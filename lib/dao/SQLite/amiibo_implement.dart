@@ -25,8 +25,8 @@ class AmiiboImplement implements Dao<AmiiboLocalDB, String, AmiiboDB>{
     await _adapter.createTable(tableAmiibo);
 
     final Create tableDate = Create("date", ifNotExists: true)
-        .addStr('lastUpdated', length: 35)
-        .addPrimaryInt("id");
+      .addStr('lastUpdated', length: 35)
+      .addPrimaryInt("id");
     await _adapter.createTable(tableDate);
 
     await connection.close();

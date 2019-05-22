@@ -16,14 +16,14 @@ class Repository {
   Future<DateTime> get lastUpdate async{
     if(_lastUpdate == null) {
       LastUpdate v = await amiiboApiProvider.fetchLastUpdate()
-          .catchError((x) => print(x));
+        .catchError((x) => print(x));
       _lastUpdate = v.lastUpdated;
     }
     return _lastUpdate;
   }
 
   Future<bool> createDB() async{
-    return await dao.createTables().then((_) async {
+    return dao.createTables().then((_) async {
       final bool comparisonDates = await compareLastUpdate();
       if(!comparisonDates) {
         final amiiboAPI = await amiiboApiProvider.fetchAllAmiibo();
@@ -37,7 +37,7 @@ class Repository {
   }
 
   updateDB(AmiiboLocalDB amiiboDB) async{
-    await dao.insertAll(amiiboDB, "amiibo").then((_) async{
+    dao.insertAll(amiiboDB, "amiibo").then((_) async{
       await dao.updateTime(LastUpdateDB.fromDate(await lastUpdate));
     });
   }
@@ -83,7 +83,7 @@ class Repository {
     dao.fetchLimit('%$name%', 10);
 
   Future<bool> compareLastUpdate() async{
-    return await dao.lastUpdate().then((value) async{
+    return dao.lastUpdate().then((value) async{
       if (value != null){
         if(value.lastUpdated.isAtSameMomentAs(await lastUpdate)) return true;
       }

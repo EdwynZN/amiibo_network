@@ -58,21 +58,22 @@ class SplashScreenState extends State<SplashScreen>
                 builder: (_, AsyncSnapshot<bool> snapshot) {
                   switch(snapshot.connectionState){
                     case ConnectionState.active:
-                      if(!snapshot.data && snapshot.hasData)
-                        return Center(
-                          child: FlatButton(
-                            textColor: Colors.white,
-                            splashColor: Theme.of(context).accentColor,
-                            highlightColor: Colors.transparent,
-                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-                            onPressed: () => _bloc.updateApp(),
-                            child: Text("Couldn't Update :(")
-                          )
-                        );
-                      else if(snapshot.hasData && snapshot.data){
+                      if(snapshot.hasData){
                         _animationController.forward().whenCompleteOrCancel(
-                                () => Navigator.pushReplacementNamed(context, '/home'));
-                        return Center(child: Text("WELCOME", style: TextStyle(color: Colors.white,),),);
+                          () => Navigator.pushReplacementNamed(context, '/home'));
+                        if(!snapshot.data)
+                          return Center(
+                            child: FlatButton(
+                              textColor: Colors.white,
+                              splashColor: Theme.of(context).accentColor,
+                              highlightColor: Colors.transparent,
+                              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+                              onPressed: () => {},//_bloc.updateApp(),
+                              child: Text("Couldn't Update :(")
+                            )
+                          );
+                        else if(snapshot.data)
+                          return Center(child: Text("WELCOME", style: TextStyle(color: Colors.white,),),);
                       }
                       return Center(child: LinearProgressIndicator(backgroundColor: Colors.black,));
                     case ConnectionState.waiting:

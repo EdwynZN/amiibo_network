@@ -105,7 +105,7 @@ class HomePageState extends State<HomePage> {
                       return Stack(
                         fit: StackFit.expand,
                         children: <Widget>[
-                          if(snapshot.hasData) GestureDetector(
+                          GestureDetector(
                             onTap: () async {
                               Navigator.pushNamed(context, "/details", arguments: snapshot.data.amiibo[index])
                                 .then((_) {

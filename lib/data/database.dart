@@ -4,8 +4,8 @@ import 'package:sqflite/sqflite.dart';
 import 'package:jaguar_query_sqflite/jaguar_query_sqflite.dart';
 
 class ConnectionFactory {
-  static final String _databaseName = "Amiibo.db";
-  static final int _databaseVersion = 1;
+  static const String _databaseName = "Amiibo.db";
+  static const int _databaseVersion = 1;
   SqfliteAdapter _adapter;
 
   ConnectionFactory._();
@@ -25,7 +25,7 @@ class ConnectionFactory {
     }
   }
 
-  _initAdapter() async{
+  Future<SqfliteAdapter> _initAdapter() async{
     final String documentsDir = await getDatabasesPath();
     final String path = join(documentsDir, _databaseName);
     _adapter = SqfliteAdapter(path, version: _databaseVersion);
