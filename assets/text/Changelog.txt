@@ -1,1 +1,4 @@
-h
+Version 1.0.0
+- Search by name
+- Filter by game
+- Save your owned amiibos and an amiibo wishlist
