@@ -29,12 +29,12 @@ class AmiiboImplement implements Dao<AmiiboLocalDB, String, AmiiboDB>{
       .addPrimaryInt("id");
     await _adapter.createTable(tableDate);
 
-    await connection.close();
+    //await connection.close();
   }
 
   Future<AmiiboLocalDB> fetchAll() async{
     SqfliteAdapter _adapter = await connection.adapter;
-    final fetchAll = Find("amiibo").selAll().orderByMany(['amiiboSeries', 'name']);
+    final fetchAll = Find("amiibo").selAll().orderByMany(['jp', 'name']);
     final AmiiboLocalDB allAmiibos = entityFromList(await _adapter.find(fetchAll));
     await connection.close();
     return allAmiibos;
@@ -44,7 +44,7 @@ class AmiiboImplement implements Dao<AmiiboLocalDB, String, AmiiboDB>{
     SqfliteAdapter _adapter = await connection.adapter;
     final List<Map> allAmiibos = await _adapter.connection.rawQuery('SELECT DISTINCT $column FROM $name ORDER BY $column' );
     final List<String> list = List<String>.from(allAmiibos.map((x) => x['amiiboSeries']));
-    await connection.close();
+    //await connection.close();
     return list;
   }
 
@@ -53,7 +53,7 @@ class AmiiboImplement implements Dao<AmiiboLocalDB, String, AmiiboDB>{
     final fetchAll = Find("amiibo").sel('name').like('character',name).or(like('name',name)).limit(limit);
     final allAmiibos = await _adapter.find(fetchAll);
     final List<String> list = List<String>.from(allAmiibos.map((x) => x['name']));
-    await connection.close();
+    //await connection.close();
     return list;
   }
 
@@ -62,7 +62,7 @@ class AmiiboImplement implements Dao<AmiiboLocalDB, String, AmiiboDB>{
     final fetch = Find("date").sel("lastUpdated").eq("id", 1);
     final date = await _adapter.findOne(fetch);
     final LastUpdateDB dateBackup = date == null ? null : LastUpdateDB.fromMap(date);
-    await connection.close();
+    //await connection.close();
     return dateBackup;
   }
 
@@ -70,14 +70,14 @@ class AmiiboImplement implements Dao<AmiiboLocalDB, String, AmiiboDB>{
     SqfliteAdapter _adapter = await connection.adapter;
     final insertMap = Upsert("date").setValues(map.toMap()).setValues({"id":1});
     await _adapter.upsert(insertMap);
-    await connection.close();
+    //await connection.close();
   }
 
   Future<AmiiboLocalDB> fetchByColumn(String column, String name) async{
     SqfliteAdapter _adapter = await connection.adapter;
     final fetchAll = Find("amiibo").selAll().like(column, name);
     final AmiiboLocalDB allAmiibos = entityFromList(await _adapter.find(fetchAll));
-    await connection.close();
+    //await connection.close();
     return allAmiibos;
   }
 
@@ -85,37 +85,37 @@ class AmiiboImplement implements Dao<AmiiboLocalDB, String, AmiiboDB>{
     SqfliteAdapter _adapter = await connection.adapter;
     final fetch = Find("amiibo").selAll().where(eq("id", id));
     final AmiiboDB amiibo = AmiiboDB.fromDB(await _adapter.findOne(fetch));
-    await connection.close();
+    //await connection.close();
     return amiibo;
   }
 
-  Future<bool> findNew() async{
+  Future<AmiiboLocalDB> findNew() async{
     SqfliteAdapter _adapter = await connection.adapter;
-    final List<Map> allAmiibos = await _adapter.connection.rawQuery('SELECT brandNew FROM amiibo WHERE brandNew IS NULL' );
-    final bool newAmiibo = allAmiibos.length == 0 ? false : true;
-    await connection.close();
-    return newAmiibo;
+    final List<Map> allAmiibos = await _adapter.connection.rawQuery('SELECT * FROM amiibo WHERE brandNew IS NULL ORDER BY jp DESC, name DESC' );
+    final AmiiboLocalDB amiibos = entityFromList(allAmiibos);
+    //await connection.close();
+    return amiibos;
   }
 
   Future<void> insertAll(AmiiboLocalDB list, String name) async{
     SqfliteAdapter _adapter = await connection.adapter;
     final insertList = UpsertMany(name).addAllMap(entityToListOfMaps(list));
     await _adapter.upsertMany(insertList);
-    await connection.close();
+    //await connection.close();
   }
 
   Future<void> insert(AmiiboDB map, String name) async{
     SqfliteAdapter _adapter = await connection.adapter;
     final insertMap = Upsert(name).setValues(map.toMap());
     await _adapter.upsert(insertMap);
-    await connection.close();
+    //await connection.close();
   }
 
   Future<void> update(AmiiboDB map, String name) async{
     SqfliteAdapter _adapter = await connection.adapter;
     final updateMap = Update(name).setValues(map.toMap()).where(eq('id', map.id));
     await _adapter.update(updateMap);
-    await connection.close();
+    //await connection.close();
   }
 
   Future<void> updateAll(String name, String column,
@@ -124,13 +124,13 @@ class AmiiboImplement implements Dao<AmiiboLocalDB, String, AmiiboDB>{
         final updateMap = Update(name).setValue(column, value);
         if(category != null) updateMap.like(columnCategory, category);
         await _adapter.update(updateMap);
-        await connection.close();
+        //await connection.close();
   }
 
   Future<void> remove({String name, String column, String value}) async{
     SqfliteAdapter _adapter = await connection.adapter;
     final deleteRecord = Remove(name).eq(column, value);
     await _adapter.remove(deleteRecord);
-    await connection.close();
+    //await connection.close();
   }
 }

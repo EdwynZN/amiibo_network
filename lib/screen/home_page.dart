@@ -4,15 +4,16 @@ import 'package:amiibo_network/bloc/bloc_provider.dart';
 import 'package:amiibo_network/model/amiibo_local_db.dart';
 import 'package:floating_search_bar/floating_search_bar.dart';
 import 'package:cached_network_image/cached_network_image.dart';
-
+import 'package:amiibo_network/data/database.dart';
 class HomePage extends StatefulWidget {
   @override
   State<StatefulWidget> createState() => HomePageState();
 }
 
 class HomePageState extends State<HomePage> {
+  ConnectionFactory connection = ConnectionFactory();
   final AmiiboBloc _bloc = $Provider.of<AmiiboBloc>();
-  static List<String> list = <String>['All', 'Owned', 'Wishlist'];
+  static List<String> list = <String>['All', 'New', 'Owned', 'Wishlist'];
   static String filter = 'All';
   static bool searchFilter = false;
 
@@ -30,6 +31,7 @@ class HomePageState extends State<HomePage> {
   @override
   dispose(){
     $Provider.dispose<AmiiboBloc>();
+    connection.close();
     super.dispose();
   }
 
@@ -43,6 +45,7 @@ class HomePageState extends State<HomePage> {
             child:  Row(
               children: <Widget>[
                 if(series == 'All') Icon(Icons.all_inclusive)
+                else if(series == 'New') Icon(Icons.new_releases, color: Colors.yellowAccent,)
                 else if(series == 'Owned') Icon(Icons.favorite, color: Colors.pinkAccent,)
                 else if(series == 'Wishlist') Icon(Icons.cake, color: Colors.yellowAccent,)
                 else CircleAvatar(child: Text(series[0]), radius: 14,),
@@ -78,7 +81,7 @@ class HomePageState extends State<HomePage> {
               automaticallyImplyLeading: false,
               leading: _popUpMenu(context),
               title: InkWell(
-                child: Text('Search Amiibo', style: TextStyle(color: Colors.black),),
+                child: Text('Search Amiibo', style: TextStyle(color: Colors.black54),),
                 onTap: () => Navigator.pushNamed(context, "/search").then((value) {
                   if(value != null) {
                     searchFilter = true;
@@ -110,6 +113,7 @@ class HomePageState extends State<HomePage> {
                               Navigator.pushNamed(context, "/details", arguments: snapshot.data.amiibo[index])
                                 .then((_) {
                                 _bloc.updateAmiiboDB(amiibo: snapshot.data.amiibo[index]);
+                                if(filter == 'New' && snapshot.data.amiibo[index].brandNew != null) snapshot.data.amiibo.removeAt(index);
                                 if(filter == 'Owned' && snapshot.data.amiibo[index].owned != 1) snapshot.data.amiibo.removeAt(index);
                                 if(filter == 'Wishlist' && snapshot.data.amiibo[index].wishlist != 1) snapshot.data.amiibo.removeAt(index);
                               });

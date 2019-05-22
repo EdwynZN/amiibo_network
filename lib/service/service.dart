@@ -4,7 +4,7 @@ import '../model/amiibo.dart';
 import 'package:amiibo_network/dao/SQLite/amiibo_implement.dart';
 import '../model/amiibo_local_db.dart';
 
-class Repository {
+class Service {
   final amiiboApiProvider = AmiiboApiProvider();
   final dao = AmiiboImplement();
   DateTime _lastUpdate;
@@ -56,11 +56,14 @@ class Repository {
     }
   }
 
-  Future<bool> findNew() async => dao.findNew();
+  Future<AmiiboLocalDB> findNew() async => dao.findNew();
 
   Future<void> cleanNew(String name, [bool search]) async {
     switch(name){
       case 'All':
+        await dao.updateAll('amiibo', 'brandNew', '1');
+        break;
+      case 'New':
         await dao.updateAll('amiibo', 'brandNew', '1');
         break;
       case 'Owned':

@@ -1,14 +1,14 @@
-import 'package:amiibo_network/service/repository.dart';
+import 'package:amiibo_network/service/service.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:amiibo_network/model/amiibo_local_db.dart';
 import 'package:dash/dash.dart';
 
 class AmiiboBloc extends Bloc{
-  static final _repository = Repository();
+  static final _service = Service();
   final _amiiboSeriesDB = BehaviorSubject<List<String>>();
   final _amiiboFetcherDB = BehaviorSubject<AmiiboLocalDB>();
   final _updateAmiiboDB = PublishSubject<AmiiboLocalDB>()
-    ..listen((amiibos) => _repository.update(amiibos))
+    ..listen((amiibos) => _service.update(amiibos))
     .onError((f) => print("Error updating DB"));
 
   Observable<AmiiboLocalDB> get allAmiibosDB => _amiiboFetcherDB.stream;
@@ -23,14 +23,14 @@ class AmiiboBloc extends Bloc{
   Observable<List<String>> get allSeries => _amiiboSeriesDB.stream;
 
   fetchAllAmiibosDB() async{
-    AmiiboLocalDB amiiboDB = await _repository.fetchAllAmiiboDB();
-    List<String> distinct = await _repository.fetchDistinct();
+    AmiiboLocalDB amiiboDB = await _service.fetchAllAmiiboDB();
+    List<String> distinct = await _service.fetchDistinct();
     _amiiboFetcherDB.sink.add(amiiboDB);
     _amiiboSeriesDB.sink.add(distinct);
   }
 
   fetchByName(String name) async{
-    final AmiiboLocalDB amiiboDB = await _repository.fetchByCategory('name', '%$name%');
+    final AmiiboLocalDB amiiboDB = await _service.fetchByCategory('name', '%$name%');
     _amiiboFetcherDB.sink.add(amiiboDB);
   }
 
@@ -38,16 +38,19 @@ class AmiiboBloc extends Bloc{
     AmiiboLocalDB amiiboDB;
     switch(name){
       case 'All':
-        amiiboDB = await _repository.fetchAllAmiiboDB();
+        amiiboDB = await _service.fetchAllAmiiboDB();
+        break;
+      case 'New':
+        amiiboDB = await _service.findNew();
         break;
       case 'Owned':
-        amiiboDB = await _repository.fetchByCategory('owned', '%1%');
+        amiiboDB = await _service.fetchByCategory('owned', '%1%');
         break;
       case 'Wishlist':
-        amiiboDB = await _repository.fetchByCategory('wishlist', '%1%');
+        amiiboDB = await _service.fetchByCategory('wishlist', '%1%');
         break;
       default:
-        amiiboDB = await _repository.fetchByCategory(
+        amiiboDB = await _service.fetchByCategory(
           search ? 'name' : 'amiiboSeries', '%$name%');
         break;
     }
@@ -55,7 +58,7 @@ class AmiiboBloc extends Bloc{
   }
 
   findBrandNew() async{
-    await _repository.findNew();
+    await _service.findNew();
   }
 
   updateAmiiboDB({AmiiboDB amiibo, AmiiboLocalDB amiibos}) async{
@@ -64,7 +67,7 @@ class AmiiboBloc extends Bloc{
   }
   
   cleanBrandNew(String category, bool search) async{
-    _repository.cleanNew(category, search)
+    _service.cleanNew(category, search)
       .then((_) => fetchByCategory(category, search));
   }
 

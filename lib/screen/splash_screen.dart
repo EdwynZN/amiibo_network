@@ -59,8 +59,6 @@ class SplashScreenState extends State<SplashScreen>
                   switch(snapshot.connectionState){
                     case ConnectionState.active:
                       if(snapshot.hasData){
-                        _animationController.forward().whenCompleteOrCancel(
-                          () => Navigator.pushReplacementNamed(context, '/home'));
                         if(!snapshot.data)
                           return Center(
                             child: FlatButton(
@@ -72,8 +70,11 @@ class SplashScreenState extends State<SplashScreen>
                               child: Text("Couldn't Update :(")
                             )
                           );
-                        else if(snapshot.data)
+                        else if(snapshot.data){
+                          _animationController.forward().whenCompleteOrCancel(
+                              () => Navigator.pushReplacementNamed(context, '/home'));
                           return Center(child: Text("WELCOME", style: TextStyle(color: Colors.white,),),);
+                        }
                       }
                       return Center(child: LinearProgressIndicator(backgroundColor: Colors.black,));
                     case ConnectionState.waiting:
