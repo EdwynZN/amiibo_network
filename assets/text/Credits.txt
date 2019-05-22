@@ -1,26 +1,38 @@
-Credits to the credits
+AMIIBO API
+https://www.amiiboapi.com/
+Copyright (c) 2019, Nevin Vu
 
+RXDART
+Project: https://github.com/ReactiveX/rxdart
+ReactiveX
+Apache Software License 2.0
 
+HTTP
+Project: https://github.com/dart-lang/http
+Copyright (c) 2014, Dart project authors
+BSD 3-Clause
 
+JAGUAR QUERY SQLITE
+Project: https://github.com/Jaguar-dart/jaguar_orm/tree/master/sqflite
+Copyright (c) 2016, teja.
+BSD 3-Clause
 
+SQFLITE
+Project: https://github.com/tekartik/sqflite
+Copyright (c) 2019, Tekartik
+MIT License
 
+DASH
+Project https://github.com/ViniciusSossela/dash
+Copyright (c) 2019, Vinicius Sossella
+MIT LICENSE
 
+FLOATING SEARCH BAR
+Project: https://github.com/AppleEducate/plugins/tree/master/packages/floating_search_bar
+Copyright (c) 2018, Rody Davis
+MIT License
 
-
-
-
-
-
-
-
-
-
-hello
-
-
-
-
-
-
-
-ma
+CACHED NETWORK IMAGE
+Project: https://github.com/renefloor/flutter_cached_network_image
+Copyright (c) 2018, Rene Floor
+MIT License 
