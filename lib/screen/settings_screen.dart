@@ -7,7 +7,6 @@ class SettingsPage extends StatelessWidget{
       //backgroundColor: Colors.white,
       appBar: AppBar(
         //backgroundColor: Color.fromRGBO(58, 66, 86, 1.0),
-        centerTitle: true,
         actions: <Widget>[],
         title: Text('Settings'),
       ),

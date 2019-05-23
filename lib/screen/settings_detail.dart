@@ -1,47 +1,38 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-class SettingsDetail extends StatefulWidget {
+class SettingsDetail extends StatelessWidget {
   final String title;
   const SettingsDetail({Key key, this.title}): super(key: key);
 
-  @override
-  State<StatefulWidget> createState() => SettingsDetailState();
-}
-
-class SettingsDetailState extends State<SettingsDetail> {
-  String _text;
-
   Future<String> get _localFile async {
-    return await rootBundle.loadString('assets/text/${widget.title}.txt');
-  }
-
-  @override
-  void initState() {
-    _localFile.then((value) => setState(() => _text = value));
-    super.initState();
-  }
-
-  @override
-  dispose(){
-    super.dispose();
+    return await rootBundle.loadString('assets/text/$title.txt');
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        //backgroundColor: Colors.white,
-        appBar: AppBar(
-          //backgroundColor: Color.fromRGBO(58, 66, 86, 1.0),
-          centerTitle: true,
-          title: Text(widget.title),
-        ),
-        body: SingleChildScrollView(
-          child: Container(
-            margin: EdgeInsets.all(8),
-            child: Text('$_text'),
-          ),
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor
+        == Colors.blueGrey[800]
+        ? Theme.of(context).scaffoldBackgroundColor : Colors.white,
+      appBar: AppBar(title: Text(title),),
+      body: SingleChildScrollView(
+        padding: EdgeInsets.all(16),
+        child: FutureBuilder(
+          future: _localFile,
+          builder: (BuildContext context, AsyncSnapshot<String> snapshot){
+            if(snapshot.hasData)
+              return Container(
+                child: Text('${snapshot.data}',
+                  overflow: TextOverflow.clip,
+                  textAlign: TextAlign.justify,
+                  style: TextStyle(height: 1.5, fontWeight: FontWeight.w500),
+                ),
+              );
+            else return Container();
+          }
         )
+      )
     );
   }
 }

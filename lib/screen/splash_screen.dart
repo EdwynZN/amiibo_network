@@ -14,9 +14,9 @@ class SplashScreen extends StatefulWidget {
 class SplashScreenState extends State<SplashScreen>
       with SingleTickerProviderStateMixin {
   static final lightTheme = SystemUiOverlayStyle.light
-      .copyWith(systemNavigationBarColor: Colors.red);
+    .copyWith(systemNavigationBarColor: Colors.red);
   static final darkTheme = SystemUiOverlayStyle.light
-      .copyWith(systemNavigationBarColor: Colors.blueGrey[800]);
+    .copyWith(systemNavigationBarColor: Colors.blueGrey[800]);
   AnimationController _animationController;
   final SplashBloc _bloc = $Provider.of<SplashBloc>();
 
@@ -52,28 +52,24 @@ class SplashScreenState extends State<SplashScreen>
             height: (MediaQuery.of(context).size.height-15)/4,
             child: Container(
               color: Colors.black,
-              padding: EdgeInsets.all(30),
               child: StreamBuilder(
                 stream: _bloc.allAmiibosDB,
                 builder: (_, AsyncSnapshot<bool> snapshot) {
                   switch(snapshot.connectionState){
                     case ConnectionState.active:
                       if(snapshot.hasData){
+                        _animationController.forward().whenCompleteOrCancel(
+                          () => Navigator.pushReplacementNamed(context, '/home'));
                         if(!snapshot.data)
-                          return Center(
-                            child: FlatButton(
-                              textColor: Colors.white,
-                              splashColor: Theme.of(context).accentColor,
-                              highlightColor: Colors.transparent,
-                              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-                              onPressed: () => {},//_bloc.updateApp(),
-                              child: Text("Couldn't Update :(")
-                            )
+                          return  FlatButton(
+                            textColor: Colors.white,
+                            splashColor: Theme.of(context).accentColor,
+                            highlightColor: Colors.transparent,
+                            onPressed: () => {},//_bloc.updateApp(),
+                            child: Center(child: Text("Couldn't Update :(", textAlign: TextAlign.center))
                           );
                         else if(snapshot.data){
-                          _animationController.forward().whenCompleteOrCancel(
-                              () => Navigator.pushReplacementNamed(context, '/home'));
-                          return Center(child: Text("WELCOME", style: TextStyle(color: Colors.white,),),);
+                          return Center(child: Text("WELCOME"));
                         }
                       }
                       return Center(child: LinearProgressIndicator(backgroundColor: Colors.black,));

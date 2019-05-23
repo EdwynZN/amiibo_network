@@ -4,22 +4,32 @@ import 'package:amiibo_network/bloc/bloc_provider.dart';
 import 'package:amiibo_network/model/amiibo_local_db.dart';
 import 'package:floating_search_bar/floating_search_bar.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter/services.dart';
 import 'package:amiibo_network/data/database.dart';
+
 class HomePage extends StatefulWidget {
   @override
   State<StatefulWidget> createState() => HomePageState();
 }
 
 class HomePageState extends State<HomePage> {
-  ConnectionFactory connection = ConnectionFactory();
+  final ConnectionFactory connection = ConnectionFactory();
   final AmiiboBloc _bloc = $Provider.of<AmiiboBloc>();
   static List<String> list = <String>['All', 'New', 'Owned', 'Wishlist'];
   static String filter = 'All';
   static bool searchFilter = false;
+  static final lightTheme = SystemUiOverlayStyle.light
+      .copyWith(systemNavigationBarColor: Colors.red);
+  static final darkTheme = SystemUiOverlayStyle.light
+      .copyWith(systemNavigationBarColor: Colors.blueGrey[800]);
 
   initBloc() async{
     await _bloc.fetchAllAmiibosDB();
     list.addAll(await _bloc.allSeries.first);
+  }
+
+  disposeDB() async{
+    await connection.close();
   }
 
   @override
@@ -31,7 +41,7 @@ class HomePageState extends State<HomePage> {
   @override
   dispose(){
     $Provider.dispose<AmiiboBloc>();
-    connection.close();
+    disposeDB();
     super.dispose();
   }
 
@@ -70,6 +80,8 @@ class HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
+    SystemChrome.setSystemUIOverlayStyle(
+        MediaQuery.platformBrightnessOf(context) == Brightness.light ? lightTheme : darkTheme);
     return Scaffold(
       body: SafeArea(
         child: CustomScrollView(
@@ -93,7 +105,7 @@ class HomePageState extends State<HomePage> {
               trailing: CircleAvatar(
                 child: GestureDetector(
                   onTap: () => Navigator.pushNamed(context, "/settings"),
-                  child: Icon(Icons.settings),
+                  child: Tooltip(message: 'Settings', child: Icon(Icons.settings)),
                 )
               ),
             ),
@@ -124,6 +136,14 @@ class HomePageState extends State<HomePage> {
                             alignment: Alignment.topRight,
                             child: Icon(Icons.new_releases, color: Colors.yellowAccent,),
                           ),
+                          if(snapshot.data.amiibo[index].owned?.isOdd ?? false) Align(
+                            alignment: Alignment.topLeft,
+                            child: Icon(Icons.star, color: Colors.pinkAccent, size: 18),
+                          ),
+                          if(snapshot.data.amiibo[index].wishlist?.isOdd ?? false) Align(
+                            alignment: Alignment.centerLeft,
+                            child: Icon(Icons.cake, color: Colors.yellowAccent, size: 18),
+                          ),
                         ],
                       );
                     },
@@ -146,8 +166,7 @@ class HomePageState extends State<HomePage> {
               label: Text('Clean New'),
               icon: Icon(Icons.new_releases, color: Colors.yellowAccent,),
             );
-          else
-            return Container();
+          else return Container();
         }
       )
     );
@@ -188,19 +207,19 @@ class AmiiboGrid extends StatelessWidget{
                 ),
               ),
             ),
-            flex: 8,
+            flex: 9,
           ),
           Expanded(
             child: Container(
               decoration: ShapeDecoration(
                 color: Theme.of(context).unselectedWidgetColor,
                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.vertical(bottom: Radius.circular(8)))),
-              alignment: Alignment.center,
+              alignment: Alignment.topCenter,
               child: Text('${amiibo.name}',
                 textAlign: TextAlign.center,
                 maxLines: 1,
                 overflow: TextOverflow.fade,
-                style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
+                style: TextStyle(fontSize: 12, fontWeight: FontWeight.w500),
               ),
             ),
             flex: 2,

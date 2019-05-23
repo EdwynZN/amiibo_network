@@ -36,7 +36,7 @@ class AmiiboImplement implements Dao<AmiiboLocalDB, String, AmiiboDB>{
     SqfliteAdapter _adapter = await connection.adapter;
     final fetchAll = Find("amiibo").selAll().orderByMany(['jp', 'name']);
     final AmiiboLocalDB allAmiibos = entityFromList(await _adapter.find(fetchAll));
-    await connection.close();
+    //await connection.close();
     return allAmiibos;
   }
 
