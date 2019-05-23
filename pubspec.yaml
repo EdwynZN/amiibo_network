@@ -33,7 +33,6 @@ dependencies:
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  test: ^1.5.1+1
   dash_generator: ^0.5.3
   build_runner: ^1.4.0
   build_test: ^0.10.3
