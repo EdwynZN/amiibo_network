@@ -6,37 +6,10 @@ import 'package:jaguar_query_sqflite/jaguar_query_sqflite.dart';
 class ConnectionFactory {
   static const String _databaseName = "Amiibo.db";
   static const int _databaseVersion = 1;
-  SqfliteAdapter _adapter;
 
   ConnectionFactory._();
   static final ConnectionFactory _instance = ConnectionFactory._();
   factory ConnectionFactory() => _instance;
-
-  Future<SqfliteAdapter> get adapter async {
-    if (_adapter != null) return _adapter;
-    _adapter = await _initAdapter();
-    return _adapter;
-  }
-
-  close() async{
-    if(_adapter.connection.isOpen) {
-      _adapter.close();
-      _adapter = null;
-    }
-  }
-
-  Future<SqfliteAdapter> _initAdapter() async{
-    final String documentsDir = await getDatabasesPath();
-    final String path = join(documentsDir, _databaseName);
-    _adapter = SqfliteAdapter(path, version: _databaseVersion);
-    //print(path);
-    await _adapter.connect();
-
-    //_createAmiiboTable();
-    //_createDateTable();
-
-    return _adapter;
-  }
 
   Database _database;
 
