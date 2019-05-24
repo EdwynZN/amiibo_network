@@ -38,7 +38,7 @@ class ConnectionFactory {
     return _adapter;
   }
 
-  /*Database _database;
+  Database _database;
 
   Future<Database> get database async {
     if (_database != null) return _database;
@@ -73,5 +73,5 @@ class ConnectionFactory {
       print("CREATED TABLE");
     });
   }
-  */
+
 }
