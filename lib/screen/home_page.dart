@@ -5,7 +5,6 @@ import 'package:amiibo_network/model/amiibo_local_db.dart';
 import 'package:floating_search_bar/floating_search_bar.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/services.dart';
-import 'package:amiibo_network/data/database.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -13,7 +12,6 @@ class HomePage extends StatefulWidget {
 }
 
 class HomePageState extends State<HomePage> {
-  final ConnectionFactory connection = ConnectionFactory();
   final AmiiboBloc _bloc = $Provider.of<AmiiboBloc>();
   static List<String> list = <String>['All', 'New', 'Owned', 'Wishlist'];
   static String filter = 'All';
@@ -28,10 +26,6 @@ class HomePageState extends State<HomePage> {
     list.addAll(await _bloc.allSeries.first);
   }
 
-  disposeDB() async{
-    await connection.close();
-  }
-
   @override
   void initState() {
     initBloc();
@@ -41,7 +35,6 @@ class HomePageState extends State<HomePage> {
   @override
   dispose(){
     $Provider.dispose<AmiiboBloc>();
-    disposeDB();
     super.dispose();
   }
 

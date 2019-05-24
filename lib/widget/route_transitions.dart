@@ -19,6 +19,20 @@ class FadeRoute<T> extends MaterialPageRoute<T> {
     }
 }
 
+class ScaleRoute<T> extends MaterialPageRoute<T> {
+  ScaleRoute({ WidgetBuilder builder, RouteSettings settings })
+      : super(builder: builder, settings: settings);
+
+  @override
+  Widget buildTransitions(BuildContext context, Animation<double> animation,
+      Animation<double> secondaryAnimation, Widget child) {
+    return ScaleTransition(
+      scale: Tween<double>(begin: 0, end: 1).animate(animation),
+      child: child
+    );
+  }
+}
+
 class SlideRoute<T> extends MaterialPageRoute<T> {
   SlideRoute({ WidgetBuilder builder, RouteSettings settings })
       : super(builder: builder, settings: settings);
