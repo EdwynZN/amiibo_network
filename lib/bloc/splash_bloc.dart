@@ -4,7 +4,6 @@ import 'package:dash/dash.dart';
 
 class SplashBloc extends Bloc {
   static final _service = Service();
-
   final _initializeApp = PublishSubject<bool>();
 
   Observable<bool> get allAmiibosDB => _initializeApp.stream;

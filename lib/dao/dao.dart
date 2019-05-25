@@ -1,6 +1,4 @@
 abstract class Dao<T, K, V> {
-  Future<void> createTables();
-
   Future<T> fetchAll();
 
   Future<T> fetchByColumn(String column, String name);

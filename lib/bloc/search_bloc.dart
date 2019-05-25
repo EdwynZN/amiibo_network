@@ -8,8 +8,7 @@ class SearchBloc extends Bloc{
 
   Observable<List<String>> get search => _searchFetcher.stream
     .debounce(Duration(milliseconds: 800))
-    .asyncMap((x) => x.isEmpty ? null : _service.searchDB(x))
-    .map((x) => x?.toSet()?.toList());
+    .asyncMap((x) => x.isEmpty ? null : _service.searchDB(x));
 
   searchValue(String s) {
     _searchFetcher.sink.add(s);

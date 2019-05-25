@@ -1,12 +1,12 @@
 import 'dart:async';
 import 'package:amiibo_network/service/amiibo_api_provider.dart';
 import '../model/amiibo.dart';
-import 'package:amiibo_network/dao/SQLite/amiibo_implement.dart';
+import 'package:amiibo_network/dao/SQLite/amiibo_sqlite.dart';
 import '../model/amiibo_local_db.dart';
 
 class Service {
   final amiiboApiProvider = AmiiboApiProvider();
-  final dao = AmiiboImplement();
+  final dao = AmiiboSQLite();
   DateTime _lastUpdate;
 
   Future<AmiiboClient> fetchAllAmiibo() => amiiboApiProvider.fetchAllAmiibo();
@@ -23,9 +23,8 @@ class Service {
   }
 
   Future<bool> createDB() async{
-    return dao.createTables().then((_) async {
-      final bool comparisonDates = await compareLastUpdate();
-      if(!comparisonDates) {
+    return compareLastUpdate().then((val) async {
+      if(!val) {
         final amiiboAPI = await amiiboApiProvider.fetchAllAmiibo();
         await updateDB(entityFromMap(amiiboAPI.toMap()));
       }
