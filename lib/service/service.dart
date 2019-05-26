@@ -1,41 +1,44 @@
 import 'dart:async';
 import 'package:amiibo_network/service/amiibo_api_provider.dart';
-import '../model/amiibo.dart';
 import 'package:amiibo_network/dao/SQLite/amiibo_sqlite.dart';
+import '../model/amiibo.dart';
 import '../model/amiibo_local_db.dart';
 
 class Service {
   final amiiboApiProvider = AmiiboApiProvider();
   final dao = AmiiboSQLite();
-  DateTime _lastUpdate;
+  static DateTime _lastUpdate;
+  static DateTime _lastUpdateDB;
 
   Future<AmiiboClient> fetchAllAmiibo() => amiiboApiProvider.fetchAllAmiibo();
 
   Future<AmiiboLocalDB> fetchAllAmiiboDB() => dao.fetchAll();
 
+  Future<DateTime> get lastUpdateDB async{
+    return _lastUpdateDB ??= await dao.lastUpdate()
+      .then((x) => x?.lastUpdated);
+  }
+
   Future<DateTime> get lastUpdate async{
-    if(_lastUpdate == null) {
-      LastUpdate v = await amiiboApiProvider.fetchLastUpdate()
-        .catchError((x) => print(x));
-      _lastUpdate = v.lastUpdated;
-    }
-    return _lastUpdate;
+    return _lastUpdate ??= await amiiboApiProvider.fetchLastUpdate()
+      .then((x) => x?.lastUpdated)
+      .catchError((_) => null);
   }
 
   Future<bool> createDB() async{
     return compareLastUpdate().then((val) async {
       if(!val) {
         final amiiboAPI = await amiiboApiProvider.fetchAllAmiibo();
-        await updateDB(entityFromMap(amiiboAPI.toMap()));
+        await _updateDB(entityFromMap(amiiboAPI.toMap()));
       }
-      return true;
+      return await Future.value(true);
     }).catchError((e) {
       print(e.toString());
       return false;
     });
   }
 
-  updateDB(AmiiboLocalDB amiiboDB) async{
+  _updateDB(AmiiboLocalDB amiiboDB) async{
     dao.insertAll(amiiboDB, "amiibo").then((_) async{
       await dao.updateTime(LastUpdateDB.fromDate(await lastUpdate));
     });
@@ -85,11 +88,11 @@ class Service {
     dao.fetchLimit('%$name%', 10);
 
   Future<bool> compareLastUpdate() async{
-    return dao.lastUpdate().then((value) async{
-      if (value != null){
-        if(value.lastUpdated.isAtSameMomentAs(await lastUpdate)) return true;
-      }
-      return false;
-    });
+    final dateDB = await lastUpdateDB;
+    final dateAPI = await lastUpdate;
+
+    if(dateAPI == null) return null;
+
+    return dateDB?.isAtSameMomentAs(dateAPI) ?? false;
   }
 }

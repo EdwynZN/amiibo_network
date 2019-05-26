@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-
 MaterialPageRoute materialRoute(Widget builder, RouteSettings settings) {
   return MaterialPageRoute(
     settings: settings,

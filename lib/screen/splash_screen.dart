@@ -12,7 +12,7 @@ class SplashScreen extends StatefulWidget {
 }
 
 class SplashScreenState extends State<SplashScreen>
-      with SingleTickerProviderStateMixin {
+      with TickerProviderStateMixin {
   static final lightTheme = SystemUiOverlayStyle.light
     .copyWith(systemNavigationBarColor: Colors.red);
   static final darkTheme = SystemUiOverlayStyle.light
@@ -58,19 +58,19 @@ class SplashScreenState extends State<SplashScreen>
                   switch(snapshot.connectionState){
                     case ConnectionState.active:
                       if(snapshot.hasData){
-                        if(!snapshot.data)
-                          return  FlatButton(
+                        _animationController.forward().whenCompleteOrCancel(
+                          () => Future.delayed(Duration(seconds: 2))
+                          .then((_) => Navigator.pushReplacementNamed(context, '/home')));
+                        if(!snapshot.data) return Center(child: Text("Could't Update :(", textAlign: TextAlign.center));
+                          /*return FlatButton(
                             textColor: Colors.white,
                             splashColor: Theme.of(context).accentColor,
                             highlightColor: Colors.transparent,
-                            onPressed: () => {},//_bloc.updateApp(),
+                            onPressed: () {_animationController.repeat();
+                              _bloc.updateApp();},
                             child: Center(child: Text("Couldn't Update :(", textAlign: TextAlign.center))
-                          );
-                        else if(snapshot.data){
-                          _animationController.forward().whenCompleteOrCancel(
-                              () => Navigator.pushReplacementNamed(context, '/home'));
-                          return Center(child: Text("WELCOME"));
-                        }
+                          );*/
+                        else return Center(child: Text("WELCOME"));
                       }
                       return Center(child: LinearProgressIndicator(backgroundColor: Colors.black,));
                     case ConnectionState.waiting:

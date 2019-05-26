@@ -10,7 +10,11 @@ class SplashBloc extends Bloc {
 
   updateApp() async{
     final bool value = await _service.createDB();
-    _initializeApp.sink.add(value);
+    _initializeApp.sink..add(null)..add(value);
+  }
+
+  done() {
+    _initializeApp.sink.close();
   }
 
   @override

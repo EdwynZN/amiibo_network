@@ -3,14 +3,21 @@ import 'package:amiibo_network/screen/home_page.dart';
 import 'package:amiibo_network/screen/splash_screen.dart';
 import 'package:amiibo_network/screen/detail_page.dart';
 import 'package:amiibo_network/screen/settings_screen.dart';
-import 'package:amiibo_network/widget/route_transitions.dart';
 import 'package:amiibo_network/screen/settings_detail.dart';
 import 'package:amiibo_network/screen/search_screen.dart';
-import 'package:flutter/services.dart';
+import 'package:amiibo_network/widget/route_transitions.dart';
+import 'package:amiibo_network/service/service.dart';
 
-void main() => runApp(MyApp());
+void main() async {
+  if(!(await Service().compareLastUpdate() ?? true))
+    runApp(MyApp(SplashScreen()));
+  else runApp(MyApp(HomePage()));
+}
 
 class MyApp extends StatelessWidget {
+  final Widget firstPage;
+
+  MyApp(this.firstPage);
 
   @override
   Widget build(BuildContext context) {
@@ -57,9 +64,8 @@ class MyApp extends StatelessWidget {
         )
       ),
       onGenerateRoute: _getRoute,
-      onUnknownRoute: null,
-      home: SplashScreen(),
       routes: <String, WidgetBuilder> {
+        '/': (context) => firstPage,
         '/Splash': (context) => SplashScreen(),
       },
     );

@@ -164,8 +164,10 @@ class _ButtonsState extends State<_Buttons> {
           iconSize: 30.0,
           tooltip: "Owned",
           splashColor: Colors.pinkAccent[100],
-          onPressed: () => setState(() =>
-            widget.amiibo.owned = widget.amiibo.owned?.isEven ?? true ? 1 : 0),
+          onPressed: () => setState(() {
+            widget.amiibo.owned = widget.amiibo.owned?.isEven ?? true ? 1 : 0;
+            widget.amiibo.wishlist = 0;
+            }),
           ),
         IconButton(
           icon: (widget.amiibo.wishlist?.isEven ?? true) ?
@@ -174,8 +176,10 @@ class _ButtonsState extends State<_Buttons> {
           iconSize: 30.0,
           tooltip: "Wishilist",
           splashColor: Colors.yellowAccent[100],
-          onPressed: () => setState(() =>
-            widget.amiibo.wishlist = widget.amiibo.wishlist?.isEven ?? true ? 1 : 0),
+          onPressed: () => setState(() {
+            widget.amiibo.wishlist = widget.amiibo.wishlist?.isEven ?? true ? 1 : 0;
+            widget.amiibo.owned = 0;
+          })
         ),
       ],
     );
