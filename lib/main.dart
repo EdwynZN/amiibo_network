@@ -9,14 +9,12 @@ import 'package:amiibo_network/widget/route_transitions.dart';
 import 'package:amiibo_network/service/service.dart';
 
 void main() async {
-  if(!(await Service().compareLastUpdate() ?? true))
-    runApp(MyApp(SplashScreen()));
+  if(!(await Service().compareLastUpdate() ?? true)) runApp(MyApp(SplashScreen()));
   else runApp(MyApp(HomePage()));
 }
 
 class MyApp extends StatelessWidget {
   final Widget firstPage;
-
   MyApp(this.firstPage);
 
   @override

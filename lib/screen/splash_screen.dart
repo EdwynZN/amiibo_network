@@ -39,7 +39,7 @@ class SplashScreenState extends State<SplashScreen>
   @override
   Widget build(BuildContext context) {
     SystemChrome.setSystemUIOverlayStyle(
-        MediaQuery.platformBrightnessOf(context) == Brightness.light ? lightTheme : darkTheme);
+      MediaQuery.platformBrightnessOf(context) == Brightness.light ? lightTheme : darkTheme);
     return Material(
       type: MaterialType.canvas,
       child: Row(
@@ -61,16 +61,11 @@ class SplashScreenState extends State<SplashScreen>
                         _animationController.forward().whenCompleteOrCancel(
                           () => Future.delayed(Duration(seconds: 2))
                           .then((_) => Navigator.pushReplacementNamed(context, '/home')));
-                        if(!snapshot.data) return Center(child: Text("Could't Update :(", textAlign: TextAlign.center));
-                          /*return FlatButton(
-                            textColor: Colors.white,
-                            splashColor: Theme.of(context).accentColor,
-                            highlightColor: Colors.transparent,
-                            onPressed: () {_animationController.repeat();
-                              _bloc.updateApp();},
-                            child: Center(child: Text("Couldn't Update :(", textAlign: TextAlign.center))
-                          );*/
-                        else return Center(child: Text("WELCOME"));
+                        if(!snapshot.data) return Center(
+                            child: Text("Could't Update :(",
+                            textAlign: TextAlign.center,
+                            style: TextStyle(color: Colors.white)));
+                        else return Center(child: Text("WELCOME", style: TextStyle(color: Colors.white)));
                       }
                       return Center(child: LinearProgressIndicator(backgroundColor: Colors.black,));
                     case ConnectionState.waiting:
