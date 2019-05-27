@@ -5,6 +5,7 @@ import 'package:amiibo_network/model/amiibo_local_db.dart';
 import 'package:floating_search_bar/floating_search_bar.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:amiibo_network/data/database.dart';
+import 'package:flutter/services.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -17,6 +18,10 @@ class HomePageState extends State<HomePage> {
   static List<String> list = <String>['All', 'New', 'Owned', 'Wishlist'];
   static String filter = 'All';
   static bool searchFilter = false;
+  static final lightTheme = SystemUiOverlayStyle.light
+      .copyWith(systemNavigationBarColor: Colors.red);
+  static final darkTheme = SystemUiOverlayStyle.light
+      .copyWith(systemNavigationBarColor: Colors.blueGrey[800]);
 
   initBloc() async{
     await _bloc.fetchAllAmiibosDB();
@@ -75,6 +80,8 @@ class HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
+    SystemChrome.setSystemUIOverlayStyle(
+      MediaQuery.platformBrightnessOf(context) == Brightness.light ? lightTheme : darkTheme);
     return WillPopScope(
       onWillPop: () => _exitApp(),
       child: Scaffold(
