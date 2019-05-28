@@ -74,7 +74,7 @@ class MyApp extends StatelessWidget {
       case '/details':
         return materialRoute(DetailPage(amiibo: settings.arguments), settings);
       case '/home':
-        return ScaleRoute(builder: (_) => HomePage());
+        return FadeRoute(builder: (_) => HomePage());
       case '/settings':
         return SlideRoute(builder: (_) => SettingsPage());
       case '/settingsdetail':

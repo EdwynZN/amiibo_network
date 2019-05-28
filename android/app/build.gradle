@@ -29,6 +29,8 @@ android {
 
     lintOptions {
         disable 'InvalidPackage'
+        disable 'GoogleAppIndexingWarning'
+        baseline file("lint-baseline.xml") // your choice of filename/path here
     }
 
     defaultConfig {

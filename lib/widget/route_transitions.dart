@@ -36,6 +36,8 @@ class SlideRoute<T> extends MaterialPageRoute<T> {
   SlideRoute({ WidgetBuilder builder, RouteSettings settings })
       : super(builder: builder, settings: settings);
 
+  double initial = 0.0;
+
   @override
   Widget buildTransitions(BuildContext context, Animation<double> animation,
     Animation<double> secondaryAnimation, Widget child) {
