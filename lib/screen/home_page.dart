@@ -31,7 +31,6 @@ class HomePageState extends State<HomePage> {
   @override
   void initState(){
     initBloc();
-    print('h');
     super.initState();
   }
 
