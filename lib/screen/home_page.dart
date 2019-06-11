@@ -39,37 +39,12 @@ class HomePageState extends State<HomePage> {
     super.dispose();
   }
 
-  Theme _popUpMenu(BuildContext context) {
-    return Theme(
-      data: Theme.of(context),
-      child: PopupMenuButton<String>(
-        itemBuilder: (context) => [
-          for(var series in list) PopupMenuItem(
-            value: series,
-            child:  Row(
-              children: <Widget>[
-                if(series == 'All') Icon(Icons.all_inclusive)
-                else if(series == 'New') Icon(Icons.new_releases, color: Colors.yellowAccent,)
-                else if(series == 'Owned') Icon(Icons.star, color: Colors.pinkAccent,)
-                else if(series == 'Wishlist') Icon(Icons.cake, color: Colors.yellowAccent,)
-                else CircleAvatar(child: Text(series[0]), radius: 14,),
-                Container(child: Text(series), margin: EdgeInsets.only(left: 8),)
-              ],
-            ),
-          ),
-        ],
-        icon: Icon(Icons.filter_list, color: Colors.black),
-        offset: Offset(-16, 50),
-        tooltip: 'Categories',
-        onSelected: (value) {
-          searchFilter = false;
-          if(filter != value){
-            setState((){filter = value;});
-            _bloc.fetchByCategory(value, searchFilter);
-          }
-        }
-      ),
-    );
+  _onTapPopMenu(String value){
+    searchFilter = false;
+    if(filter != value){
+      setState((){filter = value;});
+      _bloc.fetchByCategory(value, searchFilter);
+    }
   }
 
   Future<bool> _exitApp() async{
@@ -81,110 +56,226 @@ class HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     SystemChrome.setSystemUIOverlayStyle(
-      MediaQuery.platformBrightnessOf(context) == Brightness.light ? lightTheme : darkTheme);
+    MediaQuery.platformBrightnessOf(context) == Brightness.light ? lightTheme : darkTheme);
     return WillPopScope(
       onWillPop: () => _exitApp(),
       child: Scaffold(
-          body: SafeArea(
-            child: CustomScrollView(
-              slivers: <Widget>[
-                SliverFloatingBar(
-                  backgroundColor: Theme.of(context).backgroundColor,
-                  floating: true,
-                  snap: true,
-                  automaticallyImplyLeading: false,
-                  leading: _popUpMenu(context),
-                  title: InkWell(
-                    child: Text('$filter | Search Amiibo', style: TextStyle(color: Colors.black54), overflow: TextOverflow.ellipsis, maxLines: 1),
-                    onTap: () => Navigator.pushNamed(context, "/search").then((value) {
-                      if(value != null) {
-                        searchFilter = true;
-                        filter = value;
-                        _bloc.fetchByCategory(value, searchFilter);
-                      }
-                    })
-                  ),
-                  trailing: CircleAvatar(
-                    child: GestureDetector(
-                      onTap: () => Navigator.pushNamed(context, "/settings"),
-                      child: Tooltip(message: 'Settings', child: Icon(Icons.settings)),
-                    )
-                  ),
-                ),
-                SliverPadding(padding: EdgeInsets.symmetric(horizontal: 5),
-                  sliver: StreamBuilder(
-                    stream: _bloc.allAmiibosDB,
-                    builder: (context, AsyncSnapshot<AmiiboLocalDB> snapshot) {
-                      if((snapshot.data?.amiibo?.length ?? 1) == 0)
-                        return SliverList(
-                          delegate: SliverChildListDelegate([
-                            Container(alignment: Alignment.center,height: 250,
-                              child: Text('Nothing to see here',
-                                textAlign: TextAlign.center,
-                                style: TextStyle(fontSize: 18),
-                              )
-                            )
-                          ])
-                        );
-                      else return SliverGrid(
-                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                            crossAxisCount: MediaQuery.of(context).orientation == Orientation.portrait ? 4 : 7),
-                        delegate: SliverChildBuilderDelegate(
-                              (BuildContext context, int index) {
-                            return Stack(
-                              fit: StackFit.expand,
-                              children: <Widget>[
-                                GestureDetector(
-                                  onTap: () async {
-                                    Navigator.pushNamed(context, "/details", arguments: snapshot.data.amiibo[index])
-                                        .then((_) {
-                                      _bloc.updateAmiiboDB(amiibo: snapshot.data.amiibo[index]);
-                                      if(filter == 'New' && snapshot.data.amiibo[index].brandNew != null) snapshot.data.amiibo.removeAt(index);
-                                      if(filter == 'Owned' && snapshot.data.amiibo[index].owned != 1) snapshot.data.amiibo.removeAt(index);
-                                      if(filter == 'Wishlist' && snapshot.data.amiibo[index].wishlist != 1) snapshot.data.amiibo.removeAt(index);
-                                    });
-                                  },
-                                  child: AmiiboGrid(amiibo: snapshot.data.amiibo[index]),
-                                ),
-                                if(snapshot.data.amiibo[index].brandNew == null) Align(
-                                  alignment: Alignment.topRight,
-                                  child: Icon(Icons.new_releases, color: Colors.yellowAccent,),
-                                ),
-                                if(snapshot.data.amiibo[index].owned?.isOdd ?? false) Align(
-                                  alignment: Alignment.topLeft,
-                                  child: Icon(Icons.star, color: Colors.pinkAccent),
-                                ),
-                                if(snapshot.data.amiibo[index].wishlist?.isOdd ?? false) Align(
-                                  alignment: Alignment.topLeft,
-                                  child: Icon(Icons.cake, color: Colors.yellowAccent),
-                                ),
-                              ],
-                            );
-                          },
-                          addRepaintBoundaries: false,
-                          childCount: snapshot.hasData ? snapshot.data.amiibo.length : 0,
-                        )
-                      );
+        body: CustomScrollView(
+            slivers: <Widget>[
+              SliverFloatingBar(
+                backgroundColor: Theme.of(context).backgroundColor,
+                floating: true,
+                snap: true,
+                automaticallyImplyLeading: false,
+                leading: PopUpMenu(list, _onTapPopMenu),
+                title: InkWell(
+                  child: Text('$filter | Search Amiibo', style: TextStyle(color: Colors.black54), overflow: TextOverflow.ellipsis, maxLines: 1),
+                  onTap: () => Navigator.pushNamed(context, "/search").then((value) {
+                    if(value != null) {
+                      searchFilter = true;
+                      filter = value;
+                      _bloc.fetchByCategory(value, searchFilter);
                     }
+                  })
+                ),
+                trailing: CircleAvatar(
+                  child: GestureDetector(
+                    onTap: () => Navigator.pushNamed(context, "/settings"),
+                    child: Tooltip(message: 'Settings', child: Icon(Icons.settings)),
                   )
                 ),
+              ),
+              SliverPadding(padding: EdgeInsets.symmetric(horizontal: 5),
+                sliver: StreamBuilder(
+                  stream: _bloc.allAmiibosDB,
+                  builder: (context, AsyncSnapshot<AmiiboLocalDB> snapshot) {
+                    if((snapshot.data?.amiibo?.length ?? 1) == 0)
+                      return SliverList(
+                        delegate: SliverChildListDelegate([
+                          Container(alignment: Alignment.center,height: 250,
+                            child: Text('Nothing to see here',
+                              textAlign: TextAlign.center,
+                              style: TextStyle(fontSize: 18),
+                            )
+                          )
+                        ])
+                      );
+                    else return SliverGrid(
+                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: MediaQuery.of(context).orientation == Orientation.portrait ? 4 : 7),
+                      delegate: SliverChildBuilderDelegate(
+                            (BuildContext context, int index) {
+                          return Stack(
+                            fit: StackFit.expand,
+                            children: <Widget>[
+                              GestureDetector(
+                                onTap: () async {
+                                  Navigator.pushNamed(context, "/details", arguments: snapshot.data.amiibo[index])
+                                      .then((_) {
+                                    _bloc.updateAmiiboDB(amiibo: snapshot.data.amiibo[index]);
+                                    if(filter == 'New' && snapshot.data.amiibo[index].brandNew != null) snapshot.data.amiibo.removeAt(index);
+                                    if(filter == 'Owned' && snapshot.data.amiibo[index].owned != 1) snapshot.data.amiibo.removeAt(index);
+                                    if(filter == 'Wishlist' && snapshot.data.amiibo[index].wishlist != 1) snapshot.data.amiibo.removeAt(index);
+                                  });
+                                },
+                                child: AmiiboGrid(amiibo: snapshot.data.amiibo[index]),
+                              ),
+                              if(snapshot.data.amiibo[index].brandNew == null) Align(
+                                alignment: Alignment.topRight,
+                                child: Icon(Icons.new_releases, color: Colors.yellowAccent,),
+                              ),
+                              if(snapshot.data.amiibo[index].owned?.isOdd ?? false) Align(
+                                alignment: Alignment.topLeft,
+                                child: Icon(Icons.star, color: Colors.pinkAccent),
+                              ),
+                              if(snapshot.data.amiibo[index].wishlist?.isOdd ?? false) Align(
+                                alignment: Alignment.topLeft,
+                                child: Icon(Icons.cake, color: Colors.yellowAccent),
+                              ),
+                            ],
+                          );
+                        },
+                        addRepaintBoundaries: false, addAutomaticKeepAlives: false,
+                        childCount: snapshot.hasData ? snapshot.data.amiibo.length : 0,
+                      )
+                    );
+                  }
+                )
+              ),
+            ],
+          ),
+        floatingActionButton: StreamBuilder(
+          initialData: false,
+          stream: _bloc.findNew,
+          builder: (context, AsyncSnapshot<bool> snapshotNew){
+            if(snapshotNew.data)
+              return FloatingActionButton.extended(
+                onPressed: () => _bloc.cleanBrandNew(filter, searchFilter),
+                label: Text('Clean New'),
+                icon: Icon(Icons.new_releases, color: Colors.yellowAccent,),
+              );
+            else return const SizedBox();
+          }
+        )
+      ));
+  }
+}
+
+
+class FAB extends StatelessWidget{
+  final AmiiboBloc _bloc = $Provider.of<AmiiboBloc>();
+  final Animation<double> scale;
+  final Animation<double> fabAnimation;
+  final Animation<double> rotation;
+  final AnimationController controller;
+  final VoidCallback goTop;
+  final VoidCallback clean;
+  final double initialValue;
+
+  FAB(this.controller, this.initialValue, this.goTop, this.clean):
+
+        scale = Tween<double>(begin: 0.0, end: 1.0)
+            .animate(
+            CurvedAnimation(parent: controller,
+                curve: Interval(0.0, initialValue, curve: Curves.linear)
+            )
+        ),
+        fabAnimation = Tween<double>(begin: 0.0, end: 1.0)
+            .animate(
+            CurvedAnimation(parent: controller,
+                curve: Interval(0.5, 1.0, curve: Curves.easeInOutExpo)
+            )
+        ),
+        rotation = Tween<double>(begin: 0.0, end: 0.625)
+            .animate(
+            CurvedAnimation(parent: controller,
+                curve: Interval(initialValue, 1, curve: Curves.easeOutBack)
+            )
+        );
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.end,
+      crossAxisAlignment: CrossAxisAlignment.end,
+      children: <Widget>[
+        Padding(
+          padding: EdgeInsets.only(bottom: 5),
+          child: ScaleTransition(
+              scale: fabAnimation,
+              child: FloatingActionButton.extended(
+                heroTag: 'GoTopFAB',
+                onPressed: controller.isAnimating ? null : goTop,
+                label: Icon(Icons.keyboard_arrow_up),
+                icon: Text('Go to top'),
+              )
+          ),
+        ),
+        StreamBuilder(
+            initialData: false,
+            stream: _bloc.findNew,
+            builder: (context, AsyncSnapshot<bool> snapshotNew){
+              if(snapshotNew.data)
+                return Padding(
+                  padding: EdgeInsets.only(bottom: 5),
+                  child: ScaleTransition(
+                    scale: fabAnimation,
+                    child: FloatingActionButton.extended(
+                      heroTag: 'CleanNewFAB',
+                      onPressed: controller.isAnimating ? null : clean,
+                      label: const Icon(Icons.new_releases, color: Colors.yellowAccent),
+                      icon: Text('Clean new'),
+                    ),
+                  ),
+                );
+              else return const SizedBox();
+            }
+        ),
+        ScaleTransition(
+            scale: scale,
+            child: RotationTransition(
+              turns: rotation,
+              child: FloatingActionButton(
+                  heroTag: 'MenuFAB',
+                  onPressed: () => controller.isCompleted ? controller.animateBack(0.35) : controller.forward(),
+                  child: Icon(Icons.add)
+              ),
+            )
+        ),
+      ],
+    );
+  }
+}
+
+class PopUpMenu extends StatelessWidget{
+  final List<String> list;
+  final PopupMenuItemSelected<String> onTap;
+
+  PopUpMenu(this.list, this.onTap);
+
+  @override
+  Widget build(BuildContext context) {
+    return PopupMenuButton<String>(
+        itemBuilder: (context) => [
+          for(var series in list) PopupMenuItem(
+            value: series,
+            child:  Row(
+              children: <Widget>[
+                if(series == 'All') const Icon(Icons.all_inclusive)
+                else if(series == 'New') const Icon(Icons.new_releases, color: Colors.yellowAccent,)
+                else if(series == 'Owned') const Icon(Icons.star, color: Colors.pinkAccent,)
+                  else if(series == 'Wishlist') const Icon(Icons.cake, color: Colors.yellowAccent,)
+                    else CircleAvatar(child: Text(series[0]), radius: 14,),
+                Container(child: Text(series), margin: EdgeInsets.only(left: 8),)
               ],
             ),
           ),
-          floatingActionButton: StreamBuilder(
-              initialData: false,
-              stream: _bloc.findNew,
-              builder: (context, AsyncSnapshot<bool> snapshotNew){
-                if(snapshotNew.data)
-                  return FloatingActionButton.extended(
-                    onPressed: () => _bloc.cleanBrandNew(filter, searchFilter),
-                    label: Text('Clean New'),
-                    icon: Icon(Icons.new_releases, color: Colors.yellowAccent,),
-                  );
-                else return Container();
-              }
-          )
-      ));
+        ],
+        icon: Icon(Icons.filter_list, color: Colors.black),
+        offset: Offset(-16, 50),
+        tooltip: 'Categories',
+        onSelected: onTap
+    );
   }
 }
 

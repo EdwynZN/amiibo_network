@@ -6,9 +6,7 @@ import 'package:amiibo_network/bloc/bloc_provider.dart';
 class SearchScreen extends StatefulWidget {
 
   @override
-  State<StatefulWidget> createState() {
-    return SearchScreenState();
-  }
+  State<StatefulWidget> createState() => SearchScreenState();
 }
 
 class SearchScreenState extends State<SearchScreen> {
@@ -34,15 +32,15 @@ class SearchScreenState extends State<SearchScreen> {
             backgroundColor: Theme.of(context).backgroundColor,
             leading: IconButton(
               icon: Icon(Icons.arrow_back, color: Colors.black),
-              onPressed: () => Navigator.of(context).pop()),
+              onPressed: Navigator.of(context).pop),
             pinned: true,
             title: TextField(
               maxLength: 15,
               style: TextStyle(color: Colors.black),
               textInputAction: TextInputAction.search,
               autofocus: true,
-              onSubmitted: (value) => Navigator.of(context).pop(value),
-              onChanged: (text) => _bloc.searchValue(text),
+              onSubmitted: Navigator.of(context).pop,
+              onChanged: _bloc.searchValue,
               autocorrect: false,
               decoration: null,
             ),
@@ -63,7 +61,7 @@ class SearchScreenState extends State<SearchScreen> {
                         title: Text('${snapshot.data[index]}')
                       )
                     );
-                  else ListTile();
+                  else const ListTile();
                 },
                   childCount: snapshot.hasData ? snapshot.data.length : 0,
                 ),
