@@ -5,23 +5,28 @@ import 'package:amiibo_network/model/amiibo_local_db.dart';
 import 'package:floating_search_bar/floating_search_bar.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:amiibo_network/data/database.dart';
+import 'package:amiibo_network/data/cacheDB.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter/rendering.dart';
 
 class HomePage extends StatefulWidget {
   @override
   State<StatefulWidget> createState() => HomePageState();
 }
 
-class HomePageState extends State<HomePage> {
-  ConnectionFactory connection = ConnectionFactory();
+class HomePageState extends State<HomePage>
+    with SingleTickerProviderStateMixin{
   final AmiiboBloc _bloc = $Provider.of<AmiiboBloc>();
   static List<String> list = <String>['All', 'New', 'Owned', 'Wishlist'];
-  static String filter = 'All';
+  static String _filter = 'All';
   static bool searchFilter = false;
+  static const double initialFAB = 0.35;
+  ScrollController _controller;
+  AnimationController _animationController;
   static final lightTheme = SystemUiOverlayStyle.light
-      .copyWith(systemNavigationBarColor: Colors.red);
+    .copyWith(systemNavigationBarColor: Colors.red);
   static final darkTheme = SystemUiOverlayStyle.light
-      .copyWith(systemNavigationBarColor: Colors.blueGrey[800]);
+    .copyWith(systemNavigationBarColor: Colors.blueGrey[800]);
 
   initBloc() async{
     await _bloc.fetchAllAmiibosDB();
@@ -31,24 +36,51 @@ class HomePageState extends State<HomePage> {
   @override
   void initState(){
     initBloc();
+    _controller = ScrollController()..addListener(_scrollListener);
+    _animationController = AnimationController(
+      duration: const Duration(milliseconds: 500),
+      animationBehavior: AnimationBehavior.preserve,
+      vsync: this)..value = initialFAB;
     super.initState();
   }
 
   @override
   dispose() {
+    _controller?.removeListener(_scrollListener);
+    _controller?.dispose();
+    _animationController?.dispose();
     super.dispose();
+  }
+
+  _scrollListener() {
+    if((_controller?.hasClients ?? false) && !_animationController.isAnimating){
+      switch(_controller.position.userScrollDirection){
+        case ScrollDirection.forward:
+          if(!_animationController.isCompleted)
+            _animationController.animateBack(initialFAB);
+          break;
+        case ScrollDirection.reverse:
+          _animationController.animateBack(0.0);
+          break;
+        case ScrollDirection.idle:
+          break;
+      }
+    }
   }
 
   _onTapPopMenu(String value){
     searchFilter = false;
-    if(filter != value){
-      setState((){filter = value;});
+    if(_filter != value){
+      setState((){_filter = value;});
       _bloc.fetchByCategory(value, searchFilter);
     }
   }
 
   Future<bool> _exitApp() async{
-    await connection.close();
+    await ConnectionFactory().close();
+    _controller?.removeListener(_scrollListener);
+    _controller?.dispose();
+    _animationController?.dispose();
     $Provider.dispose<AmiiboBloc>();
     return await Future.value(true);
   }
@@ -61,106 +93,81 @@ class HomePageState extends State<HomePage> {
       onWillPop: () => _exitApp(),
       child: Scaffold(
         body: CustomScrollView(
-            slivers: <Widget>[
-              SliverFloatingBar(
-                backgroundColor: Theme.of(context).backgroundColor,
-                floating: true,
-                snap: true,
-                automaticallyImplyLeading: false,
-                leading: PopUpMenu(list, _onTapPopMenu),
-                title: InkWell(
-                  child: Text('$filter | Search Amiibo', style: TextStyle(color: Colors.black54), overflow: TextOverflow.ellipsis, maxLines: 1),
-                  onTap: () => Navigator.pushNamed(context, "/search").then((value) {
-                    if(value != null) {
-                      searchFilter = true;
-                      filter = value;
-                      _bloc.fetchByCategory(value, searchFilter);
-                    }
-                  })
-                ),
-                trailing: CircleAvatar(
-                  child: GestureDetector(
-                    onTap: () => Navigator.pushNamed(context, "/settings"),
-                    child: Tooltip(message: 'Settings', child: Icon(Icons.settings)),
-                  )
-                ),
-              ),
-              SliverPadding(padding: EdgeInsets.symmetric(horizontal: 5),
-                sliver: StreamBuilder(
-                  stream: _bloc.allAmiibosDB,
-                  builder: (context, AsyncSnapshot<AmiiboLocalDB> snapshot) {
-                    if((snapshot.data?.amiibo?.length ?? 1) == 0)
-                      return SliverList(
-                        delegate: SliverChildListDelegate([
-                          Container(alignment: Alignment.center,height: 250,
-                            child: Text('Nothing to see here',
-                              textAlign: TextAlign.center,
-                              style: TextStyle(fontSize: 18),
-                            )
-                          )
-                        ])
-                      );
-                    else return SliverGrid(
-                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount: MediaQuery.of(context).orientation == Orientation.portrait ? 4 : 7),
-                      delegate: SliverChildBuilderDelegate(
-                            (BuildContext context, int index) {
-                          return Stack(
-                            fit: StackFit.expand,
-                            children: <Widget>[
-                              GestureDetector(
-                                onTap: () async {
-                                  Navigator.pushNamed(context, "/details", arguments: snapshot.data.amiibo[index])
-                                      .then((_) {
-                                    _bloc.updateAmiiboDB(amiibo: snapshot.data.amiibo[index]);
-                                    if(filter == 'New' && snapshot.data.amiibo[index].brandNew != null) snapshot.data.amiibo.removeAt(index);
-                                    if(filter == 'Owned' && snapshot.data.amiibo[index].owned != 1) snapshot.data.amiibo.removeAt(index);
-                                    if(filter == 'Wishlist' && snapshot.data.amiibo[index].wishlist != 1) snapshot.data.amiibo.removeAt(index);
-                                  });
-                                },
-                                child: AmiiboGrid(amiibo: snapshot.data.amiibo[index]),
-                              ),
-                              if(snapshot.data.amiibo[index].brandNew == null) Align(
-                                alignment: Alignment.topRight,
-                                child: Icon(Icons.new_releases, color: Colors.yellowAccent,),
-                              ),
-                              if(snapshot.data.amiibo[index].owned?.isOdd ?? false) Align(
-                                alignment: Alignment.topLeft,
-                                child: Icon(Icons.star, color: Colors.pinkAccent),
-                              ),
-                              if(snapshot.data.amiibo[index].wishlist?.isOdd ?? false) Align(
-                                alignment: Alignment.topLeft,
-                                child: Icon(Icons.cake, color: Colors.yellowAccent),
-                              ),
-                            ],
-                          );
-                        },
-                        addRepaintBoundaries: false, addAutomaticKeepAlives: false,
-                        childCount: snapshot.hasData ? snapshot.data.amiibo.length : 0,
-                      )
-                    );
+          controller: _controller,
+          slivers: <Widget>[
+            SliverFloatingBar(
+              backgroundColor: Theme.of(context).backgroundColor,
+              floating: true,
+              snap: true,
+              automaticallyImplyLeading: false,
+              leading: PopUpMenu(list, _onTapPopMenu),
+              title: GestureDetector(
+                child: Text('$_filter | Search Amiibo', style: TextStyle(color: Colors.black54), overflow: TextOverflow.ellipsis, maxLines: 1),
+                onTap: () => Navigator.pushNamed(context, "/search").then((value) {
+                  if(value != null) {
+                    searchFilter = true;
+                    _filter = value;
+                    _bloc.fetchByCategory(value, searchFilter);
                   }
+                })
+              ),
+              trailing: CircleAvatar(
+                child: GestureDetector(
+                  onTap: () => Navigator.pushNamed(context, "/settings"),
+                  child: Tooltip(message: 'Settings', child: Icon(Icons.settings)),
                 )
               ),
-            ],
-          ),
-        floatingActionButton: StreamBuilder(
-          initialData: false,
-          stream: _bloc.findNew,
-          builder: (context, AsyncSnapshot<bool> snapshotNew){
-            if(snapshotNew.data)
-              return FloatingActionButton.extended(
-                onPressed: () => _bloc.cleanBrandNew(filter, searchFilter),
-                label: Text('Clean New'),
-                icon: Icon(Icons.new_releases, color: Colors.yellowAccent,),
-              );
-            else return const SizedBox();
-          }
+            ),
+            SliverPadding(padding: EdgeInsets.symmetric(horizontal: 5),
+              sliver: StreamBuilder(
+                stream: _bloc.allAmiibosDB,
+                builder: (context, AsyncSnapshot<AmiiboLocalDB> snapshot) {
+                  if((snapshot.data?.amiibo?.length ?? 1) == 0)
+                    return SliverList(
+                      delegate: SliverChildListDelegate([
+                        Container(alignment: Alignment.center,height: 250,
+                          child: Text('Nothing to see here',
+                            textAlign: TextAlign.center,
+                            style: TextStyle(fontSize: 18),
+                          )
+                        )
+                      ])
+                    );
+                  else return SliverGrid(
+                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: MediaQuery.of(context).orientation == Orientation.portrait ? 4 : 7),
+                    delegate: SliverChildBuilderDelegate(
+                      (BuildContext context, int index) {
+                        return GestureDetector(
+                          onTap: () async {
+                            Navigator.pushNamed(context, "/details", arguments: snapshot.data.amiibo[index])
+                              .then((_) {
+                              _bloc.updateAmiiboDB(amiibo: snapshot.data.amiibo[index]);
+                              if(_filter == 'New' && snapshot.data.amiibo[index].brandNew != null) snapshot.data.amiibo.removeAt(index);
+                              if(_filter == 'Owned' && snapshot.data.amiibo[index].owned != 1) snapshot.data.amiibo.removeAt(index);
+                              if(_filter == 'Wishlist' && snapshot.data.amiibo[index].wishlist != 1) snapshot.data.amiibo.removeAt(index);
+                            });
+                          },
+                          child: AmiiboGrid(amiibo: snapshot.data.amiibo[index]),
+                        );
+                      },
+                      addRepaintBoundaries: false, addAutomaticKeepAlives: false,
+                      childCount: snapshot.hasData ? snapshot.data.amiibo.length : 0,
+                    )
+                  );
+                }
+              )
+            ),
+          ],
+        ),
+        floatingActionButton: FAB(_animationController, initialFAB,
+          () => _controller.jumpTo(0),
+          () => _bloc.cleanBrandNew(_filter, searchFilter)
         )
-      ));
+      )
+    );
   }
 }
-
 
 class FAB extends StatelessWidget{
   final AmiiboBloc _bloc = $Provider.of<AmiiboBloc>();
@@ -174,24 +181,24 @@ class FAB extends StatelessWidget{
 
   FAB(this.controller, this.initialValue, this.goTop, this.clean):
 
-        scale = Tween<double>(begin: 0.0, end: 1.0)
-            .animate(
-            CurvedAnimation(parent: controller,
-                curve: Interval(0.0, initialValue, curve: Curves.linear)
-            )
-        ),
-        fabAnimation = Tween<double>(begin: 0.0, end: 1.0)
-            .animate(
-            CurvedAnimation(parent: controller,
-                curve: Interval(0.5, 1.0, curve: Curves.easeInOutExpo)
-            )
-        ),
-        rotation = Tween<double>(begin: 0.0, end: 0.625)
-            .animate(
-            CurvedAnimation(parent: controller,
-                curve: Interval(initialValue, 1, curve: Curves.easeOutBack)
-            )
-        );
+  scale = Tween<double>(begin: 0.0, end: 1.0)
+    .animate(
+      CurvedAnimation(parent: controller,
+        curve: Interval(0.0, initialValue, curve: Curves.linear)
+    )
+  ),
+  fabAnimation = Tween<double>(begin: 0.0, end: 1.0)
+    .animate(
+      CurvedAnimation(parent: controller,
+        curve: Interval(0.5, 1.0, curve: Curves.easeInOutExpo)
+    )
+  ),
+  rotation = Tween<double>(begin: 0.0, end: 0.625)
+    .animate(
+      CurvedAnimation(parent: controller,
+        curve: Interval(initialValue, 1, curve: Curves.easeOutBack)
+    )
+  );
 
   @override
   Widget build(BuildContext context) {
@@ -256,25 +263,25 @@ class PopUpMenu extends StatelessWidget{
   @override
   Widget build(BuildContext context) {
     return PopupMenuButton<String>(
-        itemBuilder: (context) => [
-          for(var series in list) PopupMenuItem(
-            value: series,
-            child:  Row(
-              children: <Widget>[
-                if(series == 'All') const Icon(Icons.all_inclusive)
-                else if(series == 'New') const Icon(Icons.new_releases, color: Colors.yellowAccent,)
-                else if(series == 'Owned') const Icon(Icons.star, color: Colors.pinkAccent,)
-                  else if(series == 'Wishlist') const Icon(Icons.cake, color: Colors.yellowAccent,)
-                    else CircleAvatar(child: Text(series[0]), radius: 14,),
-                Container(child: Text(series), margin: EdgeInsets.only(left: 8),)
-              ],
-            ),
+      itemBuilder: (context) => [
+        for(var series in list) PopupMenuItem(
+          value: series,
+          child:  Row(
+            children: <Widget>[
+              if(series == 'All') const Icon(Icons.all_inclusive)
+              else if(series == 'New') const Icon(Icons.new_releases, color: Colors.yellowAccent,)
+              else if(series == 'Owned') const Icon(Icons.star, color: Colors.pinkAccent,)
+                else if(series == 'Wishlist') const Icon(Icons.cake, color: Colors.yellowAccent,)
+                  else CircleAvatar(child: Text(series[0]), radius: 14,),
+              Container(child: Text(series), margin: EdgeInsets.only(left: 8),)
+            ],
           ),
-        ],
-        icon: Icon(Icons.filter_list, color: Colors.black),
-        offset: Offset(-16, 50),
-        tooltip: 'Categories',
-        onSelected: onTap
+        ),
+      ],
+      icon: Icon(Icons.filter_list, color: Colors.black),
+      offset: Offset(-16, 50),
+      tooltip: 'Categories',
+      onSelected: onTap
     );
   }
 }
@@ -289,49 +296,65 @@ class AmiiboGrid extends StatelessWidget{
 
   @override
   Widget build(BuildContext context){
-    return Card(
-      child: Column(
-        mainAxisSize: MainAxisSize.max,
-        mainAxisAlignment: MainAxisAlignment.center,
-        textBaseline: TextBaseline.alphabetic,
-        children: <Widget>[
-          Expanded(
-            child: Container(
-              color: Colors.transparent,
-              padding: EdgeInsets.all(4),
-              child: Hero(
-                tag: amiibo.id,
-                child: CachedNetworkImage(
-                  useOldImageOnUrlChange: false,
-                  imageUrl: 'https://raw.githubusercontent.com/N3evin/AmiiboAPI/master/images/icon_'
-                    '${amiibo.toMap()['id']?.toString()?.substring(0,8)}-'
-                    '${amiibo.toMap()['id']?.toString()?.substring(8)}'
-                    '.png',
-                  placeholder: (context, url) => CircularProgressIndicator(),
-                  errorWidget: (context, url, error) => Icon(Icons.error),
-                  fit: BoxFit.scaleDown,
+    return Stack(
+      fit: StackFit.expand,
+      children: <Widget>[
+        Card(
+          child: Column(
+            mainAxisSize: MainAxisSize.max,
+            mainAxisAlignment: MainAxisAlignment.center,
+            textBaseline: TextBaseline.alphabetic,
+            children: <Widget>[
+              Expanded(
+                child: Container(
+                  color: Colors.transparent,
+                  padding: EdgeInsets.all(4),
+                  child: Hero(
+                    tag: amiibo.id,
+                    child: CachedNetworkImage(
+                      cacheManager: CacheManager(),
+                      imageUrl: 'https://raw.githubusercontent.com/N3evin/AmiiboAPI/master/images/icon_'
+                          '${amiibo.toMap()['id']?.toString()?.substring(0,8)}-'
+                          '${amiibo.toMap()['id']?.toString()?.substring(8)}.png',
+                      placeholder: (context, url) => const CircularProgressIndicator(),
+                      errorWidget: (context, url, error) => const Icon(Icons.error, color: const Color(0xFFEF9A9A)),
+                      fit: BoxFit.scaleDown,
+                    ),
+                  ),
                 ),
+                flex: 9,
               ),
-            ),
-            flex: 9,
-          ),
-          Expanded(
-            child: Container(
-              decoration: ShapeDecoration(
-                color: Theme.of(context).unselectedWidgetColor,
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.vertical(bottom: Radius.circular(8)))),
-              alignment: Alignment.topCenter,
-              child: Text('${amiibo.name}',
-                textAlign: TextAlign.center,
-                maxLines: 1,
-                overflow: TextOverflow.fade,
-                style: TextStyle(fontSize: 12, fontWeight: FontWeight.w500),
+              Expanded(
+                child: Container(
+                  decoration: ShapeDecoration(
+                      color: Theme.of(context).unselectedWidgetColor,
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.vertical(bottom: Radius.circular(8)))),
+                  alignment: Alignment.center,
+                  padding: EdgeInsets.symmetric(horizontal: 5),
+                  child: Text('${amiibo.name}',
+                    softWrap: false,
+                    overflow: TextOverflow.fade,
+                    style: TextStyle(fontSize: 12, fontWeight: FontWeight.w500),
+                  ),
+                ),
+                flex: 2,
               ),
-            ),
-            flex: 2,
+            ],
           ),
-        ],
-      ),
+        ),
+        if(amiibo.brandNew?.isEven ?? true) const Align(
+          alignment: Alignment.topRight,
+          child: const Icon(Icons.new_releases, color: Colors.yellowAccent),
+        ),
+        if(amiibo.owned?.isOdd ?? false) const Align(
+          alignment: Alignment.topLeft,
+          child: const Icon(Icons.star, color: Colors.pinkAccent),
+        ),
+        if(amiibo.wishlist?.isOdd ?? false) const Align(
+          alignment: Alignment.topLeft,
+          child: const Icon(Icons.cake, color: Colors.yellowAccent),
+        ),
+      ],
     );
   }
 }

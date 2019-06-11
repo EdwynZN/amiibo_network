@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:amiibo_network/model/amiibo_local_db.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:amiibo_network/data/cacheDB.dart';
 
 class DetailPage extends StatelessWidget{
   final AmiiboDB amiibo;
@@ -27,9 +28,9 @@ class DetailPage extends StatelessWidget{
                 children: <Widget>[
                   _CardDetailAmiibo(amiibo: amiibo),
                   if(_brandNew)
-                    Align(
+                    const Align(
                       alignment: Alignment.topRight,
-                      child: Icon(
+                      child: const Icon(
                         Icons.new_releases,
                         size: 45.0,
                         color: Colors.yellowAccent,
@@ -38,12 +39,12 @@ class DetailPage extends StatelessWidget{
                 ],
               ),
             ),
-            Container(
+            /*Container(
               height: 100,
               child: Card(
                 child: Center(child: Text("Coming soon..."),)
               ),
-            )
+            )*/
           ],
         )
       ),
@@ -77,10 +78,10 @@ class _CardDetailAmiibo extends StatelessWidget{
                       margin: EdgeInsets.all(5),
                       alignment: Alignment.center,
                       child: CachedNetworkImage(
+                        cacheManager: CacheManager(),
                         imageUrl: 'https://raw.githubusercontent.com/N3evin/AmiiboAPI/master/images/icon_'
-                            '${amiibo.toMap()['id']?.toString()?.substring(0,8)}-'
-                            '${amiibo.toMap()['id']?.toString()?.substring(8)}'
-                            '.png',
+                          '${amiibo.toMap()['id']?.toString()?.substring(0,8)}-'
+                          '${amiibo.toMap()['id']?.toString()?.substring(8)}.png',
                         placeholder: (context, url) => CircularProgressIndicator(),
                         errorWidget: (context, url, error) => Icon(Icons.error),
                         fit: BoxFit.scaleDown,
@@ -111,10 +112,10 @@ class _CardDetailAmiibo extends StatelessWidget{
                 if(amiibo.character != amiibo.name) TextCardDetail(text: "Name", data: amiibo.name,),
                 TextCardDetail(text: "Serie", data: amiibo.amiiboSeries,),
                 if(amiibo.amiiboSeries != amiibo.gameSeries) TextCardDetail(text: "Game", data: amiibo.gameSeries,),
-                if(amiibo.au != null) TextCardDetail(text: "Australia", data: amiibo.au,),
-                if(amiibo.eu != null) TextCardDetail(text: "Europe", data: amiibo.eu,),
-                if(amiibo.na != null) TextCardDetail(text: "America", data: amiibo.na,),
-                if(amiibo.jp != null) TextCardDetail(text: "Japan", data: amiibo.jp,)
+                if(amiibo.au != null) RegionDetail(amiibo.au, 'au', 'Australia'),
+                if(amiibo.eu != null) RegionDetail(amiibo.eu, 'eu', 'Europe'),
+                if(amiibo.na != null) RegionDetail(amiibo.na, 'na', 'America'),
+                if(amiibo.jp != null) RegionDetail(amiibo.jp, 'jp', 'Japan'),
               ],
             ),
             flex: 7,
@@ -148,6 +149,9 @@ class _ButtonsState extends State<_Buttons> {
   }
 
   @override
+  _Buttons get widget => super.widget;
+
+  @override
   dispose(){
     super.dispose();
   }
@@ -159,28 +163,60 @@ class _ButtonsState extends State<_Buttons> {
       children: <Widget>[
         IconButton(
           icon: (widget.amiibo.owned?.isEven ?? true) ?
-            Icon(Icons.star_border) : Icon(Icons.star),
+          Icon(Icons.star_border) : Icon(Icons.star),
           color: Colors.pinkAccent,
           iconSize: 30.0,
           tooltip: "Owned",
           splashColor: Colors.pinkAccent[100],
           onPressed: () => setState(() {
-            widget.amiibo.owned = widget.amiibo.owned?.isEven ?? true ? 1 : 0;
-            widget.amiibo.wishlist = 0;
-            }),
-          ),
-        IconButton(
-          icon: (widget.amiibo.wishlist?.isEven ?? true) ?
-          Icon(Icons.check_box_outline_blank) : Icon(Icons.cake),
-          color: Colors.yellowAccent,
-          iconSize: 30.0,
-          tooltip: "Wishilist",
-          splashColor: Colors.yellowAccent[100],
-          onPressed: () => setState(() {
-            widget.amiibo.wishlist = widget.amiibo.wishlist?.isEven ?? true ? 1 : 0;
-            widget.amiibo.owned = 0;
-          })
+            widget.amiibo.owned = (widget.amiibo?.owned ?? 0) ^ 1;
+            if(widget.amiibo.owned.isOdd) widget.amiibo.wishlist = 0;
+          }),
         ),
+        IconButton(
+            icon: (widget.amiibo.wishlist?.isEven ?? true) ?
+            Icon(Icons.check_box_outline_blank) : Icon(Icons.cake),
+            color: Colors.yellowAccent,
+            iconSize: 30.0,
+            tooltip: "Wishilist",
+            splashColor: Colors.yellowAccent[100],
+            onPressed: () => setState(() {
+              widget.amiibo.wishlist = (widget.amiibo?.wishlist ?? 0) ^ 1;
+              if(widget.amiibo.wishlist.isOdd) widget.amiibo.owned = 0;
+            })
+        ),
+      ],
+    );
+  }
+}
+
+class RegionDetail extends StatelessWidget{
+  final String text;
+  final String asset;
+  final String description;
+
+  RegionDetail(this.text,this.asset,this.description);
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: <Widget>[
+        SizedBox(height: 16, width: 25,
+          child: Image.asset(
+            'assets/images/$asset.png',
+            fit: BoxFit.fill,
+            semanticLabel: description,)
+        ),
+        Container(
+          padding: EdgeInsets.only(left: 8),
+          child: Text(text,
+            textAlign: TextAlign.start,
+            overflow: TextOverflow.fade,
+            maxLines: 1,
+            style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
+          )
+        )
       ],
     );
   }
@@ -199,12 +235,12 @@ class TextCardDetail extends StatelessWidget{
   @override
   Widget build(BuildContext context){
     return Container(
-      child: Text('$text: $data',
-        textAlign: TextAlign.start,
-        overflow: TextOverflow.fade,
-        maxLines: 1,
-        style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
-      )
+        child: Text('$text: $data',
+          textAlign: TextAlign.start,
+          overflow: TextOverflow.fade,
+          maxLines: 1,
+          style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
+        )
     );
   }
 }

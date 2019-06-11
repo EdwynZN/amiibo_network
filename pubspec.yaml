@@ -51,6 +51,10 @@ flutter:
     - assets/text/FAQ.txt
     - assets/text/Changelog.txt
     - assets/text/Credits.txt
+    - assets/images/au.png
+    - assets/images/eu.png
+    - assets/images/jp.png
+    - assets/images/na.png
 
   # To add assets to your application, add an assets section, like this:
   # assets:

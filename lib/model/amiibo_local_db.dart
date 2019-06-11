@@ -66,10 +66,10 @@ class AmiiboDB {
     character: amiibo["character"],
     gameSeries: amiibo["gameSeries"],
     name: amiibo["name"],
-    au: amiibo["release"]["au"],
-    eu: amiibo["release"]["eu"],
-    jp: amiibo["release"]["jp"],
-    na: amiibo["release"]["na"],
+    au: amiibo["release"]["au"]?.toString()?.replaceAll('-', '/'),
+    eu: amiibo["release"]["eu"]?.toString()?.replaceAll('-', '/'),
+    jp: amiibo["release"]["jp"]?.toString()?.replaceAll('-', '/'),
+    na: amiibo["release"]["na"]?.toString()?.replaceAll('-', '/'),
     type: amiibo["type"],
   );
 

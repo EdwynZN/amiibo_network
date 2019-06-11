@@ -7,6 +7,7 @@ import 'package:amiibo_network/screen/settings_detail.dart';
 import 'package:amiibo_network/screen/search_screen.dart';
 import 'package:amiibo_network/widget/route_transitions.dart';
 import 'package:amiibo_network/service/service.dart';
+import 'package:flutter/cupertino.dart';
 
 void main() async {
   if(!(await Service().compareLastUpdate() ?? true)) runApp(MyApp(SplashScreen()));
@@ -40,26 +41,26 @@ class MyApp extends StatelessWidget {
         ),
       ),
       darkTheme: ThemeData(
-        brightness: Brightness.dark,
-        unselectedWidgetColor: Colors.grey[700],
-        dividerColor: Colors.white70,
-        scaffoldBackgroundColor: Colors.blueGrey[800],
-        accentColor: Colors.blueGrey[700],
-        canvasColor: Colors.blueGrey,
-        primarySwatch: Colors.blueGrey,
-        primaryColor: Colors.blueGrey[900],
-        cursorColor: Colors.black12,
-        backgroundColor: Colors.white70,
-        cardTheme: CardTheme(
-          color: Colors.blueGrey[900],
-          margin: EdgeInsets.only(right: 8, left: 8, top: 8),
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-          elevation: 8,
-        ),
-        iconTheme: IconThemeData(color: Colors.white70),
-        textTheme: TextTheme(
-          body1: TextStyle(color: Colors.white),
-        )
+          brightness: Brightness.dark,
+          unselectedWidgetColor: Colors.grey[700],
+          dividerColor: Colors.white70,
+          scaffoldBackgroundColor: Colors.blueGrey[800],
+          accentColor: Colors.blueGrey[700],
+          canvasColor: Colors.blueGrey,
+          primarySwatch: Colors.blueGrey,
+          primaryColor: Colors.blueGrey[900],
+          cursorColor: Colors.black12,
+          backgroundColor: Colors.white70,
+          cardTheme: CardTheme(
+            color: Colors.blueGrey[900],
+            margin: EdgeInsets.only(right: 8, left: 8, top: 8),
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+            elevation: 8,
+          ),
+          iconTheme: IconThemeData(color: Colors.white70),
+          textTheme: TextTheme(
+            body1: TextStyle(color: Colors.white),
+          )
       ),
       onGenerateRoute: _getRoute,
       routes: <String, WidgetBuilder> {
@@ -74,7 +75,7 @@ class MyApp extends StatelessWidget {
       case '/details':
         return materialRoute(DetailPage(amiibo: settings.arguments), settings);
       case '/home':
-        return ScaleRoute(builder: (_) => HomePage());
+        return FadeRoute(builder: (_) => HomePage());
       case '/settings':
         return SlideRoute(builder: (_) => SettingsPage());
       case '/settingsdetail':

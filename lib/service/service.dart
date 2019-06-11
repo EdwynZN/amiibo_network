@@ -10,6 +10,10 @@ class Service {
   static DateTime _lastUpdate;
   static DateTime _lastUpdateDB;
 
+  static final Service _instance = Service._();
+  factory Service() => _instance;
+  Service._();
+
   Future<AmiiboClient> fetchAllAmiibo() => amiiboApiProvider.fetchAllAmiibo();
 
   Future<AmiiboLocalDB> fetchAllAmiiboDB() => dao.fetchAll();
