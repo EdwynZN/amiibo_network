@@ -5,11 +5,13 @@ import 'package:dash/dash.dart';
 
 class AmiiboBloc extends Bloc{
   static final _service = Service();
-  final _amiiboSeriesDB = BehaviorSubject<List<String>>();
+  static String _searchFilter = 'amiiboSeries';
   final _amiiboFetcherDB = BehaviorSubject<AmiiboLocalDB>();
+  final _filter = PublishSubject<String>();
   final _updateAmiiboDB = PublishSubject<AmiiboLocalDB>()
-    ..listen((amiibos) => _service.update(amiibos))
-    .onError((f) => print("Error updating DB"));
+    ..listen((amiibos) => _service.update(amiibos));
+
+  Observable<String> get filter => _filter.stream;
 
   Observable<AmiiboLocalDB> get allAmiibosDB => _amiiboFetcherDB.stream;
 
@@ -20,21 +22,25 @@ class AmiiboBloc extends Bloc{
     )
     .map((x) => x != null ? true : false);
 
-  Observable<List<String>> get allSeries => _amiiboSeriesDB.stream;
-
   fetchAllAmiibosDB() async{
     AmiiboLocalDB amiiboDB = await _service.fetchAllAmiiboDB();
-    List<String> distinct = await _service.fetchDistinct();
     _amiiboFetcherDB.sink.add(amiiboDB);
-    _amiiboSeriesDB.sink.add(distinct);
   }
+
+  Future<List<String>> listOfGames() => _service.fetchDistinct();
 
   fetchByName(String name) async{
     final AmiiboLocalDB amiiboDB = await _service.fetchByCategory('name', '%$name%');
     _amiiboFetcherDB.sink.add(amiiboDB);
   }
 
-  fetchByCategory(String name, [bool search]) async{
+  resetPagination(String name, bool search) async{
+    _searchFilter = search ? 'name' : 'amiiboSeries';
+    await _fetchByCategory(name);
+    _filter.sink.add(name);
+  }
+
+  _fetchByCategory(String name) async{
     AmiiboLocalDB amiiboDB;
     switch(name){
       case 'All':
@@ -50,15 +56,10 @@ class AmiiboBloc extends Bloc{
         amiiboDB = await _service.fetchByCategory('wishlist', '%1%');
         break;
       default:
-        amiiboDB = await _service.fetchByCategory(
-          search ? 'name' : 'amiiboSeries', '%$name%');
+        amiiboDB = await _service.fetchByCategory(_searchFilter, '%$name%');
         break;
     }
     _amiiboFetcherDB.sink.add(amiiboDB);
-  }
-
-  findBrandNew() async{
-    await _service.findNew();
   }
 
   updateAmiiboDB({AmiiboDB amiibo, AmiiboLocalDB amiibos}) async{
@@ -66,15 +67,15 @@ class AmiiboBloc extends Bloc{
     _updateAmiiboDB.sink.add(amiibos);
   }
   
-  cleanBrandNew(String category, bool search) async{
-    _service.cleanNew(category, search)
-      .then((_) => fetchByCategory(category, search));
+  cleanBrandNew(String category) async{
+    _service.cleanNew(category, _searchFilter)
+      .then((_) => _fetchByCategory(category));
   }
 
   @override
   dispose() {
-    _amiiboSeriesDB.close();
     _amiiboFetcherDB.close();
+    _filter.close();
     _updateAmiiboDB.close();
   }
 

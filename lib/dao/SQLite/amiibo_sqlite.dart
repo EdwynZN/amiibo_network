@@ -9,7 +9,7 @@ class AmiiboSQLite implements Dao<AmiiboLocalDB, String, AmiiboDB>{
   Future<AmiiboLocalDB> fetchAll() async{
     Database _db = await connectionFactory.database;
     List<Map> maps = await _db.query('amiibo',
-      orderBy: 'type DESC, jp DESC, name',
+      orderBy: 'type DESC, na DESC, name',
       limit: null,
       offset: null);
     return entityFromList(maps);
@@ -57,7 +57,7 @@ class AmiiboSQLite implements Dao<AmiiboLocalDB, String, AmiiboDB>{
     List<Map> maps = await _db.query('amiibo',
       where: '$column LIKE ?',
       whereArgs: [name],
-      orderBy: 'type DESC, jp DESC, name');
+      orderBy: 'type DESC, na DESC, name');
     return entityFromList(maps);
   }
 
@@ -74,7 +74,7 @@ class AmiiboSQLite implements Dao<AmiiboLocalDB, String, AmiiboDB>{
     Database _db = await connectionFactory.database;
     List<Map> maps = await _db.query('amiibo',
       where: 'brandNew = 0 OR brandNew IS NULL',
-      orderBy: 'jp DESC, name DESC');
+      orderBy: 'na DESC, name');
     return entityFromList(maps);
   }
 

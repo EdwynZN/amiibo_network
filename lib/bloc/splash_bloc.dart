@@ -4,17 +4,18 @@ import 'package:dash/dash.dart';
 
 class SplashBloc extends Bloc {
   static final _service = Service();
+  bool value;
   final _initializeApp = PublishSubject<bool>();
 
   Observable<bool> get allAmiibosDB => _initializeApp.stream;
 
   updateApp() async{
-    final bool value = await _service.createDB();
-    _initializeApp.sink..add(null)..add(value);
+    value = await _service.createDB();
+    _initializeApp.sink.add(value);
   }
 
-  done() {
-    _initializeApp.sink.close();
+  finishAnimation() {
+    _initializeApp.sink.add(value);
   }
 
   @override

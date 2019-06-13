@@ -31,6 +31,7 @@ class Service {
 
   Future<bool> createDB() async{
     return compareLastUpdate().then((val) async {
+      if(val == null) throw Exception("Couldn't fetch last update");
       if(!val) {
         final amiiboAPI = await amiiboApiProvider.fetchAllAmiibo();
         await _updateDB(entityFromMap(amiiboAPI.toMap()));
@@ -64,7 +65,7 @@ class Service {
 
   Future<AmiiboLocalDB> findNew() async => dao.findNew();
 
-  Future<void> cleanNew(String name, [bool search]) async {
+  Future<void> cleanNew(String name, [String search]) async {
     switch(name){
       case 'All':
         await dao.updateAll('amiibo', 'brandNew', '1');
@@ -79,8 +80,7 @@ class Service {
         await dao.updateAll('amiibo', 'brandNew', '1', columnCategory: 'wishlist', category: '%1%');
         break;
       default:
-        await dao.updateAll('amiibo', 'brandNew', '1',
-          columnCategory: search ? 'name' : 'amiiboSeries', category: '%$name%');
+        await dao.updateAll('amiibo', 'brandNew', '1', columnCategory: search, category: '%$name%');
         break;
     }
   }

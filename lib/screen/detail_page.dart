@@ -163,7 +163,7 @@ class _ButtonsState extends State<_Buttons> {
       children: <Widget>[
         IconButton(
           icon: (widget.amiibo.owned?.isEven ?? true) ?
-          Icon(Icons.star_border) : Icon(Icons.star),
+            Icon(Icons.star_border) : const Icon(Icons.star),
           color: Colors.pinkAccent,
           iconSize: 30.0,
           tooltip: "Owned",
@@ -174,16 +174,16 @@ class _ButtonsState extends State<_Buttons> {
           }),
         ),
         IconButton(
-            icon: (widget.amiibo.wishlist?.isEven ?? true) ?
-            Icon(Icons.check_box_outline_blank) : Icon(Icons.cake),
-            color: Colors.yellowAccent,
-            iconSize: 30.0,
-            tooltip: "Wishilist",
-            splashColor: Colors.yellowAccent[100],
-            onPressed: () => setState(() {
-              widget.amiibo.wishlist = (widget.amiibo?.wishlist ?? 0) ^ 1;
-              if(widget.amiibo.wishlist.isOdd) widget.amiibo.owned = 0;
-            })
+          icon: (widget.amiibo.wishlist?.isEven ?? true) ?
+            Icon(Icons.check_box_outline_blank) : const Icon(Icons.cake),
+          color: Colors.yellowAccent,
+          iconSize: 30.0,
+          tooltip: "Wishilist",
+          splashColor: Colors.yellowAccent[100],
+          onPressed: () => setState(() {
+            widget.amiibo.wishlist = (widget.amiibo?.wishlist ?? 0) ^ 1;
+            if(widget.amiibo.wishlist.isOdd) widget.amiibo.owned = 0;
+          })
         ),
       ],
     );
@@ -235,12 +235,12 @@ class TextCardDetail extends StatelessWidget{
   @override
   Widget build(BuildContext context){
     return Container(
-        child: Text('$text: $data',
-          textAlign: TextAlign.start,
-          overflow: TextOverflow.fade,
-          maxLines: 1,
-          style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
-        )
+      child: Text('$text: $data',
+        textAlign: TextAlign.start,
+        overflow: TextOverflow.fade,
+        maxLines: 1,
+        style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
+      )
     );
   }
 }

@@ -124,6 +124,7 @@ class AmiiboApiProvider {
     final Client client = Client();
     try{
       final response = await client.get("https://www.amiiboapi.com/api/lastupdated");
+      print(response.statusCode);
       if (response.statusCode == 200) {
         return lastUpdateFromJson(response.body);
       } else {

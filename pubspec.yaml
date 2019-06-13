@@ -55,6 +55,7 @@ flutter:
     - assets/images/eu.png
     - assets/images/jp.png
     - assets/images/na.png
+    - assets/images/icon_app.png
 
   # To add assets to your application, add an assets section, like this:
   # assets:
