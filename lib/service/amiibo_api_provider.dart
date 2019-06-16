@@ -1,137 +1,55 @@
 import 'dart:async';
-import 'package:http/http.dart' show Client;
+import 'package:http/http.dart' as http;
 import '../model/amiibo.dart';
 
-class AmiiboApiProvider {
+mixin _SingleHTTPCall{
+  Future<String> getBodyResponse(String url, [int time = 10]) async{
+    final response = await http.get(url).timeout(Duration(seconds: time));
+    if(response.statusCode == 200) return response.body;
+    else throw Exception('Failed to connect to amiiboAPI');
+  }
+}
+
+class AmiiboApiProvider with _SingleHTTPCall{
+  static String url = 'https://www.amiiboapi.com/api/';
 
   Future<AmiiboClient> fetchAllAmiibo() async {
-    final Client client = Client();
-    try{
-      final response = await client.get("https://www.amiiboapi.com/api/amiibo");
-      switch(response.statusCode){
-        case 200:
-          return clientFromJson(response.body);
-          break;
-        case 404:
-          throw Exception('Failed to load amiibos');
-          break;
-        default:
-          throw Exception('Failed to coneect');
-          break;
-      }
-    } finally{
-      client.close();
-    }
+    final amiibos = await getBodyResponse("${url}amiibo");
+    return clientFromJson(amiibos);
   }
 
   Future<AmiiboClient> fetchAmiiboById(String id) async {
-    final Client client = Client();
-    try{
-      final response = await client.get("https://www.amiiboapi.com/api/amiibo/?id=$id");
-      switch(response.statusCode){
-        case 200:
-          return clientFromJson(response.body);
-          break;
-        case 404:
-          throw Exception('Failed to load amiibos');
-          break;
-        default:
-          throw Exception('Failed to coneect');
-          break;
-      }
-    } finally{
-      client.close();
-    }
+    final amiibos = await getBodyResponse("${url}amiibo/?id=$id");
+    return clientFromJson(amiibos);
   }
 
   Future<AmiiboClient> fetchAmiiboByName(String name) async {
-    final Client client = Client();
-    try{
-      final response = await client.get("https://www.amiiboapi.com/api/amiibo/?name=$name");
-      switch(response.statusCode){
-        case 200:
-          return clientFromJson(response.body);
-          break;
-        case 404:
-          throw Exception('Failed to load amiibos');
-          break;
-        default:
-          throw Exception('Failed to coneect');
-          break;
-      }
-    } finally{
-      client.close();
-    }
+    final amiibos = await getBodyResponse("${url}amiibo/?name=$name");
+    return clientFromJson(amiibos);
   }
 
   Future<AmiiboClient> fetchAmiiboByType(String type) async {
-    final Client client = Client();
-    try{
-      final response = await client.get("https://www.amiiboapi.com/api/amiibo/?type:$type");
-      if (response.statusCode == 200) {
-        return clientFromJson(response.body);
-      } else {
-        throw Exception('Failed to load amiibos');
-      }
-    } finally{
-      client.close();
-    }
+    final amiibos = await getBodyResponse("${url}amiibo/?type:$type");
+    return clientFromJson(amiibos);
   }
 
   Future<AmiiboClient> fetchAmiiboByGameSeries(String game) async {
-    final Client client = Client();
-    try{
-      final response = await client.get("https://www.amiiboapi.com/api/amiibo/?gameseries=$game");
-      if (response.statusCode == 200) {
-        return clientFromJson(response.body);
-      } else {
-        throw Exception('Failed to load amiibos');
-      }
-    } finally{
-      client.close();
-    }
+    final amiibos = await getBodyResponse("${url}amiibo/?gameseries=$game");
+    return clientFromJson(amiibos);
   }
 
   Future<AmiiboClient> fetchAmiiboByAmiiboSeries(String amiibo) async {
-    final Client client = Client();
-    try{
-      final response = await client.get("https://www.amiiboapi.com/api/amiibo/?amiiboSeries=$amiibo");
-      if (response.statusCode == 200) {
-        return clientFromJson(response.body);
-      } else {
-        throw Exception('Failed to load amiibos');
-      }
-    } finally{
-      client.close();
-    }
+    final amiibos = await getBodyResponse("${url}amiibo/?amiiboSeries=$amiibo");
+    return clientFromJson(amiibos);
   }
 
   Future<AmiiboClient> fetchAmiiboByCharacter(String character) async {
-    final Client client = Client();
-    try{
-      final response = await client.get("https://www.amiiboapi.com/api/amiibo/?character=$character");
-      if (response.statusCode == 200) {
-        return clientFromJson(response.body);
-      } else {
-        throw Exception('Failed to load amiibos');
-      }
-    } finally{
-      client.close();
-    }
+    final amiibos = await getBodyResponse("${url}amiibo/?character=$character");
+    return clientFromJson(amiibos);
   }
 
   Future<LastUpdate> fetchLastUpdate() async {
-    final Client client = Client();
-    try{
-      final response = await client.get("https://www.amiiboapi.com/api/lastupdated");
-      print(response.statusCode);
-      if (response.statusCode == 200) {
-        return lastUpdateFromJson(response.body);
-      } else {
-        throw Exception('Failed to load Last Update date');
-      }
-    } finally{
-      client.close();
-    }
+    final lastUpdate = await getBodyResponse("${url}lastupdated", 3);
+    return lastUpdateFromJson(lastUpdate);
   }
 }

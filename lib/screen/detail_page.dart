@@ -83,7 +83,7 @@ class _CardDetailAmiibo extends StatelessWidget{
                           '${amiibo.toMap()['id']?.toString()?.substring(0,8)}-'
                           '${amiibo.toMap()['id']?.toString()?.substring(8)}.png',
                         placeholder: (context, url) => CircularProgressIndicator(),
-                        errorWidget: (context, url, error) => Icon(Icons.error),
+                        errorWidget: (context, url, error) => Icon(Icons.error_outline, color: Theme.of(context).errorColor),
                         fit: BoxFit.scaleDown,
                       ),
                     ),

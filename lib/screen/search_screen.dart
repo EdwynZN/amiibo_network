@@ -4,7 +4,6 @@ import 'package:amiibo_network/bloc/search_bloc.dart';
 import 'package:amiibo_network/bloc/bloc_provider.dart';
 
 class SearchScreen extends StatefulWidget {
-
   @override
   State<StatefulWidget> createState() => SearchScreenState();
 }
@@ -31,12 +30,12 @@ class SearchScreenState extends State<SearchScreen> {
           SliverFloatingBar(
             backgroundColor: Theme.of(context).backgroundColor,
             leading: IconButton(
-              icon: Icon(Icons.arrow_back, color: Colors.black),
+              icon: Icon(Icons.arrow_back),
               onPressed: Navigator.of(context).pop),
             pinned: true,
             title: TextField(
+              style: Theme.of(context).textTheme.body2,
               maxLength: 15,
-              style: TextStyle(color: Colors.black),
               textInputAction: TextInputAction.search,
               autofocus: true,
               onSubmitted: Navigator.of(context).pop,

@@ -5,15 +5,12 @@ class SettingsDetail extends StatelessWidget {
   final String title;
   const SettingsDetail({Key key, this.title}): super(key: key);
 
-  Future<String> get _localFile async {
-    return await rootBundle.loadString('assets/text/$title.txt');
-  }
+  Future<String> get _localFile => rootBundle.loadString('assets/text/$title.txt');
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Theme.of(context).scaffoldBackgroundColor
-        == Colors.blueGrey[800]
+      backgroundColor: MediaQuery.platformBrightnessOf(context) == Brightness.dark
         ? Theme.of(context).scaffoldBackgroundColor : Colors.white,
       appBar: AppBar(title: Text(title),),
       body: SingleChildScrollView(
@@ -29,7 +26,7 @@ class SettingsDetail extends StatelessWidget {
                   style: TextStyle(height: 1.5, fontWeight: FontWeight.w500),
                 ),
               );
-            else return Container();
+            else return const SizedBox();
           }
         )
       )

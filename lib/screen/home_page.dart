@@ -25,7 +25,7 @@ class HomePageState extends State<HomePage>
   static final lightTheme = SystemUiOverlayStyle.light
     .copyWith(systemNavigationBarColor: Colors.red);
   static final darkTheme = SystemUiOverlayStyle.light
-    .copyWith(systemNavigationBarColor: Colors.blueGrey[800]);
+    .copyWith(systemNavigationBarColor: Colors.grey[900]);
 
   initBloc() async{
     await _bloc.fetchAllAmiibosDB();
@@ -97,7 +97,7 @@ class HomePageState extends State<HomePage>
 
   _search(){
     Navigator.pushNamed(context,"/search").then((value) {
-      if(value != null) {
+      if(value != null && value != '') {
         _filter = value;
         _bloc.resetPagination(_filter, true);
         _controller.position.jumpTo(0);
@@ -137,12 +137,14 @@ class HomePageState extends State<HomePage>
                   stream: _bloc.filter,
                   builder: (BuildContext context, AsyncSnapshot<String> filter){
                     return Text('${filter.data} | Search Amiibo',
-                      style: TextStyle(color: Colors.black54),
-                      overflow: TextOverflow.ellipsis, maxLines: 1);
+                        style: Theme.of(context).textTheme.body2,
+                        overflow: TextOverflow.ellipsis, maxLines: 1);
                   }),
                 onTap: _search
               ),
               trailing: CircleAvatar(
+                backgroundColor: Theme.of(context).accentColor,
+                foregroundColor: Theme.of(context).accentIconTheme.color,
                 child: GestureDetector(
                   onTap: () => Navigator.pushNamed(context, "/settings"),
                   child: Tooltip(message: 'Settings', child: Icon(Icons.settings)),
@@ -170,13 +172,14 @@ class HomePageState extends State<HomePage>
                     delegate: SliverChildBuilderDelegate(
                       (BuildContext context, int index) {
                         return GestureDetector(
-                          onTap: () async {
+                          onTap: () {
                             Navigator.pushNamed(context, "/details", arguments: snapshot.data.amiibo[index])
                               .then((_) {
                               bool remove = _onGestureAmiibo(snapshot.data.amiibo[index]);
                               if(remove) snapshot.data.amiibo.removeAt(index);
                             });
                           },
+
                           child: AmiiboGrid(amiibo: snapshot.data.amiibo[index]),
                         );
                       },
@@ -301,13 +304,16 @@ class PopUpMenu extends StatelessWidget{
               else if(series == 'New') const Icon(Icons.new_releases, color: Colors.yellowAccent,)
               else if(series == 'Owned') const Icon(Icons.star, color: Colors.pinkAccent,)
               else if(series == 'Wishlist') const Icon(Icons.cake, color: Colors.yellowAccent,)
-              else CircleAvatar(child: Text(series[0]), radius: 14,),
+              else CircleAvatar(
+                backgroundColor: Theme.of(context).accentColor,
+                foregroundColor: Theme.of(context).accentIconTheme.color,
+                child: Text(series[0]), radius: 14,),
               Container(child: Text(series), margin: EdgeInsets.only(left: 8),)
             ],
           ),
         ),
       ],
-      icon: Icon(Icons.filter_list, color: Colors.black),
+      icon: Icon(Icons.filter_list),
       offset: Offset(-16, 50),
       tooltip: 'Categories',
       onSelected: onTap
@@ -346,7 +352,7 @@ class AmiiboGrid extends StatelessWidget{
                           '${amiibo.toMap()['id']?.toString()?.substring(0,8)}-'
                           '${amiibo.toMap()['id']?.toString()?.substring(8)}.png',
                       placeholder: (context, url) => const CircularProgressIndicator(),
-                      errorWidget: (context, url, error) => const Icon(Icons.error, color: Colors.redAccent),
+                      errorWidget: (context, url, error) => Icon(Icons.error_outline, color: Theme.of(context).errorColor),
                       fit: BoxFit.scaleDown,
                     ),
                   ),

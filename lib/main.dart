@@ -10,8 +10,9 @@ import 'package:amiibo_network/service/service.dart';
 import 'package:flutter/cupertino.dart';
 
 void main() async {
-  if(!(await Service().compareLastUpdate() ?? true)) runApp(MyApp(SplashScreen()));
-  else runApp(MyApp(HomePage()));
+  runApp(MyApp(SplashScreen()));
+  //if(!(await Service().compareLastUpdate() ?? true)) runApp(MyApp(SplashScreen()));
+  //else runApp(MyApp(HomePage()));
 }
 
 class MyApp extends StatelessWidget {
@@ -23,44 +24,63 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
+        textSelectionHandleColor: Colors.white70,
         brightness: Brightness.light,
+        appBarTheme: AppBarTheme(color: Colors.red),
         unselectedWidgetColor: Colors.deepOrangeAccent[100],
         dividerColor: Colors.blueGrey,
         scaffoldBackgroundColor: Colors.red,
         accentColor: Colors.redAccent,
+        accentIconTheme: IconThemeData(color: Colors.white),
+        iconTheme: IconThemeData(color: Colors.black),
+        errorColor: Colors.redAccent,
         canvasColor: Colors.red,
         primarySwatch: Colors.red,
         primaryColor: Colors.red,
         cursorColor: Colors.black12,
         backgroundColor: Colors.white70,
+        highlightColor: Colors.white54,
         cardTheme: CardTheme(
           color: Colors.white70,
           margin: EdgeInsets.only(right: 8, left: 8, top: 8),
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
           elevation: 8,
         ),
+        textTheme: TextTheme(
+          body1: TextStyle(color: Colors.black87),
+          body2: TextStyle(color: Colors.black87, fontSize: 16, fontWeight: FontWeight.w400),
+        )
       ),
       darkTheme: ThemeData(
-          brightness: Brightness.dark,
-          unselectedWidgetColor: Colors.grey[700],
-          dividerColor: Colors.white70,
-          scaffoldBackgroundColor: Colors.blueGrey[800],
-          accentColor: Colors.blueGrey[700],
-          canvasColor: Colors.blueGrey,
-          primarySwatch: Colors.blueGrey,
-          primaryColor: Colors.blueGrey[900],
-          cursorColor: Colors.black12,
-          backgroundColor: Colors.white70,
-          cardTheme: CardTheme(
-            color: Colors.blueGrey[900],
-            margin: EdgeInsets.only(right: 8, left: 8, top: 8),
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-            elevation: 8,
-          ),
-          iconTheme: IconThemeData(color: Colors.white70),
-          textTheme: TextTheme(
-            body1: TextStyle(color: Colors.white),
-          )
+        textSelectionHandleColor: Color.fromRGBO(207, 102, 121, 1),
+        appBarTheme: AppBarTheme(
+          color: Colors.grey[900],
+          textTheme: TextTheme(title: TextStyle(color: Colors.white70, fontSize: 20)),
+          iconTheme: IconThemeData(color: Colors.white54),
+        ),
+        brightness: Brightness.dark,
+        unselectedWidgetColor: Colors.grey[850],
+        dividerColor: Colors.white70,
+        scaffoldBackgroundColor: Colors.grey[900],
+        accentColor: Color.fromRGBO(207, 102, 121, 1),
+        accentIconTheme: IconThemeData(color: Colors.black),
+        iconTheme: IconThemeData(color: Colors.white54),
+        errorColor: Color.fromRGBO(207, 102, 121, 1),
+        canvasColor: Colors.grey[900],
+        primarySwatch: Colors.blueGrey,
+        primaryColor: Colors.blueGrey[900],
+        cursorColor: Colors.white10,
+        backgroundColor: Colors.grey[850],
+        cardTheme: CardTheme(
+          color: Colors.grey[900],
+          margin: EdgeInsets.only(right: 8, left: 8, top: 8),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+          elevation: 8,
+        ),
+        textTheme: TextTheme(
+          body1: TextStyle(color: Colors.white70),
+          body2: TextStyle(color: Colors.white70, fontSize: 16, fontWeight: FontWeight.w400),
+        )
       ),
       onGenerateRoute: _getRoute,
       routes: <String, WidgetBuilder> {

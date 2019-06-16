@@ -43,17 +43,17 @@ class CardSettings extends StatelessWidget{
         iconColor: Theme.of(context).iconTheme.color,
         textColor: Theme.of(context).textTheme.body1.color,
         child: ListTile(
-            title: Text(title),
-            subtitle: Text(subtitle),
-            onTap: () => Navigator.pushNamed(context, "/settingsdetail", arguments: title),
-            trailing: Icon(Icons.navigate_next),
-            leading: Container(
-              padding: EdgeInsets.only(right: 16, top: 8, bottom: 8),
-              decoration: BoxDecoration(
-                  border: Border(right: BorderSide(width: 1, color: Theme.of(context).dividerColor))
-              ),
-              child: Icon(icon),
-            )
+          title: Text(title),
+          subtitle: Text(subtitle),
+          onTap: () => Navigator.pushNamed(context, "/settingsdetail", arguments: title),
+          trailing: Icon(Icons.navigate_next),
+          leading: Container(
+            padding: EdgeInsets.only(right: 16, top: 8, bottom: 8),
+            decoration: BoxDecoration(
+              border: Border(right: BorderSide(width: 1, color: Theme.of(context).dividerColor))
+            ),
+            child: Icon(icon),
+          )
         ),
       )
     );

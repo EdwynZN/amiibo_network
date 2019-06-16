@@ -6,9 +6,7 @@ import 'package:flutter/services.dart';
 
 class SplashScreen extends StatefulWidget {
   @override
-  State<StatefulWidget> createState() {
-    return SplashScreenState();
-  }
+  State<StatefulWidget> createState() => SplashScreenState();
 }
 
 class SplashScreenState extends State<SplashScreen>
@@ -16,7 +14,7 @@ class SplashScreenState extends State<SplashScreen>
   static final lightTheme = SystemUiOverlayStyle.light
     .copyWith(systemNavigationBarColor: Colors.red);
   static final darkTheme = SystemUiOverlayStyle.light
-    .copyWith(systemNavigationBarColor: Colors.blueGrey[800]);
+    .copyWith(systemNavigationBarColor: Colors.grey[900]);
   AnimationController _animationController;
   final SplashBloc _bloc = $Provider.of<SplashBloc>();
 
@@ -61,7 +59,7 @@ class SplashScreenState extends State<SplashScreen>
             color: Colors.black,
             padding: EdgeInsets.all(5),
             width: MediaQuery.of(context).size.height / 3,
-            height: (MediaQuery.of(context).size.height)/4 - 5,
+            height: (MediaQuery.of(context).size.height)/4,
             alignment: Alignment.center,
             child: StreamBuilder(
               stream: _bloc.allAmiibosDB,
@@ -137,7 +135,7 @@ class SwitchIcon extends StatelessWidget{
       child: CustomPaint(
         size: Size(MediaQuery.of(context).size.height/11.3, MediaQuery.of(context).size.height/4),
         painter: SwitchJoycon(isLeft: isLeft,
-        color: Theme.of(context).accentColor == Colors.redAccent ? null : Theme.of(context).accentColor)
+        color: MediaQuery.platformBrightnessOf(context) == Brightness.light ? null : Theme.of(context).primaryColor)
       ),
       builder: (_, Widget child) {
         return FractionalTranslation(

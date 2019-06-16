@@ -7,10 +7,11 @@ class SwitchJoycon extends CustomPainter{
 
   SwitchJoycon({Color color, @required this.isLeft}):
     buttonPaint = Paint()
-      ..color = Colors.black87
+      ..color = const Color(0xFF414548)
       ..style = PaintingStyle.fill,
     joyconPaint = Paint()
-      ..color = color ?? (isLeft == true ? Colors.lightBlue[300] : Colors.red[200])
+      ..color = color ?? (isLeft == true ?
+        const Color.fromRGBO(0, 195, 227, 1) : Colors.red[300])
       ..style = PaintingStyle.fill;
 
   @override

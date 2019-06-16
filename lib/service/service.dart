@@ -3,6 +3,7 @@ import 'package:amiibo_network/service/amiibo_api_provider.dart';
 import 'package:amiibo_network/dao/SQLite/amiibo_sqlite.dart';
 import '../model/amiibo.dart';
 import '../model/amiibo_local_db.dart';
+import 'dart:io';
 
 class Service {
   final amiiboApiProvider = AmiiboApiProvider();
@@ -26,19 +27,22 @@ class Service {
   Future<DateTime> get lastUpdate async{
     return _lastUpdate ??= await amiiboApiProvider.fetchLastUpdate()
       .then((x) => x?.lastUpdated)
-      .catchError((_) => null);
+      .catchError((e) {
+        return null;
+    });
   }
 
   Future<bool> createDB() async{
-    return compareLastUpdate().then((val) async {
-      if(val == null) throw Exception("Couldn't fetch last update");
-      if(!val) {
+    return compareLastUpdate().then((sameDate) async {
+      if(sameDate == null) throw Exception("Couldn't fetch last update");
+      if(!sameDate) {
         final amiiboAPI = await amiiboApiProvider.fetchAllAmiibo();
         await _updateDB(entityFromMap(amiiboAPI.toMap()));
       }
       return await Future.value(true);
     }).catchError((e) {
-      print(e.toString());
+      if(e is SocketException) print('Failed to coneect. Check your internet connection');
+      else print(e.toString());
       return false;
     });
   }
@@ -51,7 +55,6 @@ class Service {
 
   Future<AmiiboLocalDB> fetchByCategory(String column, String like) =>
     dao.fetchByColumn(column, like);
-
 
   Future<AmiiboDB> fetchAmiiboDBById(String id) => dao.fetchById(id);
 

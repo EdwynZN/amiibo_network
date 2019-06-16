@@ -5,7 +5,7 @@ import 'package:path_provider/path_provider.dart';
 
 class CacheManager extends BaseCacheManager {
   static const key = 'amiiboCachedImage';
-  static const maxAgeCacheObject = const Duration(days: 60);
+  static const maxAgeCacheObject = const Duration(days: 180);
   static const maxNrOfCacheObjects = 1000;
 
   static final CacheManager _instance = CacheManager._();

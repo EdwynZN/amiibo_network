@@ -4,9 +4,8 @@
         <!-- Show a splash screen on the activity. Automatically removed when
              Flutter draws its first frame
          -->
+        <item name="android:colorPrimaryDark">@color/grey</item>
+        <item name="android:navigationBarColor">@color/grey</item>
         <item name="android:windowBackground">@drawable/launch_background</item>
-        <item name="android:colorPrimaryDark">@color/blueGrey</item>
-        <item name="android:windowBackground">@color/blueGrey</item>
-        <item name="android:navigationBarColor">@color/blueGrey</item>
     </style>
 </resources>

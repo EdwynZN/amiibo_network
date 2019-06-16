@@ -47,10 +47,10 @@ class SlideRoute<T> extends MaterialPageRoute<T> {
       controller.fling(velocity: math.max(2.0, -flingVelocity));
     else if (flingVelocity > 0.0)
       controller.fling(velocity: math.min(-2.0, -flingVelocity))
-          .whenComplete(() => Navigator.of(context).maybePop());
+        .whenComplete(() => Navigator.of(context).maybePop());
     else
       controller.fling(velocity: controller.value < 0.5 ? -2.0 : 2.0)
-          .whenComplete(() {if(controller.value == 0) Navigator.of(context).maybePop();});
+        .whenComplete(() {if(controller.value == 0) Navigator.of(context).maybePop();});
   }
 
 }
