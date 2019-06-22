@@ -263,7 +263,7 @@ class FAB extends StatelessWidget{
             child: FloatingActionButton.extended(
               heroTag: 'GoTopFAB',
               onPressed: controller.isAnimating ? null : goTop,
-              label: Icon(Icons.keyboard_arrow_up),
+              label: const Icon(Icons.keyboard_arrow_up),
               icon: Text('Go to top'),
             )
           ),
@@ -295,7 +295,7 @@ class FAB extends StatelessWidget{
             child: FloatingActionButton(
               heroTag: 'MenuFAB',
               onPressed: () => controller.isCompleted ? controller.animateBack(0.35) : controller.forward(),
-              child: Icon(Icons.add)
+              child: const Icon(Icons.add)
             ),
           )
         ),
