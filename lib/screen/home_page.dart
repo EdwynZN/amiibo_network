@@ -462,8 +462,8 @@ class AmiiboGrid extends StatelessWidget{
                     alignment: Alignment.center,
                     cacheManager: CacheManager(),
                     imageUrl: 'https://raw.githubusercontent.com/N3evin/AmiiboAPI/master/images/icon_'
-                      '${amiibo.toMap()['id']?.toString()?.substring(0,8)}-'
-                      '${amiibo.toMap()['id']?.toString()?.substring(8)}.png',
+                      '${amiibo.id?.substring(0,8)}-'
+                      '${amiibo.id?.substring(8)}.png',
                     placeholder: (context, url) => const CircularProgressIndicator(),
                     errorWidget: (context, url, error) => const Icon(Icons.error_outline),
                     fit: BoxFit.scaleDown,
