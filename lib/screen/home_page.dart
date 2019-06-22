@@ -17,7 +17,7 @@ class HomePage extends StatefulWidget {
 class HomePageState extends State<HomePage>
     with SingleTickerProviderStateMixin{
   final AmiiboBloc _bloc = $Provider.of<AmiiboBloc>();
-  static List<String> list = <String>['All', 'New', 'Owned', 'Wishlist'];
+  static List<String> list = <String>['All', 'New', 'Owned', 'Wishlist', 'Cards'];
   static String _filter = 'All';
   static const double initialFAB = 0.35;
   ScrollController _controller;
@@ -25,7 +25,7 @@ class HomePageState extends State<HomePage>
   static final lightTheme = SystemUiOverlayStyle.light
     .copyWith(systemNavigationBarColor: Colors.red);
   static final darkTheme = SystemUiOverlayStyle.light
-    .copyWith(systemNavigationBarColor: Colors.grey[900]);
+    .copyWith(systemNavigationBarColor: Colors.black87);
 
   initBloc() async{
     await _bloc.fetchAllAmiibosDB();
@@ -133,13 +133,13 @@ class HomePageState extends State<HomePage>
               leading: PopUpMenu(list, _onTapPopMenu),
               title: GestureDetector(
                 child: StreamBuilder(
-                  initialData: 'All',
-                  stream: _bloc.filter,
-                  builder: (BuildContext context, AsyncSnapshot<String> filter){
-                    return Text('${filter.data} | Search Amiibo',
-                        style: Theme.of(context).textTheme.body2,
-                        overflow: TextOverflow.ellipsis, maxLines: 1);
-                  }),
+                initialData: 'All',
+                stream: _bloc.filter,
+                builder: (BuildContext context, AsyncSnapshot<String> filter){
+                  return Text('${filter.data} | Search Amiibo',
+                    style: Theme.of(context).textTheme.body2,
+                    overflow: TextOverflow.ellipsis, maxLines: 1);
+                }),
                 onTap: _search
               ),
               trailing: CircleAvatar(
@@ -151,38 +151,55 @@ class HomePageState extends State<HomePage>
                 )
               ),
             ),
+            SliverPadding(
+              padding: EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+              sliver: SliverToBoxAdapter(
+                child: StreamBuilder(
+                  stream: _bloc.owned,
+                  builder: (context, AsyncSnapshot<List<String>> strList){
+                    if(strList.hasData)
+                    return Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: <Widget>[
+                        if(_filter != 'Wishlist')
+                        SizedBox(child: Text(strList.data[0], style: Theme.of(context).textTheme.display1)),
+                        if(_filter != 'Owned')
+                        SizedBox(child: Text(strList.data[1], style: Theme.of(context).textTheme.display1)),
+                      ],
+                    );
+                    else return const SizedBox.shrink();
+                  }
+                )
+              ),
+            ),
             SliverPadding(padding: EdgeInsets.symmetric(horizontal: 5),
               sliver: StreamBuilder(
                 stream: _bloc.allAmiibosDB,
                 builder: (context, AsyncSnapshot<AmiiboLocalDB> snapshot) {
                   if((snapshot.data?.amiibo?.length ?? 1) == 0)
-                    return SliverList(
-                      delegate: SliverChildListDelegate([
-                        Container(alignment: Alignment.center, height: 250,
-                          child: Text('Nothing to see here',
-                            textAlign: TextAlign.center,
-                            style: TextStyle(fontSize: 18),
-                          )
+                    return const SliverToBoxAdapter(
+                      child: const Align(alignment: Alignment.center, heightFactor: 10,
+                        child: Text('Nothing to see here',
+                          textAlign: TextAlign.center,
+                          style: TextStyle(fontSize: 18),
                         )
-                      ])
+                      )
                     );
                   else return SliverGrid(
                     gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                     crossAxisCount: MediaQuery.of(context).orientation == Orientation.portrait ? 3 : 6),
                     delegate: SliverChildBuilderDelegate(
-                      (BuildContext context, int index) {
-                        return GestureDetector(
+                      (BuildContext context, int index) =>
+                        AmiiboGrid(amiibo: snapshot.data.amiibo[index],
                           onTap: () {
                             Navigator.pushNamed(context, "/details", arguments: snapshot.data.amiibo[index])
-                              .then((_) {
+                            .then((_) {
                               bool remove = _onGestureAmiibo(snapshot.data.amiibo[index]);
                               if(remove) snapshot.data.amiibo.removeAt(index);
                             });
                           },
-
-                          child: AmiiboGrid(amiibo: snapshot.data.amiibo[index]),
-                        );
-                      },
+                        ),
                       addRepaintBoundaries: false, addAutomaticKeepAlives: false,
                       childCount: snapshot.hasData ? snapshot.data.amiibo.length : 0,
                     )
@@ -235,51 +252,52 @@ class FAB extends StatelessWidget{
   @override
   Widget build(BuildContext context) {
     return Column(
+      mainAxisSize: MainAxisSize.min,
       mainAxisAlignment: MainAxisAlignment.end,
       crossAxisAlignment: CrossAxisAlignment.end,
       children: <Widget>[
         Padding(
           padding: EdgeInsets.only(bottom: 5),
           child: ScaleTransition(
-              scale: fabAnimation,
-              child: FloatingActionButton.extended(
-                heroTag: 'GoTopFAB',
-                onPressed: controller.isAnimating ? null : goTop,
-                label: Icon(Icons.keyboard_arrow_up),
-                icon: Text('Go to top'),
-              )
+            scale: fabAnimation,
+            child: FloatingActionButton.extended(
+              heroTag: 'GoTopFAB',
+              onPressed: controller.isAnimating ? null : goTop,
+              label: Icon(Icons.keyboard_arrow_up),
+              icon: Text('Go to top'),
+            )
           ),
         ),
         StreamBuilder(
-            initialData: false,
-            stream: _bloc.findNew,
-            builder: (context, AsyncSnapshot<bool> snapshotNew){
-              if(snapshotNew.data)
-                return Padding(
-                  padding: EdgeInsets.only(bottom: 5),
-                  child: ScaleTransition(
-                    scale: fabAnimation,
-                    child: FloatingActionButton.extended(
-                      heroTag: 'CleanNewFAB',
-                      onPressed: controller.isAnimating ? null : clean,
-                      label: const Icon(Icons.new_releases, color: Colors.yellowAccent),
-                      icon: Text('Clean new'),
-                    ),
+          initialData: false,
+          stream: _bloc.findNew,
+          builder: (context, AsyncSnapshot<bool> snapshotNew){
+            if(snapshotNew.data)
+              return Padding(
+                padding: EdgeInsets.only(bottom: 5),
+                child: ScaleTransition(
+                  scale: fabAnimation,
+                  child: FloatingActionButton.extended(
+                    heroTag: 'CleanNewFAB',
+                    onPressed: controller.isAnimating ? null : clean,
+                    label: const Icon(Icons.new_releases, color: Colors.yellowAccent),
+                    icon: Text('Clean new'),
                   ),
-                );
-              else return const SizedBox();
-            }
+                ),
+              );
+            else return const SizedBox.shrink();
+          }
         ),
         ScaleTransition(
-            scale: scale,
-            child: RotationTransition(
-              turns: rotation,
-              child: FloatingActionButton(
-                  heroTag: 'MenuFAB',
-                  onPressed: () => controller.isCompleted ? controller.animateBack(0.35) : controller.forward(),
-                  child: Icon(Icons.add)
-              ),
-            )
+          scale: scale,
+          child: RotationTransition(
+            turns: rotation,
+            child: FloatingActionButton(
+              heroTag: 'MenuFAB',
+              onPressed: () => controller.isCompleted ? controller.animateBack(0.35) : controller.forward(),
+              child: Icon(Icons.add)
+            ),
+          )
         ),
       ],
     );
@@ -296,14 +314,15 @@ class PopUpMenu extends StatelessWidget{
   Widget build(BuildContext context) {
     return PopupMenuButton<String>(
       itemBuilder: (context) => [
-        for(var series in list) PopupMenuItem(
+        for(String series in list) PopupMenuItem(
           value: series,
-          child:  Row(
+          child: Row(
             children: <Widget>[
               if(series == 'All') const Icon(Icons.all_inclusive)
-              else if(series == 'New') const Icon(Icons.new_releases, color: Colors.yellowAccent,)
+              else if(series == 'New') const Icon(Icons.new_releases, color: Colors.amber,)
               else if(series == 'Owned') const Icon(Icons.star, color: Colors.pinkAccent,)
-              else if(series == 'Wishlist') const Icon(Icons.cake, color: Colors.yellowAccent,)
+              else if(series == 'Wishlist') const Icon(Icons.card_giftcard, color: Colors.amber,)
+              else if(series == 'Cards') const Icon(Icons.view_carousel, color: Colors.amber)
               else CircleAvatar(
                 backgroundColor: Theme.of(context).accentColor,
                 foregroundColor: Theme.of(context).accentIconTheme.color,
@@ -320,18 +339,114 @@ class PopUpMenu extends StatelessWidget{
     );
   }
 }
-
-class AmiiboGrid extends StatelessWidget{
+/*
+class AmiiboGrid extends StatefulWidget {
   final AmiiboDB amiibo;
+  final GestureTapCallback onDoubleTap;
+  final GestureTapCallback onTap;
 
-  AmiiboGrid({
-    Key key,
-    this.amiibo
-  });
+  const AmiiboGrid({Key key, this.amiibo, this.onTap, this.onDoubleTap});
 
   @override
-  Widget build(BuildContext context){
-    return Stack(
+  State<StatefulWidget> createState() => AmiiboGridState();
+}
+
+class AmiiboGridState extends State<AmiiboGrid> {
+  @override
+  Widget build(BuildContext context) => GestureDetector(
+    onDoubleTap: widget.onDoubleTap,
+    onTap: () {
+      widget.amiibo.brandNew = 1;
+      switch(widget.amiibo?.owned ?? 0){
+        case 1:
+          widget.amiibo.owned = 0;
+          widget.amiibo.wishlist = 1;
+          break;
+        case 0:
+          if((widget.amiibo?.wishlist ?? 0) == 0) widget.amiibo.owned = 1;
+          widget.amiibo.wishlist = 0;
+          break;
+      }
+      widget.onTap();
+      setState(() {});
+    },
+    child: Stack(
+      children: <Widget>[
+        Card(
+          child: Column(
+            mainAxisSize: MainAxisSize.max,
+            mainAxisAlignment: MainAxisAlignment.center,
+            textBaseline: TextBaseline.alphabetic,
+            children: <Widget>[
+              Expanded(
+                child: Hero(
+                  tag: widget.amiibo.id,
+                  child: CachedNetworkImage(
+                    alignment: Alignment.center,
+                    cacheManager: CacheManager(),
+                    imageUrl: 'https://raw.githubusercontent.com/N3evin/AmiiboAPI/master/images/icon_'
+                        '${widget.amiibo.toMap()['id']?.toString()?.substring(
+                        0, 8)}-'
+                        '${widget.amiibo.toMap()['id']?.toString()?.substring(
+                        8)}.png',
+                    placeholder: (context,
+                        url) => const CircularProgressIndicator(),
+                    errorWidget: (context, url, error) =>
+                    const Icon(Icons.error_outline),
+                    fit: BoxFit.scaleDown,
+                  ),
+                ),
+                flex: 9,
+              ),
+              Expanded(
+                child: Container(
+                  decoration: ShapeDecoration(
+                      color: Theme
+                          .of(context)
+                          .unselectedWidgetColor,
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.vertical(
+                              bottom: Radius.circular(8)))),
+                  alignment: Alignment.center,
+                  padding: EdgeInsets.symmetric(horizontal: 5),
+                  child: Text('${widget.amiibo.name}',
+                    softWrap: false,
+                    overflow: TextOverflow.fade,
+                    style: TextStyle(fontSize: 12, fontWeight: FontWeight.w500),
+                  ),
+                ),
+                flex: 2,
+              ),
+            ],
+          ),
+        ),
+        if(widget.amiibo.brandNew?.isEven ?? true) const Align(
+          alignment: Alignment.topRight,
+          child: const Icon(Icons.new_releases, color: Colors.yellowAccent,),
+        ),
+        if(widget.amiibo.owned?.isOdd ?? false) const Align(
+          alignment: Alignment.topLeft,
+          child: const Icon(Icons.star, color: Colors.pinkAccent),
+        ),
+        if(widget.amiibo.wishlist?.isOdd ?? false) const Align(
+          alignment: Alignment.topLeft,
+          child: const Icon(Icons.cake, color: Colors.yellowAccent),
+        ),
+      ],
+    ),
+  );
+}
+*/
+class AmiiboGrid extends StatelessWidget{
+  final AmiiboDB amiibo;
+  final GestureTapCallback onTap;
+
+  const AmiiboGrid({Key key, this.amiibo, this.onTap});
+
+  @override
+  Widget build(BuildContext context) => GestureDetector(
+    onTap: onTap,
+    child: Stack(
       fit: StackFit.expand,
       children: <Widget>[
         Card(
@@ -341,20 +456,17 @@ class AmiiboGrid extends StatelessWidget{
             textBaseline: TextBaseline.alphabetic,
             children: <Widget>[
               Expanded(
-                child: Container(
-                  color: Colors.transparent,
-                  padding: EdgeInsets.all(4),
-                  child: Hero(
-                    tag: amiibo.id,
-                    child: CachedNetworkImage(
-                      cacheManager: CacheManager(),
-                      imageUrl: 'https://raw.githubusercontent.com/N3evin/AmiiboAPI/master/images/icon_'
-                          '${amiibo.toMap()['id']?.toString()?.substring(0,8)}-'
-                          '${amiibo.toMap()['id']?.toString()?.substring(8)}.png',
-                      placeholder: (context, url) => const CircularProgressIndicator(),
-                      errorWidget: (context, url, error) => Icon(Icons.error_outline, color: Theme.of(context).errorColor),
-                      fit: BoxFit.scaleDown,
-                    ),
+                child: Hero(
+                  tag: amiibo.id,
+                  child: CachedNetworkImage(
+                    alignment: Alignment.center,
+                    cacheManager: CacheManager(),
+                    imageUrl: 'https://raw.githubusercontent.com/N3evin/AmiiboAPI/master/images/icon_'
+                      '${amiibo.toMap()['id']?.toString()?.substring(0,8)}-'
+                      '${amiibo.toMap()['id']?.toString()?.substring(8)}.png',
+                    placeholder: (context, url) => const CircularProgressIndicator(),
+                    errorWidget: (context, url, error) => const Icon(Icons.error_outline),
+                    fit: BoxFit.scaleDown,
                   ),
                 ),
                 flex: 9,
@@ -362,8 +474,8 @@ class AmiiboGrid extends StatelessWidget{
               Expanded(
                 child: Container(
                   decoration: ShapeDecoration(
-                      color: Theme.of(context).unselectedWidgetColor,
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.vertical(bottom: Radius.circular(8)))),
+                    color: Theme.of(context).unselectedWidgetColor,
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.vertical(bottom: Radius.circular(8)))),
                   alignment: Alignment.center,
                   padding: EdgeInsets.symmetric(horizontal: 5),
                   child: Text('${amiibo.name}',
@@ -379,7 +491,7 @@ class AmiiboGrid extends StatelessWidget{
         ),
         if(amiibo.brandNew?.isEven ?? true) const Align(
           alignment: Alignment.topRight,
-          child: const Icon(Icons.new_releases, color: Colors.yellowAccent),
+          child: const Icon(Icons.new_releases, color: Colors.yellow,),
         ),
         if(amiibo.owned?.isOdd ?? false) const Align(
           alignment: Alignment.topLeft,
@@ -387,9 +499,9 @@ class AmiiboGrid extends StatelessWidget{
         ),
         if(amiibo.wishlist?.isOdd ?? false) const Align(
           alignment: Alignment.topLeft,
-          child: const Icon(Icons.cake, color: Colors.yellowAccent),
+          child: const Icon(Icons.card_giftcard, color: Colors.yellow),
         ),
       ],
-    );
-  }
+    )
+  );
 }

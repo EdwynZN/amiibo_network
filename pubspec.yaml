@@ -48,14 +48,8 @@ flutter:
   # the material Icons class.
   uses-material-design: true
   assets:
-    - assets/text/FAQ.txt
-    - assets/text/Changelog.txt
-    - assets/text/Credits.txt
-    - assets/images/au.png
-    - assets/images/eu.png
-    - assets/images/jp.png
-    - assets/images/na.png
-    - assets/images/icon_app.png
+    - assets/text/
+    - assets/images/
 
   # To add assets to your application, add an assets section, like this:
   # assets:

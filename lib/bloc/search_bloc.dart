@@ -7,7 +7,7 @@ class SearchBloc extends Bloc{
   final _searchFetcher = PublishSubject<String>();
 
   Observable<List<String>> get search => _searchFetcher.stream
-    .debounce(Duration(milliseconds: 500))
+    .debounce(const Duration(milliseconds: 500))
     .asyncMap((x) => x.isEmpty ? null : _service.searchDB(x));
 
   searchValue(String s) {

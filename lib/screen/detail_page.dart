@@ -33,7 +33,7 @@ class DetailPage extends StatelessWidget{
                       child: const Icon(
                         Icons.new_releases,
                         size: 45.0,
-                        color: Colors.yellowAccent,
+                        color: Colors.yellow,
                       ),
                     ),
                 ],
@@ -67,25 +67,21 @@ class _CardDetailAmiibo extends StatelessWidget{
         children: <Widget>[
           Expanded(
             child: Column(
-              mainAxisSize: MainAxisSize.max,
               crossAxisAlignment: CrossAxisAlignment.center,
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: <Widget>[
                 Expanded(
                   child: Hero(
                     tag: amiibo.id,
-                    child: Container(
-                      margin: EdgeInsets.all(5),
+                    child: CachedNetworkImage(
+                      cacheManager: CacheManager(),
                       alignment: Alignment.center,
-                      child: CachedNetworkImage(
-                        cacheManager: CacheManager(),
-                        imageUrl: 'https://raw.githubusercontent.com/N3evin/AmiiboAPI/master/images/icon_'
+                      imageUrl: 'https://raw.githubusercontent.com/N3evin/AmiiboAPI/master/images/icon_'
                           '${amiibo.toMap()['id']?.toString()?.substring(0,8)}-'
                           '${amiibo.toMap()['id']?.toString()?.substring(8)}.png',
-                        placeholder: (context, url) => CircularProgressIndicator(),
-                        errorWidget: (context, url, error) => Icon(Icons.error_outline, color: Theme.of(context).errorColor),
-                        fit: BoxFit.scaleDown,
-                      ),
+                      placeholder: (context, url) => CircularProgressIndicator(),
+                      errorWidget: (context, url, error) => const Icon(Icons.error_outline),
+                      fit: BoxFit.scaleDown,
                     ),
                   ),
                   flex: 7,
@@ -104,7 +100,7 @@ class _CardDetailAmiibo extends StatelessWidget{
           ),
           Expanded(
             child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
                 TextCardDetail(text: "Type", data: amiibo.type,),
@@ -175,8 +171,8 @@ class _ButtonsState extends State<_Buttons> {
         ),
         IconButton(
           icon: (widget.amiibo.wishlist?.isEven ?? true) ?
-            Icon(Icons.check_box_outline_blank) : const Icon(Icons.cake),
-          color: Colors.yellowAccent,
+            Icon(Icons.check_box_outline_blank) : const Icon(Icons.card_giftcard),
+          color: Colors.yellow,
           iconSize: 30.0,
           tooltip: "Wishilist",
           splashColor: Colors.yellowAccent[100],

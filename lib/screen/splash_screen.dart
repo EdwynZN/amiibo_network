@@ -14,8 +14,10 @@ class SplashScreenState extends State<SplashScreen>
   static final lightTheme = SystemUiOverlayStyle.light
     .copyWith(systemNavigationBarColor: Colors.red);
   static final darkTheme = SystemUiOverlayStyle.light
-    .copyWith(systemNavigationBarColor: Colors.grey[900]);
+    .copyWith(systemNavigationBarColor: Colors.grey[850]);
   AnimationController _animationController;
+  Animation<double> _opacity;
+  double _size;
   final SplashBloc _bloc = $Provider.of<SplashBloc>();
 
   @override
@@ -24,8 +26,23 @@ class SplashScreenState extends State<SplashScreen>
     _animationController = AnimationController(
       duration: Duration(seconds: 3),
       vsync: this,
-      animationBehavior: AnimationBehavior.preserve);
-    _animationController.repeat();
+      animationBehavior: AnimationBehavior.preserve)
+    ..repeat();
+    _opacity = Tween<double>(begin: 0, end: 1)
+      .animate(
+      AnimationMin(
+        Tween<double>(begin: 0, end: 1).animate(
+          CurvedAnimation(parent: _animationController,
+            curve: Interval(0.0, 0.5, curve: Curves.decelerate)
+          )
+        ),
+        Tween<double>(begin: 1, end: 0).animate(
+          CurvedAnimation(parent: _animationController,
+            curve: Interval(0.5, 1.0, curve: Curves.decelerate)
+          )
+        )
+      )
+    );
     _bloc.updateApp();
   }
 
@@ -47,6 +64,8 @@ class SplashScreenState extends State<SplashScreen>
   Widget build(BuildContext context) {
     SystemChrome.setSystemUIOverlayStyle(
     MediaQuery.platformBrightnessOf(context) == Brightness.light ? lightTheme : darkTheme);
+    _size = MediaQuery.of(context).orientation == Orientation.portrait ?
+      MediaQuery.of(context).size.height : MediaQuery.of(context).size.width;
     return Material(
       type: MaterialType.canvas,
       child: Row(
@@ -54,35 +73,46 @@ class SplashScreenState extends State<SplashScreen>
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          SwitchIcon(controller: _animationController.view),
+          SwitchIcon(controller: _animationController.view, height: _size),
           Container(
             color: Colors.black,
             padding: EdgeInsets.all(5),
-            width: MediaQuery.of(context).size.height / 3,
-            height: (MediaQuery.of(context).size.height)/4,
+            width: _size/3,
+            height: _size/4,
             alignment: Alignment.center,
             child: StreamBuilder(
               stream: _bloc.allAmiibosDB,
               builder: (_, AsyncSnapshot<bool> snapshot) {
                 if(snapshot.hasData && !_animationController.isAnimating){
                   _animationController.forward().whenCompleteOrCancel(
-                  () => Future.delayed(Duration(milliseconds: 500))
+                  () => Future.delayed(const Duration(milliseconds: 500))
                     .then((_) => Navigator.pushReplacementNamed(context, '/home')));
                   if(!snapshot.data) return ScreenAnimation(
                     opacity: _animationController,
-                    child: Text("Could't Update :(", style: TextStyle(color: Colors.white))
+                    child: Text("Couldn't Update :(", style: TextStyle(color: Colors.white70))
                   );
                   else return ScreenAnimation(
                     opacity: _animationController,
-                    child: Text("WELCOME", style: TextStyle(color: Colors.white)),
+                    child: Text("WELCOME", style: TextStyle(color: Colors.white70)),
                   );
                 }
                 else if(snapshot.hasData) _completeAnimation();
-                return LinearProgressIndicator(backgroundColor: Colors.black,);
+                return Stack(
+                  alignment: Alignment.center,
+                  children: <Widget>[
+                    const CircularProgressIndicator(backgroundColor: Colors.black),
+                    FadeTransition(
+                      opacity: _opacity,
+                      child: Align(alignment: Alignment.bottomCenter,
+                        child: Text("Updating...", style: TextStyle(color: Colors.white))
+                      ),
+                    )
+                  ],
+                );
               }
             ),
           ),
-          SwitchIcon(controller: _animationController.view, isLeft: false,),
+          SwitchIcon(controller: _animationController.view, isLeft: false, height: _size),
         ]
       ),
     );
@@ -120,12 +150,14 @@ class SwitchIcon extends StatelessWidget{
   final AnimationController controller;
   final SwitchAnimation animation;
   final bool isLeft;
+  final double height;
 
   SwitchIcon({
     Key key,
     @required this.controller,
+    @required this.height,
     this.isLeft = true,
-  }) :  animation = SwitchAnimation(controller: controller),
+  }) : animation = SwitchAnimation(controller: controller),
         super(key: key);
 
   @override
@@ -133,9 +165,10 @@ class SwitchIcon extends StatelessWidget{
     return AnimatedBuilder(
       animation: controller,
       child: CustomPaint(
-        size: Size(MediaQuery.of(context).size.height/11.3, MediaQuery.of(context).size.height/4),
+        size: Size(height/11.3, height/4),
         painter: SwitchJoycon(isLeft: isLeft,
-        color: MediaQuery.platformBrightnessOf(context) == Brightness.light ? null : Theme.of(context).primaryColor)
+        color: MediaQuery.platformBrightnessOf(context) == Brightness.light ?
+          null : Theme.of(context).primaryColor)
       ),
       builder: (_, Widget child) {
         return FractionalTranslation(

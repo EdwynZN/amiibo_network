@@ -23,14 +23,14 @@ class SwitchJoycon extends CustomPainter{
   void joycon(canvas, length){
     Path rightJoyCon = Path()
       ..addRRect(RRect.fromRectAndCorners(
-          Rect.fromPoints(
-              Offset.zero,
-              Offset(length * 0.35 , length)
-          ),
-          topLeft: isLeft ? Radius.circular(length*0.25) : Radius.zero,
-          bottomLeft: isLeft ? Radius.circular(length*0.25) : Radius.zero,
-          topRight: isLeft ? Radius.zero : Radius.circular(length*0.25),
-          bottomRight: isLeft ? Radius.zero : Radius.circular(length*0.25)
+        Rect.fromPoints(
+          Offset.zero,
+          Offset(length * 0.35 , length)
+        ),
+        topLeft: isLeft ? Radius.circular(length*0.25) : Radius.zero,
+        bottomLeft: isLeft ? Radius.circular(length*0.25) : Radius.zero,
+        topRight: isLeft ? Radius.zero : Radius.circular(length*0.25),
+        bottomRight: isLeft ? Radius.zero : Radius.circular(length*0.25)
       ));
     Path joystick = Path()
       ..addOval(Rect.fromCircle(

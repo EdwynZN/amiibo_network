@@ -25,6 +25,7 @@ class SearchScreenState extends State<SearchScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       body: CustomScrollView(
         slivers: <Widget>[
           SliverFloatingBar(
@@ -60,7 +61,7 @@ class SearchScreenState extends State<SearchScreen> {
                         title: Text('${snapshot.data[index]}')
                       )
                     );
-                  else const ListTile();
+                  else const SizedBox.shrink();
                 },
                   childCount: snapshot.hasData ? snapshot.data.length : 0,
                 ),

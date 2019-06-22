@@ -82,6 +82,9 @@ class Service {
       case 'Wishlist':
         await dao.updateAll('amiibo', 'brandNew', '1', columnCategory: 'wishlist', category: '%1%');
         break;
+      case 'Cards':
+        await dao.updateAll('amiibo', 'brandNew', '1', columnCategory: 'type', category: '%Card%');
+        break;
       default:
         await dao.updateAll('amiibo', 'brandNew', '1', columnCategory: search, category: '%$name%');
         break;

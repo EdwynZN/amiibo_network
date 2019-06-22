@@ -5,4 +5,5 @@
     <color name="yellow">#FFFF00</color>
     <color name="blueGrey">#37474F</color>
     <color name="grey">#212121</color>
+    <color name="dark">#000000</color>
 </resources>

@@ -15,6 +15,20 @@ class AmiiboBloc extends Bloc{
 
   Observable<AmiiboLocalDB> get allAmiibosDB => _amiiboFetcherDB.stream;
 
+  Observable<List<String>> get owned => _amiiboFetcherDB.stream
+    .map((x) => x?.amiibo)
+    .map((list) {
+      if(list?.isEmpty ?? true) return null;
+      int owned = 0; int wished = 0;
+      list.forEach((x) {
+        if(x?.owned?.isOdd ?? false) owned++;
+        if(x?.wishlist?.isOdd ?? false) wished++;
+      });
+      final List<String> data = ['$owned of ${list.length} owned',
+                                '$wished of ${list.length} wished'];
+      return data;
+    });
+
   Observable<bool> get findNew => _amiiboFetcherDB.stream
     .flatMap((x) => Observable.fromIterable(x.amiibo)
       .firstWhere((x) => x.brandNew?.isEven ?? true, orElse: () => null)
@@ -54,6 +68,9 @@ class AmiiboBloc extends Bloc{
         break;
       case 'Wishlist':
         amiiboDB = await _service.fetchByCategory('wishlist', '%1%');
+        break;
+      case 'Cards':
+        amiiboDB = await _service.fetchByCategory('type', '%Card%');
         break;
       default:
         amiiboDB = await _service.fetchByCategory(_searchFilter, '%$name%');
