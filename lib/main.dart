@@ -6,9 +6,8 @@ import 'package:amiibo_network/service/service.dart';
 import 'package:amiibo_network/themes.dart';
 
 void main() async {
-  runApp(AmiiboNetwork(SplashScreen()));
-  //if(!(await Service().compareLastUpdate() ?? true)) runApp(AmiiboNetwork(SplashScreen()));
-  //else runApp(AmiiboNetwork(HomePage()));
+  if(!(await Service().compareLastUpdate() ?? true)) runApp(AmiiboNetwork(SplashScreen()));
+  else runApp(AmiiboNetwork(HomePage()));
 }
 
 class AmiiboNetwork extends StatelessWidget {
