@@ -12,7 +12,7 @@ class Themes {
     brightness: Brightness.dark,
     unselectedWidgetColor: Colors.grey[850],
     dividerColor: Colors.white70,
-    scaffoldBackgroundColor: Colors.black87,
+    scaffoldBackgroundColor: Colors.black,
     accentColor: const Color.fromRGBO(207, 102, 121, 1),
     accentIconTheme: IconThemeData(color: Colors.black),
     iconTheme: IconThemeData(color: Colors.white54),

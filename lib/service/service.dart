@@ -1,13 +1,12 @@
 import 'dart:async';
-import 'package:amiibo_network/service/amiibo_api_provider.dart';
 import 'package:amiibo_network/dao/SQLite/amiibo_sqlite.dart';
-import '../model/amiibo.dart';
 import '../model/amiibo_local_db.dart';
-import 'dart:io';
+import 'dart:convert' show jsonDecode;
+import 'package:flutter/services.dart';
 
 class Service {
-  final amiiboApiProvider = AmiiboApiProvider();
   final dao = AmiiboSQLite();
+  static Map<String, dynamic> _jsonFile;
   static DateTime _lastUpdate;
   static DateTime _lastUpdateDB;
 
@@ -15,7 +14,13 @@ class Service {
   factory Service() => _instance;
   Service._();
 
-  Future<AmiiboClient> fetchAllAmiibo() => amiiboApiProvider.fetchAllAmiibo();
+  Future<Map<String, dynamic>> get jsonFile async {
+    return _jsonFile ??= jsonDecode(await rootBundle.loadString('assets/databases/amiibos.json'));
+  }
+
+  Future<AmiiboLocalDB> fetchAllAmiibo() async {
+    return AmiiboLocalDB.fromMap(await jsonFile);
+  }
 
   Future<AmiiboLocalDB> fetchAllAmiiboDB() => dao.fetchAll();
 
@@ -25,24 +30,16 @@ class Service {
   }
 
   Future<DateTime> get lastUpdate async{
-    return _lastUpdate ??= await amiiboApiProvider.fetchLastUpdate()
-      .then((x) => x?.lastUpdated)
-      .catchError((e) {
-        return null;
-    });
+    return _lastUpdate ??= LastUpdateDB.fromMap(await jsonFile).lastUpdated;
   }
 
   Future<bool> createDB() async{
     return compareLastUpdate().then((sameDate) async {
       if(sameDate == null) throw Exception("Couldn't fetch last update");
-      if(!sameDate) {
-        final amiiboAPI = await amiiboApiProvider.fetchAllAmiibo();
-        await _updateDB(entityFromMap(amiiboAPI.toMap()));
-      }
+      if(!sameDate) fetchAllAmiibo().then(_updateDB);
       return await Future.value(true);
     }).catchError((e) {
-      if(e is SocketException) print('Failed to coneect. Check your internet connection');
-      else print(e.toString());
+      print(e.toString());
       return false;
     });
   }
@@ -99,10 +96,8 @@ class Service {
 
   Future<bool> compareLastUpdate() async{
     final dateDB = await lastUpdateDB;
-    final dateAPI = await lastUpdate;
+    final dateJson = await lastUpdate;
 
-    if(dateAPI == null) return null;
-
-    return dateDB?.isAtSameMomentAs(dateAPI) ?? false;
+    return dateDB?.isAtSameMomentAs(dateJson) ?? false;
   }
 }

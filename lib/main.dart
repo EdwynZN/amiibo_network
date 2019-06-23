@@ -6,7 +6,7 @@ import 'package:amiibo_network/service/service.dart';
 import 'package:amiibo_network/themes.dart';
 
 void main() async {
-  if(!(await Service().compareLastUpdate() ?? true)) runApp(AmiiboNetwork(SplashScreen()));
+  if(!await Service().compareLastUpdate()) runApp(AmiiboNetwork(SplashScreen()));
   else runApp(AmiiboNetwork(HomePage()));
 }
 

@@ -21,7 +21,6 @@ dependencies:
     sdk: flutter
   sqflite: ^1.1.5
   rxdart: ^0.21.0
-  http: ^0.12.0+2
   dash: ^0.5.3
   floating_search_bar: ^0.2.0
   # The following adds the Cupertino Icons font to your application.
@@ -50,6 +49,7 @@ flutter:
     - assets/text/
     - assets/images/
     - assets/collection/
+    - assets/databases/
 
   # To add assets to your application, add an assets section, like this:
   # assets:
