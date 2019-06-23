@@ -12,7 +12,6 @@ class SettingsPage extends StatelessWidget{
         slivers: <Widget>[
           SliverList(
             delegate: SliverChildListDelegate.fixed([
-              CardSettings(title: 'FAQ', subtitle: 'The more you know . . .', icon: Icons.question_answer,),
               CardSettings(title: 'Changelog', subtitle: 'Changing for better . . .', icon: Icons.build,),
               CardSettings(title: 'Credits', subtitle: 'Those who make it possible', icon: Icons.theaters,),
               ],
@@ -20,6 +19,15 @@ class SettingsPage extends StatelessWidget{
           ),
         ],
       ),
+      /*bottomNavigationBar: Row(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.spaceAround,
+        children: <Widget>[
+          Container(child: Text('Hola'),),
+          Container(child: Text('Hola'),),
+        ],
+      ),*/
     );
   }
 }
@@ -46,11 +54,11 @@ class CardSettings extends StatelessWidget{
           title: Text(title),
           subtitle: Text(subtitle),
           onTap: () => Navigator.pushNamed(context, "/settingsdetail", arguments: title),
-          trailing: Icon(Icons.navigate_next),
+          trailing: const Icon(Icons.navigate_next),
           leading: Container(
             padding: EdgeInsets.only(right: 16, top: 8, bottom: 8),
             decoration: BoxDecoration(
-              border: Border(right: BorderSide(width: 1, color: Theme.of(context).dividerColor))
+            border: Border(right: BorderSide(width: 1, color: Theme.of(context).dividerColor))
             ),
             child: Icon(icon),
           )

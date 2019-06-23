@@ -1,2 +1,0 @@
-Why does it need internet connection?
-In order to keep the list of amiibos updated it connects to https://www.amiiboapi.com and caching the amiibos images once. The images and amiibo list will be stored and will only connects to the internet to check for a new update of the amiibo list.

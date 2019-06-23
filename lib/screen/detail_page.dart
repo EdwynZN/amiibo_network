@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:amiibo_network/model/amiibo_local_db.dart';
-import 'package:cached_network_image/cached_network_image.dart';
-import 'package:amiibo_network/data/cacheDB.dart';
 
 class DetailPage extends StatelessWidget{
   final AmiiboDB amiibo;
@@ -73,16 +71,12 @@ class _CardDetailAmiibo extends StatelessWidget{
                 Expanded(
                   child: Hero(
                     tag: amiibo.id,
-                    child: CachedNetworkImage(
-                      cacheManager: CacheManager(),
-                      alignment: Alignment.center,
-                      imageUrl: 'https://raw.githubusercontent.com/N3evin/AmiiboAPI/master/images/icon_'
-                        '${amiibo.id?.substring(0,8)}-'
-                        '${amiibo.id?.substring(8)}.png',
-                      placeholder: (context, url) => CircularProgressIndicator(),
-                      errorWidget: (context, url, error) => const Icon(Icons.error_outline),
+                    child: Image.asset(
+                      'assets/collection/icon_${amiibo.id?.substring(0,8)}-'
+                      '${amiibo.id?.substring(8)}.png',
                       fit: BoxFit.scaleDown,
-                    ),
+                      alignment: Alignment.center,
+                    )
                   ),
                   flex: 7,
                 ),
