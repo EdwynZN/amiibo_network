@@ -46,7 +46,7 @@ class Themes {
     accentIconTheme: IconThemeData(color: Colors.white),
     iconTheme: IconThemeData(color: Colors.black),
     errorColor: Colors.redAccent,
-    canvasColor: Colors.red,
+    canvasColor: Colors.white,
     primarySwatch: Colors.red,
     primaryColor: Colors.red,
     cursorColor: Colors.black12,

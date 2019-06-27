@@ -66,7 +66,7 @@ class AmiiboSQLite implements Dao<AmiiboLocalDB, String, AmiiboDB>{
     List<Map> maps = await _db.query('amiibo',
       where: 'id = ?',
       whereArgs: [id]);
-    if(maps.length > 0) return AmiiboDB.fromDB(maps.first);
+    if(maps.length > 0) return AmiiboDB.fromMap(maps.first);
     return null;
   }
 

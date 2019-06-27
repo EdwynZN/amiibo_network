@@ -1,4 +1,4 @@
-AmiiboLocalDB entityFromMap(Map<String, dynamic> amiibo) => AmiiboLocalDB.fromMap(amiibo);
+AmiiboLocalDB entityFromMap(Map<String, dynamic> amiibo) => AmiiboLocalDB.fromJson(amiibo);
 
 Map<String, dynamic> entityToMap(AmiiboLocalDB data) => data.toMap();
 
@@ -13,12 +13,12 @@ class AmiiboLocalDB {
     this.amiibo,
   });
 
-  factory AmiiboLocalDB.fromMap(Map<String, dynamic> amiibo) => AmiiboLocalDB(
+  factory AmiiboLocalDB.fromJson(Map<String, dynamic> amiibo) => AmiiboLocalDB(
     amiibo: List<AmiiboDB>.from(amiibo["amiibo"].map((x) => AmiiboDB.fromMap(x))),
   );
 
   factory AmiiboLocalDB.fromDB(List<Map> amiibo) => AmiiboLocalDB(
-    amiibo: List<AmiiboDB>.from(amiibo.map((x) => AmiiboDB.fromDB(x))),
+    amiibo: List<AmiiboDB>.from(amiibo.map((x) => AmiiboDB.fromMap(x))),
   );
 
   Map<String, dynamic> toMap() => {
@@ -61,19 +61,6 @@ class AmiiboDB {
   });
 
   factory AmiiboDB.fromMap(Map<String, dynamic> amiibo) => AmiiboDB(
-    id: amiibo["head"] + amiibo["tail"],
-    amiiboSeries: amiibo["amiiboSeries"],
-    character: amiibo["character"],
-    gameSeries: amiibo["gameSeries"],
-    name: amiibo["name"],
-    au: amiibo["release"]["au"]?.toString()?.replaceAll('-', '/'),
-    eu: amiibo["release"]["eu"]?.toString()?.replaceAll('-', '/'),
-    jp: amiibo["release"]["jp"]?.toString()?.replaceAll('-', '/'),
-    na: amiibo["release"]["na"]?.toString()?.replaceAll('-', '/'),
-    type: amiibo["type"],
-  );
-
-  factory AmiiboDB.fromDB(Map<String, dynamic> amiibo) => AmiiboDB(
     id: amiibo["id"],
     amiiboSeries: amiibo["amiiboSeries"],
     character: amiibo["character"],

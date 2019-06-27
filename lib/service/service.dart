@@ -19,7 +19,7 @@ class Service {
   }
 
   Future<AmiiboLocalDB> fetchAllAmiibo() async {
-    return AmiiboLocalDB.fromMap(await jsonFile);
+    return AmiiboLocalDB.fromJson(await jsonFile);
   }
 
   Future<AmiiboLocalDB> fetchAllAmiiboDB() => dao.fetchAll();

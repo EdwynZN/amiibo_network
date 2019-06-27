@@ -188,15 +188,30 @@ class HomePageState extends State<HomePage>
                   else return SliverGrid(
                     gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                     crossAxisCount: MediaQuery.of(context).orientation == Orientation.portrait ? 3 : 6),
-                    delegate: SliverChildBuilderDelegate(
-                      (BuildContext context, int index) =>
+                    delegate: SliverChildBuilderDelegate((BuildContext context, int index) =>
                         AmiiboGrid(amiibo: snapshot.data.amiibo[index],
-                          onTap: () {
+                          onDoubleTap: () {
                             Navigator.pushNamed(context, "/details", arguments: snapshot.data.amiibo[index])
                             .then((_) {
                               bool remove = _onGestureAmiibo(snapshot.data.amiibo[index]);
                               if(remove) snapshot.data.amiibo.removeAt(index);
                             });
+                          },
+                          onTap: () {
+                            snapshot.data.amiibo[index].brandNew = 1;
+                            switch(snapshot.data.amiibo[index]?.owned ?? 0){
+                              case 1:
+                                snapshot.data.amiibo[index].owned = 0;
+                                snapshot.data.amiibo[index].wishlist = 1;
+                                break;
+                              case 0:
+                                if((snapshot.data.amiibo[index]?.wishlist ?? 0) == 0) snapshot.data.amiibo[index].owned = 1;
+                                snapshot.data.amiibo[index].wishlist = 0;
+                                break;
+                            }
+                            bool remove = _onGestureAmiibo(snapshot.data.amiibo[index]);
+                            if(remove) snapshot.data.amiibo.removeAt(index);
+                            if(mounted) setState(() {});
                           },
                         ),
                       addRepaintBoundaries: false, addAutomaticKeepAlives: false,
@@ -278,7 +293,7 @@ class FAB extends StatelessWidget{
                   scale: fabAnimation,
                   child: FloatingActionButton.extended(
                     heroTag: 'CleanNewFAB',
-                    onPressed: controller.isAnimating ? null : clean,
+                    onPressed: (controller.isAnimating || snapshotNew.data)? null : clean,
                     label: const Icon(Icons.new_releases, color: Colors.yellowAccent),
                     icon: Text('Clean new'),
                   ),
@@ -342,12 +357,14 @@ class PopUpMenu extends StatelessWidget{
 class AmiiboGrid extends StatelessWidget{
   final AmiiboDB amiibo;
   final GestureTapCallback onTap;
+  final GestureTapCallback onDoubleTap;
 
-  const AmiiboGrid({Key key, this.amiibo, this.onTap});
+  const AmiiboGrid({Key key, this.amiibo, this.onTap, this.onDoubleTap});
 
   @override
   Widget build(BuildContext context) => GestureDetector(
     onTap: onTap,
+    onDoubleTap: onDoubleTap,
     child: Stack(
       fit: StackFit.expand,
       children: <Widget>[

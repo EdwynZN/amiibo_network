@@ -104,7 +104,7 @@ class SplashScreenState extends State<SplashScreen>
                     FadeTransition(
                       opacity: _opacity,
                       child: Align(alignment: Alignment.bottomCenter,
-                        child: Text("Updating...", style: TextStyle(color: Colors.white))
+                        child: Text("Just a second...", style: TextStyle(color: Colors.white))
                       ),
                     )
                   ],

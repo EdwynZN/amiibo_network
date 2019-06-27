@@ -5,12 +5,12 @@ import 'dart:io';
 
 main() {
   test('convert json Test', () async {
-    final file = File('assets/databases/amiibos.json');
+    final file = File('assets/databases/AmiiboAPI.json');
     String data = file.readAsStringSync();
     final jResult = jsonDecode(data);
-    AmiiboLocalDB amiibos = AmiiboLocalDB.fromMap(jResult);
-    LastUpdateDB lUpdate = LastUpdateDB.fromMap(jResult);
-    print(lUpdate.lastUpdated);
+    AmiiboLocalDB amiibos = AmiiboLocalDB.fromJson(jResult);
+    //LastUpdateDB lUpdate = LastUpdateDB.fromMap(jResult);
+    //print(lUpdate.lastUpdated);
     print(amiibos.amiibo[0].toMap());
   });
 
