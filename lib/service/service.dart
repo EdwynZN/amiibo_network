@@ -63,31 +63,6 @@ class Service {
     }
   }
 
-  Future<AmiiboLocalDB> findNew() async => dao.findNew();
-
-  Future<void> cleanNew(String name, [String search]) async {
-    switch(name){
-      case 'All':
-        await dao.updateAll('amiibo', 'brandNew', '1');
-        break;
-      case 'New':
-        await dao.updateAll('amiibo', 'brandNew', '1');
-        break;
-      case 'Owned':
-        await dao.updateAll('amiibo', 'brandNew', '1', columnCategory: 'owned', category: '%1%');
-        break;
-      case 'Wishlist':
-        await dao.updateAll('amiibo', 'brandNew', '1', columnCategory: 'wishlist', category: '%1%');
-        break;
-      case 'Cards':
-        await dao.updateAll('amiibo', 'brandNew', '1', columnCategory: 'type', category: '%Card%');
-        break;
-      default:
-        await dao.updateAll('amiibo', 'brandNew', '1', columnCategory: search, category: '%$name%');
-        break;
-    }
-  }
-
   Future<List<String>> fetchDistinct() async =>
     dao.fetchDistinct('amiibo', 'amiiboSeries');
 

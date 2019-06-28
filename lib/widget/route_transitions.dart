@@ -49,13 +49,13 @@ class SlideRoute<T> extends MaterialPageRoute<T> {
       Animation<double> secondaryAnimation, Widget child) {
     final double maxWidth = MediaQuery.of(context).size.width;
     return SlideTransition(
-        position: Tween<Offset>(begin: const Offset(1, 0), end: Offset.zero)
-            .animate(animation),
-        child: GestureDetector(
-          child: child,
-          onHorizontalDragUpdate: (DragUpdateDetails details) => _handleDragUpdate(details, maxWidth),
-          onHorizontalDragEnd: (DragEndDetails details) => _handleDragEnd(details, maxWidth, context),
-        )
+      position: Tween<Offset>(begin: const Offset(1, 0), end: Offset.zero)
+        .animate(animation),
+      child: GestureDetector(
+        child: child,
+        onHorizontalDragUpdate: (DragUpdateDetails details) => _handleDragUpdate(details, maxWidth),
+        onHorizontalDragEnd: (DragEndDetails details) => _handleDragEnd(details, maxWidth, context),
+      )
     );
   }
 

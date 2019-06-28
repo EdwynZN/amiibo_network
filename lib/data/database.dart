@@ -39,8 +39,7 @@ class ConnectionFactory {
             na TEXT,
             type TEXT NOT NULL,
             wishlist INTEGER,
-            owned INTEGER,
-            brandNew INTEGER
+            owned INTEGER
           );
         ''');
         await tx.execute('''CREATE TABLE IF NOT EXISTS date (

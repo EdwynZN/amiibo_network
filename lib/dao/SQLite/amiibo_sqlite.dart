@@ -70,14 +70,6 @@ class AmiiboSQLite implements Dao<AmiiboLocalDB, String, AmiiboDB>{
     return null;
   }
 
-  Future<AmiiboLocalDB> findNew() async{
-    Database _db = await connectionFactory.database;
-    List<Map> maps = await _db.query('amiibo',
-      where: 'brandNew = 0 OR brandNew IS NULL',
-      orderBy: 'na DESC, name');
-    return entityFromList(maps);
-  }
-
   Future<void> insertAll(AmiiboLocalDB list, String name) async{
     Database _db = await connectionFactory.database;
     final batch = _db.batch();
@@ -85,13 +77,12 @@ class AmiiboSQLite implements Dao<AmiiboLocalDB, String, AmiiboDB>{
       batch.execute('''INSERT OR REPLACE INTO amiibo
       VALUES(?,?,?,?,?,?,?,?,?,?,
       (SELECT wishlist FROM amiibo WHERE id = ?),
-      (SELECT owned FROM amiibo WHERE id = ?),
-      (SELECT brandNew FROM amiibo WHERE id = ?)
+      (SELECT owned FROM amiibo WHERE id = ?)
       );
       ''',
       [query.id,query.amiiboSeries,query.character,query.gameSeries,
       query.name,query.au,query.eu,query.jp,query.na,query.type,
-      query.id,query.id,query.id,]);
+      query.id,query.id]);
     }
     await batch.commit(noResult: true, continueOnError: true);
   }
@@ -102,13 +93,12 @@ class AmiiboSQLite implements Dao<AmiiboLocalDB, String, AmiiboDB>{
     batch.execute('''INSERT OR REPLACE INTO amiibo
       VALUES(?,?,?,?,?,?,?,?,?,?,
       (SELECT wishlist FROM amiibo WHERE id = ?),
-      (SELECT owned FROM amiibo WHERE id = ?),
-      (SELECT brandNew FROM amiibo WHERE id = ?)
+      (SELECT owned FROM amiibo WHERE id = ?)
       );
       ''',
       [map.id,map.amiiboSeries,map.character,map.gameSeries,
       map.name,map.au,map.eu,map.jp,map.na,map.type,
-      map.id,map.id,map.id,]);
+      map.id,map.id]);
     batch.commit(noResult: true, continueOnError: true);
   }
 

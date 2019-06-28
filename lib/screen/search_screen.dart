@@ -25,7 +25,6 @@ class SearchScreenState extends State<SearchScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      resizeToAvoidBottomInset: false,
       body: CustomScrollView(
         slivers: <Widget>[
           SliverFloatingBar(
@@ -45,9 +44,8 @@ class SearchScreenState extends State<SearchScreen> {
               decoration: null,
             ),
           ),
-          const SliverPadding(padding: EdgeInsets.symmetric(vertical: 4)),
           SliverPadding(
-            padding: EdgeInsets.symmetric(horizontal: 12),
+            padding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
             sliver: StreamBuilder(
               stream: _bloc.search,
               builder: (context, AsyncSnapshot<List<String>> snapshot) => SliverList(

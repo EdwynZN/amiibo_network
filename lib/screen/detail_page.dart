@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:amiibo_network/bloc/amiibo_bloc.dart';
+import 'package:amiibo_network/bloc/bloc_provider.dart';
 import 'package:amiibo_network/model/amiibo_local_db.dart';
 
 class DetailPage extends StatelessWidget{
   final AmiiboDB amiibo;
-  final bool _brandNew;
 
   DetailPage({
     Key key,
     @required this.amiibo
-  }) : _brandNew = amiibo.brandNew?.isEven ?? true,
-        super(key: key);
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -25,15 +25,6 @@ class DetailPage extends StatelessWidget{
                 fit: StackFit.expand,
                 children: <Widget>[
                   _CardDetailAmiibo(amiibo: amiibo),
-                  if(_brandNew)
-                    const Align(
-                      alignment: Alignment.topRight,
-                      child: const Icon(
-                        Icons.new_releases,
-                        size: 45.0,
-                        color: Colors.yellow,
-                      ),
-                    ),
                 ],
               ),
             ),
@@ -131,10 +122,10 @@ class _Buttons extends StatefulWidget {
 }
 
 class _ButtonsState extends State<_Buttons> {
+  static final AmiiboBloc _bloc = $Provider.of<AmiiboBloc>();
 
   @override
   void initState() {
-    widget.amiibo.brandNew = 1;
     super.initState();
   }
 
@@ -153,28 +144,30 @@ class _ButtonsState extends State<_Buttons> {
       children: <Widget>[
         IconButton(
           icon: (widget.amiibo.owned?.isEven ?? true) ?
-            Icon(Icons.star_border) : const Icon(Icons.star),
+            const Icon(Icons.star_border) : const Icon(Icons.star),
           color: Colors.pinkAccent,
           iconSize: 30.0,
           tooltip: "Owned",
           splashColor: Colors.pinkAccent[100],
-          onPressed: () => setState(() {
-            widget.amiibo.owned = (widget.amiibo?.owned ?? 0) ^ 1;
-            if(widget.amiibo.owned.isOdd) widget.amiibo.wishlist = 0;
-          }),
+          onPressed: () {
+            _bloc.countOwned = widget.amiibo.owned = (widget.amiibo?.owned ?? 0) ^ 1;
+            if(widget.amiibo?.wishlist?.isOdd ?? false) _bloc.countWished = widget.amiibo.wishlist = 0;
+            setState(() {});
+          },
         ),
         IconButton(
           icon: (widget.amiibo.wishlist?.isEven ?? true) ?
-            Icon(Icons.check_box_outline_blank) : const Icon(Icons.card_giftcard),
+            const Icon(Icons.check_box_outline_blank) : const Icon(Icons.card_giftcard),
           color: Colors.yellow,
           iconSize: 30.0,
-          tooltip: "Wishilist",
+          tooltip: "Wished",
           splashColor: Colors.yellowAccent[100],
-          onPressed: () => setState(() {
-            widget.amiibo.wishlist = (widget.amiibo?.wishlist ?? 0) ^ 1;
-            if(widget.amiibo.wishlist.isOdd) widget.amiibo.owned = 0;
-          })
-        ),
+          onPressed: () {
+            _bloc.countWished = widget.amiibo.wishlist = (widget.amiibo?.wishlist ?? 0) ^ 1;
+            if(widget.amiibo?.owned?.isOdd ?? false) _bloc.countOwned = widget.amiibo.owned = 0;
+            setState(() {});
+          }
+        )
       ],
     );
   }

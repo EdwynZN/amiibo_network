@@ -15,9 +15,8 @@ class HomePage extends StatefulWidget {
 class HomePageState extends State<HomePage>
     with SingleTickerProviderStateMixin{
   final AmiiboBloc _bloc = $Provider.of<AmiiboBloc>();
-  static List<String> list = <String>['All', 'New', 'Owned', 'Wishlist', 'Cards'];
+  static List<String> list = <String>['All', 'Owned', 'Wishlist', 'Cards'];
   static String _filter = 'All';
-  static const double initialFAB = 0.35;
   ScrollController _controller;
   AnimationController _animationController;
   static final lightTheme = SystemUiOverlayStyle.light
@@ -35,9 +34,9 @@ class HomePageState extends State<HomePage>
     initBloc();
     _controller = ScrollController()..addListener(_scrollListener);
     _animationController = AnimationController(
-      duration: const Duration(milliseconds: 500),
+      duration: const Duration(milliseconds: 200),
       animationBehavior: AnimationBehavior.preserve,
-      vsync: this)..value = initialFAB;
+      vsync: this)..value = 1.0;
     super.initState();
   }
 
@@ -55,11 +54,10 @@ class HomePageState extends State<HomePage>
     if((_controller?.hasClients ?? false) && !_animationController.isAnimating){
       switch(_controller.position.userScrollDirection){
         case ScrollDirection.forward:
-          if(!_animationController.isCompleted)
-            _animationController.animateBack(initialFAB);
+            _animationController.forward();
           break;
         case ScrollDirection.reverse:
-          _animationController.animateBack(0.0);
+          _animationController.reverse();
           break;
         case ScrollDirection.idle:
           break;
@@ -69,7 +67,7 @@ class HomePageState extends State<HomePage>
 
   _onTapPopMenu(String value){
     if(_filter != value){
-      _animationController.animateBack(initialFAB);
+      _animationController.forward();
       _filter = value;
       _bloc.resetPagination(_filter, false);
       _controller.position.jumpTo(0);
@@ -80,9 +78,6 @@ class HomePageState extends State<HomePage>
     _bloc.updateAmiiboDB(amiibo: amiibo);
     bool remove = false;
     switch(_filter) {
-      case 'New':
-        remove = amiibo.brandNew != null;
-        break;
       case 'Owned':
         remove = amiibo.owned != 1;
         break;
@@ -99,7 +94,7 @@ class HomePageState extends State<HomePage>
         _filter = value;
         _bloc.resetPagination(_filter, true);
         _controller.position.jumpTo(0);
-        _animationController.value = initialFAB;
+        _animationController.value = 1.0;
       }
     });
   }
@@ -120,6 +115,7 @@ class HomePageState extends State<HomePage>
     return WillPopScope(
       onWillPop: _exitApp,
       child: Scaffold(
+        resizeToAvoidBottomInset: false,
         body: CustomScrollView(
           controller: _controller, cacheExtent: 150,
           slivers: <Widget>[
@@ -130,31 +126,32 @@ class HomePageState extends State<HomePage>
               automaticallyImplyLeading: false,
               leading: PopUpMenu(list, _onTapPopMenu),
               title: GestureDetector(
-                child: StreamBuilder(
-                initialData: 'All',
-                stream: _bloc.filter,
-                builder: (BuildContext context, AsyncSnapshot<String> filter){
-                  return Text('${filter.data} | Search Amiibo',
-                    style: Theme.of(context).textTheme.body2,
-                    overflow: TextOverflow.ellipsis, maxLines: 1);
-                }),
-                onTap: _search
+                  child: StreamBuilder(
+                      initialData: 'All',
+                      stream: _bloc.filter,
+                      builder: (BuildContext context, AsyncSnapshot<String> filter){
+                        return Text('${filter.data} | Search Amiibo',
+                            style: Theme.of(context).textTheme.body2,
+                            overflow: TextOverflow.ellipsis, maxLines: 1);
+                      }),
+                  onTap: _search
               ),
               trailing: CircleAvatar(
-                child: GestureDetector(
-                  onTap: () => Navigator.pushNamed(context, "/settings"),
-                  child: Tooltip(message: 'Settings',
-                    child: Icon(Icons.settings,
-                      color: Theme.of(context).accentIconTheme.color,
-                  )),
-                )
+                  child: GestureDetector(
+                    onTap: () => Navigator.pushNamed(context, "/settings"),
+                    child: Tooltip(message: 'Settings',
+                        child: Icon(Icons.settings,
+                          color: Theme.of(context).accentIconTheme.color,
+                        )),
+                  )
               ),
             ),
             SliverPadding(
               padding: EdgeInsets.symmetric(horizontal: 16, vertical: 10),
               sliver: SliverToBoxAdapter(
                 child: StreamBuilder(
-                  stream: _bloc.owned,
+                  initialData: null,
+                  stream: _bloc.wished,
                   builder: (context, AsyncSnapshot<List<String>> strList){
                     if(strList.hasData)
                     return Row(
@@ -189,31 +186,19 @@ class HomePageState extends State<HomePage>
                     gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                     crossAxisCount: MediaQuery.of(context).orientation == Orientation.portrait ? 3 : 6),
                     delegate: SliverChildBuilderDelegate((BuildContext context, int index) =>
-                        AmiiboGrid(amiibo: snapshot.data.amiibo[index],
-                          onDoubleTap: () {
-                            Navigator.pushNamed(context, "/details", arguments: snapshot.data.amiibo[index])
-                            .then((_) {
-                              bool remove = _onGestureAmiibo(snapshot.data.amiibo[index]);
-                              if(remove) snapshot.data.amiibo.removeAt(index);
-                            });
-                          },
-                          onTap: () {
-                            snapshot.data.amiibo[index].brandNew = 1;
-                            switch(snapshot.data.amiibo[index]?.owned ?? 0){
-                              case 1:
-                                snapshot.data.amiibo[index].owned = 0;
-                                snapshot.data.amiibo[index].wishlist = 1;
-                                break;
-                              case 0:
-                                if((snapshot.data.amiibo[index]?.wishlist ?? 0) == 0) snapshot.data.amiibo[index].owned = 1;
-                                snapshot.data.amiibo[index].wishlist = 0;
-                                break;
-                            }
+                      AmiiboGrid(amiibo: snapshot.data.amiibo[index],
+                        onDoubleTap: () {
+                          Navigator.pushNamed(context, "/details", arguments: snapshot.data.amiibo[index])
+                          .then((_) {
                             bool remove = _onGestureAmiibo(snapshot.data.amiibo[index]);
-                            if(remove) snapshot.data.amiibo.removeAt(index);
-                            if(mounted) setState(() {});
-                          },
-                        ),
+                            if(remove) {
+                              snapshot.data.amiibo.removeAt(index);
+                              _bloc.removeFromList = 2;
+                            }
+                            _bloc.updateList();
+                          });
+                        },
+                      ),
                       addRepaintBoundaries: false, addAutomaticKeepAlives: false,
                       childCount: snapshot.hasData ? snapshot.data.amiibo.length : 0,
                     )
@@ -223,9 +208,8 @@ class HomePageState extends State<HomePage>
             ),
           ],
         ),
-        floatingActionButton: FAB(_animationController, initialFAB,
+        floatingActionButton: FAB(_animationController,
           () => _controller.jumpTo(0),
-          () => _bloc.cleanBrandNew(_filter)
         )
       )
     );
@@ -233,87 +217,29 @@ class HomePageState extends State<HomePage>
 }
 
 class FAB extends StatelessWidget{
-  final AmiiboBloc _bloc = $Provider.of<AmiiboBloc>();
   final Animation<double> scale;
-  final Animation<double> fabAnimation;
-  final Animation<double> rotation;
   final AnimationController controller;
   final VoidCallback goTop;
-  final VoidCallback clean;
-  final double initialValue;
 
-  FAB(this.controller, this.initialValue, this.goTop, this.clean):
+  FAB(this.controller, this.goTop):
 
   scale = Tween<double>(begin: 0.0, end: 1.0)
     .animate(
       CurvedAnimation(parent: controller,
-        curve: Interval(0.0, initialValue, curve: Curves.linear)
-    )
-  ),
-  fabAnimation = Tween<double>(begin: 0.0, end: 1.0)
-    .animate(
-      CurvedAnimation(parent: controller,
-        curve: Interval(0.5, 1.0, curve: Curves.easeInOutExpo)
-    )
-  ),
-  rotation = Tween<double>(begin: 0.0, end: 0.625)
-    .animate(
-      CurvedAnimation(parent: controller,
-        curve: Interval(initialValue, 1, curve: Curves.easeOutBack)
+        curve: Interval(0.0, 1, curve: Curves.decelerate),
     )
   );
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      mainAxisAlignment: MainAxisAlignment.end,
-      crossAxisAlignment: CrossAxisAlignment.end,
-      children: <Widget>[
-        Padding(
-          padding: EdgeInsets.only(bottom: 5),
-          child: ScaleTransition(
-            scale: fabAnimation,
-            child: FloatingActionButton.extended(
-              heroTag: 'GoTopFAB',
-              onPressed: controller.isAnimating ? null : goTop,
-              label: const Icon(Icons.keyboard_arrow_up),
-              icon: Text('Go to top'),
-            )
-          ),
-        ),
-        StreamBuilder(
-          initialData: false,
-          stream: _bloc.findNew,
-          builder: (context, AsyncSnapshot<bool> snapshotNew){
-            if(snapshotNew.data)
-              return Padding(
-                padding: EdgeInsets.only(bottom: 5),
-                child: ScaleTransition(
-                  scale: fabAnimation,
-                  child: FloatingActionButton.extended(
-                    heroTag: 'CleanNewFAB',
-                    onPressed: (controller.isAnimating || snapshotNew.data)? null : clean,
-                    label: const Icon(Icons.new_releases, color: Colors.yellowAccent),
-                    icon: Text('Clean new'),
-                  ),
-                ),
-              );
-            else return const SizedBox.shrink();
-          }
-        ),
-        ScaleTransition(
-          scale: scale,
-          child: RotationTransition(
-            turns: rotation,
-            child: FloatingActionButton(
-              heroTag: 'MenuFAB',
-              onPressed: () => controller.isCompleted ? controller.animateBack(0.35) : controller.forward(),
-              child: const Icon(Icons.add)
-            ),
-          )
-        ),
-      ],
+    return ScaleTransition(
+      scale: scale,
+      child: FloatingActionButton(
+        mini: true,
+        heroTag: 'MenuFAB',
+        onPressed: controller.isAnimating ? null : goTop,
+        child: const Icon(Icons.keyboard_arrow_up),
+      )
     );
   }
 }
@@ -333,7 +259,6 @@ class PopUpMenu extends StatelessWidget{
           child: Row(
             children: <Widget>[
               if(series == 'All') const Icon(Icons.all_inclusive)
-              else if(series == 'New') const Icon(Icons.new_releases, color: Colors.amber,)
               else if(series == 'Owned') const Icon(Icons.star, color: Colors.pinkAccent,)
               else if(series == 'Wishlist') const Icon(Icons.card_giftcard, color: Colors.amber,)
               else if(series == 'Cards') const Icon(Icons.view_carousel, color: Colors.amber)
@@ -354,19 +279,40 @@ class PopUpMenu extends StatelessWidget{
   }
 }
 
-class AmiiboGrid extends StatelessWidget{
+class AmiiboGrid extends StatefulWidget {
   final AmiiboDB amiibo;
-  final GestureTapCallback onTap;
   final GestureTapCallback onDoubleTap;
 
-  const AmiiboGrid({Key key, this.amiibo, this.onTap, this.onDoubleTap});
+  const AmiiboGrid({Key key, this.amiibo, this.onDoubleTap});
+  @override
+  State<StatefulWidget> createState() => AmiiboGridState();
+}
+
+class AmiiboGridState extends State<AmiiboGrid> {
+  static final AmiiboBloc _bloc = $Provider.of<AmiiboBloc>();
 
   @override
   Widget build(BuildContext context) => GestureDetector(
-    onTap: onTap,
-    onDoubleTap: onDoubleTap,
+    onDoubleTap: widget.onDoubleTap,
+    onTap: () {
+      switch(widget.amiibo?.owned ?? 0){
+        case 1:
+          _bloc.countOwned = widget.amiibo.owned = 0;
+          _bloc.countWished = widget.amiibo.wishlist = 1;
+          break;
+        case 0:
+          if((widget.amiibo?.wishlist ?? 0) == 0) {
+            _bloc.countOwned = widget.amiibo.owned = 1;
+          } else{
+            _bloc.countWished = widget.amiibo.wishlist = 0;
+          }
+          break;
+      }
+      _bloc.updateAmiiboDB(amiibo: widget.amiibo);
+      _bloc.updateList();
+      setState(() {});
+    },
     child: Stack(
-      fit: StackFit.expand,
       children: <Widget>[
         Card(
           child: Column(
@@ -376,10 +322,10 @@ class AmiiboGrid extends StatelessWidget{
             children: <Widget>[
               Expanded(
                 child: Hero(
-                  tag: amiibo.id,
+                  tag: widget.amiibo.id,
                   child: Image.asset(
-                    'assets/collection/icon_${amiibo.id?.substring(0,8)}-'
-                    '${amiibo.id?.substring(8)}.png',
+                    'assets/collection/icon_${widget.amiibo.id?.substring(0,8)}-'
+                      '${widget.amiibo.id?.substring(8)}.png',
                     fit: BoxFit.scaleDown,
                     alignment: Alignment.center,
                   )
@@ -393,7 +339,7 @@ class AmiiboGrid extends StatelessWidget{
                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.vertical(bottom: Radius.circular(8)))),
                   alignment: Alignment.center,
                   padding: EdgeInsets.symmetric(horizontal: 5),
-                  child: Text('${amiibo.name}',
+                  child: Text('${widget.amiibo.name}',
                     softWrap: false,
                     overflow: TextOverflow.fade,
                     style: TextStyle(fontSize: 12, fontWeight: FontWeight.w500),
@@ -404,19 +350,15 @@ class AmiiboGrid extends StatelessWidget{
             ],
           ),
         ),
-        if(amiibo.brandNew?.isEven ?? true) const Align(
-          alignment: Alignment.topRight,
-          child: const Icon(Icons.new_releases, color: Colors.yellow,),
-        ),
-        if(amiibo.owned?.isOdd ?? false) const Align(
+        if(widget.amiibo.owned?.isOdd ?? false) const Align(
           alignment: Alignment.topLeft,
           child: const Icon(Icons.star, color: Colors.pinkAccent),
         ),
-        if(amiibo.wishlist?.isOdd ?? false) const Align(
+        if(widget.amiibo.wishlist?.isOdd ?? false) const Align(
           alignment: Alignment.topLeft,
-          child: const Icon(Icons.card_giftcard, color: Colors.yellow),
+          child: const Icon(Icons.card_giftcard, color: Colors.yellowAccent),
         ),
       ],
-    )
+    ),
   );
 }

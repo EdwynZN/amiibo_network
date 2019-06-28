@@ -1,5 +1,5 @@
 name: amiibo_network
-description: An Amiibo collection app
+description: An Amiibo collection app designed to allow you to keep track of which Amiibo are in your collection.
 
 # The following defines the version and build number for your application.
 # A version number is three numbers separated by dots, like 1.2.43

@@ -42,7 +42,6 @@ class AmiiboDB {
   String type;
   int wishlist;
   int owned;
-  int brandNew;
 
   AmiiboDB({
     this.id,
@@ -57,7 +56,6 @@ class AmiiboDB {
     this.type,
     this.wishlist,
     this.owned,
-    this.brandNew
   });
 
   factory AmiiboDB.fromMap(Map<String, dynamic> amiibo) => AmiiboDB(
@@ -73,7 +71,6 @@ class AmiiboDB {
     type: amiibo["type"],
     wishlist: amiibo["wishlist"],
     owned: amiibo["owned"],
-    brandNew: amiibo["brandNew"]
   );
 
   Map<String, dynamic> toMap() => {
@@ -89,7 +86,6 @@ class AmiiboDB {
     "type": type,
     if(wishlist != null) "wishlist": wishlist,
     if(owned != null) "owned": owned,
-    if(brandNew != null) "brandNew": brandNew
   };
 }
 
