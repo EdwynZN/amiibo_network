@@ -60,7 +60,7 @@ class SearchScreenState extends State<SearchScreen> {
                           title: Text('${snapshot.data[index]}')
                         )
                       );
-                    else const SizedBox.shrink();
+                    else return const SizedBox.shrink();
                   },
                     childCount: snapshot.hasData ? snapshot.data.length : 0,
                   ),
