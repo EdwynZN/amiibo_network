@@ -13,30 +13,32 @@ class DetailPage extends StatelessWidget{
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: SafeArea(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: <Widget>[
-            Container(
-              height: 250,
-              alignment: Alignment.topCenter,
-              child: Stack(
-                fit: StackFit.expand,
-                children: <Widget>[
-                  _CardDetailAmiibo(amiibo: amiibo),
-                ],
-              ),
-            ),
-            /*Container(
+    return SafeArea(
+      child: Scaffold(
+        body: SafeArea(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: <Widget>[
+                Container(
+                  height: 250,
+                  alignment: Alignment.topCenter,
+                  child: Stack(
+                    fit: StackFit.expand,
+                    children: <Widget>[
+                      _CardDetailAmiibo(amiibo: amiibo),
+                    ],
+                  ),
+                ),
+                /*Container(
               height: 100,
               child: Card(
                 child: Center(child: Text("Coming soon..."),)
               ),
             )*/
-          ],
-        )
-      ),
+              ],
+            )
+        ),
+      )
     );
   }
 }

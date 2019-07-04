@@ -4,6 +4,7 @@ import 'package:amiibo_network/screen/detail_page.dart';
 import 'package:amiibo_network/screen/settings_screen.dart';
 import 'package:amiibo_network/screen/settings_detail.dart';
 import 'package:amiibo_network/screen/search_screen.dart';
+import 'package:flutter/services.dart';
 import 'dart:math' as math;
 
 class Routes{
@@ -26,7 +27,16 @@ class Routes{
 }
 
 MaterialPageRoute materialRoute(Widget builder, RouteSettings settings) {
-  return MaterialPageRoute(settings: settings, builder: (ctx) => builder);
+  return MaterialPageRoute(
+    settings: settings,
+    builder: (ctx) => AnnotatedRegion<SystemUiOverlayStyle>(
+      value: SystemUiOverlayStyle(
+        statusBarColor: Theme.of(ctx).scaffoldBackgroundColor,
+        systemNavigationBarColor: Theme.of(ctx).scaffoldBackgroundColor
+      ),
+      child: builder,
+    )
+  );
 }
 
 class FadeRoute<T> extends MaterialPageRoute<T> {
@@ -36,7 +46,13 @@ class FadeRoute<T> extends MaterialPageRoute<T> {
   @override
   Widget buildTransitions(BuildContext context, Animation<double> animation,
       Animation<double> secondaryAnimation, Widget child) {
-    return FadeTransition(opacity: animation, child: child);
+    return AnnotatedRegion<SystemUiOverlayStyle>(
+      value: SystemUiOverlayStyle(
+        statusBarColor: Theme.of(context).scaffoldBackgroundColor,
+        systemNavigationBarColor: Theme.of(context).scaffoldBackgroundColor
+      ),
+      child: FadeTransition(opacity: animation, child: child),
+    );
   }
 }
 
@@ -48,13 +64,19 @@ class SlideRoute<T> extends MaterialPageRoute<T> {
   Widget buildTransitions(BuildContext context, Animation<double> animation,
       Animation<double> secondaryAnimation, Widget child) {
     final double maxWidth = MediaQuery.of(context).size.width;
-    return SlideTransition(
-      position: Tween<Offset>(begin: const Offset(1, 0), end: Offset.zero)
-        .animate(animation),
-      child: GestureDetector(
-        child: child,
-        onHorizontalDragUpdate: (DragUpdateDetails details) => _handleDragUpdate(details, maxWidth),
-        onHorizontalDragEnd: (DragEndDetails details) => _handleDragEnd(details, maxWidth, context),
+    return AnnotatedRegion<SystemUiOverlayStyle>(
+      value: SystemUiOverlayStyle(
+        statusBarColor: Theme.of(context).scaffoldBackgroundColor,
+        systemNavigationBarColor: Theme.of(context).scaffoldBackgroundColor
+      ),
+      child: SlideTransition(
+        position: Tween<Offset>(begin: const Offset(1, 0), end: Offset.zero)
+          .animate(animation),
+        child: GestureDetector(
+          child: child,
+          onHorizontalDragUpdate: (DragUpdateDetails details) => _handleDragUpdate(details, maxWidth),
+          onHorizontalDragEnd: (DragEndDetails details) => _handleDragEnd(details, maxWidth, context),
+        )
       )
     );
   }

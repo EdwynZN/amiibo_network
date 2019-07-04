@@ -6,6 +6,7 @@ import 'package:dash/dash.dart';
 class AmiiboBloc extends Bloc{
   static final _service = Service();
   String _searchFilter = 'amiiboSeries';
+  String _name = 'All';
   List<int> _listOwned;
   final _owned = PublishSubject<List<int>>();
   final _amiiboFetcherDB = BehaviorSubject<AmiiboLocalDB>();
@@ -36,8 +37,14 @@ class AmiiboBloc extends Bloc{
 
   resetPagination(String name, bool search) async{
     _searchFilter = search ? 'name' : 'amiiboSeries';
+    _name = name;
     await _fetchByCategory(name);
     _filter.sink.add(name);
+  }
+
+  refreshPagination() async{
+    await _fetchByCategory(_name);
+    _filter.sink.add(_name);
   }
 
   set removeFromList(int position) => --_listOwned[position];

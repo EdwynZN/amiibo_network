@@ -1,33 +1,175 @@
 import 'package:flutter/material.dart';
+import 'package:file_picker/file_picker.dart';
+import 'package:permission_handler/permission_handler.dart';
+import 'package:amiibo_network/service/storage.dart';
+import 'package:amiibo_network/bloc/amiibo_bloc.dart';
+import 'package:amiibo_network/bloc/bloc_provider.dart';
 
 class SettingsPage extends StatelessWidget{
   @override
   Widget build(BuildContext context){
-    return Scaffold(
-      appBar: AppBar(
-        actions: <Widget>[],
-        title: Text('Settings'),
-      ),
-      body: CustomScrollView(
-        slivers: <Widget>[
-          SliverList(
-            delegate: SliverChildListDelegate.fixed([
-              CardSettings(title: 'Changelog', subtitle: 'Changing for better . . .', icon: Icons.build,),
-              CardSettings(title: 'Credits', subtitle: 'Those who make it possible', icon: Icons.theaters,),
-              ],
+    return SafeArea(
+      child: Scaffold(
+          appBar: AppBar(
+            actions: <Widget>[],
+            title: Text('Settings'),
+          ),
+          body: CustomScrollView(
+            slivers: <Widget>[
+              SliverList(
+                delegate: SliverChildListDelegate.fixed([
+                  CardSettings(title: 'Changelog', subtitle: 'Changing for better . . .', icon: Icons.build,),
+                  CardSettings(title: 'Credits', subtitle: 'Those who make it possible', icon: Icons.theaters,),
+                ],
+                ),
+              ),
+            ],
+          ),
+          bottomNavigationBar: BottomBar()
+      )
+    );
+  }
+}
+
+class BottomBar extends StatelessWidget{
+  final AmiiboBloc _bloc = $Provider.of<AmiiboBloc>();
+  
+  void _openFileExplorer(BuildContext context) async {
+    final String _path = await FilePicker.getFilePath(type: FileType.ANY);
+    bool _fileRead = false;
+    print(_path);
+    if(_path == null) return;
+    if(_path.substring(_path.lastIndexOf('.')) == '.json')
+      _fileRead = await Storage().readFile(_path);
+    if(!_fileRead)
+      Scaffold.of(context).showSnackBar(
+        SnackBar(content: Text('This isn\'t an Amiibo List'))
+      );
+    else {
+      _bloc.refreshPagination();
+      Scaffold.of(context).showSnackBar(
+        SnackBar(content: Text('Amiibo List updated'))
+      );
+    }
+  }
+
+  Future<bool> _checkPermission(BuildContext context) async {
+    final PermissionStatus permission =
+      await PermissionHandler().checkPermissionStatus(PermissionGroup.storage);
+    String value;
+    Future<bool> permissionGranted;
+    switch(permission){
+      case(PermissionStatus.granted):
+        permissionGranted = Future.value(true);
+        break;
+      case(PermissionStatus.denied):
+        value = 'Storage permission denied';
+        permissionGranted = Future.value(false);
+        break;
+      case(PermissionStatus.disabled):
+        value = 'Storage permission disabled';
+        permissionGranted = Future.value(false);
+        break;
+      case(PermissionStatus.restricted):
+        value = 'Storage permission restricted';
+        permissionGranted = Future.value(false);
+        break;
+      case(PermissionStatus.unknown):
+        value = 'Unknown Error';
+        permissionGranted = Future.value(false);
+        break;
+    }
+    if(!(await permissionGranted))
+      Scaffold.of(context).showSnackBar(
+        SnackBar(content: Text(value), duration: const Duration(seconds: 2),
+        )
+      );
+    return await permissionGranted;
+  }
+
+  Future<void> _exportDialog(BuildContext context) async {
+    return showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Save your amiibos'),
+          titlePadding: EdgeInsets.all(12),
+          contentPadding: EdgeInsets.symmetric(horizontal: 12),
+          content: SizedBox(
+            child: TextField(
+              textInputAction: TextInputAction.done,
+              maxLength: 15,
+              autocorrect: false,
+              autofocus: true,
+              decoration: InputDecoration(labelText: 'Name of the File'),
             ),
           ),
+          actions: <Widget>[
+            FlatButton(
+              child: Text('Save'),
+              onPressed: Navigator.of(context).pop,
+            ),
+          ],
+        );
+      }
+    );
+  }
+
+  _requestWritePermission(BuildContext context) async {
+    await PermissionHandler().requestPermissions([PermissionGroup.storage]);
+    if(await _checkPermission(context))
+      Scaffold.of(context).showSnackBar(
+        SnackBar(
+          content: Text(await Storage().writeFile(AppDirectory.EXTERNAL)),
+          duration: const Duration(seconds: 2),
+        )
+      );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return BottomAppBar(
+      child: Row (
+        mainAxisSize: MainAxisSize.min,
+        children: <Widget>[
+          ExpandedIconButton(icon: Icons.file_upload, text: 'Export',
+            onTap: () => _requestWritePermission(context)
+          ),
+          const SizedBox(height: 35, child: const VerticalDivider(width: 1)),
+          ExpandedIconButton(icon: Icons.file_download, text: 'Import',
+            onTap: () => _openFileExplorer(context),
+          )
         ],
       ),
-      /*bottomNavigationBar: Row(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
-        children: <Widget>[
-          Container(child: Text('Hola'),),
-          Container(child: Text('Hola'),),
-        ],
-      ),*/
+    );
+  }
+}
+
+class ExpandedIconButton extends StatelessWidget{
+  final IconData icon;
+  final String text;
+  final VoidCallback onTap;
+
+  const ExpandedIconButton({this.icon, this.text, this.onTap});
+
+  @override
+  Widget build(BuildContext context) {
+    return Expanded(
+      child: InkResponse(
+        containedInkWell: true, splashFactory: InkRipple.splashFactory,
+        highlightShape: BoxShape.rectangle,
+        onTap: onTap,
+        child: Padding(
+          padding: EdgeInsets.symmetric(vertical: 5),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: <Widget>[
+              Icon(icon),
+              SizedBox(child: Text(text))
+            ],
+          ),
+        )
+      ),
     );
   }
 }
@@ -52,13 +194,13 @@ class CardSettings extends StatelessWidget{
         textColor: Theme.of(context).textTheme.body1.color,
         child: ListTile(
           title: Text(title),
-          subtitle: Text(subtitle),
+          subtitle: Text(subtitle, softWrap: false, overflow: TextOverflow.ellipsis),
           onTap: () => Navigator.pushNamed(context, "/settingsdetail", arguments: title),
           trailing: const Icon(Icons.navigate_next),
           leading: Container(
             padding: EdgeInsets.only(right: 16, top: 8, bottom: 8),
             decoration: BoxDecoration(
-            border: Border(right: BorderSide(width: 1, color: Theme.of(context).dividerColor))
+              border: Border(right: BorderSide(width: 1, color: Theme.of(context).dividerColor))
             ),
             child: Icon(icon),
           )

@@ -21,6 +21,10 @@ class AmiiboLocalDB {
     amiibo: List<AmiiboDB>.from(amiibo.map((x) => AmiiboDB.fromMap(x))),
   );
 
+  Map<String, dynamic> toJson() => {
+    "amiibo": List<dynamic>.from(amiibo.map((x) => x.toJson())),
+  };
+
   Map<String, dynamic> toMap() => {
     "amiibo": List<dynamic>.from(amiibo.map((x) => x.toMap())),
   };
@@ -84,6 +88,12 @@ class AmiiboDB {
     "jp": jp,
     "na": na,
     "type": type,
+    if(wishlist != null) "wishlist": wishlist,
+    if(owned != null) "owned": owned,
+  };
+
+  Map<String, dynamic> toJson() => {
+    "id": id,
     if(wishlist != null) "wishlist": wishlist,
     if(owned != null) "owned": owned,
   };

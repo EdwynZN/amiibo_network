@@ -4,7 +4,6 @@ import 'package:amiibo_network/bloc/bloc_provider.dart';
 import 'package:amiibo_network/model/amiibo_local_db.dart';
 import 'package:floating_search_bar/floating_search_bar.dart';
 import 'package:amiibo_network/data/database.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter/rendering.dart';
 
 class HomePage extends StatefulWidget {
@@ -19,10 +18,6 @@ class HomePageState extends State<HomePage>
   static String _filter = 'All';
   ScrollController _controller;
   AnimationController _animationController;
-  static final lightTheme = SystemUiOverlayStyle.light
-    .copyWith(systemNavigationBarColor: Colors.red);
-  static final darkTheme = SystemUiOverlayStyle.light
-    .copyWith(systemNavigationBarColor: Colors.black87);
 
   initBloc() async{
     await _bloc.fetchAllAmiibosDB();
@@ -110,106 +105,107 @@ class HomePageState extends State<HomePage>
 
   @override
   Widget build(BuildContext context) {
-    SystemChrome.setSystemUIOverlayStyle(
-    MediaQuery.platformBrightnessOf(context) == Brightness.light ? lightTheme : darkTheme);
-    return WillPopScope(
-      onWillPop: _exitApp,
-      child: Scaffold(
-        resizeToAvoidBottomInset: false,
-        body: CustomScrollView(
-          controller: _controller, cacheExtent: 150,
-          slivers: <Widget>[
-            SliverFloatingBar(
-              backgroundColor: Theme.of(context).backgroundColor,
-              floating: true,
-              snap: true,
-              automaticallyImplyLeading: false,
-              leading: PopUpMenu(list, _onTapPopMenu),
-              title: GestureDetector(
+    return SafeArea(
+      child: WillPopScope(
+        onWillPop: _exitApp,
+        child: Scaffold(
+          resizeToAvoidBottomInset: false,
+          body: CustomScrollView(
+            controller: _controller, cacheExtent: 150,
+            slivers: <Widget>[
+              SliverFloatingBar(
+                backgroundColor: Theme.of(context).backgroundColor,
+                floating: true,
+                snap: true,
+                automaticallyImplyLeading: false,
+                leading: PopUpMenu(list, _onTapPopMenu),
+                title: GestureDetector(
                   child: StreamBuilder(
-                      initialData: 'All',
-                      stream: _bloc.filter,
-                      builder: (BuildContext context, AsyncSnapshot<String> filter){
-                        return Text('${filter.data} | Search Amiibo',
-                            style: Theme.of(context).textTheme.body2,
-                            overflow: TextOverflow.ellipsis, maxLines: 1);
-                      }),
+                    initialData: 'All',
+                    stream: _bloc.filter,
+                    builder: (BuildContext context, AsyncSnapshot<String> filter){
+                      return Text('${filter.data} | Search Amiibo',
+                        style: Theme.of(context).textTheme.body2,
+                        overflow: TextOverflow.ellipsis, maxLines: 1);
+                    }),
                   onTap: _search
-              ),
-              trailing: CircleAvatar(
+                ),
+                trailing: CircleAvatar(
                   child: GestureDetector(
                     onTap: () => Navigator.pushNamed(context, "/settings"),
                     child: Tooltip(message: 'Settings',
-                        child: Icon(Icons.settings,
-                          color: Theme.of(context).accentIconTheme.color,
-                        )),
+                      child: Icon(Icons.settings,
+                        color: Theme.of(context).accentIconTheme.color,
+                      )
+                    ),
                   )
+                ),
               ),
-            ),
-            SliverPadding(
-              padding: EdgeInsets.symmetric(horizontal: 16, vertical: 10),
-              sliver: SliverToBoxAdapter(
-                child: StreamBuilder(
-                  initialData: null,
-                  stream: _bloc.wished,
-                  builder: (context, AsyncSnapshot<List<String>> strList){
-                    if(strList.hasData)
-                    return Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: <Widget>[
-                        if(_filter != 'Wishlist')
-                        SizedBox(child: Text(strList.data[0], style: Theme.of(context).textTheme.display1)),
-                        if(_filter != 'Owned')
-                        SizedBox(child: Text(strList.data[1], style: Theme.of(context).textTheme.display1)),
-                      ],
+              SliverPadding(
+                padding: EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+                sliver: SliverToBoxAdapter(
+                  child: StreamBuilder(
+                    initialData: null,
+                    stream: _bloc.wished,
+                    builder: (context, AsyncSnapshot<List<String>> strList){
+                      if(strList.hasData)
+                        return Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: <Widget>[
+                            if(_filter != 'Wishlist')
+                              SizedBox(child: Text(strList.data[0], style: Theme.of(context).textTheme.display1)),
+                            if(_filter != 'Owned')
+                              SizedBox(child: Text(strList.data[1], style: Theme.of(context).textTheme.display1)),
+                          ],
+                        );
+                      else return const SizedBox.shrink();
+                    }
+                  )
+                ),
+              ),
+              SliverPadding(padding: EdgeInsets.symmetric(horizontal: 5),
+                sliver: StreamBuilder(
+                  stream: _bloc.allAmiibosDB,
+                  builder: (context, AsyncSnapshot<AmiiboLocalDB> snapshot) {
+                    if((snapshot.data?.amiibo?.length ?? 1) == 0)
+                      return const SliverToBoxAdapter(
+                          child: const Align(alignment: Alignment.center, heightFactor: 10,
+                              child: Text('Nothing to see here',
+                                textAlign: TextAlign.center,
+                                style: TextStyle(fontSize: 18),
+                              )
+                          )
+                      );
+                    else return SliverGrid(
+                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: MediaQuery.of(context).orientation == Orientation.portrait ? 3 : 6),
+                      delegate: SliverChildBuilderDelegate((BuildContext context, int index) =>
+                        AmiiboGrid(amiibo: snapshot.data.amiibo[index],
+                          onDoubleTap: () {
+                            Navigator.pushNamed(context, "/details", arguments: snapshot.data.amiibo[index])
+                                .then((_) {
+                              bool remove = _onGestureAmiibo(snapshot.data.amiibo[index]);
+                              if(remove) {
+                                snapshot.data.amiibo.removeAt(index);
+                                _bloc.removeFromList = 2;
+                              }
+                              _bloc.updateList();
+                            });
+                          },
+                        ),
+                        addRepaintBoundaries: false, addAutomaticKeepAlives: false,
+                        childCount: snapshot.hasData ? snapshot.data.amiibo.length : 0,
+                      )
                     );
-                    else return const SizedBox.shrink();
                   }
                 )
               ),
-            ),
-            SliverPadding(padding: EdgeInsets.symmetric(horizontal: 5),
-              sliver: StreamBuilder(
-                stream: _bloc.allAmiibosDB,
-                builder: (context, AsyncSnapshot<AmiiboLocalDB> snapshot) {
-                  if((snapshot.data?.amiibo?.length ?? 1) == 0)
-                    return const SliverToBoxAdapter(
-                      child: const Align(alignment: Alignment.center, heightFactor: 10,
-                        child: Text('Nothing to see here',
-                          textAlign: TextAlign.center,
-                          style: TextStyle(fontSize: 18),
-                        )
-                      )
-                    );
-                  else return SliverGrid(
-                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: MediaQuery.of(context).orientation == Orientation.portrait ? 3 : 6),
-                    delegate: SliverChildBuilderDelegate((BuildContext context, int index) =>
-                      AmiiboGrid(amiibo: snapshot.data.amiibo[index],
-                        onDoubleTap: () {
-                          Navigator.pushNamed(context, "/details", arguments: snapshot.data.amiibo[index])
-                          .then((_) {
-                            bool remove = _onGestureAmiibo(snapshot.data.amiibo[index]);
-                            if(remove) {
-                              snapshot.data.amiibo.removeAt(index);
-                              _bloc.removeFromList = 2;
-                            }
-                            _bloc.updateList();
-                          });
-                        },
-                      ),
-                      addRepaintBoundaries: false, addAutomaticKeepAlives: false,
-                      childCount: snapshot.hasData ? snapshot.data.amiibo.length : 0,
-                    )
-                  );
-                }
-              )
-            ),
-          ],
-        ),
-        floatingActionButton: FAB(_animationController,
-          () => _controller.jumpTo(0),
+            ],
+          ),
+          floatingActionButton: FAB(_animationController,
+            () => _controller.jumpTo(0),
+          )
         )
       )
     );

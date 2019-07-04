@@ -4,6 +4,7 @@ import 'package:amiibo_network/screen/splash_screen.dart';
 import 'package:amiibo_network/widget/route_transitions.dart';
 import 'package:amiibo_network/service/service.dart';
 import 'package:amiibo_network/themes.dart';
+import 'package:flutter/services.dart';
 
 void main() async {
   if(!await Service().compareLastUpdate()) runApp(AmiiboNetwork(SplashScreen()));
@@ -21,7 +22,17 @@ class AmiiboNetwork extends StatelessWidget {
       theme: Themes.light,
       darkTheme: Themes.dark,
       onGenerateRoute: Routes.getRoute,
-      home: firstPage,
+      home: Builder(
+        builder: (BuildContext context){
+          return AnnotatedRegion<SystemUiOverlayStyle>(
+            value: SystemUiOverlayStyle(
+              statusBarColor: Theme.of(context).scaffoldBackgroundColor,
+              systemNavigationBarColor: Theme.of(context).scaffoldBackgroundColor
+            ),
+            child: firstPage,
+          );
+        }
+      )
     );
   }
 }

@@ -2,3 +2,4 @@ Version 1.0.0
 - Search by name
 - Filter by game, wished, owned and cards
 - Save your owned amiibos and an amiibo wishlist
+- Import and export your list

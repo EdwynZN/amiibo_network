@@ -32,13 +32,29 @@ class Themes {
       body1: TextStyle(color: Colors.white70),
       body2: TextStyle(color: Colors.white70, fontSize: 16, fontWeight: FontWeight.w400),
       display1: TextStyle(color: Colors.white70, fontSize: 16, fontWeight: FontWeight.w600),
+    ),
+    bottomAppBarTheme: BottomAppBarTheme(
+      color: Colors.grey[900],
+    ),
+    dialogTheme: DialogTheme(
+      backgroundColor: Colors.grey[900],
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+    ),
+    snackBarTheme: SnackBarThemeData(
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(8),
+        side: BorderSide(color:const Color.fromRGBO(207, 102, 121, 1))
+      ),
+      behavior: SnackBarBehavior.floating,
     )
   );
   static final _light = ThemeData(
     primaryColorDark: Colors.redAccent,
     textSelectionHandleColor: Colors.white70,
     brightness: Brightness.light,
-    appBarTheme: AppBarTheme(color: Colors.red),
+    appBarTheme: AppBarTheme(
+      color: Colors.red,
+    ),
     unselectedWidgetColor: Colors.deepOrangeAccent[100],
     dividerColor: Colors.blueGrey,
     scaffoldBackgroundColor: Colors.red,
@@ -62,6 +78,17 @@ class Themes {
       body1: TextStyle(color: Colors.black87),
       body2: TextStyle(color: Colors.black87, fontSize: 16, fontWeight: FontWeight.w400),
       display1: TextStyle(color: Colors.black, fontSize: 16, fontWeight: FontWeight.w600),
+    ),
+    bottomAppBarTheme: BottomAppBarTheme(
+      color: Colors.white70
+    ),
+    dialogTheme: DialogTheme(
+      backgroundColor: Colors.white,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+    ),
+    snackBarTheme: SnackBarThemeData(
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8),),
+      behavior: SnackBarBehavior.floating,
     )
   );
 

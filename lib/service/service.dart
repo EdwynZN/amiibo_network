@@ -1,7 +1,6 @@
-import 'dart:async';
 import 'package:amiibo_network/dao/SQLite/amiibo_sqlite.dart';
 import '../model/amiibo_local_db.dart';
-import 'dart:convert' show jsonDecode;
+import 'dart:convert';
 import 'package:flutter/services.dart';
 
 class Service {
@@ -23,6 +22,11 @@ class Service {
   }
 
   Future<AmiiboLocalDB> fetchAllAmiiboDB() => dao.fetchAll();
+
+  Future<String> jsonFileDB() async {
+    final AmiiboLocalDB amiibos = await dao.fetchAll();
+    return jsonEncode(amiibos);
+  }
 
   Future<DateTime> get lastUpdateDB async{
     return _lastUpdateDB ??= await dao.lastUpdate()

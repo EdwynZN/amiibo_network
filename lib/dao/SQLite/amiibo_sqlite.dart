@@ -87,6 +87,20 @@ class AmiiboSQLite implements Dao<AmiiboLocalDB, String, AmiiboDB>{
     await batch.commit(noResult: true, continueOnError: true);
   }
 
+  Future<void> insertImport(AmiiboLocalDB list) async{
+    Database _db = await connectionFactory.database;
+    final batch = _db.batch();
+    for (var query in list.amiibo) {
+      batch.execute('''UPDATE amiibo
+      SET wishlist = ?,
+          owned = ?
+      WHERE id = ?;
+      ''',
+      [query.wishlist, query.owned, query.id]);
+    }
+    await batch.commit(noResult: true, continueOnError: true);
+  }
+
   Future<void> insert(AmiiboDB map, String name) async{
     Database _db = await connectionFactory.database;
     final batch = _db.batch();
