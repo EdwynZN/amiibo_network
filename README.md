@@ -7,7 +7,7 @@ Amiibo Network is an unofficial app for collectors and fans of amiibo and is int
 
 Amiibo Network is in no way affiliated with Nintendo. amiibo is a registered trademark of Nintendo. All items, names and other aspects are trademarked and owned by their respective owners.
 
-![Contribution guidelines for this project](screenshots/Nexus5X_Category.png)
+![Contribution guidelines for this project](screenshots/Nexus5X_Category.png =250x)
 
 ## Getting Started
 
