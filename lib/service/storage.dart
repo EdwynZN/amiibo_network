@@ -46,4 +46,7 @@ class Storage{
     final AmiiboLocalDB amiibos = AmiiboLocalDB.fromJson(jResult);
     return dao.insertImport(amiibos).then((_) => true);
   }
+
+  Future<void > clearCache() async => Directory(await tempDirectory).delete(recursive: true);
+
 }

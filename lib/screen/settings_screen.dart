@@ -6,26 +6,35 @@ import 'package:amiibo_network/bloc/amiibo_bloc.dart';
 import 'package:amiibo_network/bloc/bloc_provider.dart';
 
 class SettingsPage extends StatelessWidget{
+
   @override
   Widget build(BuildContext context){
     return SafeArea(
       child: Scaffold(
-          appBar: AppBar(
-            actions: <Widget>[],
-            title: Text('Settings'),
-          ),
-          body: CustomScrollView(
-            slivers: <Widget>[
-              SliverList(
-                delegate: SliverChildListDelegate.fixed([
-                  CardSettings(title: 'Changelog', subtitle: 'Changing for better . . .', icon: Icons.build,),
-                  CardSettings(title: 'Credits', subtitle: 'Those who make it possible', icon: Icons.theaters,),
-                ],
+        appBar: AppBar(
+          actions: <Widget>[],
+          title: Text('Settings'),
+        ),
+        body: CustomScrollView(
+          slivers: <Widget>[
+            SliverList(
+              delegate: SliverChildListDelegate.fixed([
+                CardSettings(title: 'Changelog', subtitle: 'Changing for better . . .', icon: Icons.build,),
+                CardSettings(title: 'Credits', subtitle: 'Those who make it possible', icon: Icons.theaters,),
+                CardSettings(title: 'Privacy Policy', subtitle: 'Therms and conditions', icon: Icons.help,
+                  onTap: () => Navigator.pushNamed(context, "/webview",
+                    arguments: {
+                      'url' : 'https://amiibo-network.flycricket.io/privacy.html',
+                      'title' : 'Privacy Policy'
+                    }
+                  ),
                 ),
+              ],
               ),
-            ],
-          ),
-          bottomNavigationBar: BottomBar()
+            ),
+          ],
+        ),
+        bottomNavigationBar: BottomBar()
       )
     );
   }
@@ -95,13 +104,16 @@ class BottomBar extends StatelessWidget{
           title: Text('Save your amiibos'),
           titlePadding: EdgeInsets.all(12),
           contentPadding: EdgeInsets.symmetric(horizontal: 12),
-          content: SizedBox(
-            child: TextField(
-              textInputAction: TextInputAction.done,
-              maxLength: 15,
-              autocorrect: false,
-              autofocus: true,
-              decoration: InputDecoration(labelText: 'Name of the File'),
+          content: ClipRect(
+            clipBehavior: Clip.hardEdge,
+            child: SizedBox(
+              child: TextField(
+                textInputAction: TextInputAction.done,
+                maxLength: 15,
+                autocorrect: false,
+                autofocus: true,
+                decoration: InputDecoration(labelText: 'Name of the File'),
+              ),
             ),
           ),
           actions: <Widget>[
@@ -178,12 +190,14 @@ class CardSettings extends StatelessWidget{
   final String title;
   final String subtitle;
   final IconData icon;
+  final VoidCallback onTap;
 
   CardSettings({
     Key key,
     this.title,
     this.subtitle,
     this.icon,
+    this.onTap
   });
 
   @override
@@ -195,7 +209,7 @@ class CardSettings extends StatelessWidget{
         child: ListTile(
           title: Text(title),
           subtitle: Text(subtitle, softWrap: false, overflow: TextOverflow.ellipsis),
-          onTap: () => Navigator.pushNamed(context, "/settingsdetail", arguments: title),
+          onTap: onTap ?? () => Navigator.pushNamed(context, "/settingsdetail", arguments: title),
           trailing: const Icon(Icons.navigate_next),
           leading: Container(
             padding: EdgeInsets.only(right: 16, top: 8, bottom: 8),

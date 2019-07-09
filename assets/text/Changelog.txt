@@ -1,5 +1,8 @@
-Version 1.0.0
+Version 1.1.0
+- Fixed theme change bugs
+- Import and export your list
+
+Version 1.0.2
 - Search by name
 - Filter by game, wished, owned and cards
 - Save your owned amiibos and an amiibo wishlist
-- Import and export your list

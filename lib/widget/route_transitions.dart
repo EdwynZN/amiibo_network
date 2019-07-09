@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:amiibo_network/screen/home_page.dart';
 import 'package:amiibo_network/screen/detail_page.dart';
 import 'package:amiibo_network/screen/settings_screen.dart';
 import 'package:amiibo_network/screen/settings_detail.dart';
 import 'package:amiibo_network/screen/search_screen.dart';
+import 'package:amiibo_network/screen/web_screen.dart';
 import 'package:flutter/services.dart';
 import 'dart:math' as math;
 
@@ -20,10 +22,31 @@ class Routes{
         return SlideRoute(builder: (_) => SettingsDetail(title: settings.arguments), settings: settings);
       case '/search':
         return FadeRoute(builder: (_) => SearchScreen());
+      case '/webview':
+        return materialRoute(
+          WebViewScreen(
+            title: Map.of(settings.arguments)['title'],
+            url: Map.of(settings.arguments)['url'],
+          ),
+          settings
+        );
       default:
         return null;
     }
   }
+}
+
+CupertinoPageRoute cupertinoRoute({Widget builder, RouteSettings settings}){
+  return CupertinoPageRoute(
+    settings: settings,
+    builder: (ctx) => AnnotatedRegion<SystemUiOverlayStyle>(
+      value: SystemUiOverlayStyle(
+        statusBarColor: Theme.of(ctx).scaffoldBackgroundColor,
+        systemNavigationBarColor: Theme.of(ctx).scaffoldBackgroundColor
+      ),
+      child: builder
+    )
+  );
 }
 
 MaterialPageRoute materialRoute(Widget builder, RouteSettings settings) {
@@ -57,7 +80,7 @@ class FadeRoute<T> extends MaterialPageRoute<T> {
 }
 
 class SlideRoute<T> extends MaterialPageRoute<T> {
-  SlideRoute({ WidgetBuilder builder, RouteSettings settings })
+  SlideRoute({WidgetBuilder builder, RouteSettings settings})
       : super(builder: builder, settings: settings);
 
   @override

@@ -6,7 +6,10 @@ class Themes {
     textSelectionHandleColor: const Color.fromRGBO(207, 102, 121, 1),
     appBarTheme: AppBarTheme(
       color: Colors.grey[900],
-      textTheme: TextTheme(title: TextStyle(color: Colors.white70, fontSize: 20)),
+      textTheme: TextTheme(
+        title: TextStyle(color: Colors.white70, fontSize: 20),
+        subtitle: TextStyle(color: Colors.white70, fontSize: 12),
+      ),
       iconTheme: IconThemeData(color: Colors.white54),
     ),
     brightness: Brightness.dark,
@@ -54,6 +57,10 @@ class Themes {
     brightness: Brightness.light,
     appBarTheme: AppBarTheme(
       color: Colors.red,
+      textTheme: TextTheme(
+        title: TextStyle(color: Colors.white, fontSize: 20),
+        subtitle: TextStyle(color: Colors.white, fontSize: 12),
+      ),
     ),
     unselectedWidgetColor: Colors.deepOrangeAccent[100],
     dividerColor: Colors.blueGrey,

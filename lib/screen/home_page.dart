@@ -125,8 +125,8 @@ class HomePageState extends State<HomePage>
                     stream: _bloc.filter,
                     builder: (BuildContext context, AsyncSnapshot<String> filter){
                       return Text('${filter.data} | Search Amiibo',
-                        style: Theme.of(context).textTheme.body2,
-                        overflow: TextOverflow.ellipsis, maxLines: 1);
+                      style: Theme.of(context).textTheme.body2,
+                      overflow: TextOverflow.ellipsis, maxLines: 1);
                     }),
                   onTap: _search
                 ),
@@ -170,12 +170,12 @@ class HomePageState extends State<HomePage>
                   builder: (context, AsyncSnapshot<AmiiboLocalDB> snapshot) {
                     if((snapshot.data?.amiibo?.length ?? 1) == 0)
                       return const SliverToBoxAdapter(
-                          child: const Align(alignment: Alignment.center, heightFactor: 10,
-                              child: Text('Nothing to see here',
-                                textAlign: TextAlign.center,
-                                style: TextStyle(fontSize: 18),
-                              )
+                        child: const Align(alignment: Alignment.center, heightFactor: 10,
+                          child: Text('Nothing to see here',
+                            textAlign: TextAlign.center,
+                            style: TextStyle(fontSize: 18),
                           )
+                        )
                       );
                     else return SliverGrid(
                       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
@@ -267,8 +267,7 @@ class PopUpMenu extends StatelessWidget{
           ),
         ),
       ],
-      icon: Icon(Icons.filter_list),
-      offset: Offset(-16, 50),
+      icon: Icon(Icons.filter_list, size: 30,),
       tooltip: 'Categories',
       onSelected: onTap
     );
