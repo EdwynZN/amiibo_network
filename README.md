@@ -1,4 +1,4 @@
-# amiibo_network
+# Amiibo Network
 
 An Amiibo collection app with a wishlist and personal collection, search bar to search by name and category list to see each type of amiibo.
 
@@ -7,7 +7,14 @@ Amiibo Network is an unofficial app for collectors and fans of amiibo and is int
 
 Amiibo Network is in no way affiliated with Nintendo. amiibo is a registered trademark of Nintendo. All items, names and other aspects are trademarked and owned by their respective owners.
 
-<img src="screenshots/Nexus5X_Category.png" height="250">
+# Screenshots
+
+Ligth                      |             Dark
+:-------------------------:|:-------------------------:
+<img src="screenshots/Nexus5X_home.png" height="250"> | <img src="screenshots/Nexus5X_home_dark.png" height="250">
+<img src="screenshots/Nexus5X_Category.png" height="250"> | <img src="screenshots/Nexus5X_Category_dark.png" height="250">
+<img src="screenshots/Nexus5x_detail.png" height="250"> | <img src="screenshots/Nexus5X_detail_dark.png" height="250">
+<img src="screenshots/Nexus5X_search.png" height="250"> | <img src="screenshots/Nexus5X_search_dark.png" height="250">
 
 ## Getting Started
 
