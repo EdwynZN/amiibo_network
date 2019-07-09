@@ -14,9 +14,9 @@ class WebViewScreen extends StatelessWidget{
         clearCookies: true,
         withJavascript: false,
         withLocalStorage: false,
+        hidden: true,
         url: url,
         appBar: AppBar(
-          titleSpacing: 12.0,
           title: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisSize: MainAxisSize.min,

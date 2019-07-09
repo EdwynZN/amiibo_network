@@ -1,6 +1,5 @@
 # Amiibo Network [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
-
 <a href='https://play.google.com/store/apps/details?hl=en_US&id=com.dartz.amiibo_network&pcampaignid=MKT-Other-global-all-co-prtnr-py-PartBadge-Mar2515-1'><img alt='Get it on Google Play' src='https://play.google.com/intl/en_us/badges/images/generic/en_badge_web_generic.png' width=150/></a>
 
 An Amiibo collection app with a wishlist and personal collection, search bar to search by name and category list to see each type of amiibo.
@@ -12,7 +11,7 @@ Amiibo Network is in no way affiliated with Nintendo. amiibo is a registered tra
 
 # Screenshots
 
-Ligth                      |             Dark
+Light                      |             Dark
 :-------------------------:|:-------------------------:
 <img src="screenshots/Nexus5X_home.png" height="250"> | <img src="screenshots/Nexus5X_home_dark.png" height="250">
 <img src="screenshots/Nexus5X_Category.png" height="250"> | <img src="screenshots/Nexus5X_Category_dark.png" height="250">

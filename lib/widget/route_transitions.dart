@@ -23,12 +23,12 @@ class Routes{
       case '/search':
         return FadeRoute(builder: (_) => SearchScreen());
       case '/webview':
-        return materialRoute(
-          WebViewScreen(
+        return cupertinoRoute(
+          builder: WebViewScreen(
             title: Map.of(settings.arguments)['title'],
             url: Map.of(settings.arguments)['url'],
           ),
-          settings
+          settings: settings
         );
       default:
         return null;
