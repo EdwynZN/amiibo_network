@@ -15,8 +15,9 @@ Light                      |             Dark
 :-------------------------:|:-------------------------:
 <img src="screenshots/Nexus5X_home.png" height="250"> | <img src="screenshots/Nexus5X_home_dark.png" height="250">
 <img src="screenshots/Nexus5X_Category.png" height="250"> | <img src="screenshots/Nexus5X_Category_dark.png" height="250">
-<img src="screenshots/Nexus5x_detail.png" height="250"> | <img src="screenshots/Nexus5X_detail_dark.png" height="250">
+<img src="screenshots/Nexus5X_detail.png" height="250"> | <img src="screenshots/Nexus5X_detail_dark.png" height="250">
 <img src="screenshots/Nexus5X_search.png" height="250"> | <img src="screenshots/Nexus5X_search_dark.png" height="250">
+<img src="screenshots/Nexus5x_settings.png" height="250"> | <img src="screenshots/Nexus5X_settings_dark.png" height="250">
 
 ## Getting Started
 
