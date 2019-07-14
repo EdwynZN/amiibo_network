@@ -1,5 +1,5 @@
 <p align="center">
-    <img src="screenshots/icon_app_1024.jpg">
+    <img src="screenshots/icon_app_1024.jpg" height="350">
 </p>
 
 # Dart Bot Privacy Policy
