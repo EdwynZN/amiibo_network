@@ -1,6 +1,7 @@
 Version 1.1.0
-- Fixed theme change bugs
+- Fixed minor bugs
 - Import and export your list
+- You can now select the theme of the app
 
 Version 1.0.2
 - Search by name
