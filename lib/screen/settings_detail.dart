@@ -11,26 +11,26 @@ class SettingsDetail extends StatelessWidget {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-          backgroundColor: MediaQuery.platformBrightnessOf(context) == Brightness.dark
-              ? Theme.of(context).scaffoldBackgroundColor : Colors.white,
-          appBar: AppBar(title: Text(title),),
-          body: SingleChildScrollView(
-              padding: EdgeInsets.all(16),
-              child: FutureBuilder(
-                  future: _localFile,
-                  builder: (BuildContext context, AsyncSnapshot<String> snapshot){
-                    if(snapshot.hasData)
-                      return Container(
-                        child: Text('${snapshot.data}',
-                          overflow: TextOverflow.clip,
-                          textAlign: TextAlign.justify,
-                          style: TextStyle(height: 1.5, fontWeight: FontWeight.w500),
-                        ),
-                      );
-                    else return const SizedBox();
-                  }
-              )
+        backgroundColor: Theme.of(context).brightness == Brightness.dark
+          ? Theme.of(context).scaffoldBackgroundColor : Colors.white,
+        appBar: AppBar(title: Text(title),),
+        body: SingleChildScrollView(
+          padding: EdgeInsets.all(16),
+          child: FutureBuilder(
+            future: _localFile,
+            builder: (BuildContext context, AsyncSnapshot<String> snapshot){
+              if(snapshot.hasData)
+                return Container(
+                  child: Text('${snapshot.data}',
+                    overflow: TextOverflow.clip,
+                    textAlign: TextAlign.justify,
+                    style: TextStyle(height: 1.5, fontWeight: FontWeight.w500),
+                  ),
+                );
+              else return const SizedBox();
+            }
           )
+        )
       )
     );
   }

@@ -8,7 +8,7 @@ class Themes {
       color: Colors.grey[900],
       textTheme: TextTheme(
         title: TextStyle(color: Colors.white70, fontSize: 20),
-        subtitle: TextStyle(color: Colors.white70, fontSize: 12),
+        subtitle: TextStyle(color: Colors.white70, fontSize: 16),
       ),
       iconTheme: IconThemeData(color: Colors.white54),
     ),
@@ -59,8 +59,11 @@ class Themes {
       color: Colors.red,
       textTheme: TextTheme(
         title: TextStyle(color: Colors.white, fontSize: 20),
-        subtitle: TextStyle(color: Colors.white, fontSize: 12),
+        subtitle: TextStyle(color: Colors.white, fontSize: 16),
       ),
+      iconTheme: IconThemeData(
+        color: Colors.white
+      )
     ),
     unselectedWidgetColor: Colors.deepOrangeAccent[100],
     dividerColor: Colors.blueGrey,
@@ -87,7 +90,7 @@ class Themes {
       display1: TextStyle(color: Colors.black, fontSize: 16, fontWeight: FontWeight.w600),
     ),
     bottomAppBarTheme: BottomAppBarTheme(
-      color: Colors.white70
+      color: Colors.white70,
     ),
     dialogTheme: DialogTheme(
       backgroundColor: Colors.white,

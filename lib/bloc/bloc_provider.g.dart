@@ -24,6 +24,11 @@ class $Provider extends Provider {
           return BlocCache.getBlocInstance(
               "SearchBloc", () => SearchBloc.instance());
         }
+      case ThemeBloc:
+        {
+          return BlocCache.getBlocInstance(
+              "ThemeBloc", () => ThemeBloc.instance());
+        }
     }
     return null;
   }
@@ -43,6 +48,11 @@ class $Provider extends Provider {
       case SearchBloc:
         {
           BlocCache.dispose("SearchBloc");
+          break;
+        }
+      case ThemeBloc:
+        {
+          BlocCache.dispose("ThemeBloc");
           break;
         }
     }

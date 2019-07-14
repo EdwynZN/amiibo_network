@@ -3,6 +3,7 @@ import 'package:file_picker/file_picker.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:amiibo_network/service/storage.dart';
 import 'package:amiibo_network/bloc/amiibo_bloc.dart';
+import 'package:amiibo_network/bloc/theme_bloc.dart';
 import 'package:amiibo_network/bloc/bloc_provider.dart';
 
 class SettingsPage extends StatelessWidget{
@@ -12,8 +13,16 @@ class SettingsPage extends StatelessWidget{
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
-          actions: <Widget>[],
-          title: Text('Settings'),
+          actions: <Widget>[
+            Align(
+              alignment: Alignment.center,
+              child: Padding(
+                padding: EdgeInsets.only(right: 8),
+                child: DropMenu(),
+              ),
+            )
+          ],
+          title: const SizedBox(child: Text('Settings')),
         ),
         body: CustomScrollView(
           slivers: <Widget>[
@@ -21,20 +30,76 @@ class SettingsPage extends StatelessWidget{
               delegate: SliverChildListDelegate.fixed([
                 CardSettings(title: 'Changelog', subtitle: 'Changing for better . . .', icon: Icons.build,),
                 CardSettings(title: 'Credits', subtitle: 'Those who make it possible', icon: Icons.theaters,),
-                CardSettings(title: 'Privacy Policy', subtitle: 'Therms and conditions', icon: Icons.help,
-                  onTap: () => Navigator.pushNamed(context, "/webview",
-                    arguments: {
-                      'url' : 'https://amiibo-network.flycricket.io/privacy.html',
-                      'title' : 'Privacy Policy'
-                    }
-                  ),
-                ),
+                CardSettings(title: 'Privacy Policy', subtitle: 'Therms and conditions', icon: Icons.help,),
               ],
               ),
             ),
           ],
         ),
         bottomNavigationBar: BottomBar()
+      )
+    );
+  }
+}
+
+class DropMenu extends StatefulWidget {
+  @override
+  State<StatefulWidget> createState() => DropMenuState();
+}
+
+class DropMenuState extends State<DropMenu>{
+  static final ThemeBloc _themeBloc = $Provider.of<ThemeBloc>();
+  String _value = _themeBloc.savedTheme;
+
+  @override
+  Widget build(BuildContext context) {
+    return DropdownButton<String>(
+      items: [
+        DropdownMenuItem<String>(
+          value: 'Auto',
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: <Widget>[
+              const Icon(Icons.brightness_auto, color: Colors.amberAccent),
+              Padding(child: Text('Auto'), padding: EdgeInsets.only(left: 8))
+            ],
+          ),
+        ),
+        DropdownMenuItem<String>(
+          value: 'Light',
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: <Widget>[
+              const Icon(Icons.wb_sunny, color: Colors.amberAccent),
+              Padding(child: Text('Light'), padding: EdgeInsets.only(left: 8))
+            ],
+          ),
+        ),
+        DropdownMenuItem<String>(
+          value: 'Dark',
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: <Widget>[
+              const Icon(Icons.brightness_3, color: Colors.amberAccent),
+              Padding(child: Text('Dark'), padding: EdgeInsets.only(left: 8))
+            ],
+          ),
+        ),
+      ],
+      onChanged: (String x) async{
+        _value = x;
+        await _themeBloc.themeDB(x);
+        setState(() {});
+      },
+      underline: const SizedBox.shrink(),
+      iconEnabledColor: Theme.of(context).appBarTheme.iconTheme.color,
+      hint: Row(
+        children: <Widget>[
+          const Icon(Icons.color_lens),
+          Padding(padding: EdgeInsets.only(left: 8),
+            child: Text(_value, style: Theme.of(context).appBarTheme.textTheme.subtitle,),
+          )
+        ]
       )
     );
   }

@@ -64,51 +64,51 @@ class SplashScreenState extends State<SplashScreen>
       child: Material(
         type: MaterialType.canvas,
         child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              SwitchIcon(controller: _animationController.view, height: _size),
-              Container(
-                color: Colors.black,
-                padding: EdgeInsets.all(5),
-                width: _size/3,
-                height: _size/4,
-                alignment: Alignment.center,
-                child: StreamBuilder(
-                    stream: _bloc.allAmiibosDB,
-                    builder: (_, AsyncSnapshot<bool> snapshot) {
-                      if(snapshot.hasData && !_animationController.isAnimating){
-                        _animationController.forward().whenCompleteOrCancel(
-                                () => Future.delayed(const Duration(milliseconds: 500))
-                                .then((_) => Navigator.pushReplacementNamed(context, '/home')));
-                        if(!snapshot.data) return ScreenAnimation(
-                            opacity: _animationController,
-                            child: Text("Couldn't Update :(", style: TextStyle(color: Colors.white70))
-                        );
-                        else return ScreenAnimation(
-                          opacity: _animationController,
-                          child: Text("WELCOME", style: TextStyle(color: Colors.white70)),
-                        );
-                      }
-                      else if(snapshot.hasData) _completeAnimation();
-                      return Stack(
-                        alignment: Alignment.center,
-                        children: <Widget>[
-                          const CircularProgressIndicator(backgroundColor: Colors.black),
-                          FadeTransition(
-                            opacity: _opacity,
-                            child: Align(alignment: Alignment.bottomCenter,
-                                child: Text("Just a second...", style: TextStyle(color: Colors.white))
-                            ),
-                          )
-                        ],
-                      );
-                    }
-                ),
+          mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            SwitchIcon(controller: _animationController.view, height: _size),
+            Container(
+              color: Colors.black,
+              padding: EdgeInsets.all(5),
+              width: _size/3,
+              height: _size/4,
+              alignment: Alignment.center,
+              child: StreamBuilder(
+                stream: _bloc.allAmiibosDB,
+                builder: (_, AsyncSnapshot<bool> snapshot) {
+                  if(snapshot.hasData && !_animationController.isAnimating){
+                    _animationController.forward().whenCompleteOrCancel(
+                      () => Future.delayed(const Duration(milliseconds: 500))
+                      .then((_) => Navigator.pushReplacementNamed(context, '/home')));
+                    if(!snapshot.data) return ScreenAnimation(
+                      opacity: _animationController,
+                      child: Text("Couldn't Update :(", style: TextStyle(color: Colors.white70))
+                    );
+                    else return ScreenAnimation(
+                      opacity: _animationController,
+                      child: Text("WELCOME", style: TextStyle(color: Colors.white70)),
+                    );
+                  }
+                  else if(snapshot.hasData) _completeAnimation();
+                  return Stack(
+                    alignment: Alignment.center,
+                    children: <Widget>[
+                      const CircularProgressIndicator(backgroundColor: Colors.black),
+                      FadeTransition(
+                        opacity: _opacity,
+                        child: Align(alignment: Alignment.bottomCenter,
+                            child: Text("Just a second...", style: TextStyle(color: Colors.white))
+                        ),
+                      )
+                    ],
+                  );
+                }
               ),
-              SwitchIcon(controller: _animationController.view, isLeft: false, height: _size),
-            ]
+            ),
+            SwitchIcon(controller: _animationController.view, isLeft: false, height: _size),
+          ]
         ),
       ),
     );

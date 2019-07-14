@@ -5,7 +5,6 @@ import 'package:amiibo_network/screen/detail_page.dart';
 import 'package:amiibo_network/screen/settings_screen.dart';
 import 'package:amiibo_network/screen/settings_detail.dart';
 import 'package:amiibo_network/screen/search_screen.dart';
-import 'package:amiibo_network/screen/web_screen.dart';
 import 'package:flutter/services.dart';
 import 'dart:math' as math;
 
@@ -13,7 +12,7 @@ class Routes{
   static Route<dynamic> getRoute(RouteSettings settings) {
     switch(settings.name){
       case '/details':
-        return materialRoute(DetailPage(amiibo: settings.arguments), settings);
+        return cupertinoRoute(DetailPage(amiibo: settings.arguments), settings);
       case '/home':
         return FadeRoute(builder: (_) => HomePage());
       case '/settings':
@@ -22,21 +21,13 @@ class Routes{
         return SlideRoute(builder: (_) => SettingsDetail(title: settings.arguments), settings: settings);
       case '/search':
         return FadeRoute(builder: (_) => SearchScreen());
-      case '/webview':
-        return cupertinoRoute(
-          builder: WebViewScreen(
-            title: Map.of(settings.arguments)['title'],
-            url: Map.of(settings.arguments)['url'],
-          ),
-          settings: settings
-        );
       default:
         return null;
     }
   }
 }
 
-CupertinoPageRoute cupertinoRoute({Widget builder, RouteSettings settings}){
+CupertinoPageRoute cupertinoRoute(Widget builder, RouteSettings settings){
   return CupertinoPageRoute(
     settings: settings,
     builder: (ctx) => AnnotatedRegion<SystemUiOverlayStyle>(

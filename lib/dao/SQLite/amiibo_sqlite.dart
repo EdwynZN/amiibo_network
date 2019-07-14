@@ -38,10 +38,25 @@ class AmiiboSQLite implements Dao<AmiiboLocalDB, String, AmiiboDB>{
     List<Map> maps = await _db.query('date',
       columns: ['lastUpdated'],
       where: 'id = 1');
-    if (maps.length > 0) {
-      return LastUpdateDB.fromMap(maps.first);
-    }
+    if (maps.length > 0) return LastUpdateDB.fromMap(maps.first);
     return null;
+  }
+
+  Future<String> favoriteTheme() async{
+    Database _db = await connectionFactory.database;
+    List<Map> maps = await _db.query('date',
+      columns: ['lastUpdated'],
+      where: 'id = 2');
+    if (maps.length > 0) return maps.first['lastUpdated'].toString();
+    return 'Auto';
+  }
+
+  Future<void> updateTheme(String theme) async{
+    Database _db = await connectionFactory.database;
+    return await _db.transaction((tx) async{
+      tx.rawInsert('''REPLACE INTO date
+        VALUES(2, ?)''', [theme]);
+    });
   }
 
   Future<void> updateTime(LastUpdateDB map) async{

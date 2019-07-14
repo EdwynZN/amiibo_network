@@ -13,6 +13,10 @@ class Service {
   factory Service() => _instance;
   Service._();
 
+  Future<String> getTheme() async => await dao.favoriteTheme();
+
+  Future updateTheme(String theme) async => await dao.updateTheme(theme);
+
   Future<Map<String, dynamic>> get jsonFile async {
     return _jsonFile ??= jsonDecode(await rootBundle.loadString('assets/databases/amiibos.json'));
   }

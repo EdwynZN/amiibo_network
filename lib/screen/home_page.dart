@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:amiibo_network/bloc/amiibo_bloc.dart';
+import 'package:amiibo_network/bloc/theme_bloc.dart';
 import 'package:amiibo_network/bloc/bloc_provider.dart';
 import 'package:amiibo_network/model/amiibo_local_db.dart';
 import 'package:floating_search_bar/floating_search_bar.dart';
@@ -49,7 +50,7 @@ class HomePageState extends State<HomePage>
     if((_controller?.hasClients ?? false) && !_animationController.isAnimating){
       switch(_controller.position.userScrollDirection){
         case ScrollDirection.forward:
-            _animationController.forward();
+          _animationController.forward();
           break;
         case ScrollDirection.reverse:
           _animationController.reverse();
@@ -99,7 +100,8 @@ class HomePageState extends State<HomePage>
     _controller?.removeListener(_scrollListener);
     _controller?.dispose();
     _animationController?.dispose();
-    $Provider.dispose<AmiiboBloc>();
+    _bloc.dispose();
+    $Provider.dispose<ThemeBloc>();
     return await Future.value(true);
   }
 
@@ -262,12 +264,12 @@ class PopUpMenu extends StatelessWidget{
                 backgroundColor: Theme.of(context).accentColor,
                 foregroundColor: Theme.of(context).accentIconTheme.color,
                 child: Text(series[0]), radius: 14,),
-              Container(child: Text(series), margin: EdgeInsets.only(left: 8),)
+              Padding(child: Text(series), padding: EdgeInsets.only(left: 8),)
             ],
           ),
         ),
       ],
-      icon: Icon(Icons.filter_list, size: 30,),
+      icon: Icon(Icons.sort, size: 30,),
       tooltip: 'Categories',
       onSelected: onTap
     );
