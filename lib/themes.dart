@@ -87,7 +87,7 @@ class Themes {
     textTheme: TextTheme(
       body1: TextStyle(color: Colors.black87),
       body2: TextStyle(color: Colors.black87, fontSize: 16, fontWeight: FontWeight.w400),
-      display1: TextStyle(color: Colors.black, fontSize: 16, fontWeight: FontWeight.w600),
+      display1: TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.w600),
     ),
     bottomAppBarTheme: BottomAppBarTheme(
       color: Colors.white70,

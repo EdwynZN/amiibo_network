@@ -13,7 +13,7 @@ class Storage{
   Future get localPath async => await getApplicationDocumentsDirectory();
 
   Future<String> writeFile(AppDirectory kDir,
-      {String name = 'MyAmiiboList', String folder = '/Download'}) async{
+  {String name = 'MyAmiiboList', String folder = '/Download'}) async{
     Directory dir;
     String path;
     String fileSaved = 'saved';
