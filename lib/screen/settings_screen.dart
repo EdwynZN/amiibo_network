@@ -8,6 +8,8 @@ import 'package:amiibo_network/bloc/bloc_provider.dart';
 
 class SettingsPage extends StatelessWidget{
 
+  const SettingsPage({Key key}): super(key: key);
+
   @override
   Widget build(BuildContext context){
     return SafeArea(
@@ -60,7 +62,7 @@ class DropMenuState extends State<DropMenu>{
           child: Row(
             mainAxisSize: MainAxisSize.min,
             children: <Widget>[
-              const Icon(Icons.brightness_auto, color: Colors.amberAccent),
+              const Icon(Icons.brightness_auto, color: Colors.amber),
               Padding(child: Text('Auto'), padding: EdgeInsets.only(left: 8))
             ],
           ),
@@ -70,7 +72,7 @@ class DropMenuState extends State<DropMenu>{
           child: Row(
             mainAxisSize: MainAxisSize.min,
             children: <Widget>[
-              const Icon(Icons.wb_sunny, color: Colors.amberAccent),
+              const Icon(Icons.wb_sunny, color: Colors.amber),
               Padding(child: Text('Light'), padding: EdgeInsets.only(left: 8))
             ],
           ),
@@ -80,7 +82,7 @@ class DropMenuState extends State<DropMenu>{
           child: Row(
             mainAxisSize: MainAxisSize.min,
             children: <Widget>[
-              const Icon(Icons.brightness_3, color: Colors.amberAccent),
+              const Icon(Icons.brightness_3, color: Colors.amber),
               Padding(child: Text('Dark'), padding: EdgeInsets.only(left: 8))
             ],
           ),

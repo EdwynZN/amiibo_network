@@ -63,12 +63,10 @@ class Service {
 
   Future<AmiiboDB> fetchAmiiboDBById(String id) => dao.fetchById(id);
 
-  Future<void> update(AmiiboLocalDB amiibos) async {
-    if(amiibos.amiibo.length == 1){
-      return dao.update(amiibos.amiibo[0], "amiibo");
-    } else{
-      return dao.insertAll(amiibos, 'amiibo');
-    }
+  Future<void> update(AmiiboLocalDB amiibos) {
+    return dao.insertImport(amiibos);
+    /*return amiibos.amiibo.length == 1 ? dao.update(amiibos.amiibo[0], "amiibo")
+      : dao.insertAll(amiibos, 'amiibo');*/
   }
 
   Future<List<String>> fetchDistinct() async =>

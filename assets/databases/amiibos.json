@@ -301,6 +301,18 @@
       "type": "Figure"
     },
     {
+      "id": "0005ff00023b0702",
+      "amiiboSeries": "Skylanders",
+      "character": "Bowser",
+      "gameSeries": "Super Mario",
+      "name": "Dark Hammer Slam Bowser",
+      "au": "2015/09/24",
+      "eu": "2015/09/25",
+      "jp": null,
+      "na": "2015/09/20",
+      "type": "Figure"
+    },
+    {
       "id": "0006000000150002",
       "amiiboSeries": "Super Smash Bros.",
       "character": "Bowser Jr.",
@@ -366,6 +378,18 @@
       "character": "Donkey Kong",
       "gameSeries": "Super Mario",
       "name": "Turbo Charge Donkey Kong",
+      "au": "2015/09/24",
+      "eu": "2015/09/25",
+      "jp": null,
+      "na": "2015/09/20",
+      "type": "Figure"
+    },
+    {
+      "id": "0008ff00023a0702",
+      "amiiboSeries": "Skylanders",
+      "character": "Donkey Kong",
+      "gameSeries": "Super Mario",
+      "name": "Dark Turbo Charge Donkey Kong",
       "au": "2015/09/24",
       "eu": "2015/09/25",
       "jp": null,
@@ -8723,7 +8747,43 @@
       "jp": "2019/02/15",
       "na": "2019/02/15",
       "type": "Figure"
+    },
+    {
+      "id": "19ac000003850002",
+      "amiiboSeries": "Super Smash Bros.",
+      "character": "Pichu",
+      "gameSeries": "Pokemon",
+      "name": "Pichu",
+      "au": "2019/07/19",
+      "eu": "2019/07/19",
+      "jp": "2019/07/19",
+      "na": "2019/07/19",
+      "type": "Figure"
+    },
+    {
+      "id": "01810000037d0002",
+      "amiiboSeries": "Super Smash Bros.",
+      "character": "Isabelle",
+      "gameSeries": "Animal Crossing",
+      "name": "Isabelle",
+      "au": "2019/07/19",
+      "eu": "2019/07/19",
+      "jp": "2019/07/19",
+      "na": "2019/07/26",
+      "type": "Figure"
+    },
+    {
+      "id": "1d40000003870002",
+      "amiiboSeries": "Super Smash Bros.",
+      "character": "Pokémon Trainer",
+      "gameSeries": "Pokemon",
+      "name": "Pokémon Trainer",
+      "au": "2019/07/19",
+      "eu": "2019/07/19",
+      "jp": "2019/07/19",
+      "na": "2019/07/26",
+      "type": "Figure"
     }
   ],
-  "lastUpdated": "2019-03-18T16:34:10.688417"
+  "lastUpdated": "2019-07-26T16:34:10.688417"
 }

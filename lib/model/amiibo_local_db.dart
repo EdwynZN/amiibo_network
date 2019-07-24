@@ -97,6 +97,12 @@ class AmiiboDB {
     if(wishlist != null) "wishlist": wishlist,
     if(owned != null) "owned": owned,
   };
+
+  @override
+  toString(){
+    return 'amiibo: $id, $amiiboSeries, $character, $gameSeries, $name,'
+      ' $au, $eu, $jp, $na, $type, ${wishlist.toString()}, ${owned.toString()}';
+  }
 }
 
 class LastUpdateDB{

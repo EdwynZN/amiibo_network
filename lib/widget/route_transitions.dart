@@ -71,7 +71,7 @@ class FadeRoute<T> extends MaterialPageRoute<T> {
 }
 
 class SlideRoute<T> extends MaterialPageRoute<T> {
-  SlideRoute({WidgetBuilder builder, RouteSettings settings})
+  SlideRoute({Key key, WidgetBuilder builder, RouteSettings settings})
       : super(builder: builder, settings: settings);
 
   @override

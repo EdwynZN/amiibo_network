@@ -10,11 +10,13 @@ class AmiiboBloc extends Bloc{
   List<int> _listOwned;
   final _owned = PublishSubject<List<int>>();
   final _amiiboFetcherDB = BehaviorSubject<AmiiboLocalDB>();
-  final _filter = PublishSubject<String>();
+  final _filter = BehaviorSubject<String>();
   final _updateAmiiboDB = PublishSubject<AmiiboLocalDB>()
-    ..listen((amiibos) => _service.update(amiibos));
+    ..listen((amiibos) async => await _service.update(amiibos));
 
   Observable<String> get filter => _filter.stream;
+
+  set setFilter(String value) => _filter.sink.add(value);
 
   Observable<AmiiboLocalDB> get allAmiibosDB => _amiiboFetcherDB.stream;
 
@@ -39,12 +41,12 @@ class AmiiboBloc extends Bloc{
     _searchFilter = search ? 'name' : 'amiiboSeries';
     _name = name;
     await _fetchByCategory(name);
-    _filter.sink.add(name);
+    _filter.sink.add('$name | Search Amiibo');
   }
 
   refreshPagination() async{
     await _fetchByCategory(_name);
-    _filter.sink.add(_name);
+    _filter.sink.add('$_name | Search Amiibo');
   }
 
   set removeFromList(int position) => --_listOwned[position];

@@ -1,3 +1,8 @@
+Version 1.1.1
+- Multiple Selection
+- Added Pichu, Isabelle and Pokémon trainer
+- Added Dark versions of Skylanders amiibos
+
 Version 1.1.0
 - Fixed minor bugs
 - Import and export your list

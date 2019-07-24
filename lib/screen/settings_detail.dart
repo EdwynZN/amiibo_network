@@ -20,14 +20,14 @@ class SettingsDetail extends StatelessWidget {
             future: _localFile,
             builder: (BuildContext context, AsyncSnapshot<String> snapshot){
               if(snapshot.hasData)
-                return Container(
+                return SizedBox(
                   child: Text('${snapshot.data}',
                     overflow: TextOverflow.clip,
                     textAlign: TextAlign.justify,
                     style: TextStyle(height: 1.5, fontWeight: FontWeight.w500),
                   ),
                 );
-              else return const SizedBox();
+              else return const SizedBox.shrink();
             }
           )
         )
