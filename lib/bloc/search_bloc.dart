@@ -10,9 +10,7 @@ class SearchBloc extends Bloc{
     .debounce(const Duration(milliseconds: 500))
     .asyncMap((x) => x.isEmpty ? null : _service.searchDB(x));
 
-  searchValue(String s) {
-    _searchFetcher.sink.add(s);
-  }
+  searchValue(String s) => _searchFetcher.sink.add(s);
 
   @override
   dispose() {

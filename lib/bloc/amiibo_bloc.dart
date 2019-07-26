@@ -71,7 +71,8 @@ class AmiiboBloc extends Bloc{
         amiiboDB = await _service.fetchByCategory('type', '%Card%');
         break;
       default:
-        amiiboDB = await _service.fetchByCategory(_searchFilter, '%$name%');
+        amiiboDB = await _service.fetchByCategory(_searchFilter,
+            _searchFilter == 'name' ? '%$name%' : '%$name');
         break;
     }
     if(amiiboDB?.amiibo?.isNotEmpty ?? false) {

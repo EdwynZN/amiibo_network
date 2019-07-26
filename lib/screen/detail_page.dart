@@ -224,6 +224,7 @@ class TextCardDetail extends StatelessWidget{
     return Container(
       child: Text('$text: $data',
         textAlign: TextAlign.start,
+        softWrap: false,
         overflow: TextOverflow.fade,
         maxLines: 1,
         style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),

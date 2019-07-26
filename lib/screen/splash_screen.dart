@@ -12,7 +12,6 @@ class SplashScreen extends StatefulWidget {
 class SplashScreenState extends State<SplashScreen>
       with SingleTickerProviderStateMixin {
   AnimationController _animationController;
-  Animation<double> _opacity;
   double _size;
   final SplashBloc _bloc = $Provider.of<SplashBloc>();
 
@@ -24,21 +23,6 @@ class SplashScreenState extends State<SplashScreen>
       vsync: this,
       animationBehavior: AnimationBehavior.preserve)
     ..repeat();
-    _opacity = Tween<double>(begin: 0, end: 1)
-      .animate(
-      AnimationMin(
-        Tween<double>(begin: 0, end: 1).animate(
-          CurvedAnimation(parent: _animationController,
-            curve: Interval(0.0, 0.5, curve: Curves.decelerate)
-          )
-        ),
-        Tween<double>(begin: 1, end: 0).animate(
-          CurvedAnimation(parent: _animationController,
-            curve: Interval(0.5, 1.0, curve: Curves.decelerate)
-          )
-        )
-      )
-    );
     _bloc.updateApp();
   }
 
@@ -78,31 +62,22 @@ class SplashScreenState extends State<SplashScreen>
               child: StreamBuilder(
                 stream: _bloc.allAmiibosDB,
                 builder: (_, AsyncSnapshot<bool> snapshot) {
+                  Widget _child = const CircularProgressIndicator(backgroundColor: Colors.black);
+                  String _text = "Just a second . . .";
+                  int _key = 1;
                   if(snapshot.hasData && !_animationController.isAnimating){
                     _animationController.forward().whenCompleteOrCancel(
                       () => Future.delayed(const Duration(milliseconds: 500))
                       .then((_) => Navigator.pushReplacementNamed(context, '/home')));
-                    if(!snapshot.data) return ScreenAnimation(
-                      opacity: _animationController,
-                      child: Text("Couldn't Update :(", style: TextStyle(color: Colors.white70))
-                    );
-                    else return ScreenAnimation(
-                      opacity: _animationController,
-                      child: Text("WELCOME", style: TextStyle(color: Colors.white70)),
-                    );
+                    _child = Image.asset('assets/images/icon_app.png', fit: BoxFit.fitWidth);
+                    _text = snapshot.data ? "WELCOME" : "Couldn't Update :(";
+                    _key = 2;
                   }
                   else if(snapshot.hasData) _completeAnimation();
-                  return Stack(
-                    alignment: Alignment.center,
-                    children: <Widget>[
-                      const CircularProgressIndicator(backgroundColor: Colors.black),
-                      FadeTransition(
-                        opacity: _opacity,
-                        child: Align(alignment: Alignment.bottomCenter,
-                            child: Text("Just a second...", style: TextStyle(color: Colors.white))
-                        ),
-                      )
-                    ],
+                  return AnimatedSwitcher(duration: const Duration(seconds: 3),
+                    switchOutCurve: Curves.easeOutBack,
+                    switchInCurve: Curves.easeInExpo,
+                    child: ScreenAnimation(key: ValueKey<int>(_key), child: _child, text: _text)
                   );
                 }
               ),
@@ -116,27 +91,23 @@ class SplashScreenState extends State<SplashScreen>
 }
 
 class ScreenAnimation extends StatelessWidget{
-  final AnimationController opacity;
   final Widget child;
+  final String text;
 
-  ScreenAnimation({Key key, this.opacity, this.child}) : super(key : key);
+  ScreenAnimation({Key key, this.child, this.text}) : super(key : key);
 
   @override
   Widget build(BuildContext context) {
-    return FadeTransition(
-      opacity: opacity,
-      child: Column(
-        mainAxisSize: MainAxisSize.max,
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: <Widget>[
-          Expanded(
-            flex: 3,
-            child: Image.asset('assets/images/icon_app.png', fit: BoxFit.fitWidth)
-          ),
-          Expanded(child: Center(child: child))
-        ],
-      )
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      mainAxisAlignment: MainAxisAlignment.center,
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: <Widget>[
+        Expanded(flex: 3, child: Center(child: child)),
+        Expanded(child: Center(
+          child: Text(text, style: TextStyle(color: Colors.white)))
+        )
+      ],
     );
   }
 }
