@@ -5,6 +5,7 @@ import 'package:amiibo_network/screen/detail_page.dart';
 import 'package:amiibo_network/screen/settings_screen.dart';
 import 'package:amiibo_network/screen/settings_detail.dart';
 import 'package:amiibo_network/screen/search_screen.dart';
+import 'package:amiibo_network/screen/stats_page.dart';
 import 'package:flutter/services.dart';
 import 'dart:math' as math;
 
@@ -21,6 +22,8 @@ class Routes{
         return SlideRoute(builder: (_) => SettingsDetail(title: settings.arguments), settings: settings);
       case '/search':
         return FadeRoute(builder: (_) => SearchScreen());
+      case '/stats':
+        return FadeRoute(builder: (_) => StatsPage());
       default:
         return null;
     }

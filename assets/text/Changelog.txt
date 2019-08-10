@@ -1,3 +1,6 @@
+Version 1.1.2
+- Added general stats
+
 Version 1.1.1
 - Multiple Selection
 - Added Pichu, Isabelle and Pokémon trainer

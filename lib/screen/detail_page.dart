@@ -6,38 +6,27 @@ import 'package:amiibo_network/model/amiibo_local_db.dart';
 class DetailPage extends StatelessWidget{
   final AmiiboDB amiibo;
 
-  DetailPage({
-    Key key,
-    @required this.amiibo
-  }) : super(key: key);
+  DetailPage({Key key, @required this.amiibo}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        body: SafeArea(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: <Widget>[
-                Container(
-                  height: 250,
-                  alignment: Alignment.topCenter,
-                  child: Stack(
-                    fit: StackFit.expand,
-                    children: <Widget>[
-                      _CardDetailAmiibo(amiibo: amiibo),
-                    ],
-                  ),
-                ),
-                /*Container(
+        body: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: <Widget>[
+            SizedBox(
+              height: 250,
+              child: _CardDetailAmiibo(amiibo: amiibo)
+            ),
+            /*Container(
               height: 100,
               child: Card(
                 child: Center(child: Text("Coming soon..."),)
               ),
             )*/
-              ],
-            )
-        ),
+          ],
+        )
       )
     );
   }
@@ -46,10 +35,7 @@ class DetailPage extends StatelessWidget{
 class _CardDetailAmiibo extends StatelessWidget{
   final AmiiboDB amiibo;
 
-  _CardDetailAmiibo({
-    Key key,
-    @required this.amiibo
-  });
+  _CardDetailAmiibo({Key key, @required this.amiibo});
 
   @override
   Widget build(BuildContext context){

@@ -32,34 +32,6 @@ class SettingsPage extends StatelessWidget{
                 CardSettings(title: 'Changelog', subtitle: 'Changing for better...', icon: Icons.build,),
                 CardSettings(title: 'Credits', subtitle: 'Those who make it possible', icon: Icons.theaters,),
                 CardSettings(title: 'Privacy Policy', subtitle: 'Therms and conditions', icon: Icons.help,),
-                /*Card(
-                  child: ListTileTheme(
-                    iconColor: Theme.of(context).iconTheme.color,
-                    textColor: Theme.of(context).textTheme.body1.color,
-                    child: AboutListTile(
-                      applicationIcon: Image.asset(
-                        'assets/images/icon_app.png',
-                        color: Colors.blueGrey,
-                        fit: BoxFit.fill,
-                        width: 48,
-                        height: 48,
-                      ),
-                      applicationVersion: 'Version 1.1.1',
-                      applicationName: 'Amiibo Network',
-                      applicationLegalese: '\u00a9 2019 Dart Bot',
-                      icon: Container(
-                          padding: EdgeInsets.only(right: 16, top: 8, bottom: 8),
-                          decoration: BoxDecoration(
-                              border: Border(right: BorderSide(width: 1, color: Theme.of(context).dividerColor))
-                          ),
-                          child: Icon(Icons.theaters)
-                      ),
-                      aboutBoxChildren: <Widget>[
-
-                      ],
-                    ),
-                  )
-                )*/
               ],
               ),
             ),

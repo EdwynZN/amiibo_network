@@ -35,7 +35,7 @@ class Themes {
     textTheme: TextTheme(
       body1: TextStyle(color: Colors.white70),
       body2: TextStyle(color: Colors.white70, fontSize: 16, fontWeight: FontWeight.w400),
-      display1: TextStyle(color: Colors.white70, fontSize: 16, fontWeight: FontWeight.w600),
+      display1: TextStyle(color: Colors.white70, fontSize: 18, fontWeight: FontWeight.w600),
     ),
     bottomAppBarTheme: BottomAppBarTheme(
       color: Colors.grey[900],
@@ -50,6 +50,18 @@ class Themes {
         side: BorderSide(color:const Color.fromRGBO(207, 102, 121, 1))
       ),
       behavior: SnackBarBehavior.floating,
+    ),
+    chipTheme: ChipThemeData(
+      backgroundColor: Colors.grey[800],
+      disabledColor: Colors.grey,
+      selectedColor: const Color.fromRGBO(207, 102, 121, 1),
+      secondarySelectedColor: const Color.fromRGBO(207, 102, 121, 1),
+      labelPadding: const EdgeInsets.symmetric(horizontal: 8.0),
+      padding: const EdgeInsets.all(2.0),
+      shape: StadiumBorder(),
+      labelStyle: TextStyle(color: Colors.white70),
+      secondaryLabelStyle: TextStyle(color: Colors.white70),
+      brightness: Brightness.dark
     )
   );
   static final _light = ThemeData(
@@ -89,7 +101,7 @@ class Themes {
     textTheme: TextTheme(
       body1: TextStyle(color: Colors.black87),
       body2: TextStyle(color: Colors.black87, fontSize: 16, fontWeight: FontWeight.w400),
-      display1: TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.w600),
+      display1: TextStyle(color: Colors.black87, fontSize: 18, fontWeight: FontWeight.w600),
     ),
     bottomAppBarTheme: BottomAppBarTheme(
       color: Colors.white70,
@@ -101,6 +113,18 @@ class Themes {
     snackBarTheme: SnackBarThemeData(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8),),
       behavior: SnackBarBehavior.floating,
+    ),
+    chipTheme: ChipThemeData(
+      backgroundColor: const Color.fromRGBO(211, 211, 211, 0.7),
+      disabledColor: Colors.grey,
+      selectedColor: Colors.redAccent,
+      secondarySelectedColor: Colors.redAccent,
+      labelPadding: const EdgeInsets.symmetric(horizontal: 8.0),
+      padding: const EdgeInsets.all(2.0),
+      shape: StadiumBorder(),
+      labelStyle: TextStyle(color: Colors.black87),
+      secondaryLabelStyle: TextStyle(color: Colors.black87),
+      brightness: Brightness.light
     )
   );
 

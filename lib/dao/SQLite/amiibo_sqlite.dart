@@ -76,6 +76,23 @@ class AmiiboSQLite implements Dao<AmiiboLocalDB, String, AmiiboDB>{
     return entityFromList(maps);
   }
 
+  Future<List<Map<String, dynamic>>> fetchSum(String column, String name,
+    bool all, bool group) async{
+    Database _db = await connectionFactory.database;
+    List<Map<String,dynamic>> result = await _db.query('amiibo',
+        columns: [
+          if(group) 'amiiboSeries',
+          'count(1) AS Total',
+          'count(case WHEN wishlist=1 then 1 end) AS Wished',
+          'count(case WHEN owned=1 then 1 end) AS Owned'
+        ],
+        where: all ? null : '$column LIKE ?',
+        whereArgs: all ? null : [name],
+        groupBy: group ? 'amiiboSeries' : null
+    );
+    return result;
+  }
+
   Future<AmiiboDB> fetchById(String id) async{
     Database _db = await connectionFactory.database;
     List<Map> maps = await _db.query('amiibo',

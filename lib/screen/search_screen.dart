@@ -31,8 +31,8 @@ class SearchScreenState extends State<SearchScreen> {
             SliverFloatingBar(
               backgroundColor: Theme.of(context).backgroundColor,
               leading: IconButton(
-                  icon: Icon(Icons.arrow_back),
-                  onPressed: Navigator.of(context).pop),
+                icon: const Icon(Icons.arrow_back),
+                onPressed: Navigator.of(context).pop),
               pinned: true,
               title: TextField(
                 style: Theme.of(context).textTheme.body2,
