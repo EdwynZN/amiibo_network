@@ -5,6 +5,7 @@ import 'package:amiibo_network/service/storage.dart';
 import 'package:amiibo_network/bloc/amiibo_bloc.dart';
 import 'package:amiibo_network/bloc/theme_bloc.dart';
 import 'package:amiibo_network/bloc/bloc_provider.dart';
+import 'package:launch_review/launch_review.dart';
 
 class SettingsPage extends StatelessWidget{
   const SettingsPage({Key key}): super(key: key);
@@ -32,6 +33,33 @@ class SettingsPage extends StatelessWidget{
                 CardSettings(title: 'Changelog', subtitle: 'Changing for better...', icon: Icons.build,),
                 CardSettings(title: 'Credits', subtitle: 'Those who make it possible', icon: Icons.theaters,),
                 CardSettings(title: 'Privacy Policy', subtitle: 'Therms and conditions', icon: Icons.help,),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: <Widget>[
+                    Expanded(
+                      child: Card(
+                        child: FlatButton.icon(
+                          onPressed: LaunchReview.launch,
+                          icon: Image.asset('assets/images/icon_app.png',
+                            height: 30, width: 30, fit: BoxFit.fill,
+                            color: Theme.of(context).brightness == Brightness.dark
+                                ? Colors.white54 : null,
+                          ),
+                          label: Text('Rate me', style: Theme.of(context).textTheme.body2),
+                        ),
+                      )
+                    ),
+                    Expanded(
+                      child: Card(
+                        child: FlatButton.icon(
+                          onPressed: null,
+                          icon: Icon(Icons.monetization_on, color: Theme.of(context).iconTheme.color,),
+                          label: Text('Donate', style: Theme.of(context).textTheme.body2),
+                        ),
+                      )
+                    ),
+                  ],
+                )
               ],
               ),
             ),

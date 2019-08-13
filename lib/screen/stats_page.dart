@@ -13,8 +13,6 @@ class StatsPage extends StatelessWidget{
 
   @override
   Widget build(BuildContext context) {
-    print(MediaQuery.of(context).size.width);
-    print(MediaQuery.of(context).size.width / 3);
     return SafeArea(
       child: Scaffold(
         body: Scrollbar(
@@ -111,17 +109,18 @@ class SingleStat extends StatelessWidget{
               avatar: CustomPaint(
                 size: Size(24, 24),
                 painter: RadialProgression(owned.toDouble()/total.toDouble()),
-                child: owned.toDouble()/total.toDouble() == 1 ?
-                const Icon(Icons.check, color: Colors.green) : null,
+                child: owned.toDouble() == total.toDouble() ?
+                  const Icon(Icons.check, color: Colors.green) : null,
               ),
             ),
-            Chip(label: Text('$wished/$total Wished', softWrap: false,
+            Chip(
+              label: Text('$wished/$total Wished', softWrap: false,
               overflow: TextOverflow.fade),
               avatar: CustomPaint(
                 size: Size(24, 24),
                 painter: RadialProgression(wished.toDouble()/total.toDouble()),
-                child: wished.toDouble()/total.toDouble() == 1 ?
-                const Icon(Icons.whatshot, color: Colors.amber) : null,
+                child: wished.toDouble() == total.toDouble() ?
+                  const Icon(Icons.whatshot, color: Colors.amber) : null,
               ),
             )
           ],

@@ -3,7 +3,7 @@ import 'dart:math';
 
 class RadialProgression extends CustomPainter{
   final Paint line;
-  final Paint progressLine;
+   Paint progressLine;
   final double percent;
 
   RadialProgression(this.percent):
@@ -36,5 +36,5 @@ class RadialProgression extends CustomPainter{
   }
 
   @override
-  bool shouldRepaint(CustomPainter oldDelegate) => true;
+  bool shouldRepaint(RadialProgression oldDelegate) => oldDelegate.percent != percent;
 }

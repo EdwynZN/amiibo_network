@@ -105,7 +105,7 @@ class SlideRoute<T> extends MaterialPageRoute<T> {
   void _handleDragEnd(DragEndDetails details, double maxWidth, BuildContext context){
     if (controller.isAnimating || controller.status == AnimationStatus.completed) return;
 
-    final double flingVelocity = details.velocity.pixelsPerSecond.dx / maxWidth;
+    final double flingVelocity = details.primaryVelocity / maxWidth;
     if (flingVelocity < 0.0)
       controller.fling(velocity: math.max(2.0, -flingVelocity));
     else if (flingVelocity > 0.0)

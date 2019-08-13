@@ -52,13 +52,16 @@ class SearchScreenState extends State<SearchScreen> {
                 builder: (context, AsyncSnapshot<List<String>> snapshot) => SliverList(
                   delegate: SliverChildBuilderDelegate((BuildContext context, int index) {
                     if(snapshot.hasData)
-                      return Card(
-                        margin: EdgeInsets.zero,
-                        shape: RoundedRectangleBorder(),
-                        child: ListTile(
-                          onTap: () => Navigator.of(context).pop(snapshot.data[index]),
-                          title: Text('${snapshot.data[index]}')
-                        )
+                      return AnimatedSwitcher(duration: const Duration(milliseconds: 200),
+                        child: Card(
+                          key: Key(snapshot.data[index]),
+                          margin: EdgeInsets.zero,
+                          shape: RoundedRectangleBorder(),
+                          child: ListTile(
+                            onTap: () => Navigator.of(context).pop(snapshot.data[index]),
+                            title: Text('${snapshot.data[index]}')
+                          )
+                        ),
                       );
                     else return const SizedBox.shrink();
                   },

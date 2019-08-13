@@ -1,4 +1,4 @@
-{
+﻿{
   "amiibo":[
     {
       "id":"0000000000000002",
@@ -8783,7 +8783,79 @@
       "jp":"2019/07/19",
       "na":"2019/07/26",
       "type":"Figure"
+    },
+    {
+      "id":"3801000103931702",
+      "amiiboSeries":"Power Pros",
+      "character":"Pawapuro",
+      "gameSeries":"Power Pros",
+      "name":"Pawapuro",
+      "au":null,
+      "eu":null,
+      "jp":"2019/07/27",
+      "na":null,
+      "type":"Card"
+    },
+    {
+      "id":"3801000103941702",
+      "amiiboSeries":"Powerful Pro Baseball",
+      "character":"Ikari",
+      "gameSeries":"Power Pros",
+      "name":"Ikari",
+      "au":null,
+      "eu":null,
+      "jp":"2019/07/27",
+      "na":null,
+      "type":"Card"
+    },
+    {
+      "id":"3802000103951702",
+      "amiiboSeries":"Power Pros",
+      "character":"Daijobu",
+      "gameSeries":"Power Pros",
+      "name":"Daijobu",
+      "au":null,
+      "eu":null,
+      "jp":"2019/07/27",
+      "na":null,
+      "type":"Card"
+    },
+    {
+      "id":"3803000103961702",
+      "amiiboSeries":"Power Pros",
+      "character":"Hayakawa",
+      "gameSeries":"Power Pros",
+      "name":"Hayakawa",
+      "au":null,
+      "eu":null,
+      "jp":"2019/07/27",
+      "na":null,
+      "type":"Card"
+    },
+    {
+      "id":"3804000103971702",
+      "amiiboSeries":"Power Pros",
+      "character":"Yabe",
+      "gameSeries":"Power Pros",
+      "name":"Yabe",
+      "au":null,
+      "eu":null,
+      "jp":"2019/07/27",
+      "na":null,
+      "type":"Card"
+    },
+    {
+      "id":"3805000103981702",
+      "amiiboSeries":"Power Pros",
+      "character":"Ganda",
+      "gameSeries":"Power Pros",
+      "name":"Ganda",
+      "au":null,
+      "eu":null,
+      "jp":"2019/07/27",
+      "na":null,
+      "type":"Card"
     }
   ],
-  "lastUpdated": "2019-07-26T16:34:10.688417"
+  "lastUpdated": "2019-08-13T15:39:10.688417"
 }

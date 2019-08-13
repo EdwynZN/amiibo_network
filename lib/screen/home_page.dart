@@ -62,7 +62,6 @@ class HomePageState extends State<HomePage>
     _controller = ScrollController()..addListener(_scrollListener);
     _animationController = AnimationController(
       duration: const Duration(milliseconds: 500),
-      animationBehavior: AnimationBehavior.preserve,
       vsync: this)..value = initialFAB;
     super.initState();
   }
@@ -150,8 +149,17 @@ class HomePageState extends State<HomePage>
                     tooltip: 'Cancel',)
                       : PopUpMenu(list, _onTapPopMenu),
                   title: GestureDetector(
-                      child: const TitleFloatingBar(),
-                      onTap: _multipleSelection ? null : _search
+                    child: StreamBuilder(
+                      stream: _bloc.filter,
+                      builder: (BuildContext context, AsyncSnapshot<String> filter){
+                        if(filter.hasData)
+                          return Text(filter.data,
+                            style: Theme.of(context).textTheme.body2, softWrap: false,
+                            overflow: TextOverflow.fade, maxLines: 1);
+                        else return const SizedBox.shrink();
+                      }
+                    ),
+                    onTap: _multipleSelection ? null : _search
                   ),
                   trailing: _multipleSelection ? Row(
                     mainAxisSize: MainAxisSize.min,
@@ -186,27 +194,24 @@ class HomePageState extends State<HomePage>
                     child: StreamBuilder(
                       initialData: null,
                       stream: _bloc.wished,
-                      builder: (context, AsyncSnapshot<Map<String,dynamic>> strList){
-                        if(strList.hasData)
+                      builder: (context, AsyncSnapshot<Map<String,dynamic>> statList){
+                        if(statList.hasData)
                           return Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            crossAxisAlignment: CrossAxisAlignment.center,
                             children: <Widget>[
                               if(_filter != 'Wishlist')
                                 Flexible(
                                   child: Chip(
-                                    avatar: CustomPaint(
-                                      painter: RadialProgression(strList.data['Owned'].toDouble()/strList.data['Total'].toDouble()),
-                                      child: AnimatedSwitcher(
-                                        duration: const Duration(milliseconds: 200),
-                                        child: strList.data['Owned'].toDouble()/strList.data['Total'].toDouble() == 1 ?
-                                        const Icon(Icons.check, color: Colors.green) : const SizedBox(width: 24, height: 24),
-                                      )
+                                    avatar: AnimatedProgression(
+                                      key: Key('Owned'),
+                                      fraction: statList.data['Owned'].toDouble(),
+                                      total: statList.data['Total'].toDouble(),
+                                      child: const Icon(Icons.check, color: Colors.green),
                                     ),
                                     label: FittedBox(
                                       fit: BoxFit.contain,
-                                      child: Text('${strList.data['Owned']}/'
-                                        '${strList.data['Total']} Owned', softWrap: false,
+                                      child: Text('${statList.data['Owned']}/'
+                                          '${statList.data['Total']} Owned', softWrap: false,
                                         overflow: TextOverflow.fade,
                                       ),
                                     )
@@ -215,21 +220,19 @@ class HomePageState extends State<HomePage>
                               if(_filter != 'Owned')
                                 Flexible(
                                   child: Chip(
-                                    avatar: CustomPaint(
-                                      painter: RadialProgression(strList.data['Wished'].toDouble()/strList.data['Total'].toDouble()),
-                                      child: AnimatedSwitcher(
-                                        duration: const Duration(milliseconds: 200),
-                                        child: strList.data['Wished'].toDouble()/strList.data['Total'].toDouble() == 1 ?
-                                          const Icon(Icons.whatshot, color: Colors.amber) : const SizedBox(width: 24, height: 24,),
-                                      )
+                                    avatar: AnimatedProgression(
+                                      key: Key('Owned'),
+                                      fraction: statList.data['Wished'].toDouble(),
+                                      total: statList.data['Total'].toDouble(),
+                                      child: const Icon(Icons.whatshot, color: Colors.amber),
                                     ),
                                     label: FittedBox(
                                       fit: BoxFit.contain,
-                                      child: Text('${strList.data['Wished']}/'
-                                        '${strList.data['Total']} Wished', softWrap: false,
+                                      child: Text('${statList.data['Wished']}/'
+                                          '${statList.data['Total']} Wished', softWrap: false,
                                         overflow: TextOverflow.fade,
                                       ),
-                                    ),
+                                    )
                                   ),
                                 )
                             ],
@@ -253,17 +256,25 @@ class HomePageState extends State<HomePage>
                           )
                         )
                       );
-                      else return SliverGrid(
-                          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                            crossAxisCount: MediaQuery.of(context).size.width <= 600 ? 3 : 6),
-                          //MediaQuery.of(context).orientation == Orientation.portrait ? 3 : 3),
-                          delegate: SliverChildBuilderDelegate((BuildContext context, int index) =>
-                              AmiiboGrid(amiibo: snapshot.data.amiibo[index], key: Key(snapshot.data.amiibo[index].id),
-                                map: map, functionSelection: checkMultipleSelection, multipleSelection: _multipleSelection,
-                              ),
-                            addRepaintBoundaries: false, addAutomaticKeepAlives: false,
-                            childCount: snapshot.hasData ? snapshot.data.amiibo.length : 0,
-                          )
+                      else return
+                        SliverGrid(
+                        gridDelegate: MediaQuery.of(context).size.width >= 600 ?
+                          SliverGridDelegateWithMaxCrossAxisExtent(
+                            maxCrossAxisExtent: 200,
+                            mainAxisSpacing: 8.0,
+                          ) :
+                          SliverGridDelegateWithFixedCrossAxisCount(
+                            crossAxisCount: 3,
+                            mainAxisSpacing: 8.0
+                          ),
+                        //MediaQuery.of(context).orientation == Orientation.portrait ? 3 : 3),
+                        delegate: SliverChildBuilderDelegate((BuildContext context, int index) =>
+                          AmiiboGrid(amiibo: snapshot.data.amiibo[index], key: Key(snapshot.data.amiibo[index].id),
+                            map: map, functionSelection: checkMultipleSelection, multipleSelection: _multipleSelection,
+                          ),
+                          addRepaintBoundaries: false, addAutomaticKeepAlives: false,
+                          childCount: snapshot.hasData ? snapshot.data.amiibo.length : 0,
+                        )
                       );
                     }
                   )
@@ -280,21 +291,62 @@ class HomePageState extends State<HomePage>
   }
 }
 
-class TitleFloatingBar extends StatelessWidget {
-  static final AmiiboBloc _bloc = $Provider.of<AmiiboBloc>();
-  const TitleFloatingBar({Key key}) : super(key: key);
+class AnimatedProgression extends StatefulWidget {
+  final double fraction;
+  final double total;
+  final Widget child;
+
+  const AnimatedProgression({
+    Key key, this.fraction, this.total, this.child
+  }) : super(key: key);
+
+  @override
+  _AnimatedProgressionState createState() => _AnimatedProgressionState();
+}
+
+class _AnimatedProgressionState extends State<AnimatedProgression>
+    with SingleTickerProviderStateMixin {
+  double percentage;
+  AnimationController _controller;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = AnimationController(
+      duration: const Duration(milliseconds: 250),
+      vsync: this)
+    ..value = percentage = widget.fraction / widget.total;
+  }
+
+  @override
+  void didUpdateWidget(AnimatedProgression oldWidget) {
+    percentage = widget.fraction / widget.total;
+    _controller.animateTo(percentage);
+    super.didUpdateWidget(oldWidget);
+  }
+
+  @override
+  void dispose() {
+    _controller?.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
-    return StreamBuilder(
-      stream: _bloc.filter,
-      builder: (BuildContext context, AsyncSnapshot<String> filter){
-        if(filter.hasData)
-          return Text(filter.data,
-            style: Theme.of(context).textTheme.body2, softWrap: false,
-            overflow: TextOverflow.fade, maxLines: 1);
-        else return const SizedBox.shrink();
-      }
+    return AnimatedBuilder(
+      animation: _controller,
+      child: AnimatedSwitcher(
+        duration: const Duration(milliseconds: 250),
+        child: percentage == 1 ? widget.child : const SizedBox(width: 24, height: 24),
+      ),
+      builder: (_, Widget child){
+        return CustomPaint(
+          painter: RadialProgression(_controller.value),
+          child: child,
+          isComplex: true,
+          willChange: true,
+        );
+      },
     );
   }
 }
@@ -405,9 +457,10 @@ class PopUpMenu extends StatelessWidget{
           ),
         ),
       ],
-      icon: Icon(Icons.sort, size: 30,),
+      icon: Icon(Icons.sort, size: 30),
       tooltip: 'Categories',
-      onSelected: onTap
+      onSelected: onTap,
+      offset: Offset(-100, 0),
     );
   }
 }
@@ -423,7 +476,7 @@ class AmiiboGrid extends StatefulWidget {
     this.amiibo,
     this.map,
     this.multipleSelection,
-    this.functionSelection
+    this.functionSelection,
   }) : super(key: key);
 
   @override
@@ -499,8 +552,26 @@ class AmiiboGridState extends State<AmiiboGrid> {
     child: GestureDetector(
       onDoubleTap: widget.multipleSelection ? null : _onDoubleTap,
       onTap: widget.multipleSelection ? _onLongPress : _onTap,
-      onLongPress: _onLongPress,
-      child:Stack(
+      onLongPress: widget.multipleSelection ? null : _onLongPress,
+      /*(LongPressMoveUpdateDetails details) {
+        //print('Local: ${details.localPosition}');
+        //print('Global: ${details.globalPosition}');
+        //print('Local Offset: ${details.localOffsetFromOrigin}');
+        //print(widget.scrollController.offset);
+        //print(widget.scrollController.position.maxScrollExtent);
+        //print(widget.scrollController.position.isScrollingNotifier.value);
+        //print('Local: ${details.localPosition}');
+        //print(widget.scrollController.offset);
+        /*if(details.globalPosition.dy >= 0.85 * MediaQuery.of(context).size.height &&
+            widget.scrollController.offset < widget.scrollController.position.maxScrollExtent &&
+            !widget.scrollController.position.isScrollingNotifier.value){
+          widget.scrollController.animateTo(
+            widget.scrollController.offset + 250,
+            duration: const Duration(milliseconds: 100),
+            curve: Curves.linear);
+        }*/
+      },*/
+      child: Stack(
         children: <Widget>[
           Card(
             child: Column(
@@ -513,10 +584,19 @@ class AmiiboGridState extends State<AmiiboGrid> {
                     tag: widget.amiibo.id,
                     child: Image.asset(
                       'assets/collection/icon_${widget.amiibo.id?.substring(0,8)}-'
-                        '${widget.amiibo.id?.substring(8)}.png',
+                          '${widget.amiibo.id?.substring(8)}.png',
                       fit: BoxFit.scaleDown,
-                      alignment: Alignment.center,
                     )
+                    /*Container(
+                      decoration: BoxDecoration(
+                        image: DecorationImage(
+                          image: AssetImage('assets/collection/icon_${widget.amiibo.id?.substring(0,8)}-'
+                              '${widget.amiibo.id?.substring(8)}.png'),
+                          fit: BoxFit.scaleDown,
+                          alignment: Alignment.center,
+                        ),
+                      ),
+                    ))*/
                   ),
                   flex: 9,
                 ),

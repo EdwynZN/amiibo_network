@@ -54,7 +54,6 @@ class _CardDetailAmiibo extends StatelessWidget{
                       'assets/collection/icon_${amiibo.id?.substring(0,8)}-'
                       '${amiibo.id?.substring(8)}.png',
                       fit: BoxFit.scaleDown,
-                      alignment: Alignment.center,
                     )
                   ),
                   flex: 7,

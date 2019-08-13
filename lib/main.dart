@@ -6,8 +6,10 @@ import 'package:amiibo_network/service/service.dart';
 import 'package:amiibo_network/bloc/theme_bloc.dart';
 import 'bloc/bloc_provider.dart';
 import 'package:flutter/services.dart';
+//import 'package:flutter/gestures.dart';
 
 void main() async {
+  //debugPrintGestureArenaDiagnostics = true;
   final List<ThemeData> initialTheme = await $Provider.of<ThemeBloc>().initThemes();
   if(await Service().compareLastUpdate()) runApp(AmiiboNetwork(HomePage(), initialTheme));
   else runApp(AmiiboNetwork(SplashScreen(), initialTheme));

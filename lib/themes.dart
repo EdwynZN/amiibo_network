@@ -10,7 +10,7 @@ class Themes {
         title: TextStyle(color: Colors.white70, fontSize: 20),
         subtitle: TextStyle(color: Colors.white70, fontSize: 16),
       ),
-      iconTheme: IconThemeData(color: Colors.white54),
+      iconTheme: const IconThemeData(color: Colors.white54),
     ),
     brightness: Brightness.dark,
     unselectedWidgetColor: Colors.grey[850],
@@ -62,6 +62,14 @@ class Themes {
       labelStyle: TextStyle(color: Colors.white70),
       secondaryLabelStyle: TextStyle(color: Colors.white70),
       brightness: Brightness.dark
+    ),
+    buttonTheme: ButtonThemeData(
+      textTheme: ButtonTextTheme.normal,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+      layoutBehavior: ButtonBarLayoutBehavior.constrained,
+      buttonColor: Colors.grey[900],
+      materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+      height: 48
     )
   );
   static final _light = ThemeData(
@@ -125,6 +133,15 @@ class Themes {
       labelStyle: TextStyle(color: Colors.black87),
       secondaryLabelStyle: TextStyle(color: Colors.black87),
       brightness: Brightness.light
+    ),
+    buttonTheme: ButtonThemeData(
+      textTheme: ButtonTextTheme.normal,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+      layoutBehavior: ButtonBarLayoutBehavior.constrained,
+      buttonColor: Colors.white70,
+      materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+      height: 48,
+      highlightColor: Colors.white54
     )
   );
 
