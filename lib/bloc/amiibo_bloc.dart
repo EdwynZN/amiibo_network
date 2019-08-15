@@ -93,6 +93,11 @@ class AmiiboBloc extends Bloc{
     _updateAmiiboDB.sink.add(amiibos);
   }
 
+  Future<void> resetCollection() async {
+    await _service.resetCollection();
+    await refreshPagination();
+  }
+
   @override
   dispose() {
     _owned.close();

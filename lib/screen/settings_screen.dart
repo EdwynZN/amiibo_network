@@ -30,6 +30,7 @@ class SettingsPage extends StatelessWidget{
           slivers: <Widget>[
             SliverList(
               delegate: SliverChildListDelegate.fixed([
+                ResetCollection(),
                 CardSettings(title: 'Changelog', subtitle: 'Changing for better...', icon: Icons.build,),
                 CardSettings(title: 'Credits', subtitle: 'Those who make it possible', icon: Icons.theaters,),
                 CardSettings(title: 'Privacy Policy', subtitle: 'Therms and conditions', icon: Icons.help,),
@@ -69,6 +70,48 @@ class SettingsPage extends StatelessWidget{
       )
     );
   }
+}
+
+class ResetCollection extends StatelessWidget{
+  final AmiiboBloc _bloc = $Provider.of<AmiiboBloc>();
+
+  Future<void> _dialog(BuildContext context) async {
+    return showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Reset your collection'),
+          titlePadding: EdgeInsets.all(12),
+          contentPadding: EdgeInsets.symmetric(horizontal: 15),
+          content: Text('Are you sure? This action can\'t be undone'),
+          actions: <Widget>[
+            FlatButton(
+              child: Text('Wait no!'),
+              onPressed: Navigator.of(context).pop,
+            ),
+            FlatButton(
+              child: Text('Sure'),
+              onPressed: () async {
+                Navigator.of(context).maybePop();
+                await _bloc.resetCollection();
+              }
+            ),
+          ],
+        );
+      }
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return CardSettings(
+      title: 'Reset',
+      subtitle: 'Reset your wishlist and collection',
+      icon: Icons.warning,
+      onTap: () => _dialog(context),
+    );
+  }
+
 }
 
 class DropMenu extends StatefulWidget {
@@ -303,7 +346,7 @@ class CardSettings extends StatelessWidget{
           title: Text(title),
           subtitle: Text(subtitle, softWrap: false, overflow: TextOverflow.ellipsis),
           onTap: onTap ?? () => Navigator.pushNamed(context, "/settingsdetail", arguments: title),
-          trailing: const Icon(Icons.navigate_next),
+          trailing: onTap == null ? const Icon(Icons.navigate_next) : null,
           leading: Container(
             padding: EdgeInsets.only(right: 16, top: 8, bottom: 8),
             decoration: BoxDecoration(

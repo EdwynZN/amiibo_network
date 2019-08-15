@@ -68,8 +68,6 @@ class Service {
 
   Future<void> update(AmiiboLocalDB amiibos) {
     return dao.insertImport(amiibos);
-    /*return amiibos.amiibo.length == 1 ? dao.update(amiibos.amiibo[0], "amiibo")
-      : dao.insertAll(amiibos, 'amiibo');*/
   }
 
   Future<List<String>> fetchDistinct() async =>
@@ -83,5 +81,9 @@ class Service {
     final dateJson = await lastUpdate;
 
     return dateDB?.isAtSameMomentAs(dateJson) ?? false;
+  }
+  
+  Future<void> resetCollection() async{
+    await dao.updateAll('amiibo', {'wishlist' : 0, 'owned' : 0});
   }
 }

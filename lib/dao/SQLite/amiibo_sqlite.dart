@@ -8,7 +8,7 @@ class AmiiboSQLite implements Dao<AmiiboLocalDB, String, AmiiboDB>{
 
   Future<AmiiboLocalDB> fetchAll() async{
     Database _db = await connectionFactory.database;
-    List<Map> maps = await _db.query('amiibo',
+    List<Map<String, dynamic>> maps = await _db.query('amiibo',
       orderBy: 'type DESC, na DESC, name',
       limit: null,
       offset: null);
@@ -17,7 +17,7 @@ class AmiiboSQLite implements Dao<AmiiboLocalDB, String, AmiiboDB>{
 
   Future<List<String>> fetchDistinct(String name, String column) async{
     Database _db = await connectionFactory.database;
-    List<Map> maps = await _db.query(name, distinct: true,
+    List<Map<String, dynamic>> maps = await _db.query(name, distinct: true,
       columns: [column],
       orderBy: column);
     return List<String>.from(maps.map((x) => x['amiiboSeries']));
@@ -25,7 +25,7 @@ class AmiiboSQLite implements Dao<AmiiboLocalDB, String, AmiiboDB>{
 
   Future<List<String>> fetchLimit(String name, int limit) async{
     Database _db = await connectionFactory.database;
-    List<Map> maps = await _db.query('amiibo', distinct: true,
+    List<Map<String, dynamic>> maps = await _db.query('amiibo', distinct: true,
       columns: ['name'],
       where: 'character LIKE ? OR name LIKE ?',
       whereArgs: [name, name],
@@ -35,7 +35,7 @@ class AmiiboSQLite implements Dao<AmiiboLocalDB, String, AmiiboDB>{
 
   Future<LastUpdateDB> lastUpdate() async{
     Database _db = await connectionFactory.database;
-    List<Map> maps = await _db.query('date',
+    List<Map<String, dynamic>> maps = await _db.query('date',
       columns: ['lastUpdated'],
       where: 'id = 1');
     if (maps.length > 0) return LastUpdateDB.fromMap(maps.first);
@@ -44,7 +44,7 @@ class AmiiboSQLite implements Dao<AmiiboLocalDB, String, AmiiboDB>{
 
   Future<String> favoriteTheme() async{
     Database _db = await connectionFactory.database;
-    List<Map> maps = await _db.query('date',
+    List<Map<String, dynamic>> maps = await _db.query('date',
       columns: ['lastUpdated'],
       where: 'id = 2');
     if (maps.length > 0) return maps.first['lastUpdated'].toString();
@@ -69,7 +69,7 @@ class AmiiboSQLite implements Dao<AmiiboLocalDB, String, AmiiboDB>{
 
   Future<AmiiboLocalDB> fetchByColumn(String column, String name) async{
     Database _db = await connectionFactory.database;
-    List<Map> maps = await _db.query('amiibo',
+    List<Map<String, dynamic>> maps = await _db.query('amiibo',
       where: '$column LIKE ?',
       whereArgs: [name],
       orderBy: 'type DESC, na DESC, name');
@@ -95,7 +95,7 @@ class AmiiboSQLite implements Dao<AmiiboLocalDB, String, AmiiboDB>{
 
   Future<AmiiboDB> fetchById(String id) async{
     Database _db = await connectionFactory.database;
-    List<Map> maps = await _db.query('amiibo',
+    List<Map<String, dynamic>> maps = await _db.query('amiibo',
       where: 'id = ?',
       whereArgs: [id]);
     if(maps.length > 0) return AmiiboDB.fromMap(maps.first);
@@ -124,9 +124,8 @@ class AmiiboSQLite implements Dao<AmiiboLocalDB, String, AmiiboDB>{
     final batch = _db.batch();
     for (var query in list.amiibo) {
       batch.execute('''UPDATE amiibo
-      SET wishlist = ?,
-          owned = ?
-      WHERE id = ?;
+        SET wishlist = ?, owned = ?
+        WHERE id = ?;
       ''',
       [query.wishlist, query.owned, query.id]);
     }
@@ -157,11 +156,11 @@ class AmiiboSQLite implements Dao<AmiiboLocalDB, String, AmiiboDB>{
     });
   }
 
-  Future<void> updateAll(String name, String column,
-    String value, {String category, String columnCategory}) async{
+  Future<void> updateAll(String name, Map<String,dynamic> map,
+      {String category, String columnCategory}) async{
       Database _db = await connectionFactory.database;
       await _db.transaction((tx) async {
-        tx.update(name, {column : value},
+        tx.update(name, map,
           where: category != null ? '$columnCategory LIKE ?' : null,
           whereArgs: category != null ? [category] : null);
       });

@@ -34,6 +34,7 @@ class AmiiboLocalDB {
 }
 
 class AmiiboDB {
+  int key;
   String id;
   String amiiboSeries;
   String character;
@@ -48,6 +49,7 @@ class AmiiboDB {
   int owned;
 
   AmiiboDB({
+    this.key,
     this.id,
     this.amiiboSeries,
     this.character,
@@ -63,6 +65,7 @@ class AmiiboDB {
   });
 
   factory AmiiboDB.fromMap(Map<String, dynamic> amiibo) => AmiiboDB(
+    key: amiibo["key"],
     id: amiibo["id"],
     amiiboSeries: amiibo["amiiboSeries"],
     character: amiibo["character"],
@@ -78,6 +81,7 @@ class AmiiboDB {
   );
 
   Map<String, dynamic> toMap() => {
+    "key": key,
     "id": id,
     "amiiboSeries": amiiboSeries,
     "character": character,
@@ -93,10 +97,11 @@ class AmiiboDB {
   };
 
   Map<String, dynamic> toJson() => {
-    "id": id,
-    if(wishlist != null) "wishlist": wishlist,
-    if(owned != null) "owned": owned
     /*"id": id,
+    if(wishlist != null) "wishlist": wishlist,
+    if(owned != null) "owned": owned*/
+    "key": key,
+    "id": id,
     "amiiboSeries": amiiboSeries,
     "character": character,
     "gameSeries": gameSeries,
@@ -105,7 +110,7 @@ class AmiiboDB {
     "eu": eu,
     "jp": jp,
     "na": na,
-    "type": type,*/
+    "type": type,
   };
 
   @override
