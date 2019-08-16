@@ -30,10 +30,10 @@ class ConnectionFactory {
 
 void _onCreate(Database db, int version) async {
   await db.transaction((tx) async{
-    //        key INTEGER PRIMARY KEY,
     await tx.execute('''
       CREATE TABLE IF NOT EXISTS amiibo (
-        id TEXT PRIMARY KEY,
+        key INTEGER PRIMARY KEY AUTOINCREMENT,
+        id TEXT,
         amiiboSeries TEXT NOT NULL,
         character TEXT NOT NULL,
         gameSeries TEXT NOT NULL,
@@ -62,7 +62,7 @@ void _onUpgrade(Database db, int oldVersion, int newVersion) async{
       await db.transaction((tx) async{
         await tx.execute('ALTER TABLE amiibo RENAME TO _amiibo_old;');
         await tx.execute('''
-        CREATE TABLE IF NOT EXISTS amiibo (
+        CREATE TABLE IF NOT EXISTS amiibo(
           key INTEGER PRIMARY KEY AUTOINCREMENT,
           id TEXT,
           amiiboSeries TEXT NOT NULL,
@@ -76,19 +76,18 @@ void _onUpgrade(Database db, int oldVersion, int newVersion) async{
           type TEXT NOT NULL,
           wishlist INTEGER,
           owned INTEGER
-        );
+        ); 
       ''');
-        await tx.execute('''INSERT INTO 
+        await tx.execute('''INSERT INTO
           amiibo(id, amiiboSeries, character, gameSeries, character,
             name, au, eu, jp, na, type, wishlist, owned)
           SELECT id, amiiboSeries, character, gameSeries, character, 
             name, au, eu, jp, na, type, wishlist, owned
-          FROM _amiibo_old ORDER BY amiiboSeries;
+          FROM _amiibo_old ORDER BY id;
         ''');
         await tx.execute('DROP TABLE _amiibo_old;');
       });
       break;
     default: break;
   }
-
 }

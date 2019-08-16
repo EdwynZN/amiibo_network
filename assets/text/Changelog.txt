@@ -1,5 +1,7 @@
 Version 1.1.2
 - Added general stats
+- Added Link Awakening, Plague Knight, Specter Knight and King knight
+- Added Squirtle, Ivysaur, Snake, Incineroar, Chrom, Simon, Ritcher and Dark Samus
 
 Version 1.1.1
 - Multiple Selection

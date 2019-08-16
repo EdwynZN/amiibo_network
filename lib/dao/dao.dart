@@ -3,7 +3,7 @@ abstract class Dao<T, K, V> {
 
   Future<T> fetchByColumn(String column, String name);
 
-  Future<V> fetchById(K id);
+  Future<V> fetchByKey(K key);
 
   Future<void> insertAll(T list, String name);
 

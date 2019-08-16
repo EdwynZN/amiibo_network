@@ -20,32 +20,31 @@ class HomePageState extends State<HomePage>
   static String _filter = 'All';
   static bool _multipleSelection = false;
   static const double initialFAB = 0.35;
-  final Map<ValueKey<String>, int> map = Map();
+  final Set<ValueKey<int>> set = Set<ValueKey<int>>();
   ScrollController _controller;
   AnimationController _animationController;
 
   checkMultipleSelection(){
     final bool val = _multipleSelection;
-    _multipleSelection = map.isNotEmpty;
+    _multipleSelection = set.isNotEmpty;
     if(_multipleSelection != val) setState(() {});
     _bloc.setFilter = _multipleSelection ?
-    '${map.length.toString()}' : '$_filter | Search Amiibo';
+    '${set.length}' : '$_filter | Search Amiibo';
   }
 
   _updateSelection({int wished = 0, int owned = 0}) async {
     AmiiboLocalDB amiibos = AmiiboLocalDB(amiibo: List<AmiiboDB>.of(
-      map.keys.map((x) => AmiiboDB(id: x.value,
-        wishlist: wished, owned: owned))
+        set.map((x) => AmiiboDB(key: x.value, wishlist: wished, owned: owned))
       )
     );
-    map.clear();
+    set.clear();
     await _bloc.updateAmiiboDB(amiibos: amiibos);
     await _bloc.refreshPagination();
     setState(() => _multipleSelection = false);
   }
 
   _cancelSelection() {
-    map.clear();
+    set.clear();
     _bloc.setFilter = '$_filter | Search Amiibo';
     setState(() => _multipleSelection = false);
   }
@@ -166,7 +165,7 @@ class HomePageState extends State<HomePage>
                     children: <Widget>[
                       IconButton(
                         icon: Icon(Icons.remove),
-                        onPressed: () => _updateSelection(),
+                        onPressed: _updateSelection,
                         tooltip: 'Remove',
                       ),
                       IconButton(
@@ -269,8 +268,8 @@ class HomePageState extends State<HomePage>
                           ),
                         //MediaQuery.of(context).orientation == Orientation.portrait ? 3 : 3),
                         delegate: SliverChildBuilderDelegate((BuildContext context, int index) =>
-                          AmiiboGrid(amiibo: snapshot.data.amiibo[index], key: Key(snapshot.data.amiibo[index].id),
-                            map: map, functionSelection: checkMultipleSelection, multipleSelection: _multipleSelection,
+                          AmiiboGrid(amiibo: snapshot.data.amiibo[index], key: ValueKey<int>(snapshot.data.amiibo[index].key),
+                            set: set, functionSelection: checkMultipleSelection, multipleSelection: _multipleSelection,
                           ),
                           addRepaintBoundaries: false, addAutomaticKeepAlives: false,
                           childCount: snapshot.hasData ? snapshot.data.amiibo.length : 0,
@@ -467,14 +466,14 @@ class PopUpMenu extends StatelessWidget{
 
 class AmiiboGrid extends StatefulWidget {
   final AmiiboDB amiibo;
-  final Map<ValueKey<String>, int> map;
+  final Set<ValueKey<int>> set;
   final VoidCallback functionSelection;
   final bool multipleSelection;
 
   const AmiiboGrid({
     Key key,
     this.amiibo,
-    this.map,
+    this.set,
     this.multipleSelection,
     this.functionSelection,
   }) : super(key: key);
@@ -490,14 +489,14 @@ class AmiiboGridState extends State<AmiiboGrid> {
 
   @override
   void initState(){
-    _isSelected = widget.map.containsKey(widget.key);
+    _isSelected = widget.set.contains(widget.key);
     _widget = _changeWidget();
     super.initState();
   }
 
   @override
   void didUpdateWidget(AmiiboGrid oldWidget) {
-    _isSelected = widget.map.containsKey(widget.key);
+    _isSelected = widget.set.contains(widget.key);
     _widget = _changeWidget();
     super.didUpdateWidget(oldWidget);
   }
@@ -532,9 +531,7 @@ class AmiiboGridState extends State<AmiiboGrid> {
 
   _onLongPress() {
     setState(() {
-      _isSelected ^= true;
-      if(_isSelected) widget.map.putIfAbsent(widget.key, () => 1);
-      else widget.map.remove(widget.key);
+      _isSelected = widget.set.add(widget.key) ? true : !widget.set.remove(widget.key);
     });
     widget.functionSelection();
   }
@@ -552,7 +549,7 @@ class AmiiboGridState extends State<AmiiboGrid> {
     child: GestureDetector(
       onDoubleTap: widget.multipleSelection ? null : _onDoubleTap,
       onTap: widget.multipleSelection ? _onLongPress : _onTap,
-      onLongPress: widget.multipleSelection ? null : _onLongPress,
+      onLongPress: _onLongPress,
       /*(LongPressMoveUpdateDetails details) {
         //print('Local: ${details.localPosition}');
         //print('Global: ${details.globalPosition}');
@@ -581,10 +578,8 @@ class AmiiboGridState extends State<AmiiboGrid> {
               children: <Widget>[
                 Expanded(
                   child: Hero(
-                    tag: widget.amiibo.id,
-                    child: Image.asset(
-                      'assets/collection/icon_${widget.amiibo.id?.substring(0,8)}-'
-                          '${widget.amiibo.id?.substring(8)}.png',
+                    tag: widget.amiibo.key,
+                    child: Image.asset('assets/collection/icon_${widget.amiibo.key}.png',
                       fit: BoxFit.scaleDown,
                     )
                     /*Container(

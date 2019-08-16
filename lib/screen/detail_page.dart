@@ -12,20 +12,10 @@ class DetailPage extends StatelessWidget{
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        body: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: <Widget>[
-            SizedBox(
-              height: 250,
-              child: _CardDetailAmiibo(amiibo: amiibo)
-            ),
-            /*Container(
-              height: 100,
-              child: Card(
-                child: Center(child: Text("Coming soon..."),)
-              ),
-            )*/
-          ],
+        body: SingleChildScrollView(
+          child: SizedBox(height: 250.0,
+            child: _CardDetailAmiibo(amiibo: amiibo),
+          ),
         )
       )
     );
@@ -41,6 +31,7 @@ class _CardDetailAmiibo extends StatelessWidget{
   Widget build(BuildContext context){
     return Card(
       child: Row(
+        mainAxisSize: MainAxisSize.min,
         children: <Widget>[
           Expanded(
             child: Column(
@@ -49,10 +40,9 @@ class _CardDetailAmiibo extends StatelessWidget{
               children: <Widget>[
                 Expanded(
                   child: Hero(
-                    tag: amiibo.id,
+                    tag: amiibo.key,
                     child: Image.asset(
-                      'assets/collection/icon_${amiibo.id?.substring(0,8)}-'
-                      '${amiibo.id?.substring(8)}.png',
+                      'assets/collection/icon_${amiibo.key}.png',
                       fit: BoxFit.scaleDown,
                     )
                   ),

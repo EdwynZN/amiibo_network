@@ -64,7 +64,7 @@ class Service {
   Future<AmiiboLocalDB> fetchByCategory(String column, String like) =>
     dao.fetchByColumn(column, like);
 
-  Future<AmiiboDB> fetchAmiiboDBById(String id) => dao.fetchById(id);
+  Future<AmiiboDB> fetchAmiiboDBByKey(String key) => dao.fetchByKey(key);
 
   Future<void> update(AmiiboLocalDB amiibos) {
     return dao.insertImport(amiibos);

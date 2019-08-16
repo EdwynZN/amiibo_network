@@ -50,7 +50,7 @@ class SettingsPage extends StatelessWidget{
                         ),
                       )
                     ),
-                    Expanded(
+                    /*Expanded(
                       child: Card(
                         child: FlatButton.icon(
                           onPressed: null,
@@ -58,7 +58,7 @@ class SettingsPage extends StatelessWidget{
                           label: Text('Donate', style: Theme.of(context).textTheme.body2),
                         ),
                       )
-                    ),
+                    ),*/
                   ],
                 )
               ],

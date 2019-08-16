@@ -97,10 +97,10 @@ class AmiiboDB {
   };
 
   Map<String, dynamic> toJson() => {
-    /*"id": id,
-    if(wishlist != null) "wishlist": wishlist,
-    if(owned != null) "owned": owned*/
     "key": key,
+    if(wishlist != null) "wishlist": wishlist,
+    if(owned != null) "owned": owned
+    /*"key": key,
     "id": id,
     "amiiboSeries": amiiboSeries,
     "character": character,
@@ -110,7 +110,7 @@ class AmiiboDB {
     "eu": eu,
     "jp": jp,
     "na": na,
-    "type": type,
+    "type": type,*/
   };
 
   @override
