@@ -58,7 +58,7 @@ class HomePageState extends State<HomePage>
     initBloc();
     _controller = ScrollController()..addListener(_scrollListener);
     _animationController = AnimationController(
-      duration: const Duration(milliseconds: 500),
+      duration: const Duration(milliseconds: 300),
       vsync: this)..value = 1.0;
     super.initState();
   }
@@ -132,9 +132,9 @@ class HomePageState extends State<HomePage>
         child: Scaffold(
           resizeToAvoidBottomInset: false,
           drawer: !_multipleSelection ? CollectionDrawer(
-              key: Key('Drawer'),
-              selected: _filter, onTap: _onTapTile,
-            ) : null,
+            key: Key('Drawer'),
+            selected: _filter, onTap: _onTapTile,
+          ) : null,
           body: Scrollbar(
             child: CustomScrollView(
               controller: _controller, cacheExtent: 150,
@@ -312,24 +312,23 @@ class FAB extends StatelessWidget{
   final VoidCallback goTop;
 
   FAB(this.controller, this.goTop):
-
-        scale = Tween<double>(begin: 0.0, end: 1.0)
-            .animate(
-            CurvedAnimation(parent: controller,
-              curve: Interval(0.0, 1, curve: Curves.decelerate),
-            )
-        );
+    scale = Tween<double>(begin: 0.0, end: 1.0)
+      .animate(
+      CurvedAnimation(parent: controller,
+        curve: Interval(0.0, 1, curve: Curves.decelerate),
+      )
+    );
 
   @override
   Widget build(BuildContext context) {
     return ScaleTransition(
-        scale: scale,
-        child: FloatingActionButton(
-          mini: true,
-          heroTag: 'MenuFAB',
-          onPressed: () => controller.isAnimating ? null : goTop(),
-          child: const Icon(Icons.keyboard_arrow_up),
-        )
+      scale: scale,
+      child: FloatingActionButton(
+        mini: true,
+        heroTag: 'MenuFAB',
+        onPressed: goTop,
+        child: const Icon(Icons.keyboard_arrow_up),
+      )
     );
   }
 }
