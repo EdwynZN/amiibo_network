@@ -70,8 +70,8 @@ class Service {
     return dao.insertImport(amiibos);
   }
 
-  Future<List<String>> fetchDistinct() async =>
-    dao.fetchDistinct('amiibo', 'amiiboSeries');
+  Future<List<String>> fetchDistinct([bool figure = true]) async =>
+    dao.fetchDistinct('amiibo', 'amiiboSeries', figure ? 'IS NOT' : 'IS');
 
   Future<List<String>> searchDB(String name) async =>
     dao.fetchLimit('%$name%', 10);

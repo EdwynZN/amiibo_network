@@ -277,7 +277,7 @@ class BottomBar extends StatelessWidget{
   @override
   Widget build(BuildContext context) {
     return BottomAppBar(
-      child: Row (
+      child: Row(
         mainAxisSize: MainAxisSize.min,
         children: <Widget>[
           ExpandedIconButton(icon: Icons.file_upload, text: 'Export',

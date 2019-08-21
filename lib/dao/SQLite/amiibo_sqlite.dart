@@ -14,10 +14,12 @@ class AmiiboSQLite implements Dao<AmiiboLocalDB, String, AmiiboDB>{
     return entityFromList(maps);
   }//type DESC, na DESC, name
 
-  Future<List<String>> fetchDistinct(String name, String column) async{
+  Future<List<String>> fetchDistinct(String name, String column, String condition) async{
     Database _db = await connectionFactory.database;
     List<Map<String, dynamic>> maps = await _db.query(name, distinct: true,
       columns: [column],
+      where: 'type $condition ?',
+      whereArgs: ["Card"],
       orderBy: column);
     return List<String>.from(maps.map((x) => x['amiiboSeries']));
   }

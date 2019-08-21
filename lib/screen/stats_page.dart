@@ -2,14 +2,23 @@ import 'package:flutter/material.dart';
 import 'package:amiibo_network/service/service.dart';
 import 'package:amiibo_network/widget/radial_progression.dart';
 
-class StatsPage extends StatelessWidget{
+class StatsPage extends StatefulWidget{
   static final _service = Service();
 
+  @override
+  _StatsPageState createState() => _StatsPageState();
+}
+
+class _StatsPageState extends State<StatsPage> {
+  String _select = 'All';
+
   Future<List<Map<String, dynamic>>> get _retrieveStats
-    => _service.fetchSum(all: true, group: true);
+    => StatsPage._service.fetchSum(all: _select == 'All',
+        group: true, column: 'type', name: _select);
 
   Future<List<Map<String, dynamic>>> get _generalStats
-    => _service.fetchSum(all: true);
+    => StatsPage._service.fetchSum(all: _select == 'All',
+        column: 'type', name: _select);
 
   @override
   Widget build(BuildContext context) {
@@ -24,7 +33,7 @@ class StatsPage extends StatelessWidget{
                   return SliverList(
                     delegate: SliverChildBuilderDelegate((BuildContext context, int index) =>
                       SingleStat(
-                        key: ValueKey(index),
+                        key: Key('Amiibo Network'),
                         title: 'Amiibo Network',
                         owned: snapshot.data[index]['Owned'],
                         total: snapshot.data[index]['Total'],
@@ -75,6 +84,47 @@ class StatsPage extends StatelessWidget{
               ),
             ],
           ),
+        ),
+        bottomNavigationBar: BottomAppBar(
+          //color: Colors.transparent,
+          child: Padding(
+            padding: EdgeInsets.symmetric(horizontal: 12, vertical: 12),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              mainAxisSize: MainAxisSize.min,
+              children: <Widget>[
+                Expanded(
+                  flex: 6,
+                  child: FlatButton(
+                    color: _select == 'All' ?
+                      Theme.of(context).indicatorColor : Theme.of(context).backgroundColor,
+                    onPressed: () => _select == 'All' ? null : setState(() => _select = 'All'),
+                    child: Text('All'),
+                  ),
+                ),
+                Spacer(),
+                Expanded(
+                  flex: 6,
+                  child: FlatButton(
+                    color: _select == 'Figure' ?
+                      Theme.of(context).indicatorColor : Theme.of(context).backgroundColor,
+                    onPressed: () => _select == 'Figure' ? null : setState(() => _select = 'Figure'),
+                    child: Text('Figures'),
+                  ),
+                ),
+                Spacer(),
+                Expanded(
+                  flex: 6,
+                  child: FlatButton(
+                    color: _select == 'Card' ?
+                      Theme.of(context).indicatorColor : Theme.of(context).backgroundColor,
+                    onPressed: () => _select == 'Card' ? null : setState(() => _select = 'Card'),
+                    child: Text('Cards'),
+                  ),
+                ),
+              ],
+            ),
+          )
         )
       )
     );
@@ -89,7 +139,7 @@ class SingleStat extends StatelessWidget{
   final WrapAlignment wrapAlignment;
 
   SingleStat({Key key, this.title, this.owned, this.wished, this.total,
-    this.wrapAlignment = WrapAlignment.spaceAround}) :  super(key: key);
+    this.wrapAlignment = WrapAlignment.spaceAround}): super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -106,21 +156,19 @@ class SingleStat extends StatelessWidget{
             const Divider(),
             Chip(label: Text('$owned/$total Owned', softWrap: false,
               overflow: TextOverflow.fade,),
-              avatar: CustomPaint(
-                size: Size(24, 24),
-                painter: RadialProgression(owned.toDouble()/total.toDouble()),
-                child: owned.toDouble() == total.toDouble() ?
-                  const Icon(Icons.check, color: Colors.green) : null,
+              avatar: AnimatedRadial(
+                key: Key('Owned'),
+                percentage: owned.toDouble() / total.toDouble(),
+                child: const Icon(Icons.check, color: Colors.green),
               ),
             ),
             Chip(
               label: Text('$wished/$total Wished', softWrap: false,
               overflow: TextOverflow.fade),
-              avatar: CustomPaint(
-                size: Size(24, 24),
-                painter: RadialProgression(wished.toDouble()/total.toDouble()),
-                child: wished.toDouble() == total.toDouble() ?
-                  const Icon(Icons.whatshot, color: Colors.amber) : null,
+              avatar: AnimatedRadial(
+                key: Key('Owned'),
+                percentage: wished.toDouble() / total.toDouble(),
+                child: const Icon(Icons.whatshot, color: Colors.amber),
               ),
             )
           ],

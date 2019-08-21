@@ -28,8 +28,6 @@ class AmiiboBloc extends Bloc{
 
   Future<void> fetchAllAmiibosDB() => _fetchByCategory('All');
 
-  Future<List<String>> listOfGames() => _service.fetchDistinct();
-
   fetchByName(String name) async{
     final AmiiboLocalDB amiiboDB = await _service.fetchByCategory('name', '%$name%');
     _amiiboFetcherDB.sink.add(amiiboDB);

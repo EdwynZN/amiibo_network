@@ -4,7 +4,7 @@ import 'package:amiibo_network/screen/splash_screen.dart';
 import 'package:amiibo_network/widget/route_transitions.dart';
 import 'package:amiibo_network/service/service.dart';
 import 'package:amiibo_network/bloc/theme_bloc.dart';
-import 'bloc/bloc_provider.dart';
+import 'package:amiibo_network/bloc/bloc_provider.dart';
 import 'package:flutter/services.dart';
 //import 'package:flutter/gestures.dart';
 

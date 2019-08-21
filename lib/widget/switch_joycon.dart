@@ -42,55 +42,5 @@ class SwitchJoycon extends CustomPainter{
   }
 
   @override
-  bool shouldRepaint(CustomPainter oldDelegate) {
-    return false;
-  }
+  bool shouldRepaint(SwitchJoycon oldDelegate) => oldDelegate.isLeft != isLeft;
 }
-
-/*
-class SwitchJoyCon extends StatelessWidget{
-  final double height;
-  final bool left;
-  final Color background;
-  final Color border;
-
-  SwitchJoyCon({
-    Key key,
-    this.height = 100,
-    Color color,
-    this.border,
-    @required this.left,
-  }) :  background = color ?? (left == true ? Colors.lightBlue[300] : Colors.red[200]),
-        super(key: key);
-
-  @override
-  Widget build(BuildContext context){
-    return Container(
-      height: height,
-      width: height*0.40,
-      decoration: BoxDecoration(
-          border: Border.all(
-            width: height*0.05,
-            color: border ?? background
-          ),
-          borderRadius: BorderRadius.horizontal(
-            left: left == true ? Radius.circular(this.height*0.25) : Radius.zero,
-            right: left == true ? Radius.zero : Radius.circular(this.height*0.25),
-          ),
-          color: background
-      ),
-      child: FractionallySizedBox(
-        alignment: left == true ? Alignment.topCenter : Alignment.bottomCenter,
-        heightFactor: left == true ? 0.6 : 0.8,
-        widthFactor: 0.6,
-        child: Container(
-          decoration: BoxDecoration(
-            shape: BoxShape.circle,
-            color: Colors.black,
-          ),
-        ),
-      )
-    );
-  }
-}
-*/

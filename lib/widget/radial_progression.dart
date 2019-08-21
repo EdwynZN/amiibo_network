@@ -38,3 +38,41 @@ class RadialProgression extends CustomPainter{
   @override
   bool shouldRepaint(RadialProgression oldDelegate) => oldDelegate.percent != percent;
 }
+
+class AnimatedRadial extends ImplicitlyAnimatedWidget {
+  final Widget child;
+  final double percentage;
+
+  AnimatedRadial({
+    Key key,
+    @required this.percentage,
+    Duration duration = const Duration(milliseconds: 400),
+    this.child,
+    Curve curve = Curves.linear
+  }) : super(duration: duration, curve: curve, key: key);
+
+  @override
+  ImplicitlyAnimatedWidgetState<ImplicitlyAnimatedWidget> createState() => _AnimatedRadialState();
+}
+
+class _AnimatedRadialState extends AnimatedWidgetBaseState<AnimatedRadial> {
+  Tween<double> _percentage;
+
+  @override
+  void forEachTween(TweenVisitor visitor) {
+    _percentage = visitor(_percentage, widget.percentage, (dynamic value) => Tween<double>(begin: value));
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return CustomPaint(
+      painter: RadialProgression(_percentage.evaluate(animation)),
+      isComplex: true,
+      willChange: true,
+      child: AnimatedSwitcher(
+        duration: widget.duration,
+        child: _percentage.evaluate(animation) == 1 ? widget.child : const SizedBox(width: 24, height: 24),
+      ),
+    );
+  }
+}

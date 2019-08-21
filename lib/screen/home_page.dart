@@ -7,6 +7,7 @@ import 'package:floating_search_bar/floating_search_bar.dart';
 import 'package:amiibo_network/data/database.dart';
 import 'package:flutter/rendering.dart';
 import 'package:amiibo_network/widget/radial_progression.dart';
+import 'package:amiibo_network/widget/drawer.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -15,16 +16,14 @@ class HomePage extends StatefulWidget {
 
 class HomePageState extends State<HomePage>
     with SingleTickerProviderStateMixin{
-  final AmiiboBloc _bloc = $Provider.of<AmiiboBloc>();
-  static List<String> list = <String>['All', 'Owned', 'Wishlist', 'Cards'];
+  static final AmiiboBloc _bloc = $Provider.of<AmiiboBloc>();
   static String _filter = 'All';
   static bool _multipleSelection = false;
-  static const double initialFAB = 0.35;
   final Set<ValueKey<int>> set = Set<ValueKey<int>>();
   ScrollController _controller;
   AnimationController _animationController;
 
-  checkMultipleSelection(){
+  void checkMultipleSelection(){
     final bool val = _multipleSelection;
     _multipleSelection = set.isNotEmpty;
     if(_multipleSelection != val) setState(() {});
@@ -32,7 +31,7 @@ class HomePageState extends State<HomePage>
     '${set.length}' : '$_filter | Search Amiibo';
   }
 
-  _updateSelection({int wished = 0, int owned = 0}) async {
+  void _updateSelection({int wished = 0, int owned = 0}) async {
     AmiiboLocalDB amiibos = AmiiboLocalDB(amiibo: List<AmiiboDB>.of(
         set.map((x) => AmiiboDB(key: x.value, wishlist: wished, owned: owned))
       )
@@ -43,14 +42,13 @@ class HomePageState extends State<HomePage>
     setState(() => _multipleSelection = false);
   }
 
-  _cancelSelection() {
+  void  _cancelSelection() {
     set.clear();
     _bloc.setFilter = '$_filter | Search Amiibo';
     setState(() => _multipleSelection = false);
   }
 
-  initBloc() async{
-    list.addAll(await _bloc.listOfGames());
+  void initBloc() async{
     await _bloc.fetchAllAmiibosDB();
     _bloc.setFilter = '$_filter | Search Amiibo';
   }
@@ -61,7 +59,7 @@ class HomePageState extends State<HomePage>
     _controller = ScrollController()..addListener(_scrollListener);
     _animationController = AnimationController(
       duration: const Duration(milliseconds: 500),
-      vsync: this)..value = initialFAB;
+      vsync: this)..value = 1.0;
     super.initState();
   }
 
@@ -75,15 +73,14 @@ class HomePageState extends State<HomePage>
     super.dispose();
   }
 
-  _scrollListener() {
+  void _scrollListener() {
     if((_controller?.hasClients ?? false) && !_animationController.isAnimating){
       switch(_controller.position.userScrollDirection){
         case ScrollDirection.forward:
-          if(!_animationController.isCompleted)
-            _animationController.animateBack(initialFAB);
+            _animationController.forward();
           break;
         case ScrollDirection.reverse:
-          _animationController.animateBack(0.0);
+          _animationController.reverse();
           break;
         case ScrollDirection.idle:
           break;
@@ -91,22 +88,23 @@ class HomePageState extends State<HomePage>
     }
   }
 
-  _onTapPopMenu(String value){
-    if(_filter != value){
-      _animationController.value = initialFAB;
-      _filter = value;
+  void _onTapTile(String tile){
+    if(_filter != tile){
+      _filter = tile;
       _bloc.resetPagination(_filter, false);
+      _animationController.forward();
       _controller.position.jumpTo(0);
     }
+    setState(() {});
   }
 
-  _search(){
+  void _search(){
     Navigator.pushNamed(context,"/search").then((value) {
       if(value != null && value != '') {
         _filter = value;
         _bloc.resetPagination(_filter, true);
         _controller.position.jumpTo(0);
-        _animationController.value = initialFAB;
+        _animationController.forward();
       }
     });
   }
@@ -133,6 +131,10 @@ class HomePageState extends State<HomePage>
         onWillPop: _exitApp,
         child: Scaffold(
           resizeToAvoidBottomInset: false,
+          drawer: !_multipleSelection ? CollectionDrawer(
+              key: Key('Drawer'),
+              selected: _filter, onTap: _onTapTile,
+            ) : null,
           body: Scrollbar(
             child: CustomScrollView(
               controller: _controller, cacheExtent: 150,
@@ -143,10 +145,9 @@ class HomePageState extends State<HomePage>
                   snap: !_multipleSelection,
                   pinned: _multipleSelection,
                   leading: _multipleSelection ? IconButton(
-                    icon: Icon(Icons.clear, size: 30),
+                    icon: Icon(Icons.clear),
                     onPressed: _cancelSelection,
-                    tooltip: 'Cancel',)
-                      : PopUpMenu(list, _onTapPopMenu),
+                    tooltip: 'Cancel') : null,
                   title: GestureDetector(
                     child: StreamBuilder(
                       stream: _bloc.filter,
@@ -160,32 +161,34 @@ class HomePageState extends State<HomePage>
                     ),
                     onTap: _multipleSelection ? null : _search
                   ),
-                  trailing: _multipleSelection ? Row(
+                  trailing: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: <Widget>[
-                      IconButton(
+                      if(_multipleSelection) IconButton(
                         icon: Icon(Icons.remove),
                         onPressed: _updateSelection,
                         tooltip: 'Remove',
                       ),
-                      IconButton(
+                      if(_multipleSelection) IconButton(
                         icon: Icon(Icons.star),
                         onPressed: () => _updateSelection(owned: 1),
                         tooltip: 'Owned',
                       ),
-                      IconButton(
+                      if(_multipleSelection) IconButton(
                         icon: Icon(Icons.card_giftcard),
                         onPressed: () => _updateSelection(wished: 1),
                         tooltip: 'Wished',
                       ),
+                      if(!_multipleSelection) CircleAvatar(radius: 18,
+                          child: IconButton(
+                            padding: EdgeInsets.zero,
+                            icon: Icon(Icons.settings, color: Theme.of(context).accentIconTheme.color),
+                            onPressed: () => Navigator.pushNamed(context, "/settings"),
+                            tooltip: 'Settings',
+                          )
+                        ),
                     ],
-                  ) : CircleAvatar(
-                      child: IconButton(
-                        icon: Icon(Icons.settings, color: Theme.of(context).accentIconTheme.color),
-                        onPressed: () => Navigator.pushNamed(context, "/settings"),
-                        tooltip: 'Settings',
-                      )
-                  ),
+                  )
                 ),
                 SliverPadding(
                   padding: EdgeInsets.symmetric(horizontal: 12, vertical: 5),
@@ -195,48 +198,62 @@ class HomePageState extends State<HomePage>
                       stream: _bloc.wished,
                       builder: (context, AsyncSnapshot<Map<String,dynamic>> statList){
                         if(statList.hasData)
-                          return Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          return Column(
                             children: <Widget>[
-                              if(_filter != 'Wishlist')
-                                Flexible(
-                                  child: Chip(
-                                    avatar: AnimatedProgression(
-                                      key: Key('Owned'),
-                                      fraction: statList.data['Owned'].toDouble(),
-                                      total: statList.data['Total'].toDouble(),
-                                      child: const Icon(Icons.check, color: Colors.green),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: <Widget>[
+                                  if(_filter != 'Wishlist')
+                                    Flexible(
+                                      child: Chip(
+                                          avatar: AnimatedRadial(
+                                            key: Key('Owned'),
+                                            percentage:
+                                            statList.data['Owned'].toDouble() / statList.data['Total'].toDouble(),
+                                            child: const Icon(Icons.check, color: Colors.green),
+                                          ),
+                                          label: FittedBox(
+                                            fit: BoxFit.contain,
+                                            child: Text('${statList.data['Owned']}/'
+                                                '${statList.data['Total']} Owned', softWrap: false,
+                                              overflow: TextOverflow.fade,
+                                            ),
+                                          )
+                                      ),
                                     ),
-                                    label: FittedBox(
-                                      fit: BoxFit.contain,
-                                      child: Text('${statList.data['Owned']}/'
-                                          '${statList.data['Total']} Owned', softWrap: false,
-                                        overflow: TextOverflow.fade,
+                                  if(_filter != 'Owned')
+                                    Flexible(
+                                      child: Chip(
+                                          avatar: AnimatedRadial(
+                                            key: Key('Owned'),
+                                            percentage:
+                                            statList.data['Wished'].toDouble() / statList.data['Total'].toDouble(),
+                                            child: const Icon(Icons.whatshot, color: Colors.amber),
+                                          ),
+                                          label: FittedBox(
+                                            fit: BoxFit.contain,
+                                            child: Text('${statList.data['Wished']}/'
+                                                '${statList.data['Total']} Wished', softWrap: false,
+                                              overflow: TextOverflow.fade,
+                                            ),
+                                          )
                                       ),
                                     )
+                                ],
+                              ),
+                              /*Row(
+                                mainAxisAlignment: MainAxisAlignment.end,
+                                children: <Widget>[
+                                  Padding(
+                                    padding: const EdgeInsets.only(right: 12.0),
+                                    child: DropMenu(),
                                   ),
-                                ),
-                              if(_filter != 'Owned')
-                                Flexible(
-                                  child: Chip(
-                                    avatar: AnimatedProgression(
-                                      key: Key('Owned'),
-                                      fraction: statList.data['Wished'].toDouble(),
-                                      total: statList.data['Total'].toDouble(),
-                                      child: const Icon(Icons.whatshot, color: Colors.amber),
-                                    ),
-                                    label: FittedBox(
-                                      fit: BoxFit.contain,
-                                      child: Text('${statList.data['Wished']}/'
-                                          '${statList.data['Total']} Wished', softWrap: false,
-                                        overflow: TextOverflow.fade,
-                                      ),
-                                    )
-                                  ),
-                                )
+                                  const Icon(Icons.keyboard_arrow_up, size: 28,)
+                                ],
+                              )*/
                             ],
                           );
-                        else return const SizedBox.shrink();
+                        else return const SizedBox();
                       }
                     )
                   ),
@@ -281,8 +298,7 @@ class HomePageState extends State<HomePage>
               ],
             ),
           ),
-          floatingActionButton: FAB(_animationController, initialFAB,
-            () => _controller.jumpTo(0)
+          floatingActionButton: FAB(_animationController, () => _controller.jumpTo(0)
           ),
         )
       )
@@ -290,176 +306,30 @@ class HomePageState extends State<HomePage>
   }
 }
 
-class AnimatedProgression extends StatefulWidget {
-  final double fraction;
-  final double total;
-  final Widget child;
-
-  const AnimatedProgression({
-    Key key, this.fraction, this.total, this.child
-  }) : super(key: key);
-
-  @override
-  _AnimatedProgressionState createState() => _AnimatedProgressionState();
-}
-
-class _AnimatedProgressionState extends State<AnimatedProgression>
-    with SingleTickerProviderStateMixin {
-  double percentage;
-  AnimationController _controller;
-
-  @override
-  void initState() {
-    super.initState();
-    _controller = AnimationController(
-      duration: const Duration(milliseconds: 250),
-      vsync: this)
-    ..value = percentage = widget.fraction / widget.total;
-  }
-
-  @override
-  void didUpdateWidget(AnimatedProgression oldWidget) {
-    percentage = widget.fraction / widget.total;
-    _controller.animateTo(percentage);
-    super.didUpdateWidget(oldWidget);
-  }
-
-  @override
-  void dispose() {
-    _controller?.dispose();
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return AnimatedBuilder(
-      animation: _controller,
-      child: AnimatedSwitcher(
-        duration: const Duration(milliseconds: 250),
-        child: percentage == 1 ? widget.child : const SizedBox(width: 24, height: 24),
-      ),
-      builder: (_, Widget child){
-        return CustomPaint(
-          painter: RadialProgression(_controller.value),
-          child: child,
-          isComplex: true,
-          willChange: true,
-        );
-      },
-    );
-  }
-}
-
 class FAB extends StatelessWidget{
   final Animation<double> scale;
-  final Animation<double> fabAnimation;
-  final Animation<double> rotation;
   final AnimationController controller;
   final VoidCallback goTop;
-  final double initialValue;
 
-  FAB(this.controller, this.initialValue, this.goTop):
-    scale = Tween<double>(begin: 0.0, end: 1.0)
-      .animate(
-      CurvedAnimation(parent: controller,
-          curve: Interval(0.0, initialValue, curve: Curves.linear)
-      )
-    ),
-    fabAnimation = Tween<double>(begin: 0.0, end: 1.0)
-      .animate(
-      CurvedAnimation(parent: controller,
-          curve: Interval(0.5, 1.0, curve: Curves.easeInOutExpo)
-      )
-    ),
-    rotation = Tween<double>(begin: 0.0, end: 0.625)
-      .animate(
-      CurvedAnimation(parent: controller,
-          curve: Interval(initialValue, 1, curve: Curves.easeOutBack)
-      )
-    );
+  FAB(this.controller, this.goTop):
+
+        scale = Tween<double>(begin: 0.0, end: 1.0)
+            .animate(
+            CurvedAnimation(parent: controller,
+              curve: Interval(0.0, 1, curve: Curves.decelerate),
+            )
+        );
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.end,
-      crossAxisAlignment: CrossAxisAlignment.end,
-      children: <Widget>[
-        Padding(
-          padding: EdgeInsets.only(bottom: 5),
-          child: ScaleTransition(
-              scale: fabAnimation,
-              child: FloatingActionButton.extended(
-                heroTag: 'GoTopFAB',
-                onPressed: () => controller.isAnimating ? null : goTop(),
-                label: Icon(Icons.keyboard_arrow_up),
-                icon: Text('Go to top'),
-              )
-          ),
-        ),
-        Padding(
-          padding: EdgeInsets.only(bottom: 5),
-          child: ScaleTransition(
-              scale: fabAnimation,
-              child: FloatingActionButton.extended(
-                heroTag: 'GoStats',
-                onPressed: () => controller.isAnimating ? null : Navigator.pushNamed(context,"/stats"),
-                label: Icon(Icons.show_chart),
-                icon: Text('Your Stats'),
-              )
-          ),
-        ),
-        ScaleTransition(
-          scale: scale,
-          child: RotationTransition(
-            turns: rotation,
-            child: FloatingActionButton(
-                heroTag: 'MenuFAB',
-                onPressed: () => controller.isCompleted ? controller.animateBack(0.35) : controller.forward(),
-                child: Icon(Icons.add)
-            ),
-          )
-        ),
-      ],
-    );
-  }
-}
-
-class PopUpMenu extends StatelessWidget{
-  final List<String> list;
-  final PopupMenuItemSelected<String> onTap;
-
-  PopUpMenu(this.list, this.onTap);
-
-  @override
-  Widget build(BuildContext context) {
-    return PopupMenuButton<String>(
-      itemBuilder: (context) => [
-        PopupMenuDivider(),
-        for(String series in list) PopupMenuItem(
-          value: series,
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: <Widget>[
-              if(series == 'All') const Icon(Icons.all_inclusive)
-              else if(series == 'Owned') const Icon(Icons.star, color: Colors.pinkAccent,)
-              else if(series == 'Wishlist') const Icon(Icons.card_giftcard, color: Colors.amber,)
-              else if(series == 'Cards') const Icon(Icons.view_carousel, color: Colors.amber)
-              else CircleAvatar(
-                backgroundColor: Theme.of(context).accentColor,
-                foregroundColor: Theme.of(context).accentIconTheme.color,
-                child: Text(series[0]), radius: 14,),
-              Expanded(child: Padding(padding: EdgeInsets.only(left: 8),
-                child: Text(series, overflow: TextOverflow.fade, softWrap: false),
-                ),
-              )
-            ],
-          ),
-        ),
-      ],
-      icon: Icon(Icons.sort, size: 30),
-      tooltip: 'Categories',
-      onSelected: onTap,
-      offset: Offset(-100, 0),
+    return ScaleTransition(
+        scale: scale,
+        child: FloatingActionButton(
+          mini: true,
+          heroTag: 'MenuFAB',
+          onPressed: () => controller.isAnimating ? null : goTop(),
+          child: const Icon(Icons.keyboard_arrow_up),
+        )
     );
   }
 }
@@ -469,6 +339,7 @@ class AmiiboGrid extends StatefulWidget {
   final Set<ValueKey<int>> set;
   final VoidCallback functionSelection;
   final bool multipleSelection;
+  static final AmiiboBloc _bloc = $Provider.of<AmiiboBloc>();
 
   const AmiiboGrid({
     Key key,
@@ -483,7 +354,6 @@ class AmiiboGrid extends StatefulWidget {
 }
 
 class AmiiboGridState extends State<AmiiboGrid> {
-  static final AmiiboBloc _bloc = $Provider.of<AmiiboBloc>();
   bool _isSelected;
   Widget _widget;
 
@@ -505,7 +375,7 @@ class AmiiboGridState extends State<AmiiboGrid> {
     if(widget.amiibo?.wishlist?.isOdd ?? false)
       return const Icon(Icons.card_giftcard, key: ValueKey(2),  color: Colors.limeAccent);
     else if(widget.amiibo?.owned?.isOdd ?? false)
-      return const Icon(Icons.star, key: ValueKey(1),  color: Colors.pinkAccent);
+      return const Icon(Icons.star, key: ValueKey(1), color: Colors.pinkAccent);
     else return const SizedBox.shrink();
   }
 
@@ -515,17 +385,17 @@ class AmiiboGridState extends State<AmiiboGrid> {
   _onTap() {
     switch(widget.amiibo?.owned ?? 0){
       case 1:
-        _bloc.countOwned = widget.amiibo.owned = 0;
-        _bloc.countWished = widget.amiibo.wishlist = 1;
+        AmiiboGrid._bloc.countOwned = widget.amiibo.owned = 0;
+        AmiiboGrid._bloc.countWished = widget.amiibo.wishlist = 1;
         break;
       case 0:
         if((widget.amiibo?.wishlist ?? 0) == 0)
-          _bloc.countOwned = widget.amiibo.owned = 1;
-        else _bloc.countWished = widget.amiibo.wishlist = 0;
+          AmiiboGrid._bloc.countOwned = widget.amiibo.owned = 1;
+        else AmiiboGrid._bloc.countWished = widget.amiibo.wishlist = 0;
         break;
     }
-    _bloc.updateAmiiboDB(amiibo: widget.amiibo);
-    _bloc.updateList();
+    AmiiboGrid._bloc.updateAmiiboDB(amiibo: widget.amiibo);
+    AmiiboGrid._bloc.updateList();
     setState(() {_widget = _changeWidget();});
   }
 
@@ -598,7 +468,7 @@ class AmiiboGridState extends State<AmiiboGrid> {
                 Expanded(
                   child: Container(
                     decoration: ShapeDecoration(
-                      color: Theme.of(context).unselectedWidgetColor,
+                      color: Theme.of(context).primaryColorLight,
                       shape: RoundedRectangleBorder(borderRadius: BorderRadius.vertical(bottom: Radius.circular(8)))),
                     alignment: Alignment.center,
                     padding: EdgeInsets.symmetric(horizontal: 5),

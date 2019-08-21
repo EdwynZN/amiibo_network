@@ -13,13 +13,14 @@ class Themes {
       iconTheme: const IconThemeData(color: Colors.white54),
     ),
     brightness: Brightness.dark,
-    unselectedWidgetColor: Colors.grey[850],
+    unselectedWidgetColor: Colors.grey,
     dividerColor: Colors.white70,
     scaffoldBackgroundColor: Colors.black,
     accentColor: const Color.fromRGBO(207, 102, 121, 1),
     accentIconTheme: const IconThemeData(color: Colors.black),
     iconTheme: const IconThemeData(color: Colors.white54),
     errorColor: Color.fromRGBO(207, 102, 121, 1),
+    primaryColorLight: Colors.grey[850],
     canvasColor: Colors.grey[850],
     primarySwatch: Colors.blueGrey,
     primaryColor: Colors.blueGrey[900],
@@ -36,9 +37,11 @@ class Themes {
       body1: TextStyle(color: Colors.white70),
       body2: TextStyle(color: Colors.white70, fontSize: 16, fontWeight: FontWeight.w400),
       display1: TextStyle(color: Colors.white70, fontSize: 18, fontWeight: FontWeight.w600),
+      subhead: TextStyle(color: Colors.white70, fontSize: 14, fontWeight: FontWeight.w600),
     ),
     bottomAppBarTheme: BottomAppBarTheme(
       color: Colors.grey[900],
+      elevation: 0.0
     ),
     dialogTheme: DialogTheme(
       backgroundColor: Colors.grey[900],
@@ -55,7 +58,7 @@ class Themes {
       backgroundColor: Colors.grey[800],
       disabledColor: Colors.grey,
       selectedColor: const Color.fromRGBO(207, 102, 121, 1),
-      secondarySelectedColor: const Color.fromRGBO(207, 102, 121, 1),
+      secondarySelectedColor: const Color.fromRGBO(96, 125, 139, 0.5),
       labelPadding: const EdgeInsets.symmetric(horizontal: 8.0),
       padding: const EdgeInsets.all(2.0),
       shape: StadiumBorder(),
@@ -86,13 +89,14 @@ class Themes {
         color: Colors.white
       )
     ),
-    unselectedWidgetColor: Colors.deepOrangeAccent[100],
+    unselectedWidgetColor: Colors.black87,
     dividerColor: Colors.blueGrey,
     scaffoldBackgroundColor: Colors.red,
     accentColor: Colors.redAccent,
     accentIconTheme: const IconThemeData(color: Colors.white),
     iconTheme: const IconThemeData(color: Colors.black),
     errorColor: Colors.redAccent,
+    primaryColorLight: Colors.deepOrangeAccent[100],
     canvasColor: Colors.white,
     primarySwatch: Colors.red,
     primaryColor: Colors.red,
@@ -110,9 +114,11 @@ class Themes {
       body1: TextStyle(color: Colors.black87),
       body2: TextStyle(color: Colors.black87, fontSize: 16, fontWeight: FontWeight.w400),
       display1: TextStyle(color: Colors.black87, fontSize: 18, fontWeight: FontWeight.w600),
+      subhead: TextStyle(color: Colors.black87, fontSize: 14, fontWeight: FontWeight.w600),
     ),
     bottomAppBarTheme: BottomAppBarTheme(
       color: Colors.white70,
+      elevation: 0.0
     ),
     dialogTheme: DialogTheme(
       backgroundColor: Colors.white,
@@ -130,8 +136,8 @@ class Themes {
       labelPadding: const EdgeInsets.symmetric(horizontal: 8.0),
       padding: const EdgeInsets.all(2.0),
       shape: StadiumBorder(),
-      labelStyle: TextStyle(color: Colors.black87),
-      secondaryLabelStyle: TextStyle(color: Colors.black87),
+      labelStyle: TextStyle(color: Colors.black),
+      secondaryLabelStyle: TextStyle(color: Colors.black),
       brightness: Brightness.light
     ),
     buttonTheme: ButtonThemeData(
