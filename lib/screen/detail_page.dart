@@ -13,9 +13,7 @@ class DetailPage extends StatelessWidget{
     return SafeArea(
       child: Scaffold(
         body: SingleChildScrollView(
-          child: SizedBox(height: 250.0,
-            child: _CardDetailAmiibo(amiibo: amiibo),
-          ),
+          child: _CardDetailAmiibo(amiibo: amiibo)
         )
       )
     );
@@ -30,55 +28,58 @@ class _CardDetailAmiibo extends StatelessWidget{
   @override
   Widget build(BuildContext context){
     return Card(
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: <Widget>[
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: <Widget>[
-                Expanded(
-                  child: Hero(
-                    tag: amiibo.key,
-                    child: Image.asset(
-                      'assets/collection/icon_${amiibo.key}.png',
-                      fit: BoxFit.scaleDown,
-                    )
+      child: LimitedBox(
+        maxHeight: 250,
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: <Widget>[
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: <Widget>[
+                  Expanded(
+                    child: Padding(
+                      padding: const EdgeInsets.only(top: 8.0, left: 8.0),
+                      child: Hero(
+                        tag: amiibo.key,
+                        child: Image.asset(
+                          'assets/collection/icon_${amiibo.key}.png',
+                          fit: BoxFit.scaleDown,
+                        )
+                      ),
+                    ),
+                    flex: 7,
                   ),
-                  flex: 7,
-                ),
-                Expanded(
-                  child: _Buttons(amiibo: amiibo),
-                  flex: 2,
-                )
-              ],
+                  Expanded(
+                    child: _Buttons(amiibo: amiibo),
+                    flex: 2,
+                  )
+                ],
+              ),
+              flex: 4,
             ),
-            flex: 4,
-          ),
-          const Padding(
-            padding: EdgeInsets.only(top: 10, bottom: 10),
-            child: const VerticalDivider(),
-          ),
-          Expanded(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                TextCardDetail(text: "Type", data: amiibo.type,),
-                TextCardDetail(text: "Character", data: amiibo.character,),
-                if(amiibo.character != amiibo.name) TextCardDetail(text: "Name", data: amiibo.name,),
-                TextCardDetail(text: "Serie", data: amiibo.amiiboSeries,),
-                if(amiibo.amiiboSeries != amiibo.gameSeries) TextCardDetail(text: "Game", data: amiibo.gameSeries,),
-                if(amiibo.au != null) RegionDetail(amiibo.au, 'au', 'Australia'),
-                if(amiibo.eu != null) RegionDetail(amiibo.eu, 'eu', 'Europe'),
-                if(amiibo.na != null) RegionDetail(amiibo.na, 'na', 'America'),
-                if(amiibo.jp != null) RegionDetail(amiibo.jp, 'jp', 'Japan'),
-              ],
-            ),
-            flex: 7,
-          )
-        ],
+            const VerticalDivider(indent: 10, endIndent: 10),
+            Expanded(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  TextCardDetail(text: "Character", data: amiibo.character,),
+                  if(amiibo.character != amiibo.name) TextCardDetail(text: "Name", data: amiibo.name,),
+                  TextCardDetail(text: "Serie", data: amiibo.amiiboSeries,),
+                  if(amiibo.amiiboSeries != amiibo.gameSeries) TextCardDetail(text: "Game", data: amiibo.gameSeries,),
+                  TextCardDetail(text: "Type", data: amiibo.type,),
+                  if(amiibo.au != null) RegionDetail(amiibo.au, 'au', 'Australia'),
+                  if(amiibo.eu != null) RegionDetail(amiibo.eu, 'eu', 'Europe'),
+                  if(amiibo.na != null) RegionDetail(amiibo.na, 'na', 'America'),
+                  if(amiibo.jp != null) RegionDetail(amiibo.jp, 'jp', 'Japan'),
+                ],
+              ),
+              flex: 7,
+            )
+          ],
+        ),
       )
     );
   }
@@ -164,14 +165,14 @@ class RegionDetail extends StatelessWidget{
     return Row(
       crossAxisAlignment: CrossAxisAlignment.center,
       children: <Widget>[
-        SizedBox(height: 16, width: 25,
-          child: Image.asset(
-            'assets/images/$asset.png',
-            fit: BoxFit.fill,
-            semanticLabel: description,)
-        ),
-        Container(
-          padding: EdgeInsets.only(left: 8),
+        Image.asset(
+          'assets/images/$asset.png',
+          height: 16, width: 25,
+          fit: BoxFit.fill,
+          semanticLabel: description,
+         ),
+        Padding(
+          padding: const EdgeInsets.only(left: 8),
           child: Text(text,
             textAlign: TextAlign.start,
             overflow: TextOverflow.fade,

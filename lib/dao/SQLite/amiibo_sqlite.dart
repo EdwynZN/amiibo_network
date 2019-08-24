@@ -6,13 +6,16 @@ import 'package:sqflite/sqflite.dart';
 class AmiiboSQLite implements Dao<AmiiboLocalDB, String, AmiiboDB>{
   static ConnectionFactory connectionFactory = ConnectionFactory();
 
-  Future<AmiiboLocalDB> fetchAll() async{
+  Future<AmiiboLocalDB> fetchAll([String orderBy = 'na']) async{
     Database _db = await connectionFactory.database;
     List<Map<String, dynamic>> maps = await _db.query('amiibo',
-      orderBy: 'CASE WHEN type = "Figure" THEN 1 '
-        'WHEN type = "Yarn" THEN 2 ELSE 3 END, na DESC');
+      orderBy: '$orderBy DESC');
     return entityFromList(maps);
-  }//type DESC, na DESC, name
+  }
+  /*
+  'CASE WHEN type = "Figure" THEN 1 '
+        'WHEN type = "Yarn" THEN 2 ELSE 3 END, $orderBy DESC'
+  */
 
   Future<List<String>> fetchDistinct(String name, String column, String condition) async{
     Database _db = await connectionFactory.database;
@@ -68,12 +71,13 @@ class AmiiboSQLite implements Dao<AmiiboLocalDB, String, AmiiboDB>{
     });
   }
 
-  Future<AmiiboLocalDB> fetchByColumn(String column, String name) async{
+  Future<AmiiboLocalDB> fetchByColumn(String column, String name,
+    [String orderBy = 'na']) async{
     Database _db = await connectionFactory.database;
     List<Map<String, dynamic>> maps = await _db.query('amiibo',
       where: '$column LIKE ?',
       whereArgs: [name],
-      orderBy: 'na DESC');
+      orderBy: '$orderBy DESC');
     return entityFromList(maps);
   }
 

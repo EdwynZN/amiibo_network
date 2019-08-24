@@ -46,7 +46,7 @@ class SearchScreenState extends State<SearchScreen> {
               ),
             ),
             SliverPadding(
-              padding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+              padding: EdgeInsets.symmetric(horizontal: 12),
               sliver: StreamBuilder(
                 stream: _bloc.search,
                 builder: (context, AsyncSnapshot<List<String>> snapshot) => SliverList(

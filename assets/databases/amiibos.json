@@ -327,7 +327,7 @@
     },
     {
       "key":26,
-      "id":"0005ff00023b0702",
+      "id":"0005ff00023a0702",
       "amiiboSeries":"Skylanders",
       "character":"Bowser",
       "gameSeries":"Super Mario",
@@ -405,7 +405,7 @@
     },
     {
       "key":32,
-      "id":"0008ff00023a0702",
+      "id":"0008ff00023b0702",
       "amiiboSeries":"Skylanders",
       "character":"Donkey Kong",
       "gameSeries":"Super Mario",
@@ -9298,7 +9298,7 @@
     {
       "key":716,
       "id":"3380000003781402",
-      "amiiboSeries":"Others",
+      "amiiboSeries":"Dark Souls",
       "character":"Solaire of Astora",
       "gameSeries":"Dark Souls",
       "name":"Solaire of Astora",
@@ -9493,7 +9493,7 @@
     {
       "key":731,
       "id":"3740000103741402",
-      "amiiboSeries":"Others",
+      "amiiboSeries":"Super Mario Cereal",
       "character":"Mario Cereal",
       "gameSeries":"Kellogs",
       "name":"Super Mario Cereal",
@@ -9636,7 +9636,7 @@
     {
       "key":742,
       "id":null,
-      "amiiboSeries":"Legend of Zelda",
+      "amiiboSeries":"Legend Of Zelda",
       "character":"Link",
       "gameSeries":"The Legend of Zelda",
       "name":"Link - Link's Awakening",
@@ -9751,5 +9751,5 @@
       "type":"Figure"
     }
   ],
-  "lastUpdated": "2019-08-15T23:50:10.688417"
+  "lastUpdated": "2019-08-20T23:50:10.688417"
 }

@@ -18,6 +18,7 @@ class Themes {
     scaffoldBackgroundColor: Colors.black,
     accentColor: const Color.fromRGBO(207, 102, 121, 1),
     accentIconTheme: const IconThemeData(color: Colors.black),
+    primaryIconTheme: const IconThemeData(color: Colors.white54),
     iconTheme: const IconThemeData(color: Colors.white54),
     errorColor: Color.fromRGBO(207, 102, 121, 1),
     primaryColorLight: Colors.grey[850],
@@ -34,6 +35,7 @@ class Themes {
       elevation: 8,
     ),
     textTheme: TextTheme(
+      title: TextStyle(color: Colors.white70, fontSize: 16, fontWeight: FontWeight.w400),
       body1: TextStyle(color: Colors.white70),
       body2: TextStyle(color: Colors.white70, fontSize: 16, fontWeight: FontWeight.w400),
       display1: TextStyle(color: Colors.white70, fontSize: 18, fontWeight: FontWeight.w600),
@@ -73,7 +75,8 @@ class Themes {
       buttonColor: Colors.grey[900],
       materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
       height: 48
-    )
+    ),
+    toggleableActiveColor: const Color.fromRGBO(207, 102, 121, 1),
   );
   static final _light = ThemeData(
     primaryColorDark: Colors.redAccent,
@@ -94,6 +97,7 @@ class Themes {
     scaffoldBackgroundColor: Colors.red,
     accentColor: Colors.redAccent,
     accentIconTheme: const IconThemeData(color: Colors.white),
+    primaryIconTheme: const IconThemeData(color: Colors.black),
     iconTheme: const IconThemeData(color: Colors.black),
     errorColor: Colors.redAccent,
     primaryColorLight: Colors.deepOrangeAccent[100],
@@ -111,6 +115,8 @@ class Themes {
       elevation: 8,
     ),
     textTheme: TextTheme(
+      title: TextStyle(color: Colors.black87, fontSize: 16, fontWeight: FontWeight.w400),
+      subtitle: TextStyle(color: Colors.black87, fontSize: 12, fontWeight: FontWeight.w400),
       body1: TextStyle(color: Colors.black87),
       body2: TextStyle(color: Colors.black87, fontSize: 16, fontWeight: FontWeight.w400),
       display1: TextStyle(color: Colors.black87, fontSize: 18, fontWeight: FontWeight.w600),
@@ -148,7 +154,8 @@ class Themes {
       materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
       height: 48,
       highlightColor: Colors.white54
-    )
+    ),
+    toggleableActiveColor: Colors.redAccent,
   );
 
   static ThemeData get light => _light;

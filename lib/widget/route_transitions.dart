@@ -23,7 +23,7 @@ class Routes{
       case '/search':
         return FadeRoute(builder: (_) => SearchScreen());
       case '/stats':
-        return FadeRoute(builder: (_) => StatsPage());
+        return cupertinoRoute(StatsPage(), settings);
       default:
         return null;
     }

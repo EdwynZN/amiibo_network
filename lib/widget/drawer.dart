@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:amiibo_network/service/service.dart';
+import 'package:amiibo_network/bloc/bloc_provider.dart';
+import 'package:amiibo_network/bloc/theme_bloc.dart';
 
 typedef StringCallback = void Function(String string);
 
@@ -35,210 +37,193 @@ class _CollectionDrawerState extends State<CollectionDrawer> {
       textColor: Theme.of(context).textTheme.body1.color,
       style: ListTileStyle.drawer,
       selectedColor: Theme.of(context).accentColor,
-      dense: false,
       child: Drawer(
-        child: CustomScrollView(
-          cacheExtent: 150,
-          slivers: <Widget>[
-            SliverList(
-              delegate: SliverChildListDelegate.fixed(
-                [
-                  _HeaderDrawer(),
-                  /*SizedBox(height: 48,
-                    child: ListView(
-                      scrollDirection: Axis.horizontal,
-                      padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                      children: <Widget>[
-                        ChoiceChip(label: Text('Europe'), selected: true,
-                          avatar: Image.asset('assets/images/eu.png',
-                            fit: BoxFit.scaleDown,
-                            height: 24, width: 24,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: <Widget>[
+            Expanded(
+              child: Theme(
+                data: Theme.of(context).copyWith(
+                  highlightColor: Theme.of(context).accentColor,
+                ),
+                child: Scrollbar(
+                  child: CustomScrollView(
+                    slivers: <Widget>[
+                      SliverList(
+                        delegate: SliverChildListDelegate([
+                          _HeaderDrawer(),
+                          ListTile(
+                            onTap: () => _onTapTile(context, 'All'),
+                            leading: const Icon(Icons.all_inclusive),
+                            title: Text('All',),
+                            selected: widget.selected == 'All',
                           ),
-                        ),
-                        const SizedBox(width: 8.0),
-                        ChoiceChip(label: Text('All'), selected: false,
-                            avatar: Icon(Icons.all_inclusive)
-                        ),
-                        const SizedBox(width: 8.0),
-                        ChoiceChip(label: Text('All'),
-                            selected: true,
-                            avatar: Icon(Icons.sort)),
-                        const SizedBox(width: 8.0),
-                        ChoiceChip(label: Text('All'), selected: true,
-                            avatar: Icon(Icons.forward)
-                        ),
-                        const SizedBox(width: 8.0),
-                        ChoiceChip(label: Text('All'), selected: false,
-                            avatar: Icon(Icons.all_inclusive)
-                        ),
-                        const SizedBox(width: 8.0),
-                        ChoiceChip(label: Text('All'),
-                            selected: true,
-                            avatar: Icon(Icons.sort)),
-                        const SizedBox(width: 8.0),
-                        ChoiceChip(label: Text('All'), selected: true,
-                            avatar: Icon(Icons.forward)
-                        ),
-                        const SizedBox(width: 8.0),
-                        ChoiceChip(label: Text('All'), selected: false,
-                            avatar: Icon(Icons.all_inclusive)
-                        ),
-                        const SizedBox(width: 8.0),
-                        ChoiceChip(label: Text('All'),
-                            selected: true,
-                            avatar: Icon(Icons.sort)),
-                        const SizedBox(width: 8.0),
-                        ChoiceChip(label: Text('All'),
-                            selected: true,
-                            avatar: Icon(Icons.sort)),
-                      ],
-                    ),
-                  ),*/
-                  Theme(
-                    data: Theme.of(context).copyWith(
-                      dividerColor: Colors.transparent,
-                      accentColor: Theme.of(context).textTheme.subhead.color,
-                    ),
-                    child: ExpansionTile(
-                      leading: const Icon(Icons.sort_by_alpha),
-                      title: Text('Sort by: '),
-                      children: <Widget>[
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceAround,
-                          children: <Widget>[
-                            ChoiceChip(label: Text('Name'),
-                                selected: true,
-                                avatar: Icon(Icons.keyboard_arrow_up)),
-                            ChoiceChip(label: Text('Name'),
-                                selected: true,
-                                avatar: Icon(Icons.keyboard_arrow_down))
-                          ],
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceAround,
-                          children: <Widget>[
-                            ChoiceChip(label: Text('Wished'),
-                                selected: true,
-                                avatar: Icon(Icons.keyboard_arrow_up)),
-                            ChoiceChip(label: Text('Wished'),
-                                selected: true,
-                                avatar: Icon(Icons.keyboard_arrow_down))
-                          ],
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceAround,
-                          children: <Widget>[
-                            ChoiceChip(label: Text('Owned'), selected: true,
-                                avatar: Icon(Icons.keyboard_arrow_up)
-                            ),
-                            ChoiceChip(label: Text('Owned'), selected: false,
-                              avatar: Icon(Icons.keyboard_arrow_down)
-                            ),
-                          ],
-                        ),
-                      ],
-                    )
-                  ),
-                  const Divider(height: 1.0),
-                  ListTile(
-                    onTap: () => _onTapTile(context, 'All'),
-                    leading: const Icon(Icons.all_inclusive),
-                    title: Text('All',),
-                    selected: widget.selected == 'All',
-                  ),
-                  ListTile(
-                    onTap: () => _onTapTile(context, 'Owned'),
-                    leading: const Icon(Icons.star),
-                    title: Text('Owned'),
-                    selected: widget.selected == 'Owned',
-                  ),
-                  ListTile(
-                    onTap: () => _onTapTile(context, 'Wishlist'),
-                    leading: const Icon(Icons.card_giftcard),
-                    title: Text('Wishlist'),
-                    selected: widget.selected == 'Wishlist',
-                  ),
-                  ListTile(
-                    onTap: () {
-                      Navigator.pop(context);
-                      Navigator.pushNamed(context,"/stats");
-                    },
-                    leading: const Icon(Icons.timeline),
-                    title: Text('Stats',),
-                    selected: widget.selected == 'Stats',
-                  ),
-                  const Divider(height: 1.0),
-                  FutureBuilder(
-                    future: _listOfFigures,
-                    builder: (context, AsyncSnapshot<List<String>> snapshot) {
-                      return Theme(
-                        data: Theme.of(context).copyWith(
-                          dividerColor: Colors.transparent,
-                          accentColor: Theme.of(context).textTheme.subhead.color,
-                        ),
-                        child: ExpansionTile(
-                          leading: const Icon(Icons.toys),
-                          title: Text('Figures'),
-                          initiallyExpanded: _figureExpand,
-                          onExpansionChanged: figureExpand,
-                          children: <Widget>[
-                            if(snapshot.hasData)
-                              for(String series in snapshot.data)
-                                ListTile(
-                                  leading: CircleAvatar(
-                                    backgroundColor: Theme.of(context).accentColor,
-                                    foregroundColor: Theme.of(context).accentIconTheme.color,
-                                    radius: 12,
-                                    child: Text(series[0]),
-                                  ),
-                                  title: Text(series),
-                                  onTap: () => _onTapTile(context, series),
-                                  //contentPadding: const EdgeInsets.only(left: 72),
-                                  selected: widget.selected == series,
+                          ListTile(
+                            onTap: () => _onTapTile(context, 'Owned'),
+                            leading: const Icon(Icons.star),
+                            title: Text('Owned'),
+                            selected: widget.selected == 'Owned',
+                          ),
+                          ListTile(
+                            onTap: () => _onTapTile(context, 'Wishlist'),
+                            leading: const Icon(Icons.card_giftcard),
+                            title: Text('Wishlist'),
+                            selected: widget.selected == 'Wishlist',
+                          ),
+                          ListTile(
+                            onTap: () {
+                              Navigator.pop(context);
+                              Navigator.pushNamed(context,"/stats");
+                            },
+                            leading: const Icon(Icons.timeline),
+                            title: Text('Stats',),
+                            selected: widget.selected == 'Stats',
+                          ),
+                          FutureBuilder(
+                            future: _listOfFigures,
+                            builder: (context, AsyncSnapshot<List<String>> snapshot) {
+                              return Theme(
+                                data: Theme.of(context).copyWith(
+                                  dividerColor: Colors.transparent,
+                                  accentColor: Theme.of(context).textTheme.subhead.color,
                                 ),
-                          ],
-                        )
-                      );
-                    }
-                  ),
-                  FutureBuilder(
-                    future: _listOfCards,
-                    builder: (context, AsyncSnapshot<List<String>> snapshot) {
-                      return Theme(
-                        data: Theme.of(context).copyWith(
-                          dividerColor: Colors.transparent,
-                          accentColor: Theme.of(context).textTheme.subhead.color,
-                        ),
-                        child: ExpansionTile(
-                          leading: const Icon(Icons.view_carousel),
-                          title: Text('Cards'),
-                          initiallyExpanded: _cardExpand,
-                          onExpansionChanged: cardExpand,
-                          children: <Widget>[
-                            if(snapshot.hasData)
-                              for(String series in snapshot.data)
-                                ListTile(
-                                  leading: CircleAvatar(
-                                    backgroundColor: Theme.of(context).accentColor,
-                                    foregroundColor: Theme.of(context).accentIconTheme.color,
-                                    radius: 12,
-                                    child: Text(series[0]),
-                                  ),
-                                  title: Text(series),
-                                  onTap: () => _onTapTile(context, series),
-                                  selected: widget.selected == series,
+                                child: ExpansionTile(
+                                  leading: const Icon(Icons.toys),
+                                  title: Text('Figures'),
+                                  initiallyExpanded: _figureExpand,
+                                  onExpansionChanged: figureExpand,
+                                  children: <Widget>[
+                                    if(snapshot.hasData)
+                                      for(String series in snapshot.data)
+                                      ListTile(
+                                        leading: CircleAvatar(
+                                          backgroundColor: Theme.of(context).accentColor,
+                                          foregroundColor: Theme.of(context).accentIconTheme.color,
+                                          radius: 12,
+                                          child: Text(series[0]),
+                                        ),
+                                        title: Text(series),
+                                        onTap: () => _onTapTile(context, series),
+                                        selected: widget.selected == series,
+                                      ),
+                                    ],
+                                )
+                              );
+                            }
+                          ),
+                          FutureBuilder(
+                            future: _listOfCards,
+                            builder: (context, AsyncSnapshot<List<String>> snapshot) {
+                              return Theme(
+                                data: Theme.of(context).copyWith(
+                                  dividerColor: Colors.transparent,
+                                  accentColor: Theme.of(context).textTheme.subhead.color,
                                 ),
-                          ],
-                        )
-                      );
-                    }
-                  ),
-                ],
-              )
+                                child: ExpansionTile(
+                                  leading: const Icon(Icons.view_carousel),
+                                  title: Text('Cards'),
+                                  initiallyExpanded: _cardExpand,
+                                  onExpansionChanged: cardExpand,
+                                  children: <Widget>[
+                                    if(snapshot.hasData)
+                                    for(String series in snapshot.data)
+                                      ListTile(
+                                        leading: CircleAvatar(
+                                          backgroundColor: Theme.of(context).accentColor,
+                                          foregroundColor: Theme.of(context).accentIconTheme.color,
+                                          radius: 12,
+                                          child: Text(series[0]),
+                                        ),
+                                        title: Text(series),
+                                        onTap: () => _onTapTile(context, series),
+                                        selected: widget.selected == series,
+                                      ),
+                                  ],
+                                )
+                              );
+                            }
+                          ),
+                        ]),
+                      )
+                    ],
+                  )
+                )
+              ),
+            ),
+            const Divider(height: 1.0),
+            ListTile(
+              onTap: () {
+                Navigator.pop(context);
+                Navigator.pushNamed(context,"/settings");
+              },
+              leading: const Icon(Icons.settings),
+              title: Text('Settings',),
+              selected: widget.selected == 'Stats',
+              trailing: ThemeButton()
             ),
           ],
         )
       ),
+    );
+  }
+}
+
+class ThemeButton extends StatefulWidget{
+  static final ThemeBloc _themeBloc = $Provider.of<ThemeBloc>();
+
+  @override
+  _ThemeButtonState createState() => _ThemeButtonState();
+}
+
+class _ThemeButtonState extends State<ThemeButton> {
+  Widget _icon;
+
+  @override
+  void initState(){
+    _icon = _changeWidget();
+    super.initState();
+  }
+
+  @override
+  void didUpdateWidget(ThemeButton oldWidget) {
+    _icon = _changeWidget();
+    super.didUpdateWidget(oldWidget);
+  }
+
+  Widget _changeWidget(){
+    switch(ThemeButton._themeBloc.savedTheme){
+      case 'Light':
+        return const Icon(Icons.wb_sunny);
+      case 'Dark':
+        return const Icon(Icons.brightness_3, color: Colors.amber);
+      default:
+        return const Icon(Icons.brightness_auto);
+    }
+  }
+
+  void changeTheme(){
+    switch(ThemeButton._themeBloc.savedTheme){
+      case 'Light':
+        ThemeButton._themeBloc.themeDB('Dark');
+        break;
+      case 'Dark':
+        ThemeButton._themeBloc.themeDB('Auto');
+        break;
+      default:
+        ThemeButton._themeBloc.themeDB('Light');
+        break;
+    }
+    setState(() => _icon = _changeWidget());
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return InkResponse(
+      radius: 18,
+      highlightColor: Colors.transparent,
+      splashColor: Theme.of(context).unselectedWidgetColor,
+      child: _icon,
+      onTap: changeTheme,
     );
   }
 }

@@ -4,7 +4,6 @@ import 'package:amiibo_network/themes.dart';
 import 'package:flutter/material.dart';
 import 'package:amiibo_network/service/service.dart';
 
-
 class ThemeBloc extends Bloc{
   final service = Service();
   final _themeStream = BehaviorSubject<String>();
@@ -23,9 +22,10 @@ class ThemeBloc extends Bloc{
   }
 
    themeDB(String value) async {
-    _savedTheme = value;
-    await service.updateTheme(value);
-    theme = value;
+    if(value != _savedTheme){
+      theme = _savedTheme = value;
+      await service.updateTheme(value);
+    }
   }
 
   List<ThemeData> _switchTheme(String theme){

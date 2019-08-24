@@ -17,7 +17,7 @@ class HomePage extends StatefulWidget {
 class HomePageState extends State<HomePage>
     with SingleTickerProviderStateMixin{
   static final AmiiboBloc _bloc = $Provider.of<AmiiboBloc>();
-  static String _filter = 'All';
+  static String _filter = _bloc.strFilter;
   static bool _multipleSelection = false;
   final Set<ValueKey<int>> set = Set<ValueKey<int>>();
   ScrollController _controller;
@@ -137,7 +137,7 @@ class HomePageState extends State<HomePage>
           ) : null,
           body: Scrollbar(
             child: CustomScrollView(
-              controller: _controller, cacheExtent: 150,
+              controller: _controller,
               slivers: <Widget>[
                 SliverFloatingBar(
                   backgroundColor: Theme.of(context).backgroundColor,
@@ -154,9 +154,9 @@ class HomePageState extends State<HomePage>
                       builder: (BuildContext context, AsyncSnapshot<String> filter){
                         if(filter.hasData)
                           return Text(filter.data,
-                            style: Theme.of(context).textTheme.body2, softWrap: false,
-                            overflow: TextOverflow.fade, maxLines: 1);
-                        else return const SizedBox.shrink();
+                              style: Theme.of(context).textTheme.body2, softWrap: false,
+                              overflow: TextOverflow.fade, maxLines: 1);
+                        else return const SizedBox();
                       }
                     ),
                     onTap: _multipleSelection ? null : _search
@@ -179,23 +179,20 @@ class HomePageState extends State<HomePage>
                         onPressed: () => _updateSelection(wished: 1),
                         tooltip: 'Wished',
                       ),
-                      if(!_multipleSelection) CircleAvatar(radius: 18,
-                          child: IconButton(
-                            padding: EdgeInsets.zero,
-                            icon: Icon(Icons.settings, color: Theme.of(context).accentIconTheme.color),
-                            onPressed: () => Navigator.pushNamed(context, "/settings"),
-                            tooltip: 'Settings',
-                          )
-                        ),
+                      if(!_multipleSelection) _SortCollection(),
                     ],
                   )
                 ),
+                /*SliverPersistentHeader(
+                  pinned: true,
+                  delegate: _SliverAppBarDelegate(_filter)
+                ),*/
                 SliverPadding(
                   padding: EdgeInsets.symmetric(horizontal: 12, vertical: 5),
                   sliver: SliverToBoxAdapter(
                     child: StreamBuilder(
                       initialData: null,
-                      stream: _bloc.wished,
+                      stream: _bloc.collectionList,
                       builder: (context, AsyncSnapshot<Map<String,dynamic>> statList){
                         if(statList.hasData)
                           return Column(
@@ -302,6 +299,281 @@ class HomePageState extends State<HomePage>
           ),
         )
       )
+    );
+  }
+}
+
+class _SliverAppBarDelegate extends SliverPersistentHeaderDelegate {
+  final _filter;
+  static final AmiiboBloc _bloc = $Provider.of<AmiiboBloc>();
+
+  _SliverAppBarDelegate(this._filter);
+
+  @override
+  Widget build(BuildContext context, double shrinkOffset, bool overlapsContent,) {
+    return StreamBuilder(
+        initialData: null,
+        stream: _bloc.collectionList,
+        builder: (context, AsyncSnapshot<Map<String,dynamic>> statList){
+          if(statList.hasData)
+            return Container(
+              margin: EdgeInsets.symmetric(horizontal: 12.0, vertical: 6.0),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(8),
+                color: Theme.of(context).backgroundColor
+              ),
+              height: 66,
+              child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: <Widget>[
+                if(_filter != 'Wishlist')
+                  Flexible(
+                    child: Chip(
+                      avatar: AnimatedRadial(
+                        key: Key('Owned'),
+                        percentage:
+                        statList.data['Owned'].toDouble() / statList.data['Total'].toDouble(),
+                        child: const Icon(Icons.check, color: Colors.green),
+                      ),
+                      label: FittedBox(
+                        fit: BoxFit.contain,
+                        child: Text('${statList.data['Owned']}/'
+                          '${statList.data['Total']} Owned', softWrap: false,
+                          overflow: TextOverflow.fade,
+                        ),
+                      )
+                    ),
+                  ),
+                if(_filter != 'Owned')
+                  Flexible(
+                    child: Chip(
+                      avatar: AnimatedRadial(
+                        key: Key('Owned'),
+                        percentage:
+                        statList.data['Wished'].toDouble() / statList.data['Total'].toDouble(),
+                        child: const Icon(Icons.whatshot, color: Colors.amber),
+                      ),
+                      label: FittedBox(
+                        fit: BoxFit.contain,
+                        child: Text('${statList.data['Wished']}/'
+                            '${statList.data['Total']} Wished', softWrap: false,
+                          overflow: TextOverflow.fade,
+                        ),
+                      )
+                    ),
+                  )
+              ],
+            ),
+            );
+          else return const SizedBox(height: 66,);
+        }
+    );
+  }
+
+  @override
+  double get maxExtent => 66.0;
+
+  @override
+  double get minExtent => 66.0;
+
+  @override
+  bool shouldRebuild(SliverPersistentHeaderDelegate oldDelegate) => true;
+}
+
+class _SortCollection extends StatefulWidget{
+  @override
+  _SortCollectionState createState() => _SortCollectionState();
+}
+
+class _SortCollectionState extends State<_SortCollection> {
+  static final AmiiboBloc _bloc = $Provider.of<AmiiboBloc>();
+  String _sortBy = _bloc.orderBy;
+
+  void _selectOrder(String sort) async{
+    _bloc.strOrderBy = _sortBy = sort;
+    await _bloc.refreshPagination();
+    Navigator.pop(context);
+  }
+
+  Future<void> _dialog(BuildContext context) async {
+    return showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return SimpleDialog(
+          semanticLabel: 'Sort',
+          title: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                child: Text('Sort By'),
+              ),
+              const Divider(),
+            ],
+          ),
+          titlePadding: const EdgeInsets.only(top: 12.0),
+          contentPadding: const EdgeInsets.only(bottom: 8.0),
+          children: <Widget>[
+            RadioListTile(
+              value: 'name',
+              groupValue: _sortBy,
+              onChanged: _selectOrder,
+              dense: true,
+              title: Text('Name'),
+              selected: _sortBy == 'name',
+            ),
+            RadioListTile(
+              value: 'owned',
+              groupValue: _sortBy,
+              onChanged: _selectOrder,
+              dense: true,
+              selected: _sortBy == 'owned',
+              title: Text('Owned'),
+            ),
+            RadioListTile(
+              value: 'wishlist',
+              groupValue: _sortBy,
+              onChanged: _selectOrder,
+              dense: true,
+              title: Text('Wished'),
+              selected: _sortBy == 'wishlist',
+            ),
+            RadioListTile(
+              value: 'na',
+              groupValue: _sortBy,
+              onChanged: _selectOrder,
+              dense: true,
+              title: Text('American Date'),
+              selected: _sortBy == 'na',
+              secondary: Image.asset(
+                'assets/images/na.png',
+                height: 16, width: 25,
+                fit: BoxFit.fill,
+                semanticLabel: 'American Date',
+              ),
+            ),
+            RadioListTile(
+              value: 'eu',
+              groupValue: _sortBy,
+              onChanged: _selectOrder,
+              dense: true,
+              title: Text('European Date'),
+              selected: _sortBy == 'eu',
+              secondary: Image.asset(
+                'assets/images/eu.png',
+                height: 16, width: 25,
+                fit: BoxFit.fill,
+                semanticLabel: 'European date',
+              ),
+            ),
+            RadioListTile(
+              value: 'jp',
+              groupValue: _sortBy,
+              onChanged: _selectOrder,
+              dense: true,
+              title: Text('Japanese Date'),
+              selected: _sortBy == 'jp',
+              secondary: DecoratedBox(
+                decoration: BoxDecoration(
+                  border: Border.all(width: 0.75)
+                ),
+                position: DecorationPosition.foreground,
+                child: Image.asset(
+                  'assets/images/jp.png',
+                  height: 16, width: 25,
+                  fit: BoxFit.fill,
+                  semanticLabel: 'Japanese date',
+                ),
+              )
+            ),
+            RadioListTile(
+              value: 'au',
+              groupValue: _sortBy,
+              onChanged: _selectOrder,
+              dense: true,
+              title: Text('Australian Date'),
+              selected: _sortBy == 'au',
+              secondary: Image.asset(
+                'assets/images/au.png',
+                height: 16, width: 25,
+                fit: BoxFit.fill,
+                semanticLabel: 'Australian date',
+              ),
+            ),
+          ],
+        );
+      }
+    );
+  }
+
+  Future<void> _bottomModal(BuildContext context) async{
+    return showModalBottomSheet(
+      context: context,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+      builder: (BuildContext context) {
+        return Container(
+          width: 200,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                child: Text('Sort By', style: Theme.of(context).textTheme.body2,),
+              ),
+              const Divider(),
+              RadioListTile(
+                value: 'name',
+                groupValue: _sortBy,
+                onChanged: _selectOrder,
+                dense: true,
+                title: Text('Name'),
+                selected: _sortBy == 'name',
+              ),
+              RadioListTile(
+                value: 'owned',
+                groupValue: _sortBy,
+                onChanged: _selectOrder,
+                dense: true,
+                selected: _sortBy == 'owned',
+                title: Text('Owned'),
+              ),
+              RadioListTile(
+                value: 'wishlist',
+                groupValue: _sortBy,
+                onChanged: _selectOrder,
+                dense: true,
+                title: Text('Wished'),
+                selected: _sortBy == 'wishlist',
+              ),
+              RadioListTile(
+                value: 'na',
+                groupValue: _sortBy,
+                onChanged: _selectOrder,
+                dense: true,
+                title: Text('American Date'),
+                selected: _sortBy == 'na',
+                secondary: Image.asset(
+                  'assets/images/na.png',
+                  height: 16, width: 25,
+                  fit: BoxFit.fill,
+                  semanticLabel: 'American Date',
+                ),
+              ),
+            ],
+          ),
+        );
+      }
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return IconButton(
+      onPressed: () => _dialog(context),
+      icon: const Icon(Icons.sort_by_alpha),
+      tooltip: 'Sort',
     );
   }
 }

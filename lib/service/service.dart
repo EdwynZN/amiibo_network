@@ -25,7 +25,7 @@ class Service {
     return AmiiboLocalDB.fromJson(await jsonFile);
   }
 
-  Future<AmiiboLocalDB> fetchAllAmiiboDB() => dao.fetchAll();
+  Future<AmiiboLocalDB> fetchAllAmiiboDB(String orderBy) => dao.fetchAll(orderBy);
 
   Future<List<Map<String,dynamic>>> fetchSum({String column, String name, bool all = false,
     bool group = false}) => dao.fetchSum(column, name, all, group);
@@ -61,8 +61,8 @@ class Service {
     });
   }
 
-  Future<AmiiboLocalDB> fetchByCategory(String column, String like) =>
-    dao.fetchByColumn(column, like);
+  Future<AmiiboLocalDB> fetchByCategory(String column, String like,
+    String oderBy) => dao.fetchByColumn(column, like, oderBy);
 
   Future<AmiiboDB> fetchAmiiboDBByKey(String key) => dao.fetchByKey(key);
 

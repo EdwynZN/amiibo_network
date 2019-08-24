@@ -20,7 +20,7 @@ class SettingsPage extends StatelessWidget{
               alignment: Alignment.center,
               child: Padding(
                 padding: EdgeInsets.only(right: 8),
-                child: DropMenu(),
+                child: DropMenu(key: Key('theme')),
               ),
             )
           ],
@@ -114,14 +114,11 @@ class ResetCollection extends StatelessWidget{
 
 }
 
-class DropMenu extends StatefulWidget {
-  @override
-  State<StatefulWidget> createState() => DropMenuState();
-}
+class DropMenu extends StatelessWidget {
+  DropMenu({Key key}): super(key :key);
 
-class DropMenuState extends State<DropMenu>{
   static final ThemeBloc _themeBloc = $Provider.of<ThemeBloc>();
-  String _value = _themeBloc.savedTheme;
+  final String _value = _themeBloc.savedTheme;
 
   @override
   Widget build(BuildContext context) {
@@ -158,11 +155,7 @@ class DropMenuState extends State<DropMenu>{
           ),
         ),
       ],
-      onChanged: (String x) async{
-        _value = x;
-        await _themeBloc.themeDB(x);
-        setState(() {});
-      },
+      onChanged: _themeBloc.themeDB,
       underline: const SizedBox.shrink(),
       iconEnabledColor: Theme.of(context).appBarTheme.iconTheme.color,
       hint: Row(

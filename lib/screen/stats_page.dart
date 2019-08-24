@@ -86,7 +86,6 @@ class _StatsPageState extends State<StatsPage> {
           ),
         ),
         bottomNavigationBar: BottomAppBar(
-          //color: Colors.transparent,
           child: Padding(
             padding: EdgeInsets.symmetric(horizontal: 12, vertical: 12),
             child: Row(
@@ -125,7 +124,7 @@ class _StatsPageState extends State<StatsPage> {
               ],
             ),
           )
-        )
+        ),
       )
     );
   }

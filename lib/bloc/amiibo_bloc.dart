@@ -7,8 +7,9 @@ class AmiiboBloc extends Bloc{
   static final _service = Service();
   String _searchFilter = 'amiiboSeries';
   String _name = 'All';
+  String _order = 'na';
   Map<String,dynamic> _listOwned;
-  final _owned = PublishSubject<Map<String,dynamic>>();
+  final _collectionList = PublishSubject<Map<String,dynamic>>();
   final _amiiboFetcherDB = BehaviorSubject<AmiiboLocalDB>();
   final _filter = BehaviorSubject<String>();
   final _updateAmiiboDB = PublishSubject<AmiiboLocalDB>()
@@ -16,11 +17,14 @@ class AmiiboBloc extends Bloc{
 
   Observable<String> get filter => _filter.stream;
 
+  set strOrderBy(String sort) => _order = sort;
+  String get orderBy => _order;
+  String get strFilter => _name;
   set setFilter(String value) => _filter.sink.add(value);
 
   Observable<AmiiboLocalDB> get allAmiibosDB => _amiiboFetcherDB.stream;
 
-  Observable<Map<String,dynamic>> get wished => _owned.stream
+  Observable<Map<String,dynamic>> get collectionList => _collectionList.stream
     .map((mapOwned) {
       if(mapOwned['Total'] == 0) return null;
       return mapOwned;
@@ -29,7 +33,8 @@ class AmiiboBloc extends Bloc{
   Future<void> fetchAllAmiibosDB() => _fetchByCategory('All');
 
   fetchByName(String name) async{
-    final AmiiboLocalDB amiiboDB = await _service.fetchByCategory('name', '%$name%');
+    final AmiiboLocalDB amiiboDB
+      = await _service.fetchByCategory('name', '%$name%', _order);
     _amiiboFetcherDB.sink.add(amiiboDB);
   }
 
@@ -49,40 +54,40 @@ class AmiiboBloc extends Bloc{
   set countOwned(int counter) => counter.isOdd ? ++_listOwned['Owned'] : --_listOwned['Owned'];
   set countWished(int counter) => counter.isOdd ? ++_listOwned['Wished'] : --_listOwned['Wished'];
 
-  updateList() => _owned.sink.add(_listOwned);
+  updateList() => _collectionList.sink.add(_listOwned);
 
   _fetchByCategory(String name) async{
     AmiiboLocalDB amiiboDB;
     switch(name){
       case 'All':
-        amiiboDB = await _service.fetchAllAmiiboDB();
+        amiiboDB = await _service.fetchAllAmiiboDB(_order);
         _listOwned = Map<String, dynamic>.from(
           (await _service.fetchSum(all: true)).first);
         break;
       case 'Owned':
-        amiiboDB = await _service.fetchByCategory('owned', '%1%');
+        amiiboDB = await _service.fetchByCategory('owned', '%1%', _order);
         _listOwned = Map<String, dynamic>.from(
           (await _service.fetchSum(column: 'owned', name: '%1%')).first);
         break;
       case 'Wishlist':
-        amiiboDB = await _service.fetchByCategory('wishlist', '%1%');
+        amiiboDB = await _service.fetchByCategory('wishlist', '%1%', _order);
         _listOwned = Map<String, dynamic>.from(
           (await _service.fetchSum(column: 'wishlist', name: '%1%')).first);
         break;
       case 'Cards':
-        amiiboDB = await _service.fetchByCategory('type', '%Card%');
+        amiiboDB = await _service.fetchByCategory('type', '%Card%', _order);
         _listOwned = Map<String, dynamic>.from(
           (await _service.fetchSum(column: 'type', name: '%Card%')).first);
         break;
       default:
         amiiboDB = await _service.fetchByCategory(_searchFilter,
-          _searchFilter == 'name' ? '%$name%' : '%$name');
+          _searchFilter == 'name' ? '%$name%' : '%$name', _order);
         _listOwned = Map<String, dynamic>.from(
           (await _service.fetchSum(column: _searchFilter,
           name: _searchFilter == 'name' ? '%$name%' : '%$name')).first);
         break;
     }
-    _owned.sink.add(_listOwned);
+    _collectionList.sink.add(_listOwned);
     _amiiboFetcherDB.sink.add(amiiboDB);
   }
 
@@ -98,7 +103,7 @@ class AmiiboBloc extends Bloc{
 
   @override
   dispose() {
-    _owned.close();
+    _collectionList.close();
     _amiiboFetcherDB.close();
     _filter.close();
     _updateAmiiboDB.close();
