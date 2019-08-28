@@ -6,12 +6,12 @@ List<Map<String, dynamic>> entityToListOfMaps(AmiiboLocalDB data) => data.toList
 
 AmiiboLocalDB entityFromList(List<Map<String, dynamic>> amiibo) => AmiiboLocalDB.fromDB(amiibo);
 
-class AmiiboLocalDB {
+class AmiiboLocalDB{
   List<AmiiboDB> amiibo;
 
   AmiiboLocalDB({
     this.amiibo,
-  });
+  }) : super();
 
   factory AmiiboLocalDB.fromJson(Map<String, dynamic> amiibo) => AmiiboLocalDB(
     amiibo: List<AmiiboDB>.from(amiibo["amiibo"].map((x) => AmiiboDB.fromMap(x))),
@@ -31,6 +31,7 @@ class AmiiboLocalDB {
   
   List<Map<String, dynamic>> toListOfMaps() =>
     List<Map<String, dynamic>>.from(amiibo.map((x) => x.toMap()));
+
 }
 
 class AmiiboDB {

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:amiibo_network/bloc/amiibo_bloc.dart';
-import 'package:amiibo_network/bloc/bloc_provider.dart';
 import 'package:amiibo_network/model/amiibo_local_db.dart';
+import 'package:provider/provider.dart';
+import 'package:amiibo_network/provider/amiibo_provider.dart';
 
 class DetailPage extends StatelessWidget{
   final AmiiboDB amiibo;
@@ -100,7 +100,6 @@ class _Buttons extends StatefulWidget {
 }
 
 class _ButtonsState extends State<_Buttons> {
-  static final AmiiboBloc _bloc = $Provider.of<AmiiboBloc>();
 
   @override
   void initState() {
@@ -117,6 +116,7 @@ class _ButtonsState extends State<_Buttons> {
 
   @override
   Widget build(BuildContext context) {
+    AmiiboProvider value = Provider.of<AmiiboProvider>(context, listen: false);
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: <Widget>[
@@ -128,10 +128,9 @@ class _ButtonsState extends State<_Buttons> {
           tooltip: "Owned",
           splashColor: Colors.pinkAccent[100],
           onPressed: () => setState(() {
-            _bloc.countOwned = widget.amiibo.owned = (widget.amiibo?.owned ?? 0) ^ 1;
-            if(widget.amiibo?.wishlist?.isOdd ?? false) _bloc.countWished = widget.amiibo.wishlist = 0;
-            _bloc.updateList();
-            _bloc.updateAmiiboDB(amiibo: widget.amiibo);
+            value.countOwned = widget.amiibo.owned = (widget.amiibo?.owned ?? 0) ^ 1;
+            if(widget.amiibo?.wishlist?.isOdd ?? false) value.countWished = widget.amiibo.wishlist = 0;
+            value.updateAmiiboDB(amiibo: widget.amiibo);
           })
         ),
         IconButton(
@@ -142,10 +141,9 @@ class _ButtonsState extends State<_Buttons> {
           tooltip: "Wished",
           splashColor: Colors.yellowAccent[100],
           onPressed: () => setState(() {
-            _bloc.countWished = widget.amiibo.wishlist = (widget.amiibo?.wishlist ?? 0) ^ 1;
-            if(widget.amiibo?.owned?.isOdd ?? false) _bloc.countOwned = widget.amiibo.owned = 0;
-            _bloc.updateList();
-            _bloc.updateAmiiboDB(amiibo: widget.amiibo);
+            value.countWished = widget.amiibo.wishlist = (widget.amiibo?.wishlist ?? 0) ^ 1;
+            if(widget.amiibo?.owned?.isOdd ?? false) value.countOwned = widget.amiibo.owned = 0;
+            value.updateAmiiboDB(amiibo: widget.amiibo);
           })
         )
       ],

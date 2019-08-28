@@ -1,9 +1,8 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:amiibo_network/bloc/amiibo_bloc.dart';
-import 'package:amiibo_network/bloc/theme_bloc.dart';
-import 'package:amiibo_network/bloc/bloc_provider.dart';
+import 'package:provider/provider.dart';
+import 'package:amiibo_network/provider/amiibo_provider.dart';
 import 'package:amiibo_network/model/amiibo_local_db.dart';
-import 'package:floating_search_bar/floating_search_bar.dart';
 import 'package:amiibo_network/data/database.dart';
 import 'package:flutter/rendering.dart';
 import 'package:amiibo_network/widget/radial_progression.dart';
@@ -16,41 +15,37 @@ class HomePage extends StatefulWidget {
 
 class HomePageState extends State<HomePage>
     with SingleTickerProviderStateMixin{
-  static final AmiiboBloc _bloc = $Provider.of<AmiiboBloc>();
-  static String _filter = _bloc.strFilter;
-  static bool _multipleSelection = false;
-  final Set<ValueKey<int>> set = Set<ValueKey<int>>();
   ScrollController _controller;
   AnimationController _animationController;
-
-  void checkMultipleSelection(){
-    final bool val = _multipleSelection;
-    _multipleSelection = set.isNotEmpty;
-    if(_multipleSelection != val) setState(() {});
-    _bloc.setFilter = _multipleSelection ?
-    '${set.length}' : '$_filter | Search Amiibo';
+  static Widget _defaultLayoutBuilder(Widget currentChild, List<Widget> previousChildren) {
+    List<Widget> children = previousChildren;
+    if (currentChild != null)
+      children = children.toList()..add(currentChild);
+    return Stack(
+      children: children,
+      alignment: Alignment.centerRight,
+    );
   }
 
   void _updateSelection({int wished = 0, int owned = 0}) async {
+    AmiiboProvider selected = Provider.of<AmiiboProvider>(context, listen: false);
     AmiiboLocalDB amiibos = AmiiboLocalDB(amiibo: List<AmiiboDB>.of(
-        set.map((x) => AmiiboDB(key: x.value, wishlist: wished, owned: owned))
+        selected.set.map((x) => AmiiboDB(key: x.value, wishlist: wished, owned: owned))
       )
     );
-    set.clear();
-    await _bloc.updateAmiiboDB(amiibos: amiibos);
-    await _bloc.refreshPagination();
-    setState(() => _multipleSelection = false);
+    selected.clearSelected();
+    await selected.updateAmiiboDB(amiibos: amiibos);
+    await selected.refreshPagination();
   }
 
-  void  _cancelSelection() {
-    set.clear();
-    _bloc.setFilter = '$_filter | Search Amiibo';
-    setState(() => _multipleSelection = false);
+  void  _cancelSelection(){
+    AmiiboProvider selected = Provider.of<AmiiboProvider>(context, listen: false);
+    selected.clearSelected();
+    selected.notifyWidgets();
   }
 
   void initBloc() async{
-    await _bloc.fetchAllAmiibosDB();
-    _bloc.setFilter = '$_filter | Search Amiibo';
+    await Provider.of<AmiiboProvider>(context, listen: false).fetchAllAmiibosDB();
   }
 
   @override
@@ -64,23 +59,22 @@ class HomePageState extends State<HomePage>
   }
 
   @override
-  void dispose() {
+  void dispose(){
     ConnectionFactory().close();
     _controller?.removeListener(_scrollListener);
     _controller?.dispose();
     _animationController?.dispose();
-    $Provider.dispose<AmiiboBloc>();
     super.dispose();
   }
 
-  void _scrollListener() {
+  void _scrollListener(){
     if((_controller?.hasClients ?? false) && !_animationController.isAnimating){
       switch(_controller.position.userScrollDirection){
         case ScrollDirection.forward:
-            _animationController.forward();
+          if(_animationController.isDismissed) _animationController.forward();
           break;
         case ScrollDirection.reverse:
-          _animationController.reverse();
+          if(_animationController.isCompleted) _animationController.reverse();
           break;
         case ScrollDirection.idle:
           break;
@@ -88,21 +82,11 @@ class HomePageState extends State<HomePage>
     }
   }
 
-  void _onTapTile(String tile){
-    if(_filter != tile){
-      _filter = tile;
-      _bloc.resetPagination(_filter, false);
-      _animationController.forward();
-      _controller.position.jumpTo(0);
-    }
-    setState(() {});
-  }
-
-  void _search(){
+  void _search() {
     Navigator.pushNamed(context,"/search").then((value) {
       if(value != null && value != '') {
-        _filter = value;
-        _bloc.resetPagination(_filter, true);
+        Provider.of<AmiiboProvider>(context, listen: false)
+          .resetPagination(value, search: true);
         _controller.position.jumpTo(0);
         _animationController.forward();
       }
@@ -110,16 +94,16 @@ class HomePageState extends State<HomePage>
   }
 
   Future<bool> _exitApp() async{
-    if(_multipleSelection){
-      _cancelSelection();
+    AmiiboProvider selected = Provider.of<AmiiboProvider>(context, listen: false);
+    if(selected.multipleSelected){
+      selected.clearSelected();
+      selected.notifyWidgets();
       return false;
     } else {
       await ConnectionFactory().close();
       _controller?.removeListener(_scrollListener);
       _controller?.dispose();
       _animationController?.dispose();
-      _bloc.dispose();
-      $Provider.dispose<ThemeBloc>();
       return await Future.value(true);
     }
   }
@@ -129,255 +113,270 @@ class HomePageState extends State<HomePage>
     return SafeArea(
       child: WillPopScope(
         onWillPop: _exitApp,
-        child: Scaffold(
-          resizeToAvoidBottomInset: false,
-          drawer: !_multipleSelection ? CollectionDrawer(
-            key: Key('Drawer'),
-            selected: _filter, onTap: _onTapTile,
-          ) : null,
-          body: Scrollbar(
-            child: CustomScrollView(
-              controller: _controller,
-              slivers: <Widget>[
-                SliverFloatingBar(
-                  backgroundColor: Theme.of(context).backgroundColor,
-                  floating: !_multipleSelection,
-                  snap: !_multipleSelection,
-                  pinned: _multipleSelection,
-                  leading: _multipleSelection ? IconButton(
-                    icon: Icon(Icons.clear),
-                    onPressed: _cancelSelection,
-                    tooltip: 'Cancel') : null,
-                  title: GestureDetector(
-                    child: StreamBuilder(
-                      stream: _bloc.filter,
-                      builder: (BuildContext context, AsyncSnapshot<String> filter){
-                        if(filter.hasData)
-                          return Text(filter.data,
-                              style: Theme.of(context).textTheme.body2, softWrap: false,
-                              overflow: TextOverflow.fade, maxLines: 1);
-                        else return const SizedBox();
-                      }
+        child: Selector<AmiiboProvider, bool>(
+          selector: (_, amiibo) => amiibo.multipleSelected,
+          child: SliverPersistentHeader(
+            delegate: _SliverPersistentHeader(),
+            pinned: true,
+          ),
+          builder: (_, _multipleSelection, child){
+            return Scaffold(
+              resizeToAvoidBottomInset: false,
+              drawer: _multipleSelection ? null : CollectionDrawer(),
+              body: CustomScrollView(
+                controller: _controller,
+                slivers: <Widget>[
+                  SliverPadding(
+                    padding: const EdgeInsets.symmetric(horizontal: 12),
+                    sliver: Theme(
+                      data: Theme.of(context).copyWith(
+                        appBarTheme: AppBarTheme(
+                          color: Theme.of(context).backgroundColor,
+                          iconTheme: Theme.of(context).iconTheme,
+                          actionsIconTheme: Theme.of(context).iconTheme,
+                          textTheme: Theme.of(context).textTheme,
+                        ),
+                      ),
+                      child: SliverAppBar(
+                        floating: true,
+                        snap: true,
+                        leading: Builder(
+                          builder: (context) => IconButton(
+                            icon: ImplicitIcon(close: _multipleSelection,),
+                            tooltip: _multipleSelection ? 'close' : 'drawer',
+                            onPressed: _multipleSelection ? _cancelSelection : () => Scaffold.of(context).openDrawer(),
+                          )
+                        ),
+                        titleSpacing: 0,
+                        title: InkResponse(
+                          containedInkWell: true,
+                          highlightColor: Colors.transparent,
+                          splashColor: Colors.white12,
+                          child: Selector<AmiiboProvider, String>(
+                            selector: (context, text) => text.strFilter,
+                            builder: (context, text, _) {
+                              return Tooltip(
+                                message: '${num.tryParse(text) == null ?
+                                  'Search Amiibo' : '$text Selected' }',
+                                child: Container(
+                                  padding: const EdgeInsets.symmetric(horizontal: 12),
+                                  alignment: Alignment.centerLeft,
+                                  width: double.infinity,
+                                  child: Text(text ?? '',
+                                  softWrap: false, overflow: TextOverflow.fade, maxLines: 1)
+                                )
+                              );
+                            },
+                          ),
+                          onTap: _multipleSelection ? null : _search
+                        ),
+                        actions: <Widget>[
+                          AnimatedSwitcher(
+                            duration: const Duration(milliseconds: 250),
+                            layoutBuilder: _defaultLayoutBuilder,
+                            child: _multipleSelection ? Row(
+                              mainAxisSize: MainAxisSize.min,
+                              mainAxisAlignment: MainAxisAlignment.end,
+                              children: <Widget>[
+                                IconButton(
+                                  icon: Icon(Icons.remove),
+                                  onPressed: _updateSelection,
+                                  tooltip: 'Remove',
+                                ),
+                                IconButton(
+                                  icon: Icon(Icons.star),
+                                  onPressed: () => _updateSelection(owned: 1),
+                                  tooltip: 'Own',
+                                ),
+                                IconButton(
+                                  icon: Icon(Icons.card_giftcard),
+                                  onPressed: () => _updateSelection(wished: 1),
+                                  tooltip: 'Wish',
+                                ),
+                              ],
+                            ) : _SortCollection(),
+                          )
+                        ],
+                      ),
                     ),
-                    onTap: _multipleSelection ? null : _search
                   ),
-                  trailing: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: <Widget>[
-                      if(_multipleSelection) IconButton(
-                        icon: Icon(Icons.remove),
-                        onPressed: _updateSelection,
-                        tooltip: 'Remove',
-                      ),
-                      if(_multipleSelection) IconButton(
-                        icon: Icon(Icons.star),
-                        onPressed: () => _updateSelection(owned: 1),
-                        tooltip: 'Owned',
-                      ),
-                      if(_multipleSelection) IconButton(
-                        icon: Icon(Icons.card_giftcard),
-                        onPressed: () => _updateSelection(wished: 1),
-                        tooltip: 'Wished',
-                      ),
-                      if(!_multipleSelection) _SortCollection(),
-                    ],
-                  )
-                ),
-                /*SliverPersistentHeader(
-                  pinned: true,
-                  delegate: _SliverAppBarDelegate(_filter)
-                ),*/
-                SliverPadding(
-                  padding: EdgeInsets.symmetric(horizontal: 12, vertical: 5),
-                  sliver: SliverToBoxAdapter(
-                    child: StreamBuilder(
-                      initialData: null,
-                      stream: _bloc.collectionList,
-                      builder: (context, AsyncSnapshot<Map<String,dynamic>> statList){
-                        if(statList.hasData)
-                          return Column(
-                            children: <Widget>[
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                children: <Widget>[
-                                  if(_filter != 'Wishlist')
-                                    Flexible(
-                                      child: Chip(
-                                          avatar: AnimatedRadial(
-                                            key: Key('Owned'),
-                                            percentage:
-                                            statList.data['Owned'].toDouble() / statList.data['Total'].toDouble(),
-                                            child: const Icon(Icons.check, color: Colors.green),
-                                          ),
-                                          label: FittedBox(
-                                            fit: BoxFit.contain,
-                                            child: Text('${statList.data['Owned']}/'
-                                                '${statList.data['Total']} Owned', softWrap: false,
-                                              overflow: TextOverflow.fade,
-                                            ),
-                                          )
-                                      ),
-                                    ),
-                                  if(_filter != 'Owned')
-                                    Flexible(
-                                      child: Chip(
-                                          avatar: AnimatedRadial(
-                                            key: Key('Owned'),
-                                            percentage:
-                                            statList.data['Wished'].toDouble() / statList.data['Total'].toDouble(),
-                                            child: const Icon(Icons.whatshot, color: Colors.amber),
-                                          ),
-                                          label: FittedBox(
-                                            fit: BoxFit.contain,
-                                            child: Text('${statList.data['Wished']}/'
-                                                '${statList.data['Total']} Wished', softWrap: false,
-                                              overflow: TextOverflow.fade,
-                                            ),
-                                          )
-                                      ),
-                                    )
-                                ],
-                              ),
-                              /*Row(
-                                mainAxisAlignment: MainAxisAlignment.end,
-                                children: <Widget>[
-                                  Padding(
-                                    padding: const EdgeInsets.only(right: 12.0),
-                                    child: DropMenu(),
-                                  ),
-                                  const Icon(Icons.keyboard_arrow_up, size: 28,)
-                                ],
-                              )*/
-                            ],
-                          );
-                        else return const SizedBox();
-                      }
-                    )
-                  ),
-                ),
-                SliverPadding(padding: EdgeInsets.symmetric(horizontal: 5),
-                  sliver: StreamBuilder(
-                    stream: _bloc.allAmiibosDB,
-                    builder: (context, AsyncSnapshot<AmiiboLocalDB> snapshot) {
-                      if((snapshot.data?.amiibo?.length ?? 1) == 0) return DefaultTextStyle(
-                        style: Theme.of(context).textTheme.display1,
-                        child: const SliverToBoxAdapter(
-                          child: const Align(alignment: Alignment.center, heightFactor: 10,
-                             child: Text('Nothing to see here',
-                              textAlign: TextAlign.center,
-                            )
+                  child,
+                  SliverPadding(
+                    padding: const EdgeInsets.symmetric(horizontal: 6),
+                    sliver: Selector<AmiiboProvider, AmiiboLocalDB>(
+                      child: const SliverToBoxAdapter(
+                        child: const Align(alignment: Alignment.center, heightFactor: 10,
+                          child: const Text('Nothing to see here',
+                            textAlign: TextAlign.center,
                           )
                         )
-                      );
-                      else return
-                        SliverGrid(
-                        gridDelegate: MediaQuery.of(context).size.width >= 600 ?
+                      ),
+                      selector: (context, amiibo) => amiibo.amiibosDB,
+                      builder: (context, data, child){
+                        if((data?.amiibo?.length ?? 1) == 0)
+                          return DefaultTextStyle(
+                            style: Theme.of(context).textTheme.display1,
+                            child: child,
+                          );
+                        else return SliverGrid(
+                          gridDelegate: MediaQuery.of(context).size.width >= 600 ?
                           SliverGridDelegateWithMaxCrossAxisExtent(
                             maxCrossAxisExtent: 200,
                             mainAxisSpacing: 8.0,
                           ) :
                           SliverGridDelegateWithFixedCrossAxisCount(
-                            crossAxisCount: 3,
-                            mainAxisSpacing: 8.0
+                              crossAxisCount: 3,
+                              mainAxisSpacing: 8.0
                           ),
-                        //MediaQuery.of(context).orientation == Orientation.portrait ? 3 : 3),
-                        delegate: SliverChildBuilderDelegate((BuildContext context, int index) =>
-                          AmiiboGrid(amiibo: snapshot.data.amiibo[index], key: ValueKey<int>(snapshot.data.amiibo[index].key),
-                            set: set, functionSelection: checkMultipleSelection, multipleSelection: _multipleSelection,
-                          ),
-                          addRepaintBoundaries: false, addAutomaticKeepAlives: false,
-                          childCount: snapshot.hasData ? snapshot.data.amiibo.length : 0,
-                        )
-                      );
-                    }
-                  )
-                ),
-              ],
-            ),
-          ),
-          floatingActionButton: FAB(_animationController, () => _controller.jumpTo(0)
-          ),
-        )
+                          delegate: SliverChildBuilderDelegate((BuildContext context, int index) {
+                            return AnimatedSwitcher(
+                              duration: const Duration(milliseconds: 500),
+                              transitionBuilder: (child, animation){
+                                return SlideTransition(
+                                  position: Tween<Offset>(
+                                    begin: Offset(0.0, 1.1),
+                                    end: Offset.zero).animate(animation),
+                                  child: FadeTransition(
+                                    opacity: animation,
+                                    child: child,
+                                  )
+                                );
+                              },
+                              child: AmiiboGrid(
+                                key: ValueKey<int>(data?.amiibo[index].key),
+                                amiibo: data?.amiibo[index],
+                              ),
+                            );
+                          },
+                            addRepaintBoundaries: false, addAutomaticKeepAlives: false,
+                            childCount: data?.amiibo != null ? data?.amiibo?.length : 0,
+                          )
+                        );
+                      },
+                    )
+                  ),
+                ],
+              ),
+              floatingActionButton: FAB(_animationController, () => _controller.jumpTo(0)),
+            );
+          },
+        ),
       )
     );
   }
 }
 
-class _SliverAppBarDelegate extends SliverPersistentHeaderDelegate {
-  final _filter;
-  static final AmiiboBloc _bloc = $Provider.of<AmiiboBloc>();
-
-  _SliverAppBarDelegate(this._filter);
+class _SliverPersistentHeader extends SliverPersistentHeaderDelegate {
 
   @override
-  Widget build(BuildContext context, double shrinkOffset, bool overlapsContent,) {
-    return StreamBuilder(
-        initialData: null,
-        stream: _bloc.collectionList,
-        builder: (context, AsyncSnapshot<Map<String,dynamic>> statList){
-          if(statList.hasData)
-            return Container(
-              margin: EdgeInsets.symmetric(horizontal: 12.0, vertical: 6.0),
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(8),
-                color: Theme.of(context).backgroundColor
-              ),
-              height: 66,
-              child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: <Widget>[
-                if(_filter != 'Wishlist')
-                  Flexible(
-                    child: Chip(
-                      avatar: AnimatedRadial(
-                        key: Key('Owned'),
-                        percentage:
-                        statList.data['Owned'].toDouble() / statList.data['Total'].toDouble(),
-                        child: const Icon(Icons.check, color: Colors.green),
-                      ),
-                      label: FittedBox(
-                        fit: BoxFit.contain,
-                        child: Text('${statList.data['Owned']}/'
-                          '${statList.data['Total']} Owned', softWrap: false,
-                          overflow: TextOverflow.fade,
-                        ),
-                      )
-                    ),
+  Widget build(BuildContext context, double shrinkOffset, bool overlapsContent) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 12),
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          begin: Alignment.topCenter, end: Alignment.bottomCenter,
+          colors: [
+            Theme.of(context).scaffoldBackgroundColor,
+            Theme.of(context).scaffoldBackgroundColor.withOpacity(0.75),
+          ]
+        )
+      ),
+      height: kToolbarHeight,
+      child: StreamBuilder<Map<String,dynamic>>(
+        initialData: {'Owned' : 0, 'Wished' : 0, 'Total' : 0},
+        stream: Provider.of<AmiiboProvider>(context, listen: false).collectionList,
+        builder: (context , statList) {
+          if(statList.data['Total'] == 0 || statList == null)
+            return const SizedBox();
+          return Row(
+            children: <Widget>[
+              Expanded(
+                child: FlatButton.icon(
+                  onPressed: null,
+                  icon: AnimatedRadial(
+                    key: Key('Owned'),
+                    percentage:
+                    statList.data['Owned'].toDouble()
+                        / statList.data['Total'].toDouble(),
+                    child: const Icon(Icons.check, color: Colors.green),
                   ),
-                if(_filter != 'Owned')
-                  Flexible(
-                    child: Chip(
-                      avatar: AnimatedRadial(
-                        key: Key('Owned'),
-                        percentage:
-                        statList.data['Wished'].toDouble() / statList.data['Total'].toDouble(),
-                        child: const Icon(Icons.whatshot, color: Colors.amber),
-                      ),
-                      label: FittedBox(
-                        fit: BoxFit.contain,
-                        child: Text('${statList.data['Wished']}/'
-                            '${statList.data['Total']} Wished', softWrap: false,
-                          overflow: TextOverflow.fade,
-                        ),
-                      )
+                  label: FittedBox(
+                    fit: BoxFit.contain,
+                    child: Text('${statList.data['Owned']}/'
+                        '${statList.data['Total']} Owned', softWrap: false,
+                      overflow: TextOverflow.fade,
+                      style: Theme.of(context).textTheme.subhead,
                     ),
                   )
-              ],
-            ),
-            );
-          else return const SizedBox(height: 66,);
+                )
+              ),
+              Expanded(
+                child: FlatButton.icon(
+                  onPressed: null,
+                  icon: AnimatedRadial(
+                      key: Key('Wished'),
+                      percentage:
+                      statList.data['Wished'].toDouble()
+                          / statList.data['Total'].toDouble(),
+                      child: const Icon(Icons.check, color: Colors.green),
+                    ),
+                  label: FittedBox(
+                    fit: BoxFit.contain,
+                    child: Text('${statList.data['Wished']}/'
+                        '${statList.data['Total']} Wished',
+                      softWrap: false,
+                      overflow: TextOverflow.fade,
+                      style: Theme.of(context).textTheme.subhead,
+                    ),
+                  )
+                )
+              ),
+            ],
+          );
         }
+      ),
     );
   }
 
   @override
-  double get maxExtent => 66.0;
+  double get maxExtent => kToolbarHeight;
 
   @override
-  double get minExtent => 66.0;
+  double get minExtent => kToolbarHeight;
 
   @override
   bool shouldRebuild(SliverPersistentHeaderDelegate oldDelegate) => true;
+}
+
+class ImplicitIcon extends ImplicitlyAnimatedWidget{
+  final bool close;
+
+  ImplicitIcon({
+    Key key,
+    this.close,
+    Duration duration = const Duration(milliseconds: 250),
+    Curve curve = Curves.linear
+  }) : super(key : key, duration: duration, curve: curve);
+
+  @override
+  ImplicitlyAnimatedWidgetState<ImplicitlyAnimatedWidget> createState() => _ImplicitRadialState();
+}
+
+class _ImplicitRadialState extends AnimatedWidgetBaseState<ImplicitIcon> {
+  Tween<double> _percentage;
+
+  @override
+  void forEachTween(TweenVisitor visitor) {
+    _percentage = visitor(_percentage, widget.close ? 1.0 : 0.0, (dynamic value) => Tween<double>(begin: value));
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return AnimatedIcon(
+      icon: AnimatedIcons.menu_close,
+      progress: _percentage.animate(animation),
+    );
+  }
 }
 
 class _SortCollection extends StatefulWidget{
@@ -386,16 +385,16 @@ class _SortCollection extends StatefulWidget{
 }
 
 class _SortCollectionState extends State<_SortCollection> {
-  static final AmiiboBloc _bloc = $Provider.of<AmiiboBloc>();
-  String _sortBy = _bloc.orderBy;
 
   void _selectOrder(String sort) async{
-    _bloc.strOrderBy = _sortBy = sort;
-    await _bloc.refreshPagination();
+    AmiiboProvider amiiboProvider = Provider.of<AmiiboProvider>(context, listen: false);
+    amiiboProvider.strOrderBy = sort;
+    await amiiboProvider.refreshPagination();
     Navigator.pop(context);
   }
 
   Future<void> _dialog(BuildContext context) async {
+    String _sortBy = Provider.of<AmiiboProvider>(context).orderBy;
     return showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -406,7 +405,7 @@ class _SortCollectionState extends State<_SortCollection> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
               Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 6),
                 child: Text('Sort By'),
               ),
               const Divider(),
@@ -424,28 +423,28 @@ class _SortCollectionState extends State<_SortCollection> {
               selected: _sortBy == 'name',
             ),
             RadioListTile(
-              value: 'owned',
+              value: 'owned DESC',
               groupValue: _sortBy,
               onChanged: _selectOrder,
               dense: true,
-              selected: _sortBy == 'owned',
+              selected: _sortBy == 'owned DESC',
               title: Text('Owned'),
             ),
             RadioListTile(
-              value: 'wishlist',
+              value: 'wishlist DESC',
               groupValue: _sortBy,
               onChanged: _selectOrder,
               dense: true,
               title: Text('Wished'),
-              selected: _sortBy == 'wishlist',
+              selected: _sortBy == 'wishlist DESC',
             ),
             RadioListTile(
-              value: 'na',
+              value: 'na DESC',
               groupValue: _sortBy,
               onChanged: _selectOrder,
               dense: true,
               title: Text('American Date'),
-              selected: _sortBy == 'na',
+              selected: _sortBy == 'na DESC',
               secondary: Image.asset(
                 'assets/images/na.png',
                 height: 16, width: 25,
@@ -454,12 +453,12 @@ class _SortCollectionState extends State<_SortCollection> {
               ),
             ),
             RadioListTile(
-              value: 'eu',
+              value: 'eu DESC',
               groupValue: _sortBy,
               onChanged: _selectOrder,
               dense: true,
               title: Text('European Date'),
-              selected: _sortBy == 'eu',
+              selected: _sortBy == 'eu DESC',
               secondary: Image.asset(
                 'assets/images/eu.png',
                 height: 16, width: 25,
@@ -468,12 +467,12 @@ class _SortCollectionState extends State<_SortCollection> {
               ),
             ),
             RadioListTile(
-              value: 'jp',
+              value: 'jp DESC',
               groupValue: _sortBy,
               onChanged: _selectOrder,
               dense: true,
               title: Text('Japanese Date'),
-              selected: _sortBy == 'jp',
+              selected: _sortBy == 'jp DESC',
               secondary: DecoratedBox(
                 decoration: BoxDecoration(
                   border: Border.all(width: 0.75)
@@ -488,12 +487,12 @@ class _SortCollectionState extends State<_SortCollection> {
               )
             ),
             RadioListTile(
-              value: 'au',
+              value: 'au DESC',
               groupValue: _sortBy,
               onChanged: _selectOrder,
               dense: true,
               title: Text('Australian Date'),
-              selected: _sortBy == 'au',
+              selected: _sortBy == 'au DESC',
               secondary: Image.asset(
                 'assets/images/au.png',
                 height: 16, width: 25,
@@ -502,67 +501,6 @@ class _SortCollectionState extends State<_SortCollection> {
               ),
             ),
           ],
-        );
-      }
-    );
-  }
-
-  Future<void> _bottomModal(BuildContext context) async{
-    return showModalBottomSheet(
-      context: context,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-      builder: (BuildContext context) {
-        return Container(
-          width: 200,
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
-                child: Text('Sort By', style: Theme.of(context).textTheme.body2,),
-              ),
-              const Divider(),
-              RadioListTile(
-                value: 'name',
-                groupValue: _sortBy,
-                onChanged: _selectOrder,
-                dense: true,
-                title: Text('Name'),
-                selected: _sortBy == 'name',
-              ),
-              RadioListTile(
-                value: 'owned',
-                groupValue: _sortBy,
-                onChanged: _selectOrder,
-                dense: true,
-                selected: _sortBy == 'owned',
-                title: Text('Owned'),
-              ),
-              RadioListTile(
-                value: 'wishlist',
-                groupValue: _sortBy,
-                onChanged: _selectOrder,
-                dense: true,
-                title: Text('Wished'),
-                selected: _sortBy == 'wishlist',
-              ),
-              RadioListTile(
-                value: 'na',
-                groupValue: _sortBy,
-                onChanged: _selectOrder,
-                dense: true,
-                title: Text('American Date'),
-                selected: _sortBy == 'na',
-                secondary: Image.asset(
-                  'assets/images/na.png',
-                  height: 16, width: 25,
-                  fit: BoxFit.fill,
-                  semanticLabel: 'American Date',
-                ),
-              ),
-            ],
-          ),
         );
       }
     );
@@ -596,6 +534,7 @@ class FAB extends StatelessWidget{
     return ScaleTransition(
       scale: scale,
       child: FloatingActionButton(
+        tooltip: 'Up',
         mini: true,
         heroTag: 'MenuFAB',
         onPressed: goTop,
@@ -607,17 +546,10 @@ class FAB extends StatelessWidget{
 
 class AmiiboGrid extends StatefulWidget {
   final AmiiboDB amiibo;
-  final Set<ValueKey<int>> set;
-  final VoidCallback functionSelection;
-  final bool multipleSelection;
-  static final AmiiboBloc _bloc = $Provider.of<AmiiboBloc>();
 
   const AmiiboGrid({
     Key key,
     this.amiibo,
-    this.set,
-    this.multipleSelection,
-    this.functionSelection,
   }) : super(key: key);
 
   @override
@@ -625,148 +557,126 @@ class AmiiboGrid extends StatefulWidget {
 }
 
 class AmiiboGridState extends State<AmiiboGrid> {
-  bool _isSelected;
   Widget _widget;
 
   @override
   void initState(){
-    _isSelected = widget.set.contains(widget.key);
-    _widget = _changeWidget();
     super.initState();
+    _widget = _changeWidget();
   }
 
   @override
   void didUpdateWidget(AmiiboGrid oldWidget) {
-    _isSelected = widget.set.contains(widget.key);
-    _widget = _changeWidget();
     super.didUpdateWidget(oldWidget);
+    _widget = _changeWidget();
   }
 
   Widget _changeWidget(){
     if(widget.amiibo?.wishlist?.isOdd ?? false)
-      return const Icon(Icons.card_giftcard, key: ValueKey(2),  color: Colors.limeAccent);
+      return const Icon(Icons.card_giftcard, key: ValueKey(2), color: Colors.limeAccent,);
     else if(widget.amiibo?.owned?.isOdd ?? false)
-      return const Icon(Icons.star, key: ValueKey(1), color: Colors.pinkAccent);
+      return const Icon(Icons.star, key: ValueKey(1), color: Colors.pinkAccent,);
     else return const SizedBox.shrink();
   }
 
   _onDoubleTap()
     => Navigator.pushNamed(context, "/details", arguments: widget.amiibo);
 
-  _onTap() {
+  _onTap(){
+    AmiiboProvider amiiboProvider = Provider.of<AmiiboProvider>(context, listen: false);
     switch(widget.amiibo?.owned ?? 0){
       case 1:
-        AmiiboGrid._bloc.countOwned = widget.amiibo.owned = 0;
-        AmiiboGrid._bloc.countWished = widget.amiibo.wishlist = 1;
+        amiiboProvider.countOwned = widget.amiibo.owned = 0;
+        amiiboProvider.countWished = widget.amiibo.wishlist = 1;
         break;
       case 0:
         if((widget.amiibo?.wishlist ?? 0) == 0)
-          AmiiboGrid._bloc.countOwned = widget.amiibo.owned = 1;
-        else AmiiboGrid._bloc.countWished = widget.amiibo.wishlist = 0;
+          amiiboProvider.countOwned = widget.amiibo.owned = 1;
+        else amiiboProvider.countWished = widget.amiibo.wishlist = 0;
         break;
     }
-    AmiiboGrid._bloc.updateAmiiboDB(amiibo: widget.amiibo);
-    AmiiboGrid._bloc.updateList();
+    amiiboProvider.updateAmiiboDB(amiibo: widget.amiibo);
+    amiiboProvider.updateList();
     setState(() {_widget = _changeWidget();});
   }
 
-  _onLongPress() {
-    setState(() {
-      _isSelected = widget.set.add(widget.key) ? true : !widget.set.remove(widget.key);
-    });
-    widget.functionSelection();
+  _onLongPress(){
+    AmiiboProvider mSelected = Provider.of<AmiiboProvider>(context, listen: false);
+    if(!mSelected.addSelected(widget.key)) mSelected.removeSelected(widget.key);
+    mSelected.notifyWidgets();
   }
 
   @override
-  Widget build(BuildContext context) => AnimatedContainer(
-    duration: const Duration(milliseconds: 200),
-    curve: Curves.linearToEaseOut,
-    margin: _isSelected ? EdgeInsets.symmetric(horizontal: 8, vertical: 4) : EdgeInsets.all(0),
-    padding: _isSelected ? EdgeInsets.all(8) : EdgeInsets.all(0),
-    decoration: BoxDecoration(
-      color: _isSelected ? Theme.of(context).selectedRowColor : Colors.transparent,
-      borderRadius: BorderRadius.circular(8)
-    ),
-    child: GestureDetector(
-      onDoubleTap: widget.multipleSelection ? null : _onDoubleTap,
-      onTap: widget.multipleSelection ? _onLongPress : _onTap,
-      onLongPress: _onLongPress,
-      /*(LongPressMoveUpdateDetails details) {
-        //print('Local: ${details.localPosition}');
-        //print('Global: ${details.globalPosition}');
-        //print('Local Offset: ${details.localOffsetFromOrigin}');
-        //print(widget.scrollController.offset);
-        //print(widget.scrollController.position.maxScrollExtent);
-        //print(widget.scrollController.position.isScrollingNotifier.value);
-        //print('Local: ${details.localPosition}');
-        //print(widget.scrollController.offset);
-        /*if(details.globalPosition.dy >= 0.85 * MediaQuery.of(context).size.height &&
-            widget.scrollController.offset < widget.scrollController.position.maxScrollExtent &&
-            !widget.scrollController.position.isScrollingNotifier.value){
-          widget.scrollController.animateTo(
-            widget.scrollController.offset + 250,
-            duration: const Duration(milliseconds: 100),
-            curve: Curves.linear);
-        }*/
-      },*/
-      child: Stack(
-        children: <Widget>[
-          Card(
-            child: Column(
-              mainAxisSize: MainAxisSize.max,
-              mainAxisAlignment: MainAxisAlignment.center,
-              textBaseline: TextBaseline.alphabetic,
-              children: <Widget>[
-                Expanded(
-                  child: Hero(
-                    tag: widget.amiibo.key,
-                    child: Image.asset('assets/collection/icon_${widget.amiibo.key}.png',
-                      fit: BoxFit.scaleDown,
-                    )
-                    /*Container(
-                      decoration: BoxDecoration(
-                        image: DecorationImage(
-                          image: AssetImage('assets/collection/icon_${widget.amiibo.id?.substring(0,8)}-'
-                              '${widget.amiibo.id?.substring(8)}.png'),
-                          fit: BoxFit.scaleDown,
-                          alignment: Alignment.center,
-                        ),
-                      ),
-                    ))*/
-                  ),
-                  flex: 9,
-                ),
-                Expanded(
-                  child: Container(
-                    decoration: ShapeDecoration(
-                      color: Theme.of(context).primaryColorLight,
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.vertical(bottom: Radius.circular(8)))),
-                    alignment: Alignment.center,
-                    padding: EdgeInsets.symmetric(horizontal: 5),
-                    child: Text('${widget.amiibo.name}',
-                      softWrap: false,
-                      overflow: TextOverflow.fade,
-                      style: TextStyle(fontSize: 12, fontWeight: FontWeight.w500),
+  Widget build(BuildContext context){
+    bool _multipleSelected = Provider.of<AmiiboProvider>(context, listen: false).multipleSelected;
+    return Selector<AmiiboProvider,bool>(
+      builder: (context, _isSelected, child){
+        return AnimatedContainer(
+          duration: const Duration(milliseconds: 200),
+          curve: Curves.linearToEaseOut,
+          margin: _isSelected ? const EdgeInsets.symmetric(horizontal: 8, vertical: 4) : EdgeInsets.zero,
+          padding: _isSelected ? const EdgeInsets.all(8) : EdgeInsets.zero,
+          decoration: BoxDecoration(
+            color: _isSelected ? Theme.of(context).selectedRowColor : Colors.transparent,
+            borderRadius: BorderRadius.circular(8)
+          ),
+          child: child
+        );
+      },
+      selector: (context, selected) => selected.isSelected(widget.key),
+      child: GestureDetector(
+        onDoubleTap: _multipleSelected ? null : _onDoubleTap,
+        onTap: _multipleSelected ? _onLongPress : _onTap,
+        onLongPress: _multipleSelected ? null : _onLongPress,
+        child: Stack(
+          children: <Widget>[
+            Card(
+              child: Column(
+                mainAxisSize: MainAxisSize.max,
+                mainAxisAlignment: MainAxisAlignment.center,
+                textBaseline: TextBaseline.alphabetic,
+                children: <Widget>[
+                  Expanded(
+                    child: Hero(
+                      tag: widget.amiibo.key,
+                      child: Image.asset('assets/collection/icon_${widget.amiibo.key}.png',
+                        fit: BoxFit.scaleDown,
+                      )
                     ),
+                    flex: 9,
                   ),
-                  flex: 2,
-                ),
-              ],
+                  Expanded(
+                    child: Container(
+                      decoration: ShapeDecoration(
+                          color: Theme.of(context).primaryColorLight,
+                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.vertical(bottom: Radius.circular(8)))),
+                      alignment: Alignment.center,
+                      padding: EdgeInsets.symmetric(horizontal: 5),
+                      child: Text('${widget.amiibo.name}',
+                        softWrap: false,
+                        overflow: TextOverflow.fade,
+                        style: TextStyle(fontSize: 12, fontWeight: FontWeight.w500),
+                      ),
+                    ),
+                    flex: 2,
+                  ),
+                ],
+              ),
             ),
-          ),
-          Align(
-            alignment: Alignment.topLeft,
-            child: AnimatedSwitcher(
-              duration: const Duration(milliseconds: 200),
-              switchInCurve: Curves.easeInToLinear,
-              switchOutCurve: Curves.easeOutCirc,
-              transitionBuilder: (Widget child, Animation <double> animation)
+            Positioned(
+              top: 4, left: 8,
+              child: AnimatedSwitcher(
+                duration: const Duration(milliseconds: 200),
+                switchInCurve: Curves.easeInToLinear,
+                switchOutCurve: Curves.easeOutCirc,
+                transitionBuilder: (Widget child, Animation <double> animation)
                 => ScaleTransition(scale: animation, child: child,),
-              child: _widget
+                child: _widget
             ),
-          ),
-        ],
-      ),
-    ),
-  );
+            ),
+          ],
+        ),
+      )
+    );
+  }
 }

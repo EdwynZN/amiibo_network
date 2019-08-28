@@ -21,7 +21,7 @@ class SwitchJoycon extends CustomPainter{
   }
 
   void joycon(canvas, length){
-    Path rightJoyCon = Path()
+    Path joyCon = Path()
       ..addRRect(RRect.fromRectAndCorners(
         Rect.fromPoints(
           Offset.zero,
@@ -37,7 +37,7 @@ class SwitchJoycon extends CustomPainter{
           center: Offset(length * 0.175, length * (isLeft ? 0.3 : 0.6)),
           radius: length * 0.1
       ));
-    canvas.drawPath(rightJoyCon, joyconPaint);
+    canvas.drawPath(joyCon, joyconPaint);
     canvas.drawPath(joystick, buttonPaint);
   }
 

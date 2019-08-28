@@ -7,14 +7,14 @@ class Themes {
     appBarTheme: AppBarTheme(
       color: Colors.grey[900],
       textTheme: TextTheme(
-        title: TextStyle(color: Colors.white70, fontSize: 20),
-        subtitle: TextStyle(color: Colors.white70, fontSize: 16),
+        title: TextStyle(color: const Color(0xFFB2B2B2), fontSize: 20),
+        subtitle: TextStyle(color: const Color(0xFFB2B2B2), fontSize: 16),
       ),
       iconTheme: const IconThemeData(color: Colors.white54),
     ),
     brightness: Brightness.dark,
     unselectedWidgetColor: Colors.grey,
-    dividerColor: Colors.white70,
+    dividerColor: const Color(0xFFB2B2B2),
     scaffoldBackgroundColor: Colors.black,
     accentColor: const Color.fromRGBO(207, 102, 121, 1),
     accentIconTheme: const IconThemeData(color: Colors.black),
@@ -26,7 +26,7 @@ class Themes {
     primarySwatch: Colors.blueGrey,
     primaryColor: Colors.blueGrey[900],
     cursorColor: Colors.white10,
-    backgroundColor: Colors.grey[850],
+    backgroundColor: Colors.grey[900],
     selectedRowColor: const Color.fromRGBO(96, 125, 139, 0.5),
     cardTheme: CardTheme(
       color: Colors.grey[900],
@@ -35,11 +35,11 @@ class Themes {
       elevation: 8,
     ),
     textTheme: TextTheme(
-      title: TextStyle(color: Colors.white70, fontSize: 16, fontWeight: FontWeight.w400),
-      body1: TextStyle(color: Colors.white70),
-      body2: TextStyle(color: Colors.white70, fontSize: 16, fontWeight: FontWeight.w400),
-      display1: TextStyle(color: Colors.white70, fontSize: 18, fontWeight: FontWeight.w600),
-      subhead: TextStyle(color: Colors.white70, fontSize: 14, fontWeight: FontWeight.w600),
+      title: TextStyle(color: const Color(0xFFB2B2B2), fontSize: 18, fontWeight: FontWeight.w400),
+      body1: TextStyle(color: const Color(0xFFB2B2B2)),
+      body2: TextStyle(color: const Color(0xFFB2B2B2), fontSize: 16, fontWeight: FontWeight.w400),
+      display1: TextStyle(color: const Color(0xFFB2B2B2), fontSize: 18, fontWeight: FontWeight.w600),
+      subhead: TextStyle(color: const Color(0xFFB2B2B2), fontSize: 16, fontWeight: FontWeight.w400),
     ),
     bottomAppBarTheme: BottomAppBarTheme(
       color: Colors.grey[900],
@@ -77,6 +77,7 @@ class Themes {
       height: 48
     ),
     toggleableActiveColor: const Color.fromRGBO(207, 102, 121, 1),
+    cardColor: Colors.grey[850]
   );
   static final _light = ThemeData(
     primaryColorDark: Colors.redAccent,
@@ -90,7 +91,7 @@ class Themes {
       ),
       iconTheme: IconThemeData(
         color: Colors.white
-      )
+      ),
     ),
     unselectedWidgetColor: Colors.black87,
     dividerColor: Colors.blueGrey,
@@ -105,7 +106,7 @@ class Themes {
     primarySwatch: Colors.red,
     primaryColor: Colors.red,
     cursorColor: Colors.black12,
-    backgroundColor: Colors.white70,
+    backgroundColor: const Color(0xFFE8C2BF), //Colors.white70,
     highlightColor: Colors.white54,
     selectedRowColor: const Color.fromRGBO(100, 181, 246, 0.5),
     cardTheme: CardTheme(
@@ -115,12 +116,12 @@ class Themes {
       elevation: 8,
     ),
     textTheme: TextTheme(
-      title: TextStyle(color: Colors.black87, fontSize: 16, fontWeight: FontWeight.w400),
+      title: TextStyle(color: Colors.black87, fontSize: 18, fontWeight: FontWeight.w400),
       subtitle: TextStyle(color: Colors.black87, fontSize: 12, fontWeight: FontWeight.w400),
       body1: TextStyle(color: Colors.black87),
       body2: TextStyle(color: Colors.black87, fontSize: 16, fontWeight: FontWeight.w400),
       display1: TextStyle(color: Colors.black87, fontSize: 18, fontWeight: FontWeight.w600),
-      subhead: TextStyle(color: Colors.black87, fontSize: 14, fontWeight: FontWeight.w600),
+      subhead: TextStyle(color: Colors.black87, fontSize: 16, fontWeight: FontWeight.w400),
     ),
     bottomAppBarTheme: BottomAppBarTheme(
       color: Colors.white70,
@@ -156,6 +157,8 @@ class Themes {
       highlightColor: Colors.white54
     ),
     toggleableActiveColor: Colors.redAccent,
+    indicatorColor: const Color.fromRGBO(100, 181, 246, 0.5),
+    cardColor: Colors.white70,
   );
 
   static ThemeData get light => _light;

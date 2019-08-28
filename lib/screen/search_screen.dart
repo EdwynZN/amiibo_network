@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:floating_search_bar/floating_search_bar.dart';
-import 'package:amiibo_network/bloc/search_bloc.dart';
-import 'package:amiibo_network/bloc/bloc_provider.dart';
+import 'package:amiibo_network/provider/search_provider.dart';
 
 class SearchScreen extends StatefulWidget {
   @override
@@ -9,16 +7,11 @@ class SearchScreen extends StatefulWidget {
 }
 
 class SearchScreenState extends State<SearchScreen> {
-  final SearchBloc _bloc = $Provider.of<SearchBloc>();
-
-  @override
-  void initState() {
-    super.initState();
-  }
+  SearchProvider _search = SearchProvider();
 
   @override
   dispose() {
-    $Provider.dispose<SearchBloc>();
+    _search.dispose();
     super.dispose();
   }
 
@@ -28,28 +21,40 @@ class SearchScreenState extends State<SearchScreen> {
       child: Scaffold(
         body: CustomScrollView(
           slivers: <Widget>[
-            SliverFloatingBar(
-              backgroundColor: Theme.of(context).backgroundColor,
-              leading: IconButton(
-                icon: const Icon(Icons.arrow_back),
-                onPressed: Navigator.of(context).pop),
-              pinned: true,
-              title: TextField(
-                style: Theme.of(context).textTheme.body2,
-                maxLength: 15,
-                textInputAction: TextInputAction.search,
-                autofocus: true,
-                onSubmitted: Navigator.of(context).pop,
-                onChanged: _bloc.searchValue,
-                autocorrect: false,
-                decoration: null,
+            SliverPadding(
+              padding: const EdgeInsets.symmetric(horizontal: 12),
+              sliver: Theme(
+                data: Theme.of(context).copyWith(
+                  appBarTheme: AppBarTheme(
+                    color: Theme.of(context).backgroundColor,
+                    iconTheme: Theme.of(context).iconTheme,
+                    actionsIconTheme: Theme.of(context).iconTheme,
+                    textTheme: Theme.of(context).textTheme
+                  ),
+                ),
+                child: SliverAppBar(
+                  leading: IconButton(
+                    icon: const Icon(Icons.arrow_back),
+                    onPressed: Navigator.of(context).pop),
+                  pinned: true,
+                  title: TextField(
+                    style: Theme.of(context).textTheme.body2,
+                    maxLength: 15,
+                    textInputAction: TextInputAction.search,
+                    autofocus: true,
+                    onSubmitted: Navigator.of(context).pop,
+                    onChanged: _search.searchValue,
+                    autocorrect: false,
+                    decoration: null,
+                  ),
+                ),
               ),
             ),
             SliverPadding(
-              padding: EdgeInsets.symmetric(horizontal: 12),
-              sliver: StreamBuilder(
-                stream: _bloc.search,
-                builder: (context, AsyncSnapshot<List<String>> snapshot) => SliverList(
+              padding: EdgeInsets.symmetric(horizontal: 12, vertical: 6.0),
+              sliver: StreamBuilder<List<String>>(
+                stream: _search.search,
+                builder: (context, snapshot) => SliverList(
                   delegate: SliverChildBuilderDelegate((BuildContext context, int index) {
                     if(snapshot.hasData)
                       return AnimatedSwitcher(duration: const Duration(milliseconds: 200),
@@ -65,7 +70,7 @@ class SearchScreenState extends State<SearchScreen> {
                       );
                     else return const SizedBox.shrink();
                   },
-                    childCount: snapshot.hasData ? snapshot.data.length : 0,
+                    childCount: snapshot.hasData ? snapshot.data.length : 10,
                   ),
                 ),
               )

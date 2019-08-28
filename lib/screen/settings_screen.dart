@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:amiibo_network/service/storage.dart';
-import 'package:amiibo_network/bloc/amiibo_bloc.dart';
-import 'package:amiibo_network/bloc/theme_bloc.dart';
-import 'package:amiibo_network/bloc/bloc_provider.dart';
+import 'package:amiibo_network/provider/theme_provider.dart';
+import 'package:provider/provider.dart';
+import 'package:amiibo_network/provider/amiibo_provider.dart';
 import 'package:launch_review/launch_review.dart';
 
 class SettingsPage extends StatelessWidget{
@@ -73,7 +73,6 @@ class SettingsPage extends StatelessWidget{
 }
 
 class ResetCollection extends StatelessWidget{
-  final AmiiboBloc _bloc = $Provider.of<AmiiboBloc>();
 
   Future<void> _dialog(BuildContext context) async {
     return showDialog(
@@ -93,7 +92,7 @@ class ResetCollection extends StatelessWidget{
               child: Text('Sure'),
               onPressed: () async {
                 Navigator.of(context).maybePop();
-                await _bloc.resetCollection();
+                await Provider.of<AmiiboProvider>(context, listen: false).resetCollection();
               }
             ),
           ],
@@ -117,62 +116,62 @@ class ResetCollection extends StatelessWidget{
 class DropMenu extends StatelessWidget {
   DropMenu({Key key}): super(key :key);
 
-  static final ThemeBloc _themeBloc = $Provider.of<ThemeBloc>();
-  final String _value = _themeBloc.savedTheme;
-
   @override
   Widget build(BuildContext context) {
-    return DropdownButton<String>(
-      items: [
-        DropdownMenuItem<String>(
-          value: 'Auto',
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
+    return Selector<ThemeProvider, String>(
+      builder: (context, strTheme, _) {
+        return DropdownButton<String>(
+          items: [
+            DropdownMenuItem<String>(
+              value: 'Auto',
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: <Widget>[
+                  const Icon(Icons.brightness_auto, color: Colors.amber),
+                  Padding(child: Text('Auto'), padding: const EdgeInsets.only(left: 8))
+                ],
+              ),
+            ),
+            DropdownMenuItem<String>(
+              value: 'Light',
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: <Widget>[
+                  const Icon(Icons.wb_sunny, color: Colors.amber),
+                  Padding(child: Text('Light'), padding: const EdgeInsets.only(left: 8))
+                ],
+              ),
+            ),
+            DropdownMenuItem<String>(
+              value: 'Dark',
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: <Widget>[
+                  const Icon(Icons.brightness_3, color: Colors.amber),
+                  Padding(child: Text('Dark'), padding: EdgeInsets.only(left: 8))
+                ],
+              ),
+            ),
+          ],
+          onChanged: Provider.of<ThemeProvider>(context, listen: false).themeDB,
+          underline: const SizedBox.shrink(),
+          iconEnabledColor: Theme.of(context).appBarTheme.iconTheme.color,
+          hint: Row(
             children: <Widget>[
-              const Icon(Icons.brightness_auto, color: Colors.amber),
-              Padding(child: Text('Auto'), padding: EdgeInsets.only(left: 8))
-            ],
-          ),
-        ),
-        DropdownMenuItem<String>(
-          value: 'Light',
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: <Widget>[
-              const Icon(Icons.wb_sunny, color: Colors.amber),
-              Padding(child: Text('Light'), padding: EdgeInsets.only(left: 8))
-            ],
-          ),
-        ),
-        DropdownMenuItem<String>(
-          value: 'Dark',
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: <Widget>[
-              const Icon(Icons.brightness_3, color: Colors.amber),
-              Padding(child: Text('Dark'), padding: EdgeInsets.only(left: 8))
-            ],
-          ),
-        ),
-      ],
-      onChanged: _themeBloc.themeDB,
-      underline: const SizedBox.shrink(),
-      iconEnabledColor: Theme.of(context).appBarTheme.iconTheme.color,
-      hint: Row(
-        children: <Widget>[
-          const Icon(Icons.color_lens),
-          Padding(padding: EdgeInsets.only(left: 8),
-            child: Text(_value, style: Theme.of(context).appBarTheme.textTheme.subtitle,),
+              const Icon(Icons.color_lens),
+              Padding(padding: const EdgeInsets.only(left: 8),
+                child: Text(strTheme, style: Theme.of(context).appBarTheme.textTheme.subtitle,),
+              )
+            ]
           )
-        ]
-      )
+        );
+      },
+      selector: (context, theme) => theme.savedTheme,
     );
   }
 }
 
 class BottomBar extends StatelessWidget{
-  final AmiiboBloc _bloc = $Provider.of<AmiiboBloc>();
-  
   void _openFileExplorer(BuildContext context) async {
     final String _path = await FilePicker.getFilePath(type: FileType.ANY);
     bool _fileRead = false;
@@ -184,7 +183,7 @@ class BottomBar extends StatelessWidget{
         SnackBar(content: Text('This isn\'t an Amiibo List'))
       );
     else {
-      _bloc.refreshPagination();
+      Provider.of<AmiiboProvider>(context, listen: false).refreshPagination();
       Scaffold.of(context).showSnackBar(
         SnackBar(content: Text('Amiibo List updated'))
       );

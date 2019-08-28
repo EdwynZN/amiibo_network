@@ -10,15 +10,13 @@ class StatsPage extends StatefulWidget{
 }
 
 class _StatsPageState extends State<StatsPage> {
-  String _select = 'All';
+  Set<String> select = {};
 
   Future<List<Map<String, dynamic>>> get _retrieveStats
-    => StatsPage._service.fetchSum(all: _select == 'All',
-        group: true, column: 'type', name: _select);
+    => StatsPage._service.fetchSum(group: true, column: 'type', args: select.toList());
 
   Future<List<Map<String, dynamic>>> get _generalStats
-    => StatsPage._service.fetchSum(all: _select == 'All',
-        column: 'type', name: _select);
+    => StatsPage._service.fetchSum(column: 'type', args: select.toList());
 
   @override
   Widget build(BuildContext context) {
@@ -95,9 +93,11 @@ class _StatsPageState extends State<StatsPage> {
                 Expanded(
                   flex: 6,
                   child: FlatButton(
-                    color: _select == 'All' ?
-                      Theme.of(context).indicatorColor : Theme.of(context).backgroundColor,
-                    onPressed: () => _select == 'All' ? null : setState(() => _select = 'All'),
+                    color: select.isEmpty ?
+                      Theme.of(context).indicatorColor : Theme.of(context).cardColor,
+                    onPressed: () => select.isEmpty ? null : setState(() {
+                      select.clear();
+                    }),
                     child: Text('All'),
                   ),
                 ),
@@ -105,9 +105,12 @@ class _StatsPageState extends State<StatsPage> {
                 Expanded(
                   flex: 6,
                   child: FlatButton(
-                    color: _select == 'Figure' ?
-                      Theme.of(context).indicatorColor : Theme.of(context).backgroundColor,
-                    onPressed: () => _select == 'Figure' ? null : setState(() => _select = 'Figure'),
+                    color: select.contains('Figure') ?
+                      Theme.of(context).indicatorColor : Theme.of(context).cardColor,
+                    onPressed: () => select.contains('Figure') ? null : setState(() {
+                      select.clear();
+                      select = {'Figure', 'Yarn'};
+                    }),
                     child: Text('Figures'),
                   ),
                 ),
@@ -115,9 +118,12 @@ class _StatsPageState extends State<StatsPage> {
                 Expanded(
                   flex: 6,
                   child: FlatButton(
-                    color: _select == 'Card' ?
-                      Theme.of(context).indicatorColor : Theme.of(context).backgroundColor,
-                    onPressed: () => _select == 'Card' ? null : setState(() => _select = 'Card'),
+                    color: select.contains('Card') ?
+                      Theme.of(context).indicatorColor : Theme.of(context).cardColor,
+                    onPressed: () => select.contains('Card') ? null : setState(() {
+                      select.clear();
+                      select = {'Card'};
+                    }),
                     child: Text('Cards'),
                   ),
                 ),

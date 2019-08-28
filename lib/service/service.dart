@@ -27,8 +27,12 @@ class Service {
 
   Future<AmiiboLocalDB> fetchAllAmiiboDB(String orderBy) => dao.fetchAll(orderBy);
 
-  Future<List<Map<String,dynamic>>> fetchSum({String column, String name, bool all = false,
-    bool group = false}) => dao.fetchSum(column, name, all, group);
+  Future<List<Map<String,dynamic>>> fetchSum({String column, List<String> args,
+    bool group = false}) {
+    if(column == null || args == null || args.isEmpty) column = args = null;
+    //args = (args?.isEmpty ?? true) || column == null ? null : args;
+    return dao.fetchSum(column, args, group);
+  }
 
   Future<String> jsonFileDB() async {
     final AmiiboLocalDB amiibos = await dao.fetchAll();

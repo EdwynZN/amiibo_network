@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:amiibo_network/widget/switch_joycon.dart';
-import 'package:amiibo_network/bloc/splash_bloc.dart';
-import 'package:amiibo_network/bloc/bloc_provider.dart';
 import 'package:flutter/services.dart';
+import 'package:amiibo_network/service/service.dart';
 
 class SplashScreen extends StatefulWidget {
   @override
@@ -10,10 +9,16 @@ class SplashScreen extends StatefulWidget {
 }
 
 class SplashScreenState extends State<SplashScreen>
-      with SingleTickerProviderStateMixin {
+  with SingleTickerProviderStateMixin {
+  static final _service = Service();
   AnimationController _animationController;
-  double _size;
-  final SplashBloc _bloc = $Provider.of<SplashBloc>();
+
+  Future<bool> get updateDB async {
+    bool result = await _service.createDB();
+    await _animationController.forward().whenComplete(
+      () => _animationController.value = 0);
+    return result;
+  }
 
   @override
   void initState() {
@@ -23,26 +28,17 @@ class SplashScreenState extends State<SplashScreen>
       vsync: this,
       animationBehavior: AnimationBehavior.preserve)
     ..repeat();
-    _bloc.updateApp();
   }
 
   @override
   dispose(){
-    $Provider.dispose<SplashBloc>();
     _animationController.dispose();
     super.dispose();
   }
 
-  _completeAnimation() {
-    _animationController.forward().then((_) {
-      _animationController.value = 0;
-      _bloc.finishAnimation();
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
-    _size = MediaQuery.of(context).orientation == Orientation.portrait ?
+    double _size = MediaQuery.of(context).orientation == Orientation.portrait ?
       MediaQuery.of(context).size.height : MediaQuery.of(context).size.width;
     return SafeArea(
       child: Material(
@@ -50,7 +46,6 @@ class SplashScreenState extends State<SplashScreen>
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             SwitchIcon(controller: _animationController.view, height: _size),
             Container(
@@ -59,25 +54,28 @@ class SplashScreenState extends State<SplashScreen>
               width: _size/3,
               height: _size/4,
               alignment: Alignment.center,
-              child: StreamBuilder(
-                stream: _bloc.allAmiibosDB,
-                builder: (_, AsyncSnapshot<bool> snapshot) {
+              child: FutureBuilder<bool>(
+                future: updateDB,
+                builder: (context, snapshot){
+                  int key = 0;
                   Widget _child = const CircularProgressIndicator(backgroundColor: Colors.black);
                   String _text = "Just a second . . .";
-                  int _key = 1;
-                  if(snapshot.hasData && !_animationController.isAnimating){
-                    _animationController.forward().whenCompleteOrCancel(
-                      () => Future.delayed(const Duration(milliseconds: 500))
-                      .then((_) => Navigator.pushReplacementNamed(context, '/home')));
+                  if(snapshot.hasData){
+                    key = 1;
+                    _text = snapshot.data ? 'WELCOME' : 'Couldn\'t Update 😢';
                     _child = Image.asset('assets/images/icon_app.png', fit: BoxFit.fitWidth);
-                    _text = snapshot.data ? "WELCOME" : "Couldn't Update :(";
-                    _key = 2;
+                    _animationController.forward().whenCompleteOrCancel(
+                    () => Future.delayed(const Duration(milliseconds: 500),
+                    () => Navigator.pushReplacementNamed(context, '/home')));
                   }
-                  else if(snapshot.hasData) _completeAnimation();
                   return AnimatedSwitcher(duration: const Duration(seconds: 3),
                     switchOutCurve: Curves.easeOutBack,
                     switchInCurve: Curves.easeInExpo,
-                    child: ScreenAnimation(key: ValueKey<int>(_key), child: _child, text: _text)
+                    child: ScreenAnimation(
+                      key: ValueKey<int>(key),
+                      child: _child,
+                      text: _text
+                    )
                   );
                 }
               ),
@@ -133,7 +131,7 @@ class SwitchIcon extends StatelessWidget{
       child: CustomPaint(
         size: Size(height/11.3, height/4),
         painter: SwitchJoycon(isLeft: isLeft,
-        color: MediaQuery.platformBrightnessOf(context) == Brightness.light ?
+        color: Theme.of(context).brightness == Brightness.light ?
           null : Theme.of(context).primaryColor)
       ),
       builder: (_, Widget child) {

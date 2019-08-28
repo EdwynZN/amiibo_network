@@ -9,7 +9,7 @@ class AmiiboSQLite implements Dao<AmiiboLocalDB, String, AmiiboDB>{
   Future<AmiiboLocalDB> fetchAll([String orderBy = 'na']) async{
     Database _db = await connectionFactory.database;
     List<Map<String, dynamic>> maps = await _db.query('amiibo',
-      orderBy: '$orderBy DESC');
+      orderBy: orderBy);
     return entityFromList(maps);
   }
   /*
@@ -77,12 +77,12 @@ class AmiiboSQLite implements Dao<AmiiboLocalDB, String, AmiiboDB>{
     List<Map<String, dynamic>> maps = await _db.query('amiibo',
       where: '$column LIKE ?',
       whereArgs: [name],
-      orderBy: '$orderBy DESC');
+      orderBy: orderBy);
     return entityFromList(maps);
   }
 
-  Future<List<Map<String, dynamic>>> fetchSum(String column, String name,
-    bool all, bool group) async{
+  /*Future<List<Map<String, dynamic>>> fetchSum(String column, String name,
+      bool all, bool group) async{
     Database _db = await connectionFactory.database;
     List<Map<String,dynamic>> result = await _db.query('amiibo',
         columns: [
@@ -91,9 +91,26 @@ class AmiiboSQLite implements Dao<AmiiboLocalDB, String, AmiiboDB>{
           'count(case WHEN wishlist=1 then 1 end) AS Wished',
           'count(case WHEN owned=1 then 1 end) AS Owned'
         ],
-        where: all ? null : '$column LIKE ?',
+        where: all ? null : '$column LIKE ',
         whereArgs: all ? null : [name],
         groupBy: group ? 'amiiboSeries' : null
+    );
+    return result;
+  }*/
+
+  Future<List<Map<String, dynamic>>> fetchSum(String column,
+      List<String> name, bool group) async{
+    Database _db = await connectionFactory.database;
+    List<Map<String,dynamic>> result = await _db.query('amiibo',
+      columns: [
+        if(group) 'amiiboSeries',
+        'count(1) AS Total',
+        'count(case WHEN wishlist=1 then 1 end) AS Wished',
+        'count(case WHEN owned=1 then 1 end) AS Owned'
+      ],
+      where: name?.skip(1)?.fold<String>('$column LIKE ?', (curr, next) => curr + ' OR $column LIKE ?'),
+      whereArgs: name,
+      groupBy: group ? 'amiiboSeries' : null
     );
     return result;
   }
