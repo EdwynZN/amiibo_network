@@ -1,17 +1,31 @@
 import 'package:flutter/material.dart';
 import 'package:amiibo_network/provider/search_provider.dart';
+import 'package:provider/provider.dart';
+import 'package:amiibo_network/provider/amiibo_provider.dart';
+import 'package:flutter/services.dart';
 
 class SearchScreen extends StatefulWidget {
   @override
   State<StatefulWidget> createState() => SearchScreenState();
 }
 
-class SearchScreenState extends State<SearchScreen> {
+class SearchScreenState extends State<SearchScreen>
+    with SingleTickerProviderStateMixin{
   SearchProvider _search = SearchProvider();
+  AnimationController _animationController;
+
+  @override
+  void initState() {
+    super.initState();
+    _animationController = AnimationController(
+      duration: const Duration(milliseconds: 300),
+      vsync: this)..value = 0.0..forward();
+  }
 
   @override
   dispose() {
     _search.dispose();
+    _animationController.dispose();
     super.dispose();
   }
 
@@ -33,19 +47,23 @@ class SearchScreenState extends State<SearchScreen> {
                   ),
                 ),
                 child: SliverAppBar(
-                  leading: IconButton(
-                    icon: const Icon(Icons.arrow_back),
-                    onPressed: Navigator.of(context).pop),
+                  leading: BackButton(),
                   pinned: true,
+                  titleSpacing: 12,
                   title: TextField(
                     style: Theme.of(context).textTheme.body2,
-                    maxLength: 15,
+                    inputFormatters: [LengthLimitingTextInputFormatter(15)],
                     textInputAction: TextInputAction.search,
                     autofocus: true,
                     onSubmitted: Navigator.of(context).pop,
                     onChanged: _search.searchValue,
                     autocorrect: false,
-                    decoration: null,
+                    decoration: InputDecoration.collapsed(
+                      hintText: Provider.of<AmiiboProvider>(context).strFilter,
+                      hintStyle: Theme.of(context).textTheme.title.copyWith(
+                        color: Theme.of(context).textTheme.title.color.withOpacity(0.5)
+                      ),
+                    ),
                   ),
                 ),
               ),

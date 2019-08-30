@@ -42,7 +42,7 @@ class Themes {
       subhead: TextStyle(color: const Color(0xFFB2B2B2), fontSize: 16, fontWeight: FontWeight.w400),
     ),
     bottomAppBarTheme: BottomAppBarTheme(
-      color: Colors.grey[900],
+      color: Colors.transparent,
       elevation: 0.0
     ),
     dialogTheme: DialogTheme(
@@ -77,7 +77,7 @@ class Themes {
       height: 48
     ),
     toggleableActiveColor: const Color.fromRGBO(207, 102, 121, 1),
-    cardColor: Colors.grey[850]
+    buttonColor: Colors.grey[850],
   );
   static final _light = ThemeData(
     primaryColorDark: Colors.redAccent,
@@ -107,11 +107,11 @@ class Themes {
     primaryColor: Colors.red,
     cursorColor: Colors.black12,
     backgroundColor: const Color(0xFFE8C2BF), //Colors.white70,
-    highlightColor: Colors.white54,
+    highlightColor: Colors.white70,
     selectedRowColor: const Color.fromRGBO(100, 181, 246, 0.5),
     cardTheme: CardTheme(
       color: Colors.white70,
-      margin: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+      margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
       elevation: 8,
     ),
@@ -124,7 +124,7 @@ class Themes {
       subhead: TextStyle(color: Colors.black87, fontSize: 16, fontWeight: FontWeight.w400),
     ),
     bottomAppBarTheme: BottomAppBarTheme(
-      color: Colors.white70,
+      color: Colors.transparent,
       elevation: 0.0
     ),
     dialogTheme: DialogTheme(
@@ -151,14 +151,14 @@ class Themes {
       textTheme: ButtonTextTheme.normal,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
       layoutBehavior: ButtonBarLayoutBehavior.constrained,
-      buttonColor: Colors.white70,
+      buttonColor: const Color(0xFFE8C2BF), //Colors.white70,
       materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
       height: 48,
       highlightColor: Colors.white54
     ),
     toggleableActiveColor: Colors.redAccent,
-    indicatorColor: const Color.fromRGBO(100, 181, 246, 0.5),
-    cardColor: Colors.white70,
+    indicatorColor: const Color.fromRGBO(178, 218, 251, 1),
+    buttonColor: const Color(0xFFE8C2BF),
   );
 
   static ThemeData get light => _light;

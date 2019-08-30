@@ -57,10 +57,12 @@ class AnimatedRadial extends ImplicitlyAnimatedWidget {
 
 class _AnimatedRadialState extends AnimatedWidgetBaseState<AnimatedRadial> {
   Tween<double> _percentage;
+  Tween<double> _opacity;
 
   @override
   void forEachTween(TweenVisitor visitor) {
     _percentage = visitor(_percentage, widget.percentage, (dynamic value) => Tween<double>(begin: value));
+    _opacity = visitor(_opacity, widget.percentage == 1 ? 1.0 : 0.0, (dynamic value) => Tween<double>(begin: value));
   }
 
   @override
@@ -69,10 +71,10 @@ class _AnimatedRadialState extends AnimatedWidgetBaseState<AnimatedRadial> {
       painter: RadialProgression(_percentage.evaluate(animation)),
       isComplex: true,
       willChange: true,
-      child: AnimatedSwitcher(
-        duration: widget.duration,
-        child: _percentage.evaluate(animation) == 1 ? widget.child : const SizedBox(width: 24, height: 24),
-      ),
+      child: Opacity(
+        opacity: _opacity.evaluate(animation),
+        child: widget.child,
+      )
     );
   }
 }

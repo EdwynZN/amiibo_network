@@ -7,6 +7,7 @@ import 'package:amiibo_network/data/database.dart';
 import 'package:flutter/rendering.dart';
 import 'package:amiibo_network/widget/radial_progression.dart';
 import 'package:amiibo_network/widget/drawer.dart';
+import 'package:amiibo_network/widget/animated_widgets.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -27,6 +28,11 @@ class HomePageState extends State<HomePage>
     );
   }
 
+  void _restartAnimation(){
+    _controller.jumpTo(0);
+    _animationController.forward();
+  }
+
   void _updateSelection({int wished = 0, int owned = 0}) async {
     AmiiboProvider selected = Provider.of<AmiiboProvider>(context, listen: false);
     AmiiboLocalDB amiibos = AmiiboLocalDB(amiibo: List<AmiiboDB>.of(
@@ -38,15 +44,14 @@ class HomePageState extends State<HomePage>
     await selected.refreshPagination();
   }
 
-  void  _cancelSelection(){
+  void _cancelSelection(){
     AmiiboProvider selected = Provider.of<AmiiboProvider>(context, listen: false);
     selected.clearSelected();
     selected.notifyWidgets();
   }
 
-  void initBloc() async{
+  void initBloc() async =>
     await Provider.of<AmiiboProvider>(context, listen: false).fetchAllAmiibosDB();
-  }
 
   @override
   void initState(){
@@ -82,19 +87,17 @@ class HomePageState extends State<HomePage>
     }
   }
 
-  void _search() {
-    Navigator.pushNamed(context,"/search").then((value) {
-      if(value != null && value != '') {
-        Provider.of<AmiiboProvider>(context, listen: false)
-          .resetPagination(value, search: true);
-        _controller.position.jumpTo(0);
-        _animationController.forward();
-      }
-    });
+  void _search() async{
+    var value = await Navigator.pushNamed(context,"/search");
+    if(value != null && value != '') {
+      Provider.of<AmiiboProvider>(context, listen: false)
+        .resetPagination(value, search: true);
+      _restartAnimation();
+    }
   }
 
   Future<bool> _exitApp() async{
-    AmiiboProvider selected = Provider.of<AmiiboProvider>(context, listen: false);
+    final AmiiboProvider selected = Provider.of<AmiiboProvider>(context, listen: false);
     if(selected.multipleSelected){
       selected.clearSelected();
       selected.notifyWidgets();
@@ -122,140 +125,131 @@ class HomePageState extends State<HomePage>
           builder: (_, _multipleSelection, child){
             return Scaffold(
               resizeToAvoidBottomInset: false,
-              drawer: _multipleSelection ? null : CollectionDrawer(),
-              body: CustomScrollView(
-                controller: _controller,
-                slivers: <Widget>[
-                  SliverPadding(
-                    padding: const EdgeInsets.symmetric(horizontal: 12),
-                    sliver: Theme(
-                      data: Theme.of(context).copyWith(
-                        appBarTheme: AppBarTheme(
-                          color: Theme.of(context).backgroundColor,
-                          iconTheme: Theme.of(context).iconTheme,
-                          actionsIconTheme: Theme.of(context).iconTheme,
-                          textTheme: Theme.of(context).textTheme,
+              drawer: _multipleSelection ? null : CollectionDrawer(restart: _restartAnimation,),
+              body: Scrollbar(
+                child: CustomScrollView(
+                  controller: _controller,
+                  slivers: <Widget>[
+                    SliverPadding(
+                      padding: const EdgeInsets.symmetric(horizontal: 12),
+                      sliver: Theme(
+                        data: Theme.of(context).copyWith(
+                          appBarTheme: AppBarTheme(
+                            color: Theme.of(context).backgroundColor,
+                            iconTheme: Theme.of(context).iconTheme,
+                            actionsIconTheme: Theme.of(context).iconTheme,
+                            textTheme: Theme.of(context).textTheme,
+                          ),
                         ),
-                      ),
-                      child: SliverAppBar(
-                        floating: true,
-                        snap: true,
-                        leading: Builder(
-                          builder: (context) => IconButton(
-                            icon: ImplicitIcon(close: _multipleSelection,),
-                            tooltip: _multipleSelection ? 'close' : 'drawer',
-                            onPressed: _multipleSelection ? _cancelSelection : () => Scaffold.of(context).openDrawer(),
-                          )
-                        ),
-                        titleSpacing: 0,
-                        title: InkResponse(
-                          containedInkWell: true,
-                          highlightColor: Colors.transparent,
-                          splashColor: Colors.white12,
-                          child: Selector<AmiiboProvider, String>(
-                            selector: (context, text) => text.strFilter,
-                            builder: (context, text, _) {
-                              return Tooltip(
-                                message: '${num.tryParse(text) == null ?
+                        child: SliverAppBar(
+                          floating: true,
+                          snap: true,
+                          leading: Builder(
+                            builder: (context) => IconButton(
+                              icon: ImplicitIcon(forward: _multipleSelection),
+                              tooltip: _multipleSelection ? 'close' : 'drawer',
+                              onPressed: _multipleSelection ? _cancelSelection : () => Scaffold.of(context).openDrawer(),
+                            )
+                          ),
+                          titleSpacing: 0,
+                          title: InkResponse(
+                            containedInkWell: true,
+                            highlightColor: Colors.transparent,
+                            splashColor: Colors.white12,
+                            child: Selector<AmiiboProvider, String>(
+                              selector: (context, text) => text.strFilter,
+                              builder: (context, text, _) {
+                                return Tooltip(
+                                  message: '${num.tryParse(text) == null ?
                                   'Search Amiibo' : '$text Selected' }',
-                                child: Container(
-                                  padding: const EdgeInsets.symmetric(horizontal: 12),
-                                  alignment: Alignment.centerLeft,
-                                  width: double.infinity,
-                                  child: Text(text ?? '',
-                                  softWrap: false, overflow: TextOverflow.fade, maxLines: 1)
-                                )
-                              );
-                            },
-                          ),
-                          onTap: _multipleSelection ? null : _search
-                        ),
-                        actions: <Widget>[
-                          AnimatedSwitcher(
-                            duration: const Duration(milliseconds: 250),
-                            layoutBuilder: _defaultLayoutBuilder,
-                            child: _multipleSelection ? Row(
-                              mainAxisSize: MainAxisSize.min,
-                              mainAxisAlignment: MainAxisAlignment.end,
-                              children: <Widget>[
-                                IconButton(
-                                  icon: Icon(Icons.remove),
-                                  onPressed: _updateSelection,
-                                  tooltip: 'Remove',
-                                ),
-                                IconButton(
-                                  icon: Icon(Icons.star),
-                                  onPressed: () => _updateSelection(owned: 1),
-                                  tooltip: 'Own',
-                                ),
-                                IconButton(
-                                  icon: Icon(Icons.card_giftcard),
-                                  onPressed: () => _updateSelection(wished: 1),
-                                  tooltip: 'Wish',
-                                ),
-                              ],
-                            ) : _SortCollection(),
-                          )
-                        ],
-                      ),
-                    ),
-                  ),
-                  child,
-                  SliverPadding(
-                    padding: const EdgeInsets.symmetric(horizontal: 6),
-                    sliver: Selector<AmiiboProvider, AmiiboLocalDB>(
-                      child: const SliverToBoxAdapter(
-                        child: const Align(alignment: Alignment.center, heightFactor: 10,
-                          child: const Text('Nothing to see here',
-                            textAlign: TextAlign.center,
-                          )
-                        )
-                      ),
-                      selector: (context, amiibo) => amiibo.amiibosDB,
-                      builder: (context, data, child){
-                        if((data?.amiibo?.length ?? 1) == 0)
-                          return DefaultTextStyle(
-                            style: Theme.of(context).textTheme.display1,
-                            child: child,
-                          );
-                        else return SliverGrid(
-                          gridDelegate: MediaQuery.of(context).size.width >= 600 ?
-                          SliverGridDelegateWithMaxCrossAxisExtent(
-                            maxCrossAxisExtent: 200,
-                            mainAxisSpacing: 8.0,
-                          ) :
-                          SliverGridDelegateWithFixedCrossAxisCount(
-                              crossAxisCount: 3,
-                              mainAxisSpacing: 8.0
-                          ),
-                          delegate: SliverChildBuilderDelegate((BuildContext context, int index) {
-                            return AnimatedSwitcher(
-                              duration: const Duration(milliseconds: 500),
-                              transitionBuilder: (child, animation){
-                                return SlideTransition(
-                                  position: Tween<Offset>(
-                                    begin: Offset(0.0, 1.1),
-                                    end: Offset.zero).animate(animation),
-                                  child: FadeTransition(
-                                    opacity: animation,
-                                    child: child,
+                                  child: Container(
+                                    padding: const EdgeInsets.symmetric(horizontal: 12),
+                                    alignment: Alignment.centerLeft,
+                                    width: double.infinity,
+                                    child: Text(text ?? '',
+                                      softWrap: false, overflow: TextOverflow.fade, maxLines: 1)
                                   )
                                 );
                               },
-                              child: AmiiboGrid(
-                                key: ValueKey<int>(data?.amiibo[index].key),
-                                amiibo: data?.amiibo[index],
-                              ),
-                            );
-                          },
-                            addRepaintBoundaries: false, addAutomaticKeepAlives: false,
-                            childCount: data?.amiibo != null ? data?.amiibo?.length : 0,
+                            ),
+                            onTap: _multipleSelection ? null : _search
+                          ),
+                          actions: <Widget>[
+                            AnimatedSwitcher(
+                              duration: const Duration(milliseconds: 250),
+                              layoutBuilder: _defaultLayoutBuilder,
+                              child: _multipleSelection ? Row(
+                                mainAxisSize: MainAxisSize.min,
+                                mainAxisAlignment: MainAxisAlignment.end,
+                                children: <Widget>[
+                                  IconButton(
+                                    icon: Icon(Icons.remove),
+                                    onPressed: _updateSelection,
+                                    tooltip: 'Remove',
+                                  ),
+                                  IconButton(
+                                    icon: Icon(Icons.star),
+                                    onPressed: () => _updateSelection(owned: 1),
+                                    tooltip: 'Own',
+                                  ),
+                                  IconButton(
+                                    icon: Icon(Icons.card_giftcard),
+                                    onPressed: () => _updateSelection(wished: 1),
+                                    tooltip: 'Wish',
+                                  ),
+                                ],
+                              ) : _SortCollection(),
+                            )
+                          ],
+                        ),
+                      ),
+                    ),
+                    child,
+                    SliverPadding(
+                      padding: const EdgeInsets.symmetric(horizontal: 6),
+                      sliver: Selector<AmiiboProvider, AmiiboLocalDB>(
+                        child: const SliverToBoxAdapter(
+                          child: const Align(alignment: Alignment.center, heightFactor: 10,
+                            child: const Text('Nothing to see here',
+                              textAlign: TextAlign.center,
+                            )
                           )
-                        );
-                      },
-                    )
-                  ),
-                ],
+                        ),
+                        selector: (context, amiibo) => amiibo.amiibosDB,
+                        builder: (context, data, child){
+                          if((data?.amiibo?.length ?? 1) == 0)
+                            return DefaultTextStyle(
+                              style: Theme.of(context).textTheme.display1,
+                              child: child,
+                            );
+                          else return SliverGrid(
+                            gridDelegate: MediaQuery.of(context).size.width >= 600 ?
+                            SliverGridDelegateWithMaxCrossAxisExtent(
+                              maxCrossAxisExtent: 200,
+                              mainAxisSpacing: 8.0,
+                            ) :
+                            SliverGridDelegateWithFixedCrossAxisCount(
+                                crossAxisCount: 3,
+                                mainAxisSpacing: 8.0
+                            ),
+                            delegate: SliverChildBuilderDelegate((BuildContext context, int index) {
+                              return FadeSwitchAnimation(
+                                key: ValueKey<int>(index),
+                                child: AmiiboGrid(
+                                  key: ValueKey<int>(data?.amiibo[index].key),
+                                  amiibo: data?.amiibo[index],
+                                ),
+                              );
+                            },
+                              addRepaintBoundaries: false, addAutomaticKeepAlives: false,
+                              childCount: data?.amiibo != null ? data?.amiibo?.length : 0,
+                            )
+                          );
+                        },
+                      )
+                    ),
+                  ],
+                )
               ),
               floatingActionButton: FAB(_animationController, () => _controller.jumpTo(0)),
             );
@@ -318,7 +312,7 @@ class _SliverPersistentHeader extends SliverPersistentHeaderDelegate {
                       percentage:
                       statList.data['Wished'].toDouble()
                           / statList.data['Total'].toDouble(),
-                      child: const Icon(Icons.check, color: Colors.green),
+                      child: const Icon(Icons.whatshot, color: Colors.amber),
                     ),
                   label: FittedBox(
                     fit: BoxFit.contain,
@@ -346,37 +340,6 @@ class _SliverPersistentHeader extends SliverPersistentHeaderDelegate {
 
   @override
   bool shouldRebuild(SliverPersistentHeaderDelegate oldDelegate) => true;
-}
-
-class ImplicitIcon extends ImplicitlyAnimatedWidget{
-  final bool close;
-
-  ImplicitIcon({
-    Key key,
-    this.close,
-    Duration duration = const Duration(milliseconds: 250),
-    Curve curve = Curves.linear
-  }) : super(key : key, duration: duration, curve: curve);
-
-  @override
-  ImplicitlyAnimatedWidgetState<ImplicitlyAnimatedWidget> createState() => _ImplicitRadialState();
-}
-
-class _ImplicitRadialState extends AnimatedWidgetBaseState<ImplicitIcon> {
-  Tween<double> _percentage;
-
-  @override
-  void forEachTween(TweenVisitor visitor) {
-    _percentage = visitor(_percentage, widget.close ? 1.0 : 0.0, (dynamic value) => Tween<double>(begin: value));
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return AnimatedIcon(
-      icon: AnimatedIcons.menu_close,
-      progress: _percentage.animate(animation),
-    );
-  }
 }
 
 class _SortCollection extends StatefulWidget{
@@ -627,7 +590,7 @@ class AmiiboGridState extends State<AmiiboGrid> {
       child: GestureDetector(
         onDoubleTap: _multipleSelected ? null : _onDoubleTap,
         onTap: _multipleSelected ? _onLongPress : _onTap,
-        onLongPress: _multipleSelected ? null : _onLongPress,
+        onLongPress: _onLongPress,
         child: Stack(
           children: <Widget>[
             Card(
@@ -638,10 +601,11 @@ class AmiiboGridState extends State<AmiiboGrid> {
                 children: <Widget>[
                   Expanded(
                     child: Hero(
-                      tag: widget.amiibo.key,
-                      child: Image.asset('assets/collection/icon_${widget.amiibo.key}.png',
-                        fit: BoxFit.scaleDown,
-                      )
+                        transitionOnUserGestures: true,
+                        tag: widget.amiibo.key,
+                        child: Image.asset('assets/collection/icon_${widget.amiibo.key}.png',
+                          fit: BoxFit.scaleDown,
+                        )
                     ),
                     flex: 9,
                   ),
@@ -666,13 +630,13 @@ class AmiiboGridState extends State<AmiiboGrid> {
             Positioned(
               top: 4, left: 8,
               child: AnimatedSwitcher(
-                duration: const Duration(milliseconds: 200),
-                switchInCurve: Curves.easeInToLinear,
-                switchOutCurve: Curves.easeOutCirc,
-                transitionBuilder: (Widget child, Animation <double> animation)
-                => ScaleTransition(scale: animation, child: child,),
-                child: _widget
-            ),
+                  duration: const Duration(milliseconds: 200),
+                  switchInCurve: Curves.easeInToLinear,
+                  switchOutCurve: Curves.easeOutCirc,
+                  transitionBuilder: (Widget child, Animation <double> animation)
+                  => ScaleTransition(scale: animation, child: child,),
+                  child: _widget
+              ),
             ),
           ],
         ),

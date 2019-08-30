@@ -5,7 +5,9 @@ import 'package:amiibo_network/provider/theme_provider.dart';
 import 'package:amiibo_network/provider/amiibo_provider.dart';
 
 class CollectionDrawer extends StatefulWidget{
-  CollectionDrawer({Key key}) : super(key: key);
+  final VoidCallback restart;
+
+  CollectionDrawer({Key key, this.restart}) : super(key: key);
 
   @override
   _CollectionDrawerState createState() => _CollectionDrawerState();
@@ -22,9 +24,12 @@ class _CollectionDrawerState extends State<CollectionDrawer> {
   void figureExpand(bool x) => _figureExpand = x;
   void cardExpand(bool x) => _cardExpand = x;
 
-  void _onTapTile(BuildContext context, String tile){
-    if(Provider.of<AmiiboProvider>(context, listen: false).strFilter != tile)
-      Provider.of<AmiiboProvider>(context, listen: false).resetPagination(tile);
+  void _onTapTile(String tile){
+    AmiiboProvider provider = Provider.of<AmiiboProvider>(context, listen: false);
+    if(provider.strFilter != tile) {
+      provider.resetPagination(tile);
+      widget.restart();
+    }
     Navigator.pop(context);
   }
 
@@ -40,11 +45,7 @@ class _CollectionDrawerState extends State<CollectionDrawer> {
           mainAxisAlignment: MainAxisAlignment.end,
           children: <Widget>[
             Expanded(
-              child: Theme(
-                data: Theme.of(context).copyWith(
-                  highlightColor: Theme.of(context).accentColor,
-                ),
-                child: Scrollbar(
+              child: Scrollbar(
                   child: Selector<AmiiboProvider, String>(
                     builder: (context, _selected, child) {
                       return CustomScrollView(
@@ -53,19 +54,19 @@ class _CollectionDrawerState extends State<CollectionDrawer> {
                             delegate: SliverChildListDelegate([
                               child,
                               ListTile(
-                                onTap: () => _onTapTile(context, 'All'),
+                                onTap: () => _onTapTile('All'),
                                 leading: const Icon(Icons.all_inclusive),
                                 title: Text('All',),
                                 selected: _selected == 'All',
                               ),
                               ListTile(
-                                onTap: () => _onTapTile(context, 'Owned'),
+                                onTap: () => _onTapTile('Owned'),
                                 leading: const Icon(Icons.star),
                                 title: Text('Owned'),
                                 selected: _selected == 'Owned',
                               ),
                               ListTile(
-                                onTap: () => _onTapTile(context, 'Wishlist'),
+                                onTap: () => _onTapTile('Wishlist'),
                                 leading: const Icon(Icons.card_giftcard),
                                 title: Text('Wishlist'),
                                 selected: _selected == 'Wishlist',
@@ -80,36 +81,36 @@ class _CollectionDrawerState extends State<CollectionDrawer> {
                                 selected: _selected == 'Stats',
                               ),
                               FutureBuilder(
-                                future: _listOfFigures,
-                                builder: (context, AsyncSnapshot<List<String>> snapshot) {
-                                  return Theme(
-                                    data: Theme.of(context).copyWith(
-                                      dividerColor: Colors.transparent,
-                                      accentColor: Theme.of(context).textTheme.subhead.color,
-                                    ),
-                                    child: ExpansionTile(
-                                      leading: const Icon(Icons.toys),
-                                      title: Text('Figures'),
-                                      initiallyExpanded: _figureExpand,
-                                      onExpansionChanged: figureExpand,
-                                      children: <Widget>[
-                                        if(snapshot.hasData)
-                                          for(String series in snapshot.data)
-                                            ListTile(
-                                              leading: CircleAvatar(
-                                                backgroundColor: Theme.of(context).accentColor,
-                                                foregroundColor: Theme.of(context).accentIconTheme.color,
-                                                radius: 12,
-                                                child: Text(series[0]),
-                                              ),
-                                              title: Text(series),
-                                              onTap: () => _onTapTile(context, series),
-                                              selected: _selected == series,
-                                            ),
-                                      ],
-                                    )
-                                  );
-                                }
+                                  future: _listOfFigures,
+                                  builder: (context, AsyncSnapshot<List<String>> snapshot) {
+                                    return Theme(
+                                        data: Theme.of(context).copyWith(
+                                          dividerColor: Colors.transparent,
+                                          accentColor: Theme.of(context).textTheme.subhead.color,
+                                        ),
+                                        child: ExpansionTile(
+                                          leading: const Icon(Icons.toys),
+                                          title: Text('Figures'),
+                                          initiallyExpanded: _figureExpand,
+                                          onExpansionChanged: figureExpand,
+                                          children: <Widget>[
+                                            if(snapshot.hasData)
+                                              for(String series in snapshot.data)
+                                                ListTile(
+                                                  leading: CircleAvatar(
+                                                    backgroundColor: Theme.of(context).accentColor,
+                                                    foregroundColor: Theme.of(context).accentIconTheme.color,
+                                                    radius: 12,
+                                                    child: Text(series[0]),
+                                                  ),
+                                                  title: Text(series),
+                                                  onTap: () => _onTapTile(series),
+                                                  selected: _selected == series,
+                                                ),
+                                          ],
+                                        )
+                                    );
+                                  }
                               ),
                               FutureBuilder(
                                   future: _listOfCards,
@@ -135,7 +136,7 @@ class _CollectionDrawerState extends State<CollectionDrawer> {
                                                     child: Text(series[0]),
                                                   ),
                                                   title: Text(series),
-                                                  onTap: () => _onTapTile(context, series),
+                                                  onTap: () => _onTapTile(series),
                                                   selected: _selected == series,
                                                 ),
                                           ],
@@ -151,11 +152,11 @@ class _CollectionDrawerState extends State<CollectionDrawer> {
                     selector: (context, filter) => filter.strFilter,
                     child: _HeaderDrawer(),
                   )
-                )
-              ),
+              )
             ),
             const Divider(height: 1.0),
             ListTile(
+              dense: true,
               onTap: () {
                 Navigator.pop(context);
                 Navigator.pushNamed(context,"/settings");
@@ -204,9 +205,13 @@ class ThemeButton extends StatelessWidget{
       builder: (context, strTheme, _) {
         return InkResponse(
           radius: 18,
+          splashFactory: InkRipple.splashFactory,
           highlightColor: Colors.transparent,
-          splashColor: Theme.of(context).unselectedWidgetColor,
-          child: _selectWidget(strTheme),
+          splashColor: Theme.of(context).primaryColorDark,
+          child: Tooltip(
+            message: '$strTheme Theme',
+            child: _selectWidget(strTheme),
+          ),
           onTap: () => changeTheme(context, strTheme),
         );
       },

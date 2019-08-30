@@ -10,7 +10,14 @@ class StatsPage extends StatefulWidget{
 }
 
 class _StatsPageState extends State<StatsPage> {
+  ScrollController _controller;
   Set<String> select = {};
+
+  @override
+  void initState(){
+    super.initState();
+    _controller = ScrollController();
+  }
 
   Future<List<Map<String, dynamic>>> get _retrieveStats
     => StatsPage._service.fetchSum(group: true, column: 'type', args: select.toList());
@@ -19,11 +26,18 @@ class _StatsPageState extends State<StatsPage> {
     => StatsPage._service.fetchSum(column: 'type', args: select.toList());
 
   @override
+  void dispose() {
+    _controller?.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
         body: Scrollbar(
           child: CustomScrollView(
+            controller: _controller,
             slivers: <Widget>[
               FutureBuilder(
                 future: _generalStats,
@@ -85,7 +99,7 @@ class _StatsPageState extends State<StatsPage> {
         ),
         bottomNavigationBar: BottomAppBar(
           child: Padding(
-            padding: EdgeInsets.symmetric(horizontal: 12, vertical: 12),
+            padding: EdgeInsets.symmetric(horizontal: 12, vertical: 6),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               mainAxisSize: MainAxisSize.min,
@@ -93,10 +107,13 @@ class _StatsPageState extends State<StatsPage> {
                 Expanded(
                   flex: 6,
                   child: FlatButton(
+                    textColor: Theme.of(context).textTheme.title.color,
                     color: select.isEmpty ?
-                      Theme.of(context).indicatorColor : Theme.of(context).cardColor,
+                      Theme.of(context).indicatorColor : Theme.of(context).buttonColor,
                     onPressed: () => select.isEmpty ? null : setState(() {
                       select.clear();
+                      if(_controller.offset != _controller.initialScrollOffset)
+                        _controller.jumpTo(0);
                     }),
                     child: Text('All'),
                   ),
@@ -105,11 +122,14 @@ class _StatsPageState extends State<StatsPage> {
                 Expanded(
                   flex: 6,
                   child: FlatButton(
+                    textColor: Theme.of(context).textTheme.title.color,
                     color: select.contains('Figure') ?
-                      Theme.of(context).indicatorColor : Theme.of(context).cardColor,
+                    Theme.of(context).indicatorColor : Theme.of(context).buttonColor,
                     onPressed: () => select.contains('Figure') ? null : setState(() {
                       select.clear();
                       select = {'Figure', 'Yarn'};
+                      if(_controller.offset != _controller.initialScrollOffset)
+                        _controller.jumpTo(0);
                     }),
                     child: Text('Figures'),
                   ),
@@ -118,11 +138,14 @@ class _StatsPageState extends State<StatsPage> {
                 Expanded(
                   flex: 6,
                   child: FlatButton(
+                    textColor: Theme.of(context).textTheme.title.color,
                     color: select.contains('Card') ?
-                      Theme.of(context).indicatorColor : Theme.of(context).cardColor,
+                    Theme.of(context).indicatorColor : Theme.of(context).buttonColor,
                     onPressed: () => select.contains('Card') ? null : setState(() {
                       select.clear();
                       select = {'Card'};
+                      if(_controller.offset != _controller.initialScrollOffset)
+                        _controller.jumpTo(0);
                     }),
                     child: Text('Cards'),
                   ),

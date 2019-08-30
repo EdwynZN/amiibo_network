@@ -224,37 +224,6 @@ class BottomBar extends StatelessWidget{
     return await permissionGranted;
   }
 
-  Future<void> _exportDialog(BuildContext context) async {
-    return showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text('Save your amiibos'),
-          titlePadding: EdgeInsets.all(12),
-          contentPadding: EdgeInsets.symmetric(horizontal: 12),
-          content: ClipRect(
-            clipBehavior: Clip.hardEdge,
-            child: SizedBox(
-              child: TextField(
-                textInputAction: TextInputAction.done,
-                maxLength: 15,
-                autocorrect: false,
-                autofocus: true,
-                decoration: InputDecoration(labelText: 'Name of the File'),
-              ),
-            ),
-          ),
-          actions: <Widget>[
-            FlatButton(
-              child: Text('Save'),
-              onPressed: Navigator.of(context).pop,
-            ),
-          ],
-        );
-      }
-    );
-  }
-
   _requestWritePermission(BuildContext context) async {
     await PermissionHandler().requestPermissions([PermissionGroup.storage]);
     if(await _checkPermission(context))
@@ -271,44 +240,30 @@ class BottomBar extends StatelessWidget{
     return BottomAppBar(
       child: Row(
         mainAxisSize: MainAxisSize.min,
+        mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
-          ExpandedIconButton(icon: Icons.file_upload, text: 'Export',
-            onTap: () => _requestWritePermission(context)
+          Expanded(
+            child: FlatButton.icon(
+              color: Theme.of(context).buttonColor,
+              shape: BeveledRectangleBorder(),
+              textColor: Theme.of(context).textTheme.title.color,
+              onPressed: () => _requestWritePermission(context),
+              icon: const Icon(Icons.file_upload),
+              label: Text('Export')
+            ),
           ),
-          const SizedBox(height: 35, child: const VerticalDivider(width: 1)),
-          ExpandedIconButton(icon: Icons.file_download, text: 'Import',
-            onTap: () => _openFileExplorer(context),
+          const Padding(padding: const EdgeInsets.symmetric(horizontal: 0.5)),
+          Expanded(
+            child: FlatButton.icon(
+              color: Theme.of(context).buttonColor,
+              shape: BeveledRectangleBorder(),
+              textColor: Theme.of(context).textTheme.title.color,
+              onPressed: () => _openFileExplorer(context),
+              icon: const Icon(Icons.file_download),
+              label: Text('Import')
+            ),
           )
         ],
-      ),
-    );
-  }
-}
-
-class ExpandedIconButton extends StatelessWidget{
-  final IconData icon;
-  final String text;
-  final VoidCallback onTap;
-
-  const ExpandedIconButton({this.icon, this.text, this.onTap});
-
-  @override
-  Widget build(BuildContext context) {
-    return Expanded(
-      child: InkResponse(
-        containedInkWell: true, splashFactory: InkRipple.splashFactory,
-        highlightShape: BoxShape.rectangle,
-        onTap: onTap,
-        child: Padding(
-          padding: EdgeInsets.symmetric(vertical: 5),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: <Widget>[
-              Icon(icon),
-              SizedBox(child: Text(text))
-            ],
-          ),
-        )
       ),
     );
   }
