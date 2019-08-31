@@ -45,113 +45,118 @@ class _CollectionDrawerState extends State<CollectionDrawer> {
           mainAxisAlignment: MainAxisAlignment.end,
           children: <Widget>[
             Expanded(
-              child: Scrollbar(
+              child: Theme(
+                data: Theme.of(context).copyWith(
+                  highlightColor: Theme.of(context).accentColor
+                ),
+                child: Scrollbar(
                   child: Selector<AmiiboProvider, String>(
-                    builder: (context, _selected, child) {
-                      return CustomScrollView(
-                        slivers: <Widget>[
-                          SliverList(
-                            delegate: SliverChildListDelegate([
-                              child,
-                              ListTile(
-                                onTap: () => _onTapTile('All'),
-                                leading: const Icon(Icons.all_inclusive),
-                                title: Text('All',),
-                                selected: _selected == 'All',
-                              ),
-                              ListTile(
-                                onTap: () => _onTapTile('Owned'),
-                                leading: const Icon(Icons.star),
-                                title: Text('Owned'),
-                                selected: _selected == 'Owned',
-                              ),
-                              ListTile(
-                                onTap: () => _onTapTile('Wishlist'),
-                                leading: const Icon(Icons.card_giftcard),
-                                title: Text('Wishlist'),
-                                selected: _selected == 'Wishlist',
-                              ),
-                              ListTile(
-                                onTap: () {
-                                  Navigator.pop(context);
-                                  Navigator.pushNamed(context,"/stats");
-                                },
-                                leading: const Icon(Icons.timeline),
-                                title: Text('Stats',),
-                                selected: _selected == 'Stats',
-                              ),
-                              FutureBuilder(
-                                  future: _listOfFigures,
-                                  builder: (context, AsyncSnapshot<List<String>> snapshot) {
-                                    return Theme(
-                                        data: Theme.of(context).copyWith(
-                                          dividerColor: Colors.transparent,
-                                          accentColor: Theme.of(context).textTheme.subhead.color,
-                                        ),
-                                        child: ExpansionTile(
-                                          leading: const Icon(Icons.toys),
-                                          title: Text('Figures'),
-                                          initiallyExpanded: _figureExpand,
-                                          onExpansionChanged: figureExpand,
-                                          children: <Widget>[
-                                            if(snapshot.hasData)
-                                              for(String series in snapshot.data)
-                                                ListTile(
-                                                  leading: CircleAvatar(
-                                                    backgroundColor: Theme.of(context).accentColor,
-                                                    foregroundColor: Theme.of(context).accentIconTheme.color,
-                                                    radius: 12,
-                                                    child: Text(series[0]),
+                      builder: (context, _selected, child) {
+                        return CustomScrollView(
+                          slivers: <Widget>[
+                            SliverList(
+                              delegate: SliverChildListDelegate([
+                                child,
+                                ListTile(
+                                  onTap: () => _onTapTile('All'),
+                                  leading: const Icon(Icons.all_inclusive),
+                                  title: Text('All',),
+                                  selected: _selected == 'All',
+                                ),
+                                ListTile(
+                                  onTap: () => _onTapTile('Owned'),
+                                  leading: const Icon(Icons.star),
+                                  title: Text('Owned'),
+                                  selected: _selected == 'Owned',
+                                ),
+                                ListTile(
+                                  onTap: () => _onTapTile('Wishlist'),
+                                  leading: const Icon(Icons.card_giftcard),
+                                  title: Text('Wishlist'),
+                                  selected: _selected == 'Wishlist',
+                                ),
+                                ListTile(
+                                  onTap: () {
+                                    Navigator.pop(context);
+                                    Navigator.pushNamed(context,"/stats");
+                                  },
+                                  leading: const Icon(Icons.timeline),
+                                  title: Text('Stats',),
+                                  selected: _selected == 'Stats',
+                                ),
+                                FutureBuilder(
+                                    future: _listOfFigures,
+                                    builder: (context, AsyncSnapshot<List<String>> snapshot) {
+                                      return Theme(
+                                          data: Theme.of(context).copyWith(
+                                            dividerColor: Colors.transparent,
+                                            accentColor: Theme.of(context).textTheme.subhead.color,
+                                          ),
+                                          child: ExpansionTile(
+                                            leading: const Icon(Icons.toys),
+                                            title: Text('Figures'),
+                                            initiallyExpanded: _figureExpand,
+                                            onExpansionChanged: figureExpand,
+                                            children: <Widget>[
+                                              if(snapshot.hasData)
+                                                for(String series in snapshot.data)
+                                                  ListTile(
+                                                    leading: CircleAvatar(
+                                                      backgroundColor: Theme.of(context).accentColor,
+                                                      foregroundColor: Theme.of(context).accentIconTheme.color,
+                                                      radius: 12,
+                                                      child: Text(series[0]),
+                                                    ),
+                                                    title: Text(series),
+                                                    onTap: () => _onTapTile(series),
+                                                    selected: _selected == series,
                                                   ),
-                                                  title: Text(series),
-                                                  onTap: () => _onTapTile(series),
-                                                  selected: _selected == series,
-                                                ),
-                                          ],
-                                        )
-                                    );
-                                  }
-                              ),
-                              FutureBuilder(
-                                  future: _listOfCards,
-                                  builder: (context, AsyncSnapshot<List<String>> snapshot) {
-                                    return Theme(
-                                        data: Theme.of(context).copyWith(
-                                          dividerColor: Colors.transparent,
-                                          accentColor: Theme.of(context).textTheme.subhead.color,
-                                        ),
-                                        child: ExpansionTile(
-                                          leading: const Icon(Icons.view_carousel),
-                                          title: Text('Cards'),
-                                          initiallyExpanded: _cardExpand,
-                                          onExpansionChanged: cardExpand,
-                                          children: <Widget>[
-                                            if(snapshot.hasData)
-                                              for(String series in snapshot.data)
-                                                ListTile(
-                                                  leading: CircleAvatar(
-                                                    backgroundColor: Theme.of(context).accentColor,
-                                                    foregroundColor: Theme.of(context).accentIconTheme.color,
-                                                    radius: 12,
-                                                    child: Text(series[0]),
+                                            ],
+                                          )
+                                      );
+                                    }
+                                ),
+                                FutureBuilder(
+                                    future: _listOfCards,
+                                    builder: (context, AsyncSnapshot<List<String>> snapshot) {
+                                      return Theme(
+                                          data: Theme.of(context).copyWith(
+                                            dividerColor: Colors.transparent,
+                                            accentColor: Theme.of(context).textTheme.subhead.color,
+                                          ),
+                                          child: ExpansionTile(
+                                            leading: const Icon(Icons.view_carousel),
+                                            title: Text('Cards'),
+                                            initiallyExpanded: _cardExpand,
+                                            onExpansionChanged: cardExpand,
+                                            children: <Widget>[
+                                              if(snapshot.hasData)
+                                                for(String series in snapshot.data)
+                                                  ListTile(
+                                                    leading: CircleAvatar(
+                                                      backgroundColor: Theme.of(context).accentColor,
+                                                      foregroundColor: Theme.of(context).accentIconTheme.color,
+                                                      radius: 12,
+                                                      child: Text(series[0]),
+                                                    ),
+                                                    title: Text(series),
+                                                    onTap: () => _onTapTile(series),
+                                                    selected: _selected == series,
                                                   ),
-                                                  title: Text(series),
-                                                  onTap: () => _onTapTile(series),
-                                                  selected: _selected == series,
-                                                ),
-                                          ],
-                                        )
-                                    );
-                                  }
-                              ),
-                            ]),
-                          )
-                        ],
-                      );
-                    },
-                    selector: (context, filter) => filter.strFilter,
-                    child: _HeaderDrawer(),
-                  )
+                                            ],
+                                          )
+                                      );
+                                    }
+                                ),
+                              ]),
+                            )
+                          ],
+                        );
+                      },
+                      selector: (context, filter) => filter.strFilter,
+                      child: _HeaderDrawer(),
+                    )
+                )
               )
             ),
             const Divider(height: 1.0),

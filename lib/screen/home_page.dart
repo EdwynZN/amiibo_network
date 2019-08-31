@@ -8,6 +8,7 @@ import 'package:flutter/rendering.dart';
 import 'package:amiibo_network/widget/radial_progression.dart';
 import 'package:amiibo_network/widget/drawer.dart';
 import 'package:amiibo_network/widget/animated_widgets.dart';
+import 'package:amiibo_network/widget/floating_bar.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -130,83 +131,57 @@ class HomePageState extends State<HomePage>
                 child: CustomScrollView(
                   controller: _controller,
                   slivers: <Widget>[
-                    SliverPadding(
-                      padding: const EdgeInsets.symmetric(horizontal: 12),
-                      sliver: Theme(
-                        data: Theme.of(context).copyWith(
-                          appBarTheme: AppBarTheme(
-                            color: Theme.of(context).backgroundColor,
-                            iconTheme: Theme.of(context).iconTheme,
-                            actionsIconTheme: Theme.of(context).iconTheme,
-                            textTheme: Theme.of(context).textTheme,
-                          ),
-                        ),
-                        child: SliverAppBar(
-                          floating: true,
-                          snap: true,
-                          leading: Builder(
-                            builder: (context) => IconButton(
-                              icon: ImplicitIcon(forward: _multipleSelection),
-                              tooltip: _multipleSelection ? 'close' : 'drawer',
-                              onPressed: _multipleSelection ? _cancelSelection : () => Scaffold.of(context).openDrawer(),
-                            )
-                          ),
-                          titleSpacing: 0,
-                          title: InkResponse(
-                            containedInkWell: true,
-                            highlightColor: Colors.transparent,
-                            splashColor: Colors.white12,
-                            child: Selector<AmiiboProvider, String>(
-                              selector: (context, text) => text.strFilter,
-                              builder: (context, text, _) {
-                                return Tooltip(
-                                  message: '${num.tryParse(text) == null ?
-                                  'Search Amiibo' : '$text Selected' }',
-                                  child: Container(
-                                    padding: const EdgeInsets.symmetric(horizontal: 12),
-                                    alignment: Alignment.centerLeft,
-                                    width: double.infinity,
-                                    child: Text(text ?? '',
-                                      softWrap: false, overflow: TextOverflow.fade, maxLines: 1)
-                                  )
-                                );
-                              },
-                            ),
-                            onTap: _multipleSelection ? null : _search
-                          ),
-                          actions: <Widget>[
-                            AnimatedSwitcher(
-                              duration: const Duration(milliseconds: 250),
-                              layoutBuilder: _defaultLayoutBuilder,
-                              child: _multipleSelection ? Row(
-                                mainAxisSize: MainAxisSize.min,
-                                mainAxisAlignment: MainAxisAlignment.end,
-                                children: <Widget>[
-                                  IconButton(
-                                    icon: Icon(Icons.remove),
-                                    onPressed: _updateSelection,
-                                    tooltip: 'Remove',
-                                  ),
-                                  IconButton(
-                                    icon: Icon(Icons.star),
-                                    onPressed: () => _updateSelection(owned: 1),
-                                    tooltip: 'Own',
-                                  ),
-                                  IconButton(
-                                    icon: Icon(Icons.card_giftcard),
-                                    onPressed: () => _updateSelection(wished: 1),
-                                    tooltip: 'Wish',
-                                  ),
-                                ],
-                              ) : _SortCollection(),
-                            )
-                          ],
-                        ),
+                    SliverFloatingBar(
+                      floating: true,
+                      forward: _multipleSelection,
+                      snap: true,
+                      leading: Builder(
+                        builder: (context) => IconButton(
+                          icon: ImplicitIcon(forward: _multipleSelection),
+                          tooltip: _multipleSelection ? 'close' : 'drawer',
+                          onPressed: _multipleSelection ? _cancelSelection : () => Scaffold.of(context).openDrawer(),
+                        )
                       ),
+                      title: Selector<AmiiboProvider, String>(
+                        selector: (context, text) => text.strFilter,
+                        builder: (context, text, _) {
+                          return Tooltip(
+                            message: '${num.tryParse(text) == null ?
+                            'Search Amiibo' : '$text Selected' }',
+                            child: Text(text ?? ''),
+                          );
+                        },
+                      ),
+                      onTap: _multipleSelection ? null : _search,
+                      trailing: AnimatedSwitcher(
+                        duration: const Duration(milliseconds: 250),
+                        layoutBuilder: _defaultLayoutBuilder,
+                        child: _multipleSelection ? Row(
+                          mainAxisSize: MainAxisSize.min,
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: <Widget>[
+                            IconButton(
+                              icon: Icon(Icons.remove),
+                              onPressed: _updateSelection,
+                              tooltip: 'Remove',
+                            ),
+                            IconButton(
+                              icon: Icon(Icons.star),
+                              onPressed: () => _updateSelection(owned: 1),
+                              tooltip: 'Own',
+                            ),
+                            IconButton(
+                              icon: Icon(Icons.card_giftcard),
+                              onPressed: () => _updateSelection(wished: 1),
+                              tooltip: 'Wish',
+                            ),
+                          ],
+                        ) : _SortCollection(),
+                      )
                     ),
                     child,
                     SliverPadding(
-                      padding: const EdgeInsets.symmetric(horizontal: 6),
+                      padding: const EdgeInsets.symmetric(horizontal: 4),
                       sliver: Selector<AmiiboProvider, AmiiboLocalDB>(
                         child: const SliverToBoxAdapter(
                           child: const Align(alignment: Alignment.center, heightFactor: 10,
@@ -627,15 +602,15 @@ class AmiiboGridState extends State<AmiiboGrid> {
                 ],
               ),
             ),
-            Positioned(
-              top: 4, left: 8,
+            Align(
+              alignment: Alignment.topLeft,
               child: AnimatedSwitcher(
-                  duration: const Duration(milliseconds: 200),
-                  switchInCurve: Curves.easeInToLinear,
-                  switchOutCurve: Curves.easeOutCirc,
-                  transitionBuilder: (Widget child, Animation <double> animation)
+                duration: const Duration(milliseconds: 200),
+                switchInCurve: Curves.easeInToLinear,
+                switchOutCurve: Curves.easeOutCirc,
+                transitionBuilder: (Widget child, Animation <double> animation)
                   => ScaleTransition(scale: animation, child: child,),
-                  child: _widget
+                child: _widget
               ),
             ),
           ],

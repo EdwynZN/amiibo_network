@@ -27,11 +27,6 @@ Project: https://github.com/rrousselGit/provider
 Copyright (c) 2018, Remi Rousselet
 MIT License
 
-FLOATING SEARCH BAR
-Project: https://github.com/AppleEducate/plugins/tree/master/packages/floating_search_bar
-Copyright (c) 2018, Rody Davis
-MIT License
-
 PERMISSION HANDLER
 Project: https://github.com/BaseflowIT/flutter-permission-handler
 Copyright (c) 2018, Baseflow

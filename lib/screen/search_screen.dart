@@ -3,6 +3,7 @@ import 'package:amiibo_network/provider/search_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:amiibo_network/provider/amiibo_provider.dart';
 import 'package:flutter/services.dart';
+import 'package:amiibo_network/widget/floating_bar.dart';
 
 class SearchScreen extends StatefulWidget {
   @override
@@ -35,35 +36,20 @@ class SearchScreenState extends State<SearchScreen>
       child: Scaffold(
         body: CustomScrollView(
           slivers: <Widget>[
-            SliverPadding(
-              padding: const EdgeInsets.symmetric(horizontal: 12),
-              sliver: Theme(
-                data: Theme.of(context).copyWith(
-                  appBarTheme: AppBarTheme(
-                    color: Theme.of(context).backgroundColor,
-                    iconTheme: Theme.of(context).iconTheme,
-                    actionsIconTheme: Theme.of(context).iconTheme,
-                    textTheme: Theme.of(context).textTheme
-                  ),
-                ),
-                child: SliverAppBar(
-                  leading: BackButton(),
-                  pinned: true,
-                  titleSpacing: 12,
-                  title: TextField(
-                    style: Theme.of(context).textTheme.body2,
-                    inputFormatters: [LengthLimitingTextInputFormatter(15)],
-                    textInputAction: TextInputAction.search,
-                    autofocus: true,
-                    onSubmitted: Navigator.of(context).pop,
-                    onChanged: _search.searchValue,
-                    autocorrect: false,
-                    decoration: InputDecoration.collapsed(
-                      hintText: Provider.of<AmiiboProvider>(context).strFilter,
-                      hintStyle: Theme.of(context).textTheme.title.copyWith(
-                        color: Theme.of(context).textTheme.title.color.withOpacity(0.5)
-                      ),
-                    ),
+            SliverFloatingBar(
+              pinned: true,
+              leading: BackButton(),
+              title: TextField(
+                inputFormatters: [LengthLimitingTextInputFormatter(15)],
+                textInputAction: TextInputAction.search,
+                autofocus: true,
+                onSubmitted: Navigator.of(context).pop,
+                onChanged: _search.searchValue,
+                autocorrect: false,
+                decoration: InputDecoration.collapsed(
+                  hintText: Provider.of<AmiiboProvider>(context).strFilter,
+                  hintStyle: Theme.of(context).textTheme.display1.copyWith(
+                      color: Theme.of(context).textTheme.display1.color.withOpacity(0.5)
                   ),
                 ),
               ),
