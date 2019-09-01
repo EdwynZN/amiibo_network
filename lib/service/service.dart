@@ -1,0 +1,93 @@
+import 'package:amiibo_network/dao/SQLite/amiibo_sqlite.dart';
+import '../model/amiibo_local_db.dart';
+import 'dart:convert';
+import 'package:flutter/services.dart';
+
+class Service {
+  final dao = AmiiboSQLite();
+  static Map<String, dynamic> _jsonFile;
+  static DateTime _lastUpdate;
+  static DateTime _lastUpdateDB;
+
+  static final Service _instance = Service._();
+  factory Service() => _instance;
+  Service._();
+
+  Future<String> getTheme() async => await dao.favoriteTheme();
+
+  Future updateTheme(String theme) async => await dao.updateTheme(theme);
+
+  Future<Map<String, dynamic>> get jsonFile async {
+    return _jsonFile ??= jsonDecode(await rootBundle.loadString('assets/databases/amiibos.json'));
+  }
+
+  Future<AmiiboLocalDB> fetchAllAmiibo() async {
+    return AmiiboLocalDB.fromJson(await jsonFile);
+  }
+
+  Future<AmiiboLocalDB> fetchAllAmiiboDB(String orderBy) => dao.fetchAll(orderBy);
+
+  Future<List<Map<String,dynamic>>> fetchSum({String column, List<String> args,
+    bool group = false}) {
+    if(column == null || args == null || args.isEmpty) column = args = null;
+    //args = (args?.isEmpty ?? true) || column == null ? null : args;
+    return dao.fetchSum(column, args, group);
+  }
+
+  Future<String> jsonFileDB() async {
+    final AmiiboLocalDB amiibos = await dao.fetchAll();
+    return jsonEncode(amiibos);
+  }
+
+  Future<DateTime> get lastUpdateDB async{
+    return _lastUpdateDB ??= await dao.lastUpdate()
+      .then((x) => x?.lastUpdated);
+  }
+
+  Future<DateTime> get lastUpdate async{
+    return _lastUpdate ??= LastUpdateDB.fromMap(await jsonFile).lastUpdated;
+  }
+
+  Future<bool> createDB() async{
+    return compareLastUpdate().then((sameDate) async {
+      if(sameDate == null) throw Exception("Couldn't fetch last update");
+      if(!sameDate) fetchAllAmiibo().then(_updateDB);
+      return await Future.value(true);
+    }).catchError((e) {
+      print(e.toString());
+      return false;
+    });
+  }
+
+  _updateDB(AmiiboLocalDB amiiboDB) async{
+    dao.insertAll(amiiboDB, "amiibo").then((_) async{
+      await dao.updateTime(LastUpdateDB.fromDate(await lastUpdate));
+    });
+  }
+
+  Future<AmiiboLocalDB> fetchByCategory(String column, String like,
+    String oderBy) => dao.fetchByColumn(column, like, oderBy);
+
+  Future<AmiiboDB> fetchAmiiboDBByKey(String key) => dao.fetchByKey(key);
+
+  Future<void> update(AmiiboLocalDB amiibos) {
+    return dao.insertImport(amiibos);
+  }
+
+  Future<List<String>> fetchDistinct([bool figure = true]) async =>
+    dao.fetchDistinct('amiibo', 'amiiboSeries', figure ? 'IS NOT' : 'IS');
+
+  Future<List<String>> searchDB(String name) async =>
+    dao.fetchLimit('%$name%', 10);
+
+  Future<bool> compareLastUpdate() async{
+    final dateDB = await lastUpdateDB;
+    final dateJson = await lastUpdate;
+
+    return dateDB?.isAtSameMomentAs(dateJson) ?? false;
+  }
+  
+  Future<void> resetCollection() async{
+    await dao.updateAll('amiibo', {'wishlist' : 0, 'owned' : 0});
+  }
+}
