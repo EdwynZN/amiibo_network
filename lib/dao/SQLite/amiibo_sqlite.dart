@@ -71,12 +71,12 @@ class AmiiboSQLite implements Dao<AmiiboLocalDB, String, AmiiboDB>{
     });
   }
 
-  Future<AmiiboLocalDB> fetchByColumn(String column, String name,
+  Future<AmiiboLocalDB> fetchByColumn(String column, List<String> args,
     [String orderBy = 'na']) async{
     Database _db = await connectionFactory.database;
     List<Map<String, dynamic>> maps = await _db.query('amiibo',
-      where: '$column LIKE ?',
-      whereArgs: [name],
+      where: args?.skip(1)?.fold<String>('$column LIKE ?', (curr, next) => curr + ' OR $column LIKE ?'),
+      whereArgs: args,
       orderBy: orderBy);
     return entityFromList(maps);
   }

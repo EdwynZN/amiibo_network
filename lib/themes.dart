@@ -50,6 +50,10 @@ class Themes {
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
     ),
     snackBarTheme: SnackBarThemeData(
+      backgroundColor: Colors.grey[900],
+      contentTextStyle: TextStyle(
+        color: const Color(0xFFB2B2B2)
+      ),
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(8),
         side: BorderSide(color:const Color.fromRGBO(207, 102, 121, 1))
@@ -132,6 +136,10 @@ class Themes {
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
     ),
     snackBarTheme: SnackBarThemeData(
+      backgroundColor: const Color(0xFFE8C2BF),
+      contentTextStyle: TextStyle(
+        color: Colors.black
+      ),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8),),
       behavior: SnackBarBehavior.floating,
     ),

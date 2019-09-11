@@ -56,7 +56,7 @@ class SplashScreenState extends State<SplashScreen>
               alignment: Alignment.center,
               child: FutureBuilder<bool>(
                 future: updateDB,
-                builder: (context, snapshot){
+                builder: (ctx, snapshot){
                   int key = 0;
                   Widget _child = const CircularProgressIndicator(backgroundColor: Colors.black);
                   String _text = "Just a second . . .";

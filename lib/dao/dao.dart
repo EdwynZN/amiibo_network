@@ -1,7 +1,7 @@
 abstract class Dao<T, K, V> {
   Future<T> fetchAll(String orderBy);
 
-  Future<T> fetchByColumn(String column, String name, String orderBy);
+  Future<T> fetchByColumn(String column, List<String> args, String orderBy);
 
   Future<V> fetchByKey(K key);
 

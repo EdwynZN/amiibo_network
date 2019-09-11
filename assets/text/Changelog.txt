@@ -2,6 +2,8 @@ Version 1.1.3
 - Sort by name, date , owned or wished
 - Fixed bugs displaying the stats
 - Display category list by figures or cards
+- Save Collection Image in Settings
+- Added Golden Shovel Knight
 - Pinned Stats
 
 Version 1.1.2

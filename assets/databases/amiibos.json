@@ -9749,7 +9749,20 @@
       "jp":"2020",
       "na":"2020",
       "type":"Figure"
+    },
+    {
+      "key":751,
+      "id":null,
+      "amiiboSeries":"Shovel Knight",
+      "character":"Shovel Knight",
+      "gameSeries":"Shovel Knight",
+      "name":"Golden Shovel Knight",
+      "au":null,
+      "eu":null,
+      "jp":null,
+      "na":"2019/12/31",
+      "type":"Figure"
     }
   ],
-  "lastUpdated": "2019-08-20T23:50:10.688417"
+  "lastUpdated": "2019-09-15T13:20:10.688417"
 }

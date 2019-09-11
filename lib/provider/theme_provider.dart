@@ -13,7 +13,7 @@ class ThemeProvider with ChangeNotifier{
   String get savedTheme => _savedTheme;
 
   Future<ThemeMode> initThemes() async {
-    _savedTheme = await service.getTheme();
+    _savedTheme = await getTheme();
     preferredTheme = _switchPreferredTheme(_savedTheme);
     return preferredTheme;
   }
@@ -21,7 +21,7 @@ class ThemeProvider with ChangeNotifier{
   themeDB(String value) async {
     if(value != _savedTheme){
       _savedTheme = value;
-      await service.updateTheme(value);
+      await updateTheme(value);
       preferredTheme = _switchPreferredTheme(_savedTheme);
       notifyListeners();
     }
