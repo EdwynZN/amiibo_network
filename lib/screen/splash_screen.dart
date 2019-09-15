@@ -64,9 +64,11 @@ class SplashScreenState extends State<SplashScreen>
                     key = 1;
                     _text = snapshot.data ? 'WELCOME' : 'Couldn\'t Update 😢';
                     _child = Image.asset('assets/images/icon_app.png', fit: BoxFit.fitWidth);
-                    _animationController.forward().whenCompleteOrCancel(
-                    () => Future.delayed(const Duration(milliseconds: 500),
-                    () => Navigator.pushReplacementNamed(context, '/home')));
+                    _animationController.forward().whenCompleteOrCancel(() {
+                      Future.delayed(const Duration(milliseconds: 500),
+                        () => Navigator.pushReplacementNamed(context, '/home')
+                      );
+                    });
                   }
                   return AnimatedSwitcher(duration: const Duration(seconds: 3),
                     switchOutCurve: Curves.easeOutBack,
@@ -121,8 +123,8 @@ class SwitchIcon extends StatelessWidget{
     @required this.controller,
     @required this.height,
     this.isLeft = true,
-  }) : animation = SwitchAnimation(controller: controller),
-        super(key: key);
+  }) : animation = SwitchAnimation(controller: controller, delay: isLeft ? 0.1 : 0.6),
+    super(key: key);
 
   @override
   Widget build(BuildContext context){
@@ -136,10 +138,7 @@ class SwitchIcon extends StatelessWidget{
       ),
       builder: (_, Widget child) {
         return FractionalTranslation(
-          translation: isLeft ? animation.translationLeftStart.value +
-                                animation.translationLeftEnd.value
-                              : animation.translationRightStart.value +
-                                animation.translationRightEnd.value,
+          translation: animation.translation.value,
           child: child
         );
       }
@@ -148,63 +147,37 @@ class SwitchIcon extends StatelessWidget{
 }
 
 class SwitchAnimation {
-  SwitchAnimation({@required this.controller}) :
+  SwitchAnimation({@required this.controller, @required this.delay}) :
 
-    translationLeftEnd = Tween<Offset>(
-      begin: Offset(0.0, -0.5),
-      end: Offset.zero,
-    ).animate(
-      CurvedAnimation(
-        parent: controller,
-        curve: Interval(
-          0.3, 0.5,
-          curve: Curves.elasticOut,
+  translation = TweenSequence<Offset>([
+      TweenSequenceItem<Offset>(
+        tween: Tween<Offset>(
+          begin: Offset.zero,
+          end: Offset(0.0, -0.5),
         ),
+        weight: 37.5
       ),
-    ),
-
-    translationLeftStart = Tween<Offset>(
-      begin: Offset(0.0, 0.5),
-      end: Offset.zero,
-    ).animate(
-      CurvedAnimation(
-        parent: controller,
-        curve: Interval(
-          0.1, 0.25,
-          curve: Curves.linear,
-        ),
+      TweenSequenceItem<Offset>(
+          tween: ConstantTween<Offset>(Offset(0.0,-0.5)),
+          weight: 25
       ),
-    ),
-
-    translationRightStart = Tween<Offset>(
-      begin: Offset(0.0, 0.5),
-      end: Offset.zero,
-    ).animate(
-      CurvedAnimation(
-        parent: controller,
-        curve: Interval(
-          0.6, 0.75,
-          curve: Curves.linear,
-        ),
+      TweenSequenceItem<Offset>(
+        tween: Tween<Offset>(
+          begin: Offset(0.0, -0.5),
+          end: Offset.zero,
+        ).chain(CurveTween(curve: Curves.elasticOut)),
+        weight: 37.5
       ),
-    ),
-
-    translationRightEnd = Tween<Offset>(
-      begin: Offset(0.0, -0.5),
-      end: Offset.zero,
-    ).animate(
-      CurvedAnimation(
-        parent: controller,
-        curve: Interval(
-          0.85, 1.0,
-          curve: Curves.elasticOut,
-        ),
+    ])
+    .animate(CurvedAnimation(
+      parent: controller,
+      curve: Interval(
+        delay, 0.4 + delay
       ),
-    );
+    )
+  );
 
   final AnimationController controller;
-  final Animation<Offset> translationLeftStart;
-  final Animation<Offset> translationLeftEnd;
-  final Animation<Offset> translationRightStart;
-  final Animation<Offset> translationRightEnd;
+  final double delay;
+  final Animation<Offset> translation;
 }

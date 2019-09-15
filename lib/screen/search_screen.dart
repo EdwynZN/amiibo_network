@@ -45,6 +45,7 @@ class SearchScreenState extends State<SearchScreen>
                 autofocus: true,
                 onSubmitted: Navigator.of(context).pop,
                 onChanged: _search.searchValue,
+                style: Theme.of(context).textTheme.display1,
                 autocorrect: false,
                 decoration: InputDecoration.collapsed(
                   hintText: Provider.of<AmiiboProvider>(context).strFilter,
@@ -55,33 +56,33 @@ class SearchScreenState extends State<SearchScreen>
               ),
             ),
             SliverPadding(
-              padding: EdgeInsets.symmetric(horizontal: 12, vertical: 6.0),
-              sliver: StreamBuilder<List<String>>(
-                stream: _search.search,
-                builder: (context, snapshot) => SliverList(
-                  delegate: SliverChildBuilderDelegate((BuildContext context, int index) {
-                    if(snapshot.hasData)
-                      return AnimatedSwitcher(duration: const Duration(milliseconds: 200),
-                        child: Card(
-                          key: Key(snapshot.data[index]),
-                          margin: EdgeInsets.zero,
-                          shape: RoundedRectangleBorder(),
-                          child: ListTile(
-                            onTap: () => Navigator.of(context).pop(snapshot.data[index]),
-                            title: Text('${snapshot.data[index]}')
-                          )
-                        ),
-                      );
-                    else return const SizedBox.shrink();
-                  },
-                    childCount: snapshot.hasData ? snapshot.data.length : 10,
+                padding: EdgeInsets.symmetric(horizontal: 12, vertical: 6.0),
+                sliver: StreamBuilder<List<String>>(
+                  stream: _search.search,
+                  builder: (context, snapshot) => SliverList(
+                    delegate: SliverChildBuilderDelegate((BuildContext context, int index) {
+                      if(snapshot.hasData)
+                        return AnimatedSwitcher(duration: const Duration(milliseconds: 200),
+                          child: Card(
+                              key: Key(snapshot.data[index]),
+                              margin: EdgeInsets.zero,
+                              shape: RoundedRectangleBorder(),
+                              child: ListTile(
+                                  onTap: () => Navigator.of(context).pop(snapshot.data[index]),
+                                  title: Text('${snapshot.data[index]}')
+                              )
+                          ),
+                        );
+                      else return const SizedBox.shrink();
+                    },
+                      childCount: snapshot.hasData ? snapshot.data.length : 10,
+                    ),
                   ),
-                ),
-              )
+                )
             )
           ],
         ),
-      )
+      ),
     );
   }
 }

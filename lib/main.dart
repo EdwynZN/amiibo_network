@@ -13,7 +13,7 @@ import 'package:amiibo_network/themes.dart';
 void main() async {
   //debugPrintGestureArenaDiagnostics = true;
   await ThemeProvider().initThemes();
-  if(await Service().compareLastUpdate()) runApp(AmiiboNetwork(HomePage()));
+  if(await Service().compareLastUpdate()) runApp(AmiiboNetwork(Home()));
   else runApp(AmiiboNetwork(SplashScreen()));
 }
 

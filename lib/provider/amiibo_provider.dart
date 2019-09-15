@@ -3,29 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:amiibo_network/model/amiibo_local_db.dart';
 
-class AmiiboProvider with ChangeNotifier{
-  static final _service = Service();
+class SelectProvider with ChangeNotifier{
   final Set<ValueKey<int>> set = Set<ValueKey<int>>();
-  String _searchFilter = 'amiiboSeries';
-  String _strFilter = 'All';
-  String _order = 'na DESC';
-  Map<String,dynamic> _listOwned;
-  //= {'Owned' : 0, 'Wished' : 0, 'Total' : 0};
-  //final Map<String, dynamic> query = Map<String,dynamic>();
-  AmiiboLocalDB _amiiboListDB;
-
-  final _collectionList = PublishSubject<Map<String,dynamic>>();
-  final filter = BehaviorSubject<String>();
-  final _updateAmiiboDB = PublishSubject<AmiiboLocalDB>()
-    ..listen((amiibos) async => await _service.update(amiibos));
 
   bool get multipleSelected => set.isNotEmpty;
-  AmiiboLocalDB get amiibosDB => _amiiboListDB;
-  Map<String,dynamic> get listCollection => _listOwned;
-  String get orderBy => _order;
-  String get strFilter => set.isNotEmpty ? set.length.toString() : _strFilter;
-  set strOrderBy(String sort) => _order = sort;
-  set setFilter(String value) => _strFilter = value;
+  int get selected => set.length;
   bool addSelected(ValueKey<int> value) => set.add(value);
   bool removeSelected(ValueKey<int> value) => set.remove(value);
   bool isSelected(ValueKey<int> value) => set.contains(value);
@@ -34,6 +16,29 @@ class AmiiboProvider with ChangeNotifier{
     set.clear();
     notifyListeners();
   }
+
+  void notifyWidgets() => notifyListeners();
+}
+
+class AmiiboProvider with ChangeNotifier{
+  static final _service = Service();
+  String _searchFilter = 'amiiboSeries';
+  String _strFilter = 'All';
+  String _order = 'na DESC';
+  Map<String,dynamic> _listOwned;
+  AmiiboLocalDB _amiiboListDB;
+
+  final _collectionList = PublishSubject<Map<String,dynamic>>();
+  final filter = BehaviorSubject<String>();
+  final _updateAmiiboDB = PublishSubject<AmiiboLocalDB>()
+    ..listen((amiibos) async => await _service.update(amiibos));
+
+  AmiiboLocalDB get amiibosDB => _amiiboListDB;
+  Map<String,dynamic> get listCollection => _listOwned;
+  String get orderBy => _order;
+  String get strFilter => _strFilter;
+  set strOrderBy(String sort) => _order = sort;
+  set setFilter(String value) => _strFilter = value;
 
   void notifyWidgets() => notifyListeners();
 

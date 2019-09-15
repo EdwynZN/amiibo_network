@@ -15,13 +15,13 @@ class Routes{
       case '/details':
         return cupertinoRoute(DetailPage(amiibo: settings.arguments), settings);
       case '/home':
-        return FadeRoute(builder: (_) => HomePage());
+        return FadeRoute(builder: (_) => Home());
       case '/settings':
         return SlideRoute(builder: (_) => SettingsPage());
       case '/settingsdetail':
         return SlideRoute(builder: (_) => SettingsDetail(title: settings.arguments), settings: settings);
       case '/search':
-        return FadeRoute(builder: (_) => SearchScreen());
+        return FadeRoute<String>(builder: (_) => SearchScreen());
       case '/stats':
         return cupertinoRoute(StatsPage(), settings);
       default:

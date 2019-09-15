@@ -51,7 +51,6 @@ class _StatsPageState extends State<StatsPage> {
                         total: snapshot.data[index]['Total'],
                         wished: snapshot.data[index]['Wished'],
                       ),
-                      addRepaintBoundaries: false, addAutomaticKeepAlives: false,
                       childCount: snapshot.hasData ? snapshot.data.length : 0,
                     ),
                   );
@@ -70,7 +69,6 @@ class _StatsPageState extends State<StatsPage> {
                           total: snapshot.data[index]['Total'],
                           wished: snapshot.data[index]['Wished'],
                         ),
-                        addRepaintBoundaries: false, addAutomaticKeepAlives: false,
                         childCount: snapshot.hasData ? snapshot.data.length : 0,
                       ),
                     );
@@ -88,7 +86,6 @@ class _StatsPageState extends State<StatsPage> {
                         total: snapshot.data[index]['Total'],
                         wished: snapshot.data[index]['Wished'],
                       ),
-                      addRepaintBoundaries: false, addAutomaticKeepAlives: false,
                       childCount: snapshot.hasData ? snapshot.data.length : 0,
                     )
                   );
@@ -99,17 +96,17 @@ class _StatsPageState extends State<StatsPage> {
         ),
         bottomNavigationBar: BottomAppBar(
           child: Padding(
-            padding: EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+            padding: EdgeInsets.symmetric(horizontal: 8, vertical: 6),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               mainAxisSize: MainAxisSize.min,
               children: <Widget>[
                 Expanded(
-                  flex: 6,
+                  flex: 9,
                   child: FlatButton(
                     textColor: Theme.of(context).textTheme.title.color,
                     color: select.isEmpty ?
-                      Theme.of(context).indicatorColor : Theme.of(context).buttonColor,
+                    Theme.of(context).indicatorColor : Theme.of(context).buttonColor,
                     onPressed: () => select.isEmpty ? null : setState(() {
                       select.clear();
                       if(_controller.offset != _controller.initialScrollOffset)
@@ -120,7 +117,7 @@ class _StatsPageState extends State<StatsPage> {
                 ),
                 Spacer(),
                 Expanded(
-                  flex: 6,
+                  flex: 9,
                   child: FlatButton(
                     textColor: Theme.of(context).textTheme.title.color,
                     color: select.contains('Figure') ?
@@ -136,7 +133,7 @@ class _StatsPageState extends State<StatsPage> {
                 ),
                 Spacer(),
                 Expanded(
-                  flex: 6,
+                  flex: 9,
                   child: FlatButton(
                     textColor: Theme.of(context).textTheme.title.color,
                     color: select.contains('Card') ?
@@ -153,6 +150,84 @@ class _StatsPageState extends State<StatsPage> {
               ],
             ),
           )
+          /*
+          Padding(
+            padding: EdgeInsets.symmetric(horizontal: 8, vertical: 6),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              mainAxisSize: MainAxisSize.max,
+              children: <Widget>[
+                Flexible(
+                  fit: FlexFit.tight,
+                  child: FlatButton(
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.horizontal(left: Radius.circular(8)),
+                        side: BorderSide(
+                          color: Theme.of(context).indicatorColor,//const Color(0xFFE8C2BF),
+                          width: 2,
+                        )
+                    ),
+                    textColor: select.isEmpty ?
+                    Theme.of(context).textTheme.title.color : Theme.of(context).appBarTheme.textTheme.title.color,
+                    color: select.isEmpty ?
+                    Theme.of(context).indicatorColor : null,//Theme.of(context).buttonColor,
+                    onPressed: () => select.isEmpty ? null : setState(() {
+                      select.clear();
+                      if(_controller.offset != _controller.initialScrollOffset)
+                        _controller.jumpTo(0);
+                    }),
+                    child: Text('All'),
+                  ),
+                ),
+                Flexible(
+                  fit: FlexFit.tight,
+                  child: FlatButton(
+                    shape: RoundedRectangleBorder(
+                        side: BorderSide(
+                          color: Theme.of(context).indicatorColor,//const Color(0xFFE8C2BF),
+                          width: 2,
+                        )
+                    ),
+                    textColor: select.contains('Figure') ?
+                    Theme.of(context).textTheme.title.color : Theme.of(context).appBarTheme.textTheme.title.color,
+                    color: select.contains('Figure') ?
+                    Theme.of(context).indicatorColor : null,//Theme.of(context).buttonColor,
+                    onPressed: () => select.contains('Figure') ? null : setState(() {
+                      select.clear();
+                      select = {'Figure', 'Yarn'};
+                      if(_controller.offset != _controller.initialScrollOffset)
+                        _controller.jumpTo(0);
+                    }),
+                    child: Text('Figures'),
+                  ),
+                ),
+                Flexible(
+                  fit: FlexFit.tight,
+                  child: FlatButton(
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.horizontal(right: Radius.circular(8)),
+                        side: BorderSide(
+                          color: Theme.of(context).indicatorColor,//const Color(0xFFE8C2BF),
+                          width: 2,
+                        )
+                    ),
+                    textColor: select.contains('Card') ?
+                    Theme.of(context).textTheme.title.color : Theme.of(context).appBarTheme.textTheme.title.color,
+                    color: select.contains('Card') ?
+                    Theme.of(context).indicatorColor : null,//Theme.of(context).buttonColor,
+                    onPressed: () => select.contains('Card') ? null : setState(() {
+                      select.clear();
+                      select = {'Card'};
+                      if(_controller.offset != _controller.initialScrollOffset)
+                        _controller.jumpTo(0);
+                    }),
+                    child: Text('Cards'),
+                  ),
+                ),
+              ],
+            ),
+          )
+           */
         ),
       )
     );

@@ -1,5 +1,4 @@
 import 'package:amiibo_network/model/amiibo_local_db.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:file_picker/file_picker.dart';
@@ -12,6 +11,7 @@ import 'package:amiibo_network/provider/amiibo_provider.dart';
 import 'package:launch_review/launch_review.dart';
 import 'dart:ui' as ui;
 import 'dart:io';
+import 'package:url_launcher/url_launcher.dart';
 
 class SettingsPage extends StatelessWidget{
   const SettingsPage({Key key}): super(key: key);
@@ -38,7 +38,9 @@ class SettingsPage extends StatelessWidget{
               delegate: SliverChildListDelegate.fixed([
                 ResetCollection(),
                 Builder(builder: (_){
-                  return CardSettings(title: 'Save Collection', subtitle: 'Create a picture of your collection', icon: Icons.save,
+                  return CardSettings(title: 'Save Collection',
+                    subtitle: 'Create a picture of your collection',
+                    icon: const Icon(Icons.save),
                     onTap: () async {
                       String text = await showDialog(
                         context: _,
@@ -51,44 +53,20 @@ class SettingsPage extends StatelessWidget{
                     }
                   );
                 }),
-                CardSettings(title: 'Changelog', subtitle: 'Changing for better...', icon: Icons.build,),
-                CardSettings(title: 'Credits', subtitle: 'Those who make it possible', icon: Icons.theaters,),
-                CardSettings(title: 'Privacy Policy', subtitle: 'Therms and conditions', icon: Icons.help,),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: <Widget>[
-                    Expanded(
-                      child: Card(
-                        child: FlatButton.icon(
-                          onPressed: LaunchReview.launch,
-                          icon: Image.asset('assets/images/icon_app.png',
-                            height: 30, width: 30, fit: BoxFit.fill,
-                            color: Theme.of(context).brightness == Brightness.dark
-                                ? Colors.white54 : null,
-                          ),
-                          label: Text('Rate me', style: Theme.of(context).textTheme.body2),
-                        ),
-                      )
+                CardSettings(title: 'Changelog', subtitle: 'Changing for better...', icon: const Icon(Icons.build),),
+                CardSettings(title: 'Credits', subtitle: 'Those who make it possible', icon: const Icon(Icons.theaters),),
+                CardSettings(title: 'Privacy Policy', subtitle: 'Therms and conditions', icon: const Icon(Icons.help),),
+                ProjectButtons(),
+                Card(
+                  child: FlatButton.icon(
+                    onPressed: LaunchReview.launch,
+                    icon: Image.asset('assets/images/icon_app.png',
+                      height: 30, width: 30, fit: BoxFit.fill,
+                      color: Theme.of(context).brightness == Brightness.dark
+                          ? Colors.white54 : null,
                     ),
-                    /*Expanded(
-                      child: Card(
-                        child: FlatButton.icon(
-                          onPressed: saveCollection,//LaunchReview.launch,
-                          icon: const Icon(Icons.save),
-                          label: Text('Collect', style: Theme.of(context).textTheme.body2),
-                        ),
-                      )
-                    ),*/
-                    /*Expanded(
-                      child: Card(
-                        child: FlatButton.icon(
-                          onPressed: null,
-                          icon: Icon(Icons.monetization_on, color: Theme.of(context).iconTheme.color,),
-                          label: Text('Donate', style: Theme.of(context).textTheme.body2),
-                        ),
-                      )
-                    ),*/
-                  ],
+                    label: Text('Rate me', style: Theme.of(context).textTheme.body2),
+                  ),
                 )
               ],
               ),
@@ -97,6 +75,43 @@ class SettingsPage extends StatelessWidget{
         ),
         bottomNavigationBar: BottomBar()
       )
+    );
+  }
+}
+
+class ProjectButtons extends StatelessWidget{
+  _launchURL(String url, BuildContext ctx) async {
+    if (await canLaunch(url)) {
+      await launch(url);
+    } else {
+      Scaffold.of(ctx).showSnackBar(SnackBar(content: Text('Could not launch $url')));
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: <Widget>[
+        Expanded(
+            child: Card(
+              child: FlatButton.icon(
+                onPressed: () => _launchURL('https://github.com/EdwynZN/amiibo_network', context),
+                icon: Icon(Icons.code, color: Theme.of(context).iconTheme.color,),
+                label: Text('Github', style: Theme.of(context).textTheme.body2),
+              ),
+            )
+        ),
+        Expanded(
+            child: Card(
+              child: FlatButton.icon(
+                onPressed: () => _launchURL('https://github.com/EdwynZN/amiibo_network/issues', context),
+                icon: Icon(Icons.bug_report, color: Theme.of(context).iconTheme.color),
+                label: Text('Report bug', style: Theme.of(context).textTheme.body2),
+              ),
+            )
+        ),
+      ],
     );
   }
 }
@@ -126,7 +141,7 @@ class _SaveCollectionState extends State<_SaveCollection> {
     final Paint wishedCardPaint = Paint()..color = Colors.limeAccent.withOpacity(0.5);
     final Paint unselectedCardPaint = Paint()..color = Colors.grey.withOpacity(0.5);
     final double margin = 20.0;
-    final double maxSize = 50.0;
+    final double maxSize = 60.0;
     final double padding = 10.0;
     final double space = 0.25;
     double maxX;
@@ -139,7 +154,7 @@ class _SaveCollectionState extends State<_SaveCollection> {
 
     maxX = (width * (1 + space) - space) * (maxSize + 2*padding) + 2*margin;
     maxY = ((amiibos.amiibo.length / width).ceilToDouble()
-        * (1 + 0.5*space) - 0.5*space) * (1.5*maxSize + 2*padding) + 100 + 2*margin;
+      * (1 + 0.5*space) - 0.5*space) * (1.5*maxSize + 2*padding) + 100 + 2*margin;
 
     final ui.PictureRecorder pictureRecorder = ui.PictureRecorder();
     final Canvas canvas = Canvas(pictureRecorder);
@@ -156,28 +171,14 @@ class _SaveCollectionState extends State<_SaveCollection> {
           text: '\u24C7 '
         ),
         TextSpan(
-          style: TextStyle(
-            color: Colors.black, fontSize: 35,
-            wordSpacing: 100,
-          ),
-          text: 'Owned '
-        ),
-        TextSpan(
-          style: TextStyle(color: Colors.black, fontSize: 35,
-            wordSpacing: ((width-14.6)/width)*maxX + margin
-          ),
-          text: 'Wished '
-        ),
-        TextSpan(
-          style: TextStyle(color: Colors.black, fontSize: 25,),
-          text: 'created on: $time'
+          style: TextStyle(color: Colors.black, fontSize: 35, wordSpacing: 100),
+          text: 'Owned Wished'
         ),
       ]
     );
     TextPainter(text: aNetwork,
-      textAlign: TextAlign.left,
       textDirection: TextDirection.ltr
-    )..layout(maxWidth: maxX-125-2*margin)
+    )..layout(minWidth: maxX-125-margin)
       ..paint(canvas, Offset(125, maxY - margin - 65));
     canvas.drawPath(Path()..addRect(Rect.fromPoints(
       Offset(600, maxY - margin - 55),
@@ -188,10 +189,18 @@ class _SaveCollectionState extends State<_SaveCollection> {
       Offset(855, maxY - margin - 15)
     )), wishedCardPaint);
 
+    TextSpan createdDate = TextSpan(
+      style: TextStyle(color: Colors.black, fontSize: 25),
+      text: 'created on: $time'
+    );
+    TextPainter(text: createdDate, textDirection: TextDirection.rtl,)
+      ..layout(minWidth: maxX-125-margin)
+      ..paint(canvas, Offset(125, maxY - margin - 25));
+
     final _ima = await rootBundle.load('assets/images/icon_app.png');
     final ui.Image appIcon = await ui.instantiateImageCodec(
-        _ima.buffer.asUint8List(),
-        targetWidth: 80, targetHeight: 80
+      _ima.buffer.asUint8List(),
+      targetWidth: 80, targetHeight: 80
     ).then((codec) => codec.getNextFrame())
       .then((frame) => frame.image).catchError((e) => print(e));
 
@@ -203,8 +212,8 @@ class _SaveCollectionState extends State<_SaveCollection> {
       final Offset _offset = Offset(xOffset, yOffset);
       final Path cardPath = Path()..addRRect(RRect.fromRectAndRadius(
         Rect.fromPoints(
-            _offset,
-            _offset.translate(maxSize + 2*padding, 1.5*maxSize + 2*padding)
+          _offset,
+          _offset.translate(maxSize + 2*padding, 1.5*maxSize + 2*padding)
         ),
         Radius.circular(8.0)
       ));
@@ -221,15 +230,15 @@ class _SaveCollectionState extends State<_SaveCollection> {
       final bool taller = _image.width > 1.3*_image.height;
       canvas.drawImageNine(_image,
         Rect.fromCenter(
-            center: Offset.zero,
-            width: _image.height.toDouble()*1.5,
-            height: _image.width.toDouble()
+          center: Offset.zero,
+          width: _image.height.toDouble()*1.5,
+          height: _image.width.toDouble()
         ),
         Rect.fromLTRB(
-            _offset.dx + padding,
-            (taller ? _offset.dy + 1.4 * maxSize - _image.height : _offset.dy) + padding,
-            _offset.dx + maxSize + padding,
-            _offset.dy + 1.5*maxSize + padding
+          _offset.dx + padding,
+          (taller ? _offset.dy + 1.4 * maxSize - _image.height : _offset.dy) + padding,
+          _offset.dx + maxSize + padding,
+          _offset.dy + 1.5*maxSize + padding
         ),
         paint
       );
@@ -244,15 +253,27 @@ class _SaveCollectionState extends State<_SaveCollection> {
     }
 
     pic = pictureRecorder.endRecording();
-    ui.Image img = await pic.toImage(maxX.toInt(), maxY.toInt());
+    /*ui.Image img = await pic.toImage(maxX.toInt(), maxY.toInt());
     ByteData byteData = await img.toByteData(format: ui.ImageByteFormat.png);
     List<int> buffer = byteData.buffer.asUint8List();
-    pic.dispose(); img.dispose();
     file['path'] = path;
     file['buffer'] = buffer;
-    await compute(writeCollectionFile, file);
-    //final File file = File(path);
-    //file.writeAsBytes(buffer);
+    pic.dispose(); img.dispose();
+    await compute(writeCollectionFile, file);*/
+    try{
+      //pic = pictureRecorder.endRecording();
+      ui.Image img = await pic.toImage(maxX.toInt(), maxY.toInt());
+      ByteData byteData = await img.toByteData(format: ui.ImageByteFormat.png);
+      List<int> buffer = byteData.buffer.asUint8List();
+      file['path'] = path;
+      file['buffer'] = buffer;
+      compute(writeCollectionFile, file);
+      img.dispose();
+    }catch(e){
+      print(e);
+    }finally{
+      pic.dispose();
+    }
   }
 
   @override
@@ -367,7 +388,7 @@ class ResetCollection extends StatelessWidget{
     return CardSettings(
       title: 'Reset',
       subtitle: 'Reset your wishlist and collection',
-      icon: Icons.warning,
+      icon: const Icon(Icons.warning),
       onTap: () => _dialog(context),
     );
   }
@@ -522,7 +543,7 @@ class BottomBar extends StatelessWidget{
 class CardSettings extends StatelessWidget{
   final String title;
   final String subtitle;
-  final IconData icon;
+  final Widget icon;
   final VoidCallback onTap;
 
   CardSettings({
@@ -541,7 +562,7 @@ class CardSettings extends StatelessWidget{
         textColor: Theme.of(context).textTheme.body1.color,
         child: ListTile(
           title: Text(title),
-          subtitle: Text(subtitle, softWrap: false, overflow: TextOverflow.ellipsis),
+          subtitle: subtitle == null ? null : Text(subtitle, softWrap: false, overflow: TextOverflow.ellipsis),
           onTap: onTap ?? () => Navigator.pushNamed(context, "/settingsdetail", arguments: title),
           trailing: onTap == null ? const Icon(Icons.navigate_next) : null,
           leading: Container(
@@ -549,7 +570,7 @@ class CardSettings extends StatelessWidget{
             decoration: BoxDecoration(
               border: Border(right: BorderSide(width: 1, color: Theme.of(context).dividerColor))
             ),
-            child: Icon(icon),
+            child: icon,
           )
         ),
       )
