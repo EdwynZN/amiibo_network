@@ -165,7 +165,7 @@ class Themes {
       highlightColor: Colors.white54
     ),
     toggleableActiveColor: Colors.redAccent,
-    indicatorColor: const Color.fromRGBO(178, 218, 251, 1),
+    indicatorColor:const Color(0XFFE8C2BF),// const Color.fromRGBO(178, 218, 251, 1),
     buttonColor: const Color(0xFFE8C2BF),
   );
 
