@@ -4,12 +4,16 @@ import 'package:provider/provider.dart';
 import 'package:amiibo_network/provider/amiibo_provider.dart';
 
 class DetailPage extends StatelessWidget{
-  final AmiiboDB amiibo;
+  final int index;
 
-  DetailPage({Key key, @required this.amiibo}) : super(key: key);
+  DetailPage({Key key,
+    @required this.index,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    AmiiboDB amiibo = Provider.of<AmiiboProvider>(context, listen: false)
+      .amiibosDB.amiibo[index];
     return SafeArea(
       child: Scaffold(
         body: SingleChildScrollView(
@@ -103,19 +107,6 @@ class _Buttons extends StatefulWidget {
 class _ButtonsState extends State<_Buttons> {
 
   @override
-  void initState() {
-    super.initState();
-  }
-
-  @override
-  _Buttons get widget => super.widget;
-
-  @override
-  dispose(){
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
     AmiiboProvider value = Provider.of<AmiiboProvider>(context, listen: false);
     return Row(
@@ -153,11 +144,11 @@ class _ButtonsState extends State<_Buttons> {
 }
 
 class RegionDetail extends StatelessWidget{
-  final String text;
+  final String date;
   final String asset;
   final String description;
 
-  RegionDetail(this.text,this.asset,this.description);
+  RegionDetail(this.date,this.asset,this.description);
 
   @override
   Widget build(BuildContext context) {
@@ -172,7 +163,7 @@ class RegionDetail extends StatelessWidget{
          ),
         Padding(
           padding: const EdgeInsets.only(left: 8),
-          child: Text(text,
+          child: Text(date,
             textAlign: TextAlign.start,
             overflow: TextOverflow.fade,
             maxLines: 1,

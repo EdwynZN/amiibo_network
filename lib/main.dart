@@ -12,21 +12,27 @@ import 'package:amiibo_network/themes.dart';
 
 void main() async {
   //debugPrintGestureArenaDiagnostics = true;
-  await ThemeProvider().initThemes();
-  if(await Service().compareLastUpdate()) runApp(AmiiboNetwork(Home()));
-  else runApp(AmiiboNetwork(SplashScreen()));
+  String savedTheme = await getTheme();
+  bool splash = await Service().compareLastUpdate();
+  runApp(
+    AmiiboNetwork(
+      firstPage: splash ? Home() : SplashScreen(),
+      theme: savedTheme,
+    )
+  );
 }
 
 class AmiiboNetwork extends StatelessWidget {
   final Widget firstPage;
-  AmiiboNetwork(this.firstPage);
+  final String theme;
+  AmiiboNetwork({this.firstPage, this.theme});
 
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider<ThemeProvider>(
-          builder: (context) => ThemeProvider(),
+          builder: (context) => ThemeProvider(theme),
         ),
         ChangeNotifierProvider<AmiiboProvider>(
           builder: (context) => AmiiboProvider(),

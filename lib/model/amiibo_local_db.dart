@@ -129,7 +129,7 @@ class LastUpdateDB{
   });
 
   factory LastUpdateDB.fromMap(Map<String, dynamic> date) => LastUpdateDB(
-    lastUpdated: DateTime.parse(date["lastUpdated"]),
+    lastUpdated: DateTime.tryParse(date["lastUpdated"]),
   );
 
   factory LastUpdateDB.fromDate(DateTime date) => LastUpdateDB(

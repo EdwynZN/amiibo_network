@@ -64,11 +64,9 @@ class SplashScreenState extends State<SplashScreen>
                     key = 1;
                     _text = snapshot.data ? 'WELCOME' : 'Couldn\'t Update 😢';
                     _child = Image.asset('assets/images/icon_app.png', fit: BoxFit.fitWidth);
-                    _animationController.forward().whenCompleteOrCancel(() {
-                      Future.delayed(const Duration(milliseconds: 500),
-                        () => Navigator.pushReplacementNamed(context, '/home')
-                      );
-                    });
+                    _animationController.forward().whenCompleteOrCancel(() =>
+                      Navigator.pushReplacementNamed(context, '/home')
+                    );
                   }
                   return AnimatedSwitcher(duration: const Duration(seconds: 3),
                     switchOutCurve: Curves.easeOutBack,

@@ -117,36 +117,36 @@ class _CollectionDrawerState extends State<CollectionDrawer> {
                                 }
                               ),
                               FutureBuilder(
-                                  future: _listOfCards,
-                                  builder: (context, AsyncSnapshot<List<String>> snapshot) {
-                                    return Theme(
-                                        data: Theme.of(context).copyWith(
-                                          dividerColor: Colors.transparent,
-                                          accentColor: Theme.of(context).textTheme.subhead.color,
-                                        ),
-                                        child: ExpansionTile(
-                                          leading: const Icon(Icons.view_carousel),
-                                          title: Text('Cards'),
-                                          initiallyExpanded: _cardExpand,
-                                          onExpansionChanged: cardExpand,
-                                          children: <Widget>[
-                                            if(snapshot.hasData)
-                                              for(String series in snapshot.data)
-                                                ListTile(
-                                                  leading: CircleAvatar(
-                                                    backgroundColor: Theme.of(context).accentColor,
-                                                    foregroundColor: Theme.of(context).accentIconTheme.color,
-                                                    radius: 12,
-                                                    child: Text(series[0]),
-                                                  ),
-                                                  title: Text(series),
-                                                  onTap: () => _onTapTile(series),
-                                                  selected: _selected == series,
+                                future: _listOfCards,
+                                builder: (context, AsyncSnapshot<List<String>> snapshot) {
+                                  return Theme(
+                                      data: Theme.of(context).copyWith(
+                                        dividerColor: Colors.transparent,
+                                        accentColor: Theme.of(context).textTheme.subhead.color,
+                                      ),
+                                      child: ExpansionTile(
+                                        leading: const Icon(Icons.view_carousel),
+                                        title: Text('Cards'),
+                                        initiallyExpanded: _cardExpand,
+                                        onExpansionChanged: cardExpand,
+                                        children: <Widget>[
+                                          if(snapshot.hasData)
+                                            for(String series in snapshot.data)
+                                              ListTile(
+                                                leading: CircleAvatar(
+                                                  backgroundColor: Theme.of(context).accentColor,
+                                                  foregroundColor: Theme.of(context).accentIconTheme.color,
+                                                  radius: 12,
+                                                  child: Text(series[0]),
                                                 ),
-                                          ],
-                                        )
-                                    );
-                                  }
+                                                title: Text(series),
+                                                onTap: () => _onTapTile(series),
+                                                selected: _selected == series,
+                                              ),
+                                        ],
+                                      )
+                                  );
+                                }
                               ),
                             ]),
                           )

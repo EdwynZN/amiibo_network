@@ -13,7 +13,7 @@ class Routes{
   static Route<dynamic> getRoute(RouteSettings settings) {
     switch(settings.name){
       case '/details':
-        return cupertinoRoute(DetailPage(amiibo: settings.arguments), settings);
+        return cupertinoRoute(DetailPage(index: settings.arguments), settings);
       case '/home':
         return FadeRoute(builder: (_) => Home());
       case '/settings':

@@ -92,8 +92,8 @@ class _SliverFloatingPersistentHeader extends SliverPersistentHeaderDelegate {
     this.leading,
     this.title,
     this.onTap
-  }) : _maxExtent = kToolbarHeight,
-        _minExtent = kToolbarHeight,
+  }) : _maxExtent = kToolbarHeight+6.0,
+        _minExtent = kToolbarHeight+6.0,
         super();
 
   @override
@@ -110,16 +110,17 @@ class _SliverFloatingPersistentHeader extends SliverPersistentHeaderDelegate {
         snap: snap,
         child: Container(
           color: Theme.of(context).scaffoldBackgroundColor,
-          padding: const EdgeInsets.symmetric(horizontal: 12),
+          padding: const EdgeInsets.fromLTRB(12,6,12,0),
           child: ListTileTheme(
-            contentPadding: const EdgeInsets.symmetric(horizontal: 6),
+            contentPadding: const EdgeInsets.symmetric(horizontal: 12),
             iconColor: Theme.of(context).iconTheme.color,
             textColor: Theme.of(context).textTheme.title.color,
             child: Material(
               color: Theme.of(context).backgroundColor,
               type: MaterialType.card,
               elevation: elevation,
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
+              borderRadius: BorderRadius.circular(8.0),
+              //shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
               child: ListTile(
                 leading: leading,
                 title: DefaultTextStyle(

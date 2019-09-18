@@ -37,37 +37,21 @@ class AmiiboSQLite implements Dao<AmiiboLocalDB, String, AmiiboDB>{
     return List<String>.from(maps.map((x) => x['name']));
   }
 
-  Future<LastUpdateDB> lastUpdate() async{
+  Future<List<Map<String, dynamic>>> fetchRowTable(String name, int id) async{
     Database _db = await connectionFactory.database;
-    List<Map<String, dynamic>> maps = await _db.query('date',
+    List<Map<String, dynamic>> maps = await _db.query(name,
       columns: ['lastUpdated'],
-      where: 'id = 1');
-    if (maps.length > 0) return LastUpdateDB.fromMap(maps.first);
-    return null;
+      where: 'id = ?',
+      whereArgs: [id]
+    );
+    return maps;
   }
 
-  Future<String> favoriteTheme() async{
+  Future<void> updateRowTable(String name, List<String> args) async{
     Database _db = await connectionFactory.database;
-    List<Map<String, dynamic>> maps = await _db.query('date',
-      columns: ['lastUpdated'],
-      where: 'id = 2');
-    if (maps.length > 0) return maps.first['lastUpdated'].toString();
-    return 'Auto';
-  }
-
-  Future<void> updateTheme(String theme) async{
-    Database _db = await connectionFactory.database;
-    return await _db.transaction((tx) async{
-      tx.rawInsert('''REPLACE INTO date
-        VALUES(2, ?)''', [theme]);
-    });
-  }
-
-  Future<void> updateTime(LastUpdateDB map) async{
-    Database _db = await connectionFactory.database;
-    return await _db.transaction((tx) async{
-      tx.rawInsert('''REPLACE INTO date
-        VALUES(1, ?)''', [map?.lastUpdated?.toIso8601String()]);
+    String values = args?.skip(1)?.fold<String>('?', (curr, next) => curr + ',?');
+    await _db.transaction((tx) async{
+      await tx.rawInsert('''REPLACE INTO $name VALUES($values)''', args);
     });
   }
 
@@ -80,23 +64,6 @@ class AmiiboSQLite implements Dao<AmiiboLocalDB, String, AmiiboDB>{
       orderBy: orderBy);
     return entityFromList(maps);
   }
-
-  /*Future<List<Map<String, dynamic>>> fetchSum(String column, String name,
-      bool all, bool group) async{
-    Database _db = await connectionFactory.database;
-    List<Map<String,dynamic>> result = await _db.query('amiibo',
-        columns: [
-          if(group) 'amiiboSeries',
-          'count(1) AS Total',
-          'count(case WHEN wishlist=1 then 1 end) AS Wished',
-          'count(case WHEN owned=1 then 1 end) AS Owned'
-        ],
-        where: all ? null : '$column LIKE ',
-        whereArgs: all ? null : [name],
-        groupBy: group ? 'amiiboSeries' : null
-    );
-    return result;
-  }*/
 
   Future<List<Map<String, dynamic>>> fetchSum(String column,
       List<String> name, bool group) async{
@@ -179,13 +146,13 @@ class AmiiboSQLite implements Dao<AmiiboLocalDB, String, AmiiboDB>{
   }
 
   Future<void> updateAll(String name, Map<String,dynamic> map,
-      {String category, String columnCategory}) async{
-      Database _db = await connectionFactory.database;
-      await _db.transaction((tx) async {
-        tx.update(name, map,
-          where: category != null ? '$columnCategory LIKE ?' : null,
-          whereArgs: category != null ? [category] : null);
-      });
+    {String category, String columnCategory}) async{
+    Database _db = await connectionFactory.database;
+    await _db.transaction((tx) async {
+      tx.update(name, map,
+        where: category != null ? '$columnCategory LIKE ?' : null,
+        whereArgs: category != null ? [category] : null);
+    });
   }
 
   Future<void> remove({String name, String column, String value}) async{

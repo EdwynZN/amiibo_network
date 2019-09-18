@@ -29,7 +29,6 @@ class AmiiboProvider with ChangeNotifier{
   AmiiboLocalDB _amiiboListDB;
 
   final _collectionList = PublishSubject<Map<String,dynamic>>();
-  final filter = BehaviorSubject<String>();
   final _updateAmiiboDB = PublishSubject<AmiiboLocalDB>()
     ..listen((amiibos) async => await _service.update(amiibos));
 
@@ -44,7 +43,8 @@ class AmiiboProvider with ChangeNotifier{
 
   Observable<Map<String,dynamic>> get collectionList => _collectionList.stream;
 
-  Future<void> fetchAllAmiibosDB() => _fetchByCategory(_strFilter).then((x) => notifyListeners());
+  Future<void> fetchAllAmiibosDB() =>
+    _fetchByCategory(_strFilter).then((x) => notifyListeners());
 
   resetPagination(String name,{bool search = false}) {
     _searchFilter = search ? 'name' : 'amiiboSeries';
@@ -52,9 +52,8 @@ class AmiiboProvider with ChangeNotifier{
     _fetchByCategory(name).then((x) => notifyListeners());
   }
 
-  refreshPagination() {
+  refreshPagination() =>
     _fetchByCategory(_strFilter).then((x) => notifyListeners());
-  }
 
   set removeFromList(String position) => --_listOwned[position];
   set countOwned(int counter) => counter.isOdd ? ++_listOwned['Owned'] : --_listOwned['Owned'];
@@ -103,7 +102,6 @@ class AmiiboProvider with ChangeNotifier{
   @override
   dispose() {
     _collectionList.close();
-    filter.close();
     _updateAmiiboDB.close();
     super.dispose();
   }

@@ -6,9 +6,13 @@ import 'package:flutter/services.dart';
 
 final AmiiboSQLite dao = AmiiboSQLite();
 
-Future<String> getTheme() async => await dao.favoriteTheme();
+Future<String> getTheme() async => await dao.fetchRowTable('date', 2)
+  .then((maps){
+    if (maps.length > 0) return maps.first['lastUpdated'].toString();
+    return 'Auto';}
+  );
 
-Future updateTheme(String theme) async => await dao.updateTheme(theme);
+Future updateTheme(String theme) async => await dao.updateRowTable('date', ['2', theme]);
 
 class Service{
   static Map<String, dynamic> _jsonFile;
@@ -41,8 +45,11 @@ class Service{
   }
 
   Future<DateTime> get lastUpdateDB async{
-    return _lastUpdateDB ??= await dao.lastUpdate()
-      .then((x) => x?.lastUpdated);
+    return _lastUpdateDB ??= await dao.fetchRowTable('date', 1)
+      .then((maps) {
+      if (maps.length > 0) return LastUpdateDB.fromMap(maps.first).lastUpdated;
+      return null;
+    });
   }
 
   Future<DateTime> get lastUpdate async{
@@ -62,7 +69,8 @@ class Service{
 
   _updateDB(AmiiboLocalDB amiiboDB) async{
     dao.insertAll(amiiboDB, "amiibo").then((_) async{
-      await dao.updateTime(LastUpdateDB.fromDate(await lastUpdate));
+      LastUpdateDB dateTime = LastUpdateDB.fromDate(await lastUpdate);
+      await dao.updateRowTable('date', ['1', dateTime?.lastUpdated?.toIso8601String()]);
     });
   }
 

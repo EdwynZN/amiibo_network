@@ -134,7 +134,7 @@ class _StatsPageState extends State<StatsPage> {
                       top: BorderSide(
                         color: Theme.of(context).indicatorColor,//const Color(0xFFE8C2BF),
                         width: 2,
-                      )
+                      ),
                     ),
                     textColor: select.contains('Figure') ?
                     Theme.of(context).textTheme.title.color : Theme.of(context).appBarTheme.textTheme.title.color,
@@ -153,11 +153,11 @@ class _StatsPageState extends State<StatsPage> {
                   fit: FlexFit.tight,
                   child: FlatButton(
                     shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.horizontal(right: Radius.circular(8)),
-                        side: BorderSide(
-                          color: Theme.of(context).indicatorColor,//const Color(0xFFE8C2BF),
-                          width: 2,
-                        )
+                      borderRadius: BorderRadius.horizontal(right: Radius.circular(8)),
+                      side: BorderSide(
+                        color: Theme.of(context).indicatorColor,//const Color(0xFFE8C2BF),
+                        width: 2,
+                      )
                     ),
                     textColor: select.contains('Card') ?
                     Theme.of(context).textTheme.title.color : Theme.of(context).appBarTheme.textTheme.title.color,

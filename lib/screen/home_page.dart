@@ -33,6 +33,8 @@ class HomePageState extends State<HomePage>
     with SingleTickerProviderStateMixin{
   ScrollController _controller;
   AnimationController _animationController;
+  AmiiboProvider amiiboProvider;
+  SelectProvider selected;
   static Widget _defaultLayoutBuilder(Widget currentChild, List<Widget> previousChildren) {
     List<Widget> children = previousChildren;
     if (currentChild != null)
@@ -43,14 +45,19 @@ class HomePageState extends State<HomePage>
     );
   }
 
+  @override
+  didChangeDependencies(){
+    super.didChangeDependencies();
+    amiiboProvider = Provider.of<AmiiboProvider>(context, listen: false);
+    selected = Provider.of<SelectProvider>(context, listen: false);
+  }
+
   void _restartAnimation(){
     _controller.jumpTo(0);
     _animationController.forward();
   }
 
   void _updateSelection({int wished = 0, int owned = 0}) async {
-    final AmiiboProvider amiiboProvider = Provider.of<AmiiboProvider>(context, listen: false);
-    final SelectProvider selected = Provider.of<SelectProvider>(context, listen: false);
     AmiiboLocalDB amiibos = AmiiboLocalDB(amiibo: List<AmiiboDB>.of(
         selected.set.map((x) => AmiiboDB(key: x.value, wishlist: wished, owned: owned))
       )
@@ -60,10 +67,7 @@ class HomePageState extends State<HomePage>
     await amiiboProvider.refreshPagination();
   }
 
-  void _cancelSelection(){
-    final SelectProvider selected = Provider.of<SelectProvider>(context, listen: false);
-    selected.clearSelected();
-  }
+  void _cancelSelection() => selected.clearSelected();
 
   void initBloc() async =>
     await Provider.of<AmiiboProvider>(context, listen: false).fetchAllAmiibosDB();
@@ -105,14 +109,12 @@ class HomePageState extends State<HomePage>
   void _search() async{
     String value = await Navigator.pushNamed(context,"/search");
     if(value != null && value != '') {
-      Provider.of<AmiiboProvider>(context, listen: false)
-          .resetPagination(value, search: true);
+      amiiboProvider.resetPagination(value, search: true);
       _restartAnimation();
     }
   }
 
   Future<bool> _exitApp() async{
-    final SelectProvider selected = Provider.of<SelectProvider>(context, listen: false);
     if(selected.multipleSelected){
       selected.clearSelected();
       return false;
@@ -209,7 +211,7 @@ class HomePageState extends State<HomePage>
                         else return SliverGrid(
                           gridDelegate: MediaQuery.of(context).size.width >= 600 ?
                           SliverGridDelegateWithMaxCrossAxisExtent(
-                            maxCrossAxisExtent: 200,
+                            maxCrossAxisExtent: 192,
                             mainAxisSpacing: 8.0,
                           ) :
                           SliverGridDelegateWithFixedCrossAxisCount(
@@ -220,8 +222,8 @@ class HomePageState extends State<HomePage>
                             return FadeSwitchAnimation(
                               key: ValueKey<int>(index),
                               child: AmiiboGrid(
+                                index: index,
                                 key: ValueKey<int>(data?.amiibo[index].key),
-                                amiibo: data?.amiibo[index],
                               ),
                             );
                           },
@@ -489,11 +491,11 @@ class FAB extends StatelessWidget{
 }
 
 class AmiiboGrid extends StatefulWidget {
-  final AmiiboDB amiibo;
+  final int index;
 
   const AmiiboGrid({
     Key key,
-    this.amiibo,
+    this.index,
   }) : super(key: key);
 
   @override
@@ -501,58 +503,46 @@ class AmiiboGrid extends StatefulWidget {
 }
 
 class AmiiboGridState extends State<AmiiboGrid> {
-  Widget _widget;
+  SelectProvider mSelected;
+  bool _multipleSelected;
+  AmiiboProvider amiiboProvider;
+  AmiiboDB amiibo;
 
   @override
-  void initState(){
-    super.initState();
-    _widget = _changeWidget();
+  didChangeDependencies(){
+    super.didChangeDependencies();
+    amiiboProvider = Provider.of<AmiiboProvider>(context, listen: false);
+    mSelected = Provider.of<SelectProvider>(context, listen: false);
   }
 
-  @override
-  void didUpdateWidget(AmiiboGrid oldWidget) {
-    super.didUpdateWidget(oldWidget);
-    _widget = _changeWidget();
-  }
-
-  Widget _changeWidget(){
-    if(widget.amiibo?.wishlist?.isOdd ?? false)
-      return const Icon(Icons.card_giftcard, key: ValueKey(2), color: Colors.limeAccent,);
-    else if(widget.amiibo?.owned?.isOdd ?? false)
-      return const Icon(Icons.star, key: ValueKey(1), color: Colors.pinkAccent,);
-    else return const SizedBox.shrink();
-  }
-
-  _onDoubleTap()
-    => Navigator.pushNamed(context, "/details", arguments: widget.amiibo);
+  _onDoubleTap() =>
+    Navigator.pushNamed(context, "/details", arguments: widget.index);
 
   _onTap(){
-    final AmiiboProvider amiiboProvider = Provider.of<AmiiboProvider>(context, listen: false);
-    switch(widget.amiibo?.owned ?? 0){
+    switch(amiibo?.owned ?? 0){
       case 1:
-        amiiboProvider.countOwned = widget.amiibo.owned = 0;
-        amiiboProvider.countWished = widget.amiibo.wishlist = 1;
+        amiiboProvider.countOwned = amiibo.owned = 0;
+        amiiboProvider.countWished = amiibo.wishlist = 1;
         break;
       case 0:
-        if((widget.amiibo?.wishlist ?? 0) == 0)
-          amiiboProvider.countOwned = widget.amiibo.owned = 1;
-        else amiiboProvider.countWished = widget.amiibo.wishlist = 0;
+        if((amiibo?.wishlist ?? 0) == 0)
+          amiiboProvider.countOwned = amiibo.owned = 1;
+        else amiiboProvider.countWished = amiibo.wishlist = 0;
         break;
     }
-    amiiboProvider.updateAmiiboDB(amiibo: widget.amiibo);
-    amiiboProvider.updateList();
-    setState(() {_widget = _changeWidget();});
+    amiiboProvider..updateAmiiboDB(amiibo: amiibo)..updateList()..notifyWidgets();
+    //setState(() {});
   }
 
   _onLongPress(){
-    final SelectProvider mSelected = Provider.of<SelectProvider>(context, listen: false);
     if(!mSelected.addSelected(widget.key)) mSelected.removeSelected(widget.key);
     mSelected.notifyWidgets();
   }
 
   @override
   Widget build(BuildContext context){
-    bool _multipleSelected = Provider.of<SelectProvider>(context, listen: false).multipleSelected;
+    _multipleSelected = mSelected.multipleSelected;
+    amiibo = amiiboProvider.amiibosDB.amiibo[widget.index];
     return Selector<SelectProvider,bool>(
       builder: (context, _isSelected, child){
         return AnimatedContainer(
@@ -583,8 +573,8 @@ class AmiiboGridState extends State<AmiiboGrid> {
                   Expanded(
                     child: Hero(
                       transitionOnUserGestures: true,
-                      tag: widget.amiibo.key,
-                      child: Image.asset('assets/collection/icon_${widget.amiibo.key}.png',
+                      tag: amiibo.key,
+                      child: Image.asset('assets/collection/icon_${amiibo.key}.png',
                         fit: BoxFit.scaleDown,
                       )
                     ),
@@ -597,7 +587,7 @@ class AmiiboGridState extends State<AmiiboGrid> {
                           shape: RoundedRectangleBorder(borderRadius: BorderRadius.vertical(bottom: Radius.circular(8)))),
                       alignment: Alignment.center,
                       padding: EdgeInsets.symmetric(horizontal: 5),
-                      child: Text('${widget.amiibo.name}',
+                      child: Text('${amiibo.name}',
                         softWrap: false,
                         overflow: TextOverflow.fade,
                         style: TextStyle(fontSize: 12, fontWeight: FontWeight.w500),
@@ -610,14 +600,26 @@ class AmiiboGridState extends State<AmiiboGrid> {
             ),
             Align(
               alignment: Alignment.topLeft,
-              child: AnimatedSwitcher(
-                duration: const Duration(milliseconds: 200),
-                switchInCurve: Curves.easeInToLinear,
-                switchOutCurve: Curves.easeOutCirc,
-                transitionBuilder: (Widget child, Animation <double> animation)
-                  => ScaleTransition(scale: animation, child: child,),
-                child: _widget
-              ),
+              child: Selector<AmiiboProvider, Widget>(
+                builder: (ctx, widget, child){
+                  return AnimatedSwitcher(
+                    duration: const Duration(milliseconds: 200),
+                    switchInCurve: Curves.easeInToLinear,
+                    switchOutCurve: Curves.easeOutCirc,
+                    transitionBuilder: (Widget child, Animation <double> animation)
+                    => ScaleTransition(scale: animation, child: child,),
+                    child: widget
+                  );
+                },
+                selector: (context, amiiboProvider) {
+                  AmiiboDB amiibo = amiiboProvider.amiibosDB.amiibo[widget.index];
+                  if(amiibo?.wishlist?.isOdd ?? false)
+                    return const Icon(Icons.card_giftcard, key: ValueKey(2), color: Colors.limeAccent,);
+                  else if(amiibo?.owned?.isOdd ?? false)
+                    return const Icon(Icons.star, key: ValueKey(1), color: Colors.pinkAccent,);
+                  else return const SizedBox.shrink();
+                }
+              )
             ),
           ],
         ),
