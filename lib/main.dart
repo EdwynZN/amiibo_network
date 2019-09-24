@@ -34,9 +34,18 @@ class AmiiboNetwork extends StatelessWidget {
         ChangeNotifierProvider<ThemeProvider>(
           builder: (context) => ThemeProvider(theme),
         ),
-        ChangeNotifierProvider<AmiiboProvider>(
-          builder: (context) => AmiiboProvider(),
+        ChangeNotifierProvider<SortProvider>(
+          builder: (context) => SortProvider(),
         ),
+        ChangeNotifierProxyProvider<SortProvider, AmiiboProvider>(
+          initialBuilder: (_) => AmiiboProvider(),
+          builder: (ctx, t, r){
+            return r;
+          },
+        ),
+        /*ChangeNotifierProvider<AmiiboProvider>(
+          builder: (context) => AmiiboProvider(),
+        ),*/
         Consumer<ThemeProvider>(
           builder: (context, themeMode, child) => MaterialApp(
             debugShowCheckedModeBanner: false,

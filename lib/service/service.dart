@@ -87,7 +87,8 @@ class Service{
   }
 
   Future<List<String>> fetchDistinct([bool figure = true]) async =>
-    dao.fetchDistinct('amiibo', 'amiiboSeries', figure ? 'IS NOT' : 'IS');
+    dao.fetchDistinct('amiibo', 'amiiboSeries',
+      figure ? 'type IS NOT' : 'type IS', ["Card"]);
 
   Future<List<String>> searchDB(String name) async =>
     dao.fetchLimit('%$name%', 10);

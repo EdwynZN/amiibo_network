@@ -80,6 +80,11 @@ class Themes {
       materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
       height: 48
     ),
+    bottomSheetTheme: BottomSheetThemeData(
+      elevation: 8.0,
+      backgroundColor: Colors.transparent,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(8))),
+    ),
     toggleableActiveColor: const Color.fromRGBO(207, 102, 121, 1),
     buttonColor: Colors.grey[850],
   );
@@ -162,7 +167,12 @@ class Themes {
       buttonColor: const Color(0xFFE8C2BF), //Colors.white70,
       materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
       height: 48,
-      highlightColor: Colors.white54
+      highlightColor: Colors.white70,
+    ),
+    bottomSheetTheme: BottomSheetThemeData(
+      elevation: 8.0,
+      backgroundColor: Colors.transparent,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(8))),
     ),
     toggleableActiveColor: Colors.redAccent,
     indicatorColor:const Color(0XFFE8C2BF),// const Color.fromRGBO(178, 218, 251, 1),

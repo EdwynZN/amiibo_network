@@ -294,18 +294,6 @@ class _SaveCollectionState extends State<_SaveCollection> {
       titlePadding: const EdgeInsets.only(top: 12.0),
       contentPadding: const EdgeInsets.only(bottom: 8.0),
       children: <Widget>[
-        /*CheckboxListTile(
-          value: select.contains('Figure')
-              && select.contains('Card') && select.contains('Yarn'),
-          controlAffinity: ListTileControlAffinity.leading,
-          onChanged: (value){
-            setState(() {
-              if(value) select.addAll(['Figure', 'Yarn', 'Card']);
-              else select.clear();
-            });
-          },
-          title: Text('All'),
-        ),*/
         CheckboxListTile(
           value: select.contains('Figure') && select.contains('Figure'),
           controlAffinity: ListTileControlAffinity.leading,
@@ -328,27 +316,24 @@ class _SaveCollectionState extends State<_SaveCollection> {
           },
           title: Text('Cards'),
         ),
-        Row(
-          mainAxisSize: MainAxisSize.min,
-          mainAxisAlignment: MainAxisAlignment.end,
-          children: <Widget>[
-            FlatButton(
-              onPressed: select.isEmpty ? null : () async {
-                final Map<PermissionGroup, PermissionStatus> response =
-                  await PermissionHandler().requestPermissions([PermissionGroup.storage]);
-                final Map<String, dynamic> permission = checkPermission(
+        Align(
+          alignment: Alignment.centerRight,
+          child: FlatButton(
+            onPressed: select.isEmpty ? null : () async {
+              final Map<PermissionGroup, PermissionStatus> response =
+              await PermissionHandler().requestPermissions([PermissionGroup.storage]);
+              final Map<String, dynamic> permission = checkPermission(
                   response[PermissionGroup.storage]
-                );
-                if(permission['permission']) saveCollection();
-                Navigator.of(context).pop(permission['permission'] ?
-                  'Saving your file. This could take a while depending on your device' :
-                  permission['message']
-                );
-              },
-              child: Text('Save')
-            )
-          ],
-        )
+              );
+              if(permission['permission']) saveCollection();
+              Navigator.of(context).pop(permission['permission'] ?
+              'Saving your file. This could take a while depending on your device' :
+              permission['message']
+              );
+            },
+            child: Text('Save')
+          )
+        ),
       ],
     );
   }
@@ -560,18 +545,23 @@ class CardSettings extends StatelessWidget{
       child: ListTileTheme(
         iconColor: Theme.of(context).iconTheme.color,
         textColor: Theme.of(context).textTheme.body1.color,
-        child: ListTile(
-          title: Text(title),
-          subtitle: subtitle == null ? null : Text(subtitle, softWrap: false, overflow: TextOverflow.ellipsis),
-          onTap: onTap ?? () => Navigator.pushNamed(context, "/settingsdetail", arguments: title),
-          trailing: onTap == null ? const Icon(Icons.navigate_next) : null,
-          leading: Container(
-            padding: EdgeInsets.only(right: 16, top: 8, bottom: 8),
-            decoration: BoxDecoration(
-              border: Border(right: BorderSide(width: 1, color: Theme.of(context).dividerColor))
-            ),
-            child: icon,
-          )
+        child: Material(
+          color: Colors.transparent,
+          shape: Theme.of(context).cardTheme.shape,
+          clipBehavior: Clip.hardEdge,
+          child: ListTile(
+              title: Text(title),
+              subtitle: subtitle == null ? null : Text(subtitle, softWrap: false, overflow: TextOverflow.ellipsis),
+              onTap: onTap ?? () => Navigator.pushNamed(context, "/settingsdetail", arguments: title),
+              trailing: onTap == null ? const Icon(Icons.navigate_next) : null,
+              leading: Container(
+                padding: EdgeInsets.only(right: 16, top: 8, bottom: 8),
+                decoration: BoxDecoration(
+                    border: Border(right: BorderSide(width: 1, color: Theme.of(context).dividerColor))
+                ),
+                child: icon,
+              )
+          ),
         ),
       )
     );

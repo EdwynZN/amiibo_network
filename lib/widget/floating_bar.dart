@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'dart:math' as math;
 
+import 'package:flutter/widgets.dart';
+
 class SliverFloatingBar extends StatefulWidget{
   final bool pinned;
   final bool floating;
@@ -120,6 +122,7 @@ class _SliverFloatingPersistentHeader extends SliverPersistentHeaderDelegate {
               type: MaterialType.card,
               elevation: elevation,
               borderRadius: BorderRadius.circular(8.0),
+              clipBehavior: Clip.hardEdge,
               //shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
               child: ListTile(
                 leading: leading,

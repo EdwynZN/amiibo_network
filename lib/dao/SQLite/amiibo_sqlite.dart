@@ -17,12 +17,13 @@ class AmiiboSQLite implements Dao<AmiiboLocalDB, String, AmiiboDB>{
         'WHEN type = "Yarn" THEN 2 ELSE 3 END, $orderBy DESC'
   */
 
-  Future<List<String>> fetchDistinct(String name, String column, String condition) async{
+  Future<List<String>> fetchDistinct(String name, String column,
+      String condition, List<String> whereArgs) async{
     Database _db = await connectionFactory.database;
     List<Map<String, dynamic>> maps = await _db.query(name, distinct: true,
       columns: [column],
-      where: 'type $condition ?',
-      whereArgs: ["Card"],
+      where: '$condition ?',
+      whereArgs: whereArgs,
       orderBy: column);
     return List<String>.from(maps.map((x) => x['amiiboSeries']));
   }

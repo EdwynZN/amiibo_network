@@ -107,14 +107,14 @@ class _StatsPageState extends State<StatsPage> {
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.horizontal(left: Radius.circular(8)),
                       side: BorderSide(
-                        color: Theme.of(context).indicatorColor,//const Color(0xFFE8C2BF),
+                        color: Theme.of(context).indicatorColor,
                         width: 2,
                       )
                     ),
                     textColor: select.isEmpty ?
                     Theme.of(context).textTheme.title.color : Theme.of(context).appBarTheme.textTheme.title.color,
                     color: select.isEmpty ?
-                    Theme.of(context).indicatorColor : null,//Theme.of(context).buttonColor,
+                    Theme.of(context).indicatorColor : null,
                     onPressed: () => select.isEmpty ? null : setState(() {
                       select.clear();
                       if(_controller.offset != _controller.initialScrollOffset)
@@ -134,6 +134,14 @@ class _StatsPageState extends State<StatsPage> {
                       top: BorderSide(
                         color: Theme.of(context).indicatorColor,//const Color(0xFFE8C2BF),
                         width: 2,
+                      ),
+                      left: BorderSide(
+                        color: Theme.of(context).indicatorColor,
+                        width: 0.0
+                      ),
+                      right: BorderSide(
+                        color: Theme.of(context).indicatorColor,
+                        width: 0.0
                       ),
                     ),
                     textColor: select.contains('Figure') ?
