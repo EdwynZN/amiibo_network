@@ -9596,7 +9596,7 @@
     },
     {
       "key":739,
-      "id":null,
+      "id":"37800000038A0002",
       "amiiboSeries":"Super Smash Bros.",
       "character":"Snake",
       "gameSeries":"Metal Gear Solid",
@@ -9609,7 +9609,7 @@
     },
     {
       "key":740,
-      "id":null,
+      "id":"1907000003840002",
       "amiiboSeries":"Super Smash Bros.",
       "character":"Squirtle",
       "gameSeries":"Pokemon",
@@ -9622,7 +9622,7 @@
     },
     {
       "key":741,
-      "id":null,
+      "id":"1902000003830002",
       "amiiboSeries":"Super Smash Bros.",
       "character":"Ivysaur",
       "gameSeries":"Pokemon",
@@ -9635,7 +9635,7 @@
     },
     {
       "key":742,
-      "id":null,
+      "id":"0100000003990902",
       "amiiboSeries":"Legend Of Zelda",
       "character":"Link",
       "gameSeries":"The Legend of Zelda",
@@ -9648,41 +9648,41 @@
     },
     {
       "key":743,
-      "id":null,
+      "id":"37C00000038B0002",
       "amiiboSeries":"Super Smash Bros.",
       "character":"Simon",
       "gameSeries":"Castlevania",
       "name":"Simon",
-      "au":"2019/11/30",
-      "eu":"2019/11/30",
-      "jp":"2019/11/30",
-      "na":"2019/11/30",
+      "au":"2019/11/15",
+      "eu":"2019/11/15",
+      "jp":"2019/11/08",
+      "na":"2019/11/15",
       "type":"Figure"
     },
     {
       "key":744,
-      "id":null,
+      "id":"2108000003880002",
       "amiiboSeries":"Super Smash Bros.",
       "character":"Chrom",
       "gameSeries":"Fire Emblem",
       "name":"Chrom",
-      "au":"2019/11/30",
-      "eu":"2019/11/30",
-      "jp":"2019/11/30",
-      "na":"2019/11/30",
+      "au":"2019/11/15",
+      "eu":"2019/11/15",
+      "jp":"2019/11/08",
+      "na":"2019/11/15",
       "type":"Figure"
     },
     {
       "key":745,
-      "id":null,
+      "id":"1BD7000003860002",
       "amiiboSeries":"Super Smash Bros.",
       "character":"Incineroar",
       "gameSeries":"Pokemon",
       "name":"Incineroar",
-      "au":"2019/11/30",
-      "eu":"2019/11/30",
-      "jp":"2019/11/30",
-      "na":"2019/11/30",
+      "au":"2019/11/15",
+      "eu":"2019/11/15",
+      "jp":"2019/11/08",
+      "na":"2019/11/15",
       "type":"Figure"
     },
     {
@@ -9695,7 +9695,7 @@
       "au":null,
       "eu":null,
       "jp":null,
-      "na":"2019/12/31",
+      "na":"2019/12/10",
       "type":"Figure"
     },
     {
@@ -9708,7 +9708,7 @@
       "au":null,
       "eu":null,
       "jp":null,
-      "na":"2019/12/31",
+      "na":"2019/12/10",
       "type":"Figure"
     },
     {
@@ -9721,7 +9721,7 @@
       "au":null,
       "eu":null,
       "jp":null,
-      "na":"2019/12/31",
+      "na":"2019/12/10",
       "type":"Figure"
     },
     {
@@ -9731,10 +9731,10 @@
       "character":"Richter",
       "gameSeries":"Castlevania",
       "name":"Richter",
-      "au":"2020",
-      "eu":"2020",
-      "jp":"2020",
-      "na":"2020",
+      "au":"2020/01/17",
+      "eu":"2020/01/17",
+      "jp":"2020/01/17",
+      "na":"2020/01/17",
       "type":"Figure"
     },
     {
@@ -9744,10 +9744,10 @@
       "character":"Dark Samus",
       "gameSeries":"Metroid",
       "name":"Dark Samus",
-      "au":"2020",
-      "eu":"2020",
-      "jp":"2020",
-      "na":"2020",
+      "au":"2020/01/17",
+      "eu":"2020/01/17",
+      "jp":"2020/01/17",
+      "na":"2020/01/17",
       "type":"Figure"
     },
     {
@@ -9760,9 +9760,9 @@
       "au":null,
       "eu":null,
       "jp":null,
-      "na":"2019/12/31",
+      "na":"2019/12/10",
       "type":"Figure"
     }
   ],
-  "lastUpdated": "2019-09-15T13:20:10.688417"
+  "lastUpdated": "2019-11-19T06:20:10.688417"
 }

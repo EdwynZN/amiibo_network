@@ -13,6 +13,7 @@ class Routes{
   static Route<dynamic> getRoute(RouteSettings settings) {
     switch(settings.name){
       case '/details':
+        //return SlideRoute(builder: (_) => DetailPage(index: settings.arguments), settings: settings);
         return cupertinoRoute(DetailPage(index: settings.arguments), settings);
       case '/home':
         return FadeRoute(builder: (_) => Home());
@@ -99,11 +100,26 @@ class SlideRoute<T> extends MaterialPageRoute<T> {
   }
 
   void _handleDragUpdate(DragUpdateDetails details, double maxWidth){
+    /*
+    print('''
+      $isFirst || $willHandlePopInternally
+      || $hasScopedWillPopCallback || $fullscreenDialog
+      || ${animation.status != AnimationStatus.completed}
+      || ${secondaryAnimation.status != AnimationStatus.dismissed}
+        ''');
+
+    if (isFirst || willHandlePopInternally
+      || hasScopedWillPopCallback || fullscreenDialog
+      || animation.status != AnimationStatus.completed
+      || secondaryAnimation.status != AnimationStatus.dismissed)
+      return;
+
+     */
     controller.value -= details.primaryDelta / maxWidth;
   }
 
   void _handleDragEnd(DragEndDetails details, double maxWidth, BuildContext context){
-    if (controller.isAnimating || controller.status == AnimationStatus.completed) return;
+    if (controller.isAnimating || controller.status == AnimationStatus.dismissed) return;
 
     final double flingVelocity = details.primaryVelocity / maxWidth;
     if (flingVelocity < 0.0)

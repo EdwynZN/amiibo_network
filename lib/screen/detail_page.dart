@@ -12,12 +12,13 @@ class DetailPage extends StatelessWidget{
 
   @override
   Widget build(BuildContext context) {
-    AmiiboDB amiibo = Provider.of<AmiiboProvider>(context, listen: false)
-      .amiibosDB.amiibo[index];
     return SafeArea(
       child: Scaffold(
         body: SingleChildScrollView(
-          child: _CardDetailAmiibo(amiibo: amiibo)
+          child: Provider<int>.value(
+            value: index,
+            child: _CardDetailAmiibo(),
+          )
         )
       )
     );
@@ -25,12 +26,11 @@ class DetailPage extends StatelessWidget{
 }
 
 class _CardDetailAmiibo extends StatelessWidget{
-  final AmiiboDB amiibo;
-
-  _CardDetailAmiibo({Key key, @required this.amiibo});
-
   @override
   Widget build(BuildContext context){
+    final AmiiboProvider amiiboProvider = Provider.of<AmiiboProvider>(context, listen: false);
+    final int index = Provider.of<int>(context, listen: false);
+    final AmiiboDB amiibo = amiiboProvider.amiibosDB.amiibo[index];
     return Card(
       child: LimitedBox(
         maxHeight: 250,
@@ -57,7 +57,41 @@ class _CardDetailAmiibo extends StatelessWidget{
                     flex: 7,
                   ),
                   Expanded(
-                    child: _Buttons(amiibo: amiibo),
+                    child: StatefulBuilder(
+                      builder: (ctx, setState){
+                        return Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: <Widget>[
+                            IconButton(
+                              icon: (amiibo.owned?.isEven ?? true) ?
+                              const Icon(Icons.star_border) : const Icon(Icons.star),
+                              color: Colors.pinkAccent,
+                              iconSize: 30.0,
+                              tooltip: "Owned",
+                              splashColor: Colors.pinkAccent[100],
+                              onPressed: () => setState(() {
+                                amiiboProvider.countOwned = amiibo.owned = (amiibo?.owned ?? 0) ^ 1;
+                                if(amiibo?.wishlist?.isOdd ?? false) amiiboProvider.countWished = amiibo.wishlist = 0;
+                                amiiboProvider.updateAmiiboDB(amiibo: amiibo);
+                              })
+                            ),
+                            IconButton(
+                              icon: (amiibo.wishlist?.isEven ?? true) ?
+                              const Icon(Icons.check_box_outline_blank) : const Icon(Icons.card_giftcard),
+                              color: Colors.yellow,
+                              iconSize: 30.0,
+                              tooltip: "Wished",
+                              splashColor: Colors.yellowAccent[100],
+                              onPressed: () => setState(() {
+                                amiiboProvider.countWished = amiibo.wishlist = (amiibo?.wishlist ?? 0) ^ 1;
+                                if(amiibo?.owned?.isOdd ?? false) amiiboProvider.countOwned = amiibo.owned = 0;
+                                amiiboProvider.updateAmiiboDB(amiibo: amiibo);
+                              })
+                            )
+                          ],
+                        );
+                      }
+                    ),
                     flex: 2,
                   )
                 ],
@@ -86,59 +120,6 @@ class _CardDetailAmiibo extends StatelessWidget{
           ],
         ),
       )
-    );
-  }
-}
-
-class _Buttons extends StatefulWidget {
-  final AmiiboDB amiibo;
-
-  _Buttons({
-    Key key,
-    @required this.amiibo
-  }) : super(key : key);
-
-  @override
-  State<StatefulWidget> createState() {
-    return _ButtonsState();
-  }
-}
-
-class _ButtonsState extends State<_Buttons> {
-
-  @override
-  Widget build(BuildContext context) {
-    AmiiboProvider value = Provider.of<AmiiboProvider>(context, listen: false);
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-      children: <Widget>[
-        IconButton(
-          icon: (widget.amiibo.owned?.isEven ?? true) ?
-            const Icon(Icons.star_border) : const Icon(Icons.star),
-          color: Colors.pinkAccent,
-          iconSize: 30.0,
-          tooltip: "Owned",
-          splashColor: Colors.pinkAccent[100],
-          onPressed: () => setState(() {
-            value.countOwned = widget.amiibo.owned = (widget.amiibo?.owned ?? 0) ^ 1;
-            if(widget.amiibo?.wishlist?.isOdd ?? false) value.countWished = widget.amiibo.wishlist = 0;
-            value.updateAmiiboDB(amiibo: widget.amiibo);
-          })
-        ),
-        IconButton(
-          icon: (widget.amiibo.wishlist?.isEven ?? true) ?
-            const Icon(Icons.check_box_outline_blank) : const Icon(Icons.card_giftcard),
-          color: Colors.yellow,
-          iconSize: 30.0,
-          tooltip: "Wished",
-          splashColor: Colors.yellowAccent[100],
-          onPressed: () => setState(() {
-            value.countWished = widget.amiibo.wishlist = (widget.amiibo?.wishlist ?? 0) ^ 1;
-            if(widget.amiibo?.owned?.isOdd ?? false) value.countOwned = widget.amiibo.owned = 0;
-            value.updateAmiiboDB(amiibo: widget.amiibo);
-          })
-        )
-      ],
     );
   }
 }

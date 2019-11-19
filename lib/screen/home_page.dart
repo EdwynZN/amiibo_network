@@ -165,30 +165,30 @@ class HomePageState extends State<HomePage>
                     ),
                     onTap: _multipleSelection ? null : _search,
                     trailing: AnimatedSwitcher(
-                        duration: const Duration(milliseconds: 250),
-                        layoutBuilder: _defaultLayoutBuilder,
-                        child: _multipleSelection ? Row(
-                          mainAxisSize: MainAxisSize.min,
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          children: <Widget>[
-                            IconButton(
-                              icon: Icon(Icons.remove),
-                              onPressed: _updateSelection,
-                              tooltip: 'Remove',
-                            ),
-                            IconButton(
-                              icon: Icon(Icons.star),
-                              onPressed: () => _updateSelection(owned: 1),
-                              tooltip: 'Own',
-                            ),
-                            IconButton(
-                              icon: Icon(Icons.card_giftcard),
-                              onPressed: () => _updateSelection(wished: 1),
-                              tooltip: 'Wish',
-                            ),
-                          ],
-                        ) : _SortCollection(),
-                      )
+                      duration: const Duration(milliseconds: 250),
+                      layoutBuilder: _defaultLayoutBuilder,
+                      child: _multipleSelection ? Row(
+                        mainAxisSize: MainAxisSize.min,
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: <Widget>[
+                          IconButton(
+                            icon: Icon(Icons.remove),
+                            onPressed: _updateSelection,
+                            tooltip: 'Remove',
+                          ),
+                          IconButton(
+                            icon: Icon(Icons.star),
+                            onPressed: () => _updateSelection(owned: 1),
+                            tooltip: 'Own',
+                          ),
+                          IconButton(
+                            icon: Icon(Icons.card_giftcard),
+                            onPressed: () => _updateSelection(wished: 1),
+                            tooltip: 'Wish',
+                          ),
+                        ],
+                      ) : _SortCollection(),
+                    )
                   ),
                   child,
                   SliverPadding(
@@ -255,9 +255,11 @@ class _SliverPersistentHeader extends SliverPersistentHeaderDelegate {
       decoration: BoxDecoration(
         gradient: LinearGradient(
           begin: Alignment.topCenter, end: Alignment.bottomCenter,
+          stops: [0.5, 0.7, 1],
           colors: [
             Theme.of(context).scaffoldBackgroundColor,
             Theme.of(context).scaffoldBackgroundColor.withOpacity(0.75),
+            Theme.of(context).scaffoldBackgroundColor.withOpacity(0.0),
           ]
         )
       ),
@@ -323,7 +325,8 @@ class _SliverPersistentHeader extends SliverPersistentHeaderDelegate {
   double get minExtent => kToolbarHeight;
 
   @override
-  bool shouldRebuild(SliverPersistentHeaderDelegate oldDelegate) => true;
+  bool shouldRebuild(SliverPersistentHeaderDelegate oldDelegate)
+    => maxExtent != oldDelegate.maxExtent || minExtent != oldDelegate.minExtent;
 }
 
 class _SortCollection extends StatefulWidget{
@@ -334,7 +337,7 @@ class _SortCollection extends StatefulWidget{
 class _SortCollectionState extends State<_SortCollection> {
 
   void _selectOrder(String sort) async{
-    AmiiboProvider amiiboProvider = Provider.of<AmiiboProvider>(context, listen: false);
+    final AmiiboProvider amiiboProvider = Provider.of<AmiiboProvider>(context, listen: false);
     amiiboProvider.strOrderBy = sort;
     await amiiboProvider.refreshPagination();
     Navigator.pop(context);
@@ -460,7 +463,7 @@ class _SortCollectionState extends State<_SortCollection> {
       isScrollControlled: true,
       builder: (context) {
         return DraggableScrollableSheet(
-          maxChildSize: 0.75, expand: false,
+          maxChildSize: 0.75, expand: false, minChildSize: 0.15,
           builder: (context, scrollController){
             return Padding(
               padding: const EdgeInsets.symmetric(horizontal: 12),
@@ -594,7 +597,7 @@ class _SortCollectionState extends State<_SortCollection> {
   @override
   Widget build(BuildContext context) {
     return IconButton(
-      onPressed: _bottomSheet,
+      onPressed: _dialog,
       icon: const Icon(Icons.sort_by_alpha),
       tooltip: 'Sort',
     );

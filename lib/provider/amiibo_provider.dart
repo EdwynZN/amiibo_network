@@ -20,21 +20,8 @@ class SelectProvider with ChangeNotifier{
   void notifyWidgets() => notifyListeners();
 }
 
-class SortProvider with ChangeNotifier{
-  String _searchFilter = 'amiiboSeries';
-  String _strFilter = 'All';
-  String _order = 'na DESC';
-  Map<String,String> exOrderBy = {'serie' : 'ASC', 'na' : 'DESC'};
-
-  String get orderBy => _order;
-  String get strFilter => _strFilter;
-  set strOrderBy(String sort) => _order = sort;
-  set setFilter(String value) => _strFilter = value;
-}
-
 class AmiiboProvider with ChangeNotifier{
   static final _service = Service();
-  SortProvider _preferenceProvider;
   String _searchFilter = 'amiiboSeries';
   String _strFilter = 'All';
   String _order = 'na DESC';
@@ -42,18 +29,10 @@ class AmiiboProvider with ChangeNotifier{
   Map<String,dynamic> _listOwned;
   AmiiboLocalDB _amiiboListDB;
 
-  set a(SortProvider value) {
-    if (value != _preferenceProvider) {
-      _preferenceProvider = value;
-      notifyListeners();
-    }
-  }
-
   final _collectionList = PublishSubject<Map<String,dynamic>>();
   final _updateAmiiboDB = PublishSubject<AmiiboLocalDB>()
     ..listen((amiibos) async => await _service.update(amiibos));
 
-  SortProvider get preferences => _preferenceProvider;
   AmiiboLocalDB get amiibosDB => _amiiboListDB;
   Map<String,dynamic> get listCollection => _listOwned;
   String get orderBy => _order;
@@ -65,17 +44,15 @@ class AmiiboProvider with ChangeNotifier{
 
   Observable<Map<String,dynamic>> get collectionList => _collectionList.stream;
 
-  Future<void> fetchAllAmiibosDB() =>
-      _fetchByCategory(_strFilter).then((x) => notifyListeners());
+  Future<void> fetchAllAmiibosDB() => _fetchByCategory().then((x) => notifyListeners());
 
   resetPagination(String name,{bool search = false}) {
     _searchFilter = search ? 'name' : 'amiiboSeries';
     _strFilter = name;
-    _fetchByCategory(name).then((x) => notifyListeners());
+    _fetchByCategory().then((x) => notifyListeners());
   }
 
-  refreshPagination() =>
-      _fetchByCategory(_strFilter).then((x) => notifyListeners());
+  refreshPagination() => _fetchByCategory().then((x) => notifyListeners());
 
   set removeFromList(String position) => --_listOwned[position];
   set countOwned(int counter) => counter.isOdd ? ++_listOwned['Owned'] : --_listOwned['Owned'];
@@ -83,12 +60,15 @@ class AmiiboProvider with ChangeNotifier{
 
   updateList() => _collectionList.sink.add(_listOwned);
 
-  Future<void> _fetchByCategory(String name) async{
-    switch(name){
+  Future<void> _fetchByCategory() async{
+    /*_amiiboListDB = await _service.fetchByCategory(_strFilter, _args, _order);
+    _listOwned = Map<String, dynamic>.from(
+        (await _service.fetchSum(column: _strFilter, args: _args)).first);
+    */
+    switch(_strFilter){
       case 'All':
         _amiiboListDB = await _service.fetchByCategory(null, null, _order);
-        _listOwned = Map<String, dynamic>.from(
-            (await _service.fetchSum(column: null, args: null)).first);
+        _listOwned = Map<String, dynamic>.from((await _service.fetchSum()).first);
        /* _amiiboListDB = await _service.fetchAllAmiiboDB(_order);
         _listOwned = Map<String, dynamic>.from(
             (await _service.fetchSum()).first);*/
@@ -96,7 +76,7 @@ class AmiiboProvider with ChangeNotifier{
       case 'Owned':
         _amiiboListDB = await _service.fetchByCategory('owned', ['%1%'], _order);
         _listOwned = Map<String, dynamic>.from(
-            (await _service.fetchSum(column: 'owned', args: ['%1%'])).first);
+          (await _service.fetchSum(column: 'owned', args: ['%1%'])).first);
         break;
       case 'Wishlist':
         _amiiboListDB = await _service.fetchByCategory('wishlist', ['%1%'], _order);
@@ -105,10 +85,10 @@ class AmiiboProvider with ChangeNotifier{
         break;
       default:
         _amiiboListDB = await _service.fetchByCategory(_searchFilter,
-            [_searchFilter == 'name' ? '%$name%' : '%$name'], _order);
+          [_searchFilter == 'name' ? '%$_strFilter%' : '%$_strFilter'], _order);
         _listOwned = Map<String, dynamic>.from(
-            (await _service.fetchSum(column: _searchFilter,
-                args: _searchFilter == 'name' ? ['%$name%'] : ['%$name'])).first);
+          (await _service.fetchSum(column: _searchFilter,
+            args: [_searchFilter == 'name' ? '%$_strFilter%' : '%$_strFilter'])).first);
         break;
     }
     _collectionList.sink.add(_listOwned);

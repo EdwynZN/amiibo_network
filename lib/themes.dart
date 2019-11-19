@@ -13,7 +13,7 @@ class Themes {
       iconTheme: const IconThemeData(color: Colors.white54),
     ),
     brightness: Brightness.dark,
-    unselectedWidgetColor: Colors.grey,
+    unselectedWidgetColor: Colors.white54,
     dividerColor: const Color(0xFFB2B2B2),
     scaffoldBackgroundColor: Colors.black,
     accentColor: const Color.fromRGBO(207, 102, 121, 1),
@@ -119,7 +119,7 @@ class Themes {
     highlightColor: Colors.white70,
     selectedRowColor: const Color.fromRGBO(100, 181, 246, 0.5),
     cardTheme: CardTheme(
-      color: Colors.white70,
+      color: const Color(0xFFE8C2BF),
       margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
       elevation: 8,

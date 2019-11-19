@@ -12,6 +12,7 @@ import 'package:amiibo_network/themes.dart';
 
 void main() async {
   //debugPrintGestureArenaDiagnostics = true;
+  WidgetsFlutterBinding.ensureInitialized();
   String savedTheme = await getTheme();
   bool splash = await Service().compareLastUpdate();
   runApp(
@@ -34,18 +35,9 @@ class AmiiboNetwork extends StatelessWidget {
         ChangeNotifierProvider<ThemeProvider>(
           builder: (context) => ThemeProvider(theme),
         ),
-        ChangeNotifierProvider<SortProvider>(
-          builder: (context) => SortProvider(),
-        ),
-        ChangeNotifierProxyProvider<SortProvider, AmiiboProvider>(
-          initialBuilder: (_) => AmiiboProvider(),
-          builder: (ctx, t, r){
-            return r;
-          },
-        ),
-        /*ChangeNotifierProvider<AmiiboProvider>(
+        ChangeNotifierProvider<AmiiboProvider>(
           builder: (context) => AmiiboProvider(),
-        ),*/
+        ),
         Consumer<ThemeProvider>(
           builder: (context, themeMode, child) => MaterialApp(
             debugShowCheckedModeBanner: false,

@@ -74,8 +74,8 @@ class Service{
     });
   }
 
-  Future<AmiiboLocalDB> fetchByCategory(String column, List<String> args,
-    String oderBy) {
+  Future<AmiiboLocalDB> fetchByCategory([String column, List<String> args,
+    String oderBy]) {
     if(column == null || args == null || args.isEmpty) column = args = null;
     return dao.fetchByColumn(column, args, oderBy);
   }

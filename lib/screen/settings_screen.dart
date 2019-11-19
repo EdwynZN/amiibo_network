@@ -144,17 +144,14 @@ class _SaveCollectionState extends State<_SaveCollection> {
     final double maxSize = 60.0;
     final double padding = 10.0;
     final double space = 0.25;
-    double maxX;
-    double maxY;
+    final double width = (amiibos.amiibo.length / 25.0).ceilToDouble().clamp(15.0, 30.0);
+    final double maxX = (width * (1 + space) - space) * (maxSize + 2*padding) + 2*margin;
+    final double maxY = ((amiibos.amiibo.length / width).ceilToDouble()
+      * (1 + 0.5*space) - 0.5*space) * (1.5*maxSize + 2*padding) + 100 + 2*margin;
+
     double xOffset = margin;
     double yOffset = margin;
     ui.Picture pic;
-
-    double width = (amiibos.amiibo.length / 25.0).ceilToDouble().clamp(15.0, 30.0);
-
-    maxX = (width * (1 + space) - space) * (maxSize + 2*padding) + 2*margin;
-    maxY = ((amiibos.amiibo.length / width).ceilToDouble()
-      * (1 + 0.5*space) - 0.5*space) * (1.5*maxSize + 2*padding) + 100 + 2*margin;
 
     final ui.PictureRecorder pictureRecorder = ui.PictureRecorder();
     final Canvas canvas = Canvas(pictureRecorder);
@@ -452,18 +449,12 @@ class BottomBar extends StatelessWidget{
       Map<String,dynamic> map = await compute(readFile, _path);
       if(map == null && scaffold.mounted)
         scaffold.showSnackBar(SnackBar(content: Text('This isn\'t an Amiibo List')));
-        /*Scaffold.of(context).showSnackBar(
-          SnackBar(content: Text('This isn\'t an Amiibo List'))
-        );*/
       else{
         AmiiboLocalDB amiibos = await compute(entityFromMap, map);
         await dao.insertImport(amiibos);
         amiiboProvider.refreshPagination();
         if(scaffold.mounted)
           scaffold.showSnackBar(SnackBar(content: Text('Amiibo List updated')));
-        /*Scaffold.of(context).showSnackBar(
-          SnackBar(content: Text('Amiibo List updated'))
-        );*/
       }
     }
   }

@@ -25,7 +25,7 @@ class _CollectionDrawerState extends State<CollectionDrawer> {
   void cardExpand(bool x) => _cardExpand = x;
 
   void _onTapTile(String tile){
-    AmiiboProvider provider = Provider.of<AmiiboProvider>(context, listen: false);
+    final AmiiboProvider provider = Provider.of<AmiiboProvider>(context, listen: false);
     if(provider.strFilter != tile) {
       provider.resetPagination(tile);
       widget.restart();
@@ -90,7 +90,7 @@ class _CollectionDrawerState extends State<CollectionDrawer> {
                                   return Theme(
                                     data: Theme.of(context).copyWith(
                                       dividerColor: Colors.transparent,
-                                      accentColor: Theme.of(context).textTheme.subhead.color,
+                                      accentColor: Theme.of(context).iconTheme.color,
                                     ),
                                     child: ExpansionTile(
                                       leading: const Icon(Icons.toys),
@@ -122,7 +122,7 @@ class _CollectionDrawerState extends State<CollectionDrawer> {
                                   return Theme(
                                     data: Theme.of(context).copyWith(
                                       dividerColor: Colors.transparent,
-                                      accentColor: Theme.of(context).textTheme.subhead.color,
+                                      accentColor: Theme.of(context).iconTheme.color,
                                     ),
                                     child: ExpansionTile(
                                       leading: const Icon(Icons.view_carousel),

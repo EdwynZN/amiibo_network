@@ -94,15 +94,14 @@ class _SliverFloatingPersistentHeader extends SliverPersistentHeaderDelegate {
     this.leading,
     this.title,
     this.onTap
-  }) : _maxExtent = kToolbarHeight+6.0,
-        _minExtent = kToolbarHeight+6.0,
+  }) : _maxExtent = kToolbarHeight,
+        _minExtent = kToolbarHeight,
         super();
 
   @override
   Widget build(BuildContext context, double shrinkOffset, bool overlapsContent) {
     final double visibleMainHeight = maxExtent - shrinkOffset;
     final double toolbarOpacity = 1.0;
-
     return FlexibleSpaceBarSettings(
       toolbarOpacity: toolbarOpacity,
       minExtent: _minExtent,
@@ -112,32 +111,33 @@ class _SliverFloatingPersistentHeader extends SliverPersistentHeaderDelegate {
         snap: snap,
         child: Container(
           color: Theme.of(context).scaffoldBackgroundColor,
-          padding: const EdgeInsets.fromLTRB(12,6,12,0),
+          padding: const EdgeInsets.fromLTRB(12,8,12,0),
           child: ListTileTheme(
-            contentPadding: const EdgeInsets.symmetric(horizontal: 12),
-            iconColor: Theme.of(context).iconTheme.color,
-            textColor: Theme.of(context).textTheme.title.color,
-            child: Material(
-              color: Theme.of(context).backgroundColor,
-              type: MaterialType.card,
-              elevation: elevation,
-              borderRadius: BorderRadius.circular(8.0),
-              clipBehavior: Clip.hardEdge,
-              //shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
-              child: ListTile(
-                leading: leading,
-                title: DefaultTextStyle(
-                  textAlign: TextAlign.left,
-                  style: Theme.of(context).textTheme.display1,
-                  softWrap: false,
-                  overflow: TextOverflow.fade,
-                  child: title,
-                ),
-                trailing: trailing,
-                onTap: onTap,
-              ),
+                contentPadding: const EdgeInsets.symmetric(horizontal: 4.0),
+                iconColor: Theme.of(context).iconTheme.color,
+                textColor: Theme.of(context).textTheme.title.color,
+                dense: true,
+                child: Material(
+                  color: Theme.of(context).backgroundColor,
+                  type: MaterialType.card,
+                  elevation: elevation,
+                  borderRadius: BorderRadius.circular(8.0),
+                  clipBehavior: Clip.hardEdge,
+                  //shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
+                  child: ListTile(
+                    leading: leading,
+                    title: DefaultTextStyle(
+                      textAlign: TextAlign.left,
+                      style: Theme.of(context).textTheme.display1,
+                      softWrap: false,
+                      overflow: TextOverflow.fade,
+                      child: title,
+                    ),
+                    trailing: trailing,
+                    onTap: onTap,
+                  ),
+                )
             )
-          )
         ),
       ),
     );
