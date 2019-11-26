@@ -10,6 +10,8 @@ import 'package:amiibo_network/widget/radial_progression.dart';
 import 'package:amiibo_network/widget/drawer.dart';
 import 'package:amiibo_network/widget/animated_widgets.dart';
 import 'package:amiibo_network/widget/floating_bar.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:amiibo_network/provider/stat_provider.dart';
 
 class Home extends StatelessWidget{
 
@@ -265,7 +267,7 @@ class _SliverPersistentHeader extends SliverPersistentHeaderDelegate {
       ),
       height: kToolbarHeight,
       child: StreamBuilder<Map<String,dynamic>>(
-        initialData: {'Owned' : 0, 'Wished' : 0, 'Total' : 0},
+        initialData: {'Owned' : 0.0, 'Wished' : 0.0, 'Total' : 0.0},
         stream: Provider.of<AmiiboProvider>(context, listen: false).collectionList,
         builder: (context , statList) {
           if(statList.data['Total'] == 0 || statList == null)
@@ -278,16 +280,21 @@ class _SliverPersistentHeader extends SliverPersistentHeaderDelegate {
                     onPressed: null,
                     icon: AnimatedRadial(
                       key: Key('Owned'),
-                      percentage:
-                      statList.data['Owned'].toDouble()
-                          / statList.data['Total'].toDouble(),
+                      percentage: statList.data['Owned'].toDouble() / statList.data['Total'].toDouble(),
                       child: const Icon(Icons.check, color: Colors.green),
                     ),
-                    label: Text('${statList.data['Owned']}/'
-                        '${statList.data['Total']} Owned', softWrap: false,
-                      overflow: TextOverflow.fade,
-                      style: Theme.of(context).textTheme.subhead,
-                    ),
+                    label: Consumer<StatProvider>(
+                      builder: (ctx, stat, _){
+                        final String ownedStat = stat.statLabel(
+                          statList.data['Owned'].toDouble(),
+                          statList.data['Total'].toDouble()
+                        );
+                        return Text('$ownedStat Owned', softWrap: false,
+                          overflow: TextOverflow.fade,
+                          style: Theme.of(context).textTheme.subhead,
+                        );
+                      }
+                    )
                   ),
                 )
               ),
@@ -299,15 +306,21 @@ class _SliverPersistentHeader extends SliverPersistentHeaderDelegate {
                       key: Key('Wished'),
                       percentage:
                       statList.data['Wished'].toDouble()
-                          / statList.data['Total'].toDouble(),
+                        / statList.data['Total'].toDouble(),
                       child: const Icon(Icons.whatshot, color: Colors.amber),
                     ),
-                    label: Text('${statList.data['Wished']}/'
-                        '${statList.data['Total']} Wished',
-                      softWrap: false,
-                      overflow: TextOverflow.fade,
-                      style: Theme.of(context).textTheme.subhead,
-                    ),
+                    label: Consumer<StatProvider>(
+                      builder: (ctx, stat, _){
+                        final String wishedStat = stat.statLabel(
+                          statList.data['Wished'].toDouble(),
+                          statList.data['Total'].toDouble()
+                        );
+                        return Text('$wishedStat Wished', softWrap: false,
+                          overflow: TextOverflow.fade,
+                          style: Theme.of(context).textTheme.subhead,
+                        );
+                      }
+                    )
                   ),
                 )
               ),
@@ -325,8 +338,7 @@ class _SliverPersistentHeader extends SliverPersistentHeaderDelegate {
   double get minExtent => kToolbarHeight;
 
   @override
-  bool shouldRebuild(SliverPersistentHeaderDelegate oldDelegate)
-    => maxExtent != oldDelegate.maxExtent || minExtent != oldDelegate.minExtent;
+  bool shouldRebuild(SliverPersistentHeaderDelegate oldDelegate) => true;
 }
 
 class _SortCollection extends StatefulWidget{
@@ -338,6 +350,7 @@ class _SortCollectionState extends State<_SortCollection> {
 
   void _selectOrder(String sort) async{
     final AmiiboProvider amiiboProvider = Provider.of<AmiiboProvider>(context, listen: false);
+    //final SharedPreferences preferences = await SharedPreferences.getInstance();
     amiiboProvider.strOrderBy = sort;
     await amiiboProvider.refreshPagination();
     Navigator.pop(context);
@@ -457,13 +470,13 @@ class _SortCollectionState extends State<_SortCollection> {
   }
 
   Future<void> _bottomSheet() async {
-    Map<String,String> _exSortBy = Provider.of<AmiiboProvider>(context).exOrderBy;
+    Map<String,String> _exSortBy = {};
     return showModalBottomSheet(
       context: context,
       isScrollControlled: true,
       builder: (context) {
         return DraggableScrollableSheet(
-          maxChildSize: 0.75, expand: false, minChildSize: 0.15,
+          maxChildSize: 0.75, expand: false, minChildSize: 0.25,
           builder: (context, scrollController){
             return Padding(
               padding: const EdgeInsets.symmetric(horizontal: 12),
@@ -597,7 +610,7 @@ class _SortCollectionState extends State<_SortCollection> {
   @override
   Widget build(BuildContext context) {
     return IconButton(
-      onPressed: _dialog,
+      onPressed: _bottomSheet,
       icon: const Icon(Icons.sort_by_alpha),
       tooltip: 'Sort',
     );

@@ -8,17 +8,21 @@ import 'package:amiibo_network/provider/amiibo_provider.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:amiibo_network/themes.dart';
+import 'package:amiibo_network/provider/stat_provider.dart';
 //import 'package:flutter/gestures.dart';
 
 void main() async {
   //debugPrintGestureArenaDiagnostics = true;
   WidgetsFlutterBinding.ensureInitialized();
-  String savedTheme = await getTheme();
+  await initDB();
   bool splash = await Service().compareLastUpdate();
+  String savedTheme = await getTheme();
+  bool stat = await getStatMode();
   runApp(
     AmiiboNetwork(
       firstPage: splash ? Home() : SplashScreen(),
       theme: savedTheme,
+      statMode: stat,
     )
   );
 }
@@ -26,7 +30,8 @@ void main() async {
 class AmiiboNetwork extends StatelessWidget {
   final Widget firstPage;
   final String theme;
-  AmiiboNetwork({this.firstPage, this.theme});
+  final bool statMode;
+  AmiiboNetwork({this.firstPage, this.theme, this.statMode});
 
   @override
   Widget build(BuildContext context) {
@@ -34,6 +39,9 @@ class AmiiboNetwork extends StatelessWidget {
       providers: [
         ChangeNotifierProvider<ThemeProvider>(
           builder: (context) => ThemeProvider(theme),
+        ),
+        ChangeNotifierProvider<StatProvider>(
+          builder: (context) => StatProvider(statMode),
         ),
         ChangeNotifierProvider<AmiiboProvider>(
           builder: (context) => AmiiboProvider(),

@@ -345,19 +345,21 @@ class ResetCollection extends StatelessWidget{
         return AlertDialog(
           title: Text('Reset your collection'),
           titlePadding: EdgeInsets.all(12),
-          contentPadding: EdgeInsets.symmetric(horizontal: 15),
+          contentPadding: EdgeInsets.symmetric(horizontal: 12),
           content: Text('Are you sure? This action can\'t be undone'),
           actions: <Widget>[
             FlatButton(
               child: Text('Wait no!'),
               onPressed: Navigator.of(context).pop,
+              textColor: Theme.of(context).accentColor,
             ),
             FlatButton(
               child: Text('Sure'),
               onPressed: () async {
                 Navigator.of(context).maybePop();
                 await Provider.of<AmiiboProvider>(context, listen: false).resetCollection();
-              }
+              },
+              textColor: Theme.of(context).accentColor,
             ),
           ],
         );

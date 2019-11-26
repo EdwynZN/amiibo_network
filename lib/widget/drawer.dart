@@ -3,6 +3,7 @@ import 'package:amiibo_network/service/service.dart';
 import 'package:provider/provider.dart';
 import 'package:amiibo_network/provider/theme_provider.dart';
 import 'package:amiibo_network/provider/amiibo_provider.dart';
+import 'package:amiibo_network/provider/stat_provider.dart';
 
 class CollectionDrawer extends StatefulWidget{
   final VoidCallback restart;
@@ -57,6 +58,22 @@ class _CollectionDrawerState extends State<CollectionDrawer> {
                           SliverList(
                             delegate: SliverChildListDelegate([
                               child,
+                              Consumer<StatProvider>(
+                                child: Text('Show percentage', overflow: TextOverflow.fade,),
+                                builder: (ctx, _statMode, child){
+                                  return SwitchListTile.adaptive(
+                                    secondary: const Icon(Icons.local_parking),
+                                    title: child,
+                                    //subtitle: Text('Toggle between percentage and ratio', overflow: TextOverflow.fade,),
+                                    //dense: true,
+                                    value: _statMode.prefStat,
+                                    onChanged: Provider.of<StatProvider>(ctx, listen: false).spStat,
+                                    //activeThumbImage: AssetImage('assets/images/icon_app.png',),
+                                    //inactiveThumbImage: AssetImage('assets/images/icon_app.png',),
+                                    activeColor: Theme.of(ctx).accentColor,
+                                  );
+                                },
+                              ),
                               ListTile(
                                 onTap: () => _onTapTile('All'),
                                 leading: const Icon(Icons.all_inclusive),

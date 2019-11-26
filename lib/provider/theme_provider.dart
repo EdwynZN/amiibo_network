@@ -1,5 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:amiibo_network/service/service.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+Future<String> getTheme() async {
+  final SharedPreferences preferences = await SharedPreferences.getInstance();
+  return preferences.getString('Theme') ?? 'Auto';
+}
 
 class ThemeProvider with ChangeNotifier{
   String _savedTheme;
@@ -11,8 +16,9 @@ class ThemeProvider with ChangeNotifier{
 
   themeDB(String value) async {
     if(value != _savedTheme){
+      final SharedPreferences preferences = await SharedPreferences.getInstance();
       _savedTheme = value;
-      await updateTheme(value);
+      await preferences.setString('Theme', value);
       preferredTheme = _switchPreferredTheme(_savedTheme);
       notifyListeners();
     }

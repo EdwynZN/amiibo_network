@@ -6,6 +6,10 @@ import 'package:sqflite/sqflite.dart';
 class AmiiboSQLite implements Dao<AmiiboLocalDB, String, AmiiboDB>{
   static ConnectionFactory connectionFactory = ConnectionFactory();
 
+  Future<void> initDB() async {
+    await connectionFactory.database;
+  }
+
   Future<AmiiboLocalDB> fetchAll([String orderBy = 'na']) async{
     Database _db = await connectionFactory.database;
     List<Map<String, dynamic>> maps = await _db.query('amiibo',
@@ -36,24 +40,6 @@ class AmiiboSQLite implements Dao<AmiiboLocalDB, String, AmiiboDB>{
       whereArgs: [name, name],
       limit: limit);
     return List<String>.from(maps.map((x) => x['name']));
-  }
-
-  Future<List<Map<String, dynamic>>> fetchRowTable(String name, int id) async{
-    Database _db = await connectionFactory.database;
-    List<Map<String, dynamic>> maps = await _db.query(name,
-      columns: ['lastUpdated'],
-      where: 'id = ?',
-      whereArgs: [id]
-    );
-    return maps;
-  }
-
-  Future<void> updateRowTable(String name, List<String> args) async{
-    Database _db = await connectionFactory.database;
-    String values = args?.skip(1)?.fold<String>('?', (curr, next) => curr + ',?');
-    await _db.transaction((tx) async{
-      await tx.rawInsert('''REPLACE INTO $name VALUES($values)''', args);
-    });
   }
 
   Future<AmiiboLocalDB> fetchByColumn(String column, List<String> args,

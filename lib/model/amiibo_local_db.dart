@@ -121,6 +121,7 @@ class AmiiboDB {
   }
 }
 
+/*
 class LastUpdateDB{
   DateTime lastUpdated;
 
@@ -140,3 +141,4 @@ class LastUpdateDB{
     "lastUpdated": lastUpdated.toIso8601String(),
   };
 }
+ */

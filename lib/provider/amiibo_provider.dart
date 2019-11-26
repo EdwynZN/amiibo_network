@@ -25,7 +25,6 @@ class AmiiboProvider with ChangeNotifier{
   String _searchFilter = 'amiiboSeries';
   String _strFilter = 'All';
   String _order = 'na DESC';
-  Map<String,String> exOrderBy = {'serie' : 'ASC', 'na' : 'DESC'};
   Map<String,dynamic> _listOwned;
   AmiiboLocalDB _amiiboListDB;
 

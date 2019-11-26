@@ -3,16 +3,11 @@ import 'package:flutter/foundation.dart';
 import '../model/amiibo_local_db.dart';
 import 'dart:convert';
 import 'package:flutter/services.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 final AmiiboSQLite dao = AmiiboSQLite();
 
-Future<String> getTheme() async => await dao.fetchRowTable('date', 2)
-  .then((maps){
-    if (maps.length > 0) return maps.first['lastUpdated'].toString();
-    return 'Auto';}
-  );
-
-Future updateTheme(String theme) async => await dao.updateRowTable('date', ['2', theme]);
+Future<void> initDB() async => await dao.initDB();
 
 class Service{
   static Map<String, dynamic> _jsonFile;
@@ -28,14 +23,12 @@ class Service{
   }
 
   Future<AmiiboLocalDB> fetchAllAmiibo() async => compute(entityFromMap, await jsonFile);
-  //AmiiboLocalDB.fromJson(await jsonFile);
 
   Future<AmiiboLocalDB> fetchAllAmiiboDB(String orderBy) => dao.fetchAll(orderBy);
 
   Future<List<Map<String,dynamic>>> fetchSum({String column, List<String> args,
     bool group = false}) {
     if(column == null || args == null || args.isEmpty) column = args = null;
-    //args = (args?.isEmpty ?? true) || column == null ? null : args;
     return dao.fetchSum(column, args, group);
   }
 
@@ -45,15 +38,12 @@ class Service{
   }
 
   Future<DateTime> get lastUpdateDB async{
-    return _lastUpdateDB ??= await dao.fetchRowTable('date', 1)
-      .then((maps) {
-      if (maps.length > 0) return LastUpdateDB.fromMap(maps.first).lastUpdated;
-      return null;
-    });
+    final SharedPreferences preferences = await SharedPreferences.getInstance();
+    return _lastUpdateDB ??= DateTime.tryParse(preferences.getString('Date') ?? '');
   }
 
   Future<DateTime> get lastUpdate async{
-    return _lastUpdate ??= LastUpdateDB.fromMap(await jsonFile).lastUpdated;
+    return _lastUpdate ??= DateTime.tryParse((await jsonFile)['lastUpdated'] ?? '');
   }
 
   Future<bool> createDB() async{
@@ -69,8 +59,9 @@ class Service{
 
   _updateDB(AmiiboLocalDB amiiboDB) async{
     dao.insertAll(amiiboDB, "amiibo").then((_) async{
-      LastUpdateDB dateTime = LastUpdateDB.fromDate(await lastUpdate);
-      await dao.updateRowTable('date', ['1', dateTime?.lastUpdated?.toIso8601String()]);
+      final SharedPreferences preferences = await SharedPreferences.getInstance();
+      final DateTime dateTime = await lastUpdate;
+      await preferences.setString('Date', dateTime?.toIso8601String());
     });
   }
 

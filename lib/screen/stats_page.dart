@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:amiibo_network/service/service.dart';
 import 'package:amiibo_network/widget/radial_progression.dart';
+import 'package:amiibo_network/provider/stat_provider.dart';
+import 'package:provider/provider.dart';
 
 class StatsPage extends StatefulWidget{
   static final _service = Service();
@@ -269,8 +271,18 @@ class SingleStat extends StatelessWidget{
                 overflow: TextOverflow.fade, style: Theme.of(context).textTheme.display1,),
             ),
             const Divider(),
-            Chip(label: Text('$owned/$total Owned', softWrap: false,
-              overflow: TextOverflow.fade,),
+            Chip(
+              label: Consumer<StatProvider>(
+                builder: (ctx, stat, _){
+                  final String ownedStat = stat.statLabel(
+                    owned.toDouble(),
+                    total.toDouble()
+                  );
+                  return Text('$ownedStat Owned', softWrap: false,
+                    overflow: TextOverflow.fade,
+                  );
+                }
+              ),
               avatar: AnimatedRadial(
                 key: Key('Owned'),
                 percentage: owned.toDouble() / total.toDouble(),
@@ -278,10 +290,19 @@ class SingleStat extends StatelessWidget{
               ),
             ),
             Chip(
-              label: Text('$wished/$total Wished', softWrap: false,
-              overflow: TextOverflow.fade),
+              label: Consumer<StatProvider>(
+                builder: (ctx, stat, _){
+                  final String wishedStat = stat.statLabel(
+                    wished.toDouble(),
+                    total.toDouble()
+                  );
+                  return Text('$wishedStat Wished', softWrap: false,
+                    overflow: TextOverflow.fade,
+                  );
+                }
+              ),
               avatar: AnimatedRadial(
-                key: Key('Owned'),
+                key: Key('Wished'),
                 percentage: wished.toDouble() / total.toDouble(),
                 child: const Icon(Icons.whatshot, color: Colors.amber),
               ),
