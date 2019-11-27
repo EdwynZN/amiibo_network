@@ -24,7 +24,7 @@ class Service{
 
   Future<AmiiboLocalDB> fetchAllAmiibo() async => compute(entityFromMap, await jsonFile);
 
-  Future<AmiiboLocalDB> fetchAllAmiiboDB(String orderBy) => dao.fetchAll(orderBy);
+  Future<AmiiboLocalDB> fetchAllAmiiboDB([String orderBy]) => dao.fetchAll(orderBy);
 
   Future<List<Map<String,dynamic>>> fetchSum({String column, List<String> args,
     bool group = false}) {

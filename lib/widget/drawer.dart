@@ -62,7 +62,7 @@ class _CollectionDrawerState extends State<CollectionDrawer> {
                                 child: Text('Show percentage', overflow: TextOverflow.fade,),
                                 builder: (ctx, _statMode, child){
                                   return SwitchListTile.adaptive(
-                                    secondary: const Icon(Icons.local_parking),
+                                    secondary: const SizedBox(),//const Icon(Icons.local_parking),
                                     title: child,
                                     //subtitle: Text('Toggle between percentage and ratio', overflow: TextOverflow.fade,),
                                     //dense: true,

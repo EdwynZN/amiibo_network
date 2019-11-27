@@ -5,7 +5,7 @@ enum StatMode{Percentage, Ratio}
 
 Future<bool> getStatMode() async {
   final SharedPreferences preferences = await SharedPreferences.getInstance();
-  return preferences.getBool('StatMode') ?? true;
+  return preferences.getBool('StatMode') ?? false;
 }
 
 class StatProvider with ChangeNotifier{

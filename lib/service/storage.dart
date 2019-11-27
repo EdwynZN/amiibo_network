@@ -1,10 +1,7 @@
 import 'dart:io';
-import 'package:amiibo_network/dao/SQLite/amiibo_sqlite.dart';
 import '../model/amiibo_local_db.dart';
 import 'dart:convert';
 import 'package:permission_handler/permission_handler.dart';
-
-final AmiiboSQLite dao = AmiiboSQLite();
 
 Map<String, dynamic> checkPermission(PermissionStatus permission) {
   Map<String, dynamic> response = Map<String, dynamic>();

@@ -350,7 +350,8 @@ class _SortCollectionState extends State<_SortCollection> {
 
   void _selectOrder(String sort) async{
     final AmiiboProvider amiiboProvider = Provider.of<AmiiboProvider>(context, listen: false);
-    //final SharedPreferences preferences = await SharedPreferences.getInstance();
+    final SharedPreferences preferences = await SharedPreferences.getInstance();
+    preferences.setString('Sort', sort);
     amiiboProvider.strOrderBy = sort;
     await amiiboProvider.refreshPagination();
     Navigator.pop(context);
@@ -470,13 +471,17 @@ class _SortCollectionState extends State<_SortCollection> {
   }
 
   Future<void> _bottomSheet() async {
-    Map<String,String> _exSortBy = {};
+    /*Map<String,String> _exSortBy = {};
+    final SharedPreferences preferences = await SharedPreferences.getInstance();
+    preferences.setStringList('Sort', ['name DESC', 'na DESC']);
+    List<String> pref = preferences.getStringList('Sort');*/
+    String _sortBy = Provider.of<AmiiboProvider>(context).orderBy;
     return showModalBottomSheet(
       context: context,
       isScrollControlled: true,
       builder: (context) {
         return DraggableScrollableSheet(
-          maxChildSize: 0.75, expand: false, minChildSize: 0.25,
+          maxChildSize: 0.6, expand: false, initialChildSize: 0.6,
           builder: (context, scrollController){
             return Padding(
               padding: const EdgeInsets.symmetric(horizontal: 12),
@@ -489,7 +494,9 @@ class _SortCollectionState extends State<_SortCollection> {
                     SliverPersistentHeader(
                       pinned: true,
                       delegate: _BottomSheetHeader(
-                        child: Row(
+                        child: Text('Sort By', style: Theme.of(context).textTheme.subhead),
+                        /*
+                        Row(
                           mainAxisAlignment: MainAxisAlignment.end,
                           children: <Widget>[
                             Expanded(
@@ -504,8 +511,100 @@ class _SortCollectionState extends State<_SortCollection> {
                             ),
                           ],
                         )
+                        */
                       ),
                     ),
+                    SliverList(
+                      delegate: SliverChildListDelegate([
+                        RadioListTile(
+                          value: 'name',
+                          groupValue: _sortBy,
+                          onChanged: _selectOrder,
+                          dense: true,
+                          title: Text('Name'),
+                          selected: _sortBy == 'name',
+                        ),
+                        RadioListTile(
+                          value: 'owned DESC',
+                          groupValue: _sortBy,
+                          onChanged: _selectOrder,
+                          dense: true,
+                          selected: _sortBy == 'owned DESC',
+                          title: Text('Owned'),
+                        ),
+                        RadioListTile(
+                          value: 'wishlist DESC',
+                          groupValue: _sortBy,
+                          onChanged: _selectOrder,
+                          dense: true,
+                          title: Text('Wished'),
+                          selected: _sortBy == 'wishlist DESC',
+                        ),
+                        RadioListTile(
+                          value: 'na DESC',
+                          groupValue: _sortBy,
+                          onChanged: _selectOrder,
+                          dense: true,
+                          title: Text('American Date'),
+                          selected: _sortBy == 'na DESC',
+                          secondary: Image.asset(
+                            'assets/images/na.png',
+                            height: 16, width: 25,
+                            fit: BoxFit.fill,
+                            semanticLabel: 'American Date',
+                          ),
+                        ),
+                        RadioListTile(
+                          value: 'eu DESC',
+                          groupValue: _sortBy,
+                          onChanged: _selectOrder,
+                          dense: true,
+                          title: Text('European Date'),
+                          selected: _sortBy == 'eu DESC',
+                          secondary: Image.asset(
+                            'assets/images/eu.png',
+                            height: 16, width: 25,
+                            fit: BoxFit.fill,
+                            semanticLabel: 'European date',
+                          ),
+                        ),
+                        RadioListTile(
+                            value: 'jp DESC',
+                            groupValue: _sortBy,
+                            onChanged: _selectOrder,
+                            dense: true,
+                            title: Text('Japanese Date'),
+                            selected: _sortBy == 'jp DESC',
+                            secondary: DecoratedBox(
+                              decoration: BoxDecoration(
+                                  border: Border.all(width: 0.75)
+                              ),
+                              position: DecorationPosition.foreground,
+                              child: Image.asset(
+                                'assets/images/jp.png',
+                                height: 16, width: 25,
+                                fit: BoxFit.fill,
+                                semanticLabel: 'Japanese date',
+                              ),
+                            )
+                        ),
+                        RadioListTile(
+                          value: 'au DESC',
+                          groupValue: _sortBy,
+                          onChanged: _selectOrder,
+                          dense: true,
+                          title: Text('Australian Date'),
+                          selected: _sortBy == 'au DESC',
+                          secondary: Image.asset(
+                            'assets/images/au.png',
+                            height: 16, width: 25,
+                            fit: BoxFit.fill,
+                            semanticLabel: 'Australian date',
+                          ),
+                        ),
+                      ]),
+                    )
+                    /*
                     SliverList(
                       delegate: SliverChildListDelegate([
                         ListTile(
@@ -597,6 +696,7 @@ class _SortCollectionState extends State<_SortCollection> {
                         ),
                       ]),
                     )
+                    */
                   ],
                 )
               )
@@ -630,10 +730,11 @@ class _BottomSheetHeader extends SliverPersistentHeaderDelegate {
         shape: Theme.of(context).bottomSheetTheme.shape,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.end,
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16),
-              child: child,
+              padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 6),
+              child:  child,
             ),
             const Divider()
           ],

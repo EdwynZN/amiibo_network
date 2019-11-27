@@ -12,6 +12,8 @@ import 'package:launch_review/launch_review.dart';
 import 'dart:ui' as ui;
 import 'dart:io';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:amiibo_network/service/service.dart';
+import 'package:amiibo_network/provider/stat_provider.dart';
 
 class SettingsPage extends StatelessWidget{
   const SettingsPage({Key key}): super(key: key);
@@ -125,11 +127,15 @@ class _SaveCollectionState extends State<_SaveCollection> {
   Set<String> select = {};
 
   Future<void> saveCollection() async{
-    AmiiboLocalDB amiibos = await dao.fetchByColumn('type', select.toList(),
+    final _service = Service();
+    final StatProvider statProvider = Provider.of<StatProvider>(context, listen: false);
+    AmiiboLocalDB amiibos = await _service.fetchByCategory('type', select.toList(),
       'CASE WHEN type = "Figure" THEN 1 '
       'WHEN type = "Yarn" THEN 2 ELSE 3 END, amiiboSeries DESC, na DESC');
     if(amiibos?.amiibo?.isEmpty ?? true) return;
 
+    Map<String,dynamic> _listStat = Map<String, dynamic>.from(
+        (await _service.fetchSum(column: 'type', args: select.toList())).first);
     final Map<String,dynamic> file = Map<String,dynamic>();
     final String time = DateTime.now().toString().substring(0,10);
     final Directory dir = await Directory('/storage/emulated/0/Download').create();
@@ -159,17 +165,35 @@ class _SaveCollectionState extends State<_SaveCollection> {
 
     canvas.drawColor(const Color.fromRGBO(178, 218, 251, 1), BlendMode.src);
 
-    TextSpan aNetwork = TextSpan(
+    final TextSpan aNetwork = TextSpan(
       style: TextStyle(color: Colors.black, fontSize: 50),
       text: 'Amiibo Network',
       children: <InlineSpan>[
         TextSpan(
-          style: TextStyle(color: Colors.black, fontSize: 15, wordSpacing: 150),
+          style: TextStyle(color: Colors.black, fontSize: 15, wordSpacing: maxSize),
           text: '\u24C7 '
         ),
         TextSpan(
-          style: TextStyle(color: Colors.black, fontSize: 35, wordSpacing: 100),
-          text: 'Owned Wished'
+          style: TextStyle(color: Colors.black, fontSize: 30, height: 1.15,
+              fontWeight: FontWeight.w300, background: ownedCardPaint),
+          text: ' ${statProvider.statLabel(_listStat['Owned'].toDouble(), _listStat['Total'].toDouble())} '
+        ),
+        TextSpan(
+          style: TextStyle(color: Colors.black, fontSize: 35),
+          text: ' Owned'
+        ),
+        TextSpan(
+          style: TextStyle(color: Colors.black, fontSize: 35, wordSpacing: maxSize),
+          text: ' '
+        ),
+        TextSpan(
+          style: TextStyle(color: Colors.black, fontSize: 30, height: 1.15,
+              fontWeight: FontWeight.w300, background: wishedCardPaint),
+          text: ' ${statProvider.statLabel(_listStat['Wished'].toDouble(), _listStat['Total'].toDouble())} '
+        ),
+        TextSpan(
+          style: TextStyle(color: Colors.black, fontSize: 35),
+          text: ' Wished'
         ),
       ]
     );
@@ -177,14 +201,6 @@ class _SaveCollectionState extends State<_SaveCollection> {
       textDirection: TextDirection.ltr
     )..layout(minWidth: maxX-125-margin)
       ..paint(canvas, Offset(125, maxY - margin - 65));
-    canvas.drawPath(Path()..addRect(Rect.fromPoints(
-      Offset(600, maxY - margin - 55),
-      Offset(640, maxY - margin - 15)
-    )), ownedCardPaint);
-    canvas.drawPath(Path()..addRect(Rect.fromPoints(
-      Offset(815, maxY - margin - 55),
-      Offset(855, maxY - margin - 15)
-    )), wishedCardPaint);
 
     TextSpan createdDate = TextSpan(
       style: TextStyle(color: Colors.black, fontSize: 25),
@@ -246,19 +262,11 @@ class _SaveCollectionState extends State<_SaveCollection> {
       if(xOffset >= maxX - margin){
         xOffset = margin;
         yOffset += (1 + 0.5*space)*(1.5*maxSize + 2*padding);
-      }//if(yOffset >= maxY - margin - 100) break;
+      }
     }
 
     pic = pictureRecorder.endRecording();
-    /*ui.Image img = await pic.toImage(maxX.toInt(), maxY.toInt());
-    ByteData byteData = await img.toByteData(format: ui.ImageByteFormat.png);
-    List<int> buffer = byteData.buffer.asUint8List();
-    file['path'] = path;
-    file['buffer'] = buffer;
-    pic.dispose(); img.dispose();
-    await compute(writeCollectionFile, file);*/
     try{
-      //pic = pictureRecorder.endRecording();
       ui.Image img = await pic.toImage(maxX.toInt(), maxY.toInt());
       ByteData byteData = await img.toByteData(format: ui.ImageByteFormat.png);
       List<int> buffer = byteData.buffer.asUint8List();
@@ -320,7 +328,7 @@ class _SaveCollectionState extends State<_SaveCollection> {
               final Map<PermissionGroup, PermissionStatus> response =
               await PermissionHandler().requestPermissions([PermissionGroup.storage]);
               final Map<String, dynamic> permission = checkPermission(
-                  response[PermissionGroup.storage]
+                response[PermissionGroup.storage]
               );
               if(permission['permission']) saveCollection();
               Navigator.of(context).pop(permission['permission'] ?
@@ -452,8 +460,9 @@ class BottomBar extends StatelessWidget{
       if(map == null && scaffold.mounted)
         scaffold.showSnackBar(SnackBar(content: Text('This isn\'t an Amiibo List')));
       else{
+        final _service = Service();
         AmiiboLocalDB amiibos = await compute(entityFromMap, map);
-        await dao.insertImport(amiibos);
+        await _service.update(amiibos);
         amiiboProvider.refreshPagination();
         if(scaffold.mounted)
           scaffold.showSnackBar(SnackBar(content: Text('Amiibo List updated')));
@@ -468,7 +477,8 @@ class BottomBar extends StatelessWidget{
       response[PermissionGroup.storage]
     );
     if(permission['permission']){
-      final AmiiboLocalDB amiibos = await dao.fetchAll();
+      final _service = Service();
+      final AmiiboLocalDB amiibos = await _service.fetchAllAmiiboDB();
       String response = await compute(writeFile, amiibos);
       Scaffold.of(context).showSnackBar(
         SnackBar(

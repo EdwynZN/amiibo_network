@@ -1,6 +1,7 @@
 Version 1.1.4
 - Update date of Incineroar, Chrom, Simon, Ritcher and Dark Samus
-- Added option to see percentage of owned and wished
+- Added option to toggle percentage of owned and wished in the app and in the Collection export image
+- Saved sorting preferences
 - Fixed minor bugs
 
 Version 1.1.3
