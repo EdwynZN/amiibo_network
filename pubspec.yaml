@@ -11,7 +11,7 @@ description: An Amiibo collection app designed to allow you to keep track of whi
 # In iOS, build-name is used as CFBundleShortVersionString while build-number used as CFBundleVersion.
 # Read more about iOS versioning at
 # https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
-version: 1.1.4+18
+version: 1.1.41+19
 
 environment:
   sdk: ">=2.2.2 <3.0.0"
@@ -23,10 +23,10 @@ dependencies:
   rxdart: ^0.22.2
   provider: ^3.1.0
   file_picker: ^1.4.0+1
-  permission_handler: ^3.3.0
+  permission_handler: ^4.0.0
   launch_review: ^2.0.0
-  url_launcher: ^5.2.3
-  shared_preferences: ^0.5.4+5
+  url_launcher: ^5.3.0
+  shared_preferences: ^0.5.6
 
 dev_dependencies:
   flutter_test:

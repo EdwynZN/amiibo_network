@@ -38,13 +38,13 @@ class AmiiboNetwork extends StatelessWidget {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider<ThemeProvider>(
-          builder: (context) => ThemeProvider(theme),
+          create: (context) => ThemeProvider(theme),
         ),
         ChangeNotifierProvider<StatProvider>(
-          builder: (context) => StatProvider(statMode),
+          create: (context) => StatProvider(statMode),
         ),
         ChangeNotifierProvider<AmiiboProvider>(
-          builder: (context) => AmiiboProvider(),
+          create: (context) => AmiiboProvider(),
         ),
         Consumer<ThemeProvider>(
           builder: (context, themeMode, child) => MaterialApp(

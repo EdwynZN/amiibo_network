@@ -81,7 +81,7 @@ class Themes {
       height: 48
     ),
     bottomSheetTheme: BottomSheetThemeData(
-      elevation: 8.0,
+      elevation: 0.0,
       backgroundColor: Colors.transparent,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(8))),
     ),
@@ -170,7 +170,7 @@ class Themes {
       highlightColor: Colors.white70,
     ),
     bottomSheetTheme: BottomSheetThemeData(
-      elevation: 8.0,
+      elevation: 0.0,
       backgroundColor: Colors.transparent,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(8))),
     ),

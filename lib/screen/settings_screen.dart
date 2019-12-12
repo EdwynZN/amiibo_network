@@ -55,9 +55,9 @@ class SettingsPage extends StatelessWidget{
                     }
                   );
                 }),
-                CardSettings(title: 'Changelog', subtitle: 'Changing for better...', icon: const Icon(Icons.build),),
-                CardSettings(title: 'Credits', subtitle: 'Those who make it possible', icon: const Icon(Icons.theaters),),
-                CardSettings(title: 'Privacy Policy', subtitle: 'Therms and conditions', icon: const Icon(Icons.help),),
+                CardSettings(title: 'Changelog', subtitle: 'Changing for better...', icon: const Icon(Icons.build)),
+                CardSettings(title: 'Credits', subtitle: 'Those who make it possible', icon: const Icon(Icons.theaters)),
+                CardSettings(title: 'Privacy Policy', subtitle: 'Therms and conditions', icon: const Icon(Icons.help)),
                 ProjectButtons(),
                 Card(
                   child: FlatButton.icon(
@@ -553,17 +553,17 @@ class CardSettings extends StatelessWidget{
           shape: Theme.of(context).cardTheme.shape,
           clipBehavior: Clip.hardEdge,
           child: ListTile(
-              title: Text(title),
-              subtitle: subtitle == null ? null : Text(subtitle, softWrap: false, overflow: TextOverflow.ellipsis),
-              onTap: onTap ?? () => Navigator.pushNamed(context, "/settingsdetail", arguments: title),
-              trailing: onTap == null ? const Icon(Icons.navigate_next) : null,
-              leading: Container(
-                padding: EdgeInsets.only(right: 16, top: 8, bottom: 8),
-                decoration: BoxDecoration(
-                    border: Border(right: BorderSide(width: 1, color: Theme.of(context).dividerColor))
-                ),
-                child: icon,
-              )
+            title: Text(title),
+            subtitle: subtitle == null ? null : Text(subtitle, softWrap: false, overflow: TextOverflow.ellipsis),
+            onTap: onTap ?? () => Navigator.pushNamed(context, "/settingsdetail", arguments: title),
+            trailing: onTap == null ? const Icon(Icons.navigate_next) : null,
+            leading: Container(
+              padding: EdgeInsets.only(right: 16, top: 8, bottom: 8),
+              decoration: BoxDecoration(
+                  border: Border(right: BorderSide(width: 1, color: Theme.of(context).dividerColor))
+              ),
+              child: icon,
+            )
           ),
         ),
       )

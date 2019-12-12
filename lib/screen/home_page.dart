@@ -12,6 +12,7 @@ import 'package:amiibo_network/widget/animated_widgets.dart';
 import 'package:amiibo_network/widget/floating_bar.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:amiibo_network/provider/stat_provider.dart';
+import 'dart:math' as math;
 
 class Home extends StatelessWidget{
 
@@ -19,7 +20,7 @@ class Home extends StatelessWidget{
   Widget build(BuildContext context) {
     return SafeArea(
       child: ChangeNotifierProvider(
-        builder: (context) => SelectProvider(),
+        create: (context) => SelectProvider(),
         child: HomePage(),
       )
     );
@@ -241,6 +242,7 @@ class HomePageState extends State<HomePage>
               )
             ),
             floatingActionButton: FAB(_animationController, () => _controller.jumpTo(0)),
+
           );
         },
       ),
@@ -252,6 +254,7 @@ class _SliverPersistentHeader extends SliverPersistentHeaderDelegate {
 
   @override
   Widget build(BuildContext context, double shrinkOffset, bool overlapsContent) {
+    final Color _color = Theme.of(context).scaffoldBackgroundColor;
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 12),
       decoration: BoxDecoration(
@@ -259,13 +262,13 @@ class _SliverPersistentHeader extends SliverPersistentHeaderDelegate {
           begin: Alignment.topCenter, end: Alignment.bottomCenter,
           stops: [0.5, 0.7, 1],
           colors: [
-            Theme.of(context).scaffoldBackgroundColor,
-            Theme.of(context).scaffoldBackgroundColor.withOpacity(0.75),
-            Theme.of(context).scaffoldBackgroundColor.withOpacity(0.0),
+            _color,
+            _color.withOpacity(0.75),
+            _color.withOpacity(0.0),
           ]
-        )
+        ),
       ),
-      height: kToolbarHeight,
+      height: math.max(minExtent, maxExtent - shrinkOffset),
       child: StreamBuilder<Map<String,dynamic>>(
         initialData: {'Owned' : 0.0, 'Wished' : 0.0, 'Total' : 0.0},
         stream: Provider.of<AmiiboProvider>(context, listen: false).collectionList,
@@ -471,20 +474,24 @@ class _SortCollectionState extends State<_SortCollection> {
   }
 
   Future<void> _bottomSheet() async {
-    /*Map<String,String> _exSortBy = {};
-    final SharedPreferences preferences = await SharedPreferences.getInstance();
-    preferences.setStringList('Sort', ['name DESC', 'na DESC']);
-    List<String> pref = preferences.getStringList('Sort');*/
     String _sortBy = Provider.of<AmiiboProvider>(context).orderBy;
     return showModalBottomSheet(
       context: context,
       isScrollControlled: true,
+      elevation: 0.0,
       builder: (context) {
+        final Size size = MediaQuery.of(context).size;
+        final double height = (460.0 / size.height).clamp(0.25, 0.66);
+        EdgeInsetsGeometry padding = EdgeInsets.zero;
+        if(size.longestSide >= 800) padding = EdgeInsets.symmetric(
+          horizontal: (size.width/2 - 210).clamp(0.0, double.infinity)
+        );
         return DraggableScrollableSheet(
-          maxChildSize: 0.6, expand: false, initialChildSize: 0.6,
+          key: Key('Draggable'),
+          maxChildSize: height, expand: false, initialChildSize: height,
           builder: (context, scrollController){
             return Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 12),
+              padding: padding,
               child: Material(
                 color: Theme.of(context).backgroundColor,
                 shape: Theme.of(context).bottomSheetTheme.shape,
@@ -494,24 +501,7 @@ class _SortCollectionState extends State<_SortCollection> {
                     SliverPersistentHeader(
                       pinned: true,
                       delegate: _BottomSheetHeader(
-                        child: Text('Sort By', style: Theme.of(context).textTheme.subhead),
-                        /*
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          children: <Widget>[
-                            Expanded(
-                              child: Text('Sort By', style: Theme.of(context).textTheme.subhead,),
-                            ),
-                            InkResponse(
-                              radius: 18,
-                              splashFactory: InkRipple.splashFactory,
-                              highlightColor: Colors.transparent,
-                              child: const Icon(Icons.save,),
-                              onTap: () => print('pressed'),
-                            ),
-                          ],
-                        )
-                        */
+                        child: Text('Sort By', style: Theme.of(context).textTheme.title),
                       ),
                     ),
                     SliverList(
@@ -520,7 +510,6 @@ class _SortCollectionState extends State<_SortCollection> {
                           value: 'name',
                           groupValue: _sortBy,
                           onChanged: _selectOrder,
-                          dense: true,
                           title: Text('Name'),
                           selected: _sortBy == 'name',
                         ),
@@ -528,7 +517,6 @@ class _SortCollectionState extends State<_SortCollection> {
                           value: 'owned DESC',
                           groupValue: _sortBy,
                           onChanged: _selectOrder,
-                          dense: true,
                           selected: _sortBy == 'owned DESC',
                           title: Text('Owned'),
                         ),
@@ -536,7 +524,6 @@ class _SortCollectionState extends State<_SortCollection> {
                           value: 'wishlist DESC',
                           groupValue: _sortBy,
                           onChanged: _selectOrder,
-                          dense: true,
                           title: Text('Wished'),
                           selected: _sortBy == 'wishlist DESC',
                         ),
@@ -544,7 +531,6 @@ class _SortCollectionState extends State<_SortCollection> {
                           value: 'na DESC',
                           groupValue: _sortBy,
                           onChanged: _selectOrder,
-                          dense: true,
                           title: Text('American Date'),
                           selected: _sortBy == 'na DESC',
                           secondary: Image.asset(
@@ -558,7 +544,6 @@ class _SortCollectionState extends State<_SortCollection> {
                           value: 'eu DESC',
                           groupValue: _sortBy,
                           onChanged: _selectOrder,
-                          dense: true,
                           title: Text('European Date'),
                           selected: _sortBy == 'eu DESC',
                           secondary: Image.asset(
@@ -572,7 +557,6 @@ class _SortCollectionState extends State<_SortCollection> {
                             value: 'jp DESC',
                             groupValue: _sortBy,
                             onChanged: _selectOrder,
-                            dense: true,
                             title: Text('Japanese Date'),
                             selected: _sortBy == 'jp DESC',
                             secondary: DecoratedBox(
@@ -592,7 +576,6 @@ class _SortCollectionState extends State<_SortCollection> {
                           value: 'au DESC',
                           groupValue: _sortBy,
                           onChanged: _selectOrder,
-                          dense: true,
                           title: Text('Australian Date'),
                           selected: _sortBy == 'au DESC',
                           secondary: Image.asset(
@@ -604,99 +587,6 @@ class _SortCollectionState extends State<_SortCollection> {
                         ),
                       ]),
                     )
-                    /*
-                    SliverList(
-                      delegate: SliverChildListDelegate([
-                        ListTile(
-                          onTap: () => print(''),
-                          dense: true,
-                          title: Text('Name'),
-                          selected: _exSortBy.containsKey('name'),
-                          leading: const Icon(Icons.arrow_upward, size: 15,)
-                        ),
-                        ListTile(
-                          dense: true,
-                          title: Text('Serie'),
-                          selected: _exSortBy.containsKey('serie'),
-                          leading: const Icon(Icons.arrow_upward, size: 15,),
-                        ),
-                        ListTile(
-                          dense: true,
-                          title: Text('Game'),
-                          selected: _exSortBy.containsKey('game'),
-                          leading: const Icon(Icons.arrow_upward, size: 15,),
-                        ),
-                        ListTile(
-                          dense: true,
-                          title: Text('Owned'),
-                          selected: _exSortBy.containsKey('owned'),
-                          leading: const Icon(Icons.arrow_upward, size: 15,),
-                        ),
-                        ListTile(
-                          dense: true,
-                          title: Text('Wished'),
-                          selected: _exSortBy.containsKey('wished'),
-                          leading: const Icon(Icons.arrow_upward, size: 15,),
-                        ),
-                        const Divider(),
-                        ListTile(
-                          onTap: () => print(''),
-                          dense: true,
-                          title: Text('American Date'),
-                          selected: _exSortBy.containsKey('na'),
-                          leading: const Icon(Icons.arrow_upward, size: 15,),
-                          trailing: Image.asset(
-                            'assets/images/na.png',
-                            height: 16, width: 25,
-                            fit: BoxFit.fill,
-                            semanticLabel: 'Australian date',
-                          ),
-                        ),
-                        ListTile(
-                          dense: true,
-                          title: Text('European Date'),
-                          selected: _exSortBy.containsKey('eu'),
-                          leading: const Icon(Icons.arrow_upward, size: 15,),
-                          trailing: Image.asset(
-                            'assets/images/eu.png',
-                            height: 16, width: 25,
-                            fit: BoxFit.fill,
-                            semanticLabel: 'Australian date',
-                          ),
-                        ),
-                        ListTile(
-                            dense: true,
-                            title: Text('Japanese Date'),
-                            selected: _exSortBy.containsKey('jp'),
-                            leading: const Icon(Icons.arrow_upward, size: 15,),
-                            trailing: DecoratedBox(
-                              decoration: BoxDecoration(
-                                  border: Border.all(width: 0.75)
-                              ),
-                              position: DecorationPosition.foreground,
-                              child: Image.asset(
-                                'assets/images/jp.png',
-                                height: 16, width: 25,
-                                fit: BoxFit.fill,
-                                semanticLabel: 'Japanese date',
-                              ),
-                            )
-                        ),
-                        ListTile(
-                          dense: true,
-                          title: Text('Australian Date'),
-                          selected: _exSortBy.containsKey('au'),
-                          leading: const Icon(Icons.arrow_upward, size: 15,),
-                          trailing: Image.asset(
-                            'assets/images/au.png',
-                            height: 16, width: 25,
-                            fit: BoxFit.fill,
-                            semanticLabel: 'Australian date',
-                          ),
-                        ),
-                      ]),
-                    )
-                    */
                   ],
                 )
               )
@@ -867,7 +757,14 @@ class AmiiboGridState extends State<AmiiboGrid> {
                       tag: amiibo.key,
                       child: Image.asset('assets/collection/icon_${amiibo.key}.png',
                         fit: BoxFit.scaleDown,
-                      )
+                      ),
+                          /*
+                      ColorFiltered(
+                        colorFilter: ColorFilter.mode(Colors.white54, BlendMode.modulate),
+                        child: Image.asset('assets/collection/icon_${amiibo.key}.png',
+                          fit: BoxFit.scaleDown,
+                        ),
+                      )*/
                     ),
                     flex: 9,
                   ),

@@ -113,31 +113,31 @@ class _SliverFloatingPersistentHeader extends SliverPersistentHeaderDelegate {
           color: Theme.of(context).scaffoldBackgroundColor,
           padding: const EdgeInsets.fromLTRB(12,8,12,0),
           child: ListTileTheme(
-                contentPadding: const EdgeInsets.symmetric(horizontal: 4.0),
-                iconColor: Theme.of(context).iconTheme.color,
-                textColor: Theme.of(context).textTheme.title.color,
-                dense: true,
-                child: Material(
-                  color: Theme.of(context).backgroundColor,
-                  type: MaterialType.card,
-                  elevation: elevation,
-                  borderRadius: BorderRadius.circular(8.0),
-                  clipBehavior: Clip.hardEdge,
-                  //shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
-                  child: ListTile(
-                    leading: leading,
-                    title: DefaultTextStyle(
-                      textAlign: TextAlign.left,
-                      style: Theme.of(context).textTheme.display1,
-                      softWrap: false,
-                      overflow: TextOverflow.fade,
-                      child: title,
-                    ),
-                    trailing: trailing,
-                    onTap: onTap,
-                  ),
-                )
+            contentPadding: const EdgeInsets.symmetric(horizontal: 4.0),
+            iconColor: Theme.of(context).iconTheme.color,
+            textColor: Theme.of(context).textTheme.title.color,
+            dense: true,
+            child: Material(
+              color: Theme.of(context).backgroundColor,
+              type: MaterialType.card,
+              elevation: elevation,
+              borderRadius: BorderRadius.circular(8.0),
+              clipBehavior: Clip.hardEdge,
+              //shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
+              child: ListTile(
+                leading: leading,
+                title: DefaultTextStyle(
+                  textAlign: TextAlign.left,
+                  style: Theme.of(context).textTheme.display1,
+                  softWrap: false,
+                  overflow: TextOverflow.fade,
+                  child: title,
+                ),
+                trailing: trailing,
+                onTap: onTap,
+              ),
             )
+          )
         ),
       ),
     );
@@ -155,10 +155,10 @@ class _SliverFloatingPersistentHeader extends SliverPersistentHeaderDelegate {
   @override
   bool shouldRebuild(_SliverFloatingPersistentHeader oldDelegate) {
     return snap != oldDelegate.snap
-        || snapConfiguration != oldDelegate.snapConfiguration
-        || trailing != oldDelegate.trailing
-        || leading != oldDelegate.leading
-        || title != oldDelegate.title
+      || snapConfiguration != oldDelegate.snapConfiguration
+      || trailing != oldDelegate.trailing
+      || leading != oldDelegate.leading
+      || title != oldDelegate.title
     ;
   }
 }
@@ -194,7 +194,7 @@ class _FloatingBarState extends State<_FloatingBar> {
   }
 
   RenderSliverFloatingPersistentHeader _headerRenderer() {
-    return context.ancestorRenderObjectOfType(const TypeMatcher<RenderSliverFloatingPersistentHeader>());
+    return context.findAncestorRenderObjectOfType<RenderSliverFloatingPersistentHeader>();
   }
 
   void _isScrollingListener() {

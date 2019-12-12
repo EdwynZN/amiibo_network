@@ -9687,39 +9687,39 @@
     },
     {
       "key":746,
-      "id":null,
+      "id":"35C10000036C0A02",
       "amiiboSeries":"Shovel Knight",
       "character":"Plague Knight",
       "gameSeries":"Shovel Knight",
       "name":"Plague Knight",
-      "au":null,
-      "eu":null,
+      "au":"2019/12/10",
+      "eu":"2019/12/10",
       "jp":null,
       "na":"2019/12/10",
       "type":"Figure"
     },
     {
       "key":747,
-      "id":null,
+      "id":"35C20000036D0A02",
       "amiiboSeries":"Shovel Knight",
       "character":"Specter Knight",
       "gameSeries":"Shovel Knight",
       "name":"Specter Knight",
-      "au":null,
-      "eu":null,
+      "au":"2019/12/10",
+      "eu":"2019/12/10",
       "jp":null,
       "na":"2019/12/10",
       "type":"Figure"
     },
     {
       "key":748,
-      "id":null,
+      "id":"35C30000036E0A02",
       "amiiboSeries":"Shovel Knight",
       "character":"King Knight",
       "gameSeries":"Shovel Knight",
       "name":"King Knight",
-      "au":null,
-      "eu":null,
+      "au":"2019/12/10",
+      "eu":"2019/12/10",
       "jp":null,
       "na":"2019/12/10",
       "type":"Figure"
@@ -9752,17 +9752,17 @@
     },
     {
       "key":751,
-      "id":null,
+      "id":"35C0000003920A02",
       "amiiboSeries":"Shovel Knight",
       "character":"Shovel Knight",
       "gameSeries":"Shovel Knight",
       "name":"Golden Shovel Knight",
-      "au":null,
-      "eu":null,
+      "au":"2019/12/10",
+      "eu":"2019/12/10",
       "jp":null,
       "na":"2019/12/10",
       "type":"Figure"
     }
   ],
-  "lastUpdated": "2019-11-19T06:20:10.688417"
+  "lastUpdated": "2019-12-12T20:19:12.688417"
 }

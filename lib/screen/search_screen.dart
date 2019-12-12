@@ -47,20 +47,15 @@ class SearchScreenState extends State<SearchScreen>{
                 //onChanged: _search.searchValue,
                 style: Theme.of(context).textTheme.display1,
                 autocorrect: false,
-                decoration: InputDecoration.collapsed(
+                decoration: InputDecoration(
+                  isDense: true,
                   hintText: Provider.of<AmiiboProvider>(context).strFilter,
                   hintStyle: Theme.of(context).textTheme.display1.copyWith(
-                      color: Theme.of(context).textTheme.display1.color.withOpacity(0.5)
+                    color: Theme.of(context).textTheme.display1.color.withOpacity(0.5)
                   ),
-                ),
+                  border: InputBorder.none
+                )
               ),
-              /*trailing: IconButton(
-                tooltip: 'Filter',
-                icon: const Icon(Icons.filter_list),
-                onPressed: (){
-                  print('a');
-                }
-              ),*/
             ),
             /*SliverPersistentHeader(
               delegate: _SliverPersistentHeader(),
