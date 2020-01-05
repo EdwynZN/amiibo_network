@@ -115,8 +115,7 @@ class _StatsPageState extends State<StatsPage> {
                     ),
                     textColor: select.isEmpty ?
                     Theme.of(context).textTheme.title.color : Theme.of(context).appBarTheme.textTheme.title.color,
-                    color: select.isEmpty ?
-                    Theme.of(context).indicatorColor : null,
+                    color: select.isEmpty ? Theme.of(context).indicatorColor : null,
                     onPressed: () => select.isEmpty ? null : setState(() {
                       select.clear();
                       if(_controller.offset != _controller.initialScrollOffset)
@@ -185,63 +184,6 @@ class _StatsPageState extends State<StatsPage> {
               ],
             ),
           ),
-          /*
-          Padding(
-            padding: EdgeInsets.symmetric(horizontal: 8, vertical: 6),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              mainAxisSize: MainAxisSize.min,
-              children: <Widget>[
-                Expanded(
-                  flex: 9,
-                  child: FlatButton(
-                    textColor: Theme.of(context).textTheme.title.color,
-                    color: select.isEmpty ?
-                    Theme.of(context).indicatorColor : Theme.of(context).buttonColor,
-                    onPressed: () => select.isEmpty ? null : setState(() {
-                      select.clear();
-                      if(_controller.offset != _controller.initialScrollOffset)
-                        _controller.jumpTo(0);
-                    }),
-                    child: Text('All'),
-                  ),
-                ),
-                Spacer(),
-                Expanded(
-                  flex: 9,
-                  child: FlatButton(
-                    textColor: Theme.of(context).textTheme.title.color,
-                    color: select.contains('Figure') ?
-                    Theme.of(context).indicatorColor : Theme.of(context).buttonColor,
-                    onPressed: () => select.contains('Figure') ? null : setState(() {
-                      select.clear();
-                      select = {'Figure', 'Yarn'};
-                      if(_controller.offset != _controller.initialScrollOffset)
-                        _controller.jumpTo(0);
-                    }),
-                    child: Text('Figures'),
-                  ),
-                ),
-                Spacer(),
-                Expanded(
-                  flex: 9,
-                  child: FlatButton(
-                    textColor: Theme.of(context).textTheme.title.color,
-                    color: select.contains('Card') ?
-                    Theme.of(context).indicatorColor : Theme.of(context).buttonColor,
-                    onPressed: () => select.contains('Card') ? null : setState(() {
-                      select.clear();
-                      select = {'Card'};
-                      if(_controller.offset != _controller.initialScrollOffset)
-                        _controller.jumpTo(0);
-                    }),
-                    child: Text('Cards'),
-                  ),
-                ),
-              ],
-            ),
-          )
-          * */
         ),
       )
     );
@@ -271,42 +213,48 @@ class SingleStat extends StatelessWidget{
                 overflow: TextOverflow.fade, style: Theme.of(context).textTheme.display1,),
             ),
             const Divider(),
-            Chip(
-              label: Consumer<StatProvider>(
-                builder: (ctx, stat, _){
-                  final String ownedStat = stat.statLabel(
-                    owned.toDouble(),
-                    total.toDouble()
-                  );
-                  return Text('$ownedStat Owned', softWrap: false,
-                    overflow: TextOverflow.fade,
-                  );
-                }
-              ),
-              avatar: AnimatedRadial(
-                key: Key('Owned'),
-                percentage: owned.toDouble() / total.toDouble(),
-                child: const Icon(Icons.check, color: Colors.green),
+            FittedBox(
+              child: FlatButton.icon(
+                onPressed: null,
+                label: Consumer<StatProvider>(
+                  builder: (ctx, stat, _){
+                    final String ownedStat = stat.statLabel(
+                      owned.toDouble(),
+                      total.toDouble()
+                    );
+                    return Text('$ownedStat Owned', softWrap: false,
+                      overflow: TextOverflow.fade, style: Theme.of(context).textTheme.subhead,
+                    );
+                  }
+                ),
+                icon: AnimatedRadial(
+                  key: Key('Owned'),
+                  percentage: owned.toDouble() / total.toDouble(),
+                  child: const Icon(Icons.check, color: Colors.green),
+                ),
               ),
             ),
-            Chip(
-              label: Consumer<StatProvider>(
-                builder: (ctx, stat, _){
-                  final String wishedStat = stat.statLabel(
-                    wished.toDouble(),
-                    total.toDouble()
-                  );
-                  return Text('$wishedStat Wished', softWrap: false,
-                    overflow: TextOverflow.fade,
-                  );
-                }
+            FittedBox(
+              child: FlatButton.icon(
+                onPressed: null,
+                label: Consumer<StatProvider>(
+                    builder: (ctx, stat, _){
+                      final String wishedStat = stat.statLabel(
+                          wished.toDouble(),
+                          total.toDouble()
+                      );
+                      return Text('$wishedStat Wished', softWrap: false,
+                        overflow: TextOverflow.fade, style: Theme.of(context).textTheme.subhead,
+                      );
+                    }
+                ),
+                icon: AnimatedRadial(
+                  key: Key('Wished'),
+                  percentage: wished.toDouble() / total.toDouble(),
+                  child: const Icon(Icons.whatshot, color: Colors.amber),
+                ),
               ),
-              avatar: AnimatedRadial(
-                key: Key('Wished'),
-                percentage: wished.toDouble() / total.toDouble(),
-                child: const Icon(Icons.whatshot, color: Colors.amber),
-              ),
-            )
+            ),
           ],
         ),
       )

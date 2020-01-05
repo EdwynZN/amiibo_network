@@ -60,18 +60,6 @@ class Themes {
       ),
       behavior: SnackBarBehavior.floating,
     ),
-    chipTheme: ChipThemeData(
-      backgroundColor: Colors.grey[800],
-      disabledColor: Colors.grey,
-      selectedColor: const Color.fromRGBO(207, 102, 121, 1),
-      secondarySelectedColor: const Color.fromRGBO(96, 125, 139, 0.5),
-      labelPadding: const EdgeInsets.symmetric(horizontal: 8.0),
-      padding: const EdgeInsets.all(2.0),
-      shape: StadiumBorder(),
-      labelStyle: TextStyle(color: Colors.white70),
-      secondaryLabelStyle: TextStyle(color: Colors.white70),
-      brightness: Brightness.dark
-    ),
     buttonTheme: ButtonThemeData(
       textTheme: ButtonTextTheme.normal,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
@@ -88,7 +76,8 @@ class Themes {
     toggleableActiveColor: const Color.fromRGBO(207, 102, 121, 1),
     buttonColor: Colors.grey[850],
   );
-  static final _light = ThemeData(
+
+  static final _lightO = ThemeData(
     primaryColorDark: Colors.redAccent,
     textSelectionHandleColor: Colors.white70,
     brightness: Brightness.light,
@@ -99,7 +88,7 @@ class Themes {
         subtitle: TextStyle(color: Colors.white, fontSize: 16),
       ),
       iconTheme: IconThemeData(
-        color: Colors.white
+          color: Colors.white
       ),
     ),
     unselectedWidgetColor: Colors.black87,
@@ -133,8 +122,8 @@ class Themes {
       subhead: TextStyle(color: Colors.black87, fontSize: 16, fontWeight: FontWeight.w400),
     ),
     bottomAppBarTheme: BottomAppBarTheme(
-      color: Colors.transparent,
-      elevation: 0.0
+        color: Colors.transparent,
+        elevation: 0.0
     ),
     dialogTheme: DialogTheme(
       backgroundColor: Colors.white,
@@ -143,22 +132,22 @@ class Themes {
     snackBarTheme: SnackBarThemeData(
       backgroundColor: const Color(0xFFE8C2BF),
       contentTextStyle: TextStyle(
-        color: Colors.black
+          color: Colors.black
       ),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8),),
       behavior: SnackBarBehavior.floating,
     ),
     chipTheme: ChipThemeData(
-      backgroundColor: const Color.fromRGBO(211, 211, 211, 0.7),
-      disabledColor: Colors.grey,
-      selectedColor: Colors.redAccent,
-      secondarySelectedColor: Colors.redAccent,
-      labelPadding: const EdgeInsets.symmetric(horizontal: 8.0),
-      padding: const EdgeInsets.all(2.0),
-      shape: StadiumBorder(),
-      labelStyle: TextStyle(color: Colors.black),
-      secondaryLabelStyle: TextStyle(color: Colors.black),
-      brightness: Brightness.light
+        backgroundColor: const Color.fromRGBO(211, 211, 211, 0.7),
+        disabledColor: Colors.grey,
+        selectedColor: Colors.redAccent,
+        secondarySelectedColor: Colors.redAccent,
+        labelPadding: const EdgeInsets.symmetric(horizontal: 8.0),
+        padding: const EdgeInsets.all(2.0),
+        shape: StadiumBorder(),
+        labelStyle: TextStyle(color: Colors.black),
+        secondaryLabelStyle: TextStyle(color: Colors.black),
+        brightness: Brightness.light
     ),
     buttonTheme: ButtonThemeData(
       textTheme: ButtonTextTheme.normal,
@@ -175,8 +164,172 @@ class Themes {
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(8))),
     ),
     toggleableActiveColor: Colors.redAccent,
-    indicatorColor:const Color(0XFFE8C2BF),// const Color.fromRGBO(178, 218, 251, 1),
+    indicatorColor: const Color(0XFFE8C2BF),// const Color.fromRGBO(178, 218, 251, 1),
     buttonColor: const Color(0xFFE8C2BF),
+  );
+  static final _lightP = ThemeData(
+    primaryColorDark: Colors.deepPurpleAccent,
+    textSelectionHandleColor: Colors.deepPurple[300],
+    brightness: Brightness.light,
+    appBarTheme: AppBarTheme(
+      color: Colors.deepPurple,
+      textTheme: TextTheme(
+        title: TextStyle(color: Colors.white, fontSize: 20),
+        subtitle: TextStyle(color: Colors.white, fontSize: 16),
+      ),
+      iconTheme: IconThemeData(
+          color: Colors.white
+      ),
+    ),
+    unselectedWidgetColor: Colors.black87,
+    dividerColor: Colors.blueGrey,
+    scaffoldBackgroundColor: Colors.deepPurple,
+    accentColor: Colors.deepPurpleAccent,
+    accentIconTheme: const IconThemeData(color: Colors.white),
+    primaryIconTheme: const IconThemeData(color: Colors.black),
+    iconTheme: const IconThemeData(color: Colors.black),
+    errorColor: Colors.redAccent,
+    primaryColorLight: Colors.deepPurpleAccent[100],
+    canvasColor: Colors.white,
+    primarySwatch: Colors.deepPurple,
+    primaryColor: Colors.deepPurple,
+    cursorColor: Colors.black12,
+    backgroundColor: Colors.deepPurple[100], //const Color(0xFFE8C2BF), //Colors.white70,
+    highlightColor: Colors.white70,
+    selectedRowColor: Colors.deepPurple[300], //const Color.fromRGBO(100, 181, 246, 0.5),
+    cardTheme: CardTheme(
+      color: Colors.deepPurple[100],//Colors.red[100], //const Color(0xFFE8C2BF),
+      margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+      elevation: 8,
+    ),
+    textTheme: TextTheme(
+      title: TextStyle(color: Colors.black87, fontSize: 18, fontWeight: FontWeight.w400),
+      subtitle: TextStyle(color: Colors.black87, fontSize: 12, fontWeight: FontWeight.w400),
+      body1: TextStyle(color: Colors.black87),
+      body2: TextStyle(color: Colors.black87, fontSize: 16, fontWeight: FontWeight.w400),
+      display1: TextStyle(color: Colors.black87, fontSize: 18, fontWeight: FontWeight.w600),
+      subhead: TextStyle(color: Colors.black87, fontSize: 16, fontWeight: FontWeight.w400),
+    ),
+    bottomAppBarTheme: BottomAppBarTheme(
+        color: Colors.transparent,
+        elevation: 0.0
+    ),
+    dialogTheme: DialogTheme(
+      backgroundColor: Colors.deepPurple[200],//Colors.white,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+    ),
+    snackBarTheme: SnackBarThemeData(
+      backgroundColor: Colors.deepPurple[200], //const Color(0xFFE8C2BF),
+      contentTextStyle: TextStyle(
+          color: Colors.black
+      ),
+      //shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8),),
+      shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(8),
+          side: BorderSide(color: Colors.deepPurpleAccent)
+      ),
+      behavior: SnackBarBehavior.floating,
+    ),
+    buttonTheme: ButtonThemeData(
+      textTheme: ButtonTextTheme.normal,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+      layoutBehavior: ButtonBarLayoutBehavior.constrained,
+      buttonColor: Colors.deepPurple[200], //const Color(0xFFE8C2BF), //Colors.white70,
+      materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+      height: 48,
+      highlightColor: Colors.white70,
+    ),
+    bottomSheetTheme: BottomSheetThemeData(
+      elevation: 0.0,
+      backgroundColor: Colors.transparent,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(8))),
+    ),
+    toggleableActiveColor: Colors.deepPurpleAccent,
+    indicatorColor: Colors.deepPurple[100], //const Color(0xFFE8C2BF),
+    buttonColor:Colors.deepPurple[100], //const Color(0xFFE8C2BF),
+  );
+  static final _light = ThemeData(
+    primaryColorDark: Colors.redAccent,
+    textSelectionHandleColor: Colors.red[300],
+    brightness: Brightness.light,
+    appBarTheme: AppBarTheme(
+      color: Colors.red,
+      textTheme: TextTheme(
+        title: TextStyle(color: Colors.white, fontSize: 20),
+        subtitle: TextStyle(color: Colors.white, fontSize: 16),
+      ),
+      iconTheme: IconThemeData(
+          color: Colors.white
+      ),
+    ),
+    unselectedWidgetColor: Colors.black87,
+    dividerColor: Colors.blueGrey,
+    scaffoldBackgroundColor: Colors.red,
+    accentColor: Colors.redAccent,
+    accentIconTheme: const IconThemeData(color: Colors.white),
+    primaryIconTheme: const IconThemeData(color: Colors.black),
+    iconTheme: const IconThemeData(color: Colors.black),
+    errorColor: Colors.redAccent,
+    primaryColorLight: Colors.redAccent[100],
+    canvasColor: Colors.white,
+    primarySwatch: Colors.red,
+    primaryColor: Colors.red,
+    cursorColor: Colors.black12,
+    backgroundColor: Colors.red[100], //const Color(0xFFE8C2BF), //Colors.white70,
+    highlightColor: Colors.white70,
+    selectedRowColor: Colors.red[200], //const Color.fromRGBO(100, 181, 246, 0.5),
+    cardTheme: CardTheme(
+      color: Colors.red[100],//Colors.red[100], //const Color(0xFFE8C2BF),
+      margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+      elevation: 8,
+    ),
+    textTheme: TextTheme(
+      title: TextStyle(color: Colors.black87, fontSize: 18, fontWeight: FontWeight.w400),
+      subtitle: TextStyle(color: Colors.black87, fontSize: 12, fontWeight: FontWeight.w400),
+      body1: TextStyle(color: Colors.black87),
+      body2: TextStyle(color: Colors.black87, fontSize: 16, fontWeight: FontWeight.w400),
+      display1: TextStyle(color: Colors.black87, fontSize: 18, fontWeight: FontWeight.w600),
+      subhead: TextStyle(color: Colors.black87, fontSize: 16, fontWeight: FontWeight.w400),
+    ),
+    bottomAppBarTheme: BottomAppBarTheme(
+        color: Colors.transparent,
+        elevation: 0.0
+    ),
+    dialogTheme: DialogTheme(
+      backgroundColor: Colors.red[100],//Colors.white,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+    ),
+    snackBarTheme: SnackBarThemeData(
+      backgroundColor: Colors.red[100], //const Color(0xFFE8C2BF),
+      contentTextStyle: TextStyle(
+          color: Colors.black
+      ),
+      //shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8),),
+      shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(8),
+          side: BorderSide(color: Colors.redAccent)
+      ),
+      behavior: SnackBarBehavior.floating,
+    ),
+    buttonTheme: ButtonThemeData(
+      textTheme: ButtonTextTheme.normal,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+      layoutBehavior: ButtonBarLayoutBehavior.constrained,
+      buttonColor: Colors.red[100], //const Color(0xFFE8C2BF), //Colors.white70,
+      materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+      height: 48,
+      highlightColor: Colors.white70,
+    ),
+    bottomSheetTheme: BottomSheetThemeData(
+      elevation: 0.0,
+      backgroundColor: Colors.transparent,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(8))),
+    ),
+    toggleableActiveColor: Colors.redAccent,
+    indicatorColor: Colors.red[100], //const Color(0xFFE8C2BF),
+    buttonColor:Colors.red[100], //const Color(0xFFE8C2BF),
   );
 
   static ThemeData get light => _light;

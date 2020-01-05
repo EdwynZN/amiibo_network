@@ -268,16 +268,15 @@ class _SaveCollectionState extends State<_SaveCollection> {
     pic = pictureRecorder.endRecording();
     try{
       ui.Image img = await pic.toImage(maxX.toInt(), maxY.toInt());
+      pic.dispose();
       ByteData byteData = await img.toByteData(format: ui.ImageByteFormat.png);
+      img.dispose();
       List<int> buffer = byteData.buffer.asUint8List();
       file['path'] = path;
       file['buffer'] = buffer;
       compute(writeCollectionFile, file);
-      img.dispose();
     }catch(e){
       print(e);
-    }finally{
-      pic.dispose();
     }
   }
 
