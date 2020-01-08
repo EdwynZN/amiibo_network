@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:amiibo_network/service/service.dart';
 import 'package:provider/provider.dart';
-import 'package:amiibo_network/provider/theme_provider.dart';
+import 'package:amiibo_network/widget/theme_widget.dart';
 import 'package:amiibo_network/provider/amiibo_provider.dart';
 import 'package:amiibo_network/provider/stat_provider.dart';
 
@@ -40,7 +40,7 @@ class _CollectionDrawerState extends State<CollectionDrawer> {
       iconColor: Theme.of(context).iconTheme.color,
       textColor: Theme.of(context).textTheme.body1.color,
       style: ListTileStyle.drawer,
-      selectedColor: Theme.of(context).accentColor,
+      selectedColor: Theme.of(context).accentColor,//Theme.of(context).textSelectionColor,//Theme.of(context).accentColor,
       child: Drawer(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.end,
@@ -48,7 +48,7 @@ class _CollectionDrawerState extends State<CollectionDrawer> {
             Expanded(
               child: Theme(
                 data: Theme.of(context).copyWith(
-                  highlightColor: Theme.of(context).accentColor
+                  highlightColor: Theme.of(context).primaryColorLight
                 ),
                 child: Scrollbar(
                   child: Selector<AmiiboProvider, String>(
@@ -62,15 +62,10 @@ class _CollectionDrawerState extends State<CollectionDrawer> {
                                 child: Text('Show percentage', overflow: TextOverflow.fade,),
                                 builder: (ctx, _statMode, child){
                                   return SwitchListTile.adaptive(
-                                    secondary: const SizedBox(),//const Icon(Icons.local_parking),
+                                    secondary: const SizedBox(),
                                     title: child,
-                                    //subtitle: Text('Toggle between percentage and ratio', overflow: TextOverflow.fade,),
-                                    //dense: true,
                                     value: _statMode.prefStat,
                                     onChanged: Provider.of<StatProvider>(ctx, listen: false).spStat,
-                                    //activeThumbImage: AssetImage('assets/images/icon_app.png',),
-                                    //inactiveThumbImage: AssetImage('assets/images/icon_app.png',),
-                                    activeColor: Theme.of(ctx).accentColor,
                                   );
                                 },
                               ),
@@ -185,59 +180,11 @@ class _CollectionDrawerState extends State<CollectionDrawer> {
               },
               leading: const Icon(Icons.settings),
               title: Text('Settings',),
-              trailing: ThemeButton()
+              trailing: ThemeButton(openDialog: true,)
             ),
           ],
         )
       ),
-    );
-  }
-}
-
-class ThemeButton extends StatelessWidget{
-
-  Widget _selectWidget(String value){
-    switch(value){
-      case 'Light':
-        return const Icon(Icons.wb_sunny);
-      case 'Dark':
-        return const Icon(Icons.brightness_3, color: Colors.amber);
-      default:
-        return const Icon(Icons.brightness_auto);
-    }
-  }
-
-  void changeTheme(BuildContext context, String strTheme){
-    switch(strTheme){
-      case 'Light':
-        Provider.of<ThemeProvider>(context, listen: false).themeDB('Dark');
-        break;
-      case 'Dark':
-        Provider.of<ThemeProvider>(context, listen: false).themeDB('Auto');
-        break;
-      default:
-        Provider.of<ThemeProvider>(context, listen: false).themeDB('Light');
-        break;
-    }
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Selector<ThemeProvider, String>(
-      builder: (context, strTheme, _) {
-        return InkResponse(
-          radius: 18,
-          splashFactory: InkRipple.splashFactory,
-          highlightColor: Colors.transparent,
-          splashColor: Theme.of(context).primaryColorDark,
-          child: Tooltip(
-            message: '$strTheme Theme',
-            child: _selectWidget(strTheme),
-          ),
-          onTap: () => changeTheme(context, strTheme),
-        );
-      },
-      selector: (context, theme) => theme.savedTheme,
     );
   }
 }

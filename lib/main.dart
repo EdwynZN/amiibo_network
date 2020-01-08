@@ -7,7 +7,6 @@ import 'package:amiibo_network/provider/theme_provider.dart';
 import 'package:amiibo_network/provider/amiibo_provider.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
-import 'package:amiibo_network/themes.dart';
 import 'package:amiibo_network/provider/stat_provider.dart';
 //import 'package:flutter/gestures.dart';
 
@@ -16,7 +15,7 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await initDB();
   bool splash = await Service().compareLastUpdate();
-  String savedTheme = await getTheme();
+  Map<String,dynamic> savedTheme = await getTheme();
   bool stat = await getStatMode();
   runApp(
     AmiiboNetwork(
@@ -29,7 +28,7 @@ void main() async {
 
 class AmiiboNetwork extends StatelessWidget {
   final Widget firstPage;
-  final String theme;
+  final Map<String,dynamic> theme;
   final bool statMode;
   AmiiboNetwork({this.firstPage, this.theme, this.statMode});
 
@@ -38,7 +37,9 @@ class AmiiboNetwork extends StatelessWidget {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider<ThemeProvider>(
-          create: (context) => ThemeProvider(theme),
+          create: (context) => ThemeProvider(
+            theme['Theme'], theme['Light'], theme['Dark']
+          ),
         ),
         ChangeNotifierProvider<StatProvider>(
           create: (context) => StatProvider(statMode),
@@ -49,8 +50,8 @@ class AmiiboNetwork extends StatelessWidget {
         Consumer<ThemeProvider>(
           builder: (context, themeMode, child) => MaterialApp(
             debugShowCheckedModeBanner: false,
-            theme: Themes.light,
-            darkTheme: Themes.dark,
+            theme: themeMode.theme.light,
+            darkTheme: themeMode.theme.dark,
             onGenerateRoute: Routes.getRoute,
             themeMode: themeMode.preferredTheme,
             home: Builder(

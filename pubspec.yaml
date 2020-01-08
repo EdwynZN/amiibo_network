@@ -14,7 +14,10 @@ description: An Amiibo collection app designed to allow you to keep track of whi
 version: 1.1.41+19
 
 environment:
-  sdk: ">=2.2.2 <3.0.0"
+  sdk: ">=2.6.0 <3.0.0"
+
+enable-experiment:
+  - extension-methods
 
 dependencies:
   flutter:

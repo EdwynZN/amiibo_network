@@ -14,6 +14,7 @@ import 'dart:io';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:amiibo_network/service/service.dart';
 import 'package:amiibo_network/provider/stat_provider.dart';
+import 'package:amiibo_network/widget/theme_widget.dart';
 
 class SettingsPage extends StatelessWidget{
   const SettingsPage({Key key}): super(key: key);
@@ -34,46 +35,51 @@ class SettingsPage extends StatelessWidget{
           ],
           title: const SizedBox(child: Text('Settings')),
         ),
-        body: CustomScrollView(
-          slivers: <Widget>[
-            SliverList(
-              delegate: SliverChildListDelegate.fixed([
-                ResetCollection(),
-                Builder(builder: (_){
-                  return CardSettings(title: 'Save Collection',
-                    subtitle: 'Create a picture of your collection',
-                    icon: const Icon(Icons.save),
-                    onTap: () async {
-                      String text = await showDialog(
-                        context: _,
-                        builder: (BuildContext _) => _SaveCollection()
-                      );
-                      if(text != null)
-                        Scaffold.of(_).showSnackBar(
-                          SnackBar(content: Text(text))
-                        );
-                    }
-                  );
-                }),
-                CardSettings(title: 'Changelog', subtitle: 'Changing for better...', icon: const Icon(Icons.build)),
-                CardSettings(title: 'Credits', subtitle: 'Those who make it possible', icon: const Icon(Icons.theaters)),
-                CardSettings(title: 'Privacy Policy', subtitle: 'Therms and conditions', icon: const Icon(Icons.help)),
-                ProjectButtons(),
-                Card(
-                  child: FlatButton.icon(
-                    onPressed: LaunchReview.launch,
-                    icon: Image.asset('assets/images/icon_app.png',
-                      height: 30, width: 30, fit: BoxFit.fill,
-                      color: Theme.of(context).brightness == Brightness.dark
-                          ? Colors.white54 : null,
-                    ),
-                    label: Text('Rate me', style: Theme.of(context).textTheme.body2),
+        body: Scrollbar(
+          child: CustomScrollView(
+            slivers: <Widget>[
+              SliverList(
+                delegate: SliverChildListDelegate.fixed([
+                  ResetCollection(),
+                  Builder(builder: (_){
+                    return CardSettings(title: 'Save Collection',
+                        subtitle: 'Create a picture of your collection',
+                        icon: const Icon(Icons.save),
+                        onTap: () async {
+                          String text = await showDialog(
+                              context: _,
+                              builder: (BuildContext _) => _SaveCollection()
+                          );
+                          if(text != null)
+                            Scaffold.of(_).showSnackBar(
+                                SnackBar(content: Text(text))
+                            );
+                        }
+                    );
+                  }),
+                  CardSettings(title: 'Appearance', subtitle: 'More personalization', icon: const Icon(Icons.color_lens),
+                    onTap: () => ThemeButton.dialog(context)//() => _dialog(context),
                   ),
-                )
-              ],
+                  CardSettings(title: 'Changelog', subtitle: 'Changing for better...', icon: const Icon(Icons.build)),
+                  CardSettings(title: 'Credits', subtitle: 'Those who make it possible', icon: const Icon(Icons.theaters)),
+                  CardSettings(title: 'Privacy Policy', subtitle: 'Therms and conditions', icon: const Icon(Icons.help)),
+                  ProjectButtons(),
+                  Card(
+                    child: FlatButton.icon(
+                      onPressed: LaunchReview.launch,
+                      icon: Image.asset('assets/images/icon_app.png',
+                        height: 30, width: 30, fit: BoxFit.fill,
+                        color: Theme.of(context).brightness == Brightness.dark
+                            ? Colors.white54 : null,
+                      ),
+                      label: Text('Rate me', style: Theme.of(context).textTheme.body2),
+                    ),
+                  )
+                ],
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
         bottomNavigationBar: BottomBar()
       )
@@ -105,13 +111,13 @@ class ProjectButtons extends StatelessWidget{
             )
         ),
         Expanded(
-            child: Card(
-              child: FlatButton.icon(
-                onPressed: () => _launchURL('https://github.com/EdwynZN/amiibo_network/issues', context),
-                icon: Icon(Icons.bug_report, color: Theme.of(context).iconTheme.color),
-                label: Text('Report bug', style: Theme.of(context).textTheme.body2),
-              ),
-            )
+          child: Card(
+            child: FlatButton.icon(
+              onPressed: () => _launchURL('https://github.com/EdwynZN/amiibo_network/issues', context),
+              icon: Icon(Icons.bug_report, color: Theme.of(context).iconTheme.color),
+              label: Text('Report bug', style: Theme.of(context).textTheme.body2),
+            ),
+          )
         ),
       ],
     );

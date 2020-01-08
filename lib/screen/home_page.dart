@@ -360,119 +360,6 @@ class _SortCollectionState extends State<_SortCollection> {
     Navigator.pop(context);
   }
 
-  Future<void> _dialog() async {
-    String _sortBy = Provider.of<AmiiboProvider>(context).orderBy;
-    return showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return SimpleDialog(
-          semanticLabel: 'Sort',
-          title: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 6),
-                child: Text('Sort By'),
-              ),
-              const Divider(),
-            ],
-          ),
-          titlePadding: const EdgeInsets.only(top: 12.0),
-          contentPadding: const EdgeInsets.only(bottom: 8.0),
-          children: <Widget>[
-            RadioListTile(
-              value: 'name',
-              groupValue: _sortBy,
-              onChanged: _selectOrder,
-              dense: true,
-              title: Text('Name'),
-              selected: _sortBy == 'name',
-            ),
-            RadioListTile(
-              value: 'owned DESC',
-              groupValue: _sortBy,
-              onChanged: _selectOrder,
-              dense: true,
-              selected: _sortBy == 'owned DESC',
-              title: Text('Owned'),
-            ),
-            RadioListTile(
-              value: 'wishlist DESC',
-              groupValue: _sortBy,
-              onChanged: _selectOrder,
-              dense: true,
-              title: Text('Wished'),
-              selected: _sortBy == 'wishlist DESC',
-            ),
-            RadioListTile(
-              value: 'na DESC',
-              groupValue: _sortBy,
-              onChanged: _selectOrder,
-              dense: true,
-              title: Text('American Date'),
-              selected: _sortBy == 'na DESC',
-              secondary: Image.asset(
-                'assets/images/na.png',
-                height: 16, width: 25,
-                fit: BoxFit.fill,
-                semanticLabel: 'American Date',
-              ),
-            ),
-            RadioListTile(
-              value: 'eu DESC',
-              groupValue: _sortBy,
-              onChanged: _selectOrder,
-              dense: true,
-              title: Text('European Date'),
-              selected: _sortBy == 'eu DESC',
-              secondary: Image.asset(
-                'assets/images/eu.png',
-                height: 16, width: 25,
-                fit: BoxFit.fill,
-                semanticLabel: 'European date',
-              ),
-            ),
-            RadioListTile(
-              value: 'jp DESC',
-              groupValue: _sortBy,
-              onChanged: _selectOrder,
-              dense: true,
-              title: Text('Japanese Date'),
-              selected: _sortBy == 'jp DESC',
-              secondary: DecoratedBox(
-                decoration: BoxDecoration(
-                  border: Border.all(width: 0.75)
-                ),
-                position: DecorationPosition.foreground,
-                child: Image.asset(
-                  'assets/images/jp.png',
-                  height: 16, width: 25,
-                  fit: BoxFit.fill,
-                  semanticLabel: 'Japanese date',
-                ),
-              )
-            ),
-            RadioListTile(
-              value: 'au DESC',
-              groupValue: _sortBy,
-              onChanged: _selectOrder,
-              dense: true,
-              title: Text('Australian Date'),
-              selected: _sortBy == 'au DESC',
-              secondary: Image.asset(
-                'assets/images/au.png',
-                height: 16, width: 25,
-                fit: BoxFit.fill,
-                semanticLabel: 'Australian date',
-              ),
-            ),
-          ],
-        );
-      }
-    );
-  }
-
   Future<void> _bottomSheet() async {
     String _sortBy = Provider.of<AmiiboProvider>(context).orderBy;
     return showModalBottomSheet(
@@ -624,7 +511,7 @@ class _BottomSheetHeader extends SliverPersistentHeaderDelegate {
           children: <Widget>[
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 6),
-              child:  child,
+              child: child,
             ),
             const Divider()
           ],

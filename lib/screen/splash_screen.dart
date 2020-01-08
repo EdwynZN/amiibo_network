@@ -49,7 +49,11 @@ class SplashScreenState extends State<SplashScreen>
           children: [
             SwitchIcon(controller: _animationController.view, height: _size),
             Container(
-              color: Colors.black,
+              decoration: BoxDecoration(
+                color: Colors.black,
+                border: Border.all(color: Colors.white, width: 0.1)
+              ),
+              //color: Colors.black,
               padding: EdgeInsets.all(5),
               width: _size/3,
               height: _size/4,
