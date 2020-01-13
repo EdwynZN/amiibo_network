@@ -136,7 +136,7 @@ class SwitchIcon extends StatelessWidget{
         size: Size(height/11.3, height/4),
         painter: SwitchJoycon(isLeft: isLeft,
         color: Theme.of(context).brightness == Brightness.light ?
-          null : Theme.of(context).primaryColor)
+          null : Colors.grey[850])
       ),
       builder: (_, Widget child) {
         return FractionalTranslation(

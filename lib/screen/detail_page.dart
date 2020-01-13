@@ -78,7 +78,7 @@ class _CardDetailAmiibo extends StatelessWidget{
                             IconButton(
                               icon: (amiibo.wishlist?.isEven ?? true) ?
                               const Icon(Icons.check_box_outline_blank) : const Icon(Icons.card_giftcard),
-                              color: Colors.yellow,
+                              color: Colors.yellowAccent,
                               iconSize: 30.0,
                               tooltip: "Wished",
                               splashColor: Colors.yellowAccent[100],

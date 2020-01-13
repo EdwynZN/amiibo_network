@@ -13,7 +13,7 @@ class RadialProgression extends CustomPainter{
         percent <= 0.50 ? Colors.yellow[300] :
         percent <= 0.75 ? Colors.amber[300] :
         percent <= 0.99 ? Colors.lightGreen[300] :
-        Colors.green
+        Colors.green[800]
       ..style = PaintingStyle.stroke
       ..strokeWidth = 4.0,
     line = Paint()
@@ -37,6 +37,31 @@ class RadialProgression extends CustomPainter{
 
   @override
   bool shouldRepaint(RadialProgression oldDelegate) => oldDelegate.percent != percent;
+}
+
+class Radial extends StatelessWidget{
+  final Widget label;
+  final Widget icon;
+  final MainAxisAlignment mainAxisAlignment;
+
+  Radial({
+    @required this.label,
+    @required this.icon,
+    this.mainAxisAlignment = MainAxisAlignment.center,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: <Widget>[
+        icon,
+        const SizedBox(width: 8.0),
+        label
+      ],
+    );
+  }
 }
 
 class AnimatedRadial extends ImplicitlyAnimatedWidget {

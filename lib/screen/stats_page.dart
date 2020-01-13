@@ -148,7 +148,7 @@ class _StatsPageState extends State<StatsPage> {
                     textColor: select.contains('Figure') ?
                     Theme.of(context).textTheme.title.color : Theme.of(context).appBarTheme.textTheme.title.color,
                     color: select.contains('Figure') ?
-                    Theme.of(context).indicatorColor : null,//Theme.of(context).buttonColor,
+                    Theme.of(context).indicatorColor : null,
                     onPressed: () => select.contains('Figure') ? null : setState(() {
                       select.clear();
                       select = {'Figure', 'Yarn'};
@@ -214,47 +214,47 @@ class SingleStat extends StatelessWidget{
             ),
             const Divider(),
             FittedBox(
-              child: FlatButton.icon(
-                onPressed: null,
-                label: Consumer<StatProvider>(
-                  builder: (ctx, stat, _){
-                    final String ownedStat = stat.statLabel(
-                      owned.toDouble(),
-                      total.toDouble()
-                    );
-                    return Text('$ownedStat Owned', softWrap: false,
-                      overflow: TextOverflow.fade, style: Theme.of(context).textTheme.subhead,
-                    );
-                  }
-                ),
-                icon: AnimatedRadial(
-                  key: Key('Owned'),
-                  percentage: owned.toDouble() / total.toDouble(),
-                  child: const Icon(Icons.check, color: Colors.green),
+                child: FlatButton.icon(
+                  onPressed: null,
+                  label: Consumer<StatProvider>(
+                      builder: (ctx, stat, _){
+                        final String ownedStat = stat.statLabel(
+                            owned.toDouble(),
+                            total.toDouble()
+                        );
+                        return Text('$ownedStat Owned', softWrap: false,
+                          overflow: TextOverflow.fade, style: Theme.of(context).textTheme.subhead,
+                        );
+                      }
+                  ),
+                  icon: AnimatedRadial(
+                    key: Key('Owned'),
+                    percentage: owned.toDouble() / total.toDouble(),
+                    child: Icon(Icons.check, color: Colors.green[800]),
+                  ),
                 ),
               ),
-            ),
             FittedBox(
-              child: FlatButton.icon(
-                onPressed: null,
-                label: Consumer<StatProvider>(
-                    builder: (ctx, stat, _){
-                      final String wishedStat = stat.statLabel(
-                          wished.toDouble(),
-                          total.toDouble()
-                      );
-                      return Text('$wishedStat Wished', softWrap: false,
-                        overflow: TextOverflow.fade, style: Theme.of(context).textTheme.subhead,
-                      );
-                    }
-                ),
-                icon: AnimatedRadial(
-                  key: Key('Wished'),
-                  percentage: wished.toDouble() / total.toDouble(),
-                  child: const Icon(Icons.whatshot, color: Colors.amber),
+                child: FlatButton.icon(
+                  onPressed: null,
+                  label: Consumer<StatProvider>(
+                      builder: (ctx, stat, _){
+                        final String wishedStat = stat.statLabel(
+                            wished.toDouble(),
+                            total.toDouble()
+                        );
+                        return Text('$wishedStat Wished', softWrap: false,
+                          overflow: TextOverflow.fade, style: Theme.of(context).textTheme.subhead,
+                        );
+                      }
+                  ),
+                  icon: AnimatedRadial(
+                    key: Key('Wished'),
+                    percentage: wished.toDouble() / total.toDouble(),
+                    child: Icon(Icons.whatshot, color: Colors.amber[800]),
+                  ),
                 ),
               ),
-            ),
           ],
         ),
       )

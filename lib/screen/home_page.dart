@@ -277,55 +277,58 @@ class _SliverPersistentHeader extends SliverPersistentHeaderDelegate {
             return const SizedBox();
           return Row(
             children: <Widget>[
+              const SizedBox(width: 4.0),
               Expanded(
-                child: FittedBox(
-                  child: FlatButton.icon(
-                    onPressed: null,
-                    icon: AnimatedRadial(
-                      key: Key('Owned'),
-                      percentage: statList.data['Owned'].toDouble() / statList.data['Total'].toDouble(),
-                      child: const Icon(Icons.check, color: Colors.green),
-                    ),
-                    label: Consumer<StatProvider>(
+                child: Radial(
+                  icon: AnimatedRadial(
+                    key: Key('Owned'),
+                    percentage: statList.data['Owned'].toDouble() / statList.data['Total'].toDouble(),
+                    child: Icon(Icons.check, color: Colors.green[800]),
+                  ),
+                  label: Consumer<StatProvider>(
                       builder: (ctx, stat, _){
                         final String ownedStat = stat.statLabel(
-                          statList.data['Owned'].toDouble(),
-                          statList.data['Total'].toDouble()
+                            statList.data['Owned'].toDouble(),
+                            statList.data['Total'].toDouble()
                         );
-                        return Text('$ownedStat Owned', softWrap: false,
-                          overflow: TextOverflow.fade,
-                          style: Theme.of(context).textTheme.subhead,
-                        );
+                        return Flexible(child: FittedBox(
+                          child: Text('$ownedStat Owned', softWrap: false,
+                            overflow: TextOverflow.fade,
+                            style: Theme.of(context).textTheme.subhead,
+                          ),
+                        ));
                       }
-                    )
                   ),
-                )
+                ),
               ),
+              const SizedBox(width: 8.0),
               Expanded(
-                child: FittedBox(
-                  child: FlatButton.icon(
-                    onPressed: null,
-                    icon: AnimatedRadial(
-                      key: Key('Wished'),
-                      percentage:
-                      statList.data['Wished'].toDouble()
+                child:Radial(
+                  icon: AnimatedRadial(
+                    key: Key('Wished'),
+                    percentage:
+                    statList.data['Wished'].toDouble()
                         / statList.data['Total'].toDouble(),
-                      child: const Icon(Icons.whatshot, color: Colors.amber),
-                    ),
-                    label: Consumer<StatProvider>(
-                      builder: (ctx, stat, _){
-                        final String wishedStat = stat.statLabel(
-                          statList.data['Wished'].toDouble(),
-                          statList.data['Total'].toDouble()
-                        );
-                        return Text('$wishedStat Wished', softWrap: false,
-                          overflow: TextOverflow.fade,
-                          style: Theme.of(context).textTheme.subhead,
-                        );
-                      }
-                    )
+                    child: Icon(Icons.whatshot, color: Colors.amber[800]),
                   ),
-                )
+                  label: Flexible(
+                    child: FittedBox(
+                      fit: BoxFit.scaleDown,
+                      child: Consumer<StatProvider>(
+                        builder: (ctx, stat, _){
+                          final String wishedStat = stat.statLabel(
+                              statList.data['Wished'].toDouble(),
+                              statList.data['Total'].toDouble()
+                          );
+                          return Text('$wishedStat Wished', softWrap: false,
+                            overflow: TextOverflow.fade,
+                            style: Theme.of(context).textTheme.subhead,
+                          );
+                        }
+                      ),
+                    ),
+                  )
+                ),
               ),
             ],
           );
@@ -549,7 +552,7 @@ class FAB extends StatelessWidget{
       scale: scale,
       child: FloatingActionButton(
         tooltip: 'Up',
-        mini: true,
+        //mini: true,
         heroTag: 'MenuFAB',
         onPressed: goTop,
         child: const Icon(Icons.keyboard_arrow_up),

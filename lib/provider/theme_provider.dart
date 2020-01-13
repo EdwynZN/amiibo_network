@@ -1,17 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-MaterialAccentColor get blueGreyAccent => MaterialAccentColor(
-  0xFFA5BAC4,
-  <int, Color>{
-    100: Color(0xFFB0C9D4),
-    200: Color(0xFFA5BAC4),
-    400: Color(0xFF4D6773),
-    700: Color(0xFF3A5E6B),
-  },
-);
-
-Future<Map<String, dynamic>> getTheme() async {
+Future<Map<String,dynamic>> getTheme() async {
   final SharedPreferences preferences = await SharedPreferences.getInstance();
   final String themeMode = preferences.getString('Theme') ?? 'Auto';
   final int light = preferences.getInt('lightColor');
@@ -32,9 +22,9 @@ class ThemeProvider with ChangeNotifier{
 
   String get savedTheme => _savedTheme;
 
-  int get lightOption => _lightColor;
+  int get lightOption => _lightColor ?? 0;
 
-  int get darkOption => _darkColor;
+  int get darkOption => _darkColor ?? 2;
 
   lightTheme(int light) async{
     light = light?.clamp(0, 17) ?? 0;
@@ -90,14 +80,24 @@ class _Theme{
   }
 
   set setLight(int light){
-    MaterialColor color = Colors.primaries[light?.clamp(0, 17) ?? 0];
-    MaterialAccentColor accentColor = Colors.accents[light?.clamp(0, 15) ?? 0];
-    if(light == 17) accentColor = blueGreyAccent;
+    light ??= 0;
+    MaterialColor color = Colors.primaries[light.clamp(0, 17)];
+    MaterialAccentColor accentColor = Colors.accents[light.clamp(0, 15)];
+    if(light >= 17) accentColor = const MaterialAccentColor(
+      0xFF4D6773,
+      <int, Color>{
+        100: Color(0xFF9BBBC9),
+        200: Color(0xFF4D6773),
+        400: Color(0xFF3F4F57),
+        700: Color(0xFF2F414A),
+      },
+    );
     _lightTheme = ThemeData(
       primaryColorDark: accentColor[100],
       textSelectionHandleColor: color[300],
       brightness: Brightness.light,
       appBarTheme: AppBarTheme(
+        elevation: 0.0,
         color: color,
         textTheme: TextTheme(
           title: TextStyle(color: Colors.white, fontSize: 20),
@@ -108,9 +108,9 @@ class _Theme{
         ),
       ),
       unselectedWidgetColor: Colors.black87,
-      dividerColor: Colors.blueGrey,
+      dividerColor: color,
       scaffoldBackgroundColor: color,
-      accentColor: accentColor,
+      accentColor: accentColor[700],
       accentIconTheme: const IconThemeData(color: Colors.white),
       primaryIconTheme: const IconThemeData(color: Colors.black),
       iconTheme: const IconThemeData(color: Colors.black),
@@ -122,7 +122,7 @@ class _Theme{
       cursorColor: Colors.black12,
       backgroundColor: color[100],
       highlightColor: Colors.white70,
-      selectedRowColor: color[200],
+      selectedRowColor: color[300],
       cardTheme: CardTheme(
         color: color[100],
         margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
@@ -142,11 +142,12 @@ class _Theme{
           elevation: 0.0
       ),
       dialogTheme: DialogTheme(
-        backgroundColor: color[100],//Colors.white,
+        titleTextStyle: TextStyle(color: Colors.black87, fontSize: 18, fontWeight: FontWeight.w600),
+        backgroundColor: color[100],
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
       ),
       snackBarTheme: SnackBarThemeData(
-        backgroundColor: color[100], //const Color(0xFFE8C2BF),
+        backgroundColor: color[100],
         contentTextStyle: TextStyle(
             color: Colors.black
         ),
@@ -161,7 +162,7 @@ class _Theme{
         textTheme: ButtonTextTheme.normal,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
         layoutBehavior: ButtonBarLayoutBehavior.constrained,
-        buttonColor: color[100], //const Color(0xFFE8C2BF), //Colors.white70,
+        buttonColor: color[100],
         materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
         height: 48,
         highlightColor: Colors.white70,
@@ -171,22 +172,21 @@ class _Theme{
         backgroundColor: Colors.transparent,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(8))),
       ),
-      toggleableActiveColor: accentColor,
+      toggleableActiveColor: accentColor[700],
       indicatorColor: color[100],
       buttonColor: color[100],
     );
   }
 
   set setDark(int dark){
-    //MaterialColor color = Colors.primaries[dark?.clamp(0, 2) ?? 0];
-    //MaterialAccentColor accentColor = Colors.accents[dark?.clamp(0, 2) ?? 0];
-    dark ??= 0;
+    dark ??= 2;
     switch(dark){
       case 0:
         _darkTheme = ThemeData(
           primaryColorDark: const Color.fromRGBO(207, 102, 121, 1),
           textSelectionHandleColor: const Color.fromRGBO(207, 102, 121, 1),
           appBarTheme: AppBarTheme(
+            elevation: 0.0,
             color: Colors.blueGrey[900],
             textTheme: TextTheme(
               title: TextStyle(color: const Color(0xFFB2B2B2), fontSize: 20),
@@ -196,7 +196,7 @@ class _Theme{
           ),
           brightness: Brightness.dark,
           unselectedWidgetColor: Colors.white54,
-          dividerColor: const Color(0xFFB2B2B2),
+          dividerColor: Colors.blueGrey[700],
           scaffoldBackgroundColor: Colors.blueGrey[900],
           accentColor: const Color.fromRGBO(207, 102, 121, 1),
           accentIconTheme: const IconThemeData(color: Colors.black),
@@ -204,12 +204,12 @@ class _Theme{
           iconTheme: const IconThemeData(color: Colors.white54),
           errorColor: Color.fromRGBO(207, 102, 121, 1),
           primaryColorLight: Colors.blueGrey[800],
-          canvasColor: Colors.blueGrey[800],
+          canvasColor: Colors.blueGrey[900],
           primarySwatch: Colors.blueGrey,
           primaryColor: Colors.blueGrey[900],
           cursorColor: Colors.white10,
           backgroundColor: Colors.blueGrey[800],
-          selectedRowColor: const Color.fromRGBO(96, 125, 139, 0.5),
+          selectedRowColor: Colors.blueGrey[700],
           cardTheme: CardTheme(
             color: Colors.blueGrey[800],
             margin: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
@@ -228,6 +228,7 @@ class _Theme{
               elevation: 0.0
           ),
           dialogTheme: DialogTheme(
+            titleTextStyle: TextStyle(color: const Color(0xFFB2B2B2), fontSize: 18, fontWeight: FontWeight.w600),
             backgroundColor: Colors.blueGrey[900],
             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
           ),
@@ -256,6 +257,7 @@ class _Theme{
             shape: RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(8))),
           ),
           toggleableActiveColor: const Color.fromRGBO(207, 102, 121, 1),
+          indicatorColor: Colors.blueGrey[700],
           buttonColor: Colors.blueGrey[800],
         );
         break;
@@ -264,6 +266,7 @@ class _Theme{
           primaryColorDark: const Color.fromRGBO(207, 102, 121, 1),
           textSelectionHandleColor: const Color.fromRGBO(207, 102, 121, 1),
           appBarTheme: AppBarTheme(
+            elevation: 0.0,
             color: Colors.grey[900],
             textTheme: TextTheme(
               title: TextStyle(color: const Color(0xFFB2B2B2), fontSize: 20),
@@ -273,22 +276,22 @@ class _Theme{
           ),
           brightness: Brightness.dark,
           unselectedWidgetColor: Colors.white54,
-          dividerColor: const Color(0xFFB2B2B2),
+          dividerColor: Colors.grey[800],
           scaffoldBackgroundColor: Colors.grey[900],
           accentColor: const Color.fromRGBO(207, 102, 121, 1),
           accentIconTheme: const IconThemeData(color: Colors.black),
           primaryIconTheme: const IconThemeData(color: Colors.white54),
           iconTheme: const IconThemeData(color: Colors.white54),
           errorColor: Color.fromRGBO(207, 102, 121, 1),
-          primaryColorLight: Colors.grey[800],
-          canvasColor: Colors.grey[800],
+          primaryColorLight: Colors.grey[850],
+          canvasColor: Colors.grey[900],
           primarySwatch: Colors.grey,
           primaryColor: Colors.grey[900],
           cursorColor: Colors.white10,
-          backgroundColor: Colors.grey[800],
-          selectedRowColor: const Color.fromRGBO(96, 125, 139, 0.5),
+          backgroundColor: Colors.grey[850],
+          selectedRowColor: Colors.grey[700],
           cardTheme: CardTheme(
-            color: Colors.grey[800],
+            color: Colors.grey[850],
             margin: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
             elevation: 8,
@@ -305,6 +308,7 @@ class _Theme{
               elevation: 0.0
           ),
           dialogTheme: DialogTheme(
+            titleTextStyle: TextStyle(color: const Color(0xFFB2B2B2), fontSize: 18, fontWeight: FontWeight.w600),
             backgroundColor: Colors.grey[900],
             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
           ),
@@ -316,6 +320,87 @@ class _Theme{
             shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(8),
                 side: BorderSide(color:const Color.fromRGBO(207, 102, 121, 1))
+            ),
+            behavior: SnackBarBehavior.floating,
+          ),
+          buttonTheme: ButtonThemeData(
+              textTheme: ButtonTextTheme.normal,
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+              layoutBehavior: ButtonBarLayoutBehavior.constrained,
+              buttonColor: Colors.grey[900],
+              materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+              height: 48
+          ),
+          bottomSheetTheme: BottomSheetThemeData(
+            elevation: 0.0,
+            backgroundColor: Colors.transparent,
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(8))),
+          ),
+          toggleableActiveColor: const Color.fromRGBO(207, 102, 121, 1),
+          indicatorColor: Colors.grey[700],
+          buttonColor: Colors.grey[850],
+        );
+        break;
+      case 2:
+        _darkTheme = ThemeData(
+          primaryColorDark: const Color.fromRGBO(207, 102, 121, 1),
+          textSelectionHandleColor: const Color.fromRGBO(207, 102, 121, 1),
+          appBarTheme: AppBarTheme(
+            elevation: 0.0,
+            color: Colors.black,
+            textTheme: TextTheme(
+              title: TextStyle(color: const Color(0xFFB2B2B2), fontSize: 20),
+              subtitle: TextStyle(color: const Color(0xFFB2B2B2), fontSize: 16),
+            ),
+            iconTheme: const IconThemeData(color: Colors.white54),
+          ),
+          brightness: Brightness.dark,
+          unselectedWidgetColor: Colors.white54,
+          dividerColor: Colors.grey[800],
+          scaffoldBackgroundColor: Colors.black,
+          accentColor: const Color.fromRGBO(207, 102, 121, 1),
+          accentIconTheme: const IconThemeData(color: Colors.black),
+          primaryIconTheme: const IconThemeData(color: Colors.white54),
+          iconTheme: const IconThemeData(color: Colors.white54),
+          errorColor: Color.fromRGBO(207, 102, 121, 1),
+          primaryColorLight: Colors.grey[850],
+          canvasColor: Colors.black,
+          primarySwatch: Colors.blueGrey,
+          primaryColor: Colors.blueGrey[900],
+          cursorColor: Colors.white10,
+          backgroundColor: Colors.black,
+          selectedRowColor: Colors.grey[700],
+          cardTheme: CardTheme(
+            color: Colors.grey[900],
+            margin: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+            elevation: 8,
+          ),
+          textTheme: TextTheme(
+            title: TextStyle(color: const Color(0xFFB2B2B2), fontSize: 18, fontWeight: FontWeight.w400),
+            body1: TextStyle(color: const Color(0xFFB2B2B2)),
+            body2: TextStyle(color: const Color(0xFFB2B2B2), fontSize: 16, fontWeight: FontWeight.w400),
+            display1: TextStyle(color: const Color(0xFFB2B2B2), fontSize: 18, fontWeight: FontWeight.w600),
+            subhead: TextStyle(color: const Color(0xFFB2B2B2), fontSize: 16, fontWeight: FontWeight.w400),
+          ),
+          bottomAppBarTheme: BottomAppBarTheme(
+            color: Colors.transparent,
+            elevation: 0.0
+          ),
+          dialogTheme: DialogTheme(
+            titleTextStyle: TextStyle(color: const Color(0xFFB2B2B2), fontSize: 18, fontWeight: FontWeight.w600),
+            backgroundColor: Colors.grey[900],
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(8),
+              side: BorderSide(color:const Color.fromRGBO(207, 102, 121, 1))
+            ),
+          ),
+          snackBarTheme: SnackBarThemeData(
+            backgroundColor: Colors.grey[900],
+            contentTextStyle: TextStyle(color: const Color(0xFFB2B2B2)),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(8),
+              side: BorderSide(color:const Color.fromRGBO(207, 102, 121, 1))
             ),
             behavior: SnackBarBehavior.floating,
           ),
@@ -333,15 +418,16 @@ class _Theme{
             shape: RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(8))),
           ),
           toggleableActiveColor: const Color.fromRGBO(207, 102, 121, 1),
-          buttonColor: Colors.grey[800],
+          buttonColor: Colors.grey[900],
         );
         break;
-      case 2:
+      default:
         _darkTheme = ThemeData(
           primaryColorDark: const Color.fromRGBO(207, 102, 121, 1),
           textSelectionHandleColor: const Color.fromRGBO(207, 102, 121, 1),
           appBarTheme: AppBarTheme(
-            color: Colors.grey[900],
+            elevation: 0.0,
+            color: Colors.black,
             textTheme: TextTheme(
               title: TextStyle(color: const Color(0xFFB2B2B2), fontSize: 20),
               subtitle: TextStyle(color: const Color(0xFFB2B2B2), fontSize: 16),
@@ -350,7 +436,7 @@ class _Theme{
           ),
           brightness: Brightness.dark,
           unselectedWidgetColor: Colors.white54,
-          dividerColor: const Color(0xFFB2B2B2),
+          dividerColor: Colors.grey[800],
           scaffoldBackgroundColor: Colors.black,
           accentColor: const Color.fromRGBO(207, 102, 121, 1),
           accentIconTheme: const IconThemeData(color: Colors.black),
@@ -358,12 +444,12 @@ class _Theme{
           iconTheme: const IconThemeData(color: Colors.white54),
           errorColor: Color.fromRGBO(207, 102, 121, 1),
           primaryColorLight: Colors.grey[850],
-          canvasColor: Colors.grey[900],
+          canvasColor: Colors.black,
           primarySwatch: Colors.blueGrey,
           primaryColor: Colors.blueGrey[900],
           cursorColor: Colors.white10,
-          backgroundColor: Colors.grey[900],
-          selectedRowColor: const Color.fromRGBO(96, 125, 139, 0.5),
+          backgroundColor: Colors.black,
+          selectedRowColor: Colors.grey[700],
           cardTheme: CardTheme(
             color: Colors.grey[900],
             margin: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
@@ -382,14 +468,16 @@ class _Theme{
               elevation: 0.0
           ),
           dialogTheme: DialogTheme(
+            titleTextStyle: TextStyle(color: const Color(0xFFB2B2B2), fontSize: 18, fontWeight: FontWeight.w600),
             backgroundColor: Colors.grey[900],
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(8),
+                side: BorderSide(color:const Color.fromRGBO(207, 102, 121, 1))
+            ),
           ),
           snackBarTheme: SnackBarThemeData(
             backgroundColor: Colors.grey[900],
-            contentTextStyle: TextStyle(
-                color: const Color(0xFFB2B2B2)
-            ),
+            contentTextStyle: TextStyle(color: const Color(0xFFB2B2B2)),
             shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(8),
                 side: BorderSide(color:const Color.fromRGBO(207, 102, 121, 1))
@@ -411,83 +499,6 @@ class _Theme{
           ),
           toggleableActiveColor: const Color.fromRGBO(207, 102, 121, 1),
           buttonColor: Colors.grey[900],
-        );
-        break;
-      default:
-        _darkTheme = ThemeData(
-          primaryColorDark: const Color.fromRGBO(207, 102, 121, 1),
-          textSelectionHandleColor: const Color.fromRGBO(207, 102, 121, 1),
-          appBarTheme: AppBarTheme(
-            color: Colors.grey[900],
-            textTheme: TextTheme(
-              title: TextStyle(color: const Color(0xFFB2B2B2), fontSize: 20),
-              subtitle: TextStyle(color: const Color(0xFFB2B2B2), fontSize: 16),
-            ),
-            iconTheme: const IconThemeData(color: Colors.white54),
-          ),
-          brightness: Brightness.dark,
-          unselectedWidgetColor: Colors.white54,
-          dividerColor: const Color(0xFFB2B2B2),
-          scaffoldBackgroundColor: Colors.black,
-          accentColor: const Color.fromRGBO(207, 102, 121, 1),
-          accentIconTheme: const IconThemeData(color: Colors.black),
-          primaryIconTheme: const IconThemeData(color: Colors.white54),
-          iconTheme: const IconThemeData(color: Colors.white54),
-          errorColor: Color.fromRGBO(207, 102, 121, 1),
-          primaryColorLight: Colors.grey[850],
-          canvasColor: Colors.grey[850],
-          primarySwatch: Colors.blueGrey,
-          primaryColor: Colors.blueGrey[900],
-          cursorColor: Colors.white10,
-          backgroundColor: Colors.grey[900],
-          selectedRowColor: const Color.fromRGBO(96, 125, 139, 0.5),
-          cardTheme: CardTheme(
-            color: Colors.grey[900],
-            margin: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-            elevation: 8,
-          ),
-          textTheme: TextTheme(
-            title: TextStyle(color: const Color(0xFFB2B2B2), fontSize: 18, fontWeight: FontWeight.w400),
-            body1: TextStyle(color: const Color(0xFFB2B2B2)),
-            body2: TextStyle(color: const Color(0xFFB2B2B2), fontSize: 16, fontWeight: FontWeight.w400),
-            display1: TextStyle(color: const Color(0xFFB2B2B2), fontSize: 18, fontWeight: FontWeight.w600),
-            subhead: TextStyle(color: const Color(0xFFB2B2B2), fontSize: 16, fontWeight: FontWeight.w400),
-          ),
-          bottomAppBarTheme: BottomAppBarTheme(
-              color: Colors.transparent,
-              elevation: 0.0
-          ),
-          dialogTheme: DialogTheme(
-            backgroundColor: Colors.grey[900],
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-          ),
-          snackBarTheme: SnackBarThemeData(
-            backgroundColor: Colors.grey[900],
-            contentTextStyle: TextStyle(
-                color: const Color(0xFFB2B2B2)
-            ),
-            shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(8),
-                side: BorderSide(color:const Color.fromRGBO(207, 102, 121, 1))
-            ),
-            behavior: SnackBarBehavior.floating,
-          ),
-          buttonTheme: ButtonThemeData(
-              textTheme: ButtonTextTheme.normal,
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-              layoutBehavior: ButtonBarLayoutBehavior.constrained,
-              buttonColor: Colors.grey[900],
-              materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-              height: 48
-          ),
-          bottomSheetTheme: BottomSheetThemeData(
-            elevation: 0.0,
-            backgroundColor: Colors.transparent,
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(8))),
-          ),
-          toggleableActiveColor: const Color.fromRGBO(207, 102, 121, 1),
-          buttonColor: Colors.grey[850],
         );
         break;
     }

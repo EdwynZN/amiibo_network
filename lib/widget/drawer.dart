@@ -40,7 +40,7 @@ class _CollectionDrawerState extends State<CollectionDrawer> {
       iconColor: Theme.of(context).iconTheme.color,
       textColor: Theme.of(context).textTheme.body1.color,
       style: ListTileStyle.drawer,
-      selectedColor: Theme.of(context).accentColor,//Theme.of(context).textSelectionColor,//Theme.of(context).accentColor,
+      selectedColor: Theme.of(context).accentColor,//Theme.of(context).textSelectionColor,
       child: Drawer(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.end,
@@ -48,7 +48,7 @@ class _CollectionDrawerState extends State<CollectionDrawer> {
             Expanded(
               child: Theme(
                 data: Theme.of(context).copyWith(
-                  highlightColor: Theme.of(context).primaryColorLight
+                  highlightColor: Theme.of(context).selectedRowColor
                 ),
                 child: Scrollbar(
                   child: Selector<AmiiboProvider, String>(
@@ -196,7 +196,7 @@ class _HeaderDrawer extends StatelessWidget {
   Widget build(BuildContext context) {
     return DrawerHeader(
       decoration: BoxDecoration(
-        color: Theme.of(context).selectedRowColor
+        color: Theme.of(context).backgroundColor
       ),
       padding: EdgeInsets.zero,
       child: Image.asset('assets/images/icon_app.png',

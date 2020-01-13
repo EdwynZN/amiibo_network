@@ -102,22 +102,22 @@ class ProjectButtons extends StatelessWidget{
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: <Widget>[
         Expanded(
-            child: Card(
-              child: FlatButton.icon(
-                onPressed: () => _launchURL('https://github.com/EdwynZN/amiibo_network', context),
-                icon: Icon(Icons.code, color: Theme.of(context).iconTheme.color,),
-                label: Text('Github', style: Theme.of(context).textTheme.body2),
-              ),
-            )
+          child: Card(
+            child: FlatButton.icon(
+              onPressed: () => _launchURL('https://github.com/EdwynZN/amiibo_network', context),
+              icon: Icon(Icons.code, color: Theme.of(context).iconTheme.color,),
+              label: Flexible(child: FittedBox(child: Text('Github', style: Theme.of(context).textTheme.body2, overflow: TextOverflow.fade,),))
+            ),
+          ),
         ),
         Expanded(
           child: Card(
             child: FlatButton.icon(
               onPressed: () => _launchURL('https://github.com/EdwynZN/amiibo_network/issues', context),
               icon: Icon(Icons.bug_report, color: Theme.of(context).iconTheme.color),
-              label: Text('Report bug', style: Theme.of(context).textTheme.body2),
+              label: Flexible(child: FittedBox(child: Text('Report bug', style: Theme.of(context).textTheme.body2, overflow: TextOverflow.fade),)),
             ),
-          )
+          ),
         ),
       ],
     );
@@ -296,7 +296,7 @@ class _SaveCollectionState extends State<_SaveCollection> {
         children: <Widget>[
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 6),
-            child: Text('Select your Collection'),
+            child: Text('Select your Collection', style: Theme.of(context).textTheme.display1),
           ),
           const Divider(),
         ],
@@ -357,8 +357,8 @@ class ResetCollection extends StatelessWidget{
       builder: (BuildContext context) {
         return AlertDialog(
           title: Text('Reset your collection'),
-          titlePadding: EdgeInsets.all(12),
-          contentPadding: EdgeInsets.symmetric(horizontal: 12),
+          titlePadding: const EdgeInsets.all(12),
+          contentPadding: const EdgeInsets.symmetric(horizontal: 12),
           content: Text('Are you sure? This action can\'t be undone'),
           actions: <Widget>[
             FlatButton(
@@ -367,12 +367,12 @@ class ResetCollection extends StatelessWidget{
               textColor: Theme.of(context).accentColor,
             ),
             FlatButton(
+              textColor: Theme.of(context).accentColor,
               child: Text('Sure'),
               onPressed: () async {
                 Navigator.of(context).maybePop();
                 await Provider.of<AmiiboProvider>(context, listen: false).resetCollection();
               },
-              textColor: Theme.of(context).accentColor,
             ),
           ],
         );
