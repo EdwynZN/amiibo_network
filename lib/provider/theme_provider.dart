@@ -1,6 +1,25 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+const colorOwned = const MaterialAccentColor(
+  0xFF2E7D32,
+  <int, Color>{
+    100: Color(0xFFB9F6CA),
+    200: Color(0xFF2E7D32),
+    400: Color(0xFF1B5E20),
+    700: Color(0xFF4A5F20),
+  },
+);
+const colorWished = const MaterialAccentColor(
+  0xFFF9A825,
+  <int, Color>{
+    100: Color(0xFFFFE57F),
+    200: Color(0xFFF9A825),
+    400: Color(0xFFFF8F00),
+    700: Color(0xFFFF6F00),
+  },
+);
+
 Future<Map<String,dynamic>> getTheme() async {
   final SharedPreferences preferences = await SharedPreferences.getInstance();
   final String themeMode = preferences.getString('Theme') ?? 'Auto';
@@ -86,10 +105,10 @@ class _Theme{
     if(light >= 17) accentColor = const MaterialAccentColor(
       0xFF4D6773,
       <int, Color>{
-        100: Color(0xFF9BBBC9),
-        200: Color(0xFF4D6773),
-        400: Color(0xFF3F4F57),
-        700: Color(0xFF2F414A),
+        100: Color(0xFFA7C0CD),
+        200: Color(0xFF78909C),
+        400: Color(0xFF62727b),
+        700: Color(0xFF546E7A),
       },
     );
     _lightTheme = ThemeData(

@@ -40,7 +40,7 @@ class _CollectionDrawerState extends State<CollectionDrawer> {
       iconColor: Theme.of(context).iconTheme.color,
       textColor: Theme.of(context).textTheme.body1.color,
       style: ListTileStyle.drawer,
-      selectedColor: Theme.of(context).accentColor,//Theme.of(context).textSelectionColor,
+      selectedColor: Theme.of(context).accentColor,
       child: Drawer(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.end,

@@ -12,6 +12,7 @@ import 'package:amiibo_network/widget/animated_widgets.dart';
 import 'package:amiibo_network/widget/floating_bar.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:amiibo_network/provider/stat_provider.dart';
+import 'package:amiibo_network/provider/theme_provider.dart';
 import 'dart:math' as math;
 
 class Home extends StatelessWidget{
@@ -87,7 +88,6 @@ class HomePageState extends State<HomePage>
 
   @override
   void dispose(){
-    //ConnectionFactory().close();
     _controller?.removeListener(_scrollListener);
     _controller?.dispose();
     _animationController?.dispose();
@@ -180,7 +180,7 @@ class HomePageState extends State<HomePage>
                             tooltip: 'Remove',
                           ),
                           IconButton(
-                            icon: Icon(Icons.star),
+                            icon: Icon(Icons.check_circle_outline),
                             onPressed: () => _updateSelection(owned: 1),
                             tooltip: 'Own',
                           ),
@@ -286,18 +286,18 @@ class _SliverPersistentHeader extends SliverPersistentHeaderDelegate {
                     child: Icon(Icons.check, color: Colors.green[800]),
                   ),
                   label: Consumer<StatProvider>(
-                      builder: (ctx, stat, _){
-                        final String ownedStat = stat.statLabel(
-                            statList.data['Owned'].toDouble(),
-                            statList.data['Total'].toDouble()
-                        );
-                        return Flexible(child: FittedBox(
-                          child: Text('$ownedStat Owned', softWrap: false,
-                            overflow: TextOverflow.fade,
-                            style: Theme.of(context).textTheme.subhead,
-                          ),
-                        ));
-                      }
+                    builder: (ctx, stat, _){
+                      final String ownedStat = stat.statLabel(
+                          statList.data['Owned'].toDouble(),
+                          statList.data['Total'].toDouble()
+                      );
+                      return Flexible(child: FittedBox(
+                        child: Text('$ownedStat Owned', softWrap: false,
+                          overflow: TextOverflow.fade,
+                          style: Theme.of(context).textTheme.subhead,
+                        ),
+                      ));
+                    }
                   ),
                 ),
               ),
@@ -552,10 +552,9 @@ class FAB extends StatelessWidget{
       scale: scale,
       child: FloatingActionButton(
         tooltip: 'Up',
-        //mini: true,
         heroTag: 'MenuFAB',
         onPressed: goTop,
-        child: const Icon(Icons.keyboard_arrow_up),
+        child: const Icon(Icons.keyboard_arrow_up, size: 36),
       )
     );
   }
@@ -692,9 +691,11 @@ class AmiiboGridState extends State<AmiiboGrid> {
                 selector: (context, amiiboProvider) {
                   AmiiboDB amiibo = amiiboProvider.amiibosDB.amiibo[widget.index];
                   if(amiibo?.wishlist?.isOdd ?? false)
-                    return const Icon(Icons.card_giftcard, key: ValueKey(2), color: Colors.limeAccent,);
+                    return const Icon(Icons.card_giftcard, key: ValueKey(2), color: colorWished,);
                   else if(amiibo?.owned?.isOdd ?? false)
-                    return const Icon(Icons.star, key: ValueKey(1), color: Colors.pinkAccent,);
+                    return Theme.of(context).brightness == Brightness.light ?
+                      const Icon(Icons.check_circle_outline, key: ValueKey(1), color: colorOwned) :
+                      const Icon(Icons.check, key: ValueKey(1), color: colorOwned);
                   else return const SizedBox.shrink();
                 }
               )

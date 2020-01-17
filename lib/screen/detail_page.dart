@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:amiibo_network/model/amiibo_local_db.dart';
 import 'package:provider/provider.dart';
 import 'package:amiibo_network/provider/amiibo_provider.dart';
+import 'package:amiibo_network/provider/theme_provider.dart';
 
 class DetailPage extends StatelessWidget{
   final int index;
@@ -64,11 +65,11 @@ class _CardDetailAmiibo extends StatelessWidget{
                           children: <Widget>[
                             IconButton(
                               icon: (amiibo.owned?.isEven ?? true) ?
-                              const Icon(Icons.star_border) : const Icon(Icons.star),
-                              color: Colors.pinkAccent,
+                              const Icon(Icons.check_box_outline_blank) : const Icon(Icons.check_box),
+                              color: colorOwned,
                               iconSize: 30.0,
                               tooltip: "Owned",
-                              splashColor: Colors.pinkAccent[100],
+                              splashColor: colorOwned[100],
                               onPressed: () => setState(() {
                                 amiiboProvider.countOwned = amiibo.owned = (amiibo?.owned ?? 0) ^ 1;
                                 if(amiibo?.wishlist?.isOdd ?? false) amiiboProvider.countWished = amiibo.wishlist = 0;
@@ -78,10 +79,10 @@ class _CardDetailAmiibo extends StatelessWidget{
                             IconButton(
                               icon: (amiibo.wishlist?.isEven ?? true) ?
                               const Icon(Icons.check_box_outline_blank) : const Icon(Icons.card_giftcard),
-                              color: Colors.yellowAccent,
+                              color: colorWished,
                               iconSize: 30.0,
                               tooltip: "Wished",
-                              splashColor: Colors.yellowAccent[100],
+                              splashColor: Colors.amberAccent[100],
                               onPressed: () => setState(() {
                                 amiiboProvider.countWished = amiibo.wishlist = (amiibo?.wishlist ?? 0) ^ 1;
                                 if(amiibo?.owned?.isOdd ?? false) amiiboProvider.countOwned = amiibo.owned = 0;

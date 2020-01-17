@@ -149,8 +149,9 @@ class _SaveCollectionState extends State<_SaveCollection> {
       select.containsAll(['Figure', 'Yarn', 'Card']) ? 'Amiibo' :
       select.containsAll(['Figure', 'Yarn']) ? 'Figure' : 'Card'
       }Collection$time.png';
-    final Paint ownedCardPaint = Paint()..color = Colors.pinkAccent.withOpacity(0.5);
-    final Paint wishedCardPaint = Paint()..color = Colors.limeAccent.withOpacity(0.5);
+    final Paint ownedCardPaint = Paint()..color = colorOwned[100];
+    final Paint wishedCardPaint = Paint()..color = colorWished[100];
+    final Color textColor = Theme.of(context).textTheme.title.color;
     final Paint unselectedCardPaint = Paint()..color = Colors.grey.withOpacity(0.5);
     final double margin = 20.0;
     final double maxSize = 60.0;
@@ -167,16 +168,16 @@ class _SaveCollectionState extends State<_SaveCollection> {
 
     final ui.PictureRecorder pictureRecorder = ui.PictureRecorder();
     final Canvas canvas = Canvas(pictureRecorder);
-    final Paint paint = Paint()..color = const Color.fromRGBO(178, 218, 251, 1);
+    final Paint paint = Paint()..color = Theme.of(context).cardTheme.color;
 
-    canvas.drawColor(const Color.fromRGBO(178, 218, 251, 1), BlendMode.src);
+    canvas.drawColor(paint.color, BlendMode.src);
 
     final TextSpan aNetwork = TextSpan(
-      style: TextStyle(color: Colors.black, fontSize: 50),
+      style: TextStyle(color: textColor, fontSize: 50),
       text: 'Amiibo Network',
       children: <InlineSpan>[
         TextSpan(
-          style: TextStyle(color: Colors.black, fontSize: 15, wordSpacing: maxSize),
+          style: TextStyle(color: textColor, fontSize: 15, wordSpacing: maxSize),
           text: '\u24C7 '
         ),
         TextSpan(
@@ -185,7 +186,7 @@ class _SaveCollectionState extends State<_SaveCollection> {
           text: ' ${statProvider.statLabel(_listStat['Owned'].toDouble(), _listStat['Total'].toDouble())} '
         ),
         TextSpan(
-          style: TextStyle(color: Colors.black, fontSize: 35),
+          style: TextStyle(color: textColor, fontSize: 35),
           text: ' Owned'
         ),
         TextSpan(
@@ -198,7 +199,7 @@ class _SaveCollectionState extends State<_SaveCollection> {
           text: ' ${statProvider.statLabel(_listStat['Wished'].toDouble(), _listStat['Total'].toDouble())} '
         ),
         TextSpan(
-          style: TextStyle(color: Colors.black, fontSize: 35),
+          style: TextStyle(color: textColor, fontSize: 35),
           text: ' Wished'
         ),
       ]
@@ -209,7 +210,7 @@ class _SaveCollectionState extends State<_SaveCollection> {
       ..paint(canvas, Offset(125, maxY - margin - 65));
 
     TextSpan createdDate = TextSpan(
-      style: TextStyle(color: Colors.black, fontSize: 25),
+      style: TextStyle(color: textColor, fontSize: 25),
       text: 'created on: $time'
     );
     TextPainter(text: createdDate, textDirection: TextDirection.rtl,)
