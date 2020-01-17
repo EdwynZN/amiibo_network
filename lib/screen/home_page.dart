@@ -175,17 +175,17 @@ class HomePageState extends State<HomePage>
                         mainAxisAlignment: MainAxisAlignment.end,
                         children: <Widget>[
                           IconButton(
-                            icon: Icon(Icons.remove),
+                            icon: const Icon(Icons.remove),
                             onPressed: _updateSelection,
                             tooltip: 'Remove',
                           ),
                           IconButton(
-                            icon: Icon(Icons.check_circle_outline),
+                            icon: const Icon(iconOwned),
                             onPressed: () => _updateSelection(owned: 1),
                             tooltip: 'Own',
                           ),
                           IconButton(
-                            icon: Icon(Icons.card_giftcard),
+                            icon: const Icon(iconWished),
                             onPressed: () => _updateSelection(wished: 1),
                             tooltip: 'Wish',
                           ),
@@ -242,7 +242,6 @@ class HomePageState extends State<HomePage>
               )
             ),
             floatingActionButton: FAB(_animationController, () => _controller.jumpTo(0)),
-
           );
         },
       ),
@@ -283,7 +282,7 @@ class _SliverPersistentHeader extends SliverPersistentHeaderDelegate {
                   icon: AnimatedRadial(
                     key: Key('Owned'),
                     percentage: statList.data['Owned'].toDouble() / statList.data['Total'].toDouble(),
-                    child: Icon(Icons.check, color: Colors.green[800]),
+                    child: Icon(iconOwnedDark, color: Colors.green[800]),
                   ),
                   label: Consumer<StatProvider>(
                     builder: (ctx, stat, _){
@@ -601,7 +600,6 @@ class AmiiboGridState extends State<AmiiboGrid> {
         break;
     }
     amiiboProvider..updateAmiiboDB(amiibo: amiibo)..updateList()..notifyWidgets();
-    //setState(() {});
   }
 
   _onLongPress(){
@@ -691,11 +689,11 @@ class AmiiboGridState extends State<AmiiboGrid> {
                 selector: (context, amiiboProvider) {
                   AmiiboDB amiibo = amiiboProvider.amiibosDB.amiibo[widget.index];
                   if(amiibo?.wishlist?.isOdd ?? false)
-                    return const Icon(Icons.card_giftcard, key: ValueKey(2), color: colorWished,);
+                    return const Icon(iconWished, size: 28, key: ValueKey(2), color: colorWished,);
                   else if(amiibo?.owned?.isOdd ?? false)
                     return Theme.of(context).brightness == Brightness.light ?
-                      const Icon(Icons.check_circle_outline, key: ValueKey(1), color: colorOwned) :
-                      const Icon(Icons.check, key: ValueKey(1), color: colorOwned);
+                      const Icon(iconOwned, size: 28, key: ValueKey(1), color: colorOwned) :
+                      const Icon(iconOwnedDark, size: 28, key: ValueKey(1), color: colorOwned);
                   else return const SizedBox.shrink();
                 }
               )

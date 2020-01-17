@@ -65,7 +65,7 @@ class _CardDetailAmiibo extends StatelessWidget{
                           children: <Widget>[
                             IconButton(
                               icon: (amiibo.owned?.isEven ?? true) ?
-                              const Icon(Icons.check_box_outline_blank) : const Icon(Icons.check_box),
+                              const Icon(Icons.radio_button_unchecked) : const Icon(iconOwned),
                               color: colorOwned,
                               iconSize: 30.0,
                               tooltip: "Owned",
@@ -78,7 +78,7 @@ class _CardDetailAmiibo extends StatelessWidget{
                             ),
                             IconButton(
                               icon: (amiibo.wishlist?.isEven ?? true) ?
-                              const Icon(Icons.check_box_outline_blank) : const Icon(Icons.card_giftcard),
+                              const Icon(Icons.check_box_outline_blank) : const Icon(iconWished),
                               color: colorWished,
                               iconSize: 30.0,
                               tooltip: "Wished",

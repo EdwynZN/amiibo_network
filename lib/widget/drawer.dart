@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:amiibo_network/widget/theme_widget.dart';
 import 'package:amiibo_network/provider/amiibo_provider.dart';
 import 'package:amiibo_network/provider/stat_provider.dart';
+import 'package:amiibo_network/provider/theme_provider.dart';
 
 class CollectionDrawer extends StatefulWidget{
   final VoidCallback restart;
@@ -77,13 +78,13 @@ class _CollectionDrawerState extends State<CollectionDrawer> {
                               ),
                               ListTile(
                                 onTap: () => _onTapTile('Owned'),
-                                leading: const Icon(Icons.star),
+                                leading: const Icon(iconOwned),
                                 title: Text('Owned'),
                                 selected: _selected == 'Owned',
                               ),
                               ListTile(
                                 onTap: () => _onTapTile('Wishlist'),
-                                leading: const Icon(Icons.card_giftcard),
+                                leading: const Icon(iconWished),
                                 title: Text('Wishlist'),
                                 selected: _selected == 'Wishlist',
                               ),

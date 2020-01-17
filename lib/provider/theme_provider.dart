@@ -11,14 +11,17 @@ const colorOwned = const MaterialAccentColor(
   },
 );
 const colorWished = const MaterialAccentColor(
-  0xFFF9A825,
+  0xFFF57F17,
   <int, Color>{
     100: Color(0xFFFFE57F),
-    200: Color(0xFFF9A825),
+    200: Color(0xFFF57F17),
     400: Color(0xFFFF8F00),
     700: Color(0xFFFF6F00),
   },
 );
+const iconOwned = Icons.check_circle_outline;
+const iconOwnedDark = Icons.check;
+const iconWished = Icons.card_giftcard;
 
 Future<Map<String,dynamic>> getTheme() async {
   final SharedPreferences preferences = await SharedPreferences.getInstance();
@@ -170,7 +173,6 @@ class _Theme{
         contentTextStyle: TextStyle(
             color: Colors.black
         ),
-        //shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8),),
         shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(8),
             side: BorderSide(color: accentColor)

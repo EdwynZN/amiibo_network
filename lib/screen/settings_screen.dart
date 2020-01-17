@@ -168,7 +168,7 @@ class _SaveCollectionState extends State<_SaveCollection> {
 
     final ui.PictureRecorder pictureRecorder = ui.PictureRecorder();
     final Canvas canvas = Canvas(pictureRecorder);
-    final Paint paint = Paint()..color = Theme.of(context).cardTheme.color;
+    final Paint paint = Paint()..color = Theme.of(context).backgroundColor;
 
     canvas.drawColor(paint.color, BlendMode.src);
 
@@ -224,7 +224,12 @@ class _SaveCollectionState extends State<_SaveCollection> {
     ).then((codec) => codec.getNextFrame())
       .then((frame) => frame.image).catchError((e) => print(e));
 
-    canvas.drawImage(appIcon, Offset(margin, maxY - margin - 80), paint);
+    if(paint.color == Colors.black)
+      canvas.drawImage(appIcon, Offset(margin, maxY - margin - 80),
+        Paint()..colorFilter = ColorFilter.mode(Colors.white54, BlendMode.srcIn)
+      );
+    else canvas.drawImage(appIcon, Offset(margin, maxY - margin - 80), paint);
+
     appIcon.dispose();
 
     for(AmiiboDB amiibo in amiibos.amiibo) {

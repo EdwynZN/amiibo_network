@@ -1,5 +1,11 @@
 Version 1.2.0
-- New Light and Dark Themes
+- Redesign of Light and Dark Themes
+- New color gradients for light themes
+- New grey and blue grey themes for dark themes and redesign of dark theme to be a true dark theme, useful for AMOLED devices
+- Select a new theme from settings or by long pressing the theme icon from the drawer
+- Changed owned icon to check
+- Save collection theme according to the selected theme of the app
+- Fixed text resize on low resolution and small devices
 - Minor bugs fixed
 
 Version 1.1.4

@@ -1,3 +1,4 @@
+import 'package:amiibo_network/provider/theme_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:amiibo_network/service/service.dart';
 import 'package:amiibo_network/widget/radial_progression.dart';
@@ -230,7 +231,7 @@ class SingleStat extends StatelessWidget{
                   icon: AnimatedRadial(
                     key: Key('Owned'),
                     percentage: owned.toDouble() / total.toDouble(),
-                    child: Icon(Icons.check, color: Colors.green[800]),
+                    child: Icon(iconOwnedDark, color: Colors.green[800]),
                   ),
                 ),
               ),
