@@ -74,8 +74,8 @@ class SearchScreenState extends State<SearchScreen>{
                           margin: EdgeInsets.zero,
                           shape: RoundedRectangleBorder(),
                           child: ListTile(
-                              onTap: () => Navigator.of(context).pop(snapshot.data[index]),
-                              title: Text('${snapshot.data[index]}')
+                            onTap: () => Navigator.of(context).pop(snapshot.data[index]),
+                            title: Text('${snapshot.data[index]}')
                           )
                         ),
                       );
