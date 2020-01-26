@@ -244,8 +244,13 @@ class _SaveCollectionState extends State<_SaveCollection> {
       ));
       final ByteData imageAsset = await rootBundle.load(strImage);
 
-      canvas.drawPath(cardPath, amiibo?.owned?.isOdd ?? false ? ownedCardPaint :
-      amiibo?.wishlist?.isOdd ?? false ? wishedCardPaint : unselectedCardPaint);
+      //canvas.drawPath(cardPath, amiibo?.owned?.isOdd ?? false ? ownedCardPaint :
+      //amiibo?.wishlist?.isOdd ?? false ? wishedCardPaint : unselectedCardPaint);
+
+      if((amiibo?.owned?.isOdd ?? false) || (amiibo?.wishlist?.isOdd ?? false)){
+        canvas.drawPath(cardPath,
+          amiibo?.owned?.isOdd ?? false ? ownedCardPaint : wishedCardPaint);
+      }
 
       ui.Image _image = await ui.instantiateImageCodec(
         imageAsset.buffer.asUint8List(),
