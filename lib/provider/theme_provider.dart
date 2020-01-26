@@ -115,6 +115,7 @@ class _Theme{
       },
     );
     _lightTheme = ThemeData(
+      splashFactory: InkRipple.splashFactory,
       primaryColorDark: accentColor[100],
       textSelectionHandleColor: color[300],
       brightness: Brightness.light,
@@ -204,6 +205,7 @@ class _Theme{
     switch(dark){
       case 0:
         _darkTheme = ThemeData(
+          splashFactory: InkRipple.splashFactory,
           primaryColorDark: const Color.fromRGBO(207, 102, 121, 1),
           textSelectionHandleColor: const Color.fromRGBO(207, 102, 121, 1),
           appBarTheme: AppBarTheme(
@@ -239,6 +241,7 @@ class _Theme{
           ),
           textTheme: TextTheme(
             title: TextStyle(color: const Color(0xFFB2B2B2), fontSize: 18, fontWeight: FontWeight.w400),
+            subtitle: TextStyle(color: const Color(0xFFB2B2B2), fontSize: 12, fontWeight: FontWeight.w400),
             body1: TextStyle(color: const Color(0xFFB2B2B2)),
             body2: TextStyle(color: const Color(0xFFB2B2B2), fontSize: 16, fontWeight: FontWeight.w400),
             display1: TextStyle(color: const Color(0xFFB2B2B2), fontSize: 18, fontWeight: FontWeight.w600),
@@ -284,6 +287,7 @@ class _Theme{
         break;
       case 1:
         _darkTheme = ThemeData(
+          splashFactory: InkRipple.splashFactory,
           primaryColorDark: const Color.fromRGBO(207, 102, 121, 1),
           textSelectionHandleColor: const Color.fromRGBO(207, 102, 121, 1),
           appBarTheme: AppBarTheme(
@@ -319,6 +323,7 @@ class _Theme{
           ),
           textTheme: TextTheme(
             title: TextStyle(color: const Color(0xFFB2B2B2), fontSize: 18, fontWeight: FontWeight.w400),
+            subtitle: TextStyle(color: const Color(0xFFB2B2B2), fontSize: 12, fontWeight: FontWeight.w400),
             body1: TextStyle(color: const Color(0xFFB2B2B2)),
             body2: TextStyle(color: const Color(0xFFB2B2B2), fontSize: 16, fontWeight: FontWeight.w400),
             display1: TextStyle(color: const Color(0xFFB2B2B2), fontSize: 18, fontWeight: FontWeight.w600),
@@ -364,6 +369,7 @@ class _Theme{
         break;
       case 2:
         _darkTheme = ThemeData(
+          splashFactory: InkRipple.splashFactory,
           primaryColorDark: const Color.fromRGBO(207, 102, 121, 1),
           textSelectionHandleColor: const Color.fromRGBO(207, 102, 121, 1),
           appBarTheme: AppBarTheme(
@@ -384,7 +390,7 @@ class _Theme{
           primaryIconTheme: const IconThemeData(color: Colors.white54),
           iconTheme: const IconThemeData(color: Colors.white54),
           errorColor: Color.fromRGBO(207, 102, 121, 1),
-          primaryColorLight: Colors.black,
+          primaryColorLight: Colors.transparent,
           canvasColor: Colors.black,
           primarySwatch: Colors.blueGrey,
           primaryColor: Colors.blueGrey[900],
@@ -392,9 +398,8 @@ class _Theme{
           backgroundColor: Colors.black,
           selectedRowColor: Colors.grey[900],
           cardTheme: CardTheme(
-            color: Colors.black,
+            color: Colors.transparent,
             margin: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-            //shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(8),
               side: BorderSide(color: Colors.grey[900], width: 2)
@@ -403,6 +408,7 @@ class _Theme{
           ),
           textTheme: TextTheme(
             title: TextStyle(color: const Color(0xFFB2B2B2), fontSize: 18, fontWeight: FontWeight.w400),
+            subtitle: TextStyle(color: const Color(0xFFB2B2B2), fontSize: 12, fontWeight: FontWeight.w400),
             body1: TextStyle(color: const Color(0xFFB2B2B2)),
             body2: TextStyle(color: const Color(0xFFB2B2B2), fontSize: 16, fontWeight: FontWeight.w400),
             display1: TextStyle(color: const Color(0xFFB2B2B2), fontSize: 18, fontWeight: FontWeight.w600),
@@ -448,6 +454,7 @@ class _Theme{
         break;
       default:
         _darkTheme = ThemeData(
+          splashFactory: InkRipple.splashFactory,
           primaryColorDark: const Color.fromRGBO(207, 102, 121, 1),
           textSelectionHandleColor: const Color.fromRGBO(207, 102, 121, 1),
           appBarTheme: AppBarTheme(
@@ -468,7 +475,7 @@ class _Theme{
           primaryIconTheme: const IconThemeData(color: Colors.white54),
           iconTheme: const IconThemeData(color: Colors.white54),
           errorColor: Color.fromRGBO(207, 102, 121, 1),
-          primaryColorLight: Colors.black,
+          primaryColorLight: Colors.transparent,
           canvasColor: Colors.black,
           primarySwatch: Colors.blueGrey,
           primaryColor: Colors.blueGrey[900],
@@ -476,9 +483,8 @@ class _Theme{
           backgroundColor: Colors.black,
           selectedRowColor: Colors.grey[900],
           cardTheme: CardTheme(
-            color: Colors.black,
+            color: Colors.transparent,
             margin: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-            //shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
             shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(8),
                 side: BorderSide(color: Colors.grey[900], width: 2)
@@ -487,6 +493,7 @@ class _Theme{
           ),
           textTheme: TextTheme(
             title: TextStyle(color: const Color(0xFFB2B2B2), fontSize: 18, fontWeight: FontWeight.w400),
+            subtitle: TextStyle(color: const Color(0xFFB2B2B2), fontSize: 12, fontWeight: FontWeight.w400),
             body1: TextStyle(color: const Color(0xFFB2B2B2)),
             body2: TextStyle(color: const Color(0xFFB2B2B2), fontSize: 16, fontWeight: FontWeight.w400),
             display1: TextStyle(color: const Color(0xFFB2B2B2), fontSize: 18, fontWeight: FontWeight.w600),

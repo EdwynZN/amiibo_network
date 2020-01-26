@@ -104,8 +104,7 @@ class _StatsPageState extends State<StatsPage> {
               mainAxisAlignment: MainAxisAlignment.center,
               mainAxisSize: MainAxisSize.max,
               children: <Widget>[
-                Flexible(
-                  fit: FlexFit.tight,
+                Expanded(
                   child: FlatButton(
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.horizontal(left: Radius.circular(8)),
@@ -125,16 +124,15 @@ class _StatsPageState extends State<StatsPage> {
                     child: Text('All'),
                   ),
                 ),
-                Flexible(
-                  fit: FlexFit.tight,
+                Expanded(
                   child: FlatButton(
                     shape: Border(
                       bottom: BorderSide(
-                        color: Theme.of(context).indicatorColor,//const Color(0xFFE8C2BF),
+                        color: Theme.of(context).indicatorColor,
                         width: 2,
                       ),
                       top: BorderSide(
-                        color: Theme.of(context).indicatorColor,//const Color(0xFFE8C2BF),
+                        color: Theme.of(context).indicatorColor,
                         width: 2,
                       ),
                       left: BorderSide(
@@ -159,20 +157,18 @@ class _StatsPageState extends State<StatsPage> {
                     child: Text('Figures'),
                   ),
                 ),
-                Flexible(
-                  fit: FlexFit.tight,
+                Expanded(
                   child: FlatButton(
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.horizontal(right: Radius.circular(8)),
                       side: BorderSide(
-                        color: Theme.of(context).indicatorColor,//const Color(0xFFE8C2BF),
+                        color: Theme.of(context).indicatorColor,
                         width: 2,
                       )
                     ),
                     textColor: select.contains('Card') ?
                     Theme.of(context).textTheme.title.color : Theme.of(context).appBarTheme.textTheme.title.color,
-                    color: select.contains('Card') ?
-                    Theme.of(context).indicatorColor : null,//Theme.of(context).buttonColor,
+                    color: select.contains('Card') ? Theme.of(context).indicatorColor : null,
                     onPressed: () => select.contains('Card') ? null : setState(() {
                       select.clear();
                       select = {'Card'};
@@ -215,47 +211,47 @@ class SingleStat extends StatelessWidget{
             ),
             const Divider(),
             FittedBox(
-                child: FlatButton.icon(
-                  onPressed: null,
-                  label: Consumer<StatProvider>(
-                      builder: (ctx, stat, _){
-                        final String ownedStat = stat.statLabel(
-                            owned.toDouble(),
-                            total.toDouble()
-                        );
-                        return Text('$ownedStat Owned', softWrap: false,
-                          overflow: TextOverflow.fade, style: Theme.of(context).textTheme.subhead,
-                        );
-                      }
-                  ),
-                  icon: AnimatedRadial(
-                    key: Key('Owned'),
-                    percentage: owned.toDouble() / total.toDouble(),
-                    child: Icon(iconOwnedDark, color: Colors.green[800]),
-                  ),
+              child: FlatButton.icon(
+                onPressed: null,
+                label: Consumer<StatProvider>(
+                    builder: (ctx, stat, _){
+                      final String ownedStat = stat.statLabel(
+                          owned.toDouble(),
+                          total.toDouble()
+                      );
+                      return Text('$ownedStat Owned', softWrap: false,
+                        overflow: TextOverflow.fade, style: Theme.of(context).textTheme.subhead,
+                      );
+                    }
+                ),
+                icon: AnimatedRadial(
+                  key: Key('Owned'),
+                  percentage: owned.toDouble() / total.toDouble(),
+                  child: Icon(iconOwnedDark, color: Colors.green[800]),
                 ),
               ),
+            ),
             FittedBox(
-                child: FlatButton.icon(
-                  onPressed: null,
-                  label: Consumer<StatProvider>(
-                      builder: (ctx, stat, _){
-                        final String wishedStat = stat.statLabel(
-                            wished.toDouble(),
-                            total.toDouble()
-                        );
-                        return Text('$wishedStat Wished', softWrap: false,
-                          overflow: TextOverflow.fade, style: Theme.of(context).textTheme.subhead,
-                        );
-                      }
-                  ),
-                  icon: AnimatedRadial(
-                    key: Key('Wished'),
-                    percentage: wished.toDouble() / total.toDouble(),
-                    child: Icon(Icons.whatshot, color: Colors.amber[800]),
-                  ),
+              child: FlatButton.icon(
+                onPressed: null,
+                label: Consumer<StatProvider>(
+                    builder: (ctx, stat, _){
+                      final String wishedStat = stat.statLabel(
+                          wished.toDouble(),
+                          total.toDouble()
+                      );
+                      return Text('$wishedStat Wished', softWrap: false,
+                        overflow: TextOverflow.fade, style: Theme.of(context).textTheme.subhead,
+                      );
+                    }
+                ),
+                icon: AnimatedRadial(
+                  key: Key('Wished'),
+                  percentage: wished.toDouble() / total.toDouble(),
+                  child: Icon(Icons.whatshot, color: Colors.amber[800]),
                 ),
               ),
+            ),
           ],
         ),
       )

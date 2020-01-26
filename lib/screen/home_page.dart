@@ -356,14 +356,21 @@ class _SortCollectionState extends State<_SortCollection> {
   void _selectOrder(String sort) async{
     final AmiiboProvider amiiboProvider = Provider.of<AmiiboProvider>(context, listen: false);
     final SharedPreferences preferences = await SharedPreferences.getInstance();
-    preferences.setString('Sort', sort);
-    amiiboProvider.strOrderBy = sort;
+    preferences.setString('OrderCategory', sort);
+    amiiboProvider.orderCategory = sort;
     await amiiboProvider.refreshPagination();
-    Navigator.pop(context);
+    //Navigator.pop(context);
+  }
+
+  void _sortOrder(String sort) async{
+    final AmiiboProvider amiiboProvider = Provider.of<AmiiboProvider>(context, listen: false);
+    final SharedPreferences preferences = await SharedPreferences.getInstance();
+    preferences.setString('SortBy', sort);
+    amiiboProvider.sort = sort;
+    await amiiboProvider.refreshPagination();
   }
 
   Future<void> _bottomSheet() async {
-    String _sortBy = Provider.of<AmiiboProvider>(context).orderBy;
     return showModalBottomSheet(
       context: context,
       isScrollControlled: true,
@@ -379,6 +386,8 @@ class _SortCollectionState extends State<_SortCollection> {
           key: Key('Draggable'),
           maxChildSize: height, expand: false, initialChildSize: height,
           builder: (context, scrollController){
+            final String _orderCategory = Provider.of<AmiiboProvider>(context).orderCategory;
+            final String _sortBy = Provider.of<AmiiboProvider>(context).sort;
             return Padding(
               padding: padding,
               child: Material(
@@ -390,38 +399,106 @@ class _SortCollectionState extends State<_SortCollection> {
                     SliverPersistentHeader(
                       pinned: true,
                       delegate: _BottomSheetHeader(
-                        child: Text('Sort By', style: Theme.of(context).textTheme.title),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: <Widget>[
+                            Text('Sort By', style: Theme.of(context).textTheme.title),
+                            MaterialButton(
+                              height: 34,
+                              materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                              highlightColor: Colors.transparent,
+                              textColor: Theme.of(context).accentColor,
+                              splashColor: Theme.of(context).selectedRowColor,
+                              onPressed: () => Navigator.pop(context),
+                              child: Text('Done'),
+                            )
+                          ],
+                        ),
                       ),
                     ),
                     SliverList(
                       delegate: SliverChildListDelegate([
-                        RadioListTile(
-                          value: 'name',
-                          groupValue: _sortBy,
-                          onChanged: _selectOrder,
-                          title: Text('Name'),
-                          selected: _sortBy == 'name',
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
+                          child: SizedBox(
+                            height: 36,
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              mainAxisSize: MainAxisSize.max,
+                              children: <Widget>[
+                                Expanded(
+                                  child: FlatButton.icon(
+                                    padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                                    textColor: _sortBy.contains('ASC') ? Theme.of(context).textTheme.title.color : Theme.of(context).accentColor,
+                                    color: _sortBy.contains('ASC') ? Theme.of(context).accentColor : null,
+                                    shape: Border.all(
+                                      color: Theme.of(context).accentColor,
+                                      width: 2,
+                                    ),
+                                    onPressed: () => _sortOrder('ASC'),
+                                    icon: const Icon(Icons.arrow_downward, size: 20,),
+                                    label: Flexible(child: FittedBox(child: Text('Ascending (A-Z)'),)),
+                                  ),
+                                ),
+                                Expanded(
+                                  child: FlatButton.icon(
+                                    padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                                    textColor: _sortBy.contains('DESC') ? Theme.of(context).textTheme.title.color : Theme.of(context).accentColor,
+                                    color: _sortBy.contains('DESC') ? Theme.of(context).accentColor : null,
+                                    shape: Border(
+                                      bottom: BorderSide(
+                                        color: Theme.of(context).accentColor,
+                                        width: 2,
+                                      ),
+                                      top: BorderSide(
+                                        color: Theme.of(context).accentColor,
+                                        width: 2,
+                                      ),
+                                      left: BorderSide(
+                                          color: Theme.of(context).accentColor,
+                                          width: 0.0
+                                      ),
+                                      right: BorderSide(
+                                          color: Theme.of(context).accentColor,
+                                          width: 2.0
+                                      ),
+                                    ),
+                                    onPressed: () => _sortOrder('DESC'),
+                                    icon: const Icon(Icons.arrow_upward, size: 20),
+                                    label: Flexible(child: FittedBox(child: Text('Descending (Z-A)'),)),
+                                  ),
+                                ),
+                              ],
+                            )
+                          )
                         ),
                         RadioListTile(
-                          value: 'owned DESC',
-                          groupValue: _sortBy,
+                          value: 'name',
+                          groupValue: _orderCategory,
                           onChanged: _selectOrder,
-                          selected: _sortBy == 'owned DESC',
+                          title: Text('Name'),
+                          selected: _orderCategory.contains('name'),
+                        ),
+                        RadioListTile(
+                          value: 'owned',
+                          groupValue: _orderCategory,
+                          onChanged: _selectOrder,
+                          selected: _orderCategory.contains('owned'),
                           title: Text('Owned'),
                         ),
                         RadioListTile(
-                          value: 'wishlist DESC',
-                          groupValue: _sortBy,
+                          value: 'wishlist',
+                          groupValue: _orderCategory,
                           onChanged: _selectOrder,
                           title: Text('Wished'),
-                          selected: _sortBy == 'wishlist DESC',
+                          selected: _orderCategory.contains('wishlist'),
                         ),
                         RadioListTile(
-                          value: 'na DESC',
-                          groupValue: _sortBy,
+                          value: 'na',
+                          groupValue: _orderCategory,
                           onChanged: _selectOrder,
                           title: Text('American Date'),
-                          selected: _sortBy == 'na DESC',
+                          selected: _orderCategory == 'na',
                           secondary: Image.asset(
                             'assets/images/na.png',
                             height: 16, width: 25,
@@ -430,11 +507,11 @@ class _SortCollectionState extends State<_SortCollection> {
                           ),
                         ),
                         RadioListTile(
-                          value: 'eu DESC',
-                          groupValue: _sortBy,
+                          value: 'eu',
+                          groupValue: _orderCategory,
                           onChanged: _selectOrder,
                           title: Text('European Date'),
-                          selected: _sortBy == 'eu DESC',
+                          selected: _orderCategory.contains('eu'),
                           secondary: Image.asset(
                             'assets/images/eu.png',
                             height: 16, width: 25,
@@ -443,11 +520,11 @@ class _SortCollectionState extends State<_SortCollection> {
                           ),
                         ),
                         RadioListTile(
-                            value: 'jp DESC',
-                            groupValue: _sortBy,
+                            value: 'jp',
+                            groupValue: _orderCategory,
                             onChanged: _selectOrder,
                             title: Text('Japanese Date'),
-                            selected: _sortBy == 'jp DESC',
+                            selected: _orderCategory.contains('jp'),
                             secondary: DecoratedBox(
                               decoration: BoxDecoration(
                                   border: Border.all(width: 0.75)
@@ -462,11 +539,11 @@ class _SortCollectionState extends State<_SortCollection> {
                             )
                         ),
                         RadioListTile(
-                          value: 'au DESC',
-                          groupValue: _sortBy,
+                          value: 'au',
+                          groupValue: _orderCategory,
                           onChanged: _selectOrder,
                           title: Text('Australian Date'),
-                          selected: _sortBy == 'au DESC',
+                          selected: _orderCategory.contains('au'),
                           secondary: Image.asset(
                             'assets/images/au.png',
                             height: 16, width: 25,
@@ -512,7 +589,7 @@ class _BottomSheetHeader extends SliverPersistentHeaderDelegate {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 6),
+              padding: const EdgeInsets.only(top: 6, left: 24, right: 16),
               child: child,
             ),
             const Divider()
