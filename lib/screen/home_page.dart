@@ -253,13 +253,13 @@ class _SliverPersistentHeader extends SliverPersistentHeaderDelegate {
 
   @override
   Widget build(BuildContext context, double shrinkOffset, bool overlapsContent) {
-    final Color _color = Theme.of(context).scaffoldBackgroundColor;
+    final Color _color = Theme.of(context).appBarTheme.color;
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 12),
       decoration: BoxDecoration(
         gradient: LinearGradient(
           begin: Alignment.topCenter, end: Alignment.bottomCenter,
-          stops: [0.5, 0.7, 1],
+          stops: [0.35, 0.65, 0.9],//[0.5, 0.7, 1],
           colors: [
             _color,
             _color.withOpacity(0.75),
@@ -716,20 +716,24 @@ class AmiiboGridState extends State<AmiiboGrid> {
                 textBaseline: TextBaseline.alphabetic,
                 children: <Widget>[
                   Expanded(
-                    child: Hero(
-                      transitionOnUserGestures: true,
-                      tag: amiibo.key,
-                      child: Image.asset('assets/collection/icon_${amiibo.key}.png',
-                        fit: BoxFit.scaleDown,
+                    child: Padding(
+                      padding: const EdgeInsets.only(top: 4.0, left: 4.0, right: 4.0),
+                      child: Hero(
+                        transitionOnUserGestures: true,
+                        tag: amiibo.key,
+                        child: Image.asset(
+                          'assets/collection/icon_${amiibo.key}.png',
+                          fit: BoxFit.scaleDown,
+                        )
                       ),
-                          /*
+                    ),
+                    /*
                       ColorFiltered(
                         colorFilter: ColorFilter.mode(Colors.white54, BlendMode.modulate),
                         child: Image.asset('assets/collection/icon_${amiibo.key}.png',
                           fit: BoxFit.scaleDown,
                         ),
                       )*/
-                    ),
                     flex: 9,
                   ),
                   Expanded(

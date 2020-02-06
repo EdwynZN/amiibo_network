@@ -45,7 +45,7 @@ class _CardDetailAmiibo extends StatelessWidget{
                 children: <Widget>[
                   Expanded(
                     child: Padding(
-                      padding: const EdgeInsets.only(top: 8.0, left: 8.0),
+                      padding: const EdgeInsets.only(top: 4.0, left: 4.0),
                       child: Hero(
                         transitionOnUserGestures: true,
                         tag: amiibo.key,

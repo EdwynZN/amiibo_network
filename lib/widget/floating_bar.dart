@@ -14,6 +14,7 @@ class SliverFloatingBar extends StatefulWidget{
   final Widget title;
   final double elevation;
   final VoidCallback onTap;
+  final Color backgroundColor;
 
   const SliverFloatingBar({
     Key key,
@@ -25,7 +26,8 @@ class SliverFloatingBar extends StatefulWidget{
     this.title,
     this.leading,
     this.trailing,
-    this.onTap
+    this.onTap,
+    this.backgroundColor
   }) : super(key:key);
 
   @override
@@ -70,7 +72,8 @@ class _SliverFloatingBarState extends State<SliverFloatingBar>
         title: widget.title,
         trailing: widget.trailing,
         onTap: widget.onTap,
-        elevation: widget.elevation
+        elevation: widget.elevation,
+        backgroundColor: widget.backgroundColor ?? Theme.of(context).appBarTheme.color
       )
     );
   }
@@ -85,6 +88,7 @@ class _SliverFloatingPersistentHeader extends SliverPersistentHeaderDelegate {
   final Widget leading;
   final Widget title;
   final VoidCallback onTap;
+  final Color backgroundColor;
 
   const _SliverFloatingPersistentHeader({
     this.snap = false,
@@ -93,7 +97,8 @@ class _SliverFloatingPersistentHeader extends SliverPersistentHeaderDelegate {
     this.trailing,
     this.leading,
     this.title,
-    this.onTap
+    this.onTap,
+    this.backgroundColor
   }) : _maxExtent = kToolbarHeight,
         _minExtent = kToolbarHeight,
         super();
@@ -110,7 +115,7 @@ class _SliverFloatingPersistentHeader extends SliverPersistentHeaderDelegate {
       child: _FloatingBar(
         snap: snap,
         child: Container(
-          color: Theme.of(context).scaffoldBackgroundColor,
+          color: backgroundColor,
           padding: const EdgeInsets.fromLTRB(12,8,12,0),
           child: ListTileTheme(
             contentPadding: const EdgeInsets.symmetric(horizontal: 4.0),
@@ -159,6 +164,7 @@ class _SliverFloatingPersistentHeader extends SliverPersistentHeaderDelegate {
       || trailing != oldDelegate.trailing
       || leading != oldDelegate.leading
       || title != oldDelegate.title
+      || backgroundColor != oldDelegate.backgroundColor
     ;
   }
 }

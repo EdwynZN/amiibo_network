@@ -133,8 +133,9 @@ class _SaveCollectionState extends State<_SaveCollection> {
   Set<String> select = {};
 
   Future<void> saveCollection() async{
-    final _service = Service();
     final StatProvider statProvider = Provider.of<StatProvider>(context, listen: false);
+    final ThemeData theme = Theme.of(context);
+    final _service = Service();
     AmiiboLocalDB amiibos = await _service.fetchByCategory('type', select.toList(),
       'CASE WHEN type = "Figure" THEN 1 '
       'WHEN type = "Yarn" THEN 2 ELSE 3 END, amiiboSeries DESC, na DESC');
@@ -151,7 +152,7 @@ class _SaveCollectionState extends State<_SaveCollection> {
       }Collection$time.png';
     final Paint ownedCardPaint = Paint()..color = colorOwned[100];
     final Paint wishedCardPaint = Paint()..color = colorWished[100];
-    final Color textColor = Theme.of(context).textTheme.title.color;
+    final Color textColor = theme.textTheme.title.color;
     final Paint unselectedCardPaint = Paint()..color = Colors.grey.withOpacity(0.5);
     final double margin = 20.0;
     final double maxSize = 60.0;
@@ -168,7 +169,7 @@ class _SaveCollectionState extends State<_SaveCollection> {
 
     final ui.PictureRecorder pictureRecorder = ui.PictureRecorder();
     final Canvas canvas = Canvas(pictureRecorder);
-    final Paint paint = Paint()..color = Theme.of(context).backgroundColor;
+    final Paint paint = Paint()..color = theme.scaffoldBackgroundColor;
 
     canvas.drawColor(paint.color, BlendMode.src);
 
@@ -224,7 +225,7 @@ class _SaveCollectionState extends State<_SaveCollection> {
     ).then((codec) => codec.getNextFrame())
       .then((frame) => frame.image).catchError((e) => print(e));
 
-    if(paint.color == Colors.black)
+    if(theme.brightness == Brightness.dark)
       canvas.drawImage(appIcon, Offset(margin, maxY - margin - 80),
         Paint()..colorFilter = ColorFilter.mode(Colors.white54, BlendMode.srcIn)
       );

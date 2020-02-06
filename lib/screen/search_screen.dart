@@ -36,6 +36,7 @@ class SearchScreenState extends State<SearchScreen>{
         body: CustomScrollView(
           slivers: <Widget>[
             SliverFloatingBar(
+              backgroundColor: Theme.of(context).scaffoldBackgroundColor,
               pinned: true,
               leading: BackButton(),
               title: TextField(
@@ -98,7 +99,7 @@ class _SliverPersistentHeader extends SliverPersistentHeaderDelegate {
   @override
   Widget build(BuildContext context, double shrinkOffset, bool overlapsContent) {
     return Container(
-      color: Theme.of(context).scaffoldBackgroundColor,
+      color: Theme.of(context).appBarTheme.color,
       child: Card(
         elevation: 0.0,
         margin: const EdgeInsets.fromLTRB(12.0, 6.0, 12.0, 0.0),

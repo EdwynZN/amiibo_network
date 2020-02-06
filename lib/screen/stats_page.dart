@@ -98,6 +98,7 @@ class _StatsPageState extends State<StatsPage> {
           ),
         ),
         bottomNavigationBar: BottomAppBar(
+          color: Theme.of(context).appBarTheme.color,
           child: Padding(
             padding: EdgeInsets.symmetric(horizontal: 8, vertical: 6),
             child: Row(

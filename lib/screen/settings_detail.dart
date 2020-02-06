@@ -11,8 +11,6 @@ class SettingsDetail extends StatelessWidget {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        backgroundColor: Theme.of(context).brightness == Brightness.dark
-          ? Theme.of(context).scaffoldBackgroundColor : Colors.white,
         appBar: AppBar(title: Text(title),),
         body: SingleChildScrollView(
           padding: EdgeInsets.all(16),

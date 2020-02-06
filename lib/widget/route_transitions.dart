@@ -36,8 +36,8 @@ CupertinoPageRoute cupertinoRoute(Widget builder, RouteSettings settings){
     settings: settings,
     builder: (ctx) => AnnotatedRegion<SystemUiOverlayStyle>(
       value: SystemUiOverlayStyle(
-        statusBarColor: Theme.of(ctx).scaffoldBackgroundColor,
-        systemNavigationBarColor: Theme.of(ctx).scaffoldBackgroundColor
+        statusBarColor: Theme.of(ctx).appBarTheme.color,
+        systemNavigationBarColor: Theme.of(ctx).appBarTheme.color,
       ),
       child: builder
     )
@@ -49,8 +49,8 @@ MaterialPageRoute materialRoute(Widget builder, RouteSettings settings) {
     settings: settings,
     builder: (ctx) => AnnotatedRegion<SystemUiOverlayStyle>(
       value: SystemUiOverlayStyle(
-        statusBarColor: Theme.of(ctx).scaffoldBackgroundColor,
-        systemNavigationBarColor: Theme.of(ctx).scaffoldBackgroundColor
+        statusBarColor: Theme.of(ctx).appBarTheme.color,
+        systemNavigationBarColor: Theme.of(ctx).appBarTheme.color,
       ),
       child: builder,
     )
@@ -66,8 +66,8 @@ class FadeRoute<T> extends MaterialPageRoute<T> {
       Animation<double> secondaryAnimation, Widget child) {
     return AnnotatedRegion<SystemUiOverlayStyle>(
       value: SystemUiOverlayStyle(
-        statusBarColor: Theme.of(context).scaffoldBackgroundColor,
-        systemNavigationBarColor: Theme.of(context).scaffoldBackgroundColor
+        statusBarColor: Theme.of(context).appBarTheme.color,
+        systemNavigationBarColor: Theme.of(context).appBarTheme.color,
       ),
       child: FadeTransition(opacity: animation, child: child),
     );
@@ -84,8 +84,8 @@ class SlideRoute<T> extends MaterialPageRoute<T> {
     final double maxWidth = MediaQuery.of(context).size.width;
     return AnnotatedRegion<SystemUiOverlayStyle>(
       value: SystemUiOverlayStyle(
-        statusBarColor: Theme.of(context).scaffoldBackgroundColor,
-        systemNavigationBarColor: Theme.of(context).scaffoldBackgroundColor
+        statusBarColor: Theme.of(context).appBarTheme.color,
+        systemNavigationBarColor: Theme.of(context).appBarTheme.color,
       ),
       child: SlideTransition(
         position: Tween<Offset>(begin: const Offset(1, 0), end: Offset.zero)
