@@ -376,6 +376,7 @@ class _SortCollectionState extends State<_SortCollection> {
       isScrollControlled: true,
       elevation: 0.0,
       builder: (context) {
+        ContinuousRectangleBorder();
         final Size size = MediaQuery.of(context).size;
         final double height = (460.0 / size.height).clamp(0.25, 0.66);
         EdgeInsetsGeometry padding = EdgeInsets.zero;

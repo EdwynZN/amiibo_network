@@ -41,20 +41,18 @@ class SettingsPage extends StatelessWidget{
               SliverList(
                 delegate: SliverChildListDelegate.fixed([
                   ResetCollection(),
-                  Builder(builder: (_){
+                  Builder(builder: (ctx){
                     return CardSettings(title: 'Save Collection',
-                        subtitle: 'Create a picture of your collection',
-                        icon: const Icon(Icons.save),
-                        onTap: () async {
-                          String text = await showDialog(
-                              context: _,
-                              builder: (BuildContext _) => _SaveCollection()
-                          );
-                          if(text != null)
-                            Scaffold.of(_).showSnackBar(
-                                SnackBar(content: Text(text))
-                            );
-                        }
+                      subtitle: 'Create a picture of your collection',
+                      icon: const Icon(Icons.save),
+                      onTap: () async {
+                        String text = await showDialog(
+                          context: ctx,
+                          builder: (ctx) => _SaveCollection()
+                        );
+                        if(text != null)
+                          Scaffold.of(ctx).showSnackBar(SnackBar(content: Text(text)));
+                      }
                     );
                   }),
                   CardSettings(title: 'Appearance', subtitle: 'More personalization', icon: const Icon(Icons.color_lens),
@@ -132,9 +130,9 @@ class _SaveCollection extends StatefulWidget{
 class _SaveCollectionState extends State<_SaveCollection> {
   Set<String> select = {};
 
-  Future<void> saveCollection() async{
-    final StatProvider statProvider = Provider.of<StatProvider>(context, listen: false);
-    final ThemeData theme = Theme.of(context);
+  Future<void> saveCollection(StatProvider statProvider, ThemeData theme) async{
+    //final StatProvider statProvider = Provider.of<StatProvider>(context, listen: false);
+    //final ThemeData theme = Theme.of(context).copyWith();
     final _service = Service();
     AmiiboLocalDB amiibos = await _service.fetchByCategory('type', select.toList(),
       'CASE WHEN type = "Figure" THEN 1 '
@@ -347,7 +345,11 @@ class _SaveCollectionState extends State<_SaveCollection> {
               final Map<String, dynamic> permission = checkPermission(
                 response[PermissionGroup.storage]
               );
-              if(permission['permission']) saveCollection();
+              if(permission['permission']) {
+                final StatProvider statProvider = Provider.of<StatProvider>(context, listen: false);
+                final ThemeData theme = Theme.of(context).copyWith();
+                saveCollection(statProvider, theme);
+              }
               Navigator.of(context).pop(permission['permission'] ?
               'Saving your file. This could take a while depending on your device' :
               permission['message']
