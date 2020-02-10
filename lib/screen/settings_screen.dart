@@ -19,6 +19,172 @@ import 'package:amiibo_network/widget/theme_widget.dart';
 class SettingsPage extends StatelessWidget{
   const SettingsPage({Key key}): super(key: key);
 
+  Future<void> saveCollection(StatProvider statProvider, ThemeData theme, Set<String> select) async{
+    //final StatProvider statProvider = Provider.of<StatProvider>(context, listen: false);
+    //final ThemeData theme = Theme.of(context).copyWith();
+    final _service = Service();
+    AmiiboLocalDB amiibos = await _service.fetchByCategory('type', select.toList(),
+        'CASE WHEN type = "Figure" THEN 1 '
+            'WHEN type = "Yarn" THEN 2 ELSE 3 END, amiiboSeries DESC, na DESC');
+    if(amiibos?.amiibo?.isEmpty ?? true) return;
+
+    Map<String,dynamic> _listStat = Map<String, dynamic>.from(
+        (await _service.fetchSum(column: 'type', args: select.toList())).first);
+    final Map<String,dynamic> file = Map<String,dynamic>();
+    final String time = DateTime.now().toString().substring(0,10);
+    final Directory dir = await Directory('/storage/emulated/0/Download').create();
+    final String path = '${dir.path}/My${
+        select.containsAll(['Figure', 'Yarn', 'Card']) ? 'Amiibo' :
+        select.containsAll(['Figure', 'Yarn']) ? 'Figure' : 'Card'
+    }Collection$time.png';
+    final Paint ownedCardPaint = Paint()..color = colorOwned[100];
+    final Paint wishedCardPaint = Paint()..color = colorWished[100];
+    final Color textColor = theme.textTheme.title.color;
+    final Paint unselectedCardPaint = Paint()..color = Colors.grey.withOpacity(0.5);
+    final double margin = 20.0;
+    final double maxSize = 60.0;
+    final double padding = 10.0;
+    final double space = 0.25;
+    final double width = (amiibos.amiibo.length / 25.0).ceilToDouble().clamp(15.0, 30.0);
+    final double maxX = (width * (1 + space) - space) * (maxSize + 2*padding) + 2*margin;
+    final double maxY = ((amiibos.amiibo.length / width).ceilToDouble()
+        * (1 + 0.5*space) - 0.5*space) * (1.5*maxSize + 2*padding) + 100 + 2*margin;
+
+    double xOffset = margin;
+    double yOffset = margin;
+    ui.Picture pic;
+
+    final ui.PictureRecorder pictureRecorder = ui.PictureRecorder();
+    final Canvas canvas = Canvas(pictureRecorder);
+    final Paint paint = Paint()..color = theme.scaffoldBackgroundColor;
+
+    canvas.drawColor(paint.color, BlendMode.src);
+
+    final TextSpan aNetwork = TextSpan(
+        style: TextStyle(color: textColor, fontSize: 50),
+        text: 'Amiibo Network',
+        children: <InlineSpan>[
+          TextSpan(
+              style: TextStyle(color: textColor, fontSize: 15, wordSpacing: maxSize),
+              text: '\u24C7 '
+          ),
+          TextSpan(
+              style: TextStyle(color: Colors.black, fontSize: 30, height: 1.15,
+                  fontWeight: FontWeight.w300, background: ownedCardPaint),
+              text: ' ${statProvider.statLabel(_listStat['Owned'].toDouble(), _listStat['Total'].toDouble())} '
+          ),
+          TextSpan(
+              style: TextStyle(color: textColor, fontSize: 35),
+              text: ' Owned'
+          ),
+          TextSpan(
+              style: TextStyle(color: Colors.black, fontSize: 35, wordSpacing: maxSize),
+              text: ' '
+          ),
+          TextSpan(
+              style: TextStyle(color: Colors.black, fontSize: 30, height: 1.15,
+                  fontWeight: FontWeight.w300, background: wishedCardPaint),
+              text: ' ${statProvider.statLabel(_listStat['Wished'].toDouble(), _listStat['Total'].toDouble())} '
+          ),
+          TextSpan(
+              style: TextStyle(color: textColor, fontSize: 35),
+              text: ' Wished'
+          ),
+        ]
+    );
+    TextPainter(text: aNetwork,
+        textDirection: TextDirection.ltr
+    )..layout(minWidth: maxX-125-margin)
+      ..paint(canvas, Offset(125, maxY - margin - 65));
+
+    TextSpan createdDate = TextSpan(
+        style: TextStyle(color: textColor, fontSize: 25),
+        text: 'created on: $time'
+    );
+    TextPainter(text: createdDate, textDirection: TextDirection.rtl,)
+      ..layout(minWidth: maxX-125-margin)
+      ..paint(canvas, Offset(125, maxY - margin - 25));
+
+    final _ima = await rootBundle.load('assets/images/icon_app.png');
+    final ui.Image appIcon = await ui.instantiateImageCodec(
+        _ima.buffer.asUint8List(),
+        targetWidth: 80, targetHeight: 80
+    ).then((codec) => codec.getNextFrame())
+        .then((frame) => frame.image).catchError((e) => print(e));
+
+    if(theme.brightness == Brightness.dark)
+      canvas.drawImage(appIcon, Offset(margin, maxY - margin - 80),
+          Paint()..colorFilter = ColorFilter.mode(Colors.white54, BlendMode.srcIn)
+      );
+    else canvas.drawImage(appIcon, Offset(margin, maxY - margin - 80), paint);
+
+    appIcon.dispose();
+
+    for(AmiiboDB amiibo in amiibos.amiibo) {
+      final String strImage = 'assets/collection/icon_${amiibo.key}.png';
+      final Offset _offset = Offset(xOffset, yOffset);
+      final Path cardPath = Path()..addRRect(RRect.fromRectAndRadius(
+          Rect.fromPoints(
+              _offset,
+              _offset.translate(maxSize + 2*padding, 1.5*maxSize + 2*padding)
+          ),
+          Radius.circular(8.0)
+      ));
+      final ByteData imageAsset = await rootBundle.load(strImage);
+
+      //canvas.drawPath(cardPath, amiibo?.owned?.isOdd ?? false ? ownedCardPaint :
+      //amiibo?.wishlist?.isOdd ?? false ? wishedCardPaint : unselectedCardPaint);
+
+      if((amiibo?.owned?.isOdd ?? false) || (amiibo?.wishlist?.isOdd ?? false)){
+        canvas.drawPath(cardPath,
+            amiibo?.owned?.isOdd ?? false ? ownedCardPaint : wishedCardPaint);
+      }
+
+      ui.Image _image = await ui.instantiateImageCodec(
+        imageAsset.buffer.asUint8List(),
+        targetWidth: maxSize.toInt(),
+      ).then((codec) => codec.getNextFrame()).then((frame)=> frame.image);
+
+      final bool taller = _image.width > 1.3*_image.height;
+      canvas.drawImageNine(_image,
+          Rect.fromCenter(
+              center: Offset.zero,
+              width: _image.height.toDouble()*1.5,
+              height: _image.width.toDouble()
+          ),
+          Rect.fromLTRB(
+              _offset.dx + padding,
+              (taller ? _offset.dy + 1.4 * maxSize - _image.height : _offset.dy) + padding,
+              _offset.dx + maxSize + padding,
+              _offset.dy + 1.5*maxSize + padding
+          ),
+          paint
+      );
+
+      _image.dispose();
+
+      xOffset += (1 + space) * (maxSize + 2*padding);
+      if(xOffset >= maxX - margin){
+        xOffset = margin;
+        yOffset += (1 + 0.5*space)*(1.5*maxSize + 2*padding);
+      }
+    }
+
+    pic = pictureRecorder.endRecording();
+    try{
+      ui.Image img = await pic.toImage(maxX.toInt(), maxY.toInt());
+      pic.dispose();
+      ByteData byteData = await img.toByteData(format: ui.ImageByteFormat.png);
+      img.dispose();
+      List<int> buffer = byteData.buffer.asUint8List();
+      file['path'] = path;
+      file['buffer'] = buffer;
+      compute(writeCollectionFile, file);
+    }catch(e){
+      print(e);
+    }
+  }
+
   @override
   Widget build(BuildContext context){
     return SafeArea(
@@ -46,12 +212,21 @@ class SettingsPage extends StatelessWidget{
                       subtitle: 'Create a picture of your collection',
                       icon: const Icon(Icons.save),
                       onTap: () async {
-                        String text = await showDialog(
+                        Map<String,dynamic> collection = await showDialog(
                           context: ctx,
                           builder: (ctx) => _SaveCollection()
                         );
-                        if(text != null)
-                          Scaffold.of(ctx).showSnackBar(SnackBar(content: Text(text)));
+                        final bool permission = collection['permission'] ?? false;
+                        final String message = permission ?
+                        'Saving your file. This could take a while depending on your device' :
+                        collection['message'];
+                        Scaffold.of(ctx).showSnackBar(SnackBar(content: Text(message)));
+                        if(permission) {
+                          final StatProvider statProvider = Provider.of<StatProvider>(context, listen: false);
+                          final ThemeData theme = Theme.of(context).copyWith();
+                          final Set<String> select = collection['selected'];
+                          await saveCollection(statProvider, theme, select);
+                        }
                       }
                     );
                   }),
@@ -130,172 +305,6 @@ class _SaveCollection extends StatefulWidget{
 class _SaveCollectionState extends State<_SaveCollection> {
   Set<String> select = {};
 
-  Future<void> saveCollection(StatProvider statProvider, ThemeData theme) async{
-    //final StatProvider statProvider = Provider.of<StatProvider>(context, listen: false);
-    //final ThemeData theme = Theme.of(context).copyWith();
-    final _service = Service();
-    AmiiboLocalDB amiibos = await _service.fetchByCategory('type', select.toList(),
-      'CASE WHEN type = "Figure" THEN 1 '
-      'WHEN type = "Yarn" THEN 2 ELSE 3 END, amiiboSeries DESC, na DESC');
-    if(amiibos?.amiibo?.isEmpty ?? true) return;
-
-    Map<String,dynamic> _listStat = Map<String, dynamic>.from(
-        (await _service.fetchSum(column: 'type', args: select.toList())).first);
-    final Map<String,dynamic> file = Map<String,dynamic>();
-    final String time = DateTime.now().toString().substring(0,10);
-    final Directory dir = await Directory('/storage/emulated/0/Download').create();
-    final String path = '${dir.path}/My${
-      select.containsAll(['Figure', 'Yarn', 'Card']) ? 'Amiibo' :
-      select.containsAll(['Figure', 'Yarn']) ? 'Figure' : 'Card'
-      }Collection$time.png';
-    final Paint ownedCardPaint = Paint()..color = colorOwned[100];
-    final Paint wishedCardPaint = Paint()..color = colorWished[100];
-    final Color textColor = theme.textTheme.title.color;
-    final Paint unselectedCardPaint = Paint()..color = Colors.grey.withOpacity(0.5);
-    final double margin = 20.0;
-    final double maxSize = 60.0;
-    final double padding = 10.0;
-    final double space = 0.25;
-    final double width = (amiibos.amiibo.length / 25.0).ceilToDouble().clamp(15.0, 30.0);
-    final double maxX = (width * (1 + space) - space) * (maxSize + 2*padding) + 2*margin;
-    final double maxY = ((amiibos.amiibo.length / width).ceilToDouble()
-      * (1 + 0.5*space) - 0.5*space) * (1.5*maxSize + 2*padding) + 100 + 2*margin;
-
-    double xOffset = margin;
-    double yOffset = margin;
-    ui.Picture pic;
-
-    final ui.PictureRecorder pictureRecorder = ui.PictureRecorder();
-    final Canvas canvas = Canvas(pictureRecorder);
-    final Paint paint = Paint()..color = theme.scaffoldBackgroundColor;
-
-    canvas.drawColor(paint.color, BlendMode.src);
-
-    final TextSpan aNetwork = TextSpan(
-      style: TextStyle(color: textColor, fontSize: 50),
-      text: 'Amiibo Network',
-      children: <InlineSpan>[
-        TextSpan(
-          style: TextStyle(color: textColor, fontSize: 15, wordSpacing: maxSize),
-          text: '\u24C7 '
-        ),
-        TextSpan(
-          style: TextStyle(color: Colors.black, fontSize: 30, height: 1.15,
-              fontWeight: FontWeight.w300, background: ownedCardPaint),
-          text: ' ${statProvider.statLabel(_listStat['Owned'].toDouble(), _listStat['Total'].toDouble())} '
-        ),
-        TextSpan(
-          style: TextStyle(color: textColor, fontSize: 35),
-          text: ' Owned'
-        ),
-        TextSpan(
-          style: TextStyle(color: Colors.black, fontSize: 35, wordSpacing: maxSize),
-          text: ' '
-        ),
-        TextSpan(
-          style: TextStyle(color: Colors.black, fontSize: 30, height: 1.15,
-              fontWeight: FontWeight.w300, background: wishedCardPaint),
-          text: ' ${statProvider.statLabel(_listStat['Wished'].toDouble(), _listStat['Total'].toDouble())} '
-        ),
-        TextSpan(
-          style: TextStyle(color: textColor, fontSize: 35),
-          text: ' Wished'
-        ),
-      ]
-    );
-    TextPainter(text: aNetwork,
-      textDirection: TextDirection.ltr
-    )..layout(minWidth: maxX-125-margin)
-      ..paint(canvas, Offset(125, maxY - margin - 65));
-
-    TextSpan createdDate = TextSpan(
-      style: TextStyle(color: textColor, fontSize: 25),
-      text: 'created on: $time'
-    );
-    TextPainter(text: createdDate, textDirection: TextDirection.rtl,)
-      ..layout(minWidth: maxX-125-margin)
-      ..paint(canvas, Offset(125, maxY - margin - 25));
-
-    final _ima = await rootBundle.load('assets/images/icon_app.png');
-    final ui.Image appIcon = await ui.instantiateImageCodec(
-      _ima.buffer.asUint8List(),
-      targetWidth: 80, targetHeight: 80
-    ).then((codec) => codec.getNextFrame())
-      .then((frame) => frame.image).catchError((e) => print(e));
-
-    if(theme.brightness == Brightness.dark)
-      canvas.drawImage(appIcon, Offset(margin, maxY - margin - 80),
-        Paint()..colorFilter = ColorFilter.mode(Colors.white54, BlendMode.srcIn)
-      );
-    else canvas.drawImage(appIcon, Offset(margin, maxY - margin - 80), paint);
-
-    appIcon.dispose();
-
-    for(AmiiboDB amiibo in amiibos.amiibo) {
-      final String strImage = 'assets/collection/icon_${amiibo.key}.png';
-      final Offset _offset = Offset(xOffset, yOffset);
-      final Path cardPath = Path()..addRRect(RRect.fromRectAndRadius(
-        Rect.fromPoints(
-          _offset,
-          _offset.translate(maxSize + 2*padding, 1.5*maxSize + 2*padding)
-        ),
-        Radius.circular(8.0)
-      ));
-      final ByteData imageAsset = await rootBundle.load(strImage);
-
-      //canvas.drawPath(cardPath, amiibo?.owned?.isOdd ?? false ? ownedCardPaint :
-      //amiibo?.wishlist?.isOdd ?? false ? wishedCardPaint : unselectedCardPaint);
-
-      if((amiibo?.owned?.isOdd ?? false) || (amiibo?.wishlist?.isOdd ?? false)){
-        canvas.drawPath(cardPath,
-          amiibo?.owned?.isOdd ?? false ? ownedCardPaint : wishedCardPaint);
-      }
-
-      ui.Image _image = await ui.instantiateImageCodec(
-        imageAsset.buffer.asUint8List(),
-        targetWidth: maxSize.toInt(),
-      ).then((codec) => codec.getNextFrame()).then((frame)=> frame.image);
-
-      final bool taller = _image.width > 1.3*_image.height;
-      canvas.drawImageNine(_image,
-        Rect.fromCenter(
-          center: Offset.zero,
-          width: _image.height.toDouble()*1.5,
-          height: _image.width.toDouble()
-        ),
-        Rect.fromLTRB(
-          _offset.dx + padding,
-          (taller ? _offset.dy + 1.4 * maxSize - _image.height : _offset.dy) + padding,
-          _offset.dx + maxSize + padding,
-          _offset.dy + 1.5*maxSize + padding
-        ),
-        paint
-      );
-
-      _image.dispose();
-
-      xOffset += (1 + space) * (maxSize + 2*padding);
-      if(xOffset >= maxX - margin){
-        xOffset = margin;
-        yOffset += (1 + 0.5*space)*(1.5*maxSize + 2*padding);
-      }
-    }
-
-    pic = pictureRecorder.endRecording();
-    try{
-      ui.Image img = await pic.toImage(maxX.toInt(), maxY.toInt());
-      pic.dispose();
-      ByteData byteData = await img.toByteData(format: ui.ImageByteFormat.png);
-      img.dispose();
-      List<int> buffer = byteData.buffer.asUint8List();
-      file['path'] = path;
-      file['buffer'] = buffer;
-      compute(writeCollectionFile, file);
-    }catch(e){
-      print(e);
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     return SimpleDialog(
@@ -342,18 +351,11 @@ class _SaveCollectionState extends State<_SaveCollection> {
             onPressed: select.isEmpty ? null : () async {
               final Map<PermissionGroup, PermissionStatus> response =
               await PermissionHandler().requestPermissions([PermissionGroup.storage]);
-              final Map<String, dynamic> permission = checkPermission(
+              final Map<String,dynamic> permission = checkPermission(
                 response[PermissionGroup.storage]
               );
-              if(permission['permission']) {
-                final StatProvider statProvider = Provider.of<StatProvider>(context, listen: false);
-                final ThemeData theme = Theme.of(context).copyWith();
-                saveCollection(statProvider, theme);
-              }
-              Navigator.of(context).pop(permission['permission'] ?
-              'Saving your file. This could take a while depending on your device' :
-              permission['message']
-              );
+              if(permission['permission']) permission['selected'] = select;
+              Navigator.of(context).pop(permission);
             },
             child: Text('Save')
           )
