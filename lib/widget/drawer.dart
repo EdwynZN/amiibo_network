@@ -111,6 +111,17 @@ class _CollectionDrawerState extends State<CollectionDrawer> {
                                       initiallyExpanded: _figureExpand,
                                       onExpansionChanged: figureExpand,
                                       children: <Widget>[
+                                        ListTile(
+                                          leading: CircleAvatar(
+                                            backgroundColor: Theme.of(context).accentColor,
+                                            foregroundColor: Theme.of(context).accentIconTheme.color,
+                                            radius: 12,
+                                            child: const Icon(Icons.all_inclusive, size: 16,),
+                                          ),
+                                          title: const Text('All Figures'),
+                                          onTap: () => _onTapTile('Figures'),
+                                          selected: _selected == 'Figures',
+                                        ),
                                         if(snapshot.hasData)
                                           for(String series in snapshot.data)
                                             ListTile(
@@ -143,6 +154,17 @@ class _CollectionDrawerState extends State<CollectionDrawer> {
                                       initiallyExpanded: _cardExpand,
                                       onExpansionChanged: cardExpand,
                                       children: <Widget>[
+                                        ListTile(
+                                          leading: CircleAvatar(
+                                            backgroundColor: Theme.of(context).accentColor,
+                                            foregroundColor: Theme.of(context).accentIconTheme.color,
+                                            radius: 12,
+                                            child: const Icon(Icons.all_inclusive, size: 16,),
+                                          ),
+                                          title: const Text('All Cards'),
+                                          onTap: () => _onTapTile('Cards'),
+                                          selected: _selected == 'Cards',
+                                        ),
                                         if(snapshot.hasData)
                                           for(String series in snapshot.data)
                                             ListTile(

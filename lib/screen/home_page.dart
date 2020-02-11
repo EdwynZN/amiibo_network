@@ -146,65 +146,64 @@ class HomePageState extends State<HomePage>
                 controller: _controller,
                 slivers: <Widget>[
                   SliverFloatingBar(
-                    floating: true,
-                    forward: _multipleSelection,
-                    snap: true,
-                    leading: Builder(
-                      builder: (context) => IconButton(
-                        icon: ImplicitIcon(forward: _multipleSelection),
-                        tooltip: _multipleSelection ? 'close' : 'drawer',
-                        onPressed: _multipleSelection ? _cancelSelection : () => Scaffold.of(context).openDrawer(),
+                      floating: true,
+                      forward: _multipleSelection,
+                      snap: true,
+                      leading: Builder(
+                          builder: (context) => IconButton(
+                            icon: ImplicitIcon(forward: _multipleSelection),
+                            tooltip: _multipleSelection ? 'close' : 'drawer',
+                            onPressed: _multipleSelection ? _cancelSelection : () => Scaffold.of(context).openDrawer(),
+                          )
+                      ),
+                      title: Selector2<AmiiboProvider, SelectProvider, String>(
+                        selector: (context, text, count) => count.multipleSelected ? count.selected.toString() : text.strFilter,
+                        builder: (context, text, _) {
+                          return Tooltip(
+                            message: '${num.tryParse(text) == null ?
+                            'Search Amiibo' : '$text Selected' }',
+                            child: Text(text ?? ''),
+                          );
+                        },
+                      ),
+                      onTap: _multipleSelection ? null : _search,
+                      trailing: AnimatedSwitcher(
+                        duration: const Duration(milliseconds: 250),
+                        layoutBuilder: _defaultLayoutBuilder,
+                        child: _multipleSelection ? Row(
+                          mainAxisSize: MainAxisSize.min,
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: <Widget>[
+                            IconButton(
+                              icon: const Icon(Icons.remove),
+                              onPressed: _updateSelection,
+                              tooltip: 'Remove',
+                            ),
+                            IconButton(
+                              icon: const Icon(iconOwned),
+                              onPressed: () => _updateSelection(owned: 1),
+                              tooltip: 'Own',
+                            ),
+                            IconButton(
+                              icon: const Icon(iconWished),
+                              onPressed: () => _updateSelection(wished: 1),
+                              tooltip: 'Wish',
+                            ),
+                          ],
+                        ) : _SortCollection(),
                       )
-                    ),
-                    title: Selector2<AmiiboProvider, SelectProvider, String>(
-                      selector: (context, text, count) => count.multipleSelected ? count.selected.toString() : text.strFilter,
-                      builder: (context, text, _) {
-                        return Tooltip(
-                          message: '${num.tryParse(text) == null ?
-                          'Search Amiibo' : '$text Selected' }',
-                          child: Text(text ?? ''),
-                        );
-                      },
-                    ),
-                    onTap: _multipleSelection ? null : _search,
-                    trailing: AnimatedSwitcher(
-                      duration: const Duration(milliseconds: 250),
-                      layoutBuilder: _defaultLayoutBuilder,
-                      child: _multipleSelection ? Row(
-                        mainAxisSize: MainAxisSize.min,
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: <Widget>[
-                          IconButton(
-                            icon: const Icon(Icons.remove),
-                            onPressed: _updateSelection,
-                            tooltip: 'Remove',
-                          ),
-                          IconButton(
-                            icon: const Icon(iconOwned),
-                            onPressed: () => _updateSelection(owned: 1),
-                            tooltip: 'Own',
-                          ),
-                          IconButton(
-                            icon: const Icon(iconWished),
-                            onPressed: () => _updateSelection(wished: 1),
-                            tooltip: 'Wish',
-                          ),
-                        ],
-                      ) : _SortCollection(),
-                    )
                   ),
                   child,
                   SliverPadding(
                     padding: const EdgeInsets.symmetric(horizontal: 4),
-                    sliver: Selector<AmiiboProvider, AmiiboLocalDB>(
+                    sliver: Consumer<AmiiboLocalDB>(
                       child: const SliverToBoxAdapter(
-                        child: const Align(alignment: Alignment.center, heightFactor: 10,
-                          child: const Text('Nothing to see here. . .yet',
-                            textAlign: TextAlign.center,
+                          child: const Align(alignment: Alignment.center, heightFactor: 10,
+                              child: const Text('Nothing to see here. . .yet',
+                                textAlign: TextAlign.center,
+                              )
                           )
-                        )
                       ),
-                      selector: (context, amiibo) => amiibo.amiibosDB,
                       builder: (ctx, data, child){
                         bool bigGrid = MediaQuery.of(context).size.width >= 600;
                         if((data?.amiibo?.length ?? 1) == 0)
@@ -223,16 +222,21 @@ class HomePageState extends State<HomePage>
                               mainAxisSpacing: 8.0
                           ),
                           delegate: SliverChildBuilderDelegate((BuildContext _, int index) {
-                            return FadeSwitchAnimation(
-                              key: ValueKey<int>(index),
-                              child: AmiiboGrid(
-                                index: index,
-                                key: ValueKey<int>(data?.amiibo[index].key),
-                              ),
+                            return ChangeNotifierProxyProvider<AmiiboLocalDB,SingleAmiibo>(
+                                create: (_) => SingleAmiibo(),
+                                update: (_, amiiboList, amiibo) => amiibo
+                                  ..update = amiiboList?.amiibo[index],
+                                child: FadeSwitchAnimation(
+                                  key: ValueKey<int>(index),
+                                  child: AmiiboGrid(
+                                    index: index,
+                                    key: ValueKey<int>(data?.amiibo[index].key),
+                                  ),
+                                )
                             );
                           },
-                            //addRepaintBoundaries: false, addAutomaticKeepAlives: false,
-                            childCount: data?.amiibo != null ? data?.amiibo?.length : 0,
+                          //addRepaintBoundaries: false, addAutomaticKeepAlives: false,
+                          childCount: data?.amiibo != null ? data?.amiibo?.length : 0,
                           )
                         );
                       },
@@ -359,7 +363,6 @@ class _SortCollectionState extends State<_SortCollection> {
     preferences.setString('OrderCategory', sort);
     amiiboProvider.orderCategory = sort;
     await amiiboProvider.refreshPagination();
-    //Navigator.pop(context);
   }
 
   void _sortOrder(String sort) async{
@@ -652,13 +655,13 @@ class AmiiboGrid extends StatefulWidget {
 class AmiiboGridState extends State<AmiiboGrid> {
   SelectProvider mSelected;
   bool _multipleSelected;
-  AmiiboProvider amiiboProvider;
+  SingleAmiibo amiiboDB;
   AmiiboDB amiibo;
 
   @override
   didChangeDependencies(){
     super.didChangeDependencies();
-    amiiboProvider = Provider.of<AmiiboProvider>(context, listen: false);
+    amiiboDB = Provider.of<SingleAmiibo>(context, listen: false);
     mSelected = Provider.of<SelectProvider>(context, listen: false);
   }
 
@@ -666,29 +669,21 @@ class AmiiboGridState extends State<AmiiboGrid> {
     Navigator.pushNamed(context, "/details", arguments: widget.index);
 
   _onTap(){
-    switch(amiibo?.owned ?? 0){
-      case 1:
-        amiiboProvider.countOwned = amiibo.owned = 0;
-        amiiboProvider.countWished = amiibo.wishlist = 1;
-        break;
-      case 0:
-        if((amiibo?.wishlist ?? 0) == 0)
-          amiiboProvider.countOwned = amiibo.owned = 1;
-        else amiiboProvider.countWished = amiibo.wishlist = 0;
-        break;
-    }
-    amiiboProvider..updateAmiiboDB(amiibo: amiibo)..updateList()..notifyWidgets();
+    final AmiiboProvider amiiboProvider = Provider.of<AmiiboProvider>(context, listen: false);
+    amiiboProvider..shiftStat(amiibo.owned, amiibo.wishlist);
+    amiiboDB.shift();
+    amiiboProvider..updateAmiiboDB(amiibo: amiibo);
   }
 
   _onLongPress(){
     if(!mSelected.addSelected(widget.key)) mSelected.removeSelected(widget.key);
-    mSelected.notifyWidgets();
+    mSelected.notifyListeners();
   }
 
   @override
   Widget build(BuildContext context){
     _multipleSelected = mSelected.multipleSelected;
-    amiibo = amiiboProvider.amiibosDB.amiibo[widget.index];
+    amiibo = amiiboDB.amiibo;
     return Selector<SelectProvider,bool>(
       builder: (context, _isSelected, child){
         return AnimatedContainer(
@@ -757,28 +752,26 @@ class AmiiboGridState extends State<AmiiboGrid> {
             ),
             Align(
               alignment: Alignment.topLeft,
-              child: Selector<AmiiboProvider, Widget>(
-                builder: (ctx, widget, child){
+              child: Consumer<SingleAmiibo>(
+                builder: (ctx, amiiboP, _){
+                  final AmiiboDB amiibo = amiiboP.amiibo;
+                  Widget icon = const SizedBox.shrink();
+                  if(amiibo?.wishlist?.isOdd ?? false)
+                    icon = const Icon(iconWished, size: 28, key: ValueKey(2), color: colorWished,);
+                  else if(amiibo?.owned?.isOdd ?? false)
+                    icon = Theme.of(context).brightness == Brightness.light ?
+                    const Icon(iconOwned, size: 28, key: ValueKey(1), color: colorOwned) :
+                    const Icon(iconOwnedDark, size: 28, key: ValueKey(1), color: colorOwned);
                   return AnimatedSwitcher(
                     duration: const Duration(milliseconds: 200),
                     switchInCurve: Curves.easeInToLinear,
                     switchOutCurve: Curves.easeOutCirc,
                     transitionBuilder: (Widget child, Animation <double> animation)
                     => ScaleTransition(scale: animation, child: child,),
-                    child: widget
+                    child: icon
                   );
                 },
-                selector: (context, amiiboProvider) {
-                  AmiiboDB amiibo = amiiboProvider.amiibosDB.amiibo[widget.index];
-                  if(amiibo?.wishlist?.isOdd ?? false)
-                    return const Icon(iconWished, size: 28, key: ValueKey(2), color: colorWished,);
-                  else if(amiibo?.owned?.isOdd ?? false)
-                    return Theme.of(context).brightness == Brightness.light ?
-                      const Icon(iconOwned, size: 28, key: ValueKey(1), color: colorOwned) :
-                      const Icon(iconOwnedDark, size: 28, key: ValueKey(1), color: colorOwned);
-                  else return const SizedBox.shrink();
-                }
-              )
+              ),
             ),
           ],
         ),

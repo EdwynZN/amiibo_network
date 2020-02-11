@@ -5,7 +5,7 @@ class SearchProvider{
   static final _service = Service();
   final _searchFetcher = PublishSubject<String>();
 
-  Observable<List<String>> get search => _searchFetcher.stream
+  Stream<List<String>> get search => _searchFetcher.stream
     .debounceTime(const Duration(milliseconds: 500))
     .asyncMap((x) => x.isEmpty ? null : _service.searchDB(x));
 

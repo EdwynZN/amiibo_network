@@ -77,8 +77,8 @@ class AmiiboDB {
     jp: amiibo["jp"],
     na: amiibo["na"],
     type: amiibo["type"],
-    wishlist: amiibo["wishlist"],
-    owned: amiibo["owned"],
+    wishlist: amiibo["wishlist"] ?? 0,
+    owned: amiibo["owned"] ?? 0,
   );
 
   Map<String, dynamic> toMap() => {

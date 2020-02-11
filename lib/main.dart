@@ -8,20 +8,25 @@ import 'package:amiibo_network/provider/amiibo_provider.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:amiibo_network/provider/stat_provider.dart';
+import 'package:nfc_in_flutter/nfc_in_flutter.dart';
+import 'package:amiibo_network/model/amiibo_local_db.dart';
 //import 'package:flutter/gestures.dart';
 
 void main() async {
   //debugPrintGestureArenaDiagnostics = true;
   WidgetsFlutterBinding.ensureInitialized();
   await initDB();
-  bool splash = await Service().compareLastUpdate();
-  Map<String,dynamic> savedTheme = await getTheme();
-  bool stat = await getStatMode();
+  final bool nfcSupported = await NFC.isNDEFSupported;
+  final bool splash = await Service().compareLastUpdate();
+  final Map<String,dynamic> savedTheme = await getTheme();
+  final bool stat = await getStatMode();
+  print(nfcSupported);
   runApp(
     AmiiboNetwork(
       firstPage: splash ? Home() : SplashScreen(),
       theme: savedTheme,
       statMode: stat,
+      nfc: nfcSupported,
     )
   );
 }
@@ -30,7 +35,8 @@ class AmiiboNetwork extends StatelessWidget {
   final Widget firstPage;
   final Map<String,dynamic> theme;
   final bool statMode;
-  AmiiboNetwork({this.firstPage, this.theme, this.statMode});
+  final bool nfc;
+  AmiiboNetwork({this.firstPage, this.theme, this.statMode, this.nfc});
 
   @override
   Widget build(BuildContext context) {
@@ -45,7 +51,10 @@ class AmiiboNetwork extends StatelessWidget {
           create: (context) => StatProvider(statMode),
         ),
         ChangeNotifierProvider<AmiiboProvider>(
-          create: (context) => AmiiboProvider(),
+          create: (context) => AmiiboProvider(nfc),
+        ),
+        StreamProvider<AmiiboLocalDB>(
+          create: (_) => Provider.of<AmiiboProvider>(_, listen: false).amiiboList
         ),
         Consumer<ThemeProvider>(
           builder: (context, themeMode, child) => MaterialApp(
