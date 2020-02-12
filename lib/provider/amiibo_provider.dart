@@ -3,27 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:amiibo_network/model/amiibo_local_db.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:nfc_in_flutter/nfc_in_flutter.dart';
-
-class SelectProvider with ChangeNotifier{
-  final Set<ValueKey<int>> set = Set<ValueKey<int>>();
-
-  bool get multipleSelected => set.isNotEmpty;
-  int get selected => set.length;
-  bool addSelected(ValueKey<int> value) => set.add(value);
-  bool removeSelected(ValueKey<int> value) => set.remove(value);
-  bool isSelected(ValueKey<int> value) => set.contains(value);
-
-  void clearSelected() {
-    set.clear();
-    notifyListeners();
-  }
-
-  @override
-  void notifyListeners() {
-    super.notifyListeners();
-  }
-}
 
 class SingleAmiibo with ChangeNotifier{
   AmiiboDB amiibo;
@@ -68,8 +47,6 @@ class AmiiboProvider with ChangeNotifier{
   String _sort = 'ASC';
   Map<String,dynamic> _listOwned;
 
-  //final Stream<NDEFMessage> nfcStream = NFC.readNDEF();
-  //final _nfcStream = PublishSubject<NDEFMessage>();
   final _amiiboList = BehaviorSubject<AmiiboLocalDB>();
   final _collectionList = BehaviorSubject<Map<String,dynamic>>();
   final _updateAmiiboDB = PublishSubject<AmiiboLocalDB>()
@@ -81,27 +58,22 @@ class AmiiboProvider with ChangeNotifier{
     if(_orderCategory == value) return;
     _orderCategory = value;
     notifyListeners();
+    refreshPagination();
   }
   String get sort => _sort;
-  set sort(String value){
+  set sort(String value) {
     if(_sort == value) return;
     _sort = value;
     notifyListeners();
+    refreshPagination();
   }
   String get strFilter => _strFilter;
-  set setFilter(String value) => _strFilter = value;
-
-  AmiiboProvider(bool nfcSupport) {
-    //if(!nfcSupport) _nfcStream.toList();
-    //Stream<NDEFMessage> stream = NFC.readNDEF();
-  }
 
   @override
   void notifyListeners() {
     super.notifyListeners();
   }
 
-  //Stream<Map<String,dynamic>> get nfcStream => _collectionList.stream;
   Stream<AmiiboLocalDB> get amiiboList => _amiiboList.stream;
   Stream<Map<String,dynamic>> get collectionList => _collectionList.stream;
 
@@ -126,8 +98,8 @@ class AmiiboProvider with ChangeNotifier{
   Future<void> resetPagination(String name,{bool search = false}) async {
     _searchFilter = search ? 'name' : 'amiiboSeries';
     _strFilter = name;
-    //await _fetchByCategory();
-    _fetchByCategory().then((x) => notifyListeners());
+    await _fetchByCategory();
+    notifyListeners();
   }
 
   Future<void> refreshPagination() => _fetchByCategory();
@@ -190,7 +162,7 @@ class AmiiboProvider with ChangeNotifier{
     _collectionList.sink.add(_listOwned);
   }
 
-  updateAmiiboDB({AmiiboDB amiibo, AmiiboLocalDB amiibos}) async{
+  updateAmiiboDB({AmiiboDB amiibo, AmiiboLocalDB amiibos}) {
     amiibos ??= AmiiboLocalDB(amiibo: [amiibo]);
     _updateAmiiboDB.sink.add(amiibos);
   }

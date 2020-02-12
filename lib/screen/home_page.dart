@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:provider/provider.dart';
 import 'package:amiibo_network/provider/amiibo_provider.dart';
+import 'package:amiibo_network/provider/select_provider.dart';
 import 'package:amiibo_network/model/amiibo_local_db.dart';
 import 'package:amiibo_network/data/database.dart';
 import 'package:flutter/rendering.dart';
@@ -146,28 +147,28 @@ class HomePageState extends State<HomePage>
                 controller: _controller,
                 slivers: <Widget>[
                   SliverFloatingBar(
-                      floating: true,
-                      forward: _multipleSelection,
-                      snap: true,
-                      leading: Builder(
-                          builder: (context) => IconButton(
-                            icon: ImplicitIcon(forward: _multipleSelection),
-                            tooltip: _multipleSelection ? 'close' : 'drawer',
-                            onPressed: _multipleSelection ? _cancelSelection : () => Scaffold.of(context).openDrawer(),
-                          )
-                      ),
-                      title: Selector2<AmiiboProvider, SelectProvider, String>(
-                        selector: (context, text, count) => count.multipleSelected ? count.selected.toString() : text.strFilter,
-                        builder: (context, text, _) {
-                          return Tooltip(
-                            message: '${num.tryParse(text) == null ?
-                            'Search Amiibo' : '$text Selected' }',
-                            child: Text(text ?? ''),
-                          );
-                        },
-                      ),
-                      onTap: _multipleSelection ? null : _search,
-                      trailing: AnimatedSwitcher(
+                    floating: true,
+                    forward: _multipleSelection,
+                    snap: true,
+                    leading: Builder(
+                        builder: (context) => IconButton(
+                          icon: ImplicitIcon(forward: _multipleSelection),
+                          tooltip: _multipleSelection ? 'close' : 'drawer',
+                          onPressed: _multipleSelection ? _cancelSelection : () => Scaffold.of(context).openDrawer(),
+                        )
+                    ),
+                    title: Selector2<AmiiboProvider, SelectProvider, String>(
+                      selector: (context, text, count) => count.multipleSelected ? count.selected.toString() : text.strFilter,
+                      builder: (context, text, _) {
+                        return Tooltip(
+                          message: '${num.tryParse(text) == null ?
+                          'Search Amiibo' : '$text Selected' }',
+                          child: Text(text ?? ''),
+                        );
+                      },
+                    ),
+                    onTap: _multipleSelection ? null : _search,
+                    trailing: AnimatedSwitcher(
                         duration: const Duration(milliseconds: 250),
                         layoutBuilder: _defaultLayoutBuilder,
                         child: _multipleSelection ? Row(
@@ -198,11 +199,11 @@ class HomePageState extends State<HomePage>
                     padding: const EdgeInsets.symmetric(horizontal: 4),
                     sliver: Consumer<AmiiboLocalDB>(
                       child: const SliverToBoxAdapter(
-                          child: const Align(alignment: Alignment.center, heightFactor: 10,
-                              child: const Text('Nothing to see here. . .yet',
-                                textAlign: TextAlign.center,
-                              )
+                        child: const Align(alignment: Alignment.center, heightFactor: 10,
+                          child: const Text('Nothing to see here. . .yet',
+                            textAlign: TextAlign.center,
                           )
+                        )
                       ),
                       builder: (ctx, data, child){
                         bool bigGrid = MediaQuery.of(context).size.width >= 600;
@@ -362,7 +363,6 @@ class _SortCollectionState extends State<_SortCollection> {
     final SharedPreferences preferences = await SharedPreferences.getInstance();
     preferences.setString('OrderCategory', sort);
     amiiboProvider.orderCategory = sort;
-    await amiiboProvider.refreshPagination();
   }
 
   void _sortOrder(String sort) async{
@@ -370,7 +370,6 @@ class _SortCollectionState extends State<_SortCollection> {
     final SharedPreferences preferences = await SharedPreferences.getInstance();
     preferences.setString('SortBy', sort);
     amiiboProvider.sort = sort;
-    await amiiboProvider.refreshPagination();
   }
 
   Future<void> _bottomSheet() async {
@@ -654,8 +653,8 @@ class AmiiboGrid extends StatefulWidget {
 
 class AmiiboGridState extends State<AmiiboGrid> {
   SelectProvider mSelected;
-  bool _multipleSelected;
   SingleAmiibo amiiboDB;
+  bool _multipleSelected;
   AmiiboDB amiibo;
 
   @override
@@ -670,9 +669,9 @@ class AmiiboGridState extends State<AmiiboGrid> {
 
   _onTap(){
     final AmiiboProvider amiiboProvider = Provider.of<AmiiboProvider>(context, listen: false);
-    amiiboProvider..shiftStat(amiibo.owned, amiibo.wishlist);
+    amiiboProvider.shiftStat(amiibo.owned, amiibo.wishlist);
     amiiboDB.shift();
-    amiiboProvider..updateAmiiboDB(amiibo: amiibo);
+    amiiboProvider.updateAmiiboDB(amiibo: amiibo);
   }
 
   _onLongPress(){

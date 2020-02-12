@@ -59,32 +59,28 @@ class _CardDetailAmiibo extends StatelessWidget{
                     flex: 7,
                   ),
                   Expanded(
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: <Widget>[
-                        Consumer<SingleAmiibo>(
-                            child: const Icon(Icons.radio_button_unchecked),
-                            builder: (ctx, amiiboDB, child){
-                              return IconButton(
-                                  icon: (amiibo.owned?.isEven ?? true) ? child : const Icon(iconOwned),
-                                  color: colorOwned,
-                                  iconSize: 30.0,
-                                  tooltip: "Owned",
-                                  splashColor: colorOwned[100],
-                                  onPressed: () {
-                                    final int newValue = (amiibo?.owned ?? 0) ^ 1;
-                                    amiiboProvider.updateOwned(newValue, amiibo.wishlist);
-                                    amiiboDB.owned = newValue;
-                                    amiiboProvider.updateAmiiboDB(amiibo: amiibo);
-                                  }
-                              );
-                            }
-                        ),
-                        Consumer<SingleAmiibo>(
-                          child: const Icon(Icons.check_box_outline_blank),
-                          builder: (ctx, amiiboDB, child){
-                            return IconButton(
-                              icon: (amiibo.wishlist?.isEven ?? true) ? child: const Icon(iconWished),
+                    child: Consumer<SingleAmiibo>(
+                      builder: (ctx, amiiboDB, child){
+                        return Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: <Widget>[
+                            IconButton(
+                              icon: (amiibo.owned?.isEven ?? true) ?
+                              const Icon(Icons.radio_button_unchecked) : const Icon(iconOwned),
+                              color: colorOwned,
+                              iconSize: 30.0,
+                              tooltip: "Owned",
+                              splashColor: colorOwned[100],
+                              onPressed: () {
+                                final int newValue = (amiibo?.owned ?? 0) ^ 1;
+                                amiiboProvider.updateOwned(newValue, amiibo.wishlist);
+                                amiiboDB.owned = newValue;
+                                amiiboProvider.updateAmiiboDB(amiibo: amiibo);
+                              }
+                            ),
+                            IconButton(
+                              icon: (amiibo.wishlist?.isEven ?? true) ?
+                              const Icon(Icons.check_box_outline_blank) : const Icon(iconWished),
                               color: colorWished,
                               iconSize: 30.0,
                               tooltip: "Wished",
@@ -95,10 +91,10 @@ class _CardDetailAmiibo extends StatelessWidget{
                                 amiiboDB.wishlist = newValue;
                                 amiiboProvider.updateAmiiboDB(amiibo: amiibo);
                               }
-                            );
-                          }
-                        ),
-                      ],
+                            )
+                          ],
+                        );
+                      }
                     ),
                     flex: 2,
                   )
