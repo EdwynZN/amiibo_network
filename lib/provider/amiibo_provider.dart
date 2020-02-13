@@ -1,8 +1,11 @@
+import 'dart:async';
+
 import 'package:amiibo_network/service/service.dart';
 import 'package:flutter/material.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:amiibo_network/model/amiibo_local_db.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:nfc_in_flutter/nfc_in_flutter.dart';
 
 class SingleAmiibo with ChangeNotifier{
   AmiiboDB amiibo;
@@ -47,6 +50,7 @@ class AmiiboProvider with ChangeNotifier{
   String _sort = 'ASC';
   Map<String,dynamic> _listOwned;
 
+  Stream<NDEFMessage> _NFCStream;
   final _amiiboList = BehaviorSubject<AmiiboLocalDB>();
   final _collectionList = BehaviorSubject<Map<String,dynamic>>();
   final _updateAmiiboDB = PublishSubject<AmiiboLocalDB>()
@@ -76,6 +80,37 @@ class AmiiboProvider with ChangeNotifier{
 
   Stream<AmiiboLocalDB> get amiiboList => _amiiboList.stream;
   Stream<Map<String,dynamic>> get collectionList => _collectionList.stream;
+  //Stream<String> get NFCPayload => ZipStream2();
+  Stream<String> nfcPayload;
+
+  AmiiboProvider(bool nfcSupported){
+    if(nfcSupported){
+      _NFCStream = NFC.readNDEF();
+
+      nfcPayload = amiiboList.zipWith(
+        _NFCStream,
+        (amiiboList, nfc) {
+          print(nfc.id);
+          return nfc.payload;
+        }
+      );
+      /*
+      nfcPayload = _NFCStream.zipWith(
+        amiiboList,
+        (nfc, amiiboList) {
+          print(nfc.id);
+          return nfc.payload;
+        }
+      );
+      * */
+      /*nfcPayload = ZipStream.zip2<NDEFMessage, AmiiboLocalDB, String>(
+        _NFCStream, amiiboList,
+        (nfc, amiiboList) => nfc.payload,
+      );*/
+    }
+  }
+
+  //NFC.readNDEF()
 
   Future<void> fetchAllAmiibosDB() async {
     final SharedPreferences preferences = await SharedPreferences.getInstance();
