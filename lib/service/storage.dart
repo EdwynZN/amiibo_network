@@ -31,7 +31,6 @@ Map<String, dynamic> checkPermission(PermissionStatus permission) {
 }
 
 Future<Map<String,dynamic>> readFile(String path) async{
-  print(path);
   final file = File(path);
   String data = file.readAsStringSync();
   final Map<String, dynamic> jResult = jsonDecode(data);

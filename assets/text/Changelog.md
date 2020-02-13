@@ -1,3 +1,9 @@
+## Version 1.2.1
+- New color gradients for light themes
+- Sort ascending or descending
+- New filter all cards or all figures category
+- Minor bugs fixed
+
 ## Version 1.2.0
 - Redesign of Light and Dark Themes
 - New color gradients for light themes
