@@ -67,7 +67,12 @@ Future<void> saveCollection(StatProvider statProvider, ThemeData theme, Set<Stri
         ),
         TextSpan(
             style: TextStyle(color: Colors.black, fontSize: 30, height: 1.15,
-                fontWeight: FontWeight.w300, background: ownedCardPaint),
+              fontWeight: FontWeight.w300, background: ownedCardPaint,
+              fontFeatures: [
+                if(!statProvider.prefStat) ui.FontFeature.enable('frac'),
+                if(statProvider.prefStat) ui.FontFeature.tabularFigures()
+              ],
+            ),
             text: ' ${statProvider.statLabel(_listStat['Owned'].toDouble(), _listStat['Total'].toDouble())} '
         ),
         TextSpan(
@@ -79,9 +84,14 @@ Future<void> saveCollection(StatProvider statProvider, ThemeData theme, Set<Stri
             text: ' '
         ),
         TextSpan(
-            style: TextStyle(color: Colors.black, fontSize: 30, height: 1.15,
-                fontWeight: FontWeight.w300, background: wishedCardPaint),
-            text: ' ${statProvider.statLabel(_listStat['Wished'].toDouble(), _listStat['Total'].toDouble())} '
+          style: TextStyle(color: Colors.black, fontSize: 30, height: 1.15,
+            fontWeight: FontWeight.w300, background: wishedCardPaint,
+            fontFeatures: [
+              if(!statProvider.prefStat) ui.FontFeature.enable('frac'),
+              if(statProvider.prefStat) ui.FontFeature.tabularFigures()
+            ],
+          ),
+          text: ' ${statProvider.statLabel(_listStat['Wished'].toDouble(), _listStat['Total'].toDouble())} '
         ),
         TextSpan(
             style: TextStyle(color: textColor, fontSize: 35),

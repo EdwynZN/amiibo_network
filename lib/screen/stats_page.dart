@@ -4,6 +4,7 @@ import 'package:amiibo_network/service/service.dart';
 import 'package:amiibo_network/widget/radial_progression.dart';
 import 'package:amiibo_network/provider/stat_provider.dart';
 import 'package:provider/provider.dart';
+import 'dart:ui' as ui show FontFeature;
 
 class StatsPage extends StatefulWidget{
   static final _service = Service();
@@ -211,45 +212,85 @@ class SingleStat extends StatelessWidget{
                 overflow: TextOverflow.fade, style: Theme.of(context).textTheme.display1,),
             ),
             const Divider(),
-            FittedBox(
-              child: FlatButton.icon(
-                onPressed: null,
-                label: Consumer<StatProvider>(
-                    builder: (ctx, stat, _){
-                      final String ownedStat = stat.statLabel(
-                          owned.toDouble(),
-                          total.toDouble()
-                      );
-                      return Text('$ownedStat Owned', softWrap: false,
-                        overflow: TextOverflow.fade, style: Theme.of(context).textTheme.subhead,
-                      );
-                    }
-                ),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
+              child: Radial(
                 icon: AnimatedRadial(
                   key: Key('Owned'),
                   percentage: owned.toDouble() / total.toDouble(),
                   child: Icon(iconOwnedDark, color: Colors.green[800]),
                 ),
+                label: Flexible(
+                  child: FittedBox(
+                    fit: BoxFit.scaleDown,
+                    child: Consumer<StatProvider>(
+                        builder: (ctx, stat, _){
+                          final String ownedStat = stat.statLabel(
+                              owned.toDouble(),
+                              total.toDouble()
+                          );
+                          return RichText(
+                            text: TextSpan(
+                                text: ownedStat,
+                                style: Theme.of(context).textTheme.subhead.copyWith(
+                                  fontSize: stat.prefStat ? null : 22,
+                                  fontFeatures: [
+                                    if(!stat.prefStat) ui.FontFeature.enable('frac'),
+                                    if(stat.prefStat) ui.FontFeature.tabularFigures()
+                                  ],
+                                ),
+                                children: [
+                                  TextSpan(
+                                      style: Theme.of(context).textTheme.subhead,
+                                      text: ' Owned'
+                                  )
+                                ]
+                            ),
+                          );
+                        }
+                    ),
+                  ),
+                ),
               ),
             ),
-            FittedBox(
-              child: FlatButton.icon(
-                onPressed: null,
-                label: Consumer<StatProvider>(
-                    builder: (ctx, stat, _){
-                      final String wishedStat = stat.statLabel(
-                          wished.toDouble(),
-                          total.toDouble()
-                      );
-                      return Text('$wishedStat Wished', softWrap: false,
-                        overflow: TextOverflow.fade, style: Theme.of(context).textTheme.subhead,
-                      );
-                    }
-                ),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
+              child: Radial(
                 icon: AnimatedRadial(
                   key: Key('Wished'),
                   percentage: wished.toDouble() / total.toDouble(),
                   child: Icon(Icons.whatshot, color: Colors.amber[800]),
+                ),
+                label: Flexible(
+                  child: FittedBox(
+                    fit: BoxFit.scaleDown,
+                    child: Consumer<StatProvider>(
+                      builder: (ctx, stat, _){
+                        final String wishedStat = stat.statLabel(
+                            wished.toDouble(),
+                            total.toDouble()
+                        );
+                        return RichText(
+                          text: TextSpan(
+                            text: wishedStat,
+                            style: Theme.of(context).textTheme.subhead.copyWith(
+                              fontSize: stat.prefStat ? null : 22,
+                              fontFeatures: [
+                                if(!stat.prefStat) ui.FontFeature.enable('frac'),
+                                if(stat.prefStat) ui.FontFeature.tabularFigures()
+                              ],
+                            ),
+                            children: [
+                              TextSpan(
+                                  style: Theme.of(context).textTheme.subhead,
+                                  text: ' Wished'
+                              )
+                            ]
+                          ),
+                        );
+                      }
+                    )
+                  ),
                 ),
               ),
             ),

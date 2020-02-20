@@ -15,6 +15,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:amiibo_network/provider/stat_provider.dart';
 import 'package:amiibo_network/provider/theme_provider.dart';
 import 'dart:math' as math;
+import 'dart:ui' as ui show FontFeature;
 
 class Home extends StatelessWidget{
 
@@ -264,7 +265,7 @@ class _SliverPersistentHeader extends SliverPersistentHeaderDelegate {
       decoration: BoxDecoration(
         gradient: LinearGradient(
           begin: Alignment.topCenter, end: Alignment.bottomCenter,
-          stops: [0.35, 0.65, 0.9],//[0.5, 0.7, 1],
+          stops: [0.35, 0.65, 0.9],
           colors: [
             _color,
             _color.withOpacity(0.75),
@@ -281,7 +282,6 @@ class _SliverPersistentHeader extends SliverPersistentHeaderDelegate {
             return const SizedBox();
           return Row(
             children: <Widget>[
-              const SizedBox(width: 4.0),
               Expanded(
                 child: Radial(
                   icon: AnimatedRadial(
@@ -289,25 +289,42 @@ class _SliverPersistentHeader extends SliverPersistentHeaderDelegate {
                     percentage: statList.data['Owned'].toDouble() / statList.data['Total'].toDouble(),
                     child: Icon(iconOwnedDark, color: Colors.green[800]),
                   ),
-                  label: Consumer<StatProvider>(
-                    builder: (ctx, stat, _){
-                      final String ownedStat = stat.statLabel(
-                          statList.data['Owned'].toDouble(),
-                          statList.data['Total'].toDouble()
-                      );
-                      return Flexible(child: FittedBox(
-                        child: Text('$ownedStat Owned', softWrap: false,
-                          overflow: TextOverflow.fade,
-                          style: Theme.of(context).textTheme.subhead,
-                        ),
-                      ));
-                    }
+                  label: Flexible(
+                    child: FittedBox(
+                      fit: BoxFit.scaleDown,
+                      child: Consumer<StatProvider>(
+                        builder: (ctx, stat, _){
+                          final String ownedStat = stat.statLabel(
+                              statList.data['Owned'].toDouble(),
+                              statList.data['Total'].toDouble()
+                          );
+                          return RichText(
+                            text: TextSpan(
+                                text: ownedStat,
+                                style: Theme.of(context).textTheme.subhead.copyWith(
+                                  fontSize: stat.prefStat ? null : 22,
+                                  fontFeatures: [
+                                    if(!stat.prefStat) ui.FontFeature.enable('frac'),
+                                    if(stat.prefStat) ui.FontFeature.tabularFigures()
+                                  ],
+                                ),
+                                children: [
+                                  TextSpan(
+                                      style: Theme.of(context).textTheme.subhead,
+                                      text: ' Owned'
+                                  )
+                                ]
+                            ),
+                          );
+                        }
+                      ),
+                    )
                   ),
                 ),
               ),
               const SizedBox(width: 8.0),
               Expanded(
-                child:Radial(
+                child: Radial(
                   icon: AnimatedRadial(
                     key: Key('Wished'),
                     percentage:
@@ -324,9 +341,23 @@ class _SliverPersistentHeader extends SliverPersistentHeaderDelegate {
                               statList.data['Wished'].toDouble(),
                               statList.data['Total'].toDouble()
                           );
-                          return Text('$wishedStat Wished', softWrap: false,
-                            overflow: TextOverflow.fade,
-                            style: Theme.of(context).textTheme.subhead,
+                          return RichText(
+                            text: TextSpan(
+                                text: wishedStat,
+                                style: Theme.of(context).textTheme.subhead.copyWith(
+                                  fontSize: stat.prefStat ? null : 22,
+                                  fontFeatures: [
+                                    if(!stat.prefStat) ui.FontFeature.enable('frac'),
+                                    if(stat.prefStat) ui.FontFeature.tabularFigures()
+                                  ],
+                                ),
+                                children: [
+                                  TextSpan(
+                                      style: Theme.of(context).textTheme.subhead,
+                                      text: ' Wished'
+                                  )
+                                ]
+                            ),
                           );
                         }
                       ),
