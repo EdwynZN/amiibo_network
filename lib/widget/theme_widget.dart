@@ -129,11 +129,11 @@ class ThemeButton extends StatelessWidget{
   Widget _selectWidget(String value){
     switch(value){
       case 'Light':
-        return const Icon(Icons.wb_sunny, color: Colors.orangeAccent,);
+        return const Icon(Icons.wb_sunny, key: Key('Light'), color: Colors.orangeAccent,);
       case 'Dark':
-        return const Icon(Icons.brightness_3, color: Colors.amber);
+        return const Icon(Icons.brightness_3, key: Key('Dark'), color: Colors.amber);
       default:
-        return const Icon(Icons.brightness_auto);
+        return const Icon(Icons.brightness_auto, key: Key('Auto'),);
     }
   }
 
@@ -160,7 +160,22 @@ class ThemeButton extends StatelessWidget{
           splashFactory: InkRipple.splashFactory,
           highlightColor: Colors.transparent,
           splashColor: Theme.of(context).primaryColorDark,
-          child: _selectWidget(strTheme),
+          child: AnimatedSwitcher(
+            duration: const Duration(milliseconds: 800),
+            reverseDuration: const Duration(milliseconds: 400),
+            switchInCurve: Curves.easeInOutBack,
+            switchOutCurve: Curves.easeOutBack,
+            transitionBuilder: (child, animation){
+              return RotationTransition(
+                turns: animation,
+                child: FadeTransition(
+                  opacity: animation,
+                  child: child,
+                )
+              );
+            },
+            child: _selectWidget(strTheme),
+          ),
           onLongPress: openDialog ? () => dialog(context) : null,
           onTap: () => changeTheme(context, strTheme),
         );

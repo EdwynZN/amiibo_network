@@ -170,30 +170,30 @@ class HomePageState extends State<HomePage>
                     ),
                     onTap: _multipleSelection ? null : _search,
                     trailing: AnimatedSwitcher(
-                        duration: const Duration(milliseconds: 250),
-                        layoutBuilder: _defaultLayoutBuilder,
-                        child: _multipleSelection ? Row(
-                          mainAxisSize: MainAxisSize.min,
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          children: <Widget>[
-                            IconButton(
-                              icon: const Icon(Icons.remove),
-                              onPressed: _updateSelection,
-                              tooltip: 'Remove',
-                            ),
-                            IconButton(
-                              icon: const Icon(iconOwned),
-                              onPressed: () => _updateSelection(owned: 1),
-                              tooltip: 'Own',
-                            ),
-                            IconButton(
-                              icon: const Icon(iconWished),
-                              onPressed: () => _updateSelection(wished: 1),
-                              tooltip: 'Wish',
-                            ),
-                          ],
-                        ) : _SortCollection(),
-                      )
+                      duration: const Duration(milliseconds: 250),
+                      layoutBuilder: _defaultLayoutBuilder,
+                      child: _multipleSelection ? Row(
+                        mainAxisSize: MainAxisSize.min,
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: <Widget>[
+                          IconButton(
+                            icon: const Icon(Icons.remove),
+                            onPressed: _updateSelection,
+                            tooltip: 'Remove',
+                          ),
+                          IconButton(
+                            icon: const Icon(iconOwned),
+                            onPressed: () => _updateSelection(owned: 1),
+                            tooltip: 'Own',
+                          ),
+                          IconButton(
+                            icon: const Icon(iconWished),
+                            onPressed: () => _updateSelection(wished: 1),
+                            tooltip: 'Wish',
+                          ),
+                        ],
+                      ) : _SortCollection(),
+                    )
                   ),
                   child,
                   SliverPadding(
