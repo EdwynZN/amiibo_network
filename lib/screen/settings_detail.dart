@@ -25,7 +25,6 @@ class SettingsDetail extends StatelessWidget {
         body: FutureBuilder(
           future: _localFile,
           builder: (BuildContext context, AsyncSnapshot<String> snapshot){
-
             if(snapshot.hasData)
               return Markdown(
                 data: snapshot.data,

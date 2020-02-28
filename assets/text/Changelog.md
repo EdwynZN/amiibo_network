@@ -1,3 +1,8 @@
+## Version 1.2.2
+- Change theme animation button
+- Changed stat fonts
+- Fixed minor bugs
+
 ## Version 1.2.1
 - New color gradients for light themes
 - Sort ascending or descending

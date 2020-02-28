@@ -48,8 +48,5 @@ Future<String> writeFile(AmiiboLocalDB amiibos) async{
   return file.writeAsString(jsonEncode(amiibos)).then((file) => '$name has been $fileSaved');
 }
 
-void writeCollectionFile(Map<String, dynamic> map) async{
-  final File file = File(map['path']);
-  file.writeAsBytes(map['buffer']);
-  //return file.writeAsString(jsonEncode(amiibos)).then((file) => '$name has been $fileSaved');
-}
+void writeCollectionFile(Map<String, dynamic> map) =>
+    File(map['path'])..writeAsBytesSync(map['buffer'], flush: true);

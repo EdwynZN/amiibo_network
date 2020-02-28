@@ -17,8 +17,6 @@ import 'package:amiibo_network/provider/stat_provider.dart';
 import 'package:amiibo_network/widget/theme_widget.dart';
 
 Future<void> saveCollection(StatProvider statProvider, ThemeData theme, Set<String> select) async{
-  //final StatProvider statProvider = Provider.of<StatProvider>(context, listen: false);
-  //final ThemeData theme = Theme.of(context).copyWith();
   final _service = Service();
   AmiiboLocalDB amiibos = await _service.fetchByCategory('type', select.toList(),
     'CASE WHEN type = "Figure" THEN 1 '
@@ -37,7 +35,7 @@ Future<void> saveCollection(StatProvider statProvider, ThemeData theme, Set<Stri
   final Paint ownedCardPaint = Paint()..color = colorOwned[100];
   final Paint wishedCardPaint = Paint()..color = colorWished[100];
   final Color textColor = theme.textTheme.title.color;
-  final Paint unselectedCardPaint = Paint()..color = Colors.grey.withOpacity(0.5);
+  //final Paint unselectedCardPaint = Paint()..color = Colors.grey.withOpacity(0.5);
   final double margin = 20.0;
   final double maxSize = 60.0;
   final double padding = 10.0;
@@ -167,7 +165,7 @@ Future<void> saveCollection(StatProvider statProvider, ThemeData theme, Set<Stri
         ),
         paint
     );
-
+    print(_image.hashCode);
     _image.dispose();
 
     xOffset += (1 + space) * (maxSize + 2*padding);
@@ -186,7 +184,7 @@ Future<void> saveCollection(StatProvider statProvider, ThemeData theme, Set<Stri
     List<int> buffer = byteData.buffer.asUint8List();
     file['path'] = path;
     file['buffer'] = buffer;
-    compute(writeCollectionFile, file);
+    await compute(writeCollectionFile, file);
   }catch(e){
     print(e);
   }
@@ -226,16 +224,18 @@ class SettingsPage extends StatelessWidget{
                           context: ctx,
                           builder: (ctx) => _SaveCollection()
                         );
-                        final bool permission = collection['permission'] ?? false;
-                        final String message = permission ?
-                        'Saving your file. This could take a while depending on your device' :
-                        collection['message'];
-                        Scaffold.of(ctx).showSnackBar(SnackBar(content: Text(message)));
-                        if(permission) {
-                          final StatProvider statProvider = Provider.of<StatProvider>(context, listen: false);
-                          final ThemeData theme = Theme.of(context).copyWith();
-                          final Set<String> select = Set.of(collection['selected']);
-                          await saveCollection(statProvider, theme, select);
+                        if(collection != null){
+                          final bool permission = collection['permission'] ?? false;
+                          final String message = permission ?
+                          'Saving your file. This could take a while depending on your device' :
+                          collection['message'];
+                          Scaffold.of(ctx).showSnackBar(SnackBar(content: Text(message)));
+                          if(permission) {
+                            final StatProvider statProvider = Provider.of<StatProvider>(context, listen: false);
+                            final ThemeData theme = Theme.of(context).copyWith();
+                            final Set<String> select = Set.of(collection['selected']);
+                            await saveCollection(statProvider, theme, select);
+                          }
                         }
                       }
                     );
@@ -361,7 +361,6 @@ class _SaveCollectionState extends State<_SaveCollection> {
             onPressed: select.isEmpty ? null : () async {
               final Map<PermissionGroup, PermissionStatus> response =
               await PermissionHandler().requestPermissions([PermissionGroup.storage]);
-              PermissionHandler().requestPermissions([PermissionGroup.storage]);
               final Map<String,dynamic> permission = checkPermission(
                 response[PermissionGroup.storage]
               );
