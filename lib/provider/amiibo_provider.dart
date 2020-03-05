@@ -4,6 +4,16 @@ import 'package:rxdart/rxdart.dart';
 import 'package:amiibo_network/model/amiibo_local_db.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+enum AmiiboCategory{
+  All,
+  Owned,
+  Wishlist,
+  Figures,
+  Cards,
+  Name,
+  AmiiboSeries
+}
+
 class SingleAmiibo with ChangeNotifier{
   AmiiboDB amiibo;
 
@@ -46,6 +56,7 @@ class AmiiboProvider with ChangeNotifier{
   String _orderCategory;
   String _sort = 'ASC';
   Map<String,dynamic> _listOwned;
+  //AmiiboCategory _category = AmiiboCategory.All;
 
   final _amiiboList = BehaviorSubject<AmiiboLocalDB>();
   final _collectionList = BehaviorSubject<Map<String,dynamic>>();
@@ -68,6 +79,7 @@ class AmiiboProvider with ChangeNotifier{
     refreshPagination();
   }
   String get strFilter => _strFilter;
+  //AmiiboCategory get category => _category;
 
   @override
   void notifyListeners() {
@@ -136,6 +148,27 @@ class AmiiboProvider with ChangeNotifier{
     String column;
     List<String> args;
     final String orderBy = _orderBy;
+    /*switch(_category){
+      case AmiiboCategory.All:
+        break;
+      case AmiiboCategory.Owned:
+        column = 'owned'; args = ['%1%'];
+        break;
+      case AmiiboCategory.Wishlist:
+        column = 'wishlist'; args = ['%1%'];
+        break;
+      case AmiiboCategory.Figures:
+        column = 'type'; args = ['Figure', 'Yarn'];
+        break;
+      case AmiiboCategory.Cards:
+        column = 'type'; args = ['Card'];
+        break;
+      case AmiiboCategory.Name:
+      case AmiiboCategory.AmiiboSeries:
+        column = _searchFilter;
+        args = _searchFilter == 'name' ? ['%$_strFilter%'] : ['%$_strFilter'];
+        break;
+    }*/
     switch(_strFilter){
       case 'All':
         break;

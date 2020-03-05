@@ -67,7 +67,7 @@ class Service{
 
   Future<AmiiboLocalDB> fetchByCategory([String column, List<String> args,
     String orderBy]) {
-    if(column == null || args == null || args.isEmpty) column = args = null;
+    if(column == null || (args?.isEmpty ?? true)) column = args = null;
     return dao.fetchByColumn(column, args, orderBy);
   }
 

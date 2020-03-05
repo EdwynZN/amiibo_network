@@ -3,7 +3,7 @@ import 'dart:math';
 
 class RadialProgression extends CustomPainter{
   final Paint line;
-   Paint progressLine;
+  final Paint progressLine;
   final double percent;
 
   RadialProgression(this.percent):

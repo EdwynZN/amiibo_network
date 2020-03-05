@@ -225,16 +225,16 @@ class HomePageState extends State<HomePage>
                           ),
                           delegate: SliverChildBuilderDelegate((BuildContext _, int index) {
                             return ChangeNotifierProxyProvider<AmiiboLocalDB,SingleAmiibo>(
-                                create: (_) => SingleAmiibo(),
-                                update: (_, amiiboList, amiibo) => amiibo
-                                  ..update = amiiboList?.amiibo[index],
-                                child: FadeSwitchAnimation(
-                                  key: ValueKey<int>(index),
-                                  child: AmiiboGrid(
-                                    index: index,
-                                    key: ValueKey<int>(data?.amiibo[index].key),
-                                  ),
-                                )
+                              create: (_) => SingleAmiibo(),
+                              update: (_, amiiboList, amiibo) => amiibo
+                                ..update = amiiboList?.amiibo[index],
+                              child: FadeSwitchAnimation(
+                                key: ValueKey<int>(index),
+                                child: AmiiboGrid(
+                                  index: index,
+                                  key: ValueKey<int>(data?.amiibo[index].key),
+                                ),
+                              )
                             );
                           },
                           //addRepaintBoundaries: false, addAutomaticKeepAlives: false,

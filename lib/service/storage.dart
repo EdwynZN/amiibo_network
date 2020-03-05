@@ -39,7 +39,7 @@ Future<Map<String,dynamic>> readFile(String path) async{
 }
 
 Future<String> writeFile(AmiiboLocalDB amiibos) async{
-  String name = 'MyAmiiboList'; String folder = '/Download';
+  final String name = 'MyAmiiboList', folder = '/Download';
   Directory dir = await Directory('/storage/emulated/0$folder').create();
   String path = '${dir.path}/MyAmiiboList_${DateTime.now().toString().substring(0,10)}.json';
   String fileSaved = 'saved';
