@@ -16,9 +16,9 @@ class CollectionDrawer extends StatefulWidget{
 }
 
 class _CollectionDrawerState extends State<CollectionDrawer> {
-  static final Service _service = Service();
   static bool _figureExpand = false;
   static bool _cardExpand = false;
+  final Service _service = Service();
 
   Future<List<String>> get _listOfFigures => _service.fetchDistinct();
   Future<List<String>> get _listOfCards => _service.fetchDistinct(false);

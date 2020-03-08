@@ -11,15 +11,15 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:amiibo_network/service/storage.dart';
 
 class StatsPage extends StatefulWidget{
-  static final _service = Service();
 
   @override
   _StatsPageState createState() => _StatsPageState();
 }
 
 class _StatsPageState extends State<StatsPage> {
+  final _service = Service();
   ScrollController _controller;
-  Set<String> select = {};
+  Set<String> select = <String>{};
 
   @override
   void initState(){
@@ -27,11 +27,16 @@ class _StatsPageState extends State<StatsPage> {
     _controller = ScrollController();
   }
 
+  void _updateSet(Set<String> value){
+    if(_controller.offset != _controller.initialScrollOffset) _controller..jumpTo(0);
+    setState(() => select..clear()..addAll(value));
+  }
+
   Future<List<Map<String, dynamic>>> get _retrieveStats
-    => StatsPage._service.fetchSum(group: true, column: 'type', args: select.toList());
+    => _service.fetchSum(group: true, column: 'type', args: select.toList());
 
   Future<List<Map<String, dynamic>>> get _generalStats
-    => StatsPage._service.fetchSum(column: 'type', args: select.toList());
+    => _service.fetchSum(column: 'type', args: select.toList());
 
   @override
   void dispose() {
@@ -44,60 +49,64 @@ class _StatsPageState extends State<StatsPage> {
     return SafeArea(
       child: Scaffold(
         body: Scrollbar(
+          controller: _controller,
           child: CustomScrollView(
             controller: _controller,
+            cacheExtent: 150,
             slivers: <Widget>[
               FutureBuilder(
-                  future: _generalStats,
-                  builder: (context, AsyncSnapshot<List<Map<String, dynamic>>> snapshot) {
+                future: _generalStats,
+                builder: (context, AsyncSnapshot<List<Map<String, dynamic>>> snapshot) {
+                  return SliverList(
+                    delegate: SliverChildBuilderDelegate((BuildContext context, int index) =>
+                        SingleStat(
+                          key: Key('Amiibo Network'),
+                          title: 'Amiibo Network',
+                          owned: snapshot.data[index]['Owned'],
+                          total: snapshot.data[index]['Total'],
+                          wished: snapshot.data[index]['Wished'],
+                        ),
+                      childCount: snapshot.hasData ? snapshot.data.length : 0,
+                    ),
+                  );
+                }
+              ),
+              FutureBuilder(
+                future: _retrieveStats,
+                builder: (context, AsyncSnapshot<List<Map<String, dynamic>>> snapshot) {
+                  if(MediaQuery.of(context).size.width <= 600)
                     return SliverList(
                       delegate: SliverChildBuilderDelegate((BuildContext context, int index) =>
                           SingleStat(
-                            key: Key('Amiibo Network'),
-                            title: 'Amiibo Network',
+                            key: ValueKey(index),
+                            title: snapshot.data[index]['amiiboSeries'],
                             owned: snapshot.data[index]['Owned'],
                             total: snapshot.data[index]['Total'],
                             wished: snapshot.data[index]['Wished'],
                           ),
+                        semanticIndexOffset: 1,
                         childCount: snapshot.hasData ? snapshot.data.length : 0,
                       ),
                     );
-                  }
-              ),
-              FutureBuilder(
-                  future: _retrieveStats,
-                  builder: (context, AsyncSnapshot<List<Map<String, dynamic>>> snapshot) {
-                    if(MediaQuery.of(context).size.width <= 600)
-                      return SliverList(
-                        delegate: SliverChildBuilderDelegate((BuildContext context, int index) =>
-                            SingleStat(
-                              key: ValueKey(index),
-                              title: snapshot.data[index]['amiiboSeries'],
-                              owned: snapshot.data[index]['Owned'],
-                              total: snapshot.data[index]['Total'],
-                              wished: snapshot.data[index]['Wished'],
-                            ),
-                          childCount: snapshot.hasData ? snapshot.data.length : 0,
+                  return SliverGrid(
+                    gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
+                      maxCrossAxisExtent: 230,
+                      childAspectRatio: 1.22,
+                      mainAxisSpacing: 8.0,
+                    ),
+                    delegate: SliverChildBuilderDelegate((BuildContext context, int index) =>
+                        SingleStat(
+                          key: ValueKey(index),
+                          title: snapshot.data[index]['amiiboSeries'],
+                          owned: snapshot.data[index]['Owned'],
+                          total: snapshot.data[index]['Total'],
+                          wished: snapshot.data[index]['Wished'],
                         ),
-                      );
-                    return SliverGrid(
-                        gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
-                          maxCrossAxisExtent: 230,
-                          childAspectRatio: 1.22,
-                          mainAxisSpacing: 8.0,
-                        ),
-                        delegate: SliverChildBuilderDelegate((BuildContext context, int index) =>
-                            SingleStat(
-                              key: ValueKey(index),
-                              title: snapshot.data[index]['amiiboSeries'],
-                              owned: snapshot.data[index]['Owned'],
-                              total: snapshot.data[index]['Total'],
-                              wished: snapshot.data[index]['Wished'],
-                            ),
-                          childCount: snapshot.hasData ? snapshot.data.length : 0,
-                        )
-                    );
-                  }
+                      semanticIndexOffset: 1,
+                      childCount: snapshot.hasData ? snapshot.data.length : 0,
+                    )
+                  );
+                }
               ),
               const SliverToBoxAdapter(
                 child: const SizedBox(height: 80,),
@@ -126,11 +135,7 @@ class _StatsPageState extends State<StatsPage> {
                     textColor: select.isEmpty ?
                     Theme.of(context).textTheme.title.color : Theme.of(context).appBarTheme.textTheme.title.color,
                     color: select.isEmpty ? Theme.of(context).indicatorColor : null,
-                    onPressed: () => select.isEmpty ? null : setState(() {
-                      select.clear();
-                      if(_controller.offset != _controller.initialScrollOffset)
-                        _controller.jumpTo(0);
-                    }),
+                    onPressed: () => select.isEmpty ? null : _updateSet(Set<String>()),
                     child: Text('All'),
                   ),
                 ),
@@ -158,12 +163,7 @@ class _StatsPageState extends State<StatsPage> {
                     Theme.of(context).textTheme.title.color : Theme.of(context).appBarTheme.textTheme.title.color,
                     color: select.contains('Figure') ?
                     Theme.of(context).indicatorColor : null,
-                    onPressed: () => select.contains('Figure') ? null : setState(() {
-                      select.clear();
-                      select = {'Figure', 'Yarn'};
-                      if(_controller.offset != _controller.initialScrollOffset)
-                        _controller.jumpTo(0);
-                    }),
+                    onPressed: () => select.contains('Figure') ? null : _updateSet(<String>{'Figure', 'Yarn'}),
                     child: Text('Figures'),
                   ),
                 ),
@@ -179,12 +179,7 @@ class _StatsPageState extends State<StatsPage> {
                     textColor: select.contains('Card') ?
                     Theme.of(context).textTheme.title.color : Theme.of(context).appBarTheme.textTheme.title.color,
                     color: select.contains('Card') ? Theme.of(context).indicatorColor : null,
-                    onPressed: () => select.contains('Card') ? null : setState(() {
-                      select.clear();
-                      select = {'Card'};
-                      if(_controller.offset != _controller.initialScrollOffset)
-                        _controller.jumpTo(0);
-                    }),
+                    onPressed: () => select.contains('Card') ? null : _updateSet(<String>{'Card'}),
                     child: Text('Cards'),
                   ),
                 ),

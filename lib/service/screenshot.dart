@@ -5,7 +5,6 @@ import 'package:flutter/services.dart';
 import 'package:amiibo_network/service/storage.dart';
 import 'package:amiibo_network/provider/theme_provider.dart';
 import 'dart:ui' as ui;
-import 'dart:ui' show Paragraph;
 import 'dart:io';
 import 'package:amiibo_network/service/service.dart';
 import 'package:amiibo_network/provider/stat_provider.dart';
@@ -51,7 +50,7 @@ class Screenshot {
     final String path = '${dir.path}/My${
         select.containsAll(['Figure', 'Yarn', 'Card']) ? 'Amiibo' :
         select.containsAll(['Figure', 'Yarn']) ? 'Figure' : 'Card'
-    }Collection$time.png';
+    }Collection_$time.png';
     final double maxSize = 60.0;
     final double width = (amiibos.amiibo.length / 25.0).ceilToDouble().clamp(15.0, 30.0);
     final double maxX = (width * (1 + space) - space) * (maxSize + 2*padding) + 2*margin;
@@ -72,18 +71,18 @@ class Screenshot {
     for(AmiiboDB amiibo in amiibos.amiibo) {
       final String strImage = 'assets/collection/icon_${amiibo.key}.png';
       final Offset _offset = Offset(xOffset, yOffset);
-      final Path cardPath = Path()..addRRect(RRect.fromRectAndRadius(
+      final RRect cardPath = RRect.fromRectAndRadius(
           Rect.fromPoints(
               _offset,
               _offset.translate(maxSize + 2*padding, 1.5*maxSize + 2*padding)
           ),
           Radius.circular(8.0)
-      ));
+      );
       final ByteData imageAsset = await rootBundle.load(strImage);
 
       if((amiibo?.owned?.isOdd ?? false) || (amiibo?.wishlist?.isOdd ?? false)){
-        canvas.drawPath(cardPath,
-            amiibo?.owned?.isOdd ?? false ? ownedCardPaint : wishedCardPaint);
+        canvas.drawRRect(cardPath,
+          amiibo?.owned?.isOdd ?? false ? ownedCardPaint : wishedCardPaint);
       }
 
       ui.Image _image = await ui.instantiateImageCodec(
@@ -140,14 +139,16 @@ class Screenshot {
 
     if(_recording || (stats?.isEmpty ?? true) || (general?.isEmpty ?? true)) {
       return '';
-//      return;
     }
     _recording = true;
 
     final Map<String,dynamic> file = Map<String,dynamic>();
     final String time = DateTime.now().toString().substring(0,10);
     final Directory dir = await Directory('/storage/emulated/0/Download').create();
-    final String path = '${dir.path}/MyAmiiboStats$time.png';
+    final String path = '${dir.path}/My${
+        select.isEmpty ? 'Amiibo' :
+        select.containsAll(['Figure', 'Yarn']) ? 'Figure' : 'Card'
+    }Stats_$time.png';
     final double maxSize = 300.0;
     final double width = (stats.length / 5.0).ceilToDouble().clamp(5.0, 10.0);
     final double maxX = (width * (1 + space) - space) * (maxSize + 2*padding) + 2*margin;
@@ -163,10 +164,6 @@ class Screenshot {
     final Paint cardColor = Paint()..color = theme.cardTheme.color;
     final Color textColor = theme.textTheme.title.color;
     final Paint divider = Paint()..color = theme.dividerColor..strokeWidth = 2;
-    final double radius = 30;
-    final Paint line = Paint()..color = const Color(0xFF2B2922)
-      ..style = PaintingStyle.stroke
-      ..strokeWidth = 3;
     if(theme.scaffoldBackgroundColor == Colors.black)
       cardColor..color = const Color(0xFF2B2922)
         ..style = PaintingStyle.stroke
@@ -176,26 +173,23 @@ class Screenshot {
 
     await _paintBanner(canvas, Size(maxX, maxY), general.first);
 
-    var checkBuilder = ui.ParagraphBuilder(ui.ParagraphStyle(
-      fontFamily: iconOwnedDark.fontFamily, fontSize: 50
-    ))..pushStyle(ui.TextStyle(color: colorOwned))..addText(String.fromCharCode(iconOwnedDark.codePoint));
-    var ownedIcon = checkBuilder.build()..layout(const ui.ParagraphConstraints(width: 120));
-
     final iconWhatsHot = Icons.whatshot;
-    var wishedBuilder = ui.ParagraphBuilder(ui.ParagraphStyle(
-        fontFamily: iconWhatsHot.fontFamily, fontSize: 50
-    ))..pushStyle(ui.TextStyle(color: colorWished))..addText(String.fromCharCode(iconWhatsHot.codePoint));
-    var wishedIcon = wishedBuilder.build()..layout(const ui.ParagraphConstraints(width: 120));
+    final TextSpan ownedIcon = TextSpan(
+      style: TextStyle(color: colorOwned, fontFamily: iconOwnedDark.fontFamily, fontSize: 50,),
+      text: String.fromCharCode(iconOwnedDark.codePoint),
+    );
+    final TextSpan wishedIcon = TextSpan(
+      style: TextStyle(color: colorWished, fontFamily: iconWhatsHot.fontFamily, fontSize: 50,),
+      text: String.fromCharCode(iconWhatsHot.codePoint),
+    );
 
     for(Map<String,dynamic> singleStat in stats) {
       final Offset _offset = Offset(xOffset, yOffset);
-      final Path cardPath = Path()..addRRect(RRect.fromRectAndRadius(
-        Rect.fromPoints(
-            _offset,
-            _offset.translate(maxSize + 2*padding, 0.8*maxSize + 2*padding)
-        ),
+      final RRect cardPath = RRect.fromRectAndRadius(
+        Rect.fromPoints(_offset,
+          _offset.translate(maxSize + 2*padding, 0.8*maxSize + 2*padding)),
         Radius.circular(8.0)
-      ));
+      );
       final double ownedPercent = singleStat['Owned'].toDouble() / singleStat['Total'].toDouble();
       final double wishedPercent = singleStat['Wished'].toDouble() / singleStat['Total'].toDouble();
       final String ownedStat = statProvider.statLabel(singleStat['Owned'].toDouble(),
@@ -204,7 +198,7 @@ class Screenshot {
       final String wishedStat = statProvider.statLabel(singleStat['Wished'].toDouble(),
         singleStat['Total'].toDouble()
       );
-      canvas.drawPath(cardPath, cardColor);
+      canvas.drawRRect(cardPath, cardColor);
 
       TextSpan title = TextSpan(
         style: TextStyle(color: textColor, fontSize: 25),
@@ -214,8 +208,12 @@ class Screenshot {
         textAlign: TextAlign.center, maxLines: 1)..layout(minWidth: maxSize, maxWidth: maxSize)
         ..paint(canvas, Offset(xOffset + padding, yOffset + padding));
 
+      canvas..drawLine(_offset.translate(padding, 40 + padding),
+          _offset.translate(maxSize + padding, 40 + padding), divider);
+
       TextSpan owned = TextSpan(
-        style: TextStyle(color: textColor, fontSize: 25,
+        style: TextStyle(color: textColor, fontSize: statProvider.prefStat ? 30 : 35,
+          height: statProvider.prefStat ? null : 1,
           fontFeatures: [
             if(!statProvider.prefStat) ui.FontFeature.enable('frac'),
             if(statProvider.prefStat) ui.FontFeature.tabularFigures()
@@ -224,36 +222,35 @@ class Screenshot {
         text: ownedStat,
           children: [
             TextSpan(
-              style: TextStyle(color: textColor, fontSize: 25,),
+              style: TextStyle(color: textColor, fontSize: 30,),
               text: ' Owned'
             )
           ]
       );
       TextPainter(text: owned, textDirection: TextDirection.ltr, maxLines: 1)
         ..layout(minWidth: maxSize - 2* padding - 75, maxWidth: maxSize - 2* padding - 75)
-        ..paint(canvas, _offset.translate(padding + 75, 65 + padding + 25));
+        ..paint(canvas, _offset.translate(padding + 75, 62.5 + padding + 25));
 
       TextSpan wished = TextSpan(
-        style: TextStyle(color: textColor, fontSize: 25,
-          fontFeatures: [
-            if(!statProvider.prefStat) ui.FontFeature.enable('frac'),
-            if(statProvider.prefStat) ui.FontFeature.tabularFigures()
-          ],
-        ),
-        text: wishedStat,
+          style: TextStyle(color: textColor, fontSize: statProvider.prefStat ? 30 : 35,
+            height: statProvider.prefStat ? null : 1,
+            fontFeatures: [
+              if(!statProvider.prefStat) ui.FontFeature.enable('frac'),
+              if(statProvider.prefStat) ui.FontFeature.tabularFigures()
+            ],
+          ),
+          text: wishedStat,
         children: [
           TextSpan(
-              style: TextStyle(color: textColor, fontSize: 25,),
+              style: TextStyle(color: textColor, fontSize: 30,),
               text: ' Wished'
           )
         ]
       );
       TextPainter(text: wished, textDirection: TextDirection.ltr, maxLines: 1)
         ..layout(minWidth: maxSize - 2* padding - 75, maxWidth: maxSize - 2* padding - 75)
-        ..paint(canvas, _offset.translate(padding + 75, 145 + padding + 25));
+        ..paint(canvas, _offset.translate(padding + 75, 142.5 + padding + 25));
 
-      canvas..drawLine(_offset.translate(padding, 40 + padding),
-          _offset.translate(maxSize + padding, 40 + padding), divider);
       _paintSquareStat(canvas, _offset.translate(padding, 50 + padding + 25),
           _offset.translate(maxSize + padding, 110 + padding + 25), ownedPercent, ownedIcon);
       _paintSquareStat(canvas, _offset.translate(padding, 130 + padding + 25),
@@ -285,7 +282,7 @@ class Screenshot {
     return message;
   }
 
-  void _paintSquareStat(Canvas canvas, Offset a, Offset b, double percent, Paragraph paragraph){
+  void _paintSquareStat(Canvas canvas, Offset a, Offset b, double percent, TextSpan icon){
     final Paint progressLine = Paint()
       ..color =
       percent == 0 ? const Color(0xFF2B2922) :
@@ -305,7 +302,9 @@ class Screenshot {
     canvas..drawRRect(rect, progressLine);
 
     if(percent == 1)
-      canvas..drawParagraph(paragraph, a.translate(5 , 5));
+      TextPainter(text: icon, textDirection: TextDirection.ltr, maxLines: 1)
+      ..layout(minWidth: 50, maxWidth: 50)
+      ..paint(canvas, a.translate(5 , 5));
   }
 
   Future<void> _paintBanner(Canvas canvas, Size size, Map<String, dynamic> stat) async{
@@ -326,7 +325,7 @@ class Screenshot {
               text: '\u24C7 '
           ),
           TextSpan(
-              style: TextStyle(color: Colors.black, fontSize: 30, height: 1.15,
+              style: TextStyle(color: Colors.black, fontSize: statProvider.prefStat ? 30 : 35,
                 fontWeight: FontWeight.w300, background: ownedCardPaint,
                 fontFeatures: [
                   if(!statProvider.prefStat) ui.FontFeature.enable('frac'),
@@ -340,11 +339,11 @@ class Screenshot {
               text: ' Owned'
           ),
           TextSpan(
-            style: TextStyle(color: Colors.black, fontSize: 35, wordSpacing: 60),
-            text: ' '
+              style: TextStyle(color: Colors.black, fontSize: 35, wordSpacing: 60),
+              text: ' '
           ),
           TextSpan(
-              style: TextStyle(color: Colors.black, fontSize: 30, height: 1.15,
+              style: TextStyle(color: Colors.black, fontSize: statProvider.prefStat ? 30 : 35,
                 fontWeight: FontWeight.w300, background: wishedCardPaint,
                 fontFeatures: [
                   if(!statProvider.prefStat) ui.FontFeature.enable('frac'),

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:amiibo_network/widget/switch_joycon.dart';
 import 'package:flutter/services.dart';
-import 'package:amiibo_network/service/service.dart';
+import 'package:amiibo_network/service/update_service.dart';
 
 class SplashScreen extends StatefulWidget {
   @override
@@ -10,11 +10,11 @@ class SplashScreen extends StatefulWidget {
 
 class SplashScreenState extends State<SplashScreen>
   with SingleTickerProviderStateMixin {
-  static final _service = Service();
   AnimationController _animationController;
 
   Future<bool> get updateDB async {
-    bool result = await _service.createDB();
+    final UpdateService updateService = UpdateService();
+    bool result = await updateService.createDB();
     await _animationController.forward().whenComplete(
       () => _animationController.value = 0);
     return result;
@@ -53,7 +53,6 @@ class SplashScreenState extends State<SplashScreen>
                 color: Colors.black,
                 border: Border.all(color: Colors.white, width: 0.1)
               ),
-              //color: Colors.black,
               padding: EdgeInsets.all(5),
               width: _size/3,
               height: _size/4,

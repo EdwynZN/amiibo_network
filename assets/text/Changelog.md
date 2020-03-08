@@ -1,6 +1,7 @@
 ## Version 1.2.2
 - Change theme animation button
 - Changed stat fonts
+- Save image of your stats
 - Fixed minor bugs
 
 ## Version 1.2.1

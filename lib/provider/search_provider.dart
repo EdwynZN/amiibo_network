@@ -2,7 +2,7 @@ import 'package:amiibo_network/service/service.dart';
 import 'package:rxdart/rxdart.dart';
 
 class SearchProvider{
-  static final _service = Service();
+  final _service = Service();
   final _searchFetcher = PublishSubject<String>();
 
   Stream<List<String>> get search => _searchFetcher.stream

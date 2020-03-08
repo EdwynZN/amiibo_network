@@ -6,9 +6,7 @@ import 'package:sqflite/sqflite.dart';
 class AmiiboSQLite implements Dao<AmiiboLocalDB, String, AmiiboDB>{
   static ConnectionFactory connectionFactory = ConnectionFactory();
 
-  Future<void> initDB() async {
-    await connectionFactory.database;
-  }
+  Future<void> initDB() async => await connectionFactory.database;
 
   Future<AmiiboLocalDB> fetchAll([String orderBy = 'na']) async{
     Database _db = await connectionFactory.database;
@@ -16,10 +14,6 @@ class AmiiboSQLite implements Dao<AmiiboLocalDB, String, AmiiboDB>{
       orderBy: orderBy);
     return entityFromList(maps);
   }
-  /*
-  'CASE WHEN type = "Figure" THEN 1 '
-        'WHEN type = "Yarn" THEN 2 ELSE 3 END, $orderBy DESC'
-  */
 
   Future<List<String>> fetchDistinct(String name, String column,
       String condition, List<String> whereArgs) async{
@@ -81,7 +75,7 @@ class AmiiboSQLite implements Dao<AmiiboLocalDB, String, AmiiboDB>{
   Future<void> insertAll(AmiiboLocalDB list, String name) async{
     Database _db = await connectionFactory.database;
     final batch = _db.batch();
-    for (var query in list.amiibo) {
+    for (AmiiboDB query in list.amiibo) {
       batch.execute('''INSERT OR REPLACE INTO amiibo
       VALUES(?,?,?,?,?,?,?,?,?,?,?,
       (SELECT wishlist FROM amiibo WHERE key = ?),

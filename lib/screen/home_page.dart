@@ -343,20 +343,20 @@ class _SliverPersistentHeader extends SliverPersistentHeaderDelegate {
                           );
                           return RichText(
                             text: TextSpan(
-                                text: wishedStat,
-                                style: Theme.of(context).textTheme.subhead.copyWith(
-                                  fontSize: stat.prefStat ? null : 22,
-                                  fontFeatures: [
-                                    if(!stat.prefStat) ui.FontFeature.enable('frac'),
-                                    if(stat.prefStat) ui.FontFeature.tabularFigures()
-                                  ],
-                                ),
-                                children: [
-                                  TextSpan(
-                                      style: Theme.of(context).textTheme.subhead,
-                                      text: ' Wished'
-                                  )
-                                ]
+                              text: wishedStat,
+                              style: Theme.of(context).textTheme.subhead.copyWith(
+                                fontSize: stat.prefStat ? null : 22,
+                                fontFeatures: [
+                                  if(!stat.prefStat) ui.FontFeature.enable('frac'),
+                                  if(stat.prefStat) ui.FontFeature.tabularFigures()
+                                ],
+                              ),
+                              children: [
+                                TextSpan(
+                                    style: Theme.of(context).textTheme.subhead,
+                                    text: ' Wished'
+                                )
+                              ]
                             ),
                           );
                         }

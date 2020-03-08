@@ -210,6 +210,7 @@ class _SaveCollectionState extends State<_SaveCollection> {
 class ResetCollection extends StatelessWidget{
 
   Future<void> _dialog(BuildContext context) async {
+    final AmiiboProvider amiiboProvider = Provider.of<AmiiboProvider>(context, listen: false);
     return showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -229,7 +230,7 @@ class ResetCollection extends StatelessWidget{
               child: Text('Sure'),
               onPressed: () async {
                 Navigator.of(context).maybePop();
-                await Provider.of<AmiiboProvider>(context, listen: false).resetCollection();
+                await amiiboProvider.resetCollection();
               },
             ),
           ],

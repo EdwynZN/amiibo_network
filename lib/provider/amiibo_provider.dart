@@ -14,6 +14,27 @@ enum AmiiboCategory{
   AmiiboSeries
 }
 
+extension StringParsing on AmiiboCategory{
+  String get name {
+    switch(this){
+      case AmiiboCategory.All:
+        return 'All';
+      case AmiiboCategory.Owned:
+        return 'Owned';
+      case AmiiboCategory.Wishlist:
+        return 'Wishlist';
+      case AmiiboCategory.Figures:
+        return 'Figures';
+      case AmiiboCategory.Cards:
+        return 'Cards';
+      case AmiiboCategory.Name:
+      case AmiiboCategory.AmiiboSeries:
+        return 'Name';
+      default: return null;
+    }
+  }
+}
+
 class SingleAmiibo with ChangeNotifier{
   AmiiboDB amiibo;
 
@@ -57,6 +78,7 @@ class AmiiboProvider with ChangeNotifier{
   String _sort = 'ASC';
   Map<String,dynamic> _listOwned;
   //AmiiboCategory _category = AmiiboCategory.All;
+  //String _search = 'amiiboSeries';
 
   final _amiiboList = BehaviorSubject<AmiiboLocalDB>();
   final _collectionList = BehaviorSubject<Map<String,dynamic>>();
@@ -79,7 +101,7 @@ class AmiiboProvider with ChangeNotifier{
     refreshPagination();
   }
   String get strFilter => _strFilter;
-  //AmiiboCategory get category => _category;
+  //String get category => _category.name ?? _search;
 
   @override
   void notifyListeners() {
@@ -104,7 +126,6 @@ class AmiiboProvider with ChangeNotifier{
     }
     notifyListeners();
     await _fetchByCategory();
-    //return _fetchByCategory().then((x) => notifyListeners());
   }
 
   Future<void> resetPagination(String name,{bool search = false}) async {
@@ -152,10 +173,10 @@ class AmiiboProvider with ChangeNotifier{
       case AmiiboCategory.All:
         break;
       case AmiiboCategory.Owned:
-        column = 'owned'; args = ['%1%'];
+        column = 'Owned'; args = ['%1%'];
         break;
       case AmiiboCategory.Wishlist:
-        column = 'wishlist'; args = ['%1%'];
+        column = 'Wishlist'; args = ['%1%'];
         break;
       case AmiiboCategory.Figures:
         column = 'type'; args = ['Figure', 'Yarn'];
@@ -164,9 +185,10 @@ class AmiiboProvider with ChangeNotifier{
         column = 'type'; args = ['Card'];
         break;
       case AmiiboCategory.Name:
+        column = 'name'; args = ['%$_strFilter%'];
+        break;
       case AmiiboCategory.AmiiboSeries:
-        column = _searchFilter;
-        args = _searchFilter == 'name' ? ['%$_strFilter%'] : ['%$_strFilter'];
+        column = 'amiiboSeries'; args = ['%$_strFilter%'];
         break;
     }*/
     switch(_strFilter){

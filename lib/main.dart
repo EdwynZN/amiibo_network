@@ -1,8 +1,8 @@
+import 'package:amiibo_network/service/update_service.dart';
 import 'package:flutter/material.dart';
 import 'package:amiibo_network/screen/home_page.dart';
 import 'package:amiibo_network/screen/splash_screen.dart';
 import 'package:amiibo_network/widget/route_transitions.dart';
-import 'package:amiibo_network/service/service.dart';
 import 'package:amiibo_network/provider/theme_provider.dart';
 import 'package:amiibo_network/provider/amiibo_provider.dart';
 import 'package:flutter/services.dart';
@@ -14,8 +14,9 @@ import 'package:amiibo_network/model/amiibo_local_db.dart';
 void main() async {
   //debugPrintGestureArenaDiagnostics = true;
   WidgetsFlutterBinding.ensureInitialized();
-  await initDB();
-  final bool splash = await Service().compareLastUpdate();
+  final UpdateService updateService = UpdateService();
+  await updateService.initDB();
+  final bool splash = await updateService.compareLastUpdate();
   final Map<String,dynamic> savedTheme = await getTheme();
   final bool stat = await getStatMode();
   runApp(
