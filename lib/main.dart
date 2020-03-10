@@ -1,3 +1,4 @@
+import 'package:amiibo_network/provider/search_provider.dart';
 import 'package:amiibo_network/service/update_service.dart';
 import 'package:flutter/material.dart';
 import 'package:amiibo_network/screen/home_page.dart';
@@ -45,6 +46,10 @@ class AmiiboNetwork extends StatelessWidget {
         ),
         ChangeNotifierProvider<StatProvider>(
           create: (context) => StatProvider(statMode),
+        ),
+        Provider<SearchProvider>(
+          create: (_) => SearchProvider(),
+          dispose: (context, search) => search.dispose(),
         ),
         ChangeNotifierProvider<AmiiboProvider>(
           create: (context) => AmiiboProvider(),

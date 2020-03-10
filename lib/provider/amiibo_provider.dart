@@ -3,18 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:amiibo_network/model/amiibo_local_db.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:amiibo_network/utils/amiibo_category.dart';
 
-enum AmiiboCategory{
-  All,
-  Owned,
-  Wishlist,
-  Figures,
-  Cards,
-  Name,
-  AmiiboSeries
-}
-
-extension StringParsing on AmiiboCategory{
+extension _StringParsing on AmiiboCategory{
   String get name {
     switch(this){
       case AmiiboCategory.All:
@@ -28,8 +19,11 @@ extension StringParsing on AmiiboCategory{
       case AmiiboCategory.Cards:
         return 'Cards';
       case AmiiboCategory.Name:
+      case AmiiboCategory.CardSeries:
+      case AmiiboCategory.FigureSeries:
       case AmiiboCategory.AmiiboSeries:
-        return 'Name';
+      case AmiiboCategory.Game:
+      case AmiiboCategory.Custom:
       default: return null;
     }
   }
@@ -72,13 +66,12 @@ class SingleAmiibo with ChangeNotifier{
 
 class AmiiboProvider with ChangeNotifier{
   static final _service = Service();
-  String _searchFilter = 'amiiboSeries';
   String _strFilter = 'All';
   String _orderCategory;
   String _sort = 'ASC';
   Map<String,dynamic> _listOwned;
-  //AmiiboCategory _category = AmiiboCategory.All;
-  //String _search = 'amiiboSeries';
+  AmiiboCategory _category = AmiiboCategory.All;
+  Expression _where = And();
 
   final _amiiboList = BehaviorSubject<AmiiboLocalDB>();
   final _collectionList = BehaviorSubject<Map<String,dynamic>>();
@@ -100,8 +93,8 @@ class AmiiboProvider with ChangeNotifier{
     notifyListeners();
     refreshPagination();
   }
-  String get strFilter => _strFilter;
-  //String get category => _category.name ?? _search;
+  String get strFilter => _category.name ?? _strFilter;
+  AmiiboCategory get category => _category;
 
   @override
   void notifyListeners() {
@@ -128,9 +121,10 @@ class AmiiboProvider with ChangeNotifier{
     await _fetchByCategory();
   }
 
-  Future<void> resetPagination(String name,{bool search = false}) async {
-    _searchFilter = search ? 'name' : 'amiiboSeries';
-    _strFilter = name;
+  Future<void> resetPagination(AmiiboCategory category, String search) async {
+    _category = category ?? _category;
+    _strFilter = search ?? _strFilter;
+    _updateExpression();
     await _fetchByCategory();
     notifyListeners();
   }
@@ -165,54 +159,51 @@ class AmiiboProvider with ChangeNotifier{
     _collectionList.sink.add(_listOwned);
   }
 
-  Future<void> _fetchByCategory() async{
-    String column;
-    List<String> args;
-    final String orderBy = _orderBy;
-    /*switch(_category){
+  void _updateExpression() {
+    switch(_category){
       case AmiiboCategory.All:
+        _where = And();
         break;
       case AmiiboCategory.Owned:
-        column = 'Owned'; args = ['%1%'];
-        break;
       case AmiiboCategory.Wishlist:
-        column = 'Wishlist'; args = ['%1%'];
+        _where = Cond.like(_strFilter, '%1%');
         break;
       case AmiiboCategory.Figures:
-        column = 'type'; args = ['Figure', 'Yarn'];
+        _where = InCond.inn('type', ['Figure', 'Yarn']);
+        break;
+      case AmiiboCategory.FigureSeries:
+        _where = InCond.inn('type', ['Figure', 'Yarn'])
+          & Cond.eq('amiiboSeries', _strFilter);
+        break;
+      case AmiiboCategory.CardSeries:
+        _where = Cond.eq('type', 'Card')
+          & Cond.eq('amiiboSeries', _strFilter);
         break;
       case AmiiboCategory.Cards:
-        column = 'type'; args = ['Card'];
+        _where = Cond.eq('type', 'Card');
+        break;
+      case AmiiboCategory.Game:
+        _where = Cond.like('gameSeries', '%$_strFilter%');
         break;
       case AmiiboCategory.Name:
-        column = 'name'; args = ['%$_strFilter%'];
+        _where = Cond.like('name', '%$_strFilter%')
+         | Cond.like('character', '%$_strFilter%');
         break;
       case AmiiboCategory.AmiiboSeries:
-        column = 'amiiboSeries'; args = ['%$_strFilter%'];
+        _where = Cond.like('amiiboSeries', '%$_strFilter%');
         break;
-    }*/
-    switch(_strFilter){
-      case 'All':
-        break;
-      case 'Owned':
-        column = 'owned'; args = ['%1%'];
-        break;
-      case 'Wishlist':
-        column = 'wishlist'; args = ['%1%'];
-        break;
-      case 'Figures':
-        column = 'type'; args = ['Figure', 'Yarn'];
-        break;
-      case 'Cards':
-        column = 'type'; args = ['Card'];
+      case AmiiboCategory.Custom:
         break;
       default:
-        column = _searchFilter;
-        args = _searchFilter == 'name' ? ['%$_strFilter%'] : ['%$_strFilter'];
+        _category = AmiiboCategory.All;
+        _where = And();
         break;
     }
-    final AmiiboLocalDB _amiiboListDB = await _service.fetchByCategory(column, args, orderBy);
-    _listOwned = Map<String, dynamic>.from((await _service.fetchSum(column: column, args: args)).first);
+  }
+
+  Future<void> _fetchByCategory() async{
+    final AmiiboLocalDB _amiiboListDB = await _service.fetchByCategory(expression: _where, orderBy: _orderBy);
+    _listOwned = Map<String, dynamic>.from((await _service.fetchSum(expression: _where,)).first);
     _amiiboList.sink.add(_amiiboListDB);
     _collectionList.sink.add(_listOwned);
   }

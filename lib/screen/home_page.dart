@@ -1,3 +1,4 @@
+import 'package:amiibo_network/provider/search_provider.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -16,6 +17,7 @@ import 'package:amiibo_network/provider/stat_provider.dart';
 import 'package:amiibo_network/provider/theme_provider.dart';
 import 'dart:math' as math;
 import 'dart:ui' as ui show FontFeature;
+import 'package:amiibo_network/utils/amiibo_category.dart';
 
 class Home extends StatelessWidget{
 
@@ -40,6 +42,7 @@ class HomePageState extends State<HomePage>
   ScrollController _controller;
   AnimationController _animationController;
   AmiiboProvider amiiboProvider;
+  SearchProvider _searchProvider;
   SelectProvider selected;
   static Widget _defaultLayoutBuilder(Widget currentChild, List<Widget> previousChildren) {
     List<Widget> children = previousChildren;
@@ -56,6 +59,7 @@ class HomePageState extends State<HomePage>
     super.didChangeDependencies();
     amiiboProvider = Provider.of<AmiiboProvider>(context, listen: false);
     selected = Provider.of<SelectProvider>(context, listen: false);
+    _searchProvider = Provider.of<SearchProvider>(context, listen: false);
   }
 
   void _restartAnimation(){
@@ -113,9 +117,11 @@ class HomePageState extends State<HomePage>
 
   void _search() async{
     String value = await Navigator.pushNamed(context,"/search");
-    if(value != null && value != '') {
-      amiiboProvider.resetPagination(value, search: true);
-      _restartAnimation();
+    if(value != null) {
+      if(value.trim().isNotEmpty){
+        amiiboProvider.resetPagination(_searchProvider.category, value);
+        _restartAnimation();
+      }
     }
   }
 
@@ -409,7 +415,6 @@ class _SortCollectionState extends State<_SortCollection> {
       isScrollControlled: true,
       elevation: 0.0,
       builder: (context) {
-        ContinuousRectangleBorder();
         final Size size = MediaQuery.of(context).size;
         final double height = (460.0 / size.height).clamp(0.25, 0.66);
         EdgeInsetsGeometry padding = EdgeInsets.zero;

@@ -128,6 +128,152 @@ class _CardDetailAmiibo extends StatelessWidget{
   }
 }
 
+class _BottomSheetDetail extends StatelessWidget{
+
+  @override
+  Widget build(BuildContext context) {
+    final AmiiboProvider amiiboProvider = Provider.of<AmiiboProvider>(context, listen: false);
+    final AmiiboDB amiibo = Provider.of<SingleAmiibo>(context, listen: false).amiibo;
+    return Stack(
+      children: <Widget>[
+        Consumer<SingleAmiibo>(
+          builder: (ctx, amiiboDB, child){
+            return Row(
+              mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: MainAxisAlignment.end,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: <Widget>[
+                IconButton(
+                    icon: (amiibo.owned?.isEven ?? true) ?
+                    const Icon(Icons.radio_button_unchecked) : const Icon(iconOwned),
+                    color: colorOwned,
+                    iconSize: 30.0,
+                    tooltip: "Owned",
+                    splashColor: colorOwned[100],
+                    onPressed: () {
+                      final int newValue = (amiibo?.owned ?? 0) ^ 1;
+                      amiiboProvider.updateOwned(newValue, amiibo.wishlist);
+                      amiiboDB.owned = newValue;
+                      amiiboProvider.updateAmiiboDB(amiibo: amiibo);
+                    }
+                ),
+                child,
+                IconButton(
+                    icon: (amiibo.wishlist?.isEven ?? true) ?
+                    const Icon(Icons.check_box_outline_blank) : const Icon(iconWished),
+                    color: colorWished,
+                    iconSize: 30.0,
+                    tooltip: "Wished",
+                    splashColor: Colors.amberAccent[100],
+                    onPressed: () {
+                      final int newValue = (amiibo?.wishlist ?? 0) ^ 1;
+                      amiiboProvider.updateWished(newValue, amiibo.owned);
+                      amiiboDB.wishlist = newValue;
+                      amiiboProvider.updateAmiiboDB(amiibo: amiibo);
+                    }
+                )
+              ],
+            );
+          },
+          child: Padding(
+            padding: const EdgeInsets.only(top: 4.0, left: 4.0),
+            child: Hero(
+                transitionOnUserGestures: true,
+                tag: amiibo.key,
+                child: Image.asset(
+                  'assets/collection/icon_${amiibo.key}.png',
+                  fit: BoxFit.scaleDown,
+                )
+            ),
+          ),
+        ),
+      ],
+    );
+
+   /* final Size size = MediaQuery.of(context).size;
+    final double height = (460.0 / size.height).clamp(0.25, 0.66);
+    EdgeInsetsGeometry padding = EdgeInsets.zero;
+    if(size.longestSide >= 800) padding = EdgeInsets.symmetric(
+        horizontal: (size.width/2 - 210).clamp(0.0, double.infinity)
+    );
+    return DraggableScrollableSheet(
+      key: Key('Draggable'),
+      maxChildSize: 0.8, expand: false, initialChildSize: 0.8,
+      builder: (context, scrollController){
+        final AmiiboProvider amiiboProvider = Provider.of<AmiiboProvider>(context, listen: false);
+        final AmiiboDB amiibo = Provider.of<SingleAmiibo>(context, listen: false).amiibo;
+        return Padding(
+          padding: padding,
+          child: Material(
+              color: Theme.of(context).backgroundColor,
+              shape: Theme.of(context).bottomSheetTheme.shape,
+              child: CustomScrollView(
+                controller: scrollController,
+                slivers: <Widget>[
+                  SliverPersistentHeader(
+                    pinned: true,
+                    delegate: _BottomSheetHeader(
+                      child: Consumer<SingleAmiibo>(
+                          builder: (ctx, amiiboDB, child){
+                            return Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              children: <Widget>[
+                                Expanded(child: IconButton(
+                                    icon: (amiibo.owned?.isEven ?? true) ?
+                                    const Icon(Icons.radio_button_unchecked) : const Icon(iconOwned),
+                                    color: colorOwned,
+                                    iconSize: 30.0,
+                                    tooltip: "Owned",
+                                    splashColor: colorOwned[100],
+                                    onPressed: () {
+                                      final int newValue = (amiibo?.owned ?? 0) ^ 1;
+                                      amiiboProvider.updateOwned(newValue, amiibo.wishlist);
+                                      amiiboDB.owned = newValue;
+                                      amiiboProvider.updateAmiiboDB(amiibo: amiibo);
+                                    }
+                                ),),
+                                Expanded(child: IconButton(
+                                    icon: (amiibo.wishlist?.isEven ?? true) ?
+                                    const Icon(Icons.check_box_outline_blank) : const Icon(iconWished),
+                                    color: colorWished,
+                                    iconSize: 30.0,
+                                    tooltip: "Wished",
+                                    splashColor: Colors.amberAccent[100],
+                                    onPressed: () {
+                                      final int newValue = (amiibo?.wishlist ?? 0) ^ 1;
+                                      amiiboProvider.updateWished(newValue, amiibo.owned);
+                                      amiiboDB.wishlist = newValue;
+                                      amiiboProvider.updateAmiiboDB(amiibo: amiibo);
+                                    }
+                                ),)
+                              ],
+                            );
+                          }
+                      ),
+                    ),
+                  ),
+                  SliverList(
+                    delegate: SliverChildListDelegate([
+                      Text(amiibo.character,),
+                      if(amiibo.character != amiibo.name) Text(amiibo.name,),
+                      Text(amiibo.amiiboSeries,),
+                      if(amiibo.amiiboSeries != amiibo.gameSeries) Text(amiibo.gameSeries,),
+                      Text(amiibo.type,),
+                      if(amiibo.au != null) Text('Australia'),
+                      if(amiibo.eu != null) Text('Europe'),
+                      if(amiibo.na != null) Text('America'),
+                      if(amiibo.jp != null) Text('Japan'),
+                    ]),
+                  )
+                ],
+              )
+          )
+        );
+      },
+    );*/
+  }
+}
+
 class RegionDetail extends StatelessWidget{
   final String date;
   final String asset;

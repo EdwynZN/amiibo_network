@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:amiibo_network/provider/amiibo_provider.dart';
 import 'package:flutter/services.dart';
 import 'package:amiibo_network/widget/floating_bar.dart';
+import 'package:amiibo_network/utils/amiibo_category.dart';
 
 class SearchScreen extends StatefulWidget {
   @override
@@ -11,7 +12,7 @@ class SearchScreen extends StatefulWidget {
 }
 
 class SearchScreenState extends State<SearchScreen>{
-  final SearchProvider _search = SearchProvider();
+  SearchProvider _search;
   final _textController = TextEditingController();
 
   @override
@@ -20,11 +21,17 @@ class SearchScreenState extends State<SearchScreen>{
     _textController.addListener(onChangedText);
   }
 
-  void onChangedText() => _search.searchValue(_textController.text);
+  @override
+  didChangeDependencies(){
+    super.didChangeDependencies();
+    _search = Provider.of<SearchProvider>(context, listen: false);
+  }
+
+  void onChangedText() => _search?.searchValue(_textController.text);
 
   @override
   dispose() {
-    _search.dispose();
+    //_search.dispose();
     _textController.dispose();
     super.dispose();
   }
@@ -41,7 +48,10 @@ class SearchScreenState extends State<SearchScreen>{
               leading: BackButton(),
               title: TextField(
                 controller: _textController,
-                inputFormatters: [LengthLimitingTextInputFormatter(15)],
+                inputFormatters: [
+                  LengthLimitingTextInputFormatter(18),
+                  WhitelistingTextInputFormatter(RegExp('^[A-Za-zÀ-ÿ0-9 .\/-]*\$'))
+                ],
                 textInputAction: TextInputAction.search,
                 autofocus: true,
                 onSubmitted: Navigator.of(context).pop,
@@ -58,10 +68,10 @@ class SearchScreenState extends State<SearchScreen>{
                 )
               ),
             ),
-            /*SliverPersistentHeader(
+            SliverPersistentHeader(
               delegate: _SliverPersistentHeader(),
               pinned: true,
-            ),*/
+            ),
             SliverPadding(
               padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6.0),
               sliver: StreamBuilder<List<String>>(
@@ -76,7 +86,8 @@ class SearchScreenState extends State<SearchScreen>{
                           shape: RoundedRectangleBorder(),
                           child: ListTile(
                             onTap: () => Navigator.of(context).pop(snapshot.data[index]),
-                            title: Text('${snapshot.data[index]}')
+                            title: Text('${snapshot.data[index]}'),
+                            //subtitle: Text('AmiiboSeries'),
                           )
                         ),
                       );
@@ -95,20 +106,13 @@ class SearchScreenState extends State<SearchScreen>{
 }
 
 class _SliverPersistentHeader extends SliverPersistentHeaderDelegate {
-
   @override
   Widget build(BuildContext context, double shrinkOffset, bool overlapsContent) {
     return Container(
-      color: Theme.of(context).appBarTheme.color,
-      child: Card(
-        elevation: 0.0,
-        margin: const EdgeInsets.fromLTRB(12.0, 6.0, 12.0, 0.0),
-        shape: ContinuousRectangleBorder(),
-        child: SizedBox(
-          height: maxExtent,
-          child: const Icon(Icons.add),
-        ),
-      ),
+      color: Theme.of(context).scaffoldBackgroundColor,
+      padding: const EdgeInsets.symmetric(horizontal: 12),
+      height: maxExtent,
+      child: CategoryControl(),
     );
   }
 
@@ -123,55 +127,89 @@ class _SliverPersistentHeader extends SliverPersistentHeaderDelegate {
     => maxExtent != oldDelegate.maxExtent || minExtent != oldDelegate.minExtent;
 }
 
-class TextOptions extends StatefulWidget {
-  final TextEditingController controller;
-  TextOptions({this.controller});
-  
+class CategoryControl extends StatefulWidget {
   @override
-  State<StatefulWidget> createState() => TextOptionsState();
+  State<StatefulWidget> createState() => CategoryControlState();
 }
 
-class TextOptionsState extends State<TextOptions>{
-  bool clear = false;
+class CategoryControlState extends State<CategoryControl>{
 
-  @override
-  void initState() {
-    super.initState();
-    widget.controller.addListener(_canClear);
-  }
-
-  void _canClear() {
-    setState(() {
-      clear = widget.controller?.text?.isNotEmpty ?? false;
-    });
-  }
-
-  @override
-  dispose() {
-    widget.controller.removeListener(_canClear);
-    super.dispose();
+  void _selectCategory(AmiiboCategory category){
+    final SearchProvider _search = Provider.of<SearchProvider>(context, listen: false);
+    if(_search.category == category) return;
+    _search.category = category;
+    _search.searchRefresh();
+    setState(() {});
   }
 
   @override
   Widget build(BuildContext context) {
+    final SearchProvider _search = Provider.of<SearchProvider>(context, listen: false);
     return Row(
-      mainAxisSize: MainAxisSize.min,
-      mainAxisAlignment: MainAxisAlignment.end,
+      mainAxisAlignment: MainAxisAlignment.center,
+      mainAxisSize: MainAxisSize.max,
       children: <Widget>[
-        AnimatedSwitcher(
-          duration: const Duration(milliseconds: 200),
-          child: clear ? IconButton(
-              icon: const Icon(Icons.clear),
-              onPressed: (){
-                widget.controller.clear();
-              }
-          ) : const SizedBox(),
+        Expanded(
+          child: FlatButton.icon(
+            padding: const EdgeInsets.symmetric(horizontal: 8.0),
+            textColor: Theme.of(context).textTheme.title.color,
+            color: _search.category == AmiiboCategory.Name ? Theme.of(context).accentColor : null,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.horizontal(left: Radius.circular(8)),
+              side: BorderSide(
+                color: Theme.of(context).accentColor,
+                width: 2,
+              )
+            ),
+            onPressed: () => _selectCategory(AmiiboCategory.Name),
+            icon: const Icon(Icons.group, size: 20,),
+            label: Flexible(child: FittedBox(child: Text('Name'),)),
+          ),
         ),
-        IconButton(
-          icon: const Icon(Icons.filter_list),
-          onPressed: (){
-            print('a');
-          }
+        Expanded(
+          child: FlatButton.icon(
+            padding: const EdgeInsets.symmetric(horizontal: 8.0),
+            textColor: Theme.of(context).textTheme.title.color,
+            color: _search.category == AmiiboCategory.Game ? Theme.of(context).accentColor : null,
+            shape: Border(
+              bottom: BorderSide(
+                color: Theme.of(context).accentColor,
+                width: 2,
+              ),
+              top: BorderSide(
+                color: Theme.of(context).accentColor,
+                width: 2,
+              ),
+              left: BorderSide(
+                color: Theme.of(context).accentColor,
+                width: 0.0
+              ),
+              right: BorderSide(
+                color: Theme.of(context).accentColor,
+                width: 0.0
+              ),
+            ),
+            onPressed: () => _selectCategory(AmiiboCategory.Game),
+            icon: const Icon(Icons.games, size: 20,),
+            label: Flexible(child: FittedBox(child: Text('Game'),)),
+          ),
+        ),
+        Expanded(
+          child: FlatButton.icon(
+            padding: const EdgeInsets.symmetric(horizontal: 8.0),
+            textColor: Theme.of(context).textTheme.title.color,
+            color: _search.category == AmiiboCategory.AmiiboSeries ? Theme.of(context).accentColor : null,
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.horizontal(right: Radius.circular(8)),
+                side: BorderSide(
+                  color: Theme.of(context).accentColor,
+                  width: 2,
+                )
+            ),
+            onPressed: () => _selectCategory(AmiiboCategory.AmiiboSeries),
+            icon: const Icon(Icons.nfc, size: 20,),
+            label: Flexible(child: FittedBox(child: Text('Serie'),)),
+          ),
         ),
       ],
     );

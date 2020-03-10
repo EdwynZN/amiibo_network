@@ -28,15 +28,15 @@ class _StatsPageState extends State<StatsPage> {
   }
 
   void _updateSet(Set<String> value){
-    if(_controller.offset != _controller.initialScrollOffset) _controller..jumpTo(0);
+    if(_controller.offset != _controller.initialScrollOffset) _controller.jumpTo(0);
     setState(() => select..clear()..addAll(value));
   }
 
   Future<List<Map<String, dynamic>>> get _retrieveStats
-    => _service.fetchSum(group: true, column: 'type', args: select.toList());
+  => _service.fetchSum(group: true, expression: InCond.inn('type', select.toList()));
 
   Future<List<Map<String, dynamic>>> get _generalStats
-    => _service.fetchSum(column: 'type', args: select.toList());
+  => _service.fetchSum(expression: InCond.inn('type', select.toList()));
 
   @override
   void dispose() {
@@ -109,7 +109,7 @@ class _StatsPageState extends State<StatsPage> {
                 }
               ),
               const SliverToBoxAdapter(
-                child: const SizedBox(height: 80,),
+                child: const SizedBox(height: 80),
               )
             ],
           )

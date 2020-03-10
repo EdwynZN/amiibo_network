@@ -70,7 +70,7 @@ class ThemeProvider with ChangeNotifier{
     }
   }
 
-  themeDB(String value) async {
+  Future<void> themeDB(String value) async {
     if(value != _savedTheme){
       final SharedPreferences preferences = await SharedPreferences.getInstance();
       _savedTheme = value;

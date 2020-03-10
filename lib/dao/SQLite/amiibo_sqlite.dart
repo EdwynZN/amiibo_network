@@ -15,39 +15,39 @@ class AmiiboSQLite implements Dao<AmiiboLocalDB, String, AmiiboDB>{
     return entityFromList(maps);
   }
 
-  Future<List<String>> fetchDistinct(String name, String column,
-      String condition, List<String> whereArgs) async{
+  Future<List<String>> fetchDistinct(String name, List<String> column,
+      String where, List<dynamic> args, orderBy) async{
     Database _db = await connectionFactory.database;
     List<Map<String, dynamic>> maps = await _db.query(name, distinct: true,
-      columns: [column],
-      where: '$condition ?',
-      whereArgs: whereArgs,
-      orderBy: column);
+      columns: column,
+      where: where,
+      whereArgs: args,
+      orderBy: orderBy);
     return List<String>.from(maps.map((x) => x['amiiboSeries']));
   }
 
-  Future<List<String>> fetchLimit(String name, int limit) async{
+  Future<List<String>> fetchLimit(String where, List<dynamic> args, int limit, [String column = 'name']) async{
     Database _db = await connectionFactory.database;
     List<Map<String, dynamic>> maps = await _db.query('amiibo', distinct: true,
-      columns: ['name'],
-      where: 'character LIKE ? OR name LIKE ?',
-      whereArgs: [name, name],
+      columns: [column],
+      where: where,
+      whereArgs: args,
       limit: limit);
-    return List<String>.from(maps.map((x) => x['name']));
+    return List<String>.from(maps.map((x) => x[column]));
   }
 
-  Future<AmiiboLocalDB> fetchByColumn(String column, List<String> args,
+  Future<AmiiboLocalDB> fetchByColumn(String where, List<dynamic> args,
     [String orderBy = 'na']) async{
     Database _db = await connectionFactory.database;
     List<Map<String, dynamic>> maps = await _db.query('amiibo',
-      where: args?.skip(1)?.fold<String>('$column LIKE ?', (curr, next) => curr + ' OR $column LIKE ?'),
+      where: where,
       whereArgs: args,
       orderBy: orderBy);
     return entityFromList(maps);
   }
 
-  Future<List<Map<String, dynamic>>> fetchSum(String column,
-      List<String> name, bool group) async{
+  Future<List<Map<String, dynamic>>> fetchSum(String where,
+      List<dynamic> args, bool group) async{
     Database _db = await connectionFactory.database;
     List<Map<String,dynamic>> result = await _db.query('amiibo',
       columns: [
@@ -56,8 +56,8 @@ class AmiiboSQLite implements Dao<AmiiboLocalDB, String, AmiiboDB>{
         'count(case WHEN wishlist=1 then 1 end) AS Wished',
         'count(case WHEN owned=1 then 1 end) AS Owned'
       ],
-      where: name?.skip(1)?.fold<String>('$column LIKE ?', (curr, next) => curr + ' OR $column LIKE ?'),
-      whereArgs: name,
+      where: where,
+      whereArgs: args,
       groupBy: group ? 'amiiboSeries' : null
     );
     return result;

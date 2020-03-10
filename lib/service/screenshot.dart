@@ -33,17 +33,15 @@ class Screenshot {
   Screenshot._();
 
   Future<String> saveCollection(Set<String> select) async{
-    AmiiboLocalDB amiibos = await _service.fetchByCategory('type', select.toList(),
-      'CASE WHEN type = "Figure" THEN 1 '
-      'WHEN type = "Yarn" THEN 2 ELSE 3 END, amiiboSeries DESC, na DESC');
+    AmiiboLocalDB amiibos = await _service.fetchByCategory(expression: InCond.inn('type', select.toList()),
+      orderBy: 'CASE WHEN type = "Figure" THEN 1 ''WHEN type = "Yarn" THEN 2 ELSE 3 END, amiiboSeries DESC, na DESC');
     if(_recording || (amiibos?.amiibo?.isEmpty ?? true)) {
       return '';
-//      return;
     }
     _recording = true;
 
     Map<String,dynamic> _listStat = Map<String, dynamic>.from(
-        (await _service.fetchSum(column: 'type', args: select.toList())).first);
+        (await _service.fetchSum(expression: InCond.inn('type', select.toList()))).first);
     final Map<String,dynamic> file = Map<String,dynamic>();
     final String time = DateTime.now().toString().substring(0,10);
     final Directory dir = await Directory('/storage/emulated/0/Download').create();
@@ -134,8 +132,8 @@ class Screenshot {
   }
 
   Future<String> drawStats(Set<String> select) async{
-    final List<Map<String, dynamic>> stats = await _service.fetchSum(group: true, column: 'type', args: select.toList());
-    final List<Map<String, dynamic>> general = await _service.fetchSum(column: 'type', args: select.toList());
+    final List<Map<String, dynamic>> stats = await _service.fetchSum(group: true, expression: InCond.inn('type', select.toList()));
+    final List<Map<String, dynamic>> general = await _service.fetchSum(expression: InCond.inn('type', select.toList()));
 
     if(_recording || (stats?.isEmpty ?? true) || (general?.isEmpty ?? true)) {
       return '';
@@ -150,7 +148,7 @@ class Screenshot {
         select.containsAll(['Figure', 'Yarn']) ? 'Figure' : 'Card'
     }Stats_$time.png';
     final double maxSize = 300.0;
-    final double width = (stats.length / 5.0).ceilToDouble().clamp(5.0, 10.0);
+    final double width = (stats.length / 5.0).ceilToDouble().clamp(4.0, 10.0);
     final double maxX = (width * (1 + space) - space) * (maxSize + 2*padding) + 2*margin;
     final double maxY = ((stats.length / width).ceilToDouble()
         * (1 + 0.5*space) - 0.5*space) * (0.8*maxSize + 2*padding) + banner + 2*margin;

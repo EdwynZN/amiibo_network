@@ -2,6 +2,7 @@
 - Change theme animation button
 - Changed stat fonts
 - Save image of your stats
+- Improved search functionality
 - Fixed minor bugs
 
 ## Version 1.2.1
