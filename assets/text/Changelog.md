@@ -1,6 +1,8 @@
 ## Version 1.2.2
 - Change theme animation button
 - Changed stat fonts
+- Improved animations
+- Improved Amiibo detail page (better look for tablets)
 - Save image of your stats
 - Improved search functionality
 - Fixed minor bugs

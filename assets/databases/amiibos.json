@@ -601,7 +601,7 @@
     {
       "key":47,
       "id":"01000000034b0902",
-      "amiiboSeries":"Legend Of Zelda",
+      "amiiboSeries":"The Legend of Zelda",
       "character":"Link",
       "gameSeries":"The Legend of Zelda",
       "name":"Link - Ocarina of Time",
@@ -614,7 +614,7 @@
     {
       "key":48,
       "id":"01000000034c0902",
-      "amiiboSeries":"Legend Of Zelda",
+      "amiiboSeries":"The Legend of Zelda",
       "character":"Link",
       "gameSeries":"The Legend of Zelda",
       "name":"Link - Majora's Mask",
@@ -627,7 +627,7 @@
     {
       "key":49,
       "id":"01000000034d0902",
-      "amiiboSeries":"Legend Of Zelda",
+      "amiiboSeries":"The Legend of Zelda",
       "character":"Link",
       "gameSeries":"The Legend of Zelda",
       "name":"Link - Twilight Princess",
@@ -640,7 +640,7 @@
     {
       "key":50,
       "id":"01000000034e0902",
-      "amiiboSeries":"Legend Of Zelda",
+      "amiiboSeries":"The Legend of Zelda",
       "character":"Link",
       "gameSeries":"The Legend of Zelda",
       "name":"Link - Skyward Sword",
@@ -653,7 +653,7 @@
     {
       "key":51,
       "id":"01000000034f0902",
-      "amiiboSeries":"Legend Of Zelda",
+      "amiiboSeries":"The Legend of Zelda",
       "character":"Link",
       "gameSeries":"The Legend of Zelda",
       "name":"8-Bit Link",
@@ -666,7 +666,7 @@
     {
       "key":52,
       "id":"0100000003530902",
-      "amiiboSeries":"Legend Of Zelda",
+      "amiiboSeries":"The Legend of Zelda",
       "character":"Link",
       "gameSeries":"The Legend of Zelda",
       "name":"Link (Archer)",
@@ -679,7 +679,7 @@
     {
       "key":53,
       "id":"0100000003540902",
-      "amiiboSeries":"Legend Of Zelda",
+      "amiiboSeries":"The Legend of Zelda",
       "character":"Link",
       "gameSeries":"The Legend of Zelda",
       "name":"Link (Rider)",
@@ -718,7 +718,7 @@
     {
       "key":56,
       "id":"0100010003500902",
-      "amiiboSeries":"Legend Of Zelda",
+      "amiiboSeries":"The Legend of Zelda",
       "character":"Link",
       "gameSeries":"The Legend of Zelda",
       "name":"Toon Link - The Wind Waker",
@@ -744,7 +744,7 @@
     {
       "key":58,
       "id":"0101000003520902",
-      "amiiboSeries":"Legend Of Zelda",
+      "amiiboSeries":"The Legend of Zelda",
       "character":"Zelda",
       "gameSeries":"The Legend of Zelda",
       "name":"Toon Zelda - The Wind Waker",
@@ -757,7 +757,7 @@
     {
       "key":59,
       "id":"0101000003560902",
-      "amiiboSeries":"Legend Of Zelda",
+      "amiiboSeries":"The Legend of Zelda",
       "character":"Zelda",
       "gameSeries":"The Legend of Zelda",
       "name":"Zelda",
@@ -796,7 +796,7 @@
     {
       "key":62,
       "id":"01030000024f0902",
-      "amiiboSeries":"Legend Of Zelda",
+      "amiiboSeries":"The Legend of Zelda",
       "character":"Midna",
       "gameSeries":"The Legend of Zelda",
       "name":"Midna & Wolf Link",
@@ -809,7 +809,7 @@
     {
       "key":63,
       "id":"0105000003580902",
-      "amiiboSeries":"Legend Of Zelda",
+      "amiiboSeries":"The Legend of Zelda",
       "character":"Daruk",
       "gameSeries":"The Legend of Zelda",
       "name":"Daruk",
@@ -822,7 +822,7 @@
     {
       "key":64,
       "id":"0106000003590902",
-      "amiiboSeries":"Legend Of Zelda",
+      "amiiboSeries":"The Legend of Zelda",
       "character":"Urbosa",
       "gameSeries":"The Legend of Zelda",
       "name":"Urbosa",
@@ -835,7 +835,7 @@
     {
       "key":65,
       "id":"01070000035a0902",
-      "amiiboSeries":"Legend Of Zelda",
+      "amiiboSeries":"The Legend of Zelda",
       "character":"Mipha",
       "gameSeries":"The Legend of Zelda",
       "name":"Mipha",
@@ -848,7 +848,7 @@
     {
       "key":66,
       "id":"01080000035b0902",
-      "amiiboSeries":"Legend Of Zelda",
+      "amiiboSeries":"The Legend of Zelda",
       "character":"Revali",
       "gameSeries":"The Legend of Zelda",
       "name":"Revali",
@@ -861,7 +861,7 @@
     {
       "key":67,
       "id":"0140000003550902",
-      "amiiboSeries":"Legend Of Zelda",
+      "amiiboSeries":"The Legend of Zelda",
       "character":"Guardian",
       "gameSeries":"Breath of the Wild",
       "name":"Guardian",
@@ -874,7 +874,7 @@
     {
       "key":68,
       "id":"01410000035c0902",
-      "amiiboSeries":"Legend Of Zelda",
+      "amiiboSeries":"The Legend of Zelda",
       "character":"Bokoblin",
       "gameSeries":"Breath of the Wild",
       "name":"Bokoblin",
@@ -9636,7 +9636,7 @@
     {
       "key":742,
       "id":"0100000003990902",
-      "amiiboSeries":"Legend Of Zelda",
+      "amiiboSeries":"The Legend of Zelda",
       "character":"Link",
       "gameSeries":"The Legend of Zelda",
       "name":"Link - Link's Awakening",
@@ -9764,5 +9764,5 @@
       "type":"Figure"
     }
   ],
-  "lastUpdated": "2020-01-26T17:17:56.057"
+  "lastUpdated": "2020-03-10T17:59:30.427"
 }

@@ -12,8 +12,9 @@ class SearchScreen extends StatefulWidget {
 }
 
 class SearchScreenState extends State<SearchScreen>{
-  SearchProvider _search;
+  static final RegExp _regWhiteList = RegExp('^[A-Za-zÀ-ÿ0-9 .\/-]*\$');
   final _textController = TextEditingController();
+  SearchProvider _search;
 
   @override
   void initState() {
@@ -31,7 +32,6 @@ class SearchScreenState extends State<SearchScreen>{
 
   @override
   dispose() {
-    //_search.dispose();
     _textController.dispose();
     super.dispose();
   }
@@ -45,12 +45,11 @@ class SearchScreenState extends State<SearchScreen>{
             SliverFloatingBar(
               backgroundColor: Theme.of(context).scaffoldBackgroundColor,
               pinned: true,
-              leading: BackButton(),
               title: TextField(
                 controller: _textController,
                 inputFormatters: [
-                  LengthLimitingTextInputFormatter(18),
-                  WhitelistingTextInputFormatter(RegExp('^[A-Za-zÀ-ÿ0-9 .\/-]*\$'))
+                  LengthLimitingTextInputFormatter(25),
+                  WhitelistingTextInputFormatter(_regWhiteList)
                 ],
                 textInputAction: TextInputAction.search,
                 autofocus: true,
@@ -66,6 +65,21 @@ class SearchScreenState extends State<SearchScreen>{
                   ),
                   border: InputBorder.none
                 )
+              ),
+              trailing: ValueListenableBuilder<TextEditingValue>(
+                valueListenable: _textController,
+                child: const SizedBox(),
+                builder: (context, text, child){
+                  return AnimatedSwitcher(
+                    duration: const Duration(milliseconds: 250),
+                    child: text.text.isEmpty ? child : IconButton(
+                      highlightColor: Colors.transparent,
+                      icon: const Icon(Icons.close),
+                      onPressed: () => _textController?.clear(),
+                      tooltip: 'Clear',
+                    ),
+                  );
+                },
               ),
             ),
             SliverPersistentHeader(
@@ -108,8 +122,19 @@ class SearchScreenState extends State<SearchScreen>{
 class _SliverPersistentHeader extends SliverPersistentHeaderDelegate {
   @override
   Widget build(BuildContext context, double shrinkOffset, bool overlapsContent) {
+    final Color _color = Theme.of(context).scaffoldBackgroundColor;
     return Container(
-      color: Theme.of(context).scaffoldBackgroundColor,
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          begin: Alignment.topCenter, end: Alignment.bottomCenter,
+          stops: [0.4, 0.7, 0.9],
+          colors: [
+            _color,
+            _color.withOpacity(0.85),
+            _color.withOpacity(0.2),
+          ]
+        ),
+      ),
       padding: const EdgeInsets.symmetric(horizontal: 12),
       height: maxExtent,
       child: CategoryControl(),
@@ -138,7 +163,6 @@ class CategoryControlState extends State<CategoryControl>{
     final SearchProvider _search = Provider.of<SearchProvider>(context, listen: false);
     if(_search.category == category) return;
     _search.category = category;
-    _search.searchRefresh();
     setState(() {});
   }
 
@@ -155,7 +179,7 @@ class CategoryControlState extends State<CategoryControl>{
             textColor: Theme.of(context).textTheme.title.color,
             color: _search.category == AmiiboCategory.Name ? Theme.of(context).accentColor : null,
             shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.horizontal(left: Radius.circular(8)),
+              borderRadius: const BorderRadius.horizontal(left: Radius.circular(8)),
               side: BorderSide(
                 color: Theme.of(context).accentColor,
                 width: 2,
@@ -200,11 +224,11 @@ class CategoryControlState extends State<CategoryControl>{
             textColor: Theme.of(context).textTheme.title.color,
             color: _search.category == AmiiboCategory.AmiiboSeries ? Theme.of(context).accentColor : null,
             shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.horizontal(right: Radius.circular(8)),
-                side: BorderSide(
-                  color: Theme.of(context).accentColor,
-                  width: 2,
-                )
+              borderRadius: const BorderRadius.horizontal(right: Radius.circular(8)),
+              side: BorderSide(
+                color: Theme.of(context).accentColor,
+                width: 2,
+              )
             ),
             onPressed: () => _selectCategory(AmiiboCategory.AmiiboSeries),
             icon: const Icon(Icons.nfc, size: 20,),

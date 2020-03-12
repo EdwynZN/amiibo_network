@@ -107,6 +107,8 @@ class _SliverFloatingPersistentHeader extends SliverPersistentHeaderDelegate {
   Widget build(BuildContext context, double shrinkOffset, bool overlapsContent) {
     final double visibleMainHeight = maxExtent - shrinkOffset;
     final double toolbarOpacity = 1.0;
+    final ModalRoute<dynamic> parentRoute = ModalRoute.of(context);
+    final bool useCloseButton = parentRoute is PageRoute<dynamic> && parentRoute.fullscreenDialog;
     return FlexibleSpaceBarSettings(
       toolbarOpacity: toolbarOpacity,
       minExtent: _minExtent,
@@ -128,9 +130,8 @@ class _SliverFloatingPersistentHeader extends SliverPersistentHeaderDelegate {
               elevation: elevation,
               borderRadius: BorderRadius.circular(8.0),
               clipBehavior: Clip.hardEdge,
-              //shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
               child: ListTile(
-                leading: leading,
+                leading: leading ?? (useCloseButton ? CloseButton() : BackButton()),
                 title: DefaultTextStyle(
                   textAlign: TextAlign.left,
                   style: Theme.of(context).textTheme.display1,

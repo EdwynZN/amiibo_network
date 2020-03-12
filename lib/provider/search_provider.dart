@@ -31,22 +31,22 @@ class SearchProvider{
   static AmiiboCategory _category = AmiiboCategory.Name;
   AmiiboCategory get category => _category;
   set category(AmiiboCategory cat) {
-    if(cat == null) return;
+    if(cat == null) {
+      _category = AmiiboCategory.All;
+      return;
+    }
     _category = cat;
+    _se.sink.add(cat);
   }
 
   Stream<List<String>> get search => CombineLatestStream.combine2<String, AmiiboCategory, Expression>(
     _searchFetcher.stream.debounceTime(const Duration(milliseconds: 500)).map((string) => string.trim()),
     _se.stream, (text, category) => whereExpression(text),
-  )
-    .asyncMap((exp) => exp == null ? null : _service.searchDB(exp, _category.name));
+  ).asyncMap((exp) => exp == null ? null : _service.searchDB(exp, _category.name));
 
   Expression whereExpression(String filter){
     if(filter.isEmpty) return null;
     switch(_category){
-      case AmiiboCategory.Owned:
-      case AmiiboCategory.Wishlist:
-        return Cond.like(filter, '%1%');
       case AmiiboCategory.Figures:
         return InCond.inn('type', ['Figure', 'Yarn']);
       case AmiiboCategory.FigureSeries:
@@ -62,6 +62,8 @@ class SearchProvider{
       case AmiiboCategory.AmiiboSeries:
         return Cond.like('amiiboSeries', '%$filter%');
       case AmiiboCategory.All:
+      case AmiiboCategory.Owned:
+      case AmiiboCategory.Wishlist:
       case AmiiboCategory.Custom:
       default:
         return And();
@@ -69,8 +71,6 @@ class SearchProvider{
   }
 
   searchValue(String s) => _searchFetcher.sink.add(s);
-
-  searchRefresh() => _se.sink.add(category);
 
   dispose() {
     _se?.close();

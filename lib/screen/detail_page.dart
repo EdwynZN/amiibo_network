@@ -5,25 +5,19 @@ import 'package:amiibo_network/provider/amiibo_provider.dart';
 import 'package:amiibo_network/provider/theme_provider.dart';
 
 class DetailPage extends StatelessWidget{
-  final int index;
+  final SingleAmiibo amiibo;
 
   DetailPage({Key key,
-    @required this.index,
+    @required this.amiibo
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return SafeArea(
-      child: Scaffold(
-        body: SingleChildScrollView(
-          child: ChangeNotifierProxyProvider<AmiiboLocalDB,SingleAmiibo>(
-            create: (_) => SingleAmiibo(),
-            update: (_, amiiboList, amiibo) => amiibo
-              ..update = amiiboList?.amiibo[index],
-            child: _CardDetailAmiibo(),
-          )
-        )
-      )
+      child: ChangeNotifierProvider<SingleAmiibo>.value(
+        value: amiibo,
+        child: _BottomSheetDetail()
+      ),
     );
   }
 }
@@ -33,96 +27,100 @@ class _CardDetailAmiibo extends StatelessWidget{
   Widget build(BuildContext context){
     final AmiiboProvider amiiboProvider = Provider.of<AmiiboProvider>(context, listen: false);
     final AmiiboDB amiibo = Provider.of<SingleAmiibo>(context, listen: false).amiibo;
-    return Card(
-      child: LimitedBox(
-        maxHeight: 250,
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: <Widget>[
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: <Widget>[
-                  Expanded(
-                    child: Padding(
-                      padding: const EdgeInsets.only(top: 4.0, left: 4.0),
-                      child: Hero(
-                        transitionOnUserGestures: true,
-                        tag: amiibo.key,
-                        child: Image.asset(
-                          'assets/collection/icon_${amiibo.key}.png',
-                          fit: BoxFit.scaleDown,
-                        )
-                      ),
-                    ),
-                    flex: 7,
-                  ),
-                  Expanded(
-                    child: Consumer<SingleAmiibo>(
-                      builder: (ctx, amiiboDB, child){
-                        return Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          children: <Widget>[
-                            IconButton(
-                              icon: (amiibo.owned?.isEven ?? true) ?
-                              const Icon(Icons.radio_button_unchecked) : const Icon(iconOwned),
-                              color: colorOwned,
-                              iconSize: 30.0,
-                              tooltip: "Owned",
-                              splashColor: colorOwned[100],
-                              onPressed: () {
-                                final int newValue = (amiibo?.owned ?? 0) ^ 1;
-                                amiiboProvider.updateOwned(newValue, amiibo.wishlist);
-                                amiiboDB.owned = newValue;
-                                amiiboProvider.updateAmiiboDB(amiibo: amiibo);
-                              }
+    return Scaffold(
+      body: SingleChildScrollView(
+        child: Card(
+              child: LimitedBox(
+                maxHeight: 250,
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: <Widget>[
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        children: <Widget>[
+                          Expanded(
+                            child: Padding(
+                              padding: const EdgeInsets.only(top: 4.0, left: 4.0),
+                              child: Hero(
+                                  transitionOnUserGestures: true,
+                                  tag: amiibo.key,
+                                  child: Image.asset(
+                                    'assets/collection/icon_${amiibo.key}.png',
+                                    fit: BoxFit.scaleDown,
+                                  )
+                              ),
                             ),
-                            IconButton(
-                              icon: (amiibo.wishlist?.isEven ?? true) ?
-                              const Icon(Icons.check_box_outline_blank) : const Icon(iconWished),
-                              color: colorWished,
-                              iconSize: 30.0,
-                              tooltip: "Wished",
-                              splashColor: Colors.amberAccent[100],
-                              onPressed: () {
-                                final int newValue = (amiibo?.wishlist ?? 0) ^ 1;
-                                amiiboProvider.updateWished(newValue, amiibo.owned);
-                                amiiboDB.wishlist = newValue;
-                                amiiboProvider.updateAmiiboDB(amiibo: amiibo);
-                              }
-                            )
-                          ],
-                        );
-                      }
+                            flex: 7,
+                          ),
+                          Expanded(
+                            child: Consumer<SingleAmiibo>(
+                                builder: (ctx, amiiboDB, child){
+                                  return Row(
+                                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                    children: <Widget>[
+                                      IconButton(
+                                          icon: (amiibo.owned?.isEven ?? true) ?
+                                          const Icon(Icons.radio_button_unchecked) : const Icon(iconOwned),
+                                          color: colorOwned,
+                                          iconSize: 30.0,
+                                          tooltip: "Owned",
+                                          splashColor: colorOwned[100],
+                                          onPressed: () {
+                                            final int newValue = (amiibo?.owned ?? 0) ^ 1;
+                                            amiiboProvider.updateOwned(newValue, amiibo.wishlist);
+                                            amiiboDB.owned = newValue;
+                                            amiiboProvider.updateAmiiboDB(amiibo: amiibo);
+                                          }
+                                      ),
+                                      IconButton(
+                                          icon: (amiibo.wishlist?.isEven ?? true) ?
+                                          const Icon(Icons.check_box_outline_blank) : const Icon(iconWished),
+                                          color: colorWished,
+                                          iconSize: 30.0,
+                                          tooltip: "Wished",
+                                          splashColor: Colors.amberAccent[100],
+                                          onPressed: () {
+                                            final int newValue = (amiibo?.wishlist ?? 0) ^ 1;
+                                            amiiboProvider.updateWished(newValue, amiibo.owned);
+                                            amiiboDB.wishlist = newValue;
+                                            amiiboProvider.updateAmiiboDB(amiibo: amiibo);
+                                          }
+                                      )
+                                    ],
+                                  );
+                                }
+                            ),
+                            flex: 2,
+                          )
+                        ],
+                      ),
+                      flex: 4,
                     ),
-                    flex: 2,
-                  )
-                ],
-              ),
-              flex: 4,
-            ),
-            const VerticalDivider(indent: 10, endIndent: 10),
-            Expanded(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  TextCardDetail(text: "Character", data: amiibo.character,),
-                  if(amiibo.character != amiibo.name) TextCardDetail(text: "Name", data: amiibo.name,),
-                  TextCardDetail(text: "Serie", data: amiibo.amiiboSeries,),
-                  if(amiibo.amiiboSeries != amiibo.gameSeries) TextCardDetail(text: "Game", data: amiibo.gameSeries,),
-                  TextCardDetail(text: "Type", data: amiibo.type,),
-                  if(amiibo.au != null) RegionDetail(amiibo.au, 'au', 'Australia'),
-                  if(amiibo.eu != null) RegionDetail(amiibo.eu, 'eu', 'Europe'),
-                  if(amiibo.na != null) RegionDetail(amiibo.na, 'na', 'America'),
-                  if(amiibo.jp != null) RegionDetail(amiibo.jp, 'jp', 'Japan'),
-                ],
-              ),
-              flex: 7,
-            )
-          ],
-        ),
+                    const VerticalDivider(indent: 10, endIndent: 10),
+                    Expanded(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: <Widget>[
+                          TextCardDetail(text: "Character", data: amiibo.character,),
+                          if(amiibo.character != amiibo.name) TextCardDetail(text: "Name", data: amiibo.name,),
+                          TextCardDetail(text: "Serie", data: amiibo.amiiboSeries,),
+                          if(amiibo.amiiboSeries != amiibo.gameSeries) TextCardDetail(text: "Game", data: amiibo.gameSeries,),
+                          TextCardDetail(text: "Type", data: amiibo.type,),
+                          if(amiibo.au != null) RegionDetail(amiibo.au, 'au', 'Australia'),
+                          if(amiibo.eu != null) RegionDetail(amiibo.eu, 'eu', 'Europe'),
+                          if(amiibo.na != null) RegionDetail(amiibo.na, 'na', 'America'),
+                          if(amiibo.jp != null) RegionDetail(amiibo.jp, 'jp', 'Japan'),
+                        ],
+                      ),
+                      flex: 7,
+                    )
+                  ],
+                ),
+              )
+          )
       )
     );
   }
@@ -134,143 +132,127 @@ class _BottomSheetDetail extends StatelessWidget{
   Widget build(BuildContext context) {
     final AmiiboProvider amiiboProvider = Provider.of<AmiiboProvider>(context, listen: false);
     final AmiiboDB amiibo = Provider.of<SingleAmiibo>(context, listen: false).amiibo;
-    return Stack(
-      children: <Widget>[
-        Consumer<SingleAmiibo>(
-          builder: (ctx, amiiboDB, child){
-            return Row(
-              mainAxisSize: MainAxisSize.min,
-              mainAxisAlignment: MainAxisAlignment.end,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: <Widget>[
-                IconButton(
-                    icon: (amiibo.owned?.isEven ?? true) ?
-                    const Icon(Icons.radio_button_unchecked) : const Icon(iconOwned),
-                    color: colorOwned,
-                    iconSize: 30.0,
-                    tooltip: "Owned",
-                    splashColor: colorOwned[100],
-                    onPressed: () {
-                      final int newValue = (amiibo?.owned ?? 0) ^ 1;
-                      amiiboProvider.updateOwned(newValue, amiibo.wishlist);
-                      amiiboDB.owned = newValue;
-                      amiiboProvider.updateAmiiboDB(amiibo: amiibo);
-                    }
-                ),
-                child,
-                IconButton(
-                    icon: (amiibo.wishlist?.isEven ?? true) ?
-                    const Icon(Icons.check_box_outline_blank) : const Icon(iconWished),
-                    color: colorWished,
-                    iconSize: 30.0,
-                    tooltip: "Wished",
-                    splashColor: Colors.amberAccent[100],
-                    onPressed: () {
-                      final int newValue = (amiibo?.wishlist ?? 0) ^ 1;
-                      amiiboProvider.updateWished(newValue, amiibo.owned);
-                      amiiboDB.wishlist = newValue;
-                      amiiboProvider.updateAmiiboDB(amiibo: amiibo);
-                    }
-                )
-              ],
-            );
-          },
-          child: Padding(
-            padding: const EdgeInsets.only(top: 4.0, left: 4.0),
-            child: Hero(
-                transitionOnUserGestures: true,
-                tag: amiibo.key,
-                child: Image.asset(
-                  'assets/collection/icon_${amiibo.key}.png',
-                  fit: BoxFit.scaleDown,
-                )
-            ),
-          ),
-        ),
-      ],
-    );
-
-   /* final Size size = MediaQuery.of(context).size;
-    final double height = (460.0 / size.height).clamp(0.25, 0.66);
+    final Size size = MediaQuery.of(context).size;
     EdgeInsetsGeometry padding = EdgeInsets.zero;
-    if(size.longestSide >= 800) padding = EdgeInsets.symmetric(
-        horizontal: (size.width/2 - 210).clamp(0.0, double.infinity)
-    );
-    return DraggableScrollableSheet(
-      key: Key('Draggable'),
-      maxChildSize: 0.8, expand: false, initialChildSize: 0.8,
-      builder: (context, scrollController){
-        final AmiiboProvider amiiboProvider = Provider.of<AmiiboProvider>(context, listen: false);
-        final AmiiboDB amiibo = Provider.of<SingleAmiibo>(context, listen: false).amiibo;
-        return Padding(
-          padding: padding,
-          child: Material(
-              color: Theme.of(context).backgroundColor,
-              shape: Theme.of(context).bottomSheetTheme.shape,
-              child: CustomScrollView(
-                controller: scrollController,
-                slivers: <Widget>[
-                  SliverPersistentHeader(
-                    pinned: true,
-                    delegate: _BottomSheetHeader(
-                      child: Consumer<SingleAmiibo>(
-                          builder: (ctx, amiiboDB, child){
-                            return Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                              children: <Widget>[
-                                Expanded(child: IconButton(
-                                    icon: (amiibo.owned?.isEven ?? true) ?
-                                    const Icon(Icons.radio_button_unchecked) : const Icon(iconOwned),
-                                    color: colorOwned,
-                                    iconSize: 30.0,
-                                    tooltip: "Owned",
-                                    splashColor: colorOwned[100],
-                                    onPressed: () {
-                                      final int newValue = (amiibo?.owned ?? 0) ^ 1;
-                                      amiiboProvider.updateOwned(newValue, amiibo.wishlist);
-                                      amiiboDB.owned = newValue;
-                                      amiiboProvider.updateAmiiboDB(amiibo: amiibo);
-                                    }
-                                ),),
-                                Expanded(child: IconButton(
-                                    icon: (amiibo.wishlist?.isEven ?? true) ?
-                                    const Icon(Icons.check_box_outline_blank) : const Icon(iconWished),
-                                    color: colorWished,
-                                    iconSize: 30.0,
-                                    tooltip: "Wished",
-                                    splashColor: Colors.amberAccent[100],
-                                    onPressed: () {
-                                      final int newValue = (amiibo?.wishlist ?? 0) ^ 1;
-                                      amiiboProvider.updateWished(newValue, amiibo.owned);
-                                      amiiboDB.wishlist = newValue;
-                                      amiiboProvider.updateAmiiboDB(amiibo: amiibo);
-                                    }
-                                ),)
-                              ],
-                            );
-                          }
-                      ),
+    int flex = 4;
+    if(size.longestSide >= 800)
+      padding = EdgeInsets.symmetric(
+          horizontal: (size.width/2 - 250).clamp(0.0, double.infinity)
+      );
+    if(size.width >= 400) flex = 6;
+    return Align(
+      alignment: Alignment.bottomCenter,
+      child: Padding(
+        padding: padding,
+        child: Material(
+          type: MaterialType.card,
+          shape: const RoundedRectangleBorder(
+              borderRadius: const BorderRadius.vertical(top: Radius.circular(8))
+          ),
+          clipBehavior: Clip.antiAlias,
+          child: SingleChildScrollView(
+            child: LimitedBox(
+              maxHeight: 250,
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: <Widget>[
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: <Widget>[
+                        Expanded(
+                          child: Padding(
+                            padding: const EdgeInsets.only(top: 4.0, left: 4.0),
+                            child: Hero(
+                              transitionOnUserGestures: true,
+                              tag: amiibo.key,
+                              child: Image.asset(
+                                'assets/collection/icon_${amiibo.key}.png',
+                                fit: BoxFit.scaleDown,
+                              )
+                            ),
+                          ),
+                          flex: 7,
+                        ),
+                        Expanded(
+                          child: Consumer<SingleAmiibo>(
+                            builder: (ctx, amiiboDB, child){
+                              return Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                children: <Widget>[
+                                  Expanded(
+                                    child: FittedBox(
+                                      child: IconButton(
+                                        icon: (amiibo.owned?.isEven ?? true) ?
+                                        const Icon(Icons.radio_button_unchecked) : const Icon(iconOwned),
+                                        color: colorOwned,
+                                        iconSize: 30.0,
+                                        tooltip: "Owned",
+                                        splashColor: colorOwned[100],
+                                        onPressed: () {
+                                          final int newValue = (amiibo?.owned ?? 0) ^ 1;
+                                          amiiboProvider.updateOwned(newValue, amiibo.wishlist);
+                                          amiiboDB.owned = newValue;
+                                          amiiboProvider.updateAmiiboDB(amiibo: amiibo);
+                                        }
+                                    ),
+                                    )
+                                  ),
+                                  Expanded(
+                                    child: FittedBox(
+                                      child: IconButton(
+                                          icon: (amiibo.wishlist?.isEven ?? true) ?
+                                          const Icon(Icons.check_box_outline_blank) : const Icon(iconWished),
+                                          color: colorWished,
+                                          iconSize: 30.0,
+                                          tooltip: "Wished",
+                                          splashColor: Colors.amberAccent[100],
+                                          onPressed: () {
+                                            final int newValue = (amiibo?.wishlist ?? 0) ^ 1;
+                                            amiiboProvider.updateWished(newValue, amiibo.owned);
+                                            amiiboDB.wishlist = newValue;
+                                            amiiboProvider.updateAmiiboDB(amiibo: amiibo);
+                                          }
+                                      )
+                                    )
+                                  ),
+                                ],
+                              );
+                            }
+                          ),
+                          flex: 2,
+                        ),
+                      ],
                     ),
+                    flex: flex,
                   ),
-                  SliverList(
-                    delegate: SliverChildListDelegate([
-                      Text(amiibo.character,),
-                      if(amiibo.character != amiibo.name) Text(amiibo.name,),
-                      Text(amiibo.amiiboSeries,),
-                      if(amiibo.amiiboSeries != amiibo.gameSeries) Text(amiibo.gameSeries,),
-                      Text(amiibo.type,),
-                      if(amiibo.au != null) Text('Australia'),
-                      if(amiibo.eu != null) Text('Europe'),
-                      if(amiibo.na != null) Text('America'),
-                      if(amiibo.jp != null) Text('Japan'),
-                    ]),
+                  const VerticalDivider(indent: 10, endIndent: 10),
+                  Expanded(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        TextCardDetail(text: "Character", data: amiibo.character,),
+                        if(amiibo.character != amiibo.name) TextCardDetail(text: "Name", data: amiibo.name,),
+                        TextCardDetail(text: "Serie", data: amiibo.amiiboSeries,),
+                        if(amiibo.amiiboSeries != amiibo.gameSeries) TextCardDetail(text: "Game", data: amiibo.gameSeries,),
+                        TextCardDetail(text: "Type", data: amiibo.type,),
+                        if(amiibo.au != null) RegionDetail(amiibo.au, 'au', 'Australia'),
+                        if(amiibo.eu != null) RegionDetail(amiibo.eu, 'eu', 'Europe'),
+                        if(amiibo.na != null) RegionDetail(amiibo.na, 'na', 'America'),
+                        if(amiibo.jp != null) RegionDetail(amiibo.jp, 'jp', 'Japan'),
+                      ],
+                    ),
+                    flex: 7,
                   )
                 ],
-              )
+              ),
+            )
           )
-        );
-      },
-    );*/
+        ),
+      )
+    );
   }
 }
 

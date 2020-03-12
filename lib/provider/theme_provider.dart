@@ -146,6 +146,7 @@ class _Theme{
       backgroundColor: color[100],
       highlightColor: Colors.white70,
       selectedRowColor: color[200],
+      cardColor: color[100],
       cardTheme: CardTheme(
         color: color[100],
         margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
@@ -233,6 +234,7 @@ class _Theme{
           cursorColor: Colors.white10,
           backgroundColor: Colors.blueGrey[800],
           selectedRowColor: Colors.blueGrey[700],
+          cardColor: Colors.blueGrey[800],
           cardTheme: CardTheme(
             color: Colors.blueGrey[800],
             margin: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
@@ -315,6 +317,7 @@ class _Theme{
           cursorColor: Colors.white10,
           backgroundColor: Colors.grey[850],
           selectedRowColor: Colors.grey[800],
+          cardColor: Colors.grey[850],
           cardTheme: CardTheme(
             color: Colors.grey[850],
             margin: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
@@ -398,6 +401,7 @@ class _Theme{
           cursorColor: Colors.white10,
           backgroundColor: Colors.black,
           selectedRowColor: Colors.grey[900],
+          cardColor: Colors.black,
           cardTheme: CardTheme(
             color: Colors.transparent,
             margin: EdgeInsets.symmetric(horizontal: 8, vertical: 4),

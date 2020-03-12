@@ -17,7 +17,6 @@ import 'package:amiibo_network/provider/stat_provider.dart';
 import 'package:amiibo_network/provider/theme_provider.dart';
 import 'dart:math' as math;
 import 'dart:ui' as ui show FontFeature;
-import 'package:amiibo_network/utils/amiibo_category.dart';
 
 class Home extends StatelessWidget{
 
@@ -237,7 +236,6 @@ class HomePageState extends State<HomePage>
                               child: FadeSwitchAnimation(
                                 key: ValueKey<int>(index),
                                 child: AmiiboGrid(
-                                  index: index,
                                   key: ValueKey<int>(data?.amiibo[index].key),
                                 ),
                               )
@@ -421,182 +419,182 @@ class _SortCollectionState extends State<_SortCollection> {
         if(size.longestSide >= 800) padding = EdgeInsets.symmetric(
           horizontal: (size.width/2 - 210).clamp(0.0, double.infinity)
         );
-        return DraggableScrollableSheet(
-          key: Key('Draggable'),
-          maxChildSize: height, expand: false, initialChildSize: height,
-          builder: (context, scrollController){
-            final String _orderCategory = Provider.of<AmiiboProvider>(context).orderCategory;
-            final String _sortBy = Provider.of<AmiiboProvider>(context).sort;
-            return Padding(
-              padding: padding,
-              child: Material(
-                color: Theme.of(context).backgroundColor,
-                shape: Theme.of(context).bottomSheetTheme.shape,
-                child: CustomScrollView(
-                  controller: scrollController,
-                  slivers: <Widget>[
-                    SliverPersistentHeader(
-                      pinned: true,
-                      delegate: _BottomSheetHeader(
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: <Widget>[
-                            Text('Sort By', style: Theme.of(context).textTheme.title),
-                            MaterialButton(
-                              height: 34,
-                              materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                              highlightColor: Colors.transparent,
-                              textColor: Theme.of(context).accentColor,
-                              splashColor: Theme.of(context).selectedRowColor,
-                              onPressed: () => Navigator.pop(context),
-                              child: Text('Done'),
-                            )
-                          ],
+        return Padding(
+          padding: padding,
+          child: DraggableScrollableSheet(
+            key: Key('Draggable'),
+            maxChildSize: height, expand: false, initialChildSize: height,
+            builder: (context, scrollController){
+              final String _orderCategory = Provider.of<AmiiboProvider>(context).orderCategory;
+              final String _sortBy = Provider.of<AmiiboProvider>(context).sort;
+              return Material(
+                  color: Theme.of(context).backgroundColor,
+                  shape: Theme.of(context).bottomSheetTheme.shape,
+                  child: CustomScrollView(
+                    controller: scrollController,
+                    slivers: <Widget>[
+                      SliverPersistentHeader(
+                        pinned: true,
+                        delegate: _BottomSheetHeader(
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: <Widget>[
+                              Text('Sort By', style: Theme.of(context).textTheme.title),
+                              MaterialButton(
+                                height: 34,
+                                materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                                highlightColor: Colors.transparent,
+                                textColor: Theme.of(context).accentColor,
+                                splashColor: Theme.of(context).selectedRowColor,
+                                onPressed: () => Navigator.pop(context),
+                                child: Text('Done'),
+                              )
+                            ],
+                          ),
                         ),
                       ),
-                    ),
-                    SliverList(
-                      delegate: SliverChildListDelegate([
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
-                          child: SizedBox(
-                            height: 36,
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              mainAxisSize: MainAxisSize.max,
-                              children: <Widget>[
-                                Expanded(
-                                  child: FlatButton.icon(
-                                    padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                                    textColor: _sortBy.contains('ASC') ? Theme.of(context).textTheme.title.color : Theme.of(context).accentColor,
-                                    color: _sortBy.contains('ASC') ? Theme.of(context).accentColor : null,
-                                    shape: Border.all(
-                                      color: Theme.of(context).accentColor,
-                                      width: 2,
-                                    ),
-                                    onPressed: () => _sortOrder('ASC'),
-                                    icon: const Icon(Icons.arrow_downward, size: 20,),
-                                    label: Flexible(child: FittedBox(child: Text('Ascending (A-Z)'),)),
-                                  ),
-                                ),
-                                Expanded(
-                                  child: FlatButton.icon(
-                                    padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                                    textColor: _sortBy.contains('DESC') ? Theme.of(context).textTheme.title.color : Theme.of(context).accentColor,
-                                    color: _sortBy.contains('DESC') ? Theme.of(context).accentColor : null,
-                                    shape: Border(
-                                      bottom: BorderSide(
-                                        color: Theme.of(context).accentColor,
-                                        width: 2,
+                      SliverList(
+                        delegate: SliverChildListDelegate([
+                          Padding(
+                              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
+                              child: SizedBox(
+                                  height: 36,
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    mainAxisSize: MainAxisSize.max,
+                                    children: <Widget>[
+                                      Expanded(
+                                        child: FlatButton.icon(
+                                          padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                                          textColor: _sortBy.contains('ASC') ? Theme.of(context).textTheme.title.color : Theme.of(context).accentColor,
+                                          color: _sortBy.contains('ASC') ? Theme.of(context).accentColor : null,
+                                          shape: Border.all(
+                                            color: Theme.of(context).accentColor,
+                                            width: 2,
+                                          ),
+                                          onPressed: () => _sortOrder('ASC'),
+                                          icon: const Icon(Icons.arrow_downward, size: 20,),
+                                          label: Flexible(child: FittedBox(child: Text('Ascending (A-Z)'),)),
+                                        ),
                                       ),
-                                      top: BorderSide(
-                                        color: Theme.of(context).accentColor,
-                                        width: 2,
+                                      Expanded(
+                                        child: FlatButton.icon(
+                                          padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                                          textColor: _sortBy.contains('DESC') ? Theme.of(context).textTheme.title.color : Theme.of(context).accentColor,
+                                          color: _sortBy.contains('DESC') ? Theme.of(context).accentColor : null,
+                                          shape: Border(
+                                            bottom: BorderSide(
+                                              color: Theme.of(context).accentColor,
+                                              width: 2,
+                                            ),
+                                            top: BorderSide(
+                                              color: Theme.of(context).accentColor,
+                                              width: 2,
+                                            ),
+                                            left: BorderSide(
+                                                color: Theme.of(context).accentColor,
+                                                width: 0.0
+                                            ),
+                                            right: BorderSide(
+                                                color: Theme.of(context).accentColor,
+                                                width: 2.0
+                                            ),
+                                          ),
+                                          onPressed: () => _sortOrder('DESC'),
+                                          icon: const Icon(Icons.arrow_upward, size: 20),
+                                          label: Flexible(child: FittedBox(child: Text('Descending (Z-A)'),)),
+                                        ),
                                       ),
-                                      left: BorderSide(
-                                          color: Theme.of(context).accentColor,
-                                          width: 0.0
-                                      ),
-                                      right: BorderSide(
-                                          color: Theme.of(context).accentColor,
-                                          width: 2.0
-                                      ),
-                                    ),
-                                    onPressed: () => _sortOrder('DESC'),
-                                    icon: const Icon(Icons.arrow_upward, size: 20),
-                                    label: Flexible(child: FittedBox(child: Text('Descending (Z-A)'),)),
-                                  ),
-                                ),
-                              ],
-                            )
-                          )
-                        ),
-                        RadioListTile(
-                          value: 'name',
-                          groupValue: _orderCategory,
-                          onChanged: _selectOrder,
-                          title: Text('Name'),
-                          selected: _orderCategory.contains('name'),
-                        ),
-                        RadioListTile(
-                          value: 'owned',
-                          groupValue: _orderCategory,
-                          onChanged: _selectOrder,
-                          selected: _orderCategory.contains('owned'),
-                          title: Text('Owned'),
-                        ),
-                        RadioListTile(
-                          value: 'wishlist',
-                          groupValue: _orderCategory,
-                          onChanged: _selectOrder,
-                          title: Text('Wished'),
-                          selected: _orderCategory.contains('wishlist'),
-                        ),
-                        RadioListTile(
-                          value: 'na',
-                          groupValue: _orderCategory,
-                          onChanged: _selectOrder,
-                          title: Text('American Date'),
-                          selected: _orderCategory == 'na',
-                          secondary: Image.asset(
-                            'assets/images/na.png',
-                            height: 16, width: 25,
-                            fit: BoxFit.fill,
-                            semanticLabel: 'American Date',
+                                    ],
+                                  )
+                              )
                           ),
-                        ),
-                        RadioListTile(
-                          value: 'eu',
-                          groupValue: _orderCategory,
-                          onChanged: _selectOrder,
-                          title: Text('European Date'),
-                          selected: _orderCategory.contains('eu'),
-                          secondary: Image.asset(
-                            'assets/images/eu.png',
-                            height: 16, width: 25,
-                            fit: BoxFit.fill,
-                            semanticLabel: 'European date',
-                          ),
-                        ),
-                        RadioListTile(
-                            value: 'jp',
+                          RadioListTile(
+                            value: 'name',
                             groupValue: _orderCategory,
                             onChanged: _selectOrder,
-                            title: Text('Japanese Date'),
-                            selected: _orderCategory.contains('jp'),
-                            secondary: DecoratedBox(
-                              decoration: BoxDecoration(
-                                  border: Border.all(width: 0.75)
-                              ),
-                              position: DecorationPosition.foreground,
-                              child: Image.asset(
-                                'assets/images/jp.png',
-                                height: 16, width: 25,
-                                fit: BoxFit.fill,
-                                semanticLabel: 'Japanese date',
-                              ),
-                            )
-                        ),
-                        RadioListTile(
-                          value: 'au',
-                          groupValue: _orderCategory,
-                          onChanged: _selectOrder,
-                          title: Text('Australian Date'),
-                          selected: _orderCategory.contains('au'),
-                          secondary: Image.asset(
-                            'assets/images/au.png',
-                            height: 16, width: 25,
-                            fit: BoxFit.fill,
-                            semanticLabel: 'Australian date',
+                            title: Text('Name'),
+                            selected: _orderCategory.contains('name'),
                           ),
-                        ),
-                      ]),
-                    )
-                  ],
-                )
-              )
-            );
-          },
+                          RadioListTile(
+                            value: 'owned',
+                            groupValue: _orderCategory,
+                            onChanged: _selectOrder,
+                            selected: _orderCategory.contains('owned'),
+                            title: Text('Owned'),
+                          ),
+                          RadioListTile(
+                            value: 'wishlist',
+                            groupValue: _orderCategory,
+                            onChanged: _selectOrder,
+                            title: Text('Wished'),
+                            selected: _orderCategory.contains('wishlist'),
+                          ),
+                          RadioListTile(
+                            value: 'na',
+                            groupValue: _orderCategory,
+                            onChanged: _selectOrder,
+                            title: Text('American Date'),
+                            selected: _orderCategory == 'na',
+                            secondary: Image.asset(
+                              'assets/images/na.png',
+                              height: 16, width: 25,
+                              fit: BoxFit.fill,
+                              semanticLabel: 'American Date',
+                            ),
+                          ),
+                          RadioListTile(
+                            value: 'eu',
+                            groupValue: _orderCategory,
+                            onChanged: _selectOrder,
+                            title: Text('European Date'),
+                            selected: _orderCategory.contains('eu'),
+                            secondary: Image.asset(
+                              'assets/images/eu.png',
+                              height: 16, width: 25,
+                              fit: BoxFit.fill,
+                              semanticLabel: 'European date',
+                            ),
+                          ),
+                          RadioListTile(
+                              value: 'jp',
+                              groupValue: _orderCategory,
+                              onChanged: _selectOrder,
+                              title: Text('Japanese Date'),
+                              selected: _orderCategory.contains('jp'),
+                              secondary: DecoratedBox(
+                                decoration: BoxDecoration(
+                                    border: Border.all(width: 0.75)
+                                ),
+                                position: DecorationPosition.foreground,
+                                child: Image.asset(
+                                  'assets/images/jp.png',
+                                  height: 16, width: 25,
+                                  fit: BoxFit.fill,
+                                  semanticLabel: 'Japanese date',
+                                ),
+                              )
+                          ),
+                          RadioListTile(
+                            value: 'au',
+                            groupValue: _orderCategory,
+                            onChanged: _selectOrder,
+                            title: Text('Australian Date'),
+                            selected: _orderCategory.contains('au'),
+                            secondary: Image.asset(
+                              'assets/images/au.png',
+                              height: 16, width: 25,
+                              fit: BoxFit.fill,
+                              semanticLabel: 'Australian date',
+                            ),
+                          ),
+                        ]),
+                      )
+                    ],
+                  )
+              );
+            },
+          ),
         );
       }
     );
@@ -676,12 +674,8 @@ class FAB extends StatelessWidget{
 }
 
 class AmiiboGrid extends StatefulWidget {
-  final int index;
 
-  const AmiiboGrid({
-    Key key,
-    this.index,
-  }) : super(key: key);
+  const AmiiboGrid({Key key,}) : super(key: key);
 
   @override
   State<StatefulWidget> createState() => AmiiboGridState();
@@ -701,7 +695,7 @@ class AmiiboGridState extends State<AmiiboGrid> {
   }
 
   _onDoubleTap() =>
-    Navigator.pushNamed(context, "/details", arguments: widget.index);
+    Navigator.pushNamed(context, "/details", arguments: amiiboDB);
 
   _onTap(){
     final AmiiboProvider amiiboProvider = Provider.of<AmiiboProvider>(context, listen: false);
@@ -750,6 +744,12 @@ class AmiiboGridState extends State<AmiiboGrid> {
                     child: Padding(
                       padding: const EdgeInsets.only(top: 4.0, left: 4.0, right: 4.0),
                       child: Hero(
+                        placeholderBuilder: (context, size, child){
+                          return ColorFiltered(
+                            colorFilter: ColorFilter.mode(Colors.black54, BlendMode.modulate),
+                            child: child
+                          );
+                        },
                         transitionOnUserGestures: true,
                         tag: amiibo.key,
                         child: Image.asset(
@@ -758,13 +758,6 @@ class AmiiboGridState extends State<AmiiboGrid> {
                         )
                       ),
                     ),
-                    /*
-                      ColorFiltered(
-                        colorFilter: ColorFilter.mode(Colors.white54, BlendMode.modulate),
-                        child: Image.asset('assets/collection/icon_${amiibo.key}.png',
-                          fit: BoxFit.scaleDown,
-                        ),
-                      )*/
                     flex: 9,
                   ),
                   Expanded(

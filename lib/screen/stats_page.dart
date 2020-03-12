@@ -126,7 +126,7 @@ class _StatsPageState extends State<StatsPage> {
                 Expanded(
                   child: FlatButton(
                     shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.horizontal(left: Radius.circular(8)),
+                      borderRadius: const BorderRadius.horizontal(left: Radius.circular(8)),
                       side: BorderSide(
                         color: Theme.of(context).indicatorColor,
                         width: 2,
@@ -170,7 +170,7 @@ class _StatsPageState extends State<StatsPage> {
                 Expanded(
                   child: FlatButton(
                     shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.horizontal(right: Radius.circular(8)),
+                      borderRadius: const BorderRadius.horizontal(right: Radius.circular(8)),
                       side: BorderSide(
                         color: Theme.of(context).indicatorColor,
                         width: 2,

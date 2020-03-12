@@ -166,7 +166,7 @@ class AmiiboProvider with ChangeNotifier{
         break;
       case AmiiboCategory.Owned:
       case AmiiboCategory.Wishlist:
-        _where = Cond.like(_strFilter, '%1%');
+        _where = Cond.iss(_strFilter, '1');
         break;
       case AmiiboCategory.Figures:
         _where = InCond.inn('type', ['Figure', 'Yarn']);
