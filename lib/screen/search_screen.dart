@@ -5,7 +5,6 @@ import 'package:amiibo_network/provider/amiibo_provider.dart';
 import 'package:flutter/services.dart';
 import 'package:amiibo_network/widget/floating_bar.dart';
 import 'package:amiibo_network/utils/amiibo_category.dart';
-
 class SearchScreen extends StatefulWidget {
   @override
   State<StatefulWidget> createState() => SearchScreenState();
@@ -19,7 +18,7 @@ class SearchScreenState extends State<SearchScreen>{
   @override
   void initState() {
     super.initState();
-    _textController.addListener(onChangedText);
+    _textController..addListener(onChangedText);
   }
 
   @override
@@ -32,7 +31,7 @@ class SearchScreenState extends State<SearchScreen>{
 
   @override
   dispose() {
-    _textController.dispose();
+    _textController?.dispose();
     super.dispose();
   }
 
@@ -45,6 +44,26 @@ class SearchScreenState extends State<SearchScreen>{
             SliverFloatingBar(
               backgroundColor: Theme.of(context).scaffoldBackgroundColor,
               pinned: true,
+              leading: IconButton(
+                icon: Hero(
+                  flightShuttleBuilder: (
+                      BuildContext flightContext,
+                      Animation<double> animation,
+                      HeroFlightDirection flightDirection,
+                      BuildContext fromHeroContext,
+                      BuildContext toHeroContext,
+                      ) {
+                    return AnimatedIcon(
+                      icon: AnimatedIcons.menu_arrow,
+                      progress: animation,
+                    );
+                  },
+                  tag: 'MenuButton',
+                  child: const BackButtonIcon()
+                ),
+                tooltip: 'close',
+                onPressed: Navigator.of(context).pop
+              ),
               title: TextField(
                 controller: _textController,
                 inputFormatters: [
@@ -58,12 +77,12 @@ class SearchScreenState extends State<SearchScreen>{
                 style: Theme.of(context).textTheme.display1,
                 autocorrect: false,
                 decoration: InputDecoration(
-                  isDense: true,
-                  hintText: Provider.of<AmiiboProvider>(context).strFilter,
-                  hintStyle: Theme.of(context).textTheme.display1.copyWith(
-                    color: Theme.of(context).textTheme.display1.color.withOpacity(0.5)
-                  ),
-                  border: InputBorder.none
+                    isDense: true,
+                    hintText: Provider.of<AmiiboProvider>(context).strFilter,
+                    hintStyle: Theme.of(context).textTheme.display1.copyWith(
+                        color: Theme.of(context).textTheme.display1.color.withOpacity(0.5)
+                    ),
+                    border: InputBorder.none
                 )
               ),
               trailing: ValueListenableBuilder<TextEditingValue>(
@@ -101,7 +120,6 @@ class SearchScreenState extends State<SearchScreen>{
                           child: ListTile(
                             onTap: () => Navigator.of(context).pop(snapshot.data[index]),
                             title: Text('${snapshot.data[index]}'),
-                            //subtitle: Text('AmiiboSeries'),
                           )
                         ),
                       );

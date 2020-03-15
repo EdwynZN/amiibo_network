@@ -32,6 +32,7 @@ class StatProvider with ChangeNotifier{
 
   String statLabel(double num, double den){
     if(prefStat){
+      if(den == 0) return '0%';
       final double x = num *100 / den;
       return '${regPercent.firstMatch(x.toStringAsFixed(2))[1]}%';
     }

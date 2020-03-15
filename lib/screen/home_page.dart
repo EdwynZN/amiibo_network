@@ -18,15 +18,28 @@ import 'package:amiibo_network/provider/theme_provider.dart';
 import 'dart:math' as math;
 import 'dart:ui' as ui show FontFeature;
 
-class Home extends StatelessWidget{
-
+class Home extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: ChangeNotifierProvider(
-        create: (context) => SelectProvider(),
-        child: HomePage(),
-      )
+    final AmiiboProvider amiiboProvider = Provider.of<AmiiboProvider>(context, listen: false);
+    return MultiProvider(
+      providers: [
+        StreamProvider<AmiiboLocalDB>.value(
+          value: amiiboProvider.amiiboList,
+        ),
+        StreamProvider<Map<String,dynamic>>.value(
+          initialData: {'Owned' : 0, 'Wished' : 0, 'Total' : 0},
+          value: amiiboProvider.collectionList,
+          updateShouldNotify: (prev, curr) =>
+            prev['Owned'] != curr['Owned'] ||
+            prev['Wished'] != curr['Wished'] ||
+            prev['Total'] != curr['Total']
+        ),
+        ChangeNotifierProvider<SelectProvider>(
+          create: (_) => SelectProvider(),
+        )
+      ],
+      child: SafeArea(child: HomePage()),
     );
   }
 }
@@ -72,8 +85,8 @@ class HomePageState extends State<HomePage>
       )
     );
     selected.clearSelected();
-    await amiiboProvider.updateAmiiboDB(amiibos: amiibos);
-    await amiiboProvider.refreshPagination();
+    amiiboProvider.updateAmiiboDB(amiibos: amiibos);
+    amiiboProvider.refreshPagination();
   }
 
   void _cancelSelection() => selected.clearSelected();
@@ -147,7 +160,7 @@ class HomePageState extends State<HomePage>
         builder: (_, _multipleSelection, child){
           return Scaffold(
             resizeToAvoidBottomInset: false,
-            drawer: _multipleSelection ? null : CollectionDrawer(restart: _restartAnimation,),
+            drawer: _multipleSelection ? null : CollectionDrawer(restart: _restartAnimation),
             body: Scrollbar(
               child: CustomScrollView(
                 controller: _controller,
@@ -157,11 +170,14 @@ class HomePageState extends State<HomePage>
                     forward: _multipleSelection,
                     snap: true,
                     leading: Builder(
-                        builder: (context) => IconButton(
-                          icon: ImplicitIcon(forward: _multipleSelection),
-                          tooltip: _multipleSelection ? 'close' : 'drawer',
-                          onPressed: _multipleSelection ? _cancelSelection : () => Scaffold.of(context).openDrawer(),
-                        )
+                      builder: (context) => IconButton(
+                        icon: Hero(
+                          tag: 'MenuButton',
+                          child: ImplicitIcon(key: Key('Menu'),forward: _multipleSelection)
+                        ),
+                        tooltip: _multipleSelection ? 'close' : 'drawer',
+                        onPressed: _multipleSelection ? _cancelSelection : () => Scaffold.of(context).openDrawer(),
+                      ),
                     ),
                     title: Selector2<AmiiboProvider, SelectProvider, String>(
                       selector: (context, text, count) => count.multipleSelected ? count.selected.toString() : text.strFilter,
@@ -212,13 +228,13 @@ class HomePageState extends State<HomePage>
                         )
                       ),
                       builder: (ctx, data, child){
-                        bool bigGrid = MediaQuery.of(context).size.width >= 600;
+                        final bool bigGrid = MediaQuery.of(context).size.width >= 600;
                         if((data?.amiibo?.length ?? 1) == 0)
                           return DefaultTextStyle(
                             style: Theme.of(context).textTheme.display1,
                             child: child,
                           );
-                        else return SliverGrid(
+                        return SliverGrid(
                           gridDelegate: bigGrid ?
                           SliverGridDelegateWithMaxCrossAxisExtent(
                             maxCrossAxisExtent: 192,
@@ -278,19 +294,18 @@ class _SliverPersistentHeader extends SliverPersistentHeaderDelegate {
         ),
       ),
       height: math.max(minExtent, maxExtent - shrinkOffset),
-      child: StreamBuilder<Map<String,dynamic>>(
-        initialData: {'Owned' : 0.0, 'Wished' : 0.0, 'Total' : 0.0},
-        stream: Provider.of<AmiiboProvider>(context, listen: false).collectionList,
-        builder: (context , statList) {
-          if(statList.data['Total'] == 0 || statList == null)
-            return const SizedBox();
+      child: Consumer<Map<String,dynamic>>(
+        child: const SizedBox(),
+        builder: (context, statList, child){
+          if(statList == null) return child;
+          if(statList['Total'] == 0) return child;
           return Row(
             children: <Widget>[
               Expanded(
                 child: Radial(
                   icon: AnimatedRadial(
                     key: Key('Owned'),
-                    percentage: statList.data['Owned'].toDouble() / statList.data['Total'].toDouble(),
+                    percentage: statList['Owned'].toDouble() / statList['Total'].toDouble(),
                     child: Icon(iconOwnedDark, color: Colors.green[800]),
                   ),
                   label: Flexible(
@@ -299,8 +314,8 @@ class _SliverPersistentHeader extends SliverPersistentHeaderDelegate {
                       child: Consumer<StatProvider>(
                         builder: (ctx, stat, _){
                           final String ownedStat = stat.statLabel(
-                              statList.data['Owned'].toDouble(),
-                              statList.data['Total'].toDouble()
+                              statList['Owned'].toDouble(),
+                              statList['Total'].toDouble()
                           );
                           return RichText(
                             text: TextSpan(
@@ -329,49 +344,49 @@ class _SliverPersistentHeader extends SliverPersistentHeaderDelegate {
               const SizedBox(width: 8.0),
               Expanded(
                 child: Radial(
-                  icon: AnimatedRadial(
-                    key: Key('Wished'),
-                    percentage:
-                    statList.data['Wished'].toDouble()
-                        / statList.data['Total'].toDouble(),
-                    child: Icon(Icons.whatshot, color: Colors.amber[800]),
-                  ),
-                  label: Flexible(
-                    child: FittedBox(
-                      fit: BoxFit.scaleDown,
-                      child: Consumer<StatProvider>(
-                        builder: (ctx, stat, _){
-                          final String wishedStat = stat.statLabel(
-                              statList.data['Wished'].toDouble(),
-                              statList.data['Total'].toDouble()
-                          );
-                          return RichText(
-                            text: TextSpan(
-                              text: wishedStat,
-                              style: Theme.of(context).textTheme.subhead.copyWith(
-                                fontSize: stat.prefStat ? null : 22,
-                                fontFeatures: [
-                                  if(!stat.prefStat) ui.FontFeature.enable('frac'),
-                                  if(stat.prefStat) ui.FontFeature.tabularFigures()
-                                ],
-                              ),
-                              children: [
-                                TextSpan(
-                                    style: Theme.of(context).textTheme.subhead,
-                                    text: ' Wished'
-                                )
-                              ]
-                            ),
-                          );
-                        }
-                      ),
+                    icon: AnimatedRadial(
+                      key: Key('Wished'),
+                      percentage:
+                      statList['Wished'].toDouble()
+                          / statList['Total'].toDouble(),
+                      child: Icon(Icons.whatshot, color: Colors.amber[800]),
                     ),
-                  )
+                    label: Flexible(
+                      child: FittedBox(
+                        fit: BoxFit.scaleDown,
+                        child: Consumer<StatProvider>(
+                            builder: (ctx, stat, _){
+                              final String wishedStat = stat.statLabel(
+                                  statList['Wished'].toDouble(),
+                                  statList['Total'].toDouble()
+                              );
+                              return RichText(
+                                text: TextSpan(
+                                    text: wishedStat,
+                                    style: Theme.of(context).textTheme.subhead.copyWith(
+                                      fontSize: stat.prefStat ? null : 22,
+                                      fontFeatures: [
+                                        if(!stat.prefStat) ui.FontFeature.enable('frac'),
+                                        if(stat.prefStat) ui.FontFeature.tabularFigures()
+                                      ],
+                                    ),
+                                    children: [
+                                      TextSpan(
+                                          style: Theme.of(context).textTheme.subhead,
+                                          text: ' Wished'
+                                      )
+                                    ]
+                                ),
+                              );
+                            }
+                        ),
+                      ),
+                    )
                 ),
               ),
             ],
           );
-        }
+        },
       ),
     );
   }
@@ -699,7 +714,6 @@ class AmiiboGridState extends State<AmiiboGrid> {
 
   _onTap(){
     final AmiiboProvider amiiboProvider = Provider.of<AmiiboProvider>(context, listen: false);
-    amiiboProvider.shiftStat(amiibo.owned, amiibo.wishlist);
     amiiboDB.shift();
     amiiboProvider.updateAmiiboDB(amiibo: amiibo);
   }

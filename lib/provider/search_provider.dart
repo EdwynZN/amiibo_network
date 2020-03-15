@@ -27,21 +27,21 @@ extension _StringParsing on AmiiboCategory{
 class SearchProvider{
   final _service = Service();
   final _searchFetcher = PublishSubject<String>();
-  final _se = BehaviorSubject<AmiiboCategory>.seeded(_category);
+  final _categoryStream = BehaviorSubject<AmiiboCategory>.seeded(_category);
   static AmiiboCategory _category = AmiiboCategory.Name;
   AmiiboCategory get category => _category;
-  set category(AmiiboCategory cat) {
-    if(cat == null) {
+  set category(AmiiboCategory newCategory) {
+    if(newCategory == null) {
       _category = AmiiboCategory.All;
       return;
     }
-    _category = cat;
-    _se.sink.add(cat);
+    _category = newCategory;
+    _categoryStream.sink.add(newCategory);
   }
 
   Stream<List<String>> get search => CombineLatestStream.combine2<String, AmiiboCategory, Expression>(
     _searchFetcher.stream.debounceTime(const Duration(milliseconds: 500)).map((string) => string.trim()),
-    _se.stream, (text, category) => whereExpression(text),
+    _categoryStream.stream, (text, category) => whereExpression(text),
   ).asyncMap((exp) => exp == null ? null : _service.searchDB(exp, _category.name));
 
   Expression whereExpression(String filter){
@@ -73,7 +73,7 @@ class SearchProvider{
   searchValue(String s) => _searchFetcher.sink.add(s);
 
   dispose() {
-    _se?.close();
+    _categoryStream?.close();
     _searchFetcher?.close();
   }
 }

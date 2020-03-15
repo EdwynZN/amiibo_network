@@ -58,140 +58,140 @@ class _CollectionDrawerState extends State<CollectionDrawer> {
                   child: CustomScrollView(
                     slivers: <Widget>[
                       Consumer<AmiiboProvider>(
-                          child: _HeaderDrawer(),
-                          builder: (context, filter, child){
-                            final String _selected = filter.strFilter;
-                            final AmiiboCategory _category = filter.category;
-                            return SliverList(
-                              delegate: SliverChildListDelegate([
-                                child,
-                                Consumer<StatProvider>(
-                                  child: Text('Show percentage', overflow: TextOverflow.fade,),
-                                  builder: (ctx, _statMode, child){
-                                    return SwitchListTile.adaptive(
-                                      secondary: const SizedBox(),
-                                      title: child,
-                                      value: _statMode.prefStat,
-                                      onChanged: Provider.of<StatProvider>(ctx, listen: false).spStat,
+                        child: _HeaderDrawer(),
+                        builder: (context, filter, child){
+                          final String _selected = filter.strFilter;
+                          final AmiiboCategory _category = filter.category;
+                          return SliverList(
+                            delegate: SliverChildListDelegate([
+                              child,
+                              Consumer<StatProvider>(
+                                child: Text('Show percentage', overflow: TextOverflow.fade,),
+                                builder: (ctx, _statMode, child){
+                                  return SwitchListTile.adaptive(
+                                    secondary: const SizedBox(),
+                                    title: child,
+                                    value: _statMode.prefStat,
+                                    onChanged: Provider.of<StatProvider>(ctx, listen: false).spStat,
+                                  );
+                                },
+                              ),
+                              ListTile(
+                                onTap: () => _onTapTile(AmiiboCategory.All,'All'),
+                                leading: const Icon(Icons.all_inclusive),
+                                title: Text('All',),
+                                selected: _selected == 'All',
+                              ),
+                              ListTile(
+                                onTap: () => _onTapTile(AmiiboCategory.Owned,'Owned'),
+                                leading: const Icon(iconOwned),
+                                title: Text('Owned'),
+                                selected: _selected == 'Owned',
+                              ),
+                              ListTile(
+                                onTap: () => _onTapTile(AmiiboCategory.Wishlist,'Wishlist'),
+                                leading: const Icon(iconWished),
+                                title: Text('Wishlist'),
+                                selected: _selected == 'Wishlist',
+                              ),
+                              ListTile(
+                                onTap: () {
+                                  Navigator.pop(context);
+                                  Navigator.pushNamed(context,"/stats");
+                                },
+                                leading: const Icon(Icons.timeline),
+                                title: Text('Stats',),
+                                selected: _selected == 'Stats',
+                              ),
+                              FutureBuilder(
+                                  future: _listOfFigures,
+                                  builder: (context, AsyncSnapshot<List<String>> snapshot) {
+                                    return Theme(
+                                        data: Theme.of(context).copyWith(
+                                          dividerColor: Colors.transparent,
+                                          accentColor: Theme.of(context).iconTheme.color,
+                                        ),
+                                        child: ExpansionTile(
+                                          leading: const Icon(Icons.toys),
+                                          title: Text('Figures'),
+                                          initiallyExpanded: _figureExpand,
+                                          onExpansionChanged: figureExpand,
+                                          children: <Widget>[
+                                            ListTile(
+                                              leading: CircleAvatar(
+                                                backgroundColor: Theme.of(context).accentColor,
+                                                foregroundColor: Theme.of(context).accentIconTheme.color,
+                                                radius: 12,
+                                                child: const Icon(Icons.all_inclusive, size: 16,),
+                                              ),
+                                              title: const Text('All Figures'),
+                                              onTap: () => _onTapTile(AmiiboCategory.Figures,'Figures'),
+                                              selected: _selected == 'Figures',
+                                            ),
+                                            if(snapshot.hasData)
+                                              for(String series in snapshot.data)
+                                                ListTile(
+                                                  leading: CircleAvatar(
+                                                    backgroundColor: Theme.of(context).accentColor,
+                                                    foregroundColor: Theme.of(context).accentIconTheme.color,
+                                                    radius: 12,
+                                                    child: Text(series[0]),
+                                                  ),
+                                                  title: Text(series),
+                                                  onTap: () => _onTapTile(AmiiboCategory.FigureSeries,series),
+                                                  selected: _category == AmiiboCategory.FigureSeries && _selected == series,
+                                                ),
+                                          ],
+                                        )
                                     );
-                                  },
-                                ),
-                                ListTile(
-                                  onTap: () => _onTapTile(AmiiboCategory.All,'All'),
-                                  leading: const Icon(Icons.all_inclusive),
-                                  title: Text('All',),
-                                  selected: _selected == 'All',
-                                ),
-                                ListTile(
-                                  onTap: () => _onTapTile(AmiiboCategory.Owned,'Owned'),
-                                  leading: const Icon(iconOwned),
-                                  title: Text('Owned'),
-                                  selected: _selected == 'Owned',
-                                ),
-                                ListTile(
-                                  onTap: () => _onTapTile(AmiiboCategory.Wishlist,'Wishlist'),
-                                  leading: const Icon(iconWished),
-                                  title: Text('Wishlist'),
-                                  selected: _selected == 'Wishlist',
-                                ),
-                                ListTile(
-                                  onTap: () {
-                                    Navigator.pop(context);
-                                    Navigator.pushNamed(context,"/stats");
-                                  },
-                                  leading: const Icon(Icons.timeline),
-                                  title: Text('Stats',),
-                                  selected: _selected == 'Stats',
-                                ),
-                                FutureBuilder(
-                                    future: _listOfFigures,
-                                    builder: (context, AsyncSnapshot<List<String>> snapshot) {
-                                      return Theme(
-                                          data: Theme.of(context).copyWith(
-                                            dividerColor: Colors.transparent,
-                                            accentColor: Theme.of(context).iconTheme.color,
-                                          ),
-                                          child: ExpansionTile(
-                                            leading: const Icon(Icons.toys),
-                                            title: Text('Figures'),
-                                            initiallyExpanded: _figureExpand,
-                                            onExpansionChanged: figureExpand,
-                                            children: <Widget>[
-                                              ListTile(
-                                                leading: CircleAvatar(
-                                                  backgroundColor: Theme.of(context).accentColor,
-                                                  foregroundColor: Theme.of(context).accentIconTheme.color,
-                                                  radius: 12,
-                                                  child: const Icon(Icons.all_inclusive, size: 16,),
-                                                ),
-                                                title: const Text('All Figures'),
-                                                onTap: () => _onTapTile(AmiiboCategory.Figures,'Figures'),
-                                                selected: _selected == 'Figures',
+                                  }
+                              ),
+                              FutureBuilder(
+                                  future: _listOfCards,
+                                  builder: (context, AsyncSnapshot<List<String>> snapshot) {
+                                    return Theme(
+                                        data: Theme.of(context).copyWith(
+                                          dividerColor: Colors.transparent,
+                                          accentColor: Theme.of(context).iconTheme.color,
+                                        ),
+                                        child: ExpansionTile(
+                                          leading: const Icon(Icons.view_carousel),
+                                          title: Text('Cards'),
+                                          initiallyExpanded: _cardExpand,
+                                          onExpansionChanged: cardExpand,
+                                          children: <Widget>[
+                                            ListTile(
+                                              leading: CircleAvatar(
+                                                backgroundColor: Theme.of(context).accentColor,
+                                                foregroundColor: Theme.of(context).accentIconTheme.color,
+                                                radius: 12,
+                                                child: const Icon(Icons.all_inclusive, size: 16,),
                                               ),
-                                              if(snapshot.hasData)
-                                                for(String series in snapshot.data)
-                                                  ListTile(
-                                                    leading: CircleAvatar(
-                                                      backgroundColor: Theme.of(context).accentColor,
-                                                      foregroundColor: Theme.of(context).accentIconTheme.color,
-                                                      radius: 12,
-                                                      child: Text(series[0]),
-                                                    ),
-                                                    title: Text(series),
-                                                    onTap: () => _onTapTile(AmiiboCategory.FigureSeries,series),
-                                                    selected: _category == AmiiboCategory.FigureSeries && _selected == series,
+                                              title: const Text('All Cards'),
+                                              onTap: () => _onTapTile(AmiiboCategory.Cards,'Cards'),
+                                              selected: _selected == 'Cards',
+                                            ),
+                                            if(snapshot.hasData)
+                                              for(String series in snapshot.data)
+                                                ListTile(
+                                                  leading: CircleAvatar(
+                                                    backgroundColor: Theme.of(context).accentColor,
+                                                    foregroundColor: Theme.of(context).accentIconTheme.color,
+                                                    radius: 12,
+                                                    child: Text(series[0]),
                                                   ),
-                                            ],
-                                          )
-                                      );
-                                    }
-                                ),
-                                FutureBuilder(
-                                    future: _listOfCards,
-                                    builder: (context, AsyncSnapshot<List<String>> snapshot) {
-                                      return Theme(
-                                          data: Theme.of(context).copyWith(
-                                            dividerColor: Colors.transparent,
-                                            accentColor: Theme.of(context).iconTheme.color,
-                                          ),
-                                          child: ExpansionTile(
-                                            leading: const Icon(Icons.view_carousel),
-                                            title: Text('Cards'),
-                                            initiallyExpanded: _cardExpand,
-                                            onExpansionChanged: cardExpand,
-                                            children: <Widget>[
-                                              ListTile(
-                                                leading: CircleAvatar(
-                                                  backgroundColor: Theme.of(context).accentColor,
-                                                  foregroundColor: Theme.of(context).accentIconTheme.color,
-                                                  radius: 12,
-                                                  child: const Icon(Icons.all_inclusive, size: 16,),
+                                                  title: Text(series),
+                                                  onTap: () => _onTapTile(AmiiboCategory.CardSeries,series),
+                                                  selected: _category == AmiiboCategory.CardSeries && _selected == series,
                                                 ),
-                                                title: const Text('All Cards'),
-                                                onTap: () => _onTapTile(AmiiboCategory.Cards,'Cards'),
-                                                selected: _selected == 'Cards',
-                                              ),
-                                              if(snapshot.hasData)
-                                                for(String series in snapshot.data)
-                                                  ListTile(
-                                                    leading: CircleAvatar(
-                                                      backgroundColor: Theme.of(context).accentColor,
-                                                      foregroundColor: Theme.of(context).accentIconTheme.color,
-                                                      radius: 12,
-                                                      child: Text(series[0]),
-                                                    ),
-                                                    title: Text(series),
-                                                    onTap: () => _onTapTile(AmiiboCategory.CardSeries,series),
-                                                    selected: _category == AmiiboCategory.CardSeries && _selected == series,
-                                                  ),
-                                            ],
-                                          )
-                                      );
-                                    }
-                                ),
-                              ]),
-                            );
-                          }
+                                          ],
+                                        )
+                                    );
+                                  }
+                              ),
+                            ]),
+                          );
+                        }
                       )
                     ],
                   )

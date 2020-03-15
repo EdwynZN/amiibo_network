@@ -84,7 +84,7 @@ class ConnectionFactory {
     return _database ??= await _initDB();
   }
 
-  close() async {
+  Future<void> close() async {
     if(_database.isOpen) await _database.close();
   }
 

@@ -1,17 +1,16 @@
 import 'package:flutter/material.dart';
 
 class ImplicitIcon extends ImplicitlyAnimatedWidget{
-  final bool forward;
   final AnimatedIconData icon;
-  double get targetValue => forward ? 1.0 : 0.0;
+  final double targetValue;
 
   ImplicitIcon({
     Key key,
     this.icon = AnimatedIcons.menu_close,
-    this.forward,
+    bool forward = false,
     Duration duration = const Duration(milliseconds: 250),
     Curve curve = Curves.linear
-  }) : super(key: key, duration: duration, curve: curve);
+  }) : targetValue = forward ? 1.0 : 0.0, super(key: key, duration: duration, curve: curve);
 
   @override
   ImplicitlyAnimatedWidgetState<ImplicitlyAnimatedWidget> createState() => _ImplicitIconState();
@@ -19,11 +18,6 @@ class ImplicitIcon extends ImplicitlyAnimatedWidget{
 
 class _ImplicitIconState extends ImplicitlyAnimatedWidgetState<ImplicitIcon> {
   Tween<double> _progress;
-
-  @override
-  void initState() {
-    super.initState();
-  }
 
   @override
   void forEachTween(TweenVisitor visitor){

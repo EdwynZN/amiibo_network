@@ -9,7 +9,6 @@ import 'package:amiibo_network/provider/amiibo_provider.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:amiibo_network/provider/stat_provider.dart';
-import 'package:amiibo_network/model/amiibo_local_db.dart';
 //import 'package:flutter/gestures.dart';
 
 void main() async {
@@ -49,13 +48,10 @@ class AmiiboNetwork extends StatelessWidget {
         ),
         Provider<SearchProvider>(
           create: (_) => SearchProvider(),
-          dispose: (context, search) => search.dispose(),
+          dispose: (_, search) => search.dispose(),
         ),
         ChangeNotifierProvider<AmiiboProvider>(
-          create: (context) => AmiiboProvider(),
-        ),
-        StreamProvider<AmiiboLocalDB>(
-          create: (_) => Provider.of<AmiiboProvider>(_, listen: false).amiiboList
+          create: (_) => AmiiboProvider(),
         ),
         Consumer<ThemeProvider>(
           builder: (context, themeMode, child) => MaterialApp(

@@ -65,20 +65,15 @@ class SingleAmiibo with ChangeNotifier{
 }
 
 class AmiiboProvider with ChangeNotifier{
-  static final _service = Service();
+  final _service = Service();
   String _strFilter = 'All';
   String _orderCategory;
   String _sort = 'ASC';
-  Map<String,dynamic> _listOwned;
   AmiiboCategory _category = AmiiboCategory.All;
   Expression _where = And();
+  final _amiiboList = BehaviorSubject<Map<String,dynamic>>();
+  final _updateAmiiboDB = BehaviorSubject<AmiiboLocalDB>.seeded(null);
 
-  final _amiiboList = BehaviorSubject<AmiiboLocalDB>();
-  final _collectionList = BehaviorSubject<Map<String,dynamic>>();
-  final _updateAmiiboDB = PublishSubject<AmiiboLocalDB>()
-    ..listen((amiibos) async => await _service.update(amiibos));
-
-  Map<String,dynamic> get listCollection => _listOwned;
   String get orderCategory => _orderCategory;
   set orderCategory(String value){
     if(_orderCategory == value) return;
@@ -95,14 +90,22 @@ class AmiiboProvider with ChangeNotifier{
   }
   String get strFilter => _category.name ?? _strFilter;
   AmiiboCategory get category => _category;
+  Map<String,dynamic> get _query => <String,dynamic>{'Where' : _where, 'OrderBy' : _orderBy};
 
   @override
   void notifyListeners() {
     super.notifyListeners();
   }
 
-  Stream<AmiiboLocalDB> get amiiboList => _amiiboList.stream;
-  Stream<Map<String,dynamic>> get collectionList => _collectionList.stream;
+  Stream<AmiiboLocalDB> get amiiboList => _amiiboList.stream
+    .asyncMap((map) => _service.fetchByCategory(expression: map['Where'], orderBy: map['OrderBy']));
+
+  Stream<Map<String,dynamic>> get collectionList =>
+    CombineLatestStream.combine2<void, Map<String,dynamic>, Expression>(
+    _updateAmiiboDB.stream.asyncMap((amiibos) => amiibos == null ? null : _service.update(amiibos)),
+    _amiiboList.stream, (_, map) => map['Where'])
+    .asyncMap((exp) => _service.fetchSum(expression: exp))
+    .map((map) => Map<String, dynamic>.from(map.first));
 
   Future<void> fetchAllAmiibosDB() async {
     final SharedPreferences preferences = await SharedPreferences.getInstance();
@@ -118,46 +121,18 @@ class AmiiboProvider with ChangeNotifier{
       _sort = preferences.getString('SortBy') ?? 'DESC';
     }
     notifyListeners();
-    await _fetchByCategory();
+    _amiiboList.sink.add(_query);
   }
 
-  Future<void> resetPagination(AmiiboCategory category, String search) async {
+  void resetPagination(AmiiboCategory category, String search) {
     _category = category ?? _category;
     _strFilter = search ?? _strFilter;
     _updateExpression();
-    await _fetchByCategory();
+    _amiiboList.sink.add(_query);
     notifyListeners();
   }
 
-  Future<void> refreshPagination() => _fetchByCategory();
-
-  void updateOwned(int owned, int wished){
-    if(owned.isOdd){
-      if(wished.isOdd) --_listOwned['Wished'];
-      ++_listOwned['Owned'];
-    }
-    else --_listOwned['Owned'];
-    _collectionList.sink.add(_listOwned);
-  }
-
-  void updateWished(int wished, int owned){
-    if(wished.isOdd){
-      if(owned.isOdd) --_listOwned['Owned'];
-      ++_listOwned['Wished'];
-    }
-    else --_listOwned['Wished'];
-    _collectionList.sink.add(_listOwned);
-  }
-
-  void shiftStat(int owned, int wished){
-    final int initial = owned + wished >= 1 ? 0 : 1;
-    final int oldOwned = owned, oldWished = wished;
-    wished = owned ^ 0; owned = initial ^ 0;
-
-    if(oldOwned != owned) oldOwned.isEven ? ++_listOwned['Owned'] : --_listOwned['Owned'];
-    if(oldWished != wished) oldWished.isEven ? ++_listOwned['Wished'] : --_listOwned['Wished'];
-    _collectionList.sink.add(_listOwned);
-  }
+  Future<void> refreshPagination() async => _amiiboList.sink.add(_query);
 
   void _updateExpression() {
     switch(_category){
@@ -201,14 +176,7 @@ class AmiiboProvider with ChangeNotifier{
     }
   }
 
-  Future<void> _fetchByCategory() async{
-    final AmiiboLocalDB _amiiboListDB = await _service.fetchByCategory(expression: _where, orderBy: _orderBy);
-    _listOwned = Map<String, dynamic>.from((await _service.fetchSum(expression: _where,)).first);
-    _amiiboList.sink.add(_amiiboListDB);
-    _collectionList.sink.add(_listOwned);
-  }
-
-  updateAmiiboDB({AmiiboDB amiibo, AmiiboLocalDB amiibos}) {
+  void updateAmiiboDB({AmiiboDB amiibo, AmiiboLocalDB amiibos}) {
     amiibos ??= AmiiboLocalDB(amiibo: [amiibo]);
     _updateAmiiboDB.sink.add(amiibos);
   }
@@ -227,7 +195,6 @@ class AmiiboProvider with ChangeNotifier{
   @override
   dispose() {
     _amiiboList?.close();
-    _collectionList?.close();
     _updateAmiiboDB?.close();
     super.dispose();
   }
