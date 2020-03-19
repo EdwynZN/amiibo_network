@@ -210,11 +210,11 @@ class Screenshot {
           _offset.translate(maxSize + padding, 40 + padding), divider);
 
       TextSpan owned = TextSpan(
-        style: TextStyle(color: textColor, fontSize: statProvider.prefStat ? 30 : 35,
-          height: statProvider.prefStat ? null : 1,
+        style: TextStyle(color: textColor, fontSize: statProvider.isPercentage ? 30 : 35,
+          height: statProvider.isPercentage ? null : 1,
           fontFeatures: [
-            if(!statProvider.prefStat) ui.FontFeature.enable('frac'),
-            if(statProvider.prefStat) ui.FontFeature.tabularFigures()
+            if(!statProvider.isPercentage) ui.FontFeature.enable('frac'),
+            if(statProvider.isPercentage) ui.FontFeature.tabularFigures()
           ],
         ),
         text: ownedStat,
@@ -230,11 +230,11 @@ class Screenshot {
         ..paint(canvas, _offset.translate(padding + 75, 62.5 + padding + 25));
 
       TextSpan wished = TextSpan(
-          style: TextStyle(color: textColor, fontSize: statProvider.prefStat ? 30 : 35,
-            height: statProvider.prefStat ? null : 1,
+          style: TextStyle(color: textColor, fontSize: statProvider.isPercentage ? 30 : 35,
+            height: statProvider.isPercentage ? null : 1,
             fontFeatures: [
-              if(!statProvider.prefStat) ui.FontFeature.enable('frac'),
-              if(statProvider.prefStat) ui.FontFeature.tabularFigures()
+              if(!statProvider.isPercentage) ui.FontFeature.enable('frac'),
+              if(statProvider.isPercentage) ui.FontFeature.tabularFigures()
             ],
           ),
           text: wishedStat,
@@ -320,14 +320,14 @@ class Screenshot {
         children: <InlineSpan>[
           TextSpan(
               style: TextStyle(color: textColor, fontSize: 15, wordSpacing: 60),
-              text: '\u24C7 '
+              text: '\u00A9 '
           ),
           TextSpan(
-              style: TextStyle(color: Colors.black, fontSize: statProvider.prefStat ? 30 : 35,
+              style: TextStyle(color: Colors.black, fontSize: statProvider.isPercentage ? 30 : 35,
                 fontWeight: FontWeight.w300, background: ownedCardPaint,
                 fontFeatures: [
-                  if(!statProvider.prefStat) ui.FontFeature.enable('frac'),
-                  if(statProvider.prefStat) ui.FontFeature.tabularFigures()
+                  if(!statProvider.isPercentage) ui.FontFeature.enable('frac'),
+                  if(statProvider.isPercentage) ui.FontFeature.tabularFigures()
                 ],
               ),
               text: ' ${statProvider.statLabel(stat['Owned'].toDouble(), stat['Total'].toDouble())} '
@@ -341,11 +341,11 @@ class Screenshot {
               text: ' '
           ),
           TextSpan(
-              style: TextStyle(color: Colors.black, fontSize: statProvider.prefStat ? 30 : 35,
+              style: TextStyle(color: Colors.black, fontSize: statProvider.isPercentage ? 30 : 35,
                 fontWeight: FontWeight.w300, background: wishedCardPaint,
                 fontFeatures: [
-                  if(!statProvider.prefStat) ui.FontFeature.enable('frac'),
-                  if(statProvider.prefStat) ui.FontFeature.tabularFigures()
+                  if(!statProvider.isPercentage) ui.FontFeature.enable('frac'),
+                  if(statProvider.isPercentage) ui.FontFeature.tabularFigures()
                 ],
               ),
               text: ' ${statProvider.statLabel(stat['Wished'].toDouble(), stat['Total'].toDouble())} '

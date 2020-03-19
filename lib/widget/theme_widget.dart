@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:amiibo_network/provider/theme_provider.dart';
 import 'package:provider/provider.dart';
+import 'package:amiibo_network/generated/l10n.dart';
 
 class ThemeButton extends StatelessWidget{
   final bool openDialog;
@@ -38,18 +39,19 @@ class ThemeButton extends StatelessWidget{
       builder: (BuildContext context) {
         final ThemeProvider theme = Provider.of<ThemeProvider>(context);
         final double spacing = _spacing(MediaQuery.of(context).size.width);
+        final S translate = S.of(context);
         return SimpleDialog(
           title: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Widget>[
-              Text('Color Theme', style: Theme.of(context).textTheme.display1,),
+              Text(translate.mode, style: Theme.of(context).textTheme.display1,),
               ThemeButton()
             ],
           ),
           titlePadding: const EdgeInsets.all(16),
           contentPadding: const EdgeInsets.all(16),
           children: <Widget>[
-            Text('Ligh Theme', style: Theme.of(context).textTheme.display1,),
+            Text(translate.lightTheme, style: Theme.of(context).textTheme.display1,),
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 16),
               child: ConstrainedBox(
@@ -75,7 +77,7 @@ class ThemeButton extends StatelessWidget{
                 ),
               ),
             ),
-            Text('Dark Theme', style: Theme.of(context).textTheme.display1,),
+            Text(translate.darkTheme, style: Theme.of(context).textTheme.display1,),
             Padding(
               padding: const EdgeInsets.fromLTRB(0, 16, 0, 0),
               child: Wrap(
@@ -126,35 +128,36 @@ class ThemeButton extends StatelessWidget{
     );
   }
 
-  Widget _selectWidget(String value){
+  Widget _selectWidget(ThemeMode value){
     switch(value){
-      case 'Light':
+      case ThemeMode.light:
         return const Icon(Icons.wb_sunny, key: Key('Light'), color: Colors.orangeAccent,);
-      case 'Dark':
+      case ThemeMode.dark:
         return const Icon(Icons.brightness_3, key: Key('Dark'), color: Colors.amber);
       default:
         return const Icon(Icons.brightness_auto, key: Key('Auto'),);
     }
   }
 
-  void changeTheme(BuildContext context, String strTheme){
-    switch(strTheme){
-      case 'Light':
-        Provider.of<ThemeProvider>(context, listen: false).themeDB('Dark');
+  void changeTheme(BuildContext context, int index){
+    final ThemeProvider theme = Provider.of<ThemeProvider>(context, listen: false);
+    switch(index){
+      case 0:
+        theme.themeDB(ThemeMode.light);
         break;
-      case 'Dark':
-        Provider.of<ThemeProvider>(context, listen: false).themeDB('Auto');
+      case 1:
+        theme.themeDB(ThemeMode.dark);
         break;
       default:
-        Provider.of<ThemeProvider>(context, listen: false).themeDB('Light');
+        theme.themeDB(ThemeMode.system);
         break;
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    return Selector<ThemeProvider, String>(
-      builder: (context, strTheme, _) {
+    return Selector<ThemeProvider, ThemeMode>(
+      builder: (context, theme, _) {
         return InkResponse(
           radius: 18,
           splashFactory: InkRipple.splashFactory,
@@ -174,13 +177,13 @@ class ThemeButton extends StatelessWidget{
                 )
               );
             },
-            child: _selectWidget(strTheme),
+            child: _selectWidget(theme),
           ),
           onLongPress: openDialog ? () => dialog(context) : null,
-          onTap: () => changeTheme(context, strTheme),
+          onTap: () => changeTheme(context, theme.index),
         );
       },
-      selector: (context, theme) => theme.savedTheme,
+      selector: (context, theme) => theme.preferredTheme,
     );
   }
 }

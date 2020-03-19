@@ -9,6 +9,7 @@ import 'dart:ui' as ui show FontFeature;
 import 'dart:ui' as ui;
 import 'package:permission_handler/permission_handler.dart';
 import 'package:amiibo_network/service/storage.dart';
+import 'package:amiibo_network/generated/l10n.dart';
 
 class StatsPage extends StatefulWidget{
 
@@ -46,6 +47,7 @@ class _StatsPageState extends State<StatsPage> {
 
   @override
   Widget build(BuildContext context) {
+    final S translate = S.of(context);
     return SafeArea(
       child: Scaffold(
         body: Scrollbar(
@@ -136,7 +138,7 @@ class _StatsPageState extends State<StatsPage> {
                     Theme.of(context).textTheme.title.color : Theme.of(context).appBarTheme.textTheme.title.color,
                     color: select.isEmpty ? Theme.of(context).indicatorColor : null,
                     onPressed: () => select.isEmpty ? null : _updateSet(Set<String>()),
-                    child: Text('All'),
+                    child: Text(translate.all),
                   ),
                 ),
                 Expanded(
@@ -164,7 +166,7 @@ class _StatsPageState extends State<StatsPage> {
                     color: select.contains('Figure') ?
                     Theme.of(context).indicatorColor : null,
                     onPressed: () => select.contains('Figure') ? null : _updateSet(<String>{'Figure', 'Yarn'}),
-                    child: Text('Figures'),
+                    child: Text(translate.figures),
                   ),
                 ),
                 Expanded(
@@ -180,7 +182,7 @@ class _StatsPageState extends State<StatsPage> {
                     Theme.of(context).textTheme.title.color : Theme.of(context).appBarTheme.textTheme.title.color,
                     color: select.contains('Card') ? Theme.of(context).indicatorColor : null,
                     onPressed: () => select.contains('Card') ? null : _updateSet(<String>{'Card'}),
-                    child: Text('Cards'),
+                    child: Text(translate.cards),
                   ),
                 ),
               ],
@@ -202,7 +204,7 @@ class _FAB extends StatelessWidget{
   Widget build(BuildContext context) {
     return FloatingActionButton(
       child: const Icon(Icons.save),
-      tooltip: 'save stats',
+      tooltip: S.of(context).saveStatsTooltip,
       heroTag: 'MenuFAB',
       onPressed: () async {
         final ScaffoldState scaffoldState = Scaffold.of(context, nullOk: true);
@@ -242,8 +244,10 @@ class SingleStat extends StatelessWidget{
 
   @override
   Widget build(BuildContext context) {
+    final S translate = S.of(context);
     return Card(
-      child: Padding(padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
         child: Wrap(
           alignment: wrapAlignment,
           children: <Widget>[
@@ -278,16 +282,16 @@ class SingleStat extends StatelessWidget{
                           text: TextSpan(
                               text: ownedStat,
                               style: Theme.of(context).textTheme.subhead.copyWith(
-                                fontSize: stat.prefStat ? null : 22,
+                                fontSize: stat.isPercentage ? null : 22,
                                 fontFeatures: [
-                                  if(!stat.prefStat) ui.FontFeature.enable('frac'),
-                                  if(stat.prefStat) ui.FontFeature.tabularFigures()
+                                  if(!stat.isPercentage) ui.FontFeature.enable('frac'),
+                                  if(stat.isPercentage) ui.FontFeature.tabularFigures()
                                 ],
                               ),
                               children: [
                                 TextSpan(
                                   style: Theme.of(context).textTheme.subhead,
-                                  text: ' Owned'
+                                  text: ' ${translate.owned}'
                                 )
                               ]
                           ),
@@ -319,16 +323,16 @@ class SingleStat extends StatelessWidget{
                           text: TextSpan(
                             text: wishedStat,
                             style: Theme.of(context).textTheme.subhead.copyWith(
-                              fontSize: stat.prefStat ? null : 22,
+                              fontSize: stat.isPercentage ? null : 22,
                               fontFeatures: [
-                                if(!stat.prefStat) ui.FontFeature.enable('frac'),
-                                if(stat.prefStat) ui.FontFeature.tabularFigures()
+                                if(!stat.isPercentage) ui.FontFeature.enable('frac'),
+                                if(stat.isPercentage) ui.FontFeature.tabularFigures()
                               ],
                             ),
                             children: [
                               TextSpan(
                                   style: Theme.of(context).textTheme.subhead,
-                                  text: ' Wished'
+                                  text: ' ${translate.wished}'
                               )
                             ]
                           ),

@@ -22,6 +22,8 @@ enable-experiment:
 dependencies:
   flutter:
     sdk: flutter
+  flutter_localizations:
+    sdk: flutter
   sqflite: ^1.1.7+1
   rxdart: ^0.23.1
   provider: ^3.1.0
@@ -29,7 +31,7 @@ dependencies:
   permission_handler: ^4.0.0
   launch_review: ^2.0.0
   url_launcher: ^5.3.0
-  shared_preferences: ^0.5.6
+  shared_preferences: ^0.5.6+3
   flutter_markdown: ^0.3.3
 
 dev_dependencies:
@@ -85,3 +87,5 @@ flutter:
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages
+flutter_intl:
+  enabled: true

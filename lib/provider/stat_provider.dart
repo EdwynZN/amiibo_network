@@ -10,28 +10,24 @@ Future<bool> getStatMode() async {
 
 class StatProvider with ChangeNotifier{
   static final RegExp regPercent = RegExp(r"^(\d+(?:\.\d*?[1-9](?=0|\b))?)\.?0*$");
-  StatMode preferredStat;
-  bool prefStat;
+  StatMode _preferredStat;
 
-  StatProvider(this.prefStat) : preferredStat = _switchPreferredStat(prefStat);
+  StatProvider(bool stat) : _preferredStat = stat ? StatMode.Ratio : StatMode.Percentage;
 
-  spStat(bool value) async {
-    if(value != prefStat){
+  bool get isPercentage => _preferredStat == StatMode.Percentage;
+  StatMode get stat => _preferredStat;
+
+  toggleStat(bool newValue) async {
+    if(newValue != isPercentage){
       final SharedPreferences preferences = await SharedPreferences.getInstance();
-      prefStat = value;
-      await preferences.setBool('StatMode', value);
-      preferredStat = _switchPreferredStat(prefStat);
+      await preferences.setBool('StatMode', newValue);
+      _preferredStat = isPercentage ? StatMode.Ratio : StatMode.Percentage;
       notifyListeners();
     }
   }
 
-  static StatMode _switchPreferredStat(bool statMode){
-    if(statMode) return StatMode.Ratio;
-    else return StatMode.Percentage;
-  }
-
   String statLabel(double num, double den){
-    if(prefStat){
+    if(isPercentage){
       if(den == 0) return '0%';
       final double x = num *100 / den;
       return '${regPercent.firstMatch(x.toStringAsFixed(2))[1]}%';

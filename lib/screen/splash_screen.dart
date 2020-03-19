@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:amiibo_network/widget/switch_joycon.dart';
 import 'package:flutter/services.dart';
 import 'package:amiibo_network/service/update_service.dart';
+import 'package:amiibo_network/generated/l10n.dart';
 
 class SplashScreen extends StatefulWidget {
   @override
@@ -40,6 +41,7 @@ class SplashScreenState extends State<SplashScreen>
   Widget build(BuildContext context) {
     double _size = MediaQuery.of(context).orientation == Orientation.portrait ?
       MediaQuery.of(context).size.height : MediaQuery.of(context).size.width;
+    final S translate = S.of(context);
     return SafeArea(
       child: Material(
         type: MaterialType.canvas,
@@ -62,11 +64,14 @@ class SplashScreenState extends State<SplashScreen>
                 builder: (ctx, snapshot){
                   int key = 0;
                   Widget _child = const CircularProgressIndicator(backgroundColor: Colors.black);
-                  String _text = "Just a second . . .";
+                  String _text = translate.splashMessage;
                   if(snapshot.hasData){
                     key = 1;
-                    _text = snapshot.data ? 'WELCOME' : 'Couldn\'t Update 😢';
-                    _child = Image.asset('assets/images/icon_app.png', fit: BoxFit.fitWidth);
+                    _text = snapshot.data ? translate.splashWelcome : translate.splashError;
+                    _child = Image.asset(
+                      'assets/images/icon_app.png', fit: BoxFit.fitWidth,
+                      color: Theme.of(context).brightness == Brightness.dark ? Colors.white54 : null,
+                    );
                     _animationController.forward().whenCompleteOrCancel(() =>
                       Navigator.pushReplacementNamed(context, '/home')
                     );

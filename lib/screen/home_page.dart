@@ -17,6 +17,7 @@ import 'package:amiibo_network/provider/stat_provider.dart';
 import 'package:amiibo_network/provider/theme_provider.dart';
 import 'dart:math' as math;
 import 'dart:ui' as ui show FontFeature;
+import 'package:amiibo_network/generated/l10n.dart';
 
 class Home extends StatelessWidget {
   @override
@@ -56,6 +57,7 @@ class HomePageState extends State<HomePage>
   AmiiboProvider amiiboProvider;
   SearchProvider _searchProvider;
   SelectProvider selected;
+  S translate;
   static Widget _defaultLayoutBuilder(Widget currentChild, List<Widget> previousChildren) {
     List<Widget> children = previousChildren;
     if (currentChild != null)
@@ -72,6 +74,7 @@ class HomePageState extends State<HomePage>
     amiiboProvider = Provider.of<AmiiboProvider>(context, listen: false);
     selected = Provider.of<SelectProvider>(context, listen: false);
     _searchProvider = Provider.of<SearchProvider>(context, listen: false);
+    translate = S.of(context);
   }
 
   void _restartAnimation(){
@@ -175,17 +178,19 @@ class HomePageState extends State<HomePage>
                           tag: 'MenuButton',
                           child: ImplicitIcon(key: Key('Menu'),forward: _multipleSelection)
                         ),
-                        tooltip: _multipleSelection ? 'close' : 'drawer',
+                        tooltip: _multipleSelection ? MaterialLocalizations.of(context).cancelButtonLabel
+                          : MaterialLocalizations.of(context).openAppDrawerTooltip,
                         onPressed: _multipleSelection ? _cancelSelection : () => Scaffold.of(context).openDrawer(),
                       ),
                     ),
                     title: Selector2<AmiiboProvider, SelectProvider, String>(
                       selector: (context, text, count) => count.multipleSelected ? count.selected.toString() : text.strFilter,
-                      builder: (context, text, _) {
+                      builder: (context, title, _) {
                         return Tooltip(
-                          message: '${num.tryParse(text) == null ?
-                          'Search Amiibo' : '$text Selected' }',
-                          child: Text(text ?? ''),
+                          message: num.tryParse(title) == null ?
+                              MaterialLocalizations.of(context).searchFieldLabel
+                            : MaterialLocalizations.of(context).selectedRowCountTitle(num.parse(title)),
+                          child: Text(translate.category(title) ?? ''),
                         );
                       },
                     ),
@@ -200,17 +205,17 @@ class HomePageState extends State<HomePage>
                           IconButton(
                             icon: const Icon(Icons.remove),
                             onPressed: _updateSelection,
-                            tooltip: 'Remove',
+                            tooltip: translate.removeTooltip,
                           ),
                           IconButton(
                             icon: const Icon(iconOwned),
                             onPressed: () => _updateSelection(owned: 1),
-                            tooltip: 'Own',
+                            tooltip: translate.ownTooltip,
                           ),
                           IconButton(
                             icon: const Icon(iconWished),
                             onPressed: () => _updateSelection(wished: 1),
-                            tooltip: 'Wish',
+                            tooltip: translate.wishTooltip,
                           ),
                         ],
                       ) : _SortCollection(),
@@ -220,9 +225,10 @@ class HomePageState extends State<HomePage>
                   SliverPadding(
                     padding: const EdgeInsets.symmetric(horizontal: 4),
                     sliver: Consumer<AmiiboLocalDB>(
-                      child: const SliverToBoxAdapter(
-                        child: const Align(alignment: Alignment.center, heightFactor: 10,
-                          child: const Text('Nothing to see here. . .yet',
+                      child: SliverFillRemaining(
+                        hasScrollBody: false,
+                        child: Align(alignment: Alignment.center, heightFactor: 10,
+                          child: Text(translate.emptyPage,
                             textAlign: TextAlign.center,
                           )
                         )
@@ -280,6 +286,7 @@ class _SliverPersistentHeader extends SliverPersistentHeaderDelegate {
   @override
   Widget build(BuildContext context, double shrinkOffset, bool overlapsContent) {
     final Color _color = Theme.of(context).appBarTheme.color;
+    final S translate = S.of(context);
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 12),
       decoration: BoxDecoration(
@@ -298,14 +305,23 @@ class _SliverPersistentHeader extends SliverPersistentHeaderDelegate {
         child: const SizedBox(),
         builder: (context, statList, child){
           if(statList == null) return child;
-          if(statList['Total'] == 0) return child;
+          final double total = statList['Total'].toDouble();
+          final double owned = statList['Owned'].toDouble();
+          final double wished = statList['Wished'].toDouble();
+          if(total == 0 && owned == 0 && wished == 0) return child;
+          double ownedPercentage = 0;
+          double wishedPercentage = 0;
+          if(statList['Total'] != 0) {
+            ownedPercentage = owned / total;
+            wishedPercentage = wished / total;
+          }
           return Row(
             children: <Widget>[
               Expanded(
                 child: Radial(
                   icon: AnimatedRadial(
                     key: Key('Owned'),
-                    percentage: statList['Owned'].toDouble() / statList['Total'].toDouble(),
+                    percentage: ownedPercentage,
                     child: Icon(iconOwnedDark, color: Colors.green[800]),
                   ),
                   label: Flexible(
@@ -313,26 +329,23 @@ class _SliverPersistentHeader extends SliverPersistentHeaderDelegate {
                       fit: BoxFit.scaleDown,
                       child: Consumer<StatProvider>(
                         builder: (ctx, stat, _){
-                          final String ownedStat = stat.statLabel(
-                              statList['Owned'].toDouble(),
-                              statList['Total'].toDouble()
-                          );
+                          final String ownedStat = stat.statLabel(owned, total);
                           return RichText(
                             text: TextSpan(
-                                text: ownedStat,
-                                style: Theme.of(context).textTheme.subhead.copyWith(
-                                  fontSize: stat.prefStat ? null : 22,
-                                  fontFeatures: [
-                                    if(!stat.prefStat) ui.FontFeature.enable('frac'),
-                                    if(stat.prefStat) ui.FontFeature.tabularFigures()
-                                  ],
-                                ),
-                                children: [
-                                  TextSpan(
-                                      style: Theme.of(context).textTheme.subhead,
-                                      text: ' Owned'
-                                  )
-                                ]
+                              text: ownedStat,
+                              style: Theme.of(context).textTheme.subhead.copyWith(
+                                fontSize: stat.isPercentage ? null : 22,
+                                fontFeatures: [
+                                  if(!stat.isPercentage) ui.FontFeature.enable('frac'),
+                                  if(stat.isPercentage) ui.FontFeature.tabularFigures()
+                                ],
+                              ),
+                              children: [
+                                TextSpan(
+                                  style: Theme.of(context).textTheme.subhead,
+                                  text: ' ${translate.owned}'
+                                )
+                              ]
                             ),
                           );
                         }
@@ -344,41 +357,36 @@ class _SliverPersistentHeader extends SliverPersistentHeaderDelegate {
               const SizedBox(width: 8.0),
               Expanded(
                 child: Radial(
-                    icon: AnimatedRadial(
-                      key: Key('Wished'),
-                      percentage:
-                      statList['Wished'].toDouble()
-                          / statList['Total'].toDouble(),
-                      child: Icon(Icons.whatshot, color: Colors.amber[800]),
-                    ),
-                    label: Flexible(
+                  icon: AnimatedRadial(
+                    key: Key('Wished'),
+                    percentage: wishedPercentage,
+                    child: Icon(Icons.whatshot, color: Colors.amber[800]),
+                  ),
+                  label: Flexible(
                       child: FittedBox(
                         fit: BoxFit.scaleDown,
                         child: Consumer<StatProvider>(
-                            builder: (ctx, stat, _){
-                              final String wishedStat = stat.statLabel(
-                                  statList['Wished'].toDouble(),
-                                  statList['Total'].toDouble()
-                              );
-                              return RichText(
-                                text: TextSpan(
-                                    text: wishedStat,
-                                    style: Theme.of(context).textTheme.subhead.copyWith(
-                                      fontSize: stat.prefStat ? null : 22,
-                                      fontFeatures: [
-                                        if(!stat.prefStat) ui.FontFeature.enable('frac'),
-                                        if(stat.prefStat) ui.FontFeature.tabularFigures()
-                                      ],
-                                    ),
-                                    children: [
-                                      TextSpan(
-                                          style: Theme.of(context).textTheme.subhead,
-                                          text: ' Wished'
-                                      )
-                                    ]
+                          builder: (ctx, stat, _){
+                            final String wishedStat = stat.statLabel(wished, total);
+                            return RichText(
+                              text: TextSpan(
+                                text: wishedStat,
+                                style: Theme.of(context).textTheme.subhead.copyWith(
+                                  fontSize: stat.isPercentage ? null : 22,
+                                  fontFeatures: [
+                                    if(!stat.isPercentage) ui.FontFeature.enable('frac'),
+                                    if(stat.isPercentage) ui.FontFeature.tabularFigures()
+                                  ],
                                 ),
-                              );
-                            }
+                                children: [
+                                  TextSpan(
+                                    style: Theme.of(context).textTheme.subhead,
+                                    text: ' ${translate.wished}'
+                                  )
+                                ]
+                              ),
+                            );
+                          }
                         ),
                       ),
                     )
@@ -428,6 +436,7 @@ class _SortCollectionState extends State<_SortCollection> {
       isScrollControlled: true,
       elevation: 0.0,
       builder: (context) {
+        final S translate = S.of(context);
         final Size size = MediaQuery.of(context).size;
         final double height = (460.0 / size.height).clamp(0.25, 0.66);
         EdgeInsetsGeometry padding = EdgeInsets.zero;
@@ -443,170 +452,170 @@ class _SortCollectionState extends State<_SortCollection> {
               final String _orderCategory = Provider.of<AmiiboProvider>(context).orderCategory;
               final String _sortBy = Provider.of<AmiiboProvider>(context).sort;
               return Material(
-                  color: Theme.of(context).backgroundColor,
-                  shape: Theme.of(context).bottomSheetTheme.shape,
-                  child: CustomScrollView(
-                    controller: scrollController,
-                    slivers: <Widget>[
-                      SliverPersistentHeader(
-                        pinned: true,
-                        delegate: _BottomSheetHeader(
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: <Widget>[
-                              Text('Sort By', style: Theme.of(context).textTheme.title),
-                              MaterialButton(
-                                height: 34,
-                                materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                                highlightColor: Colors.transparent,
-                                textColor: Theme.of(context).accentColor,
-                                splashColor: Theme.of(context).selectedRowColor,
-                                onPressed: () => Navigator.pop(context),
-                                child: Text('Done'),
-                              )
-                            ],
-                          ),
+                color: Theme.of(context).backgroundColor,
+                shape: Theme.of(context).bottomSheetTheme.shape,
+                child: CustomScrollView(
+                  controller: scrollController,
+                  slivers: <Widget>[
+                    SliverPersistentHeader(
+                      pinned: true,
+                      delegate: _BottomSheetHeader(
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: <Widget>[
+                            Text(translate.sort, style: Theme.of(context).textTheme.title),
+                            MaterialButton(
+                              height: 34,
+                              materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                              highlightColor: Colors.transparent,
+                              textColor: Theme.of(context).accentColor,
+                              splashColor: Theme.of(context).selectedRowColor,
+                              onPressed: () => Navigator.pop(context),
+                              child: Text(translate.done),
+                            )
+                          ],
                         ),
                       ),
-                      SliverList(
-                        delegate: SliverChildListDelegate([
-                          Padding(
-                              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
-                              child: SizedBox(
-                                  height: 36,
-                                  child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    mainAxisSize: MainAxisSize.max,
-                                    children: <Widget>[
-                                      Expanded(
-                                        child: FlatButton.icon(
-                                          padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                                          textColor: _sortBy.contains('ASC') ? Theme.of(context).textTheme.title.color : Theme.of(context).accentColor,
-                                          color: _sortBy.contains('ASC') ? Theme.of(context).accentColor : null,
-                                          shape: Border.all(
-                                            color: Theme.of(context).accentColor,
-                                            width: 2,
-                                          ),
-                                          onPressed: () => _sortOrder('ASC'),
-                                          icon: const Icon(Icons.arrow_downward, size: 20,),
-                                          label: Flexible(child: FittedBox(child: Text('Ascending (A-Z)'),)),
-                                        ),
-                                      ),
-                                      Expanded(
-                                        child: FlatButton.icon(
-                                          padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                                          textColor: _sortBy.contains('DESC') ? Theme.of(context).textTheme.title.color : Theme.of(context).accentColor,
-                                          color: _sortBy.contains('DESC') ? Theme.of(context).accentColor : null,
-                                          shape: Border(
-                                            bottom: BorderSide(
-                                              color: Theme.of(context).accentColor,
-                                              width: 2,
-                                            ),
-                                            top: BorderSide(
-                                              color: Theme.of(context).accentColor,
-                                              width: 2,
-                                            ),
-                                            left: BorderSide(
-                                                color: Theme.of(context).accentColor,
-                                                width: 0.0
-                                            ),
-                                            right: BorderSide(
-                                                color: Theme.of(context).accentColor,
-                                                width: 2.0
-                                            ),
-                                          ),
-                                          onPressed: () => _sortOrder('DESC'),
-                                          icon: const Icon(Icons.arrow_upward, size: 20),
-                                          label: Flexible(child: FittedBox(child: Text('Descending (Z-A)'),)),
-                                        ),
-                                      ),
-                                    ],
-                                  )
-                              )
-                          ),
-                          RadioListTile(
-                            value: 'name',
-                            groupValue: _orderCategory,
-                            onChanged: _selectOrder,
-                            title: Text('Name'),
-                            selected: _orderCategory.contains('name'),
-                          ),
-                          RadioListTile(
-                            value: 'owned',
-                            groupValue: _orderCategory,
-                            onChanged: _selectOrder,
-                            selected: _orderCategory.contains('owned'),
-                            title: Text('Owned'),
-                          ),
-                          RadioListTile(
-                            value: 'wishlist',
-                            groupValue: _orderCategory,
-                            onChanged: _selectOrder,
-                            title: Text('Wished'),
-                            selected: _orderCategory.contains('wishlist'),
-                          ),
-                          RadioListTile(
-                            value: 'na',
-                            groupValue: _orderCategory,
-                            onChanged: _selectOrder,
-                            title: Text('American Date'),
-                            selected: _orderCategory == 'na',
-                            secondary: Image.asset(
-                              'assets/images/na.png',
-                              height: 16, width: 25,
-                              fit: BoxFit.fill,
-                              semanticLabel: 'American Date',
-                            ),
-                          ),
-                          RadioListTile(
-                            value: 'eu',
-                            groupValue: _orderCategory,
-                            onChanged: _selectOrder,
-                            title: Text('European Date'),
-                            selected: _orderCategory.contains('eu'),
-                            secondary: Image.asset(
-                              'assets/images/eu.png',
-                              height: 16, width: 25,
-                              fit: BoxFit.fill,
-                              semanticLabel: 'European date',
-                            ),
-                          ),
-                          RadioListTile(
-                              value: 'jp',
-                              groupValue: _orderCategory,
-                              onChanged: _selectOrder,
-                              title: Text('Japanese Date'),
-                              selected: _orderCategory.contains('jp'),
-                              secondary: DecoratedBox(
-                                decoration: BoxDecoration(
-                                    border: Border.all(width: 0.75)
+                    ),
+                    SliverList(
+                      delegate: SliverChildListDelegate([
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
+                          child: SizedBox(
+                            height: 36,
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              mainAxisSize: MainAxisSize.max,
+                              children: <Widget>[
+                                Expanded(
+                                  child: FlatButton.icon(
+                                    padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                                    textColor: _sortBy.contains('ASC') ? Theme.of(context).textTheme.title.color : Theme.of(context).accentColor,
+                                    color: _sortBy.contains('ASC') ? Theme.of(context).accentColor : null,
+                                    shape: Border.all(
+                                      color: Theme.of(context).accentColor,
+                                      width: 2,
+                                    ),
+                                    onPressed: () => _sortOrder('ASC'),
+                                    icon: const Icon(Icons.arrow_downward, size: 20,),
+                                    label: Flexible(child: FittedBox(child: Text(translate.asc),)),
+                                  ),
                                 ),
-                                position: DecorationPosition.foreground,
-                                child: Image.asset(
-                                  'assets/images/jp.png',
-                                  height: 16, width: 25,
-                                  fit: BoxFit.fill,
-                                  semanticLabel: 'Japanese date',
+                                Expanded(
+                                  child: FlatButton.icon(
+                                    padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                                    textColor: _sortBy.contains('DESC') ? Theme.of(context).textTheme.title.color : Theme.of(context).accentColor,
+                                    color: _sortBy.contains('DESC') ? Theme.of(context).accentColor : null,
+                                    shape: Border(
+                                      bottom: BorderSide(
+                                        color: Theme.of(context).accentColor,
+                                        width: 2,
+                                      ),
+                                      top: BorderSide(
+                                        color: Theme.of(context).accentColor,
+                                        width: 2,
+                                      ),
+                                      left: BorderSide(
+                                          color: Theme.of(context).accentColor,
+                                          width: 0.0
+                                      ),
+                                      right: BorderSide(
+                                          color: Theme.of(context).accentColor,
+                                          width: 2.0
+                                      ),
+                                    ),
+                                    onPressed: () => _sortOrder('DESC'),
+                                    icon: const Icon(Icons.arrow_upward, size: 20),
+                                    label: Flexible(child: FittedBox(child: Text(translate.desc),)),
+                                  ),
                                 ),
-                              )
+                              ],
+                            )
+                          )
+                        ),
+                        RadioListTile(
+                          value: 'name',
+                          groupValue: _orderCategory,
+                          onChanged: _selectOrder,
+                          title: Text(translate.sortName),
+                          selected: _orderCategory.contains('name'),
+                        ),
+                        RadioListTile(
+                          value: 'owned',
+                          groupValue: _orderCategory,
+                          onChanged: _selectOrder,
+                          title: Text(translate.owned),
+                          selected: _orderCategory.contains('owned'),
+                        ),
+                        RadioListTile(
+                          value: 'wishlist',
+                          groupValue: _orderCategory,
+                          onChanged: _selectOrder,
+                          title: Text(translate.wished),
+                          selected: _orderCategory.contains('wishlist'),
+                        ),
+                        RadioListTile(
+                          value: 'na',
+                          groupValue: _orderCategory,
+                          onChanged: _selectOrder,
+                          title: Text(translate.na),
+                          selected: _orderCategory == 'na',
+                          secondary: Image.asset(
+                            'assets/images/na.png',
+                            height: 16, width: 25,
+                            fit: BoxFit.fill,
+                            semanticLabel: translate.na,
                           ),
-                          RadioListTile(
-                            value: 'au',
+                        ),
+                        RadioListTile(
+                          value: 'eu',
+                          groupValue: _orderCategory,
+                          onChanged: _selectOrder,
+                          title: Text(translate.eu),
+                          selected: _orderCategory.contains('eu'),
+                          secondary: Image.asset(
+                            'assets/images/eu.png',
+                            height: 16, width: 25,
+                            fit: BoxFit.fill,
+                            semanticLabel: translate.eu,
+                          ),
+                        ),
+                        RadioListTile(
+                            value: 'jp',
                             groupValue: _orderCategory,
                             onChanged: _selectOrder,
-                            title: Text('Australian Date'),
-                            selected: _orderCategory.contains('au'),
-                            secondary: Image.asset(
-                              'assets/images/au.png',
-                              height: 16, width: 25,
-                              fit: BoxFit.fill,
-                              semanticLabel: 'Australian date',
-                            ),
+                            title: Text(translate.jp),
+                            selected: _orderCategory.contains('jp'),
+                            secondary: DecoratedBox(
+                              decoration: BoxDecoration(
+                                  border: Border.all(width: 0.75)
+                              ),
+                              position: DecorationPosition.foreground,
+                              child: Image.asset(
+                                'assets/images/jp.png',
+                                height: 16, width: 25,
+                                fit: BoxFit.fill,
+                                semanticLabel: translate.jp,
+                              ),
+                            )
+                        ),
+                        RadioListTile(
+                          value: 'au',
+                          groupValue: _orderCategory,
+                          onChanged: _selectOrder,
+                          title: Text(translate.au),
+                          selected: _orderCategory.contains('au'),
+                          secondary: Image.asset(
+                            'assets/images/au.png',
+                            height: 16, width: 25,
+                            fit: BoxFit.fill,
+                            semanticLabel: translate.au,
                           ),
-                        ]),
-                      )
-                    ],
-                  )
+                        ),
+                      ]),
+                    )
+                  ],
+                )
               );
             },
           ),
@@ -617,10 +626,11 @@ class _SortCollectionState extends State<_SortCollection> {
   
   @override
   Widget build(BuildContext context) {
+    final S translate = S.of(context);
     return IconButton(
       onPressed: _bottomSheet,
       icon: const Icon(Icons.sort_by_alpha),
-      tooltip: 'Sort',
+      tooltip: translate.sort,
     );
   }
 }
@@ -679,7 +689,7 @@ class FAB extends StatelessWidget{
     return ScaleTransition(
       scale: scale,
       child: FloatingActionButton(
-        tooltip: 'Up',
+        tooltip: S.of(context).upToolTip,
         heroTag: 'MenuFAB',
         onPressed: goTop,
         child: const Icon(Icons.keyboard_arrow_up, size: 36),

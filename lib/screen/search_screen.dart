@@ -5,6 +5,8 @@ import 'package:amiibo_network/provider/amiibo_provider.dart';
 import 'package:flutter/services.dart';
 import 'package:amiibo_network/widget/floating_bar.dart';
 import 'package:amiibo_network/utils/amiibo_category.dart';
+import 'package:amiibo_network/generated/l10n.dart';
+
 class SearchScreen extends StatefulWidget {
   @override
   State<StatefulWidget> createState() => SearchScreenState();
@@ -14,6 +16,8 @@ class SearchScreenState extends State<SearchScreen>{
   static final RegExp _regWhiteList = RegExp('^[A-Za-zÀ-ÿ0-9 .\/-]*\$');
   final _textController = TextEditingController();
   SearchProvider _search;
+  String amiiboCategory;
+  S translate;
 
   @override
   void initState() {
@@ -25,6 +29,8 @@ class SearchScreenState extends State<SearchScreen>{
   didChangeDependencies(){
     super.didChangeDependencies();
     _search = Provider.of<SearchProvider>(context, listen: false);
+    amiiboCategory = Provider.of<AmiiboProvider>(context, listen: false).strFilter;
+    translate = S.of(context);
   }
 
   void onChangedText() => _search?.searchValue(_textController.text);
@@ -61,7 +67,7 @@ class SearchScreenState extends State<SearchScreen>{
                   tag: 'MenuButton',
                   child: const BackButtonIcon()
                 ),
-                tooltip: 'close',
+                tooltip: MaterialLocalizations.of(context).backButtonTooltip,
                 onPressed: Navigator.of(context).pop
               ),
               title: TextField(
@@ -77,12 +83,12 @@ class SearchScreenState extends State<SearchScreen>{
                 style: Theme.of(context).textTheme.display1,
                 autocorrect: false,
                 decoration: InputDecoration(
-                    isDense: true,
-                    hintText: Provider.of<AmiiboProvider>(context).strFilter,
-                    hintStyle: Theme.of(context).textTheme.display1.copyWith(
-                        color: Theme.of(context).textTheme.display1.color.withOpacity(0.5)
-                    ),
-                    border: InputBorder.none
+                  isDense: true,
+                  hintText: translate.category(amiiboCategory),
+                  hintStyle: Theme.of(context).textTheme.display1.copyWith(
+                    color: Theme.of(context).textTheme.display1.color.withOpacity(0.5)
+                  ),
+                  border: InputBorder.none
                 )
               ),
               trailing: ValueListenableBuilder<TextEditingValue>(
@@ -187,6 +193,7 @@ class CategoryControlState extends State<CategoryControl>{
   @override
   Widget build(BuildContext context) {
     final SearchProvider _search = Provider.of<SearchProvider>(context, listen: false);
+    final S translate = S.of(context);
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       mainAxisSize: MainAxisSize.max,
@@ -205,7 +212,7 @@ class CategoryControlState extends State<CategoryControl>{
             ),
             onPressed: () => _selectCategory(AmiiboCategory.Name),
             icon: const Icon(Icons.group, size: 20,),
-            label: Flexible(child: FittedBox(child: Text('Name'),)),
+            label: Flexible(child: FittedBox(child: Text(translate.category(AmiiboCategory.Name)),)),
           ),
         ),
         Expanded(
@@ -233,7 +240,7 @@ class CategoryControlState extends State<CategoryControl>{
             ),
             onPressed: () => _selectCategory(AmiiboCategory.Game),
             icon: const Icon(Icons.games, size: 20,),
-            label: Flexible(child: FittedBox(child: Text('Game'),)),
+            label: Flexible(child: FittedBox(child: Text(translate.category(AmiiboCategory.Game)),)),
           ),
         ),
         Expanded(
@@ -250,7 +257,7 @@ class CategoryControlState extends State<CategoryControl>{
             ),
             onPressed: () => _selectCategory(AmiiboCategory.AmiiboSeries),
             icon: const Icon(Icons.nfc, size: 20,),
-            label: Flexible(child: FittedBox(child: Text('Serie'),)),
+            label: Flexible(child: FittedBox(child: Text(translate.category(AmiiboCategory.AmiiboSeries)),)),
           ),
         ),
       ],

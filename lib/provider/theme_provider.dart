@@ -25,24 +25,39 @@ const iconWished = Icons.card_giftcard;
 
 Future<Map<String,dynamic>> getTheme() async {
   final SharedPreferences preferences = await SharedPreferences.getInstance();
-  final String themeMode = preferences.getString('Theme') ?? 'Auto';
-  final int light = preferences.getInt('lightColor');
-  final int dark = preferences.getInt('darkColor');
-  return {'Theme' : themeMode, 'Light' : light, 'Dark' : dark};
+  if(preferences.containsKey('Theme')){
+    final String theme = preferences.getString('Theme') ?? 'Auto';
+    preferences.remove('Theme');
+    switch(theme){
+      case 'Light':
+        preferences.setInt('ThemeMode', ThemeMode.light.index);
+        break;
+      case 'Dark':
+        preferences.setInt('ThemeMode', ThemeMode.dark.index);
+        break;
+      case 'Auto':
+      default:
+      preferences.setInt('ThemeMode', ThemeMode.system.index);
+      break;
+    }
+  }
+  final int theme = preferences.getInt('ThemeMode') ?? 0;
+  final int light = preferences.getInt('lightColor') ?? 0;
+  final int dark = preferences.getInt('darkColor') ?? 2;
+  return <String,int>{'Theme' : theme, 'Light' : light, 'Dark' : dark};
 }
 
 class ThemeProvider with ChangeNotifier{
-  String _savedTheme;
-  ThemeMode preferredTheme;
+  ThemeMode _preferredTheme;
   int _lightColor;
   int _darkColor;
   final _Theme theme;
 
-  ThemeProvider(this._savedTheme, this._lightColor, this._darkColor) :
-    preferredTheme = _switchPreferredTheme(_savedTheme),
+  ThemeProvider(int themeMode, this._lightColor, this._darkColor) :
+    _preferredTheme = ThemeMode.values[themeMode],
     theme = _Theme(light: _lightColor, dark: _darkColor);
 
-  String get savedTheme => _savedTheme;
+  ThemeMode get preferredTheme => _preferredTheme;
 
   int get lightOption => _lightColor ?? 0;
 
@@ -70,24 +85,13 @@ class ThemeProvider with ChangeNotifier{
     }
   }
 
-  Future<void> themeDB(String value) async {
-    if(value != _savedTheme){
+  Future<void> themeDB(ThemeMode value) async {
+    if(value == null) value = ThemeMode.system;
+    if(value != preferredTheme){
       final SharedPreferences preferences = await SharedPreferences.getInstance();
-      _savedTheme = value;
-      await preferences.setString('Theme', value);
-      preferredTheme = _switchPreferredTheme(_savedTheme);
+      _preferredTheme = value;
+      await preferences.setInt('ThemeMode', value.index);
       notifyListeners();
-    }
-  }
-
-  static ThemeMode _switchPreferredTheme(String theme){
-    switch(theme){
-      case 'Light':
-        return ThemeMode.light;
-      case 'Dark':
-        return ThemeMode.dark;
-      default:
-        return ThemeMode.system;
     }
   }
 }
@@ -144,7 +148,7 @@ class _Theme{
       primaryColor: color,
       cursorColor: Colors.black12,
       backgroundColor: color[100],
-      highlightColor: Colors.white70,
+      highlightColor: color[200],
       selectedRowColor: color[200],
       cardColor: color[100],
       cardTheme: CardTheme(
@@ -167,7 +171,7 @@ class _Theme{
       ),
       dialogTheme: DialogTheme(
         titleTextStyle: TextStyle(color: Colors.black87, fontSize: 18, fontWeight: FontWeight.w600),
-        backgroundColor: color[100],
+        backgroundColor: color[50],
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
       ),
       snackBarTheme: SnackBarThemeData(
@@ -188,7 +192,7 @@ class _Theme{
         buttonColor: color[100],
         materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
         height: 48,
-        highlightColor: Colors.white70,
+        highlightColor: color[200],
       ),
       bottomSheetTheme: BottomSheetThemeData(
         elevation: 0.0,
@@ -213,8 +217,8 @@ class _Theme{
             elevation: 0.0,
             color: Colors.blueGrey[900],
             textTheme: TextTheme(
-              title: TextStyle(color: const Color(0xFFB2B2B2), fontSize: 20),
-              subtitle: TextStyle(color: const Color(0xFFB2B2B2), fontSize: 16),
+              title: TextStyle(color: Colors.white54, fontSize: 20),
+              subtitle: TextStyle(color: Colors.white54, fontSize: 16),
             ),
             iconTheme: const IconThemeData(color: Colors.white54),
           ),
@@ -242,26 +246,26 @@ class _Theme{
             elevation: 8,
           ),
           textTheme: TextTheme(
-            title: TextStyle(color: const Color(0xFFB2B2B2), fontSize: 18, fontWeight: FontWeight.w400),
-            subtitle: TextStyle(color: const Color(0xFFB2B2B2), fontSize: 12, fontWeight: FontWeight.w400),
+            title: TextStyle(color: Colors.white54, fontSize: 18, fontWeight: FontWeight.w400),
+            subtitle: TextStyle(color: Colors.white54, fontSize: 12, fontWeight: FontWeight.w400),
             body1: TextStyle(color: const Color(0xFFB2B2B2)),
-            body2: TextStyle(color: const Color(0xFFB2B2B2), fontSize: 16, fontWeight: FontWeight.w400),
-            display1: TextStyle(color: const Color(0xFFB2B2B2), fontSize: 18, fontWeight: FontWeight.w600),
-            subhead: TextStyle(color: const Color(0xFFB2B2B2), fontSize: 16, fontWeight: FontWeight.w400),
+            body2: TextStyle(color: Colors.white54, fontSize: 16, fontWeight: FontWeight.w400),
+            display1: TextStyle(color: Colors.white54, fontSize: 18, fontWeight: FontWeight.w600),
+            subhead: TextStyle(color: Colors.white54, fontSize: 16, fontWeight: FontWeight.w400),
           ),
           bottomAppBarTheme: BottomAppBarTheme(
               color: Colors.transparent,
               elevation: 0.0
           ),
           dialogTheme: DialogTheme(
-            titleTextStyle: TextStyle(color: const Color(0xFFB2B2B2), fontSize: 18, fontWeight: FontWeight.w600),
+            titleTextStyle: TextStyle(color: Colors.white54, fontSize: 18, fontWeight: FontWeight.w600),
             backgroundColor: Colors.blueGrey[900],
             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
           ),
           snackBarTheme: SnackBarThemeData(
             backgroundColor: Colors.blueGrey[800],
             contentTextStyle: TextStyle(
-                color: const Color(0xFFB2B2B2)
+                color: Colors.white54
             ),
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(8),
@@ -296,8 +300,8 @@ class _Theme{
             elevation: 0.0,
             color: Colors.grey[900],
             textTheme: TextTheme(
-              title: TextStyle(color: const Color(0xFFB2B2B2), fontSize: 20),
-              subtitle: TextStyle(color: const Color(0xFFB2B2B2), fontSize: 16),
+              title: TextStyle(color: Colors.white54, fontSize: 20),
+              subtitle: TextStyle(color: Colors.white54, fontSize: 16),
             ),
             iconTheme: const IconThemeData(color: Colors.white54),
           ),
@@ -325,26 +329,26 @@ class _Theme{
             elevation: 8,
           ),
           textTheme: TextTheme(
-            title: TextStyle(color: const Color(0xFFB2B2B2), fontSize: 18, fontWeight: FontWeight.w400),
-            subtitle: TextStyle(color: const Color(0xFFB2B2B2), fontSize: 12, fontWeight: FontWeight.w400),
+            title: TextStyle(color: Colors.white54, fontSize: 18, fontWeight: FontWeight.w400),
+            subtitle: TextStyle(color: Colors.white54, fontSize: 12, fontWeight: FontWeight.w400),
             body1: TextStyle(color: const Color(0xFFB2B2B2)),
-            body2: TextStyle(color: const Color(0xFFB2B2B2), fontSize: 16, fontWeight: FontWeight.w400),
-            display1: TextStyle(color: const Color(0xFFB2B2B2), fontSize: 18, fontWeight: FontWeight.w600),
-            subhead: TextStyle(color: const Color(0xFFB2B2B2), fontSize: 16, fontWeight: FontWeight.w400),
+            body2: TextStyle(color: Colors.white54, fontSize: 16, fontWeight: FontWeight.w400),
+            display1: TextStyle(color: Colors.white54, fontSize: 18, fontWeight: FontWeight.w600),
+            subhead: TextStyle(color: Colors.white54, fontSize: 16, fontWeight: FontWeight.w400),
           ),
           bottomAppBarTheme: BottomAppBarTheme(
               color: Colors.transparent,
               elevation: 0.0
           ),
           dialogTheme: DialogTheme(
-            titleTextStyle: TextStyle(color: const Color(0xFFB2B2B2), fontSize: 18, fontWeight: FontWeight.w600),
+            titleTextStyle: TextStyle(color: Colors.white54, fontSize: 18, fontWeight: FontWeight.w600),
             backgroundColor: Colors.grey[900],
             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
           ),
           snackBarTheme: SnackBarThemeData(
             backgroundColor: Colors.grey[800],
             contentTextStyle: TextStyle(
-                color: const Color(0xFFB2B2B2)
+                color: Colors.white54
             ),
             shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(8),
@@ -380,8 +384,8 @@ class _Theme{
             elevation: 0.0,
             color: Colors.black,
             textTheme: TextTheme(
-              title: TextStyle(color: const Color(0xFFB2B2B2), fontSize: 20),
-              subtitle: TextStyle(color: const Color(0xFFB2B2B2), fontSize: 16),
+              title: TextStyle(color: Colors.white54, fontSize: 20),
+              subtitle: TextStyle(color: Colors.white54, fontSize: 16),
             ),
             iconTheme: const IconThemeData(color: Colors.white54),
           ),
@@ -412,19 +416,19 @@ class _Theme{
             elevation: 0,
           ),
           textTheme: TextTheme(
-            title: TextStyle(color: const Color(0xFFB2B2B2), fontSize: 18, fontWeight: FontWeight.w400),
-            subtitle: TextStyle(color: const Color(0xFFB2B2B2), fontSize: 12, fontWeight: FontWeight.w400),
+            title: TextStyle(color: Colors.white54, fontSize: 18, fontWeight: FontWeight.w400),
+            subtitle: TextStyle(color: Colors.white54, fontSize: 12, fontWeight: FontWeight.w400),
             body1: TextStyle(color: const Color(0xFFB2B2B2)),
-            body2: TextStyle(color: const Color(0xFFB2B2B2), fontSize: 16, fontWeight: FontWeight.w400),
-            display1: TextStyle(color: const Color(0xFFB2B2B2), fontSize: 18, fontWeight: FontWeight.w600),
-            subhead: TextStyle(color: const Color(0xFFB2B2B2), fontSize: 16, fontWeight: FontWeight.w400),
+            body2: TextStyle(color: Colors.white54, fontSize: 16, fontWeight: FontWeight.w400),
+            display1: TextStyle(color: Colors.white54, fontSize: 18, fontWeight: FontWeight.w600),
+            subhead: TextStyle(color: Colors.white54, fontSize: 16, fontWeight: FontWeight.w400),
           ),
           bottomAppBarTheme: BottomAppBarTheme(
               color: Colors.transparent,
               elevation: 0.0
           ),
           dialogTheme: DialogTheme(
-            titleTextStyle: TextStyle(color: const Color(0xFFB2B2B2), fontSize: 18, fontWeight: FontWeight.w600),
+            titleTextStyle: TextStyle(color: Colors.white54, fontSize: 18, fontWeight: FontWeight.w600),
             backgroundColor: Colors.grey[900],
             shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(8),

@@ -1,46 +1,19 @@
-import 'package:amiibo_network/provider/search_provider.dart';
-import 'package:amiibo_network/service/update_service.dart';
+import '../generated/l10n.dart';
 import 'package:flutter/material.dart';
-import 'package:amiibo_network/screen/home_page.dart';
-import 'package:amiibo_network/screen/splash_screen.dart';
+import 'package:provider/provider.dart';
+import 'package:amiibo_network/provider/search_provider.dart';
 import 'package:amiibo_network/widget/route_transitions.dart';
 import 'package:amiibo_network/provider/theme_provider.dart';
 import 'package:amiibo_network/provider/amiibo_provider.dart';
 import 'package:flutter/services.dart';
-import 'package:provider/provider.dart';
 import 'package:amiibo_network/provider/stat_provider.dart';
-import 'package:amiibo_network/utils/localization.dart';
-//import 'package:flutter/gestures.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 
-void main() async {
-  //debugPrintGestureArenaDiagnostics = true;
-  WidgetsFlutterBinding.ensureInitialized();
-  final UpdateService updateService = UpdateService();
-  await updateService.initDB();
-  final bool splash = await updateService.compareLastUpdate();
-  final Map<String,int> savedTheme = await getTheme();
-  final bool stat = await getStatMode();
-  runApp(
-    MyApp(
-        firstPage: splash ? Home() : SplashScreen(),
-        theme: savedTheme,
-        statMode: stat,
-      )
-  );
-  /*runApp(
-    AmiiboNetwork(
-      firstPage: splash ? Home() : SplashScreen(),
-      theme: savedTheme,
-      statMode: stat,
-    )
-  );*/
-}
-
-class AmiiboNetwork extends StatelessWidget {
+class MyApp extends StatelessWidget {
   final Widget firstPage;
   final Map<String,dynamic> theme;
   final bool statMode;
-  AmiiboNetwork({this.firstPage, this.theme, this.statMode});
+  MyApp({this.firstPage, this.theme, this.statMode});
 
   @override
   Widget build(BuildContext context) {
@@ -48,7 +21,7 @@ class AmiiboNetwork extends StatelessWidget {
       providers: [
         ChangeNotifierProvider<ThemeProvider>(
           create: (context) => ThemeProvider(
-            theme['Theme'], theme['Light'], theme['Dark']
+              theme['Theme'], theme['Light'], theme['Dark']
           ),
         ),
         ChangeNotifierProvider<StatProvider>(
@@ -63,6 +36,16 @@ class AmiiboNetwork extends StatelessWidget {
         ),
         Consumer<ThemeProvider>(
           builder: (context, themeMode, child) => MaterialApp(
+            localizationsDelegates: [S.delegate,
+              GlobalMaterialLocalizations.delegate,
+              GlobalWidgetsLocalizations.delegate,
+              GlobalCupertinoLocalizations.delegate,
+            ],
+            supportedLocales: S.delegate.supportedLocales,
+            /*localeResolutionCallback: (deviceLocale, supportedLocales){
+              if(S.delegate.isSupported(deviceLocale)) return deviceLocale;
+              return supportedLocales.first;
+            },*/
             debugShowCheckedModeBanner: false,
             theme: themeMode.theme.light,
             darkTheme: themeMode.theme.dark,
@@ -72,8 +55,8 @@ class AmiiboNetwork extends StatelessWidget {
               builder: (BuildContext context){
                 return AnnotatedRegion<SystemUiOverlayStyle>(
                   value: SystemUiOverlayStyle(
-                    statusBarColor: Theme.of(context).appBarTheme.color,
-                    systemNavigationBarColor: Theme.of(context).appBarTheme.color
+                      statusBarColor: Theme.of(context).appBarTheme.color,
+                      systemNavigationBarColor: Theme.of(context).appBarTheme.color
                   ),
                   child: child,
                 );

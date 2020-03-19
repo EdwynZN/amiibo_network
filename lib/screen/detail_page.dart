@@ -3,6 +3,7 @@ import 'package:amiibo_network/model/amiibo_local_db.dart';
 import 'package:provider/provider.dart';
 import 'package:amiibo_network/provider/amiibo_provider.dart';
 import 'package:amiibo_network/provider/theme_provider.dart';
+import 'package:amiibo_network/generated/l10n.dart';
 
 class DetailPage extends StatelessWidget{
   final SingleAmiibo amiibo;
@@ -29,6 +30,7 @@ class _BottomSheetDetail extends StatelessWidget{
     final AmiiboProvider amiiboProvider = Provider.of<AmiiboProvider>(context, listen: false);
     final AmiiboDB amiibo = Provider.of<SingleAmiibo>(context, listen: false).amiibo;
     final Size size = MediaQuery.of(context).size;
+    final S translate = S.of(context);
     EdgeInsetsGeometry padding = EdgeInsets.zero;
     int flex = 4;
     if(size.longestSide >= 800)
@@ -84,7 +86,7 @@ class _BottomSheetDetail extends StatelessWidget{
                                         const Icon(Icons.radio_button_unchecked) : const Icon(iconOwned),
                                         color: colorOwned,
                                         iconSize: 30.0,
-                                        tooltip: "Owned",
+                                        tooltip: translate.ownTooltip,
                                         splashColor: colorOwned[100],
                                         onPressed: () {
                                           final int newValue = (amiibo?.owned ?? 0) ^ 1;
@@ -101,7 +103,7 @@ class _BottomSheetDetail extends StatelessWidget{
                                         const Icon(Icons.check_box_outline_blank) : const Icon(iconWished),
                                         color: colorWished,
                                         iconSize: 30.0,
-                                        tooltip: "Wished",
+                                        tooltip: translate.wishTooltip,
                                         splashColor: Colors.amberAccent[100],
                                         onPressed: () {
                                           final int newValue = (amiibo?.wishlist ?? 0) ^ 1;
@@ -127,15 +129,15 @@ class _BottomSheetDetail extends StatelessWidget{
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
-                        TextCardDetail(text: "Character", data: amiibo.character,),
-                        if(amiibo.character != amiibo.name) TextCardDetail(text: "Name", data: amiibo.name,),
-                        TextCardDetail(text: "Serie", data: amiibo.amiiboSeries,),
-                        if(amiibo.amiiboSeries != amiibo.gameSeries) TextCardDetail(text: "Game", data: amiibo.gameSeries,),
-                        TextCardDetail(text: "Type", data: amiibo.type,),
-                        if(amiibo.au != null) RegionDetail(amiibo.au, 'au', 'Australia'),
-                        if(amiibo.eu != null) RegionDetail(amiibo.eu, 'eu', 'Europe'),
-                        if(amiibo.na != null) RegionDetail(amiibo.na, 'na', 'America'),
-                        if(amiibo.jp != null) RegionDetail(amiibo.jp, 'jp', 'Japan'),
+                        TextCardDetail(text: translate.character(amiibo.character)),
+                        if(amiibo.character != amiibo.name) TextCardDetail(text: translate.name(amiibo.name)),
+                        TextCardDetail(text: translate.serie(amiibo.amiiboSeries)),
+                        if(amiibo.amiiboSeries != amiibo.gameSeries) TextCardDetail(text: translate.game(amiibo.gameSeries)),
+                        TextCardDetail(text: translate.types(amiibo.type),),
+                        if(amiibo.au != null) RegionDetail(amiibo.au, 'au', translate.au),
+                        if(amiibo.eu != null) RegionDetail(amiibo.eu, 'eu', translate.eu),
+                        if(amiibo.na != null) RegionDetail(amiibo.na, 'na', translate.na),
+                        if(amiibo.jp != null) RegionDetail(amiibo.jp, 'jp', translate.jp),
                       ],
                     ),
                     flex: 7,
@@ -151,14 +153,17 @@ class _BottomSheetDetail extends StatelessWidget{
 }
 
 class RegionDetail extends StatelessWidget{
-  final String date;
   final String asset;
   final String description;
+  final DateTime date;
 
-  RegionDetail(this.date,this.asset,this.description);
+  RegionDetail(dateString,this.asset,this.description)
+    : date = DateTime.tryParse(dateString);
 
   @override
   Widget build(BuildContext context) {
+    String formatDate = MaterialLocalizations.of(context).formatFullDate(date);
+    formatDate = formatDate.substring(formatDate.indexOf(' ')+1);
     return Row(
       crossAxisAlignment: CrossAxisAlignment.center,
       children: <Widget>[
@@ -168,14 +173,20 @@ class RegionDetail extends StatelessWidget{
           fit: BoxFit.fill,
           semanticLabel: description,
          ),
-        Padding(
-          padding: const EdgeInsets.only(left: 8),
-          child: Text(date,
-            textAlign: TextAlign.start,
-            overflow: TextOverflow.fade,
-            maxLines: 1,
-            style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
-          )
+        Flexible(
+          child: FittedBox(
+            child: Padding(
+              padding: const EdgeInsets.only(left: 8, right: 8),
+              child: Text(formatDate,
+                overflow: TextOverflow.fade,
+                softWrap: false,
+                maxLines: 1,
+                style: Theme.of(context).textTheme.body1.copyWith(
+                  fontWeight: FontWeight.bold
+                ),
+              )
+            ),
+          ),
         )
       ],
     );
@@ -184,23 +195,23 @@ class RegionDetail extends StatelessWidget{
 
 class TextCardDetail extends StatelessWidget{
   final String text;
-  final String data;
 
   TextCardDetail({
     Key key,
     this.text,
-    this.data
   });
 
   @override
   Widget build(BuildContext context){
     return Container(
-      child: Text('$text: $data',
+      child: Text(text,
         textAlign: TextAlign.start,
         softWrap: false,
         overflow: TextOverflow.fade,
         maxLines: 1,
-        style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
+        style: Theme.of(context).textTheme.body1.copyWith(
+          fontWeight: FontWeight.bold
+        ),
       )
     );
   }
