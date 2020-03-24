@@ -27,7 +27,7 @@ dependencies:
   sqflite: ^1.1.7+1
   rxdart: ^0.23.1
   provider: ^4.0.4
-  file_picker: 1.4.0+1 #^1.5.0+2
+  file_picker: ^1.5.0+2
   permission_handler: ^4.4.0+hotfix.2
   launch_review: ^2.0.0
   url_launcher: ^5.3.0

@@ -492,7 +492,7 @@ class _BottomBarState extends State<BottomBar> {
   Future<void> _openFileExplorer() async {
     try{
       //final String _path = await FilePicker.getFilePath(type: FileType.ANY);
-      final file = await FilePicker.getFile(type: FileType.CUSTOM, fileExtension: 'json');
+      final file = await FilePicker.getFile(type: FileType.custom, fileExtension: 'json');
       final String _path = file?.path;
       if(_path == null) return;
       else if(_path.substring(_path.lastIndexOf('.')) != '.json') {
