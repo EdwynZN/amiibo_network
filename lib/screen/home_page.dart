@@ -8,16 +8,14 @@ import 'package:amiibo_network/provider/select_provider.dart';
 import 'package:amiibo_network/model/amiibo_local_db.dart';
 import 'package:amiibo_network/data/database.dart';
 import 'package:flutter/rendering.dart';
-import 'package:amiibo_network/widget/radial_progression.dart';
 import 'package:amiibo_network/widget/drawer.dart';
 import 'package:amiibo_network/widget/animated_widgets.dart';
 import 'package:amiibo_network/widget/floating_bar.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:amiibo_network/provider/stat_provider.dart';
 import 'package:amiibo_network/provider/theme_provider.dart';
 import 'dart:math' as math;
-import 'dart:ui' as ui show FontFeature;
 import 'package:amiibo_network/generated/l10n.dart';
+import 'package:amiibo_network/widget/stat_widget.dart';
 
 class Home extends StatelessWidget {
   @override
@@ -309,88 +307,24 @@ class _SliverPersistentHeader extends SliverPersistentHeaderDelegate {
           final double owned = statList['Owned'].toDouble();
           final double wished = statList['Wished'].toDouble();
           if(total == 0 && owned == 0 && wished == 0) return child;
-          double ownedPercentage = 0;
-          double wishedPercentage = 0;
-          if(statList['Total'] != 0) {
-            ownedPercentage = owned / total;
-            wishedPercentage = wished / total;
-          }
           return Row(
             children: <Widget>[
               Expanded(
-                child: Radial(
-                  icon: AnimatedRadial(
-                    key: Key('Owned'),
-                    percentage: ownedPercentage,
-                    child: Icon(iconOwnedDark, color: Colors.green[800]),
-                  ),
-                  label: Flexible(
-                    child: FittedBox(
-                      fit: BoxFit.scaleDown,
-                      child: Consumer<StatProvider>(
-                        builder: (ctx, stat, _){
-                          final String ownedStat = stat.statLabel(owned, total);
-                          return RichText(
-                            text: TextSpan(
-                              text: ownedStat,
-                              style: Theme.of(context).textTheme.subhead.copyWith(
-                                fontSize: stat.isPercentage ? null : 22,
-                                fontFeatures: [
-                                  if(!stat.isPercentage) ui.FontFeature.enable('frac'),
-                                  if(stat.isPercentage) ui.FontFeature.tabularFigures()
-                                ],
-                              ),
-                              children: [
-                                TextSpan(
-                                  style: Theme.of(context).textTheme.subhead,
-                                  text: ' ${translate.owned}'
-                                )
-                              ]
-                            ),
-                          );
-                        }
-                      ),
-                    )
-                  ),
-                ),
+                child: StatWidget(
+                  num: owned,
+                  den: total,
+                  text: translate.owned,
+                  icon: Icon(iconOwnedDark, color: Colors.green[800])
+                )
               ),
               const SizedBox(width: 8.0),
               Expanded(
-                child: Radial(
-                  icon: AnimatedRadial(
-                    key: Key('Wished'),
-                    percentage: wishedPercentage,
-                    child: Icon(Icons.whatshot, color: Colors.amber[800]),
-                  ),
-                  label: Flexible(
-                      child: FittedBox(
-                        fit: BoxFit.scaleDown,
-                        child: Consumer<StatProvider>(
-                          builder: (ctx, stat, _){
-                            final String wishedStat = stat.statLabel(wished, total);
-                            return RichText(
-                              text: TextSpan(
-                                text: wishedStat,
-                                style: Theme.of(context).textTheme.subhead.copyWith(
-                                  fontSize: stat.isPercentage ? null : 22,
-                                  fontFeatures: [
-                                    if(!stat.isPercentage) ui.FontFeature.enable('frac'),
-                                    if(stat.isPercentage) ui.FontFeature.tabularFigures()
-                                  ],
-                                ),
-                                children: [
-                                  TextSpan(
-                                    style: Theme.of(context).textTheme.subhead,
-                                    text: ' ${translate.wished}'
-                                  )
-                                ]
-                              ),
-                            );
-                          }
-                        ),
-                      ),
-                    )
-                ),
+                child: StatWidget(
+                  num: wished,
+                  den: total,
+                  text: translate.wished,
+                  icon: Icon(Icons.whatshot, color: Colors.amber[800]),
+                )
               ),
             ],
           );

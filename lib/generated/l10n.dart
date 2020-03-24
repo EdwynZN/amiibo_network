@@ -595,6 +595,105 @@ class S {
       args: [],
     );
   }
+
+  String storagePermission(dynamic choice) {
+    return Intl.message(
+      '{choice, select, granted {Storage permission granted} denied {Storage permission denied} neverAskAgain {Storage permission disabled} restricted {Storage permission restricted} other {Unknown permission access}}',
+      name: 'storagePermission',
+      desc: '',
+      args: [choice],
+    );
+  }
+
+  String get createdOn {
+    return Intl.message(
+      'Created on',
+      name: 'createdOn',
+      desc: '',
+      args: [],
+    );
+  }
+
+  String get collectionReset {
+    return Intl.message(
+      'Collection reset',
+      name: 'collectionReset',
+      desc: '',
+      args: [],
+    );
+  }
+
+  String get openAppSettings {
+    return Intl.message(
+      'change',
+      name: 'openAppSettings',
+      desc: '',
+      args: [],
+    );
+  }
+
+  String get recordMessage {
+    return Intl.message(
+      'Still processing your last file',
+      name: 'recordMessage',
+      desc: '',
+      args: [],
+    );
+  }
+
+  String get savingCollectionMessage {
+    return Intl.message(
+      'Saving your file. This could take a while depending on your device',
+      name: 'savingCollectionMessage',
+      desc: '',
+      args: [],
+    );
+  }
+
+  String get errorImporting {
+    return Intl.message(
+      'This isn\'t an Amiibo List',
+      name: 'errorImporting',
+      desc: '',
+      args: [],
+    );
+  }
+
+  String get successImport {
+    return Intl.message(
+      'Amiibo List updated',
+      name: 'successImport',
+      desc: '',
+      args: [],
+    );
+  }
+
+  String get saved {
+    return Intl.message(
+      'saved',
+      name: 'saved',
+      desc: '',
+      args: [],
+    );
+  }
+
+  String get overwritten {
+    return Intl.message(
+      'overwritten',
+      name: 'overwritten',
+      desc: '',
+      args: [],
+    );
+  }
+
+  String get fileSaved {
+    return Intl.message(
+      'Your file has been',
+      name: 'fileSaved',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {

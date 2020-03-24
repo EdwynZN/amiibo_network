@@ -31,11 +31,13 @@ class MessageLookup extends MessageLookupByLibrary {
 
   static m5(serie) => "Serie: ${serie}";
 
-  static m6(choice) => "${Intl.select(choice, {'system': 'Autom.', 'light': 'Claro', 'dark': 'Oscuro', 'other': 'Autom.', })}";
+  static m6(choice) => "${Intl.select(choice, {'granted': 'Almacenamiento concedido', 'denied': 'Almacenamiento denegado', 'neverAskAgain': 'Almacenamiento deshabilitado', 'restricted': 'Almacenamiento restringido', 'other': 'Permiso de almacenamiento en estado desconocido', })}";
 
-  static m7(type) => "Tipo: ${type}";
+  static m7(choice) => "${Intl.select(choice, {'system': 'Autom.', 'light': 'Claro', 'dark': 'Oscuro', 'other': 'Autom.', })}";
 
-  static m8(choice) => "${Intl.select(choice, {'Figure': 'Tipo: Figura', 'Card': 'Tipo: Tarjeta', 'Yarn': 'Tipo: Lana', 'other': 'Tipo: Otro', })}";
+  static m8(type) => "Tipo: ${type}";
+
+  static m9(choice) => "${Intl.select(choice, {'Figure': 'Tipo: Figura', 'Card': 'Tipo: Tarjeta', 'Yarn': 'Tipo: Lana', 'other': 'Tipo: Otro', })}";
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static _notInlinedMessages(_) => <String, Function> {
@@ -51,7 +53,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "changelog" : MessageLookupByLibrary.simpleMessage("Cambios"),
     "changelogSubtitle" : MessageLookupByLibrary.simpleMessage("Novedades"),
     "character" : m1,
+    "collectionReset" : MessageLookupByLibrary.simpleMessage("Colleccción borrada"),
     "couldNotLaunchUrl" : m2,
+    "createdOn" : MessageLookupByLibrary.simpleMessage("Creado el"),
     "credits" : MessageLookupByLibrary.simpleMessage("Créditos"),
     "creditsSubtitle" : MessageLookupByLibrary.simpleMessage("Los que hicieron todo posible"),
     "dark" : MessageLookupByLibrary.simpleMessage("Oscuro"),
@@ -59,9 +63,11 @@ class MessageLookup extends MessageLookupByLibrary {
     "desc" : MessageLookupByLibrary.simpleMessage("Descendente (Z-A)"),
     "done" : MessageLookupByLibrary.simpleMessage("Listo"),
     "emptyPage" : MessageLookupByLibrary.simpleMessage("No hay nada que mostrar . . . aún"),
+    "errorImporting" : MessageLookupByLibrary.simpleMessage("Este archivo no contiene una colección"),
     "eu" : MessageLookupByLibrary.simpleMessage("Europa"),
     "export" : MessageLookupByLibrary.simpleMessage("Exportar"),
     "figures" : MessageLookupByLibrary.simpleMessage("Figuras"),
+    "fileSaved" : MessageLookupByLibrary.simpleMessage("Tú archivo ha sido"),
     "game" : m3,
     "import" : MessageLookupByLibrary.simpleMessage("Importar"),
     "jp" : MessageLookupByLibrary.simpleMessage("Japón"),
@@ -71,11 +77,14 @@ class MessageLookup extends MessageLookupByLibrary {
     "mode" : MessageLookupByLibrary.simpleMessage("Modo"),
     "na" : MessageLookupByLibrary.simpleMessage("Norteamérica"),
     "name" : m4,
+    "openAppSettings" : MessageLookupByLibrary.simpleMessage("cambiar"),
+    "overwritten" : MessageLookupByLibrary.simpleMessage("sobreescrito"),
     "ownTooltip" : MessageLookupByLibrary.simpleMessage("Adquirir"),
     "owned" : MessageLookupByLibrary.simpleMessage("Adquiridos"),
     "privacyPolicy" : MessageLookupByLibrary.simpleMessage("Política de Privacidad"),
     "privacySubtitle" : MessageLookupByLibrary.simpleMessage("Términos y condiciones"),
     "rate" : MessageLookupByLibrary.simpleMessage("Califícame"),
+    "recordMessage" : MessageLookupByLibrary.simpleMessage("Espera por favor, aún se está procesando tu petición anterior"),
     "removeTooltip" : MessageLookupByLibrary.simpleMessage("Remover"),
     "reportBug" : MessageLookupByLibrary.simpleMessage("Reportar error"),
     "reset" : MessageLookupByLibrary.simpleMessage("Restablecer"),
@@ -86,6 +95,8 @@ class MessageLookup extends MessageLookupByLibrary {
     "saveCollectionSubtitle" : MessageLookupByLibrary.simpleMessage("Guarda una imagen de tu colección"),
     "saveCollectionTitleDialog" : MessageLookupByLibrary.simpleMessage("Selecciona tu colección"),
     "saveStatsTooltip" : MessageLookupByLibrary.simpleMessage("Guardar Estadísticas"),
+    "saved" : MessageLookupByLibrary.simpleMessage("guardado"),
+    "savingCollectionMessage" : MessageLookupByLibrary.simpleMessage("Guardando tu colección, esto podría demorar dependiendo de tu dispositivo"),
     "serie" : m5,
     "settings" : MessageLookupByLibrary.simpleMessage("Opciones"),
     "showPercentage" : MessageLookupByLibrary.simpleMessage("Mostrar porcentaje"),
@@ -95,10 +106,12 @@ class MessageLookup extends MessageLookupByLibrary {
     "splashMessage" : MessageLookupByLibrary.simpleMessage("Espere un momento..."),
     "splashWelcome" : MessageLookupByLibrary.simpleMessage("Bienvenido"),
     "stats" : MessageLookupByLibrary.simpleMessage("Estadísticas"),
+    "storagePermission" : m6,
+    "successImport" : MessageLookupByLibrary.simpleMessage("Colección actualizada"),
     "sure" : MessageLookupByLibrary.simpleMessage("Seguro"),
-    "themeMode" : m6,
-    "type" : m7,
-    "types" : m8,
+    "themeMode" : m7,
+    "type" : m8,
+    "types" : m9,
     "upToolTip" : MessageLookupByLibrary.simpleMessage("Arriba"),
     "wishTooltip" : MessageLookupByLibrary.simpleMessage("Desear"),
     "wished" : MessageLookupByLibrary.simpleMessage("Deseados")

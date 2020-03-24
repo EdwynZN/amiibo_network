@@ -12,7 +12,7 @@ class StatProvider with ChangeNotifier{
   static final RegExp regPercent = RegExp(r"^(\d+(?:\.\d*?[1-9](?=0|\b))?)\.?0*$");
   StatMode _preferredStat;
 
-  StatProvider(bool stat) : _preferredStat = stat ? StatMode.Ratio : StatMode.Percentage;
+  StatProvider(bool stat) : _preferredStat = stat ? StatMode.Percentage : StatMode.Ratio;
 
   bool get isPercentage => _preferredStat == StatMode.Percentage;
   StatMode get stat => _preferredStat;
@@ -29,9 +29,9 @@ class StatProvider with ChangeNotifier{
   String statLabel(double num, double den){
     if(isPercentage){
       if(den == 0) return '0%';
-      final double x = num *100 / den;
-      return '${regPercent.firstMatch(x.toStringAsFixed(2))[1]}%';
+      final double result = num *100 / den;
+      return '${regPercent.firstMatch(result.toStringAsFixed(2))[1]}%';
     }
-    else return '${num.toInt()}/''${den.toInt()}';
+    return '${num.toInt()}/''${den.toInt()}';
   }
 }

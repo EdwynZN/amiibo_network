@@ -31,11 +31,13 @@ class MessageLookup extends MessageLookupByLibrary {
 
   static m5(serie) => "Serie: ${serie}";
 
-  static m6(choice) => "${Intl.select(choice, {'system': 'Auto', 'light': 'Light', 'dark': 'Dark', 'other': 'Auto', })}";
+  static m6(choice) => "${Intl.select(choice, {'granted': 'Storage permission granted', 'denied': 'Storage permission denied', 'neverAskAgain': 'Storage permission disabled', 'restricted': 'Storage permission restricted', 'other': 'Unknown permission access', })}";
 
-  static m7(type) => "Type: ${type}";
+  static m7(choice) => "${Intl.select(choice, {'system': 'Auto', 'light': 'Light', 'dark': 'Dark', 'other': 'Auto', })}";
 
-  static m8(choice) => "${Intl.select(choice, {'Figure': 'Type: Figure', 'Card': 'Type: Card', 'Yarn': 'Type: Yarn', 'other': 'Type: Other', })}";
+  static m8(type) => "Type: ${type}";
+
+  static m9(choice) => "${Intl.select(choice, {'Figure': 'Type: Figure', 'Card': 'Type: Card', 'Yarn': 'Type: Yarn', 'other': 'Type: Other', })}";
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static _notInlinedMessages(_) => <String, Function> {
@@ -51,7 +53,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "changelog" : MessageLookupByLibrary.simpleMessage("Changelog"),
     "changelogSubtitle" : MessageLookupByLibrary.simpleMessage("What\'s new"),
     "character" : m1,
+    "collectionReset" : MessageLookupByLibrary.simpleMessage("Collection reset"),
     "couldNotLaunchUrl" : m2,
+    "createdOn" : MessageLookupByLibrary.simpleMessage("Created on"),
     "credits" : MessageLookupByLibrary.simpleMessage("Credits"),
     "creditsSubtitle" : MessageLookupByLibrary.simpleMessage("Those who make it possible"),
     "dark" : MessageLookupByLibrary.simpleMessage("Dark"),
@@ -59,9 +63,11 @@ class MessageLookup extends MessageLookupByLibrary {
     "desc" : MessageLookupByLibrary.simpleMessage("Descending (Z-A)"),
     "done" : MessageLookupByLibrary.simpleMessage("Done"),
     "emptyPage" : MessageLookupByLibrary.simpleMessage("Nothing to see here. . .yet"),
+    "errorImporting" : MessageLookupByLibrary.simpleMessage("This isn\'t an Amiibo List"),
     "eu" : MessageLookupByLibrary.simpleMessage("Europe"),
     "export" : MessageLookupByLibrary.simpleMessage("Export"),
     "figures" : MessageLookupByLibrary.simpleMessage("Figures"),
+    "fileSaved" : MessageLookupByLibrary.simpleMessage("Your file has been"),
     "game" : m3,
     "import" : MessageLookupByLibrary.simpleMessage("Import"),
     "jp" : MessageLookupByLibrary.simpleMessage("Japan"),
@@ -71,11 +77,14 @@ class MessageLookup extends MessageLookupByLibrary {
     "mode" : MessageLookupByLibrary.simpleMessage("Theme Mode"),
     "na" : MessageLookupByLibrary.simpleMessage("North America"),
     "name" : m4,
+    "openAppSettings" : MessageLookupByLibrary.simpleMessage("change"),
+    "overwritten" : MessageLookupByLibrary.simpleMessage("overwritten"),
     "ownTooltip" : MessageLookupByLibrary.simpleMessage("Own"),
     "owned" : MessageLookupByLibrary.simpleMessage("Owned"),
     "privacyPolicy" : MessageLookupByLibrary.simpleMessage("Privacy Policy"),
     "privacySubtitle" : MessageLookupByLibrary.simpleMessage("Therms and conditions"),
     "rate" : MessageLookupByLibrary.simpleMessage("Rate me"),
+    "recordMessage" : MessageLookupByLibrary.simpleMessage("Still processing your last file"),
     "removeTooltip" : MessageLookupByLibrary.simpleMessage("Remove"),
     "reportBug" : MessageLookupByLibrary.simpleMessage("Report bug"),
     "reset" : MessageLookupByLibrary.simpleMessage("Reset"),
@@ -86,6 +95,8 @@ class MessageLookup extends MessageLookupByLibrary {
     "saveCollectionSubtitle" : MessageLookupByLibrary.simpleMessage("Create a picture of your collection"),
     "saveCollectionTitleDialog" : MessageLookupByLibrary.simpleMessage("Select your collection"),
     "saveStatsTooltip" : MessageLookupByLibrary.simpleMessage("Save Stats"),
+    "saved" : MessageLookupByLibrary.simpleMessage("saved"),
+    "savingCollectionMessage" : MessageLookupByLibrary.simpleMessage("Saving your file. This could take a while depending on your device"),
     "serie" : m5,
     "settings" : MessageLookupByLibrary.simpleMessage("Settings"),
     "showPercentage" : MessageLookupByLibrary.simpleMessage("Show percentage"),
@@ -95,10 +106,12 @@ class MessageLookup extends MessageLookupByLibrary {
     "splashMessage" : MessageLookupByLibrary.simpleMessage("Just a second . . ."),
     "splashWelcome" : MessageLookupByLibrary.simpleMessage("WELCOME"),
     "stats" : MessageLookupByLibrary.simpleMessage("Stats"),
+    "storagePermission" : m6,
+    "successImport" : MessageLookupByLibrary.simpleMessage("Amiibo List updated"),
     "sure" : MessageLookupByLibrary.simpleMessage("Sure"),
-    "themeMode" : m6,
-    "type" : m7,
-    "types" : m8,
+    "themeMode" : m7,
+    "type" : m8,
+    "types" : m9,
     "upToolTip" : MessageLookupByLibrary.simpleMessage("Up"),
     "wishTooltip" : MessageLookupByLibrary.simpleMessage("Wish"),
     "wished" : MessageLookupByLibrary.simpleMessage("Wished")

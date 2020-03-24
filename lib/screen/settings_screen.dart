@@ -3,9 +3,9 @@ import 'package:amiibo_network/service/screenshot.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:file_picker/file_picker.dart';
 import 'package:flutter/services.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:amiibo_network/service/storage.dart';
 import 'package:amiibo_network/provider/theme_provider.dart';
 import 'package:provider/provider.dart';
@@ -13,20 +13,17 @@ import 'package:amiibo_network/provider/amiibo_provider.dart';
 import 'package:launch_review/launch_review.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:amiibo_network/service/service.dart';
-import 'package:amiibo_network/provider/stat_provider.dart';
 import 'package:amiibo_network/widget/theme_widget.dart';
 import 'package:amiibo_network/generated/l10n.dart';
 import 'package:amiibo_network/utils/urls_constants.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 
 class SettingsPage extends StatelessWidget{
-  static final Screenshot _screenshot = Screenshot();
   const SettingsPage({Key key}): super(key: key);
 
   @override
   Widget build(BuildContext context){
     final S translate = S.of(context);
-    //S.load(const Locale('es'));
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
@@ -47,37 +44,7 @@ class SettingsPage extends StatelessWidget{
               SliverList(
                 delegate: SliverChildListDelegate.fixed([
                   ResetCollection(),
-                  Builder(builder: (ctx){
-                    return CardSettings(title: translate.saveCollection,
-                      subtitle: translate.saveCollectionSubtitle,
-                      icon: const Icon(Icons.save),
-                      onTap: () async {
-                        Map<String,dynamic> collection = await showDialog(
-                          context: ctx,
-                          builder: (ctx) => _SaveCollection()
-                        );
-                        if(collection != null){
-                          final bool permission = collection['permission'];
-                          final ScaffoldState scaffoldState = Scaffold.of(ctx, nullOk: true);
-                          String message = collection['message'];
-                          if(permission) message = permissionMessage;
-                          if(_screenshot.isRecording) message = recordMessage;
-                          scaffoldState?.hideCurrentSnackBar();
-                          scaffoldState?.showSnackBar(SnackBar(content: Text(message)));
-                          if(permission && !_screenshot.isRecording) {
-                            _screenshot..theme = Theme.of(context).copyWith()
-                              ..statProvider = Provider.of<StatProvider>(context, listen: false);
-                            final Set<String> select = Set.of(collection['selected']);
-                            final String response = await _screenshot.saveCollection(select);
-                            if(response.isNotEmpty && (scaffoldState?.mounted ?? false)){
-                              scaffoldState?.hideCurrentSnackBar();
-                              scaffoldState?.showSnackBar(SnackBar(content: Text(response)));
-                            }
-                          }
-                        }
-                      }
-                    );
-                  }),
+                  _SaveCollection(),
                   CardSettings(title: translate.appearance, subtitle: translate.appearanceSubtitle, icon: const Icon(Icons.color_lens),
                     onTap: () => ThemeButton.dialog(context)
                   ),
@@ -125,7 +92,7 @@ class SettingsPage extends StatelessWidget{
                     onTap: () => showDialog(
                       context: context,
                       builder: (context) => MarkdownReader(
-                        file: translate.privacyPolicy,
+                        file: translate.privacyPolicy.replaceAll(' ', '%20'),
                         title: translate.privacySubtitle
                       )
                     )
@@ -165,7 +132,7 @@ class MarkdownReader extends StatelessWidget {
     if (await canLaunch(url)) {
       await launch(url);
     } else {
-      //Scaffold.of(ctx).showSnackBar(SnackBar(content: Text('Could not launch $url')));
+      Scaffold.of(ctx, nullOk: true)?.showSnackBar(SnackBar(content: Text('Could not launch $url')));
     }
   }
 
@@ -245,12 +212,73 @@ class ProjectButtons extends StatelessWidget{
   }
 }
 
-class _SaveCollection extends StatefulWidget{
+class _SaveCollection extends StatelessWidget{
+  static final Screenshot _screenshot = Screenshot();
+
+  Future<Set<String>> _dialog(BuildContext context) async {
+    return await showDialog<Set<String>>(
+      context: context,
+      builder: (context) => _SaveCollectionDialog()
+    );
+  }
+
+  Future<void> _save(BuildContext context, Set<String> collection) async {
+    final ScaffoldState scaffoldState = Scaffold.of(context, nullOk: true);
+    final S translate = S.of(context);
+    final String message = _screenshot.isRecording ?
+      translate.recordMessage : translate.savingCollectionMessage;
+    scaffoldState?.hideCurrentSnackBar();
+    scaffoldState?.showSnackBar(SnackBar(content: Text(message)));
+    if(!_screenshot.isRecording) {
+      final String time = DateTime.now().toString().substring(0,10);
+      final String name = 'My${
+        collection.containsAll(['Figure', 'Yarn', 'Card']) ? 'Amiibo' :
+        collection.contains('Card') ? 'Card' : 'Figure'
+      }Collection_$time';
+      var file = await createFile(name, 'png');
+      _screenshot.update(context);
+      await _screenshot.saveCollection(collection, file);
+    }
+  }
+
   @override
-  _SaveCollectionState createState() => _SaveCollectionState();
+  Widget build(BuildContext context) {
+    final S translate = S.of(context);
+    return CardSettings(title: translate.saveCollection,
+      subtitle: translate.saveCollectionSubtitle,
+      icon: const Icon(Icons.save),
+      onTap: () async {
+        Set<String> collection = await _dialog(context);
+        if(collection == null) return;
+        if(collection.isNotEmpty) await _save(context, collection);
+        else{
+          final PermissionHandler _permissionHandler = PermissionHandler();
+          final PermissionStatus status =
+           await _permissionHandler.checkPermissionStatus(PermissionGroup.storage);
+          final ScaffoldState scaffoldState = Scaffold.of(context, nullOk: true);
+          if(scaffoldState?.mounted ?? false)
+          scaffoldState?.hideCurrentSnackBar();
+          scaffoldState?.showSnackBar(
+            SnackBar(
+              content: Text(translate.storagePermission(status)),
+              action: SnackBarAction(
+              label: translate.openAppSettings,
+              onPressed: () async => await _permissionHandler.openAppSettings(),
+            ),
+            )
+          );
+        }
+      }
+    );
+  }
 }
 
-class _SaveCollectionState extends State<_SaveCollection> {
+class _SaveCollectionDialog extends StatefulWidget{
+  @override
+  _SaveCollectionDialogState createState() => _SaveCollectionDialogState();
+}
+
+class _SaveCollectionDialogState extends State<_SaveCollectionDialog> {
   Set<String> select = {};
 
   @override
@@ -300,11 +328,8 @@ class _SaveCollectionState extends State<_SaveCollection> {
             onPressed: select.isEmpty ? null : () async {
               final Map<PermissionGroup, PermissionStatus> response =
               await PermissionHandler().requestPermissions([PermissionGroup.storage]);
-              final Map<String,dynamic> permission = checkPermission(
-                response[PermissionGroup.storage]
-              );
-              if(permission['permission']) permission['selected'] = select;
-              Navigator.of(context).pop(permission);
+              final bool permission = checkPermission(response[PermissionGroup.storage]);
+              Navigator.of(context).pop(permission ? select : <String>{});
             },
             child: Text(MaterialLocalizations.of(context).okButtonLabel)
           )
@@ -316,8 +341,7 @@ class _SaveCollectionState extends State<_SaveCollection> {
 
 class ResetCollection extends StatelessWidget{
 
-  Future<void> _dialog(BuildContext context) async {
-    final AmiiboProvider amiiboProvider = Provider.of<AmiiboProvider>(context, listen: false);
+  Future<bool> _dialog(BuildContext context) async {
     final S translate = S.of(context);
     return showDialog(
       context: context,
@@ -336,10 +360,7 @@ class ResetCollection extends StatelessWidget{
             FlatButton(
               textColor: Theme.of(context).accentColor,
               child: Text(translate.sure),
-              onPressed: () async {
-                Navigator.of(context).maybePop();
-                await amiiboProvider.resetCollection();
-              },
+              onPressed: () async => Navigator.of(context).pop(true)
             ),
           ],
         );
@@ -347,14 +368,32 @@ class ResetCollection extends StatelessWidget{
     );
   }
 
+  void _message(ScaffoldState scaffoldState, String message){
+    if(!scaffoldState.mounted) return;
+    scaffoldState?.hideCurrentSnackBar();
+    scaffoldState?.showSnackBar(SnackBar(content: Text(message)));
+  }
+
   @override
   Widget build(BuildContext context) {
     final S translate = S.of(context);
+    final AmiiboProvider amiiboProvider = Provider.of<AmiiboProvider>(context, listen: false);
     return CardSettings(
       title: translate.reset,
       subtitle: translate.resetSubtitle,
       icon: const Icon(Icons.warning),
-      onTap: () => _dialog(context),
+      onTap: () async {
+        final bool reset = await _dialog(context);
+        if(reset ?? false){
+          final ScaffoldState scaffoldState = Scaffold.of(context, nullOk: true);
+          try{
+            await amiiboProvider.resetCollection();
+            _message(scaffoldState, translate.collectionReset);
+          }catch(e){
+            _message(scaffoldState, translate.splashError);
+          }
+        }
+      },
     );
   }
 
@@ -422,53 +461,100 @@ class DropMenu extends StatelessWidget {
   }
 }
 
-class BottomBar extends StatelessWidget{
+class BottomBar extends StatefulWidget {
+  BottomBar({Key key, this.title}) : super(key: key);
 
-  void _openFileExplorer(BuildContext context) async {
-    final AmiiboProvider amiiboProvider = Provider.of<AmiiboProvider>(context, listen: false);
-    final ScaffoldState scaffold = Scaffold.of(context);
-    final String _path = await FilePicker.getFilePath(type: FileType.ANY);
+  final String title;
+
+  @override
+  _BottomBarState createState() => _BottomBarState();
+}
+
+class _BottomBarState extends State<BottomBar> {
+  S translate;
+  ScaffoldState scaffoldState;
+  AmiiboProvider amiiboProvider;
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    translate = S.of(context);
+    scaffoldState = Scaffold.of(context, nullOk: true);
+    amiiboProvider = Provider.of<AmiiboProvider>(context, listen: false);
+  }
+
+  void openSnackBar(String message){
+    if(!(scaffoldState?.mounted ?? false)) return;
+    scaffoldState?.hideCurrentSnackBar();
+    scaffoldState?.showSnackBar(SnackBar(content: Text(message)));
+  }
+
+  Future<void> _openFileExplorer() async {
+    try{
+      //final String _path = await FilePicker.getFilePath(type: FileType.ANY);
+      final file = await FilePicker.getFile(type: FileType.CUSTOM, fileExtension: 'json');
+      final String _path = file?.path;
+      if(_path == null) return;
+      else if(_path.substring(_path.lastIndexOf('.')) != '.json') {
+        openSnackBar(translate.errorImporting);
+      }
+      else{
+        //var copyFile = await createCacheFile(_path);
+        //Map<String,dynamic> map = await compute(readFile1, copyFile);
+        Map<String,dynamic> map = await compute(readFile, _path);
+        if(map == null)
+          openSnackBar(translate.errorImporting);
+        else{
+          final _service = Service();
+          AmiiboLocalDB amiibos = await compute(entityFromMap, map);
+          await _service.update(amiibos);
+          amiiboProvider.refreshPagination();
+          openSnackBar(translate.successImport);
+        }
+      }
+    } on PlatformException catch(e){
+      debugPrint(e.message);
+      openSnackBar(translate.storagePermission('denied'));
+    }
+    /*final String _path = await FilePicker.getFilePath(type: FileType.any);
     if(_path == null) return;
     else if(_path.substring(_path.lastIndexOf('.')) != '.json') {
-      scaffold.showSnackBar(SnackBar(content: Text('This isn\'t an Amiibo List')));
+      openSnackBar(scaffold, translate.errorImporting);
     }
     else{
       Map<String,dynamic> map = await compute(readFile, _path);
       if(map == null && scaffold.mounted)
-        scaffold.showSnackBar(SnackBar(content: Text('This isn\'t an Amiibo List')));
+        openSnackBar(scaffold, translate.errorImporting);
       else{
         final _service = Service();
         AmiiboLocalDB amiibos = await compute(entityFromMap, map);
         await _service.update(amiibos);
         amiiboProvider.refreshPagination();
-        if(scaffold.mounted)
-          scaffold.showSnackBar(SnackBar(content: Text('Amiibo List updated')));
+        openSnackBar(scaffold, translate.successImport);
       }
-    }
+    }*/
   }
 
-  _requestWritePermission(BuildContext context) async {
+  Future<void> _requestWritePermission() async {
+    final PermissionHandler _permissionHandler = PermissionHandler();
     final Map<PermissionGroup, PermissionStatus> response =
-      await PermissionHandler().requestPermissions([PermissionGroup.storage]);
-    final Map<String, dynamic> permission = checkPermission(
-      response[PermissionGroup.storage]
-    );
-    if(permission['permission']){
+    await _permissionHandler.requestPermissions([PermissionGroup.storage]);
+    final bool permission = checkPermission(response[PermissionGroup.storage]);
+    if(permission){
       final _service = Service();
-      final AmiiboLocalDB amiibos = await _service.fetchAllAmiiboDB();
-      String response = await compute(writeFile, amiibos);
-      Scaffold.of(context).showSnackBar(
-        SnackBar(
-          content: Text(response),
-          duration: const Duration(seconds: 2),
-        )
-      );
-    }else
-      Scaffold.of(context).showSnackBar(
-        SnackBar(content: Text(permission['message']),
-          duration: const Duration(seconds: 2),
-        )
-      );
+      final Map<String, dynamic> args = Map<String, dynamic>();
+      args['amiibos'] = await _service.fetchAllAmiiboDB();
+      args['file'] = await createFile();
+      final bool saved = args['file'].existsSync();
+      final String fileSaved = saved ? translate.overwritten : translate.saved;
+      await compute(writeFile, args);
+      final String response = '${translate.fileSaved} $fileSaved';
+      openSnackBar(response);
+    }
+    else{
+      final String message = translate.storagePermission(response[PermissionGroup.storage]);
+      openSnackBar(message);
+    }
   }
 
   @override
@@ -484,7 +570,7 @@ class BottomBar extends StatelessWidget{
               color: Theme.of(context).buttonColor,
               shape: BeveledRectangleBorder(),
               textColor: Theme.of(context).textTheme.title.color,
-              onPressed: () => _requestWritePermission(context),
+              onPressed: () async => await _requestWritePermission(),
               icon: const Icon(Icons.file_upload),
               label: Text(translate.export)
             ),
@@ -495,7 +581,7 @@ class BottomBar extends StatelessWidget{
               color: Theme.of(context).buttonColor,
               shape: BeveledRectangleBorder(),
               textColor: Theme.of(context).textTheme.title.color,
-              onPressed: () => _openFileExplorer(context),
+              onPressed: () async => await _openFileExplorer(),
               icon: const Icon(Icons.file_download),
               label: Text(translate.import)
             ),

@@ -1,15 +1,14 @@
 import 'package:amiibo_network/provider/theme_provider.dart';
 import 'package:amiibo_network/service/screenshot.dart';
 import 'package:amiibo_network/service/service.dart';
-import 'package:amiibo_network/widget/radial_progression.dart';
-import 'package:amiibo_network/provider/stat_provider.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'dart:ui' as ui show FontFeature;
-import 'dart:ui' as ui;
+import 'package:flutter/widgets.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:amiibo_network/service/storage.dart';
 import 'package:amiibo_network/generated/l10n.dart';
+/*import 'package:flutter_local_notifications/flutter_local_notifications.dart';*/
+import 'package:android_intent/android_intent.dart';
+import 'package:amiibo_network/widget/stat_widget.dart';
 
 class StatsPage extends StatefulWidget{
 
@@ -202,29 +201,53 @@ class _FAB extends StatelessWidget{
 
   @override
   Widget build(BuildContext context) {
+    final S translate = S.of(context);
     return FloatingActionButton(
       child: const Icon(Icons.save),
-      tooltip: S.of(context).saveStatsTooltip,
+      tooltip: translate.saveStatsTooltip,
       heroTag: 'MenuFAB',
       onPressed: () async {
         final ScaffoldState scaffoldState = Scaffold.of(context, nullOk: true);
         final Map<PermissionGroup, PermissionStatus> response =
         await PermissionHandler().requestPermissions([PermissionGroup.storage]);
-        final Map<String,dynamic> permission = checkPermission(
-          response[PermissionGroup.storage]
-        );
-        String message = permission['message'];
-        if(permission['permission']) message = permissionMessage;
-        if(_screenshot.isRecording) message = recordMessage;
+        final bool permission = checkPermission(response[PermissionGroup.storage]);
+        String message = translate.storagePermission(response[PermissionGroup.storage]);
+        if(permission) message = translate.savingCollectionMessage;
+        if(_screenshot.isRecording) message = translate.recordMessage;
         scaffoldState?.hideCurrentSnackBar();
         scaffoldState?.showSnackBar(SnackBar(content: Text(message)));
-        if(permission['permission'] && !_screenshot.isRecording) {
-          _screenshot..theme = Theme.of(context).copyWith()
-            ..statProvider = Provider.of<StatProvider>(context, listen: false);
-          final String response = await _screenshot.drawStats(_select);
-          if(response.isNotEmpty && (scaffoldState?.mounted ?? false)){
+        if(permission && !_screenshot.isRecording) {
+          _screenshot.update(context);
+          final String time = DateTime.now().toString().substring(0,10);
+          final String name = 'My${_select.isEmpty ? 'Amiibo' :
+            _select.contains('Card') ? 'Card' : 'Figure'}Stats';
+          final file = await createFile(name, 'png');
+          await _screenshot.saveStats(_select, file);
+          /*FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
+          var androidPlatformChannelSpecifics = AndroidNotificationDetails(
+            'Export', 'Export Collection', 'Save and export your collection or wishlist',
+            importance: Importance.Low, priority: Priority.Default, ticker: 'Stats saved', playSound: false, enableVibration: false,
+            autoCancel: true, setAsGroupSummary: true, groupKey: 'Stat', style: AndroidNotificationStyle.BigPicture,
+              styleInformation: BigPictureStyleInformation(
+                file.path, BitmapSource.FilePath,
+            ));
+          var platformChannelSpecifics = NotificationDetails(androidPlatformChannelSpecifics, null);
+          await flutterLocalNotificationsPlugin.cancel(notification);
+          await flutterLocalNotificationsPlugin.show(
+            1, 'Export complete', name, platformChannelSpecifics,
+            payload: file.path);*/
+          if((scaffoldState?.mounted ?? false)){
+            final AndroidIntent intent = AndroidIntent(
+              action: 'action_view',
+              data: 'content://media/external/images/media/${name}_$time',
+              type: 'image/*',
+              flags: [1, 2]
+            );
             scaffoldState?.hideCurrentSnackBar();
-            scaffoldState?.showSnackBar(SnackBar(content: Text(response)));
+            scaffoldState?.showSnackBar(SnackBar(
+              content: Text('Stats saved'),
+              action: SnackBarAction(label: 'View', onPressed: () async => await intent.launch()),
+            ));
           }
         }
       },
@@ -263,85 +286,21 @@ class SingleStat extends StatelessWidget{
             const Divider(height: 12),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-              child: Radial(
-                icon: AnimatedRadial(
-                  key: Key('Owned'),
-                  percentage: owned.toDouble() / total.toDouble(),
-                  child: Icon(iconOwnedDark, color: Colors.green[800]),
-                ),
-                label: Flexible(
-                  child: FittedBox(
-                    fit: BoxFit.scaleDown,
-                    child: Consumer<StatProvider>(
-                      builder: (ctx, stat, _){
-                        final String ownedStat = stat.statLabel(
-                            owned.toDouble(),
-                            total.toDouble()
-                        );
-                        return RichText(
-                          text: TextSpan(
-                              text: ownedStat,
-                              style: Theme.of(context).textTheme.subhead.copyWith(
-                                fontSize: stat.isPercentage ? null : 22,
-                                fontFeatures: [
-                                  if(!stat.isPercentage) ui.FontFeature.enable('frac'),
-                                  if(stat.isPercentage) ui.FontFeature.tabularFigures()
-                                ],
-                              ),
-                              children: [
-                                TextSpan(
-                                  style: Theme.of(context).textTheme.subhead,
-                                  text: ' ${translate.owned}'
-                                )
-                              ]
-                          ),
-                        );
-                      }
-                    ),
-                  ),
-                ),
-              ),
+              child: StatWidget(
+                num: owned.toDouble(),
+                den: total.toDouble(),
+                text: translate.owned,
+                icon: Icon(iconOwnedDark, color: Colors.green[800])
+              )
             ),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-              child: Radial(
-                icon: AnimatedRadial(
-                  key: Key('Wished'),
-                  percentage: wished.toDouble() / total.toDouble(),
-                  child: Icon(Icons.whatshot, color: Colors.amber[800]),
-                ),
-                label: Flexible(
-                  child: FittedBox(
-                    fit: BoxFit.scaleDown,
-                    child: Consumer<StatProvider>(
-                      builder: (ctx, stat, _){
-                        final String wishedStat = stat.statLabel(
-                            wished.toDouble(),
-                            total.toDouble()
-                        );
-                        return RichText(
-                          text: TextSpan(
-                            text: wishedStat,
-                            style: Theme.of(context).textTheme.subhead.copyWith(
-                              fontSize: stat.isPercentage ? null : 22,
-                              fontFeatures: [
-                                if(!stat.isPercentage) ui.FontFeature.enable('frac'),
-                                if(stat.isPercentage) ui.FontFeature.tabularFigures()
-                              ],
-                            ),
-                            children: [
-                              TextSpan(
-                                  style: Theme.of(context).textTheme.subhead,
-                                  text: ' ${translate.wished}'
-                              )
-                            ]
-                          ),
-                        );
-                      }
-                    )
-                  ),
-                ),
-              ),
+              child: StatWidget(
+                num: wished.toDouble(),
+                den: total.toDouble(),
+                text: translate.wished,
+                icon: Icon(Icons.whatshot, color: Colors.amber[800]),
+              )
             ),
           ],
         ),

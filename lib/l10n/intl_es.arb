@@ -62,5 +62,16 @@
   "rate": "Califícame",
   "changelogSubtitle": "Novedades",
   "changelog": "Cambios",
-  "markdownError": "Hubo un error al cargar el archivo"
+  "markdownError": "Hubo un error al cargar el archivo",
+  "storagePermission": "{choice, select, granted {Almacenamiento concedido} denied {Almacenamiento denegado} neverAskAgain {Almacenamiento deshabilitado} restricted {Almacenamiento restringido} other {Permiso de almacenamiento en estado desconocido}}",
+  "createdOn": "Creado el",
+  "collectionReset": "Colleccción borrada",
+  "openAppSettings": "cambiar",
+  "recordMessage": "Espera por favor, aún se está procesando tu petición anterior",
+  "savingCollectionMessage": "Guardando tu colección, esto podría demorar dependiendo de tu dispositivo",
+  "errorImporting": "Este archivo no contiene una colección",
+  "successImport": "Colección actualizada",
+  "saved": "guardado",
+  "overwritten": "sobreescrito",
+  "fileSaved": "Tú archivo ha sido"
 }

@@ -62,5 +62,16 @@
   "rate": "Rate me",
   "changelogSubtitle": "What's new",
   "changelog": "Changelog",
-  "markdownError": "There was an error loading the file"
+  "markdownError": "There was an error loading the file",
+  "storagePermission": "{choice, select, granted {Storage permission granted} denied {Storage permission denied} neverAskAgain {Storage permission disabled} restricted {Storage permission restricted} other {Unknown permission access}}",
+  "createdOn": "Created on",
+  "collectionReset": "Collection reset",
+  "openAppSettings": "change",
+  "recordMessage": "Still processing your last file",
+  "savingCollectionMessage": "Saving your file. This could take a while depending on your device",
+  "errorImporting": "This isn't an Amiibo List",
+  "successImport": "Amiibo List updated",
+  "saved": "saved",
+  "overwritten": "overwritten",
+  "fileSaved": "Your file has been"
 }
