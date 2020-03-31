@@ -139,9 +139,28 @@ class Screenshot {
 
     if(isRecording || (stats?.isEmpty ?? true) || (general?.isEmpty ?? true)) return;
 
+    final String longestWord = owned.length > wished.length ? owned : wished;
+    TextSpan longestParagraphTest = TextSpan(
+      style: TextStyle(fontSize: statProvider.isPercentage ? 30 : 35,
+        height: statProvider.isPercentage ? null : 1,
+        fontFeatures: [
+          if(!statProvider.isPercentage) ui.FontFeature.enable('frac'),
+          if(statProvider.isPercentage) ui.FontFeature.tabularFigures()
+        ],
+      ),
+      text: statProvider.isPercentage ? '99.99%' : '99/100',
+      children: [
+        TextSpan(
+            style: TextStyle(fontSize: 30),
+            text: ' $longestWord'
+        )
+      ]
+    );
+    TextPainter _textPainter = TextPainter(text: longestParagraphTest, textDirection: TextDirection.ltr, maxLines: 1)
+      ..layout(minWidth: 200, maxWidth: double.infinity);
 
-    final int longestWord = owned.length > wished.length ? owned.length : wished.length;
-    final double cardSizeX = 200.0 + longestWord * 15.0;
+    final double internalPadding = padding;
+    final double cardSizeX = (2*internalPadding + 75 + _textPainter.width).clamp(300.0, double.infinity);
     final double cardSizeY = 240;
     final double width = (stats.length / 5.0).ceilToDouble().clamp(4.0, 10.0);
     final double maxX = (width * (1 + space) - space) * (cardSizeX + 2*padding) + 2*margin;
@@ -219,7 +238,8 @@ class Screenshot {
           ]
       );
       TextPainter(text: ownedText, textDirection: TextDirection.ltr, maxLines: 1)
-        ..layout(minWidth: cardSizeX - 2* padding - 75, maxWidth: cardSizeX - 2* padding - 75)
+        ..layout(minWidth: cardSizeX - 2* internalPadding - 75,
+            maxWidth: cardSizeX - 2* internalPadding - 75)
         ..paint(_canvas, _offset.translate(padding + 75, 62.5 + padding + 25));
 
       TextSpan wishedText = TextSpan(
@@ -239,7 +259,8 @@ class Screenshot {
         ]
       );
       TextPainter(text: wishedText, textDirection: TextDirection.ltr, maxLines: 1)
-        ..layout(minWidth: cardSizeX - 2* padding - 75, maxWidth: cardSizeX - 2* padding - 75)
+        ..layout(minWidth: cardSizeX - 2* internalPadding - 75,
+            maxWidth: cardSizeX - 2* internalPadding - 75)
         ..paint(_canvas, _offset.translate(padding + 75, 142.5 + padding + 25));
 
       _paintSquareStat(_offset.translate(padding, 50 + padding + 25),

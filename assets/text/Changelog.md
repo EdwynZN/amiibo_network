@@ -1,4 +1,4 @@
-## Version 1.3
+## Version 1.3.0
 - Localization updates (English and Spanish)
 - Notifications of exported data
 - Show percentage changed to checkbox
