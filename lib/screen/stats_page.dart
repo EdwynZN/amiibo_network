@@ -6,9 +6,8 @@ import 'package:flutter/widgets.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:amiibo_network/service/storage.dart';
 import 'package:amiibo_network/generated/l10n.dart';
-/*import 'package:flutter_local_notifications/flutter_local_notifications.dart';*/
-import 'package:android_intent/android_intent.dart';
 import 'package:amiibo_network/widget/stat_widget.dart';
+import 'package:amiibo_network/service/notification_service.dart';
 
 class StatsPage extends StatefulWidget{
 
@@ -207,48 +206,45 @@ class _FAB extends StatelessWidget{
       tooltip: translate.saveStatsTooltip,
       heroTag: 'MenuFAB',
       onPressed: () async {
+        final _permissionHandler = PermissionHandler();
         final ScaffoldState scaffoldState = Scaffold.of(context, nullOk: true);
         final Map<PermissionGroup, PermissionStatus> response =
-        await PermissionHandler().requestPermissions([PermissionGroup.storage]);
+        await _permissionHandler.requestPermissions([PermissionGroup.storage, PermissionGroup.notification]);
         final bool permission = checkPermission(response[PermissionGroup.storage]);
         String message = translate.storagePermission(response[PermissionGroup.storage]);
         if(permission) message = translate.savingCollectionMessage;
         if(_screenshot.isRecording) message = translate.recordMessage;
         scaffoldState?.hideCurrentSnackBar();
-        scaffoldState?.showSnackBar(SnackBar(content: Text(message)));
+        scaffoldState?.showSnackBar(SnackBar(content: Text(message),
+          action: response[PermissionGroup.storage] == PermissionStatus.neverAskAgain ?
+            SnackBarAction(
+            label: translate.openAppSettings,
+            onPressed: () async => await _permissionHandler.openAppSettings(),
+          ) : null
+        ));
         if(permission && !_screenshot.isRecording) {
           _screenshot.update(context);
-          final String time = DateTime.now().toString().substring(0,10);
-          final String name = 'My${_select.isEmpty ? 'Amiibo' :
-            _select.contains('Card') ? 'Card' : 'Figure'}Stats';
+          String name;
+          int id;
+          if(_select.isEmpty){
+            name = 'MyAmiiboStats';
+            id = 1;
+          } else if(_select.contains('Card')){
+            name = 'MyCardStats';
+            id = 2;
+          } else{
+            name = 'MyFigureStats';
+            id = 3;
+          }
           final file = await createFile(name, 'png');
           await _screenshot.saveStats(_select, file);
-          /*FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
-          var androidPlatformChannelSpecifics = AndroidNotificationDetails(
-            'Export', 'Export Collection', 'Save and export your collection or wishlist',
-            importance: Importance.Low, priority: Priority.Default, ticker: 'Stats saved', playSound: false, enableVibration: false,
-            autoCancel: true, setAsGroupSummary: true, groupKey: 'Stat', style: AndroidNotificationStyle.BigPicture,
-              styleInformation: BigPictureStyleInformation(
-                file.path, BitmapSource.FilePath,
-            ));
-          var platformChannelSpecifics = NotificationDetails(androidPlatformChannelSpecifics, null);
-          await flutterLocalNotificationsPlugin.cancel(notification);
-          await flutterLocalNotificationsPlugin.show(
-            1, 'Export complete', name, platformChannelSpecifics,
-            payload: file.path);*/
-          if((scaffoldState?.mounted ?? false)){
-            final AndroidIntent intent = AndroidIntent(
-              action: 'action_view',
-              data: 'content://media/external/images/media/${name}_$time',
-              type: 'image/*',
-              flags: [1, 2]
-            );
-            scaffoldState?.hideCurrentSnackBar();
-            scaffoldState?.showSnackBar(SnackBar(
-              content: Text('Stats saved'),
-              action: SnackBarAction(label: 'View', onPressed: () async => await intent.launch()),
-            ));
-          }
+          final Map<String, dynamic> notificationArgs = <String, dynamic>{
+            'title': translate.notificationTitle,
+            'path': file.path,
+            'actionTitle': translate.actionText,
+            'id': id
+          };
+          await NotificationService.sendNotification(notificationArgs);
         }
       },
     );

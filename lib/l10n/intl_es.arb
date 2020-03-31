@@ -71,7 +71,7 @@
   "savingCollectionMessage": "Guardando tu colección, esto podría demorar dependiendo de tu dispositivo",
   "errorImporting": "Este archivo no contiene una colección",
   "successImport": "Colección actualizada",
-  "saved": "guardado",
-  "overwritten": "sobreescrito",
-  "fileSaved": "Tú archivo ha sido"
+  "notificationTitle": "Archivo generado",
+  "actionText": "Compartir",
+  "donate": "Donaciones"
 }

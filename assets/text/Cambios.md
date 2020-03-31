@@ -1,3 +1,11 @@
+## Version 1.3
+- Localización de idiomas (Inglés y Español)
+- Notifaciones cuando exportas tu colección
+- Cambiar a modo de porcentaje ahora se muestra con un checkbox (casilla de verificación)
+- Las imagenes y la colección de amiibos ahora se guardan en la carpeta Pictures y Documents de la aplicación
+- Nuevo formato de fechas
+- Múltiples correcciones
+
 ## Version 1.2.2
 - Cambios en la animación del botón para cambiar tema
 - Cambios en la fuente de texto de las estadísticas

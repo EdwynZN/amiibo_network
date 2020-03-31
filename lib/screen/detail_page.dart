@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:amiibo_network/provider/amiibo_provider.dart';
 import 'package:amiibo_network/provider/theme_provider.dart';
 import 'package:amiibo_network/generated/l10n.dart';
+import 'package:amiibo_network/utils/format_date.dart';
 
 class DetailPage extends StatelessWidget{
   final SingleAmiibo amiibo;
@@ -155,15 +156,13 @@ class _BottomSheetDetail extends StatelessWidget{
 class RegionDetail extends StatelessWidget{
   final String asset;
   final String description;
-  final DateTime date;
+  final FormatDate formatDate;
 
-  RegionDetail(dateString,this.asset,this.description)
-    : date = DateTime.tryParse(dateString);
+  RegionDetail(dateString, this.asset, this.description)
+    : formatDate = FormatDate(dateString);
 
   @override
   Widget build(BuildContext context) {
-    String formatDate = MaterialLocalizations.of(context).formatFullDate(date);
-    formatDate = formatDate.substring(formatDate.indexOf(' ')+1);
     return Row(
       crossAxisAlignment: CrossAxisAlignment.center,
       children: <Widget>[
@@ -177,7 +176,7 @@ class RegionDetail extends StatelessWidget{
           child: FittedBox(
             child: Padding(
               padding: const EdgeInsets.only(left: 8, right: 8),
-              child: Text(formatDate,
+              child: Text(formatDate.localizedDate(context),
                 overflow: TextOverflow.fade,
                 softWrap: false,
                 maxLines: 1,

@@ -80,7 +80,6 @@ class Screenshot {
     double yOffset = margin;
     _startRecording(Rect.fromPoints(Offset.zero, Offset(maxX, maxY)));
 
-    //final Canvas _canvas = _canvas;
     final Paint paint = Paint()..color = theme.scaffoldBackgroundColor;
     _canvas.drawColor(paint.color, BlendMode.src);
     await _paintBanner(Size(maxX, maxY), _listStat);
@@ -298,7 +297,7 @@ class Screenshot {
       text: 'Amiibo Network',
       children: <InlineSpan>[
         TextSpan(
-            style: TextStyle(color: textColor, fontSize: 15, wordSpacing: 60),
+            style: TextStyle(color: textColor, fontSize: 15, wordSpacing: 35),
             text: '\u00A9 '
         ),
         TextSpan(
@@ -316,7 +315,7 @@ class Screenshot {
           text: ' $owned'
         ),
         TextSpan(
-            style: TextStyle(color: Colors.black, fontSize: 35, wordSpacing: 60),
+            style: TextStyle(color: Colors.black, fontSize: 35, wordSpacing: 35),
             text: ' '
         ),
         TextSpan(
@@ -364,8 +363,8 @@ class Screenshot {
   }
 
   Future<void> _saveFile(int maxX, int maxY, File file) async{
-    final Map<String,dynamic> args = Map<String,dynamic>();
     try{
+      final Map<String,dynamic> args = Map<String,dynamic>();
       ui.Picture pic = _recorder.endRecording();
       if(pic == null) throw(AssertionError('The Canvas was empty'));
       ui.Image img = await pic.toImage(maxX, maxY);
@@ -376,10 +375,8 @@ class Screenshot {
       args['file'] = file;
       args['buffer'] = buffer;
       await compute(writeCollectionFile, args);
-      //return 'error';
     }on AssertionError catch(e){
       print(e);
-      //return e.message;
     } finally{
       _canvas = null;
       _recorder = null;

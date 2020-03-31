@@ -1,3 +1,11 @@
+## Version 1.3
+- Localization updates (English and Spanish)
+- Notifications of exported data
+- Show percentage changed to checkbox
+- Change format dates of release dates of amiibos and screenshots saved
+- Saved pictures and exported amiibos saved in Picture and Document folder of the scoped storage
+- Fixed minor bugs
+
 ## Version 1.2.2
 - Change theme animation button
 - Changed stat fonts

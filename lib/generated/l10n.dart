@@ -668,28 +668,28 @@ class S {
     );
   }
 
-  String get saved {
+  String get notificationTitle {
     return Intl.message(
-      'saved',
-      name: 'saved',
+      'Export complete',
+      name: 'notificationTitle',
       desc: '',
       args: [],
     );
   }
 
-  String get overwritten {
+  String get actionText {
     return Intl.message(
-      'overwritten',
-      name: 'overwritten',
+      'Share',
+      name: 'actionText',
       desc: '',
       args: [],
     );
   }
 
-  String get fileSaved {
+  String get donate {
     return Intl.message(
-      'Your file has been',
-      name: 'fileSaved',
+      'Donate',
+      name: 'donate',
       desc: '',
       args: [],
     );

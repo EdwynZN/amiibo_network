@@ -71,7 +71,7 @@
   "savingCollectionMessage": "Saving your file. This could take a while depending on your device",
   "errorImporting": "This isn't an Amiibo List",
   "successImport": "Amiibo List updated",
-  "saved": "saved",
-  "overwritten": "overwritten",
-  "fileSaved": "Your file has been"
+  "notificationTitle": "Export complete",
+  "actionText": "Share",
+  "donate": "Donate"
 }

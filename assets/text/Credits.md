@@ -36,6 +36,11 @@ Project: https://github.com/flutter/flutter_markdown
 Copyright 2017 Google, Inc. All rights reserved
 BSD 3-Clause License
 
+### **Path Provider**
+Project: https://github.com/flutter/plugins/tree/master/packages/path_provider/path_provider
+Copyright (c) 2017, the Flutter project authors
+BSD 3-Clause License
+
 All rights reserved.
 Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
 - Redistributions of source code must retain the above copyright notice, this list of conditions and the following disclaimer.

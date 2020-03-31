@@ -703,8 +703,10 @@ class AmiiboGridState extends State<AmiiboGrid> {
                       padding: const EdgeInsets.only(top: 4.0, left: 4.0, right: 4.0),
                       child: Hero(
                         placeholderBuilder: (context, size, child){
+                          final Color color = Theme.of(context).scaffoldBackgroundColor == Colors.black
+                              ? Colors.white24 : Colors.black54;
                           return ColorFiltered(
-                            colorFilter: ColorFilter.mode(Colors.black54, BlendMode.modulate),
+                            colorFilter: ColorFilter.mode(color, BlendMode.srcIn),
                             child: child
                           );
                         },
