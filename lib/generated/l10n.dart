@@ -9,7 +9,7 @@ import 'intl/messages_all.dart';
 // **************************************************************************
 
 class S {
-  S(this.localeName);
+  S();
   
   static const AppLocalizationDelegate delegate =
     AppLocalizationDelegate();
@@ -19,15 +19,13 @@ class S {
     final String localeName = Intl.canonicalizedLocale(name);
     return initializeMessages(localeName).then((_) {
       Intl.defaultLocale = localeName;
-      return S(localeName);
+      return S();
     });
   } 
 
   static S of(BuildContext context) {
     return Localizations.of<S>(context, S);
   }
-
-  final String localeName;
 
   String get splashMessage {
     return Intl.message(
@@ -65,9 +63,20 @@ class S {
     );
   }
 
-  String category(dynamic choice) {
-    return Intl.message(
-      '{choice, select, All {All} Owned {Owned} Wishlist {Wishlist} Name {Name} Game {Game} AmiiboSeries {Serie} Figures {All Figures} Cards {All Cards} other {{choice}}}',
+  String category(Object choice) {
+    return Intl.select(
+      choice,
+      {
+        'All': 'All',
+        'Owned': 'Owned',
+        'Wishlist': 'Wishlist',
+        'Name': 'Name',
+        'Game': 'Game',
+        'AmiiboSeries': 'Serie',
+        'Figures': 'All Figures',
+        'Cards': 'All Cards',
+        'other': '$choice',
+      },
       name: 'category',
       desc: '',
       args: [choice],
@@ -110,9 +119,15 @@ class S {
     );
   }
 
-  String types(dynamic choice) {
-    return Intl.message(
-      '{choice, select, Figure {Type: Figure} Card {Type: Card} Yarn {Type: Yarn} other {Type: Other}}',
+  String types(Object choice) {
+    return Intl.select(
+      choice,
+      {
+        'Figure': 'Type: Figure',
+        'Card': 'Type: Card',
+        'Yarn': 'Type: Yarn',
+        'other': 'Type: Other',
+      },
       name: 'types',
       desc: '',
       args: [choice],
@@ -137,7 +152,7 @@ class S {
     );
   }
 
-  String name(dynamic name) {
+  String name(Object name) {
     return Intl.message(
       'Name: $name',
       name: 'name',
@@ -146,7 +161,7 @@ class S {
     );
   }
 
-  String character(dynamic character) {
+  String character(Object character) {
     return Intl.message(
       'Character: $character',
       name: 'character',
@@ -155,7 +170,7 @@ class S {
     );
   }
 
-  String serie(dynamic serie) {
+  String serie(Object serie) {
     return Intl.message(
       'Serie: $serie',
       name: 'serie',
@@ -164,7 +179,7 @@ class S {
     );
   }
 
-  String game(dynamic game) {
+  String game(Object game) {
     return Intl.message(
       'Game: $game',
       name: 'game',
@@ -173,7 +188,7 @@ class S {
     );
   }
 
-  String type(dynamic type) {
+  String type(Object type) {
     return Intl.message(
       'Type: $type',
       name: 'type',
@@ -308,9 +323,15 @@ class S {
     );
   }
 
-  String themeMode(dynamic choice) {
-    return Intl.message(
-      '{choice, select, system {Auto} light {Light} dark {Dark} other {Auto}}',
+  String themeMode(Object choice) {
+    return Intl.select(
+      choice,
+      {
+        'system': 'Auto',
+        'light': 'Light',
+        'dark': 'Dark',
+        'other': 'Auto',
+      },
       name: 'themeMode',
       desc: '',
       args: [choice],
@@ -542,7 +563,7 @@ class S {
     );
   }
 
-  String couldNotLaunchUrl(dynamic url) {
+  String couldNotLaunchUrl(Object url) {
     return Intl.message(
       'Could not launch $url',
       name: 'couldNotLaunchUrl',
@@ -596,9 +617,16 @@ class S {
     );
   }
 
-  String storagePermission(dynamic choice) {
-    return Intl.message(
-      '{choice, select, granted {Storage permission granted} denied {Storage permission denied} neverAskAgain {Storage permission disabled} restricted {Storage permission restricted} other {Unknown permission access}}',
+  String storagePermission(Object choice) {
+    return Intl.select(
+      choice,
+      {
+        'granted': 'Storage permission granted',
+        'denied': 'Storage permission denied',
+        'neverAskAgain': 'Storage permission disabled',
+        'restricted': 'Storage permission restricted',
+        'other': 'Unknown permission access',
+      },
       name: 'storagePermission',
       desc: '',
       args: [choice],
@@ -701,7 +729,8 @@ class AppLocalizationDelegate extends LocalizationsDelegate<S> {
 
   List<Locale> get supportedLocales {
     return const <Locale>[
-      Locale.fromSubtags(languageCode: 'en'), Locale.fromSubtags(languageCode: 'es'),
+      Locale.fromSubtags(languageCode: 'en'),
+      Locale.fromSubtags(languageCode: 'es'),
     ];
   }
 
