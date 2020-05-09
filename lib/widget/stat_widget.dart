@@ -36,7 +36,7 @@ class StatWidget extends StatelessWidget{
               return RichText(
                 text: TextSpan(
                   text: ownedStat,
-                  style: Theme.of(context).textTheme.subhead.copyWith(
+                  style: Theme.of(context).textTheme.subtitle1.copyWith(
                     fontSize: stat.isPercentage ? null : 22,
                     fontFeatures: [
                       if(!stat.isPercentage) ui.FontFeature.enable('frac'),
@@ -45,7 +45,7 @@ class StatWidget extends StatelessWidget{
                   ),
                   children: [
                     TextSpan(
-                      style: Theme.of(context).textTheme.subhead,
+                      style: Theme.of(context).textTheme.subtitle1,
                       text: ' $text'
                     )
                   ]

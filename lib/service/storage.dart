@@ -1,20 +1,6 @@
 import 'dart:io';
 import 'dart:convert';
-import 'package:permission_handler/permission_handler.dart';
 import 'package:path_provider/path_provider.dart';
-
-bool checkPermission(PermissionStatus permission) {
-  switch(permission){
-    case(PermissionStatus.granted):
-      return true;
-    case(PermissionStatus.denied):
-    case(PermissionStatus.neverAskAgain):
-    case(PermissionStatus.restricted):
-    case(PermissionStatus.unknown):
-    default:
-      return false;
-  }
-}
 
 Future<File> createFile([String name = 'MyAmiiboNetwork', String type = 'json']) async{
   Directory dir;

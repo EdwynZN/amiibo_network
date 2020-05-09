@@ -44,9 +44,9 @@ class _CollectionDrawerState extends State<CollectionDrawer> {
     final S translate = S.of(context);
     return ListTileTheme(
       iconColor: Theme.of(context).iconTheme.color,
-      textColor: Theme.of(context).textTheme.body1.color,
+      textColor: Theme.of(context).textTheme.bodyText2.color,
       style: ListTileStyle.drawer,
-      selectedColor: Theme.of(context).accentColor,
+      selectedColor: Theme.of(context).toggleableActiveColor,
       child: Drawer(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.end,
@@ -71,6 +71,7 @@ class _CollectionDrawerState extends State<CollectionDrawer> {
                                     title: child,
                                     value: statMode.isPercentage,
                                     onChanged: statMode.toggleStat,
+                                    checkColor: Theme.of(context).floatingActionButtonTheme.foregroundColor,
                                   );
                                 },
                               ),

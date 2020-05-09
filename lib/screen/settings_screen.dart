@@ -4,7 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:permission_handler/permission_handler.dart';
+//import 'package:permission_handler/permission_handler.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:amiibo_network/service/storage.dart';
 import 'package:amiibo_network/provider/theme_provider.dart';
@@ -141,7 +141,7 @@ class _SupportButtons extends StatelessWidget{
                 color: Theme.of(context).brightness == Brightness.dark
                     ? Colors.white54 : null,
               ),
-              label: Flexible(child: FittedBox(child: Text(translate.rate, style: Theme.of(context).textTheme.body2, overflow: TextOverflow.fade,),))
+              label: Flexible(child: FittedBox(child: Text(translate.rate, style: Theme.of(context).textTheme.bodyText1, overflow: TextOverflow.fade,),))
             ),
           ),
         ),
@@ -155,7 +155,7 @@ class _SupportButtons extends StatelessWidget{
                 color: Theme.of(context).brightness == Brightness.dark
                     ? Colors.black38 : null,
               ),
-              label: Flexible(child: FittedBox(child: Text(translate.donate, style: Theme.of(context).textTheme.body2, overflow: TextOverflow.fade,),))
+              label: Flexible(child: FittedBox(child: Text(translate.donate, style: Theme.of(context).textTheme.bodyText1, overflow: TextOverflow.fade,),))
             ),
           ),
         ),
@@ -190,7 +190,7 @@ class _ProjectButtons extends StatelessWidget{
               child: FlatButton.icon(
                 onPressed: () => _launchURL(urls[index], context),
                 icon: Icon(icons[index], color: Theme.of(context).iconTheme.color,),
-                label: Flexible(child: FittedBox(child: Text(titles[index], style: Theme.of(context).textTheme.body2, overflow: TextOverflow.fade,),))
+                label: Flexible(child: FittedBox(child: Text(titles[index], style: Theme.of(context).textTheme.bodyText1, overflow: TextOverflow.fade,),))
               ),
             ),
           ),
@@ -305,24 +305,6 @@ class _SaveCollection extends StatelessWidget{
         Set<String> collection = await _dialog(context);
         if(collection == null) return;
         if(collection.isNotEmpty) await _save(context, collection);
-        else{
-          final PermissionHandler _permissionHandler = PermissionHandler();
-          final PermissionStatus status =
-           await _permissionHandler.checkPermissionStatus(PermissionGroup.storage);
-          final ScaffoldState scaffoldState = Scaffold.of(context, nullOk: true);
-          if(scaffoldState?.mounted ?? false)
-          scaffoldState?.hideCurrentSnackBar();
-          scaffoldState?.showSnackBar(
-            SnackBar(
-              content: Text(translate.storagePermission(status)),
-              action: status == PermissionStatus.neverAskAgain ?
-                SnackBarAction(
-                label: translate.openAppSettings,
-                onPressed: () async => await _permissionHandler.openAppSettings(),
-              ) : null
-            )
-          );
-        }
       }
     );
   }
@@ -347,7 +329,7 @@ class _SaveCollectionDialogState extends State<_SaveCollectionDialog> {
         children: <Widget>[
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 6),
-            child: Text(translate.saveCollectionTitleDialog, style: Theme.of(context).textTheme.display1),
+            child: Text(translate.saveCollectionTitleDialog, style: Theme.of(context).textTheme.headline4),
           ),
           const Divider(),
         ],
@@ -380,12 +362,8 @@ class _SaveCollectionDialogState extends State<_SaveCollectionDialog> {
         Align(
           alignment: Alignment.centerRight,
           child: FlatButton(
-            onPressed: select.isEmpty ? null : () async {
-              final Map<PermissionGroup, PermissionStatus> response =
-              await PermissionHandler().requestPermissions([PermissionGroup.storage]);
-              final bool permission = checkPermission(response[PermissionGroup.storage]);
-              Navigator.of(context).pop(permission ? select : <String>{});
-            },
+            textColor: Theme.of(context).accentColor,
+            onPressed: select.isEmpty ? null : () async => Navigator.of(context).pop(select),
             child: Text(MaterialLocalizations.of(context).okButtonLabel)
           )
         ),
@@ -508,7 +486,7 @@ class _DropMenu extends StatelessWidget {
             children: <Widget>[
               const Icon(Icons.color_lens),
               Padding(padding: const EdgeInsets.only(left: 8),
-                child: Text(translate.themeMode(themeMode.preferredTheme), style: themeStyle.textTheme.subtitle),
+                child: Text(translate.themeMode(themeMode.preferredTheme), style: themeStyle.textTheme.subtitle2),
               )
             ]
           )
@@ -552,9 +530,9 @@ class _BottomBarState extends State<BottomBar> {
 
   Future<void> _openFileExplorer() async {
     try{
-      final file = await FilePicker.getFile(type: FileType.ANY);
+      final file = await FilePicker.getFile(type: FileType.custom, allowedExtensions: ['json']);
       final String _path = file?.path;
-      print(_path);
+      //print('MyPath: $_path');
       if(_path == null) return;
       else if(_path.substring(_path.lastIndexOf('.')) != '.json') {
         openSnackBar(translate.errorImporting);
@@ -564,52 +542,36 @@ class _BottomBarState extends State<BottomBar> {
         if(map == null)
           openSnackBar(translate.errorImporting);
         else{
-          AmiiboLocalDB amiibos = await compute(entityFromMap, map);
+          AmiiboLocalDB amiibos = entityFromMap(map);///await compute(entityFromMap, map);
           await _service.update(amiibos);
           amiiboProvider.refreshPagination();
           openSnackBar(translate.successImport);
         }
       }
+      await FilePicker.clearTemporaryFiles();
     } on PlatformException catch(e){
       debugPrint(e.message);
       openSnackBar(translate.storagePermission('denied'));
     }
   }
 
-  Future<void> _requestWritePermission() async {
-    final PermissionHandler _permissionHandler = PermissionHandler();
-    final Map<PermissionGroup, PermissionStatus> response =
-    await _permissionHandler.requestPermissions([PermissionGroup.storage]);
-    final bool permission = checkPermission(response[PermissionGroup.storage]);
-    if(permission){
-      try{
-        openSnackBar(translate.savingCollectionMessage);
-        final Map<String, dynamic> args = Map<String, dynamic>();
-        args['amiibos'] = await _service.fetchAllAmiiboDB();
-        final file = await createFile();
-        args['file'] = file;
-        await compute(writeFile, args);
-        final Map<String, dynamic> notificationArgs = <String, dynamic>{
-          'title': translate.notificationTitle,
-          'path': file.path,
-          'actionTitle': translate.actionText,
-          'id': 6
-        };
-        await NotificationService.sendNotification(notificationArgs);
-      }catch(e){
-        print(e);
-      }
-    }
-    else{
-      final String message = translate.storagePermission(response[PermissionGroup.storage]);
-      openSnackBar(
-        message,
-        action: response[PermissionGroup.storage] == PermissionStatus.neverAskAgain ?
-          SnackBarAction(
-          label: translate.openAppSettings,
-          onPressed: () async => await _permissionHandler.openAppSettings(),
-        ) : null
-      );
+  Future<void> _writePermission() async {
+    try{
+      openSnackBar(translate.savingCollectionMessage);
+      final Map<String, dynamic> args = Map<String, dynamic>();
+      args['amiibos'] = await _service.fetchAllAmiiboDB();
+      final file = await createFile();
+      args['file'] = file;
+      await compute(writeFile, args);
+      final Map<String, dynamic> notificationArgs = <String, dynamic>{
+        'title': translate.notificationTitle,
+        'path': file.path,
+        'actionTitle': translate.actionText,
+        'id': 6
+      };
+      await NotificationService.sendNotification(notificationArgs);
+    }catch(e){
+      print(e);
     }
   }
 
@@ -617,6 +579,7 @@ class _BottomBarState extends State<BottomBar> {
   Widget build(BuildContext context) {
     final S translate = S.of(context);
     return BottomAppBar(
+      //color: Theme.of(context).appBarTheme.color,
       child: Row(
         mainAxisSize: MainAxisSize.min,
         mainAxisAlignment: MainAxisAlignment.center,
@@ -625,8 +588,8 @@ class _BottomBarState extends State<BottomBar> {
             child: FlatButton.icon(
               color: Theme.of(context).buttonColor,
               shape: BeveledRectangleBorder(),
-              textColor: Theme.of(context).textTheme.title.color,
-              onPressed: () async => await _requestWritePermission(),
+              textColor: Theme.of(context).textTheme.headline6.color,
+              onPressed: () async => await _writePermission(),
               icon: const Icon(Icons.file_upload),
               label: Text(translate.export)
             ),
@@ -636,7 +599,7 @@ class _BottomBarState extends State<BottomBar> {
             child: FlatButton.icon(
               color: Theme.of(context).buttonColor,
               shape: BeveledRectangleBorder(),
-              textColor: Theme.of(context).textTheme.title.color,
+              textColor: Theme.of(context).textTheme.headline6.color,
               onPressed: () async => await _openFileExplorer(),
               icon: const Icon(Icons.file_download),
               label: Text(translate.import)
@@ -667,7 +630,7 @@ class _CardSettings extends StatelessWidget{
     return Card(
       child: ListTileTheme(
         iconColor: Theme.of(context).iconTheme.color,
-        textColor: Theme.of(context).textTheme.body1.color,
+        textColor: Theme.of(context).textTheme.bodyText2.color,
         child: Material(
           color: Colors.transparent,
           shape: Theme.of(context).cardTheme.shape,

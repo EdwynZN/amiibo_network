@@ -69,7 +69,7 @@ class ThemeProvider with ChangeNotifier{
       final SharedPreferences preferences = await SharedPreferences.getInstance();
       _lightColor = light;
       await preferences.setInt('lightColor', light);
-      theme.setLight = _lightColor;
+      theme..setLight = _lightColor..setDark = _darkColor;
       notifyListeners();
     }
   }
@@ -99,6 +99,23 @@ class ThemeProvider with ChangeNotifier{
 class _Theme{
   ThemeData _lightTheme;
   ThemeData _darkTheme;
+  Color _darkAccentColor = const Color.fromRGBO(207, 102, 121, 1);
+  TextTheme __darkAccentTextTheme = const TextTheme(
+    headline6: TextStyle(color: Colors.black87, fontSize: 18, fontWeight: FontWeight.w400),
+    subtitle2: TextStyle(color: Colors.black87, fontSize: 12, fontWeight: FontWeight.w400),
+    bodyText2: TextStyle(color: Colors.black87, fontSize: 14),
+    bodyText1: TextStyle(color: Colors.black87, fontSize: 16, fontWeight: FontWeight.w400),
+    headline4: TextStyle(color: Colors.black87, fontSize: 18, fontWeight: FontWeight.w600),
+    subtitle1: TextStyle(color: Colors.black87, fontSize: 16, fontWeight: FontWeight.w400),
+  );
+  TextTheme __lightAccentTextTheme = const TextTheme(
+    headline6: TextStyle(color: Colors.white70, fontSize: 18, fontWeight: FontWeight.w400),
+    subtitle2: TextStyle(color: Colors.white70, fontSize: 12, fontWeight: FontWeight.w400),
+    bodyText2: TextStyle(color: Colors.white70, fontSize: 14),
+    bodyText1: TextStyle(color: Colors.white70, fontSize: 16, fontWeight: FontWeight.w400),
+    headline4: TextStyle(color: Colors.white70, fontSize: 18, fontWeight: FontWeight.w600),
+    subtitle1: TextStyle(color: Colors.white70, fontSize: 16, fontWeight: FontWeight.w400),
+  );
 
   _Theme({int light, int dark}){
     setLight = light;
@@ -118,32 +135,47 @@ class _Theme{
         700: Color(0xFF546E7A),
       },
     );
+    _darkAccentColor = accentColor[200];
+    final Brightness _brightnessColor = ThemeData.estimateBrightnessForColor(color);
+    final Brightness _brightnessAccentColor = ThemeData.estimateBrightnessForColor(accentColor);
+    final Brightness _brightnessAccentTextTheme = ThemeData.estimateBrightnessForColor(accentColor[700]);
     _lightTheme = ThemeData(
       splashFactory: InkRipple.splashFactory,
       primaryColorDark: accentColor[100],
       textSelectionHandleColor: color[300],
+      textSelectionColor: accentColor.withOpacity(0.5),
       brightness: Brightness.light,
       appBarTheme: AppBarTheme(
         elevation: 0.0,
         color: color,
-        textTheme: TextTheme(
-          title: TextStyle(color: Colors.white, fontSize: 20),
-          subtitle: TextStyle(color: Colors.white, fontSize: 16),
-        ),
+        textTheme: _brightnessColor == Brightness.light ?
+          __darkAccentTextTheme.apply(fontSizeFactor: 1.15, fontSizeDelta: 1.0) :
+          __lightAccentTextTheme.apply(fontSizeFactor: 1.15, fontSizeDelta: 1.0, bodyColor: Colors.white, displayColor: Colors.white),
+        /*textTheme: TextTheme(
+          headline6: TextStyle(color: Colors.white, fontSize: 20),
+          subtitle2: TextStyle(color: Colors.white, fontSize: 16),
+        ),*/
         iconTheme: IconThemeData(
-            color: Colors.white
+          color: _brightnessColor == Brightness.dark ? Colors.white : Colors.black,
         ),
       ),
       unselectedWidgetColor: Colors.black87,
       dividerColor: color,
       scaffoldBackgroundColor: color[50],
       accentColor: accentColor[700],
-      accentIconTheme: const IconThemeData(color: Colors.white),
+      accentIconTheme: IconThemeData(
+        color: ThemeData.estimateBrightnessForColor(accentColor[100]) == Brightness.dark ? Colors.white : Colors.black
+      ),
+      accentColorBrightness: _brightnessAccentColor,
       primaryIconTheme: const IconThemeData(color: Colors.black),
       iconTheme: const IconThemeData(color: Colors.black),
+      floatingActionButtonTheme: FloatingActionButtonThemeData(
+        foregroundColor: _brightnessAccentColor == Brightness.dark ? Colors.white : Colors.black,//Colors.white,
+        backgroundColor: accentColor
+      ),
       errorColor: Colors.redAccent,
       primaryColorLight: accentColor[100],
-      canvasColor: color[50],//Colors.white,
+      canvasColor: color[50],
       primarySwatch: color,
       primaryColor: color,
       cursorColor: Colors.black12,
@@ -157,14 +189,15 @@ class _Theme{
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
         elevation: 8,
       ),
-      textTheme: TextTheme(
-        title: TextStyle(color: Colors.black87, fontSize: 18, fontWeight: FontWeight.w400),
-        subtitle: TextStyle(color: Colors.black87, fontSize: 12, fontWeight: FontWeight.w400),
-        body1: TextStyle(color: Colors.black87),
-        body2: TextStyle(color: Colors.black87, fontSize: 16, fontWeight: FontWeight.w400),
-        display1: TextStyle(color: Colors.black87, fontSize: 18, fontWeight: FontWeight.w600),
-        subhead: TextStyle(color: Colors.black87, fontSize: 16, fontWeight: FontWeight.w400),
+      textTheme: const TextTheme(
+        headline6: TextStyle(color: Colors.black87, fontSize: 18, fontWeight: FontWeight.w400),
+        subtitle2: TextStyle(color: Colors.black87, fontSize: 12, fontWeight: FontWeight.w400),
+        bodyText2: TextStyle(color: Colors.black87),
+        bodyText1: TextStyle(color: Colors.black87, fontSize: 16, fontWeight: FontWeight.w400),
+        headline4: TextStyle(color: Colors.black87, fontSize: 18, fontWeight: FontWeight.w600),
+        subtitle1: TextStyle(color: Colors.black87, fontSize: 16, fontWeight: FontWeight.w400),
       ),
+      accentTextTheme: _brightnessAccentTextTheme == Brightness.dark ? __lightAccentTextTheme : __darkAccentTextTheme,
       bottomAppBarTheme: BottomAppBarTheme(
           color: Colors.transparent,
           elevation: 0.0
@@ -207,29 +240,37 @@ class _Theme{
 
   set setDark(int dark){
     dark ??= 2;
+    final Brightness _brightness = ThemeData.estimateBrightnessForColor(_darkAccentColor);
     switch(dark){
       case 0:
         _darkTheme = ThemeData(
           splashFactory: InkRipple.splashFactory,
-          primaryColorDark: const Color.fromRGBO(207, 102, 121, 1),
-          textSelectionHandleColor: const Color.fromRGBO(207, 102, 121, 1),
+          primaryColorDark: _darkAccentColor,
+          textSelectionHandleColor: _darkAccentColor,
+          textSelectionColor: _darkAccentColor.withOpacity(0.5),
           appBarTheme: AppBarTheme(
             elevation: 0.0,
             color: Colors.blueGrey[900],
-            textTheme: TextTheme(
-              title: TextStyle(color: Colors.white54, fontSize: 20),
-              subtitle: TextStyle(color: Colors.white54, fontSize: 16),
-            ),
-            iconTheme: const IconThemeData(color: Colors.white54),
+            textTheme: __lightAccentTextTheme.apply(fontSizeFactor: 1.15, fontSizeDelta: 1.0),
+            /*textTheme: TextTheme(
+              headline6: TextStyle(color: Colors.white70, fontSize: 20),
+              subtitle2: TextStyle(color: Colors.white70, fontSize: 16),
+            ),*/
+            iconTheme: const IconThemeData(color: Colors.white70),
           ),
           brightness: Brightness.dark,
-          unselectedWidgetColor: Colors.white54,
+          unselectedWidgetColor: Colors.white70,
           dividerColor: Colors.blueGrey[700],
           scaffoldBackgroundColor: Colors.blueGrey[900],
-          accentColor: const Color.fromRGBO(207, 102, 121, 1),
+          accentColor: _darkAccentColor,
           accentIconTheme: const IconThemeData(color: Colors.black),
-          primaryIconTheme: const IconThemeData(color: Colors.white54),
-          iconTheme: const IconThemeData(color: Colors.white54),
+          accentColorBrightness: _brightness,
+          primaryIconTheme: const IconThemeData(color: Colors.white70),
+          iconTheme: const IconThemeData(color: Colors.white70),
+          floatingActionButtonTheme: FloatingActionButtonThemeData(
+            foregroundColor: _brightness == Brightness.dark ? Colors.white : Colors.black,//Colors.white,
+            backgroundColor: _darkAccentColor,
+          ),
           errorColor: Color.fromRGBO(207, 102, 121, 1),
           primaryColorLight: Colors.blueGrey[800],
           canvasColor: Colors.blueGrey[900],
@@ -245,27 +286,28 @@ class _Theme{
             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
             elevation: 8,
           ),
-          textTheme: TextTheme(
-            title: TextStyle(color: Colors.white54, fontSize: 18, fontWeight: FontWeight.w400),
-            subtitle: TextStyle(color: Colors.white54, fontSize: 12, fontWeight: FontWeight.w400),
-            body1: TextStyle(color: const Color(0xFFB2B2B2)),
-            body2: TextStyle(color: Colors.white54, fontSize: 16, fontWeight: FontWeight.w400),
-            display1: TextStyle(color: Colors.white54, fontSize: 18, fontWeight: FontWeight.w600),
-            subhead: TextStyle(color: Colors.white54, fontSize: 16, fontWeight: FontWeight.w400),
+          textTheme: const TextTheme(
+            headline6: TextStyle(color: Colors.white70, fontSize: 18, fontWeight: FontWeight.w400),
+            subtitle2: TextStyle(color: Colors.white70, fontSize: 12, fontWeight: FontWeight.w400),
+            bodyText2: TextStyle(color: Colors.white70),
+            bodyText1: TextStyle(color: Colors.white70, fontSize: 16, fontWeight: FontWeight.w400),
+            headline4: TextStyle(color: Colors.white70, fontSize: 18, fontWeight: FontWeight.w600),
+            subtitle1: TextStyle(color: Colors.white70, fontSize: 16, fontWeight: FontWeight.w400),
           ),
+          accentTextTheme: _brightness == Brightness.dark ? __lightAccentTextTheme : __darkAccentTextTheme,
           bottomAppBarTheme: BottomAppBarTheme(
-              color: Colors.transparent,
-              elevation: 0.0
+            color: Colors.transparent,
+            elevation: 0.0
           ),
           dialogTheme: DialogTheme(
-            titleTextStyle: TextStyle(color: Colors.white54, fontSize: 18, fontWeight: FontWeight.w600),
+            titleTextStyle: TextStyle(color: Colors.white70, fontSize: 18, fontWeight: FontWeight.w600),
             backgroundColor: Colors.blueGrey[900],
             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
           ),
           snackBarTheme: SnackBarThemeData(
             backgroundColor: Colors.blueGrey[800],
             contentTextStyle: TextStyle(
-                color: Colors.white54
+                color: Colors.white70
             ),
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(8),
@@ -286,7 +328,7 @@ class _Theme{
             backgroundColor: Colors.transparent,
             shape: RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(8))),
           ),
-          toggleableActiveColor: const Color.fromRGBO(207, 102, 121, 1),
+          toggleableActiveColor: _darkAccentColor,
           indicatorColor: Colors.blueGrey[700],
           buttonColor: Colors.blueGrey[800],
         );
@@ -294,25 +336,32 @@ class _Theme{
       case 1:
         _darkTheme = ThemeData(
           splashFactory: InkRipple.splashFactory,
-          primaryColorDark: const Color.fromRGBO(207, 102, 121, 1),
-          textSelectionHandleColor: const Color.fromRGBO(207, 102, 121, 1),
+          primaryColorDark: _darkAccentColor,
+          textSelectionHandleColor: _darkAccentColor,
+          textSelectionColor: _darkAccentColor.withOpacity(0.5),
           appBarTheme: AppBarTheme(
             elevation: 0.0,
             color: Colors.grey[900],
-            textTheme: TextTheme(
-              title: TextStyle(color: Colors.white54, fontSize: 20),
-              subtitle: TextStyle(color: Colors.white54, fontSize: 16),
-            ),
-            iconTheme: const IconThemeData(color: Colors.white54),
+            textTheme: __lightAccentTextTheme.apply(fontSizeFactor: 1.15, fontSizeDelta: 1.0),
+            /*textTheme: TextTheme(
+              headline6: TextStyle(color: Colors.white70, fontSize: 20),
+              subtitle2: TextStyle(color: Colors.white70, fontSize: 16),
+            ),*/
+            iconTheme: const IconThemeData(color: Colors.white70),
           ),
           brightness: Brightness.dark,
-          unselectedWidgetColor: Colors.white54,
+          unselectedWidgetColor: Colors.white70,
           dividerColor: Colors.grey[800],
           scaffoldBackgroundColor: Colors.grey[900],
-          accentColor: const Color.fromRGBO(207, 102, 121, 1),
+          accentColor: _darkAccentColor,
           accentIconTheme: const IconThemeData(color: Colors.black),
-          primaryIconTheme: const IconThemeData(color: Colors.white54),
-          iconTheme: const IconThemeData(color: Colors.white54),
+          accentColorBrightness: _brightness,
+          primaryIconTheme: const IconThemeData(color: Colors.white70),
+          iconTheme: const IconThemeData(color: Colors.white70),
+          floatingActionButtonTheme: FloatingActionButtonThemeData(
+            foregroundColor: _brightness == Brightness.dark ? Colors.white : Colors.black,//Colors.white,
+            backgroundColor: _darkAccentColor,
+          ),
           errorColor: Color.fromRGBO(207, 102, 121, 1),
           primaryColorLight: Colors.grey[850],
           canvasColor: Colors.grey[900],
@@ -328,27 +377,28 @@ class _Theme{
             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
             elevation: 8,
           ),
-          textTheme: TextTheme(
-            title: TextStyle(color: Colors.white54, fontSize: 18, fontWeight: FontWeight.w400),
-            subtitle: TextStyle(color: Colors.white54, fontSize: 12, fontWeight: FontWeight.w400),
-            body1: TextStyle(color: const Color(0xFFB2B2B2)),
-            body2: TextStyle(color: Colors.white54, fontSize: 16, fontWeight: FontWeight.w400),
-            display1: TextStyle(color: Colors.white54, fontSize: 18, fontWeight: FontWeight.w600),
-            subhead: TextStyle(color: Colors.white54, fontSize: 16, fontWeight: FontWeight.w400),
+          textTheme: const TextTheme(
+            subtitle1: TextStyle(color: Colors.white70, fontSize: 16, fontWeight: FontWeight.w400),
+            subtitle2: TextStyle(color: Colors.white70, fontSize: 12, fontWeight: FontWeight.w400),
+            bodyText1: TextStyle(color: Colors.white70, fontSize: 16, fontWeight: FontWeight.w400),
+            bodyText2: TextStyle(color: Colors.white70),
+            headline4: TextStyle(color: Colors.white70, fontSize: 18, fontWeight: FontWeight.w600),
+            headline6: TextStyle(color: Colors.white70, fontSize: 18, fontWeight: FontWeight.w400),
           ),
+          accentTextTheme: _brightness == Brightness.dark ? __lightAccentTextTheme : __darkAccentTextTheme,
           bottomAppBarTheme: BottomAppBarTheme(
               color: Colors.transparent,
               elevation: 0.0
           ),
           dialogTheme: DialogTheme(
-            titleTextStyle: TextStyle(color: Colors.white54, fontSize: 18, fontWeight: FontWeight.w600),
+            titleTextStyle: TextStyle(color: Colors.white70, fontSize: 18, fontWeight: FontWeight.w600),
             backgroundColor: Colors.grey[900],
             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
           ),
           snackBarTheme: SnackBarThemeData(
             backgroundColor: Colors.grey[800],
             contentTextStyle: TextStyle(
-                color: Colors.white54
+                color: Colors.white70
             ),
             shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(8),
@@ -369,7 +419,7 @@ class _Theme{
             backgroundColor: Colors.transparent,
             shape: RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(8))),
           ),
-          toggleableActiveColor: const Color.fromRGBO(207, 102, 121, 1),
+          toggleableActiveColor: _darkAccentColor,
           indicatorColor: Colors.grey[700],
           buttonColor: Colors.grey[850],
         );
@@ -378,30 +428,37 @@ class _Theme{
       default:
         _darkTheme = ThemeData(
           splashFactory: InkRipple.splashFactory,
-          primaryColorDark: const Color.fromRGBO(207, 102, 121, 1),
-          textSelectionHandleColor: const Color.fromRGBO(207, 102, 121, 1),
+          primaryColorDark: _darkAccentColor,
+          textSelectionHandleColor: _darkAccentColor,
+          textSelectionColor: _darkAccentColor.withOpacity(0.5),
           appBarTheme: AppBarTheme(
             elevation: 0.0,
             color: Colors.black,
-            textTheme: TextTheme(
-              title: TextStyle(color: Colors.white54, fontSize: 20),
-              subtitle: TextStyle(color: Colors.white54, fontSize: 16),
-            ),
-            iconTheme: const IconThemeData(color: Colors.white54),
+            textTheme: __lightAccentTextTheme.apply(fontSizeFactor: 1.15, fontSizeDelta: 1.0),
+            /*textTheme: TextTheme(
+              headline6: TextStyle(color: Colors.white70, fontSize: 20),
+              subtitle2: TextStyle(color: Colors.white70, fontSize: 16),
+            ),*/
+            iconTheme: const IconThemeData(color: Colors.white70),
           ),
           brightness: Brightness.dark,
-          unselectedWidgetColor: Colors.white54,
+          unselectedWidgetColor: Colors.white70,
           dividerColor: Colors.grey[800],
           scaffoldBackgroundColor: Colors.black,
-          accentColor: const Color.fromRGBO(207, 102, 121, 1),
+          accentColor: _darkAccentColor,
           accentIconTheme: const IconThemeData(color: Colors.black),
-          primaryIconTheme: const IconThemeData(color: Colors.white54),
-          iconTheme: const IconThemeData(color: Colors.white54),
+          accentColorBrightness: _brightness,
+          primaryIconTheme: const IconThemeData(color: Colors.white70),
+          iconTheme: const IconThemeData(color: Colors.white70),
+          floatingActionButtonTheme: FloatingActionButtonThemeData(
+            foregroundColor: _brightness == Brightness.dark ? Colors.white : Colors.black,
+            backgroundColor: _darkAccentColor,
+          ),
           errorColor: Color.fromRGBO(207, 102, 121, 1),
           primaryColorLight: Colors.transparent,
           canvasColor: Colors.black,
           primarySwatch: Colors.blueGrey,
-          primaryColor: Colors.blueGrey[900],
+          primaryColor: Colors.grey[900],
           cursorColor: Colors.white10,
           backgroundColor: Colors.black,
           selectedRowColor: Colors.grey[900],
@@ -415,32 +472,33 @@ class _Theme{
             ),
             elevation: 0,
           ),
-          textTheme: TextTheme(
-            title: TextStyle(color: Colors.white54, fontSize: 18, fontWeight: FontWeight.w400),
-            subtitle: TextStyle(color: Colors.white54, fontSize: 12, fontWeight: FontWeight.w400),
-            body1: TextStyle(color: const Color(0xFFB2B2B2)),
-            body2: TextStyle(color: Colors.white54, fontSize: 16, fontWeight: FontWeight.w400),
-            display1: TextStyle(color: Colors.white54, fontSize: 18, fontWeight: FontWeight.w600),
-            subhead: TextStyle(color: Colors.white54, fontSize: 16, fontWeight: FontWeight.w400),
+          textTheme: const TextTheme(
+            headline6: TextStyle(color: Colors.white70, fontSize: 18, fontWeight: FontWeight.w400),
+            subtitle2: TextStyle(color: Colors.white70, fontSize: 12, fontWeight: FontWeight.w400),
+            bodyText2: TextStyle(color: Colors.white70),
+            bodyText1: TextStyle(color: Colors.white70, fontSize: 16, fontWeight: FontWeight.w400),
+            headline4: TextStyle(color: Colors.white70, fontSize: 18, fontWeight: FontWeight.w600),
+            subtitle1: TextStyle(color: Colors.white70, fontSize: 16, fontWeight: FontWeight.w400),
           ),
+          accentTextTheme: _brightness == Brightness.dark ? __lightAccentTextTheme : __darkAccentTextTheme,
           bottomAppBarTheme: BottomAppBarTheme(
               color: Colors.transparent,
               elevation: 0.0
           ),
           dialogTheme: DialogTheme(
-            titleTextStyle: TextStyle(color: Colors.white54, fontSize: 18, fontWeight: FontWeight.w600),
+            titleTextStyle: TextStyle(color: Colors.white70, fontSize: 18, fontWeight: FontWeight.w600),
             backgroundColor: Colors.grey[900],
             shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(8),
-                side: BorderSide(color:const Color.fromRGBO(207, 102, 121, 1))
+                side: BorderSide(color: _darkAccentColor)
             ),
           ),
           snackBarTheme: SnackBarThemeData(
             backgroundColor: Colors.grey[900],
-            contentTextStyle: TextStyle(color: const Color(0xFFB2B2B2)),
+            contentTextStyle: TextStyle(color: Colors.white70),
             shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(8),
-                side: BorderSide(color:const Color.fromRGBO(207, 102, 121, 1))
+                side: BorderSide(color: _darkAccentColor)
             ),
             behavior: SnackBarBehavior.floating,
           ),
@@ -457,7 +515,7 @@ class _Theme{
             backgroundColor: Colors.transparent,
             shape: RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(8))),
           ),
-          toggleableActiveColor: const Color.fromRGBO(207, 102, 121, 1),
+          toggleableActiveColor: _darkAccentColor,
           buttonColor: Colors.grey[900],
         );
         break;

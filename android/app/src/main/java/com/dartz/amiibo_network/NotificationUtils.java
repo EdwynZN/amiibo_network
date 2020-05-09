@@ -107,6 +107,7 @@ public class NotificationUtils extends ContextWrapper {
             /*intent.setDataAndType(uri, "text/plain");
             PendingIntent pIntent = PendingIntent.getActivity(this, id,
                 intent, PendingIntent.FLAG_UPDATE_CURRENT);*/
+            //Log.v("message: ", "Notification");
 
             sendIntent.setType("text/plain");
             PendingIntent pShareIntent = PendingIntent.getActivity(this, id,

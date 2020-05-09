@@ -180,7 +180,7 @@ class RegionDetail extends StatelessWidget{
                 overflow: TextOverflow.fade,
                 softWrap: false,
                 maxLines: 1,
-                style: Theme.of(context).textTheme.body1.copyWith(
+                style: Theme.of(context).textTheme.bodyText2.copyWith(
                   fontWeight: FontWeight.bold
                 ),
               )
@@ -208,7 +208,7 @@ class TextCardDetail extends StatelessWidget{
         softWrap: false,
         overflow: TextOverflow.fade,
         maxLines: 1,
-        style: Theme.of(context).textTheme.body1.copyWith(
+        style: Theme.of(context).textTheme.bodyText2.copyWith(
           fontWeight: FontWeight.bold
         ),
       )

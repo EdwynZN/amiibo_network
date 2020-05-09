@@ -235,7 +235,7 @@ class HomePageState extends State<HomePage>
                         final bool bigGrid = MediaQuery.of(context).size.width >= 600;
                         if((data?.amiibo?.length ?? 1) == 0)
                           return DefaultTextStyle(
-                            style: Theme.of(context).textTheme.display1,
+                            style: Theme.of(context).textTheme.headline4,
                             child: child,
                           );
                         return SliverGrid(
@@ -349,6 +349,14 @@ class _SortCollection extends StatefulWidget{
 }
 
 class _SortCollectionState extends State<_SortCollection> {
+  ButtonTextTheme _buttonTextTheme;
+
+  @override
+  void didChangeDependencies() {
+    _buttonTextTheme = ThemeData.estimateBrightnessForColor(Theme.of(context).primaryColor) == Brightness.light
+        ? ButtonTextTheme.normal : ButtonTextTheme.accent;
+    super.didChangeDependencies();
+  }
 
   void _selectOrder(String sort) async{
     final AmiiboProvider amiiboProvider = Provider.of<AmiiboProvider>(context, listen: false);
@@ -383,8 +391,6 @@ class _SortCollectionState extends State<_SortCollection> {
             key: Key('Draggable'),
             maxChildSize: height, expand: false, initialChildSize: height,
             builder: (context, scrollController){
-              final String _orderCategory = Provider.of<AmiiboProvider>(context).orderCategory;
-              final String _sortBy = Provider.of<AmiiboProvider>(context).sort;
               return Material(
                 color: Theme.of(context).backgroundColor,
                 shape: Theme.of(context).bottomSheetTheme.shape,
@@ -397,7 +403,7 @@ class _SortCollectionState extends State<_SortCollection> {
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: <Widget>[
-                            Text(translate.sort, style: Theme.of(context).textTheme.title),
+                            Text(translate.sort, style: Theme.of(context).textTheme.headline6),
                             MaterialButton(
                               height: 34,
                               materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
@@ -411,143 +417,167 @@ class _SortCollectionState extends State<_SortCollection> {
                         ),
                       ),
                     ),
-                    SliverList(
-                      delegate: SliverChildListDelegate([
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
-                          child: SizedBox(
-                            height: 36,
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              mainAxisSize: MainAxisSize.max,
-                              children: <Widget>[
-                                Expanded(
-                                  child: FlatButton.icon(
-                                    padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                                    textColor: _sortBy.contains('ASC') ? Theme.of(context).textTheme.title.color : Theme.of(context).accentColor,
-                                    color: _sortBy.contains('ASC') ? Theme.of(context).accentColor : null,
-                                    shape: Border.all(
-                                      color: Theme.of(context).accentColor,
-                                      width: 2,
-                                    ),
-                                    onPressed: () => _sortOrder('ASC'),
-                                    icon: const Icon(Icons.arrow_downward, size: 20,),
-                                    label: Flexible(child: FittedBox(child: Text(translate.asc),)),
-                                  ),
-                                ),
-                                Expanded(
-                                  child: FlatButton.icon(
-                                    padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                                    textColor: _sortBy.contains('DESC') ? Theme.of(context).textTheme.title.color : Theme.of(context).accentColor,
-                                    color: _sortBy.contains('DESC') ? Theme.of(context).accentColor : null,
-                                    shape: Border(
-                                      bottom: BorderSide(
+                    SliverPadding(
+                      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
+                      sliver: SliverToBoxAdapter(
+                        child: SizedBox(
+                          height: 36,
+                          child: Selector<AmiiboProvider, String>(
+                            builder: (context, sortBy, _){
+                              return Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                mainAxisSize: MainAxisSize.max,
+                                children: <Widget>[
+                                  Expanded(
+                                    child: FlatButton.icon(
+                                      padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                                      textTheme: _buttonTextTheme,
+                                      textColor: sortBy.contains('ASC') ? Theme.of(context).accentTextTheme.headline6.color : null,
+                                      color: sortBy.contains('ASC') ? Theme.of(context).accentColor : null,
+                                      shape: Border.all(
                                         color: Theme.of(context).accentColor,
                                         width: 2,
                                       ),
-                                      top: BorderSide(
-                                        color: Theme.of(context).accentColor,
-                                        width: 2,
-                                      ),
-                                      left: BorderSide(
-                                          color: Theme.of(context).accentColor,
-                                          width: 0.0
-                                      ),
-                                      right: BorderSide(
-                                          color: Theme.of(context).accentColor,
-                                          width: 2.0
-                                      ),
+                                      onPressed: () => _sortOrder('ASC'),
+                                      icon: const Icon(Icons.arrow_downward, size: 20,),
+                                      label: Flexible(child: FittedBox(child: Text(translate.asc),)),
                                     ),
-                                    onPressed: () => _sortOrder('DESC'),
-                                    icon: const Icon(Icons.arrow_upward, size: 20),
-                                    label: Flexible(child: FittedBox(child: Text(translate.desc),)),
                                   ),
-                                ),
-                              ],
-                            )
+                                  Expanded(
+                                    child: FlatButton.icon(
+                                      key: Key('DESC'),
+                                      padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                                      textTheme: _buttonTextTheme,
+                                      textColor: sortBy.contains('DESC') ? Theme.of(context).accentTextTheme.headline6.color : null,
+                                      color: sortBy.contains('DESC') ? Theme.of(context).accentColor : null,
+                                      shape: Border(
+                                        bottom: BorderSide(
+                                          color: Theme.of(context).accentColor,
+                                          width: 2,
+                                        ),
+                                        top: BorderSide(
+                                          color: Theme.of(context).accentColor,
+                                          width: 2,
+                                        ),
+                                        left: BorderSide(
+                                            color: Theme.of(context).accentColor,
+                                            width: 0.0
+                                        ),
+                                        right: BorderSide(
+                                            color: Theme.of(context).accentColor,
+                                            width: 2.0
+                                        ),
+                                      ),
+                                      onPressed: () => _sortOrder('DESC'),
+                                      icon: const Icon(Icons.arrow_upward, size: 20),
+                                      label: Flexible(child: FittedBox(child: Text(translate.desc),)),
+                                    ),
+                                  ),
+                                ],
+                              );
+                            },
+                            selector: (_, amiiboProvider) => amiiboProvider.sort,
+                            shouldRebuild: (prev, curr) => prev != curr,
                           )
-                        ),
-                        RadioListTile(
-                          value: 'name',
-                          groupValue: _orderCategory,
-                          onChanged: _selectOrder,
-                          title: Text(translate.sortName),
-                          selected: _orderCategory.contains('name'),
-                        ),
-                        RadioListTile(
-                          value: 'owned',
-                          groupValue: _orderCategory,
-                          onChanged: _selectOrder,
-                          title: Text(translate.owned),
-                          selected: _orderCategory.contains('owned'),
-                        ),
-                        RadioListTile(
-                          value: 'wishlist',
-                          groupValue: _orderCategory,
-                          onChanged: _selectOrder,
-                          title: Text(translate.wished),
-                          selected: _orderCategory.contains('wishlist'),
-                        ),
-                        RadioListTile(
-                          value: 'na',
-                          groupValue: _orderCategory,
-                          onChanged: _selectOrder,
-                          title: Text(translate.na),
-                          selected: _orderCategory == 'na',
-                          secondary: Image.asset(
-                            'assets/images/na.png',
-                            height: 16, width: 25,
-                            fit: BoxFit.fill,
-                            semanticLabel: translate.na,
-                          ),
-                        ),
-                        RadioListTile(
-                          value: 'eu',
-                          groupValue: _orderCategory,
-                          onChanged: _selectOrder,
-                          title: Text(translate.eu),
-                          selected: _orderCategory.contains('eu'),
-                          secondary: Image.asset(
-                            'assets/images/eu.png',
-                            height: 16, width: 25,
-                            fit: BoxFit.fill,
-                            semanticLabel: translate.eu,
-                          ),
-                        ),
-                        RadioListTile(
-                            value: 'jp',
-                            groupValue: _orderCategory,
-                            onChanged: _selectOrder,
-                            title: Text(translate.jp),
-                            selected: _orderCategory.contains('jp'),
-                            secondary: DecoratedBox(
-                              decoration: BoxDecoration(
-                                  border: Border.all(width: 0.75)
-                              ),
-                              position: DecorationPosition.foreground,
-                              child: Image.asset(
-                                'assets/images/jp.png',
+                        )
+                      ),
+                    ),
+                    Selector<AmiiboProvider, String>(
+                      builder: (context, order, _){
+                        return SliverList(
+                          delegate: SliverChildListDelegate([
+                            RadioListTile<String>(
+                              value: 'name',
+                              groupValue: order,
+                              onChanged: _selectOrder,
+                              title: Text(translate.sortName),
+                              selected: order.contains('name'),
+                              activeColor: Theme.of(context).toggleableActiveColor,
+                            ),
+                            RadioListTile<String>(
+                              value: 'owned',
+                              groupValue: order,
+                              onChanged: _selectOrder,
+                              title: Text(translate.owned),
+                              selected: order.contains('owned'),
+                              activeColor: Theme.of(context).toggleableActiveColor,
+                            ),
+                            RadioListTile<String>(
+                              value: 'wishlist',
+                              groupValue: order,
+                              onChanged: _selectOrder,
+                              title: Text(translate.wished),
+                              selected: order.contains('wishlist'),
+                              activeColor: Theme.of(context).toggleableActiveColor,
+                            ),
+                            RadioListTile<String>(
+                              value: 'na',
+                              groupValue: order,
+                              onChanged: _selectOrder,
+                              title: Text(translate.na),
+                              selected: order == 'na',
+                              secondary: Image.asset(
+                                'assets/images/na.png',
                                 height: 16, width: 25,
                                 fit: BoxFit.fill,
-                                semanticLabel: translate.jp,
+                                semanticLabel: translate.na,
                               ),
-                            )
-                        ),
-                        RadioListTile(
-                          value: 'au',
-                          groupValue: _orderCategory,
-                          onChanged: _selectOrder,
-                          title: Text(translate.au),
-                          selected: _orderCategory.contains('au'),
-                          secondary: Image.asset(
-                            'assets/images/au.png',
-                            height: 16, width: 25,
-                            fit: BoxFit.fill,
-                            semanticLabel: translate.au,
-                          ),
-                        ),
-                      ]),
-                    )
+                              activeColor: Theme.of(context).toggleableActiveColor,
+                            ),
+                            RadioListTile<String>(
+                              value: 'eu',
+                              groupValue: order,
+                              onChanged: _selectOrder,
+                              title: Text(translate.eu),
+                              selected: order.contains('eu'),
+                              secondary: Image.asset(
+                                'assets/images/eu.png',
+                                height: 16, width: 25,
+                                fit: BoxFit.fill,
+                                semanticLabel: translate.eu,
+                              ),
+                              activeColor: Theme.of(context).toggleableActiveColor,
+                            ),
+                            RadioListTile<String>(
+                              value: 'jp',
+                              groupValue: order,
+                              onChanged: _selectOrder,
+                              title: Text(translate.jp),
+                              selected: order.contains('jp'),
+                              secondary: DecoratedBox(
+                                decoration: BoxDecoration(
+                                    border: Border.all(width: 0.75)
+                                ),
+                                position: DecorationPosition.foreground,
+                                child: Image.asset(
+                                  'assets/images/jp.png',
+                                  height: 16, width: 25,
+                                  fit: BoxFit.fill,
+                                  semanticLabel: translate.jp,
+                                ),
+                              ),
+                              activeColor: Theme.of(context).toggleableActiveColor,
+                            ),
+                            RadioListTile<String>(
+                              value: 'au',
+                              groupValue: order,
+                              onChanged: _selectOrder,
+                              title: Text(translate.au),
+                              selected: order.contains('au'),
+                              secondary: Image.asset(
+                                'assets/images/au.png',
+                                height: 16, width: 25,
+                                fit: BoxFit.fill,
+                                semanticLabel: translate.au,
+                              ),
+                              activeColor: Theme.of(context).toggleableActiveColor,
+                            ),
+                          ]),
+                        );
+                      },
+                      selector: (_, amiiboProvider) => amiiboProvider.orderCategory,
+                      shouldRebuild: (prev, curr) => prev != curr,
+                    ),
                   ],
                 )
               );

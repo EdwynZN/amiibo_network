@@ -122,7 +122,7 @@ class _SliverFloatingPersistentHeader extends SliverPersistentHeaderDelegate {
           child: ListTileTheme(
             contentPadding: const EdgeInsets.symmetric(horizontal: 4.0),
             iconColor: Theme.of(context).iconTheme.color,
-            textColor: Theme.of(context).textTheme.title.color,
+            textColor: Theme.of(context).textTheme.headline6.color,
             dense: true,
             child: Material(
               color: Theme.of(context).backgroundColor,
@@ -134,7 +134,7 @@ class _SliverFloatingPersistentHeader extends SliverPersistentHeaderDelegate {
                 leading: leading ?? (useCloseButton ? CloseButton() : BackButton()),
                 title: DefaultTextStyle(
                   textAlign: TextAlign.left,
-                  style: Theme.of(context).textTheme.display1,
+                  style: Theme.of(context).textTheme.headline4,
                   softWrap: false,
                   overflow: TextOverflow.fade,
                   child: title,

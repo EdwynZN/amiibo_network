@@ -3,7 +3,6 @@ import 'package:amiibo_network/service/screenshot.dart';
 import 'package:amiibo_network/service/service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:permission_handler/permission_handler.dart';
 import 'package:amiibo_network/service/storage.dart';
 import 'package:amiibo_network/generated/l10n.dart';
 import 'package:amiibo_network/widget/stat_widget.dart';
@@ -19,11 +18,23 @@ class _StatsPageState extends State<StatsPage> {
   final _service = Service();
   ScrollController _controller;
   Set<String> select = <String>{};
+  static const Color _selectedColor = Colors.black;
+  Color _appBarColor, _indicatorColor, _unselectedColor;
 
   @override
   void initState(){
     super.initState();
     _controller = ScrollController();
+  }
+
+  @override
+  void didChangeDependencies() {
+    final ThemeData theme = Theme.of(context);
+    _appBarColor = theme.appBarTheme.color;
+    _indicatorColor = theme.indicatorColor;
+    //_selectedColor = theme.accentIconTheme.color;
+    _unselectedColor = theme.appBarTheme.textTheme.headline6.color;
+    super.didChangeDependencies();
   }
 
   void _updateSet(Set<String> value){
@@ -116,7 +127,7 @@ class _StatsPageState extends State<StatsPage> {
         ),
         floatingActionButton: _FAB(select),
         bottomNavigationBar: BottomAppBar(
-          color: Theme.of(context).appBarTheme.color,
+          color: _appBarColor,
           child: Padding(
             padding: EdgeInsets.symmetric(horizontal: 8, vertical: 6),
             child: Row(
@@ -128,41 +139,27 @@ class _StatsPageState extends State<StatsPage> {
                     shape: RoundedRectangleBorder(
                       borderRadius: const BorderRadius.horizontal(left: Radius.circular(8)),
                       side: BorderSide(
-                        color: Theme.of(context).indicatorColor,
+                        color: _indicatorColor,
                         width: 2,
                       )
                     ),
-                    textColor: select.isEmpty ?
-                    Theme.of(context).textTheme.title.color : Theme.of(context).appBarTheme.textTheme.title.color,
-                    color: select.isEmpty ? Theme.of(context).indicatorColor : null,
+                    textColor: select.isEmpty ? _selectedColor : _unselectedColor,
+                    color: select.isEmpty ? _indicatorColor : null,
                     onPressed: () => select.isEmpty ? null : _updateSet(Set<String>()),
                     child: Text(translate.all),
                   ),
                 ),
                 Expanded(
                   child: FlatButton(
-                    shape: Border(
-                      bottom: BorderSide(
-                        color: Theme.of(context).indicatorColor,
+                    shape: Border.symmetric(
+                      vertical: BorderSide(
+                        color: _indicatorColor,
                         width: 2,
                       ),
-                      top: BorderSide(
-                        color: Theme.of(context).indicatorColor,
-                        width: 2,
-                      ),
-                      left: BorderSide(
-                        color: Theme.of(context).indicatorColor,
-                        width: 0.0
-                      ),
-                      right: BorderSide(
-                        color: Theme.of(context).indicatorColor,
-                        width: 0.0
-                      ),
+                      horizontal: BorderSide.none
                     ),
-                    textColor: select.contains('Figure') ?
-                    Theme.of(context).textTheme.title.color : Theme.of(context).appBarTheme.textTheme.title.color,
-                    color: select.contains('Figure') ?
-                    Theme.of(context).indicatorColor : null,
+                    textColor: select.contains('Figure') ? _selectedColor : _unselectedColor,
+                    color: select.contains('Figure') ? _indicatorColor : null,
                     onPressed: () => select.contains('Figure') ? null : _updateSet(<String>{'Figure', 'Yarn'}),
                     child: Text(translate.figures),
                   ),
@@ -172,13 +169,14 @@ class _StatsPageState extends State<StatsPage> {
                     shape: RoundedRectangleBorder(
                       borderRadius: const BorderRadius.horizontal(right: Radius.circular(8)),
                       side: BorderSide(
-                        color: Theme.of(context).indicatorColor,
+                        color: _indicatorColor,
                         width: 2,
                       )
                     ),
-                    textColor: select.contains('Card') ?
-                    Theme.of(context).textTheme.title.color : Theme.of(context).appBarTheme.textTheme.title.color,
-                    color: select.contains('Card') ? Theme.of(context).indicatorColor : null,
+                    textTheme: ButtonTextTheme.normal,
+                    colorBrightness: select.contains('Card') ? Brightness.dark : Brightness.light,
+                    textColor: select.contains('Card') ? _selectedColor : _unselectedColor,
+                    color: select.contains('Card') ? _indicatorColor : null,
                     onPressed: () => select.contains('Card') ? null : _updateSet(<String>{'Card'}),
                     child: Text(translate.cards),
                   ),
@@ -206,22 +204,12 @@ class _FAB extends StatelessWidget{
       tooltip: translate.saveStatsTooltip,
       heroTag: 'MenuFAB',
       onPressed: () async {
-        final _permissionHandler = PermissionHandler();
         final ScaffoldState scaffoldState = Scaffold.of(context, nullOk: true);
-        final Map<PermissionGroup, PermissionStatus> response =
-        await _permissionHandler.requestPermissions([PermissionGroup.storage, PermissionGroup.notification]);
-        final bool permission = checkPermission(response[PermissionGroup.storage]);
-        String message = translate.storagePermission(response[PermissionGroup.storage]);
-        if(permission) message = translate.savingCollectionMessage;
+        String message = translate.savingCollectionMessage;
         if(_screenshot.isRecording) message = translate.recordMessage;
         scaffoldState?.hideCurrentSnackBar();
-        scaffoldState?.showSnackBar(SnackBar(content: Text(message),
-          action: response[PermissionGroup.storage] == PermissionStatus.neverAskAgain ?
-            SnackBarAction(
-            label: translate.openAppSettings,
-            onPressed: () async => await _permissionHandler.openAppSettings(),
-          ) : null
-        ));
+        scaffoldState?.showSnackBar(SnackBar(content: Text(message),));
+        final permission = true;
         if(permission && !_screenshot.isRecording) {
           _screenshot.update(context);
           String name;
@@ -276,7 +264,7 @@ class SingleStat extends StatelessWidget{
               child: FittedBox(
                 alignment: Alignment.center,
                 child: Text(title, softWrap: false, textAlign: TextAlign.center,
-                  overflow: TextOverflow.fade, style: Theme.of(context).textTheme.display1,),
+                  overflow: TextOverflow.fade, style: Theme.of(context).textTheme.headline4,),
               ),
             ),
             const Divider(height: 12),
