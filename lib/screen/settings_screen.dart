@@ -542,7 +542,7 @@ class _BottomBarState extends State<BottomBar> {
         if(map == null)
           openSnackBar(translate.errorImporting);
         else{
-          AmiiboLocalDB amiibos = entityFromMap(map);///await compute(entityFromMap, map);
+          AmiiboLocalDB amiibos = await compute(entityFromMap, map);
           await _service.update(amiibos);
           amiiboProvider.refreshPagination();
           openSnackBar(translate.successImport);

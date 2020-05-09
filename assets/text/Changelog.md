@@ -1,3 +1,8 @@
+## Version 1.3.1
+- Updated Dark Theme to share accent colors based on light theme selected
+- Changed text color based on the background color where is displayed
+- Fixed minor bugs
+
 ## Version 1.3.0
 - Localization updates (English and Spanish)
 - Notifications of exported data

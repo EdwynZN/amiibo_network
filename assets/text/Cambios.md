@@ -1,3 +1,8 @@
+##Version 1.3.1
+- Actualización de temas oscuros cambiando los colores acentuados a partir del tema claro favorito
+- Color del texto claro u oscuro dependiendo del color del fondo donde se muestra
+- Múltiples correcciones
+
 ## Versión 1.3.0
 - Localización de idiomas (Inglés y Español)
 - Notifaciones cuando exportas tu colección
