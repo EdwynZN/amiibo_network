@@ -4,7 +4,7 @@
   "splashWelcome": "Bienvenido",
   "splashError": "Error al actualizar \u2639",
   "showPercentage": "Mostrar porcentaje",
-  "category": "{choice, select, All {Todos} Owned {Adquiridos} Wishlist {Lista de deseos} Name {Nombre} Game {Juego} AmiiboSeries {Serie} Figures {Todas las Figuras} Cards {Todas las Tarjetas} other {{choice}}}",
+  "category": "{choice, select, All {Todos} Owned {Adquiridos} Wishlist {Lista de deseos} Name {Nombre} Game {Juego} AmiiboSeries {Serie} Figures {Todas las Figuras} Cards {Todas las Tarjetas} Custom {Personal} other {{choice}}}",
   "all": "Todos",
   "owned": "Adquiridos",
   "wished": "Deseados",
@@ -73,5 +73,6 @@
   "successImport": "Colección actualizada",
   "notificationTitle": "Archivo generado",
   "actionText": "Compartir",
-  "donate": "Donaciones"
+  "donate": "Donaciones",
+  "lockTooltip": "{choice, select, true {Bloqueado} false {Desbloqueado} other {Desconocido}}"
 }

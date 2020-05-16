@@ -12,7 +12,10 @@ class Routes{
   static Route<dynamic> getRoute(RouteSettings settings) {
     switch(settings.name){
       case '/details':
-        return VerticalSlideRoute(builder: (_) => DetailPage(amiibo: settings.arguments), settings: settings);
+        Map<String, dynamic> map = settings.arguments as Map<String, dynamic>;
+        return VerticalSlideRoute(builder: (_) => DetailPage(
+          amiibo: map['singleAmiibo'],
+          amiiboProvider: map['amiiboProvider']), settings: settings);
       case '/home':
         return FadeRoute(builder: (_) => Home());
       case '/settings':

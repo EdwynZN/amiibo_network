@@ -8,16 +8,21 @@ import 'package:amiibo_network/utils/format_date.dart';
 
 class DetailPage extends StatelessWidget{
   final SingleAmiibo amiibo;
+  final AmiiboProvider amiiboProvider;
 
   DetailPage({Key key,
-    @required this.amiibo
+    @required this.amiibo,
+    @required this.amiiboProvider,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: ChangeNotifierProvider<SingleAmiibo>.value(
-        value: amiibo,
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider<SingleAmiibo>.value(value: amiibo),
+        Provider<AmiiboProvider>.value(value: amiiboProvider)
+      ],
+      child: SafeArea(
         child: _BottomSheetDetail()
       ),
     );

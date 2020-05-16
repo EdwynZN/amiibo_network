@@ -1,6 +1,11 @@
-##Version 1.3.1
+## Version 1.3.1
+- Nueva función de personalización desde el menu lateral, manten presionado el botón personalizado para seleccionar solo las series que deseas ver en esa categoría
+- Se agregó la opción de personalización en las estadísticas, donde se muestran solo las sereis seleccionadas previamente en el menu lateral
+- La opción de guardado de la colección en opciones ahora te permite seleccionar las series que deseas guardar, predeterminado a los previamente agregados al modo personalizado
+- Actualización de la interfaz en la página de estadísticas para tabletas
+- Botón de bloqueo agregado para evitar modificar los amiibos en tu lista de deseos u obtenidos
 - Actualización de temas oscuros cambiando los colores acentuados a partir del tema claro favorito
-- Color del texto claro u oscuro dependiendo del color del fondo donde se muestra
+- Color del texto claro u oscuro dependiendo del color de fondo donde se muestra
 - Múltiples correcciones
 
 ## Versión 1.3.0

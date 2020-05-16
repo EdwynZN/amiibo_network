@@ -44,14 +44,14 @@ class ThemeButton extends StatelessWidget{
           title: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Widget>[
-              Text(translate.mode, style: Theme.of(context).textTheme.display1,),
+              Text(translate.mode, style: Theme.of(context).textTheme.headline4,),
               ThemeButton()
             ],
           ),
           titlePadding: const EdgeInsets.all(16),
           contentPadding: const EdgeInsets.all(16),
           children: <Widget>[
-            Text(translate.lightTheme, style: Theme.of(context).textTheme.display1,),
+            Text(translate.lightTheme, style: Theme.of(context).textTheme.headline4,),
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 16),
               child: ConstrainedBox(
@@ -77,7 +77,7 @@ class ThemeButton extends StatelessWidget{
                 ),
               ),
             ),
-            Text(translate.darkTheme, style: Theme.of(context).textTheme.display1,),
+            Text(translate.darkTheme, style: Theme.of(context).textTheme.headline4,),
             Padding(
               padding: const EdgeInsets.fromLTRB(0, 16, 0, 0),
               child: Wrap(
@@ -156,34 +156,30 @@ class ThemeButton extends StatelessWidget{
 
   @override
   Widget build(BuildContext context) {
-    return Selector<ThemeProvider, ThemeMode>(
-      builder: (context, theme, _) {
-        return InkResponse(
-          radius: 18,
-          splashFactory: InkRipple.splashFactory,
-          highlightColor: Colors.transparent,
-          splashColor: Theme.of(context).primaryColorDark,
-          child: AnimatedSwitcher(
-            duration: const Duration(milliseconds: 800),
-            reverseDuration: const Duration(milliseconds: 400),
-            switchInCurve: Curves.easeInOutBack,
-            switchOutCurve: Curves.easeOutBack,
-            transitionBuilder: (child, animation){
-              return RotationTransition(
-                turns: animation,
-                child: FadeTransition(
-                  opacity: animation,
-                  child: child,
-                )
-              );
-            },
-            child: _selectWidget(theme),
-          ),
-          onLongPress: openDialog ? () => dialog(context) : null,
-          onTap: () => changeTheme(context, theme.index),
-        );
-      },
-      selector: (context, theme) => theme.preferredTheme,
+    final ThemeMode theme = context.select<ThemeProvider, ThemeMode>((theme) => theme.preferredTheme);
+    return InkResponse(
+      radius: 18,
+      splashFactory: InkRipple.splashFactory,
+      highlightColor: Colors.transparent,
+      splashColor: Theme.of(context).primaryColorDark,
+      child: AnimatedSwitcher(
+        duration: const Duration(milliseconds: 800),
+        reverseDuration: const Duration(milliseconds: 400),
+        switchInCurve: Curves.easeInOutBack,
+        switchOutCurve: Curves.easeOutBack,
+        transitionBuilder: (child, animation){
+          return RotationTransition(
+              turns: animation,
+              child: FadeTransition(
+                opacity: animation,
+                child: child,
+              )
+          );
+        },
+        child: _selectWidget(theme),
+      ),
+      onLongPress: openDialog ? () => dialog(context) : null,
+      onTap: () => changeTheme(context, theme.index),
     );
   }
 }

@@ -11,6 +11,7 @@ import 'package:amiibo_network/provider/stat_provider.dart';
 import 'package:flutter/rendering.dart';
 import 'package:provider/provider.dart';
 import 'package:amiibo_network/generated/l10n.dart';
+import '../model/query_builder.dart';
 
 class Screenshot {
   ThemeData theme;
@@ -58,18 +59,18 @@ class Screenshot {
   void update(BuildContext context) {
     final S translate = S.of(context);
     this..theme = Theme.of(context)
-      ..statProvider = Provider.of<StatProvider>(context, listen: false)
+      ..statProvider = context.read<StatProvider>()
       ..owned = translate.owned..wished = translate.wished
       ..createdOn= translate.createdOn
       ..materialLocalizations = MaterialLocalizations.of(context);
   }
 
-  Future<void> saveCollection(Set<String> select, File file) async{
-    AmiiboLocalDB amiibos = await _service.fetchByCategory(expression: InCond.inn('type', select.toList()),
+  Future<bool> saveCollection(Expression expression, File file) async{
+    AmiiboLocalDB amiibos = await _service.fetchByCategory(expression: expression,
         orderBy: 'CASE WHEN type = "Figure" THEN 1 ''WHEN type = "Yarn" THEN 2 ELSE 3 END, amiiboSeries DESC, na DESC');
     Map<String,dynamic> _listStat = Map<String, dynamic>.from(
-        (await _service.fetchSum(expression: InCond.inn('type', select.toList()))).first);
-    if(isRecording || (amiibos?.amiibo?.isEmpty ?? true) || _listStat == null) return;
+        (await _service.fetchSum(expression: expression)).first);
+    if(isRecording || (amiibos?.amiibo?.isEmpty ?? true) || _listStat == null) return false;
 
     final double maxSize = 60.0;
     final double width = (amiibos.amiibo.length / 25.0).ceilToDouble().clamp(15.0, 30.0);
@@ -108,18 +109,18 @@ class Screenshot {
 
       final bool taller = _image.width > 1.3*_image.height;
       _canvas.drawImageNine(_image,
-        Rect.fromCenter(
-            center: Offset.zero,
-            width: _image.height.toDouble()*1.5,
-            height: _image.width.toDouble()
-        ),
-        Rect.fromLTRB(
-            _offset.dx + padding,
-            (taller ? _offset.dy + 1.4 * maxSize - _image.height : _offset.dy) + padding,
-            _offset.dx + maxSize + padding,
-            _offset.dy + 1.5*maxSize + padding
-        ),
-        paint
+          Rect.fromCenter(
+              center: Offset.zero,
+              width: _image.height.toDouble()*1.5,
+              height: _image.width.toDouble()
+          ),
+          Rect.fromLTRB(
+              _offset.dx + padding,
+              (taller ? _offset.dy + 1.4 * maxSize - _image.height : _offset.dy) + padding,
+              _offset.dx + maxSize + padding,
+              _offset.dy + 1.5*maxSize + padding
+          ),
+          paint
       );
       _image.dispose();
 
@@ -130,14 +131,14 @@ class Screenshot {
       }
     }
 
-    await _saveFile(maxX.toInt(), maxY.toInt(), file);
+    return await _saveFile(maxX.toInt(), maxY.toInt(), file);
   }
 
-  Future<void> saveStats(Set<String> select, File file) async{
-    final List<Map<String, dynamic>> stats = await _service.fetchSum(group: true, expression: InCond.inn('type', select.toList()));
-    final List<Map<String, dynamic>> general = await _service.fetchSum(expression: InCond.inn('type', select.toList()));
+  Future<bool> saveStats(Expression expression, File file) async{
+    final List<Map<String, dynamic>> stats = await _service.fetchSum(group: true, expression: expression);
+    final List<Map<String, dynamic>> general = await _service.fetchSum(expression: expression);
 
-    if(isRecording || (stats?.isEmpty ?? true) || (general?.isEmpty ?? true)) return;
+    if(isRecording || (stats?.isEmpty ?? true) || (general?.isEmpty ?? true)) return false;
 
     final String longestWord = owned.length > wished.length ? owned : wished;
     TextSpan longestParagraphTest = TextSpan(
@@ -172,7 +173,7 @@ class Screenshot {
 
     final Paint paint = Paint()..color = theme.scaffoldBackgroundColor;
     final Paint cardColor = Paint()..color = theme.cardTheme.color;
-    final Color textColor = theme.textTheme.title.color;
+    final Color textColor = theme.textTheme.headline6.color;
     final Paint divider = Paint()..color = theme.dividerColor..strokeWidth = 2;
     if(theme.scaffoldBackgroundColor == Colors.black)
       cardColor..color = const Color(0xFF2B2922)
@@ -275,7 +276,7 @@ class Screenshot {
       }
     }
 
-    await _saveFile(maxX.toInt(), maxY.toInt(), file);
+    return await _saveFile(maxX.toInt(), maxY.toInt(), file);
   }
 
   void _paintSquareStat(Offset a, Offset b, double percent, TextSpan icon){
@@ -304,7 +305,7 @@ class Screenshot {
   }
 
   Future<void> _paintBanner(Size size, Map<String, dynamic> stat) async{
-    final Color textColor = theme.textTheme.title.color;
+    final Color textColor = theme.textTheme.headline6.color;
     final Paint paint = Paint();
     String date = materialLocalizations.formatFullDate(DateTime.now());
     date = date.substring(date.indexOf(' ')+1);
@@ -383,7 +384,7 @@ class Screenshot {
     appIcon?.dispose();
   }
 
-  Future<void> _saveFile(int maxX, int maxY, File file) async{
+  Future<bool> _saveFile(int maxX, int maxY, File file) async{
     try{
       final Map<String,dynamic> args = Map<String,dynamic>();
       ui.Picture pic = _recorder.endRecording();
@@ -396,8 +397,10 @@ class Screenshot {
       args['file'] = file;
       args['buffer'] = buffer;
       await compute(writeCollectionFile, args);
+      return true;
     }on AssertionError catch(e){
       print(e);
+      return false;
     } finally{
       _canvas = null;
       _recorder = null;

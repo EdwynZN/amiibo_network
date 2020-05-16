@@ -1,4 +1,9 @@
 ## Version 1.3.1
+- Added Custom tile to the navigation drawer, long press to open and select only the desired series you want to collect
+- Added Custom button to the stats page, showing only the series previously added to the custom tile
+- Save Collection now let you select only the series you want to save, default to the custom series added to the custom tile
+- Update Stats page UI for tablets
+- Lock button added so you can avoid undesirable taps
 - Updated Dark Theme to share accent colors based on light theme selected
 - Changed text color based on the background color where is displayed
 - Fixed minor bugs

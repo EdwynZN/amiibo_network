@@ -1,3 +1,5 @@
+import 'package:amiibo_network/provider/lock_provider.dart';
+import 'package:amiibo_network/provider/query_provider.dart';
 import 'package:amiibo_network/provider/search_provider.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -16,23 +18,28 @@ import 'package:amiibo_network/provider/theme_provider.dart';
 import 'dart:math' as math;
 import 'package:amiibo_network/generated/l10n.dart';
 import 'package:amiibo_network/widget/stat_widget.dart';
+import '../utils/preferences_constants.dart';
 
 class Home extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final AmiiboProvider amiiboProvider = Provider.of<AmiiboProvider>(context, listen: false);
     return MultiProvider(
       providers: [
-        StreamProvider<AmiiboLocalDB>.value(
-          value: amiiboProvider.amiiboList,
+        ProxyProvider<QueryProvider, AmiiboProvider>(
+          create: (_) => AmiiboProvider(),
+          update: (_, query, amiiboProvider) => amiiboProvider..update(query.where, query.orderCategory, query.sort),
+          dispose: (_, amiiboProvider) => amiiboProvider.dispose(),
         ),
-        StreamProvider<Map<String,dynamic>>.value(
+        StreamProvider<AmiiboLocalDB>(
+          create: (context) => Provider.of<AmiiboProvider>(context, listen: false).amiiboList,
+        ),
+        StreamProvider<Map<String,dynamic>>(
           initialData: {'Owned' : 0, 'Wished' : 0, 'Total' : 0},
-          value: amiiboProvider.collectionList,
+          create: (context) => Provider.of<AmiiboProvider>(context, listen: false).collectionList,
           updateShouldNotify: (prev, curr) =>
-            prev['Owned'] != curr['Owned'] ||
-            prev['Wished'] != curr['Wished'] ||
-            prev['Total'] != curr['Total']
+          prev['Owned'] != curr['Owned'] ||
+              prev['Wished'] != curr['Wished'] ||
+              prev['Total'] != curr['Total']
         ),
         ChangeNotifierProvider<SelectProvider>(
           create: (_) => SelectProvider(),
@@ -53,6 +60,7 @@ class HomePageState extends State<HomePage>
   ScrollController _controller;
   AnimationController _animationController;
   AmiiboProvider amiiboProvider;
+  QueryProvider queryProvider;
   SearchProvider _searchProvider;
   SelectProvider selected;
   S translate;
@@ -69,15 +77,17 @@ class HomePageState extends State<HomePage>
   @override
   didChangeDependencies(){
     super.didChangeDependencies();
-    amiiboProvider = Provider.of<AmiiboProvider>(context, listen: false);
-    selected = Provider.of<SelectProvider>(context, listen: false);
-    _searchProvider = Provider.of<SearchProvider>(context, listen: false);
+    queryProvider = context.read<QueryProvider>();
+    amiiboProvider = context.read<AmiiboProvider>();
+    selected = context.read<SelectProvider>();
+    _searchProvider = context.read<SearchProvider>();
     translate = S.of(context);
   }
 
   void _restartAnimation(){
     _controller.jumpTo(0);
     _animationController.forward();
+    _cancelSelection();
   }
 
   void _updateSelection({int wished = 0, int owned = 0}) async {
@@ -86,23 +96,22 @@ class HomePageState extends State<HomePage>
       )
     );
     selected.clearSelected();
-    amiiboProvider.updateAmiiboDB(amiibos: amiibos);
-    amiiboProvider.refreshPagination();
+    amiiboProvider..updateAmiiboDB(amiibos: amiibos)..refreshAmiibos;
   }
 
   void _cancelSelection() => selected.clearSelected();
 
   void initBloc() async =>
-    await Provider.of<AmiiboProvider>(context, listen: false).fetchAllAmiibosDB();
+    await Provider.of<QueryProvider>(context, listen: false).fetchAllAmiibosDB();
 
   @override
   void initState(){
+    super.initState();
     initBloc();
     _controller = ScrollController()..addListener(_scrollListener);
     _animationController = AnimationController(
         duration: const Duration(milliseconds: 300),
         vsync: this)..value = 1.0;
-    super.initState();
   }
 
   @override
@@ -132,7 +141,7 @@ class HomePageState extends State<HomePage>
     String value = await Navigator.pushNamed(context,"/search");
     if(value != null) {
       if(value.trim().isNotEmpty){
-        amiiboProvider.resetPagination(_searchProvider.category, value);
+        queryProvider.resetPagination(_searchProvider.category, value);
         _restartAnimation();
       }
     }
@@ -181,8 +190,8 @@ class HomePageState extends State<HomePage>
                         onPressed: _multipleSelection ? _cancelSelection : () => Scaffold.of(context).openDrawer(),
                       ),
                     ),
-                    title: Selector2<AmiiboProvider, SelectProvider, String>(
-                      selector: (context, text, count) => count.multipleSelected ? count.selected.toString() : text.strFilter,
+                    title: Selector2<QueryProvider, SelectProvider, String>(
+                      selector: (context, query, count) => count.multipleSelected ? count.selected.toString() : query.strFilter,
                       builder: (context, title, _) {
                         return Tooltip(
                           message: num.tryParse(title) == null ?
@@ -197,6 +206,7 @@ class HomePageState extends State<HomePage>
                       duration: const Duration(milliseconds: 250),
                       layoutBuilder: _defaultLayoutBuilder,
                       child: _multipleSelection ? Row(
+                        key: Key('MultipleSelected'),
                         mainAxisSize: MainAxisSize.min,
                         mainAxisAlignment: MainAxisAlignment.end,
                         children: <Widget>[
@@ -216,13 +226,31 @@ class HomePageState extends State<HomePage>
                             tooltip: translate.wishTooltip,
                           ),
                         ],
-                      ) : _SortCollection(),
+                      ) :
+                      Row(
+                        key: Key('NoSelected'),
+                        mainAxisSize: MainAxisSize.min,
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: <Widget>[
+                          Consumer<LockProvider>(
+                            child: const Icon(Icons.lock_open),
+                            builder: (context, ignore, child){
+                              return IconButton(
+                                icon: ignore.lock ? const Icon(Icons.lock) : child,
+                                onPressed: () async => await ignore.update(!ignore.lock),
+                                tooltip: S.of(context).lockTooltip(ignore.lock),
+                              );
+                            },
+                          ),
+                          _SortCollection()
+                        ],
+                      ),
                     )
                   ),
                   child,
                   SliverPadding(
                     padding: const EdgeInsets.symmetric(horizontal: 4),
-                    sliver: Consumer<AmiiboLocalDB>(
+                    sliver: Consumer2<AmiiboLocalDB, LockProvider>(
                       child: SliverFillRemaining(
                         hasScrollBody: false,
                         child: Align(alignment: Alignment.center, heightFactor: 10,
@@ -231,39 +259,42 @@ class HomePageState extends State<HomePage>
                           )
                         )
                       ),
-                      builder: (ctx, data, child){
-                        final bool bigGrid = MediaQuery.of(context).size.width >= 600;
+                      builder: (ctx, data, ignore, child){
                         if((data?.amiibo?.length ?? 1) == 0)
                           return DefaultTextStyle(
                             style: Theme.of(context).textTheme.headline4,
                             child: child,
                           );
-                        return SliverGrid(
-                          gridDelegate: bigGrid ?
-                          SliverGridDelegateWithMaxCrossAxisExtent(
-                            maxCrossAxisExtent: 192,
-                            mainAxisSpacing: 8.0,
-                          ) :
-                          SliverGridDelegateWithFixedCrossAxisCount(
-                              crossAxisCount: 3,
-                              mainAxisSpacing: 8.0
+                        final bool bigGrid = MediaQuery.of(context).size.width >= 600;
+                        return SliverIgnorePointer(
+                          ignoring: ignore.lock,
+                          sliver: SliverGrid(
+                            gridDelegate: bigGrid ?
+                            SliverGridDelegateWithMaxCrossAxisExtent(
+                              maxCrossAxisExtent: 192,
+                              mainAxisSpacing: 8.0,
+                            ) :
+                            SliverGridDelegateWithFixedCrossAxisCount(
+                                crossAxisCount: 3,
+                                mainAxisSpacing: 8.0
+                            ),
+                            delegate: SliverChildBuilderDelegate((BuildContext _, int index) {
+                              return ChangeNotifierProxyProvider<AmiiboLocalDB, SingleAmiibo>(
+                                  create: (_) => SingleAmiibo(),
+                                  update: (_, amiiboList, amiibo) => amiibo
+                                    ..update = amiiboList?.amiibo[index],
+                                  child: FadeSwitchAnimation(
+                                    key: ValueKey<int>(index),
+                                    child: AmiiboGrid(
+                                      key: ValueKey<int>(data?.amiibo[index].key),
+                                    ),
+                                  )
+                              );
+                            },
+                              //addRepaintBoundaries: false, addAutomaticKeepAlives: false,
+                              childCount: data?.amiibo != null ? data?.amiibo?.length : 0,
+                            )
                           ),
-                          delegate: SliverChildBuilderDelegate((BuildContext _, int index) {
-                            return ChangeNotifierProxyProvider<AmiiboLocalDB,SingleAmiibo>(
-                              create: (_) => SingleAmiibo(),
-                              update: (_, amiiboList, amiibo) => amiibo
-                                ..update = amiiboList?.amiibo[index],
-                              child: FadeSwitchAnimation(
-                                key: ValueKey<int>(index),
-                                child: AmiiboGrid(
-                                  key: ValueKey<int>(data?.amiibo[index].key),
-                                ),
-                              )
-                            );
-                          },
-                          //addRepaintBoundaries: false, addAutomaticKeepAlives: false,
-                          childCount: data?.amiibo != null ? data?.amiibo?.length : 0,
-                          )
                         );
                       },
                     )
@@ -349,27 +380,31 @@ class _SortCollection extends StatefulWidget{
 }
 
 class _SortCollectionState extends State<_SortCollection> {
+  QueryProvider queryProvider;
   ButtonTextTheme _buttonTextTheme;
+  Color _accentColor, _accentTextThemeColor;
 
   @override
   void didChangeDependencies() {
-    _buttonTextTheme = ThemeData.estimateBrightnessForColor(Theme.of(context).primaryColor) == Brightness.light
+    queryProvider = context.read<QueryProvider>();
+    final ThemeData theme = Theme.of(context);
+    _accentColor = theme.accentColor;
+    _accentTextThemeColor = theme.accentTextTheme.headline6.color;
+    _buttonTextTheme = ThemeData.estimateBrightnessForColor(theme.primaryColor) == Brightness.light
         ? ButtonTextTheme.normal : ButtonTextTheme.accent;
     super.didChangeDependencies();
   }
 
-  void _selectOrder(String sort) async{
-    final AmiiboProvider amiiboProvider = Provider.of<AmiiboProvider>(context, listen: false);
+  void _selectOrder(String order) async{
     final SharedPreferences preferences = await SharedPreferences.getInstance();
-    preferences.setString('OrderCategory', sort);
-    amiiboProvider.orderCategory = sort;
+    preferences.setString(sharedOrder, order);
+    queryProvider.orderCategory = order;
   }
 
   void _sortOrder(String sort) async{
-    final AmiiboProvider amiiboProvider = Provider.of<AmiiboProvider>(context, listen: false);
     final SharedPreferences preferences = await SharedPreferences.getInstance();
-    preferences.setString('SortBy', sort);
-    amiiboProvider.sort = sort;
+    preferences.setString(sharedSort, sort);
+    queryProvider.sort = sort;
   }
 
   Future<void> _bottomSheet() async {
@@ -408,7 +443,7 @@ class _SortCollectionState extends State<_SortCollection> {
                               height: 34,
                               materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
                               highlightColor: Colors.transparent,
-                              textColor: Theme.of(context).accentColor,
+                              textColor: _accentColor,
                               splashColor: Theme.of(context).selectedRowColor,
                               onPressed: () => Navigator.pop(context),
                               child: Text(translate.done),
@@ -422,7 +457,7 @@ class _SortCollectionState extends State<_SortCollection> {
                       sliver: SliverToBoxAdapter(
                         child: SizedBox(
                           height: 36,
-                          child: Selector<AmiiboProvider, String>(
+                          child: Selector<QueryProvider, String>(
                             builder: (context, sortBy, _){
                               return Row(
                                 mainAxisAlignment: MainAxisAlignment.center,
@@ -432,10 +467,10 @@ class _SortCollectionState extends State<_SortCollection> {
                                     child: FlatButton.icon(
                                       padding: const EdgeInsets.symmetric(horizontal: 8.0),
                                       textTheme: _buttonTextTheme,
-                                      textColor: sortBy.contains('ASC') ? Theme.of(context).accentTextTheme.headline6.color : null,
-                                      color: sortBy.contains('ASC') ? Theme.of(context).accentColor : null,
+                                      textColor: sortBy.contains('ASC') ? _accentTextThemeColor : null,
+                                      color: sortBy.contains('ASC') ? _accentColor : null,
                                       shape: Border.all(
-                                        color: Theme.of(context).accentColor,
+                                        color: _accentColor,
                                         width: 2,
                                       ),
                                       onPressed: () => _sortOrder('ASC'),
@@ -448,23 +483,23 @@ class _SortCollectionState extends State<_SortCollection> {
                                       key: Key('DESC'),
                                       padding: const EdgeInsets.symmetric(horizontal: 8.0),
                                       textTheme: _buttonTextTheme,
-                                      textColor: sortBy.contains('DESC') ? Theme.of(context).accentTextTheme.headline6.color : null,
-                                      color: sortBy.contains('DESC') ? Theme.of(context).accentColor : null,
+                                      textColor: sortBy.contains('DESC') ? _accentTextThemeColor : null,
+                                      color: sortBy.contains('DESC') ? _accentColor : null,
                                       shape: Border(
                                         bottom: BorderSide(
-                                          color: Theme.of(context).accentColor,
+                                          color: _accentColor,
                                           width: 2,
                                         ),
                                         top: BorderSide(
-                                          color: Theme.of(context).accentColor,
+                                          color: _accentColor,
                                           width: 2,
                                         ),
                                         left: BorderSide(
-                                            color: Theme.of(context).accentColor,
+                                            color: _accentColor,
                                             width: 0.0
                                         ),
                                         right: BorderSide(
-                                            color: Theme.of(context).accentColor,
+                                            color: _accentColor,
                                             width: 2.0
                                         ),
                                       ),
@@ -476,13 +511,13 @@ class _SortCollectionState extends State<_SortCollection> {
                                 ],
                               );
                             },
-                            selector: (_, amiiboProvider) => amiiboProvider.sort,
+                            selector: (_, query) => query.sort,
                             shouldRebuild: (prev, curr) => prev != curr,
                           )
                         )
                       ),
                     ),
-                    Selector<AmiiboProvider, String>(
+                    Selector<QueryProvider, String>(
                       builder: (context, order, _){
                         return SliverList(
                           delegate: SliverChildListDelegate([
@@ -575,7 +610,7 @@ class _SortCollectionState extends State<_SortCollection> {
                           ]),
                         );
                       },
-                      selector: (_, amiiboProvider) => amiiboProvider.orderCategory,
+                      selector: (_, query) => query.orderCategory,
                       shouldRebuild: (prev, curr) => prev != curr,
                     ),
                   ],
@@ -671,6 +706,7 @@ class AmiiboGrid extends StatefulWidget {
 }
 
 class AmiiboGridState extends State<AmiiboGrid> {
+  AmiiboProvider amiiboProvider;
   SelectProvider mSelected;
   SingleAmiibo amiiboDB;
   bool _multipleSelected;
@@ -679,15 +715,15 @@ class AmiiboGridState extends State<AmiiboGrid> {
   @override
   didChangeDependencies(){
     super.didChangeDependencies();
-    amiiboDB = Provider.of<SingleAmiibo>(context, listen: false);
-    mSelected = Provider.of<SelectProvider>(context, listen: false);
+    amiiboDB = context.read<SingleAmiibo>();
+    mSelected = context.read<SelectProvider>();
+    amiiboProvider = context.read<AmiiboProvider>();
   }
 
   _onDoubleTap() =>
-    Navigator.pushNamed(context, "/details", arguments: amiiboDB);
+    Navigator.pushNamed(context, "/details", arguments: <String, dynamic>{'singleAmiibo': amiiboDB, 'amiiboProvider': amiiboProvider});
 
   _onTap(){
-    final AmiiboProvider amiiboProvider = Provider.of<AmiiboProvider>(context, listen: false);
     amiiboDB.shift();
     amiiboProvider.updateAmiiboDB(amiibo: amiibo);
   }
@@ -760,7 +796,7 @@ class AmiiboGridState extends State<AmiiboGrid> {
                       child: Text('${amiibo.name}',
                         softWrap: false,
                         overflow: TextOverflow.fade,
-                        style: TextStyle(fontSize: 12, fontWeight: FontWeight.w500),
+                        style: Theme.of(context).primaryTextTheme.headline2
                       ),
                     ),
                     flex: 2,

@@ -1,7 +1,7 @@
+import 'package:amiibo_network/provider/query_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:amiibo_network/provider/search_provider.dart';
 import 'package:provider/provider.dart';
-import 'package:amiibo_network/provider/amiibo_provider.dart';
 import 'package:flutter/services.dart';
 import 'package:amiibo_network/widget/floating_bar.dart';
 import 'package:amiibo_network/utils/amiibo_category.dart';
@@ -29,7 +29,7 @@ class SearchScreenState extends State<SearchScreen>{
   didChangeDependencies(){
     super.didChangeDependencies();
     _search = Provider.of<SearchProvider>(context, listen: false);
-    amiiboCategory = Provider.of<AmiiboProvider>(context, listen: false).strFilter;
+    amiiboCategory = Provider.of<QueryProvider>(context, listen: false).strFilter;
     translate = S.of(context);
   }
 
@@ -122,7 +122,7 @@ class SearchScreenState extends State<SearchScreen>{
                         child: Card(
                           key: Key(snapshot.data[index]),
                           margin: EdgeInsets.zero,
-                          shape: RoundedRectangleBorder(),
+                          shape: const RoundedRectangleBorder(),
                           child: ListTile(
                             onTap: () => Navigator.of(context).pop(snapshot.data[index]),
                             title: Text('${snapshot.data[index]}'),

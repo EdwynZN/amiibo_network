@@ -19,7 +19,7 @@ typedef String MessageIfAbsent(String messageStr, List<dynamic> args);
 class MessageLookup extends MessageLookupByLibrary {
   String get localeName => 'es';
 
-  static m0(choice) => "${Intl.select(choice, {'All': 'Todos', 'Owned': 'Adquiridos', 'Wishlist': 'Lista de deseos', 'Name': 'Nombre', 'Game': 'Juego', 'AmiiboSeries': 'Serie', 'Figures': 'Todas las Figuras', 'Cards': 'Todas las Tarjetas', 'other': '${choice}', })}";
+  static m0(choice) => "${Intl.select(choice, {'All': 'Todos', 'Owned': 'Adquiridos', 'Wishlist': 'Lista de deseos', 'Name': 'Nombre', 'Game': 'Juego', 'AmiiboSeries': 'Serie', 'Figures': 'Todas las Figuras', 'Cards': 'Todas las Tarjetas', 'Custom': 'Personal', 'other': '${choice}', })}";
 
   static m1(character) => "Personaje: ${character}";
 
@@ -27,17 +27,19 @@ class MessageLookup extends MessageLookupByLibrary {
 
   static m3(game) => "Juego: ${game}";
 
-  static m4(name) => "Nombre: ${name}";
+  static m4(choice) => "${Intl.select(choice, {'true': 'Bloqueado', 'false': 'Desbloqueado', 'other': 'Desconocido', })}";
 
-  static m5(serie) => "Serie: ${serie}";
+  static m5(name) => "Nombre: ${name}";
 
-  static m6(choice) => "${Intl.select(choice, {'granted': 'Almacenamiento concedido', 'denied': 'Almacenamiento denegado', 'neverAskAgain': 'Almacenamiento deshabilitado', 'restricted': 'Almacenamiento restringido', 'other': 'Permiso de almacenamiento en estado desconocido', })}";
+  static m6(serie) => "Serie: ${serie}";
 
-  static m7(choice) => "${Intl.select(choice, {'system': 'Autom.', 'light': 'Claro', 'dark': 'Oscuro', 'other': 'Autom.', })}";
+  static m7(choice) => "${Intl.select(choice, {'granted': 'Almacenamiento concedido', 'denied': 'Almacenamiento denegado', 'neverAskAgain': 'Almacenamiento deshabilitado', 'restricted': 'Almacenamiento restringido', 'other': 'Permiso de almacenamiento en estado desconocido', })}";
 
-  static m8(type) => "Tipo: ${type}";
+  static m8(choice) => "${Intl.select(choice, {'system': 'Autom.', 'light': 'Claro', 'dark': 'Oscuro', 'other': 'Autom.', })}";
 
-  static m9(choice) => "${Intl.select(choice, {'Figure': 'Tipo: Figura', 'Card': 'Tipo: Tarjeta', 'Yarn': 'Tipo: Lana', 'other': 'Tipo: Otro', })}";
+  static m9(type) => "Tipo: ${type}";
+
+  static m10(choice) => "${Intl.select(choice, {'Figure': 'Tipo: Figura', 'Card': 'Tipo: Tarjeta', 'Yarn': 'Tipo: Lana', 'other': 'Tipo: Otro', })}";
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static _notInlinedMessages(_) => <String, Function> {
@@ -74,10 +76,11 @@ class MessageLookup extends MessageLookupByLibrary {
     "jp" : MessageLookupByLibrary.simpleMessage("Japón"),
     "light" : MessageLookupByLibrary.simpleMessage("Claro"),
     "lightTheme" : MessageLookupByLibrary.simpleMessage("Tema Claro"),
+    "lockTooltip" : m4,
     "markdownError" : MessageLookupByLibrary.simpleMessage("Hubo un error al cargar el archivo"),
     "mode" : MessageLookupByLibrary.simpleMessage("Modo"),
     "na" : MessageLookupByLibrary.simpleMessage("Norteamérica"),
-    "name" : m4,
+    "name" : m5,
     "notificationTitle" : MessageLookupByLibrary.simpleMessage("Archivo generado"),
     "openAppSettings" : MessageLookupByLibrary.simpleMessage("cambiar"),
     "ownTooltip" : MessageLookupByLibrary.simpleMessage("Adquirir"),
@@ -97,7 +100,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "saveCollectionTitleDialog" : MessageLookupByLibrary.simpleMessage("Selecciona tu colección"),
     "saveStatsTooltip" : MessageLookupByLibrary.simpleMessage("Guardar Estadísticas"),
     "savingCollectionMessage" : MessageLookupByLibrary.simpleMessage("Guardando tu colección, esto podría demorar dependiendo de tu dispositivo"),
-    "serie" : m5,
+    "serie" : m6,
     "settings" : MessageLookupByLibrary.simpleMessage("Opciones"),
     "showPercentage" : MessageLookupByLibrary.simpleMessage("Mostrar porcentaje"),
     "sort" : MessageLookupByLibrary.simpleMessage("Ordenar por"),
@@ -106,12 +109,12 @@ class MessageLookup extends MessageLookupByLibrary {
     "splashMessage" : MessageLookupByLibrary.simpleMessage("Espere un momento..."),
     "splashWelcome" : MessageLookupByLibrary.simpleMessage("Bienvenido"),
     "stats" : MessageLookupByLibrary.simpleMessage("Estadísticas"),
-    "storagePermission" : m6,
+    "storagePermission" : m7,
     "successImport" : MessageLookupByLibrary.simpleMessage("Colección actualizada"),
     "sure" : MessageLookupByLibrary.simpleMessage("Seguro"),
-    "themeMode" : m7,
-    "type" : m8,
-    "types" : m9,
+    "themeMode" : m8,
+    "type" : m9,
+    "types" : m10,
     "upToolTip" : MessageLookupByLibrary.simpleMessage("Arriba"),
     "wishTooltip" : MessageLookupByLibrary.simpleMessage("Desear"),
     "wished" : MessageLookupByLibrary.simpleMessage("Deseados")

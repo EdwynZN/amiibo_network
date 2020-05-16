@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import '../utils/preferences_constants.dart';
 
 void _onCreate(Database db, int version) async{
   await db.transaction((tx) async{
@@ -63,8 +64,8 @@ void _onUpgrade(Database db, int oldVersion, int newVersion) async{
     await db.transaction((tx) async{
       table = await tx.rawQuery('SELECT * FROM date;');
       table.forEach((date){
-        if(date['id'] == '1') prefs.setString('Date', date['lastUpdated']);
-        if(date['id'] == '2') prefs.setString('Theme', date['lastUpdated']);
+        if(date['id'] == '1') prefs.setString(sharedDateDB, date['lastUpdated']);
+        if(date['id'] == '2') prefs.setString(sharedOldTheme, date['lastUpdated']);
       });
       await tx.execute('DROP TABLE date;');
     });

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'dart:math' as math;
-
 import 'package:flutter/widgets.dart';
 
 class SliverFloatingBar extends StatefulWidget{
@@ -120,7 +119,7 @@ class _SliverFloatingPersistentHeader extends SliverPersistentHeaderDelegate {
           color: backgroundColor,
           padding: const EdgeInsets.fromLTRB(12,8,12,0),
           child: ListTileTheme(
-            contentPadding: const EdgeInsets.symmetric(horizontal: 4.0),
+            contentPadding: const EdgeInsets.symmetric(horizontal: 8.0),
             iconColor: Theme.of(context).iconTheme.color,
             textColor: Theme.of(context).textTheme.headline6.color,
             dense: true,

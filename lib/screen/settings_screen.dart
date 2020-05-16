@@ -1,15 +1,15 @@
 import 'package:amiibo_network/model/amiibo_local_db.dart';
+import 'package:amiibo_network/provider/query_provider.dart';
 import 'package:amiibo_network/service/screenshot.dart';
+import 'package:amiibo_network/utils/amiibo_category.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-//import 'package:permission_handler/permission_handler.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:amiibo_network/service/storage.dart';
 import 'package:amiibo_network/provider/theme_provider.dart';
 import 'package:provider/provider.dart';
-import 'package:amiibo_network/provider/amiibo_provider.dart';
 import 'package:launch_review/launch_review.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:amiibo_network/service/service.dart';
@@ -18,6 +18,8 @@ import 'package:amiibo_network/generated/l10n.dart';
 import 'package:amiibo_network/utils/urls_constants.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:amiibo_network/service/notification_service.dart';
+import 'package:amiibo_network/model/query_builder.dart';
+import '../widget/selected_chip.dart';
 
 class SettingsPage extends StatelessWidget{
   const SettingsPage({Key key}): super(key: key);
@@ -253,45 +255,67 @@ class MarkdownReader extends StatelessWidget {
   }
 }
 
-class _SaveCollection extends StatelessWidget{
-  static final Screenshot _screenshot = Screenshot();
+class _SaveCollection extends StatefulWidget {
 
   _SaveCollection({Key key}) : super(key: key);
 
-  Future<Set<String>> _dialog(BuildContext context) async {
-    return await showDialog<Set<String>>(
-      context: context,
-      builder: (context) => _SaveCollectionDialog()
-    );
-  }
+  @override
+  __SaveCollectionState createState() => __SaveCollectionState();
+}
 
-  Future<void> _save(BuildContext context, Set<String> collection) async {
+class __SaveCollectionState extends State<_SaveCollection> {
+  static final Screenshot _screenshot = Screenshot();
+  final Future<List<String>> listOfFigures = Service().fetchDistinct(column: ['amiiboSeries'],
+      expression: InCond.inn('type', ['Figure', 'Yarn']), orderBy: 'amiiboSeries');
+  final Future<List<String>> listOfCards = Service().fetchDistinct(column: ['amiiboSeries'],
+      expression: Cond.eq('type', 'Card'), orderBy: 'amiiboSeries');
+
+  Future<void> _saveCollection(AmiiboCategory category, List<String> figures, cards) async {
     final ScaffoldState scaffoldState = Scaffold.of(context, nullOk: true);
     final S translate = S.of(context);
     final String message = _screenshot.isRecording ?
-      translate.recordMessage : translate.savingCollectionMessage;
+    translate.recordMessage : translate.savingCollectionMessage;
     scaffoldState?.hideCurrentSnackBar();
     scaffoldState?.showSnackBar(SnackBar(content: Text(message)));
     if(!_screenshot.isRecording) {
       String name;
       int id;
-      if(collection.contains('Card')){
-        name = 'MyCardCollection';
-        id = 4;
-      } else{
-        name = 'MyAmiiboCollection';
-        id = 5;
+      Expression expression;
+      switch(category){
+        case AmiiboCategory.Cards:
+          name = 'MyCardCollection';
+          id = 4;
+          expression = Cond.eq('type', 'Card');
+          break;
+        case AmiiboCategory.Figures:
+          name = 'MyFigureCollection';
+          expression = InCond.inn('type', ['Figure', 'Yarn']);
+          id = 5;
+          break;
+        case AmiiboCategory.Custom:
+          name = 'MyCustomCollection';
+          id = 8;
+          expression =
+          Bracket(InCond.inn('type', ['Figure', 'Yarn']) & InCond.inn('amiiboSeries', figures))
+          | Bracket(Cond.eq('type', 'Card') & InCond.inn('amiiboSeries', cards));
+          break;
+        case AmiiboCategory.All:
+        default:
+          name = 'MyAmiiboCollection';
+          id = 9;
+          expression = And();
+          break;
       }
       var file = await createFile(name, 'png');
       _screenshot.update(context);
-      await _screenshot.saveCollection(collection, file);
+      final bool save = await _screenshot.saveCollection(expression, file);
       final Map<String, dynamic> notificationArgs = <String, dynamic>{
         'title': translate.notificationTitle,
         'path': file.path,
         'actionTitle': translate.actionText,
         'id': id
       };
-      await NotificationService.sendNotification(notificationArgs);
+      if(save) await NotificationService.sendNotification(notificationArgs);
     }
   }
 
@@ -302,72 +326,32 @@ class _SaveCollection extends StatelessWidget{
       subtitle: translate.saveCollectionSubtitle,
       icon: const Icon(Icons.save),
       onTap: () async {
-        Set<String> collection = await _dialog(context);
-        if(collection == null) return;
-        if(collection.isNotEmpty) await _save(context, collection);
+        final QueryProvider filter = Provider.of<QueryProvider>(context, listen: false);
+        final List<String> figures = filter.customFigures;
+        final List<String> cards = filter.customCards;
+        bool save = await showDialog<bool>(
+          context: context,
+          builder: (BuildContext context) =>
+            CustomQueryWidget(translate.saveCollection,
+              figureSeriesList: listOfFigures,
+              cardSeriesList: listOfCards,
+              figures: figures,
+              cards: cards,
+            )
+        ) ?? false;
+
+        if(save && (figures.isNotEmpty || cards.isNotEmpty)) {
+          bool equalFigures = false;
+          bool equalCards = false;
+          AmiiboCategory category = AmiiboCategory.All;
+          if(figures.isNotEmpty) equalFigures = QueryProvider.checkEquality(figures, await listOfFigures);
+          if(cards.isNotEmpty) equalCards = QueryProvider.checkEquality(cards, await listOfCards);
+          if(equalFigures && cards.isEmpty) category = AmiiboCategory.Figures;
+          else if(equalCards && figures.isEmpty) category = AmiiboCategory.Cards;
+          else if(!equalCards || !equalFigures) category = AmiiboCategory.Custom;
+          _saveCollection(category, figures, cards);
+        }
       }
-    );
-  }
-}
-
-class _SaveCollectionDialog extends StatefulWidget{
-  @override
-  _SaveCollectionDialogState createState() => _SaveCollectionDialogState();
-}
-
-class _SaveCollectionDialogState extends State<_SaveCollectionDialog> {
-  Set<String> select = {};
-
-  @override
-  Widget build(BuildContext context) {
-    final S translate = S.of(context);
-    return SimpleDialog(
-      semanticLabel: translate.saveCollection,
-      title: Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 6),
-            child: Text(translate.saveCollectionTitleDialog, style: Theme.of(context).textTheme.headline4),
-          ),
-          const Divider(),
-        ],
-      ),
-      titlePadding: const EdgeInsets.only(top: 12.0),
-      contentPadding: const EdgeInsets.only(bottom: 8.0),
-      children: <Widget>[
-        CheckboxListTile(
-          value: select.contains('Figure') && select.contains('Yarn'),
-          controlAffinity: ListTileControlAffinity.leading,
-          onChanged: (value){
-            setState(() {
-              if(value) select.addAll(['Figure', 'Yarn']);
-              else select.removeAll(['Figure', 'Yarn']);
-            });
-          },
-          title: Text(translate.figures),
-        ),
-        CheckboxListTile(
-          value: select.contains('Card'),
-          controlAffinity: ListTileControlAffinity.leading,
-          onChanged: (value){
-            setState(() {
-              if(value) select.add('Card');
-              else select.remove('Card');
-            });
-          },
-          title: Text(translate.cards),
-        ),
-        Align(
-          alignment: Alignment.centerRight,
-          child: FlatButton(
-            textColor: Theme.of(context).accentColor,
-            onPressed: select.isEmpty ? null : () async => Navigator.of(context).pop(select),
-            child: Text(MaterialLocalizations.of(context).okButtonLabel)
-          )
-        ),
-      ],
     );
   }
 }
@@ -412,7 +396,7 @@ class _ResetCollection extends StatelessWidget{
   @override
   Widget build(BuildContext context) {
     final S translate = S.of(context);
-    final AmiiboProvider amiiboProvider = Provider.of<AmiiboProvider>(context, listen: false);
+    final QueryProvider queryProvider = Provider.of<QueryProvider>(context, listen: false);
     return _CardSettings(
       title: translate.reset,
       subtitle: translate.resetSubtitle,
@@ -422,7 +406,7 @@ class _ResetCollection extends StatelessWidget{
         if(reset ?? false){
           final ScaffoldState scaffoldState = Scaffold.of(context, nullOk: true);
           try{
-            await amiiboProvider.resetCollection();
+            await queryProvider.resetCollection();
             _message(scaffoldState, translate.collectionReset);
           }catch(e){
             _message(scaffoldState, translate.splashError);
@@ -508,7 +492,7 @@ class BottomBar extends StatefulWidget {
 class _BottomBarState extends State<BottomBar> {
   S translate;
   ScaffoldState scaffoldState;
-  AmiiboProvider amiiboProvider;
+  QueryProvider queryProvider;
   final _service = Service();
 
   @override
@@ -516,7 +500,7 @@ class _BottomBarState extends State<BottomBar> {
     super.didChangeDependencies();
     translate = S.of(context);
     scaffoldState = Scaffold.of(context, nullOk: true);
-    amiiboProvider = Provider.of<AmiiboProvider>(context, listen: false);
+    queryProvider = Provider.of<QueryProvider>(context, listen: false);
   }
 
   void openSnackBar(String message, {SnackBarAction action}){
@@ -530,7 +514,7 @@ class _BottomBarState extends State<BottomBar> {
 
   Future<void> _openFileExplorer() async {
     try{
-      final file = await FilePicker.getFile(type: FileType.custom, allowedExtensions: ['json']);
+      final file = await FilePicker.getFile(type: FileType.any);
       final String _path = file?.path;
       //print('MyPath: $_path');
       if(_path == null) return;
@@ -544,7 +528,7 @@ class _BottomBarState extends State<BottomBar> {
         else{
           AmiiboLocalDB amiibos = await compute(entityFromMap, map);
           await _service.update(amiibos);
-          amiiboProvider.refreshPagination();
+          queryProvider.retryQuery;
           openSnackBar(translate.successImport);
         }
       }

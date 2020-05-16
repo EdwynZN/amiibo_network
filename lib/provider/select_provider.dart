@@ -10,6 +10,7 @@ class SelectProvider with ChangeNotifier{
   bool isSelected(ValueKey<int> value) => set.contains(value);
 
   void clearSelected() {
+    if(set.isEmpty) return;
     set.clear();
     notifyListeners();
   }

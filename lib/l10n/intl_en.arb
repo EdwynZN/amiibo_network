@@ -4,7 +4,7 @@
   "splashWelcome": "WELCOME",
   "splashError": "Couldn't Update \u2639",
   "showPercentage": "Show percentage",
-  "category": "{choice, select, All {All} Owned {Owned} Wishlist {Wishlist} Name {Name} Game {Game} AmiiboSeries {Serie} Figures {All Figures} Cards {All Cards} other {{choice}}}",
+  "category": "{choice, select, All {All} Owned {Owned} Wishlist {Wishlist} Name {Name} Game {Game} AmiiboSeries {Serie} Figures {All Figures} Cards {All Cards} Custom {Custom} other {{choice}}}",
   "all": "All",
   "owned": "Owned",
   "wished": "Wished",
@@ -73,5 +73,6 @@
   "successImport": "Amiibo List updated",
   "notificationTitle": "Export complete",
   "actionText": "Share",
-  "donate": "Donate"
+  "donate": "Donate",
+  "lockTooltip": "{choice, select, true {Locked} false {Unlocked} other {Unknown}}"
 }

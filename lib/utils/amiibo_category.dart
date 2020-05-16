@@ -1,13 +1,13 @@
 enum AmiiboCategory{
   All,
+  Custom,
+  Figures,
+  Cards,
   Owned,
   Wishlist,
-  Figures,
   FigureSeries,
-  Cards,
   CardSeries,
   Name,
   AmiiboSeries,
-  Game,
-  Custom
+  Game
 }

@@ -1,3 +1,5 @@
+import 'package:provider/provider.dart';
+import 'package:amiibo_network/provider/query_provider.dart';
 import 'package:amiibo_network/provider/theme_provider.dart';
 import 'package:amiibo_network/service/screenshot.dart';
 import 'package:amiibo_network/service/service.dart';
@@ -7,6 +9,8 @@ import 'package:amiibo_network/service/storage.dart';
 import 'package:amiibo_network/generated/l10n.dart';
 import 'package:amiibo_network/widget/stat_widget.dart';
 import 'package:amiibo_network/service/notification_service.dart';
+import '../model/query_builder.dart';
+import '../utils/amiibo_category.dart';
 
 class StatsPage extends StatefulWidget{
 
@@ -15,117 +19,116 @@ class StatsPage extends StatefulWidget{
 }
 
 class _StatsPageState extends State<StatsPage> {
-  final _service = Service();
-  ScrollController _controller;
-  Set<String> select = <String>{};
+  AmiiboCategory category = AmiiboCategory.All;
+  Expression expression = And();
+  QueryProvider _queryProvider;
   static const Color _selectedColor = Colors.black;
   Color _appBarColor, _indicatorColor, _unselectedColor;
 
   @override
   void initState(){
     super.initState();
-    _controller = ScrollController();
   }
 
   @override
   void didChangeDependencies() {
+    _queryProvider = context.read<QueryProvider>();
     final ThemeData theme = Theme.of(context);
     _appBarColor = theme.appBarTheme.color;
     _indicatorColor = theme.indicatorColor;
-    //_selectedColor = theme.accentIconTheme.color;
     _unselectedColor = theme.appBarTheme.textTheme.headline6.color;
     super.didChangeDependencies();
   }
 
-  void _updateSet(Set<String> value){
-    if(_controller.offset != _controller.initialScrollOffset) _controller.jumpTo(0);
-    setState(() => select..clear()..addAll(value));
+  void _updateCategory(AmiiboCategory newCategory){
+    if(newCategory == category) return;
+    setState(() {
+      category = newCategory;
+      switch(category){
+        case AmiiboCategory.All:
+          expression = And();
+          break;
+        case AmiiboCategory.Custom:
+          expression =
+            Bracket(InCond.inn('type', ['Figure', 'Yarn']) & InCond.inn('amiiboSeries', _queryProvider.customFigures))
+            | Bracket(Cond.eq('type', 'Card') & InCond.inn('amiiboSeries', _queryProvider.customCards));
+          break;
+        case AmiiboCategory.Figures:
+          expression = InCond.inn('type', ['Figure', 'Yarn']);
+          break;
+        case AmiiboCategory.Cards:
+          expression = Cond.eq('type', 'Card');
+          break;
+        default:
+          break;
+      }
+    });
   }
 
-  Future<List<Map<String, dynamic>>> get _retrieveStats
-  => _service.fetchSum(group: true, expression: InCond.inn('type', select.toList()));
-
-  Future<List<Map<String, dynamic>>> get _generalStats
-  => _service.fetchSum(expression: InCond.inn('type', select.toList()));
-
-  @override
-  void dispose() {
-    _controller?.dispose();
-    super.dispose();
-  }
+  bool get _canSave => AmiiboCategory.Custom != category ||
+    (_queryProvider.customFigures.isNotEmpty || _queryProvider.customCards.isNotEmpty);
 
   @override
   Widget build(BuildContext context) {
     final S translate = S.of(context);
+    final Size size = MediaQuery.of(context).size;
+    if(size.longestSide >= 800)
+      return SafeArea(
+        child: Scaffold(
+          body: Scrollbar(
+            child: Row(
+              children: <Widget>[
+                NavigationRail(
+                  destinations: <NavigationRailDestination>[
+                    NavigationRailDestination(
+                        icon: const Icon(Icons.all_inclusive),
+                        label: Text(translate.all)
+                    ),
+                    NavigationRailDestination(
+                        icon: const Icon(Icons.edit),
+                        label: Text(translate.category(AmiiboCategory.Custom))
+                    ),
+                    NavigationRailDestination(
+                        icon: const Icon(Icons.toys),
+                        label: Text(translate.figures)
+                    ),
+                    NavigationRailDestination(
+                        icon: const Icon(Icons.view_carousel),
+                        label: Text(translate.cards)
+                    )
+                  ],
+                  selectedIndex: category.index,
+                  trailing: Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 8.0),
+                    child: AnimatedSwitcher(
+                      duration: const Duration(milliseconds: 300),
+                      transitionBuilder: (child, animation){
+                        return ScaleTransition(
+                          scale: animation,
+                          child: SizeTransition(
+                            sizeFactor: animation,
+                            child: child,
+                          ),
+                        );
+                      },
+                      child: _canSave ? _FAB(category, expression) : const SizedBox(),
+                    ),
+                  ),
+                  onDestinationSelected: (selected) =>
+                    _updateCategory(AmiiboCategory.values[selected]),
+                ),
+                Expanded(
+                  child: _BodyStats(expression)
+                )
+              ],
+            )
+          ),
+        )
+      );
     return SafeArea(
       child: Scaffold(
-        body: Scrollbar(
-          controller: _controller,
-          child: CustomScrollView(
-            controller: _controller,
-            cacheExtent: 150,
-            slivers: <Widget>[
-              FutureBuilder(
-                future: _generalStats,
-                builder: (context, AsyncSnapshot<List<Map<String, dynamic>>> snapshot) {
-                  return SliverList(
-                    delegate: SliverChildBuilderDelegate((BuildContext context, int index) =>
-                        SingleStat(
-                          key: Key('Amiibo Network'),
-                          title: 'Amiibo Network',
-                          owned: snapshot.data[index]['Owned'],
-                          total: snapshot.data[index]['Total'],
-                          wished: snapshot.data[index]['Wished'],
-                        ),
-                      childCount: snapshot.hasData ? snapshot.data.length : 0,
-                    ),
-                  );
-                }
-              ),
-              FutureBuilder(
-                future: _retrieveStats,
-                builder: (context, AsyncSnapshot<List<Map<String, dynamic>>> snapshot) {
-                  if(MediaQuery.of(context).size.width <= 600)
-                    return SliverList(
-                      delegate: SliverChildBuilderDelegate((BuildContext context, int index) =>
-                          SingleStat(
-                            key: ValueKey(index),
-                            title: snapshot.data[index]['amiiboSeries'],
-                            owned: snapshot.data[index]['Owned'],
-                            total: snapshot.data[index]['Total'],
-                            wished: snapshot.data[index]['Wished'],
-                          ),
-                        semanticIndexOffset: 1,
-                        childCount: snapshot.hasData ? snapshot.data.length : 0,
-                      ),
-                    );
-                  return SliverGrid(
-                    gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
-                      maxCrossAxisExtent: 230,
-                      childAspectRatio: 1.22,
-                      mainAxisSpacing: 8.0,
-                    ),
-                    delegate: SliverChildBuilderDelegate((BuildContext context, int index) =>
-                        SingleStat(
-                          key: ValueKey(index),
-                          title: snapshot.data[index]['amiiboSeries'],
-                          owned: snapshot.data[index]['Owned'],
-                          total: snapshot.data[index]['Total'],
-                          wished: snapshot.data[index]['Wished'],
-                        ),
-                      semanticIndexOffset: 1,
-                      childCount: snapshot.hasData ? snapshot.data.length : 0,
-                    )
-                  );
-                }
-              ),
-              const SliverToBoxAdapter(
-                child: const SizedBox(height: 80),
-              )
-            ],
-          )
-        ),
-        floatingActionButton: _FAB(select),
+        body: _BodyStats(expression),
+        floatingActionButton: _canSave ? _FAB(category, expression) : null,
         bottomNavigationBar: BottomAppBar(
           color: _appBarColor,
           child: Padding(
@@ -137,48 +140,68 @@ class _StatsPageState extends State<StatsPage> {
                 Expanded(
                   child: FlatButton(
                     shape: RoundedRectangleBorder(
-                      borderRadius: const BorderRadius.horizontal(left: Radius.circular(8)),
-                      side: BorderSide(
+                        borderRadius: const BorderRadius.horizontal(left: Radius.circular(8)),
+                        side: BorderSide(
+                          color: _indicatorColor,
+                          width: 2,
+                        )
+                    ),
+                    textColor: category == AmiiboCategory.All ? _selectedColor : _unselectedColor,
+                    color: category == AmiiboCategory.All ? _indicatorColor : null,
+                    onPressed: () => category == AmiiboCategory.All ? null : _updateCategory(AmiiboCategory.All),
+                    child: Text(translate.all, softWrap: false, overflow: TextOverflow.fade),
+                  ),
+                ),
+                Expanded(
+                  child: FlatButton(
+                    shape: Border(
+                      top: BorderSide(
                         color: _indicatorColor,
                         width: 2,
-                      )
+                      ),
+                      bottom: BorderSide(
+                        color: _indicatorColor,
+                        width: 2,
+                      ),
+                      right: BorderSide(
+                        color: _indicatorColor,
+                        width: 2,
+                      ),
                     ),
-                    textColor: select.isEmpty ? _selectedColor : _unselectedColor,
-                    color: select.isEmpty ? _indicatorColor : null,
-                    onPressed: () => select.isEmpty ? null : _updateSet(Set<String>()),
-                    child: Text(translate.all),
+                    textColor: category == AmiiboCategory.Custom ? _selectedColor : _unselectedColor,
+                    color: category == AmiiboCategory.Custom ? _indicatorColor : null,
+                    onPressed: () => category == AmiiboCategory.Custom ? null : _updateCategory(AmiiboCategory.Custom),
+                    child: Text(translate.category(AmiiboCategory.Custom), softWrap: false, overflow: TextOverflow.fade),
                   ),
                 ),
                 Expanded(
                   child: FlatButton(
                     shape: Border.symmetric(
-                      vertical: BorderSide(
-                        color: _indicatorColor,
-                        width: 2,
-                      ),
-                      horizontal: BorderSide.none
+                        vertical: BorderSide(
+                          color: _indicatorColor,
+                          width: 2,
+                        ),
+                        horizontal: BorderSide.none
                     ),
-                    textColor: select.contains('Figure') ? _selectedColor : _unselectedColor,
-                    color: select.contains('Figure') ? _indicatorColor : null,
-                    onPressed: () => select.contains('Figure') ? null : _updateSet(<String>{'Figure', 'Yarn'}),
-                    child: Text(translate.figures),
+                    textColor: category == AmiiboCategory.Figures ? _selectedColor : _unselectedColor,
+                    color: category == AmiiboCategory.Figures ? _indicatorColor : null,
+                    onPressed: () => category == AmiiboCategory.Figures ? null : _updateCategory(AmiiboCategory.Figures),
+                    child: Text(translate.figures, softWrap: false, overflow: TextOverflow.fade),
                   ),
                 ),
                 Expanded(
                   child: FlatButton(
                     shape: RoundedRectangleBorder(
-                      borderRadius: const BorderRadius.horizontal(right: Radius.circular(8)),
-                      side: BorderSide(
-                        color: _indicatorColor,
-                        width: 2,
-                      )
+                        borderRadius: const BorderRadius.horizontal(right: Radius.circular(8)),
+                        side: BorderSide(
+                          color: _indicatorColor,
+                          width: 2,
+                        )
                     ),
-                    textTheme: ButtonTextTheme.normal,
-                    colorBrightness: select.contains('Card') ? Brightness.dark : Brightness.light,
-                    textColor: select.contains('Card') ? _selectedColor : _unselectedColor,
-                    color: select.contains('Card') ? _indicatorColor : null,
-                    onPressed: () => select.contains('Card') ? null : _updateSet(<String>{'Card'}),
-                    child: Text(translate.cards),
+                    textColor: category == AmiiboCategory.Cards ? _selectedColor : _unselectedColor,
+                    color: category == AmiiboCategory.Cards ? _indicatorColor : null,
+                    onPressed: () => category == AmiiboCategory.Cards ? null : _updateCategory(AmiiboCategory.Cards),
+                    child: Text(translate.cards, softWrap: false, overflow: TextOverflow.fade),
                   ),
                 ),
               ],
@@ -190,11 +213,98 @@ class _StatsPageState extends State<StatsPage> {
   }
 }
 
+class _BodyStats extends StatelessWidget {
+  final _service = Service();
+  final Expression expression;
+
+  _BodyStats(this.expression);
+
+  Future<List<Map<String, dynamic>>> get _stats async{
+    return <Map<String, dynamic>>[
+      ... await _service.fetchSum( expression: expression),
+      ... await _service.fetchSum(group: true, expression: expression)
+    ];
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final S translate = S.of(context);
+    return FutureBuilder<List<Map<String, dynamic>>>(
+      future: _stats,
+      builder: (context, snapshot){
+        if(snapshot.hasData){
+          final Map<String, dynamic> generalStats = snapshot.data.first;
+          final List<Map<String, dynamic>> stats = snapshot.data.sublist(1);
+          if(generalStats.isNotEmpty && stats.isNotEmpty)
+            return Scrollbar(
+                child: CustomScrollView(
+                  slivers: <Widget>[
+                    if(stats.length > 1)
+                      SliverToBoxAdapter(
+                          key: Key('Amiibo Network'),
+                          child: SingleStat(
+                            title: 'Amiibo Network',
+                            owned: generalStats['Owned'],
+                            total: generalStats['Total'],
+                            wished: generalStats['Wished'],
+                          )
+                      ),
+                    if(MediaQuery.of(context).size.width <= 600)
+                      SliverList(
+                        delegate: SliverChildBuilderDelegate((BuildContext context, int index) =>
+                            SingleStat(
+                              key: ValueKey(index),
+                              title: stats[index]['amiiboSeries'],
+                              owned: stats[index]['Owned'],
+                              total: stats[index]['Total'],
+                              wished: stats[index]['Wished'],
+                            ),
+                          semanticIndexOffset: 1,
+                          childCount: stats.length,
+                        ),
+                      ),
+                    if(MediaQuery.of(context).size.width > 600)
+                      SliverGrid(
+                          gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
+                            maxCrossAxisExtent: 230,
+                            childAspectRatio: 1.22,
+                            mainAxisSpacing: 8.0,
+                          ),
+                          delegate: SliverChildBuilderDelegate((BuildContext context, int index) =>
+                              SingleStat(
+                                key: ValueKey(index),
+                                title: stats[index]['amiiboSeries'],
+                                owned: stats[index]['Owned'],
+                                total: stats[index]['Total'],
+                                wished: stats[index]['Wished'],
+                              ),
+                            semanticIndexOffset: 1,
+                            childCount: stats.length,
+                          )
+                      ),
+                    const SliverToBoxAdapter(child: const SizedBox(height: 80))
+                  ],
+                )
+            );
+          return DefaultTextStyle(
+              style: Theme.of(context).textTheme.headline4,
+              child: Center(
+                child: Text(translate.emptyPage,),
+              )
+          );
+        }
+        return const SizedBox();
+      },
+    );
+  }
+}
+
 class _FAB extends StatelessWidget{
   final Screenshot _screenshot = Screenshot();
-  final Set<String> _select;
+  final AmiiboCategory _category;
+  final Expression _expression;
 
-  _FAB(this._select);
+  _FAB(this._category, this._expression);
 
   @override
   Widget build(BuildContext context) {
@@ -214,25 +324,34 @@ class _FAB extends StatelessWidget{
           _screenshot.update(context);
           String name;
           int id;
-          if(_select.isEmpty){
-            name = 'MyAmiiboStats';
-            id = 1;
-          } else if(_select.contains('Card')){
-            name = 'MyCardStats';
-            id = 2;
-          } else{
-            name = 'MyFigureStats';
-            id = 3;
+          switch(_category){
+            case AmiiboCategory.Cards:
+              name = 'MyCardStats';
+              id = 2;
+              break;
+            case AmiiboCategory.Figures:
+              name = 'MyFigureStats';
+              id = 3;
+              break;
+            case AmiiboCategory.Custom:
+              name = 'MyCustomStats';
+              id = 7;
+              break;
+            case AmiiboCategory.All:
+            default:
+              name = 'MyAmiiboStats';
+              id = 1;
+              break;
           }
           final file = await createFile(name, 'png');
-          await _screenshot.saveStats(_select, file);
+          final bool saved = await _screenshot.saveStats(_expression, file);
           final Map<String, dynamic> notificationArgs = <String, dynamic>{
             'title': translate.notificationTitle,
             'path': file.path,
             'actionTitle': translate.actionText,
             'id': id
           };
-          await NotificationService.sendNotification(notificationArgs);
+          if(saved) await NotificationService.sendNotification(notificationArgs);
         }
       },
     );
@@ -246,7 +365,7 @@ class SingleStat extends StatelessWidget{
   final int total;
   final WrapAlignment wrapAlignment;
 
-  SingleStat({Key key, this.title, this.owned, this.wished, this.total,
+  const SingleStat({Key key, this.title, this.owned, this.wished, this.total,
     this.wrapAlignment = WrapAlignment.spaceAround}): super(key: key);
 
   @override

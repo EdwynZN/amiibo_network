@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import '../utils/preferences_constants.dart';
 
 enum StatMode{Percentage, Ratio}
 
-Future<bool> getStatMode() async {
+Future<bool> get getStatMode async {
   final SharedPreferences preferences = await SharedPreferences.getInstance();
-  return preferences.getBool('StatMode') ?? false;
+  return preferences.getBool(sharedStatMode) ?? false;
 }
 
 class StatProvider with ChangeNotifier{
@@ -14,13 +15,16 @@ class StatProvider with ChangeNotifier{
 
   StatProvider(bool stat) : _preferredStat = stat ? StatMode.Percentage : StatMode.Ratio;
 
+  StatProvider.fromSharedPreferences(SharedPreferences preferences) :
+    _preferredStat = (preferences.getBool(sharedStatMode) ?? false) ? StatMode.Percentage : StatMode.Ratio;
+
   bool get isPercentage => _preferredStat == StatMode.Percentage;
   StatMode get stat => _preferredStat;
 
   toggleStat(bool newValue) async {
     if(newValue != isPercentage){
       final SharedPreferences preferences = await SharedPreferences.getInstance();
-      await preferences.setBool('StatMode', newValue);
+      await preferences.setBool(sharedStatMode, newValue);
       _preferredStat = isPercentage ? StatMode.Ratio : StatMode.Percentage;
       notifyListeners();
     }

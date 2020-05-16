@@ -4,6 +4,7 @@ import '../model/amiibo_local_db.dart';
 import 'dart:convert';
 import 'package:flutter/services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import '../utils/preferences_constants.dart';
 
 class UpdateService{
   static Map<String, dynamic> _jsonFile;
@@ -25,7 +26,7 @@ class UpdateService{
 
   Future<DateTime> get lastUpdateDB async{
     final SharedPreferences preferences = await SharedPreferences.getInstance();
-    return _lastUpdateDB ??= DateTime.tryParse(preferences.getString('Date') ?? '');
+    return _lastUpdateDB ??= DateTime.tryParse(preferences.getString(sharedDateDB) ?? '');
   }
 
   Future<DateTime> get lastUpdate async{
@@ -33,7 +34,7 @@ class UpdateService{
   }
 
   Future<bool> createDB() async{
-    return compareLastUpdate().then((sameDate) async {
+    return compareLastUpdate.then((sameDate) async {
       if(sameDate == null) throw Exception("Couldn't fetch last update");
       if(!sameDate) fetchAllAmiibo().then(_updateDB);
       return await Future.value(true);
@@ -47,11 +48,11 @@ class UpdateService{
     dao.insertAll(amiiboDB, "amiibo").then((_) async{
       final SharedPreferences preferences = await SharedPreferences.getInstance();
       final DateTime dateTime = await lastUpdate;
-      await preferences.setString('Date', dateTime?.toIso8601String());
+      await preferences.setString(sharedDateDB, dateTime?.toIso8601String());
     });
   }
 
-  Future<bool> compareLastUpdate() async{
+  Future<bool> get compareLastUpdate async{
     final dateDB = await lastUpdateDB;
     final dateJson = await lastUpdate;
 

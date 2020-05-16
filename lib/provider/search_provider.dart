@@ -1,16 +1,16 @@
 import 'package:amiibo_network/service/service.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:amiibo_network/utils/amiibo_category.dart';
+import '../model/query_builder.dart';
 
 extension _StringParsing on AmiiboCategory{
   String get name {
     switch(this){
-      case AmiiboCategory.Name:
-        return 'name';
       case AmiiboCategory.AmiiboSeries:
         return 'amiiboSeries';
       case AmiiboCategory.Game:
         return 'gameSeries';
+      case AmiiboCategory.Name:
       case AmiiboCategory.Cards:
       case AmiiboCategory.Figures:
       case AmiiboCategory.Owned:

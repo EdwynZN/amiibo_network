@@ -19,7 +19,7 @@ typedef String MessageIfAbsent(String messageStr, List<dynamic> args);
 class MessageLookup extends MessageLookupByLibrary {
   String get localeName => 'en';
 
-  static m0(choice) => "${Intl.select(choice, {'All': 'All', 'Owned': 'Owned', 'Wishlist': 'Wishlist', 'Name': 'Name', 'Game': 'Game', 'AmiiboSeries': 'Serie', 'Figures': 'All Figures', 'Cards': 'All Cards', 'other': '${choice}', })}";
+  static m0(choice) => "${Intl.select(choice, {'All': 'All', 'Owned': 'Owned', 'Wishlist': 'Wishlist', 'Name': 'Name', 'Game': 'Game', 'AmiiboSeries': 'Serie', 'Figures': 'All Figures', 'Cards': 'All Cards', 'Custom': 'Custom', 'other': '${choice}', })}";
 
   static m1(character) => "Character: ${character}";
 
@@ -27,17 +27,19 @@ class MessageLookup extends MessageLookupByLibrary {
 
   static m3(game) => "Game: ${game}";
 
-  static m4(name) => "Name: ${name}";
+  static m4(choice) => "${Intl.select(choice, {'true': 'Locked', 'false': 'Unlocked', 'other': 'Unknown', })}";
 
-  static m5(serie) => "Serie: ${serie}";
+  static m5(name) => "Name: ${name}";
 
-  static m6(choice) => "${Intl.select(choice, {'granted': 'Storage permission granted', 'denied': 'Storage permission denied', 'neverAskAgain': 'Storage permission disabled', 'restricted': 'Storage permission restricted', 'other': 'Unknown permission access', })}";
+  static m6(serie) => "Serie: ${serie}";
 
-  static m7(choice) => "${Intl.select(choice, {'system': 'Auto', 'light': 'Light', 'dark': 'Dark', 'other': 'Auto', })}";
+  static m7(choice) => "${Intl.select(choice, {'granted': 'Storage permission granted', 'denied': 'Storage permission denied', 'neverAskAgain': 'Storage permission disabled', 'restricted': 'Storage permission restricted', 'other': 'Unknown permission access', })}";
 
-  static m8(type) => "Type: ${type}";
+  static m8(choice) => "${Intl.select(choice, {'system': 'Auto', 'light': 'Light', 'dark': 'Dark', 'other': 'Auto', })}";
 
-  static m9(choice) => "${Intl.select(choice, {'Figure': 'Type: Figure', 'Card': 'Type: Card', 'Yarn': 'Type: Yarn', 'other': 'Type: Other', })}";
+  static m9(type) => "Type: ${type}";
+
+  static m10(choice) => "${Intl.select(choice, {'Figure': 'Type: Figure', 'Card': 'Type: Card', 'Yarn': 'Type: Yarn', 'other': 'Type: Other', })}";
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static _notInlinedMessages(_) => <String, Function> {
@@ -74,10 +76,11 @@ class MessageLookup extends MessageLookupByLibrary {
     "jp" : MessageLookupByLibrary.simpleMessage("Japan"),
     "light" : MessageLookupByLibrary.simpleMessage("Light"),
     "lightTheme" : MessageLookupByLibrary.simpleMessage("Light Theme"),
+    "lockTooltip" : m4,
     "markdownError" : MessageLookupByLibrary.simpleMessage("There was an error loading the file"),
     "mode" : MessageLookupByLibrary.simpleMessage("Theme Mode"),
     "na" : MessageLookupByLibrary.simpleMessage("North America"),
-    "name" : m4,
+    "name" : m5,
     "notificationTitle" : MessageLookupByLibrary.simpleMessage("Export complete"),
     "openAppSettings" : MessageLookupByLibrary.simpleMessage("change"),
     "ownTooltip" : MessageLookupByLibrary.simpleMessage("Own"),
@@ -97,7 +100,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "saveCollectionTitleDialog" : MessageLookupByLibrary.simpleMessage("Select your collection"),
     "saveStatsTooltip" : MessageLookupByLibrary.simpleMessage("Save Stats"),
     "savingCollectionMessage" : MessageLookupByLibrary.simpleMessage("Saving your file. This could take a while depending on your device"),
-    "serie" : m5,
+    "serie" : m6,
     "settings" : MessageLookupByLibrary.simpleMessage("Settings"),
     "showPercentage" : MessageLookupByLibrary.simpleMessage("Show percentage"),
     "sort" : MessageLookupByLibrary.simpleMessage("Sort By"),
@@ -106,12 +109,12 @@ class MessageLookup extends MessageLookupByLibrary {
     "splashMessage" : MessageLookupByLibrary.simpleMessage("Just a second . . ."),
     "splashWelcome" : MessageLookupByLibrary.simpleMessage("WELCOME"),
     "stats" : MessageLookupByLibrary.simpleMessage("Stats"),
-    "storagePermission" : m6,
+    "storagePermission" : m7,
     "successImport" : MessageLookupByLibrary.simpleMessage("Amiibo List updated"),
     "sure" : MessageLookupByLibrary.simpleMessage("Sure"),
-    "themeMode" : m7,
-    "type" : m8,
-    "types" : m9,
+    "themeMode" : m8,
+    "type" : m9,
+    "types" : m10,
     "upToolTip" : MessageLookupByLibrary.simpleMessage("Up"),
     "wishTooltip" : MessageLookupByLibrary.simpleMessage("Wish"),
     "wished" : MessageLookupByLibrary.simpleMessage("Wished")
