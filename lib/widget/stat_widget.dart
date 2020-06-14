@@ -91,7 +91,7 @@ class _AnimatedRadial extends ImplicitlyAnimatedWidget {
   _AnimatedRadial({
     Key key,
     @required this.percentage,
-    Duration duration = const Duration(milliseconds: 400),
+    Duration duration = const Duration(milliseconds: 300),
     this.child,
     Curve curve = Curves.linear
   }) : super(duration: duration, curve: curve, key: key);
@@ -102,24 +102,42 @@ class _AnimatedRadial extends ImplicitlyAnimatedWidget {
 
 class _AnimatedRadialState extends AnimatedWidgetBaseState<_AnimatedRadial> {
   Tween<double> _percentage;
+  ColorTween _color;
   Tween<double> _opacity;
+  Animation<double> _opacityAnimation;
 
   @override
   void forEachTween(TweenVisitor visitor) {
+    Color color =
+      widget.percentage == 0.0 ? const Color(0xFF2B2922) :
+      widget.percentage <= 0.25 ? Colors.red[300] :
+      widget.percentage <= 0.50 ? Colors.yellow[300] :
+      widget.percentage <= 0.75 ? Colors.amber[300] :
+      widget.percentage < 1.0 ? Colors.lightGreen[300] :
+      Colors.green[800];
+
+    _color = visitor(_color, color, (dynamic value) => ColorTween(begin: value));
     _percentage = visitor(_percentage, widget.percentage, (dynamic value) => Tween<double>(begin: value));
     _opacity = visitor(_opacity, widget.percentage == 1 ? 1.0 : 0.0, (dynamic value) => Tween<double>(begin: value));
   }
 
   @override
+  void didUpdateTweens() {
+    _opacityAnimation = animation.drive(_opacity);
+  }
+
+  @override
   Widget build(BuildContext context) {
     return CustomPaint(
-        painter: RadialProgression(_percentage.evaluate(animation)),
-        isComplex: true,
-        willChange: true,
-        child: Opacity(
-          opacity: _opacity.evaluate(animation),
-          child: widget.child,
-        )
+      painter: RadialProgression(
+        percent: _percentage.evaluate(animation),
+        color: _color.evaluate(animation)
+      ),
+      willChange: true,
+      child: FadeTransition(
+        opacity: _opacityAnimation,
+        child: widget.child,
+      )
     );
   }
 }

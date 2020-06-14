@@ -6,14 +6,9 @@ class RadialProgression extends CustomPainter{
   final Paint progressLine;
   final double percent;
 
-  RadialProgression(this.percent):
+  RadialProgression({this.percent, Color color}):
     progressLine = Paint()
-      ..color =
-        percent <= 0.25 ? Colors.red[300] :
-        percent <= 0.50 ? Colors.yellow[300] :
-        percent <= 0.75 ? Colors.amber[300] :
-        percent <= 0.99 ? Colors.lightGreen[300] :
-        Colors.green[800]
+      ..color = color
       ..style = PaintingStyle.stroke
       ..strokeWidth = 3,
     line = Paint()

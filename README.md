@@ -11,9 +11,10 @@ Features:
 - See your stats as you want, percentage or ratio switch button from the drawer
 - Tap once on an amiibo to add it to your collection, again to your wished list, and last to remove it.
 - Double tap to see the detail of any amiibo, release date, character name, game or add it directly to any list you want from there
-- Long tap to start selecting multiple amiibos and add it or remove it of any list you want at once
-- Category list drawer to show by All, Owned, Wished, Stats or by amiibo series split by figures and cards
-- Personal stats split by All, figures and cards. Take a screenshot of your stat at any time and save it for later as a picture in your download folder
+- Lock button so you can avoid undesirable taps
+- Category list drawer to show by All, Custom, Owned, Wished, Stats or by amiibo series split by figures and cards
+- Long press on the Custom tile in the navigation drawer to open and select only the desired series you want to collect
+- Personal stats split by All, Custom, figures and cards. Take a screenshot of your stat at any time and save it for later as a picture in your download folder
 - Search bar improved, so you can search by name, game or amiibo series
 - Order the list based on what you think it's more important, the release date of any of the 4 regions, your owned, wished or name
 - Auto mode theme (only for some Android 9 and Android 10 devices) or manually select your preferred mode, light or dark
