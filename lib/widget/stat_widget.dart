@@ -4,7 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:amiibo_network/provider/stat_provider.dart';
 import 'dart:ui' as ui show FontFeature;
 
-class StatWidget extends StatelessWidget{
+class StatWidget extends StatelessWidget {
   final double num;
   final double den;
   final double stat;

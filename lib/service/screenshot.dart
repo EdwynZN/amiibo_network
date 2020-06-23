@@ -21,6 +21,7 @@ class Screenshot {
   String wished;
   String createdOn;
 
+  final S _translate = S.current;
   final Service _service = Service();
   final Paint ownedCardPaint = Paint()..color = colorOwned[100];
   final Paint wishedCardPaint = Paint()..color = colorWished[100];
@@ -57,11 +58,11 @@ class Screenshot {
   }
 
   void update(BuildContext context) {
-    final S translate = S.of(context);
+    //final S translate = S.of(context);
     this..theme = Theme.of(context)
       ..statProvider = context.read<StatProvider>()
-      ..owned = translate.owned..wished = translate.wished
-      ..createdOn= translate.createdOn
+      ..owned = _translate.owned..wished = _translate.wished
+      ..createdOn= _translate.createdOn
       ..materialLocalizations = MaterialLocalizations.of(context);
   }
 

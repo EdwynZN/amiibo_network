@@ -8,8 +8,12 @@ import 'intl/messages_all.dart';
 // Made by Localizely
 // **************************************************************************
 
+// ignore_for_file: non_constant_identifier_names, lines_longer_than_80_chars
+
 class S {
   S();
+  
+  static S current;
   
   static const AppLocalizationDelegate delegate =
     AppLocalizationDelegate();
@@ -19,7 +23,9 @@ class S {
     final localeName = Intl.canonicalizedLocale(name); 
     return initializeMessages(localeName).then((_) {
       Intl.defaultLocale = localeName;
-      return S();
+      S.current = S();
+      
+      return S.current;
     });
   } 
 
@@ -27,6 +33,7 @@ class S {
     return Localizations.of<S>(context, S);
   }
 
+  /// `Just a second . . .`
   String get splashMessage {
     return Intl.message(
       'Just a second . . .',
@@ -36,6 +43,7 @@ class S {
     );
   }
 
+  /// `WELCOME`
   String get splashWelcome {
     return Intl.message(
       'WELCOME',
@@ -45,6 +53,7 @@ class S {
     );
   }
 
+  /// `Couldn't Update ☹`
   String get splashError {
     return Intl.message(
       'Couldn\'t Update ☹',
@@ -54,6 +63,7 @@ class S {
     );
   }
 
+  /// `Show percentage`
   String get showPercentage {
     return Intl.message(
       'Show percentage',
@@ -63,6 +73,7 @@ class S {
     );
   }
 
+  /// `{choice, select, All {All} Owned {Owned} Wishlist {Wishlist} Name {Name} Game {Game} AmiiboSeries {Serie} Figures {All Figures} Cards {All Cards} Custom {Custom} other {{choice}}}`
   String category(Object choice) {
     return Intl.select(
       choice,
@@ -84,6 +95,7 @@ class S {
     );
   }
 
+  /// `All`
   String get all {
     return Intl.message(
       'All',
@@ -93,6 +105,7 @@ class S {
     );
   }
 
+  /// `Owned`
   String get owned {
     return Intl.message(
       'Owned',
@@ -102,6 +115,7 @@ class S {
     );
   }
 
+  /// `Wished`
   String get wished {
     return Intl.message(
       'Wished',
@@ -111,6 +125,7 @@ class S {
     );
   }
 
+  /// `Stats`
   String get stats {
     return Intl.message(
       'Stats',
@@ -120,6 +135,7 @@ class S {
     );
   }
 
+  /// `{choice, select, Figure {Type: Figure} Card {Type: Card} Yarn {Type: Yarn} other {Type: Other}}`
   String types(Object choice) {
     return Intl.select(
       choice,
@@ -135,6 +151,7 @@ class S {
     );
   }
 
+  /// `Figures`
   String get figures {
     return Intl.message(
       'Figures',
@@ -144,6 +161,7 @@ class S {
     );
   }
 
+  /// `Cards`
   String get cards {
     return Intl.message(
       'Cards',
@@ -153,6 +171,7 @@ class S {
     );
   }
 
+  /// `Name: {name}`
   String name(Object name) {
     return Intl.message(
       'Name: $name',
@@ -162,6 +181,7 @@ class S {
     );
   }
 
+  /// `Character: {character}`
   String character(Object character) {
     return Intl.message(
       'Character: $character',
@@ -171,6 +191,7 @@ class S {
     );
   }
 
+  /// `Serie: {serie}`
   String serie(Object serie) {
     return Intl.message(
       'Serie: $serie',
@@ -180,6 +201,7 @@ class S {
     );
   }
 
+  /// `Game: {game}`
   String game(Object game) {
     return Intl.message(
       'Game: $game',
@@ -189,6 +211,7 @@ class S {
     );
   }
 
+  /// `Type: {type}`
   String type(Object type) {
     return Intl.message(
       'Type: $type',
@@ -198,6 +221,7 @@ class S {
     );
   }
 
+  /// `Ascending (A-Z)`
   String get asc {
     return Intl.message(
       'Ascending (A-Z)',
@@ -207,6 +231,7 @@ class S {
     );
   }
 
+  /// `Descending (Z-A)`
   String get desc {
     return Intl.message(
       'Descending (Z-A)',
@@ -216,6 +241,7 @@ class S {
     );
   }
 
+  /// `Name`
   String get sortName {
     return Intl.message(
       'Name',
@@ -225,6 +251,7 @@ class S {
     );
   }
 
+  /// `Australia`
   String get au {
     return Intl.message(
       'Australia',
@@ -234,6 +261,7 @@ class S {
     );
   }
 
+  /// `Europe`
   String get eu {
     return Intl.message(
       'Europe',
@@ -243,6 +271,7 @@ class S {
     );
   }
 
+  /// `North America`
   String get na {
     return Intl.message(
       'North America',
@@ -252,6 +281,7 @@ class S {
     );
   }
 
+  /// `Japan`
   String get jp {
     return Intl.message(
       'Japan',
@@ -261,6 +291,7 @@ class S {
     );
   }
 
+  /// `Settings`
   String get settings {
     return Intl.message(
       'Settings',
@@ -270,6 +301,7 @@ class S {
     );
   }
 
+  /// `Sort By`
   String get sort {
     return Intl.message(
       'Sort By',
@@ -279,6 +311,7 @@ class S {
     );
   }
 
+  /// `Done`
   String get done {
     return Intl.message(
       'Done',
@@ -288,6 +321,7 @@ class S {
     );
   }
 
+  /// `Sure`
   String get sure {
     return Intl.message(
       'Sure',
@@ -297,6 +331,7 @@ class S {
     );
   }
 
+  /// `Light`
   String get light {
     return Intl.message(
       'Light',
@@ -306,6 +341,7 @@ class S {
     );
   }
 
+  /// `Dark`
   String get dark {
     return Intl.message(
       'Dark',
@@ -315,6 +351,7 @@ class S {
     );
   }
 
+  /// `Auto`
   String get auto {
     return Intl.message(
       'Auto',
@@ -324,6 +361,7 @@ class S {
     );
   }
 
+  /// `{choice, select, system {Auto} light {Light} dark {Dark} other {Auto}}`
   String themeMode(Object choice) {
     return Intl.select(
       choice,
@@ -339,6 +377,7 @@ class S {
     );
   }
 
+  /// `Theme Mode`
   String get mode {
     return Intl.message(
       'Theme Mode',
@@ -348,6 +387,7 @@ class S {
     );
   }
 
+  /// `Light Theme`
   String get lightTheme {
     return Intl.message(
       'Light Theme',
@@ -357,6 +397,7 @@ class S {
     );
   }
 
+  /// `Dark Theme`
   String get darkTheme {
     return Intl.message(
       'Dark Theme',
@@ -366,6 +407,7 @@ class S {
     );
   }
 
+  /// `Remove`
   String get removeTooltip {
     return Intl.message(
       'Remove',
@@ -375,6 +417,7 @@ class S {
     );
   }
 
+  /// `Own`
   String get ownTooltip {
     return Intl.message(
       'Own',
@@ -384,6 +427,7 @@ class S {
     );
   }
 
+  /// `Wish`
   String get wishTooltip {
     return Intl.message(
       'Wish',
@@ -393,6 +437,7 @@ class S {
     );
   }
 
+  /// `Save Stats`
   String get saveStatsTooltip {
     return Intl.message(
       'Save Stats',
@@ -402,6 +447,7 @@ class S {
     );
   }
 
+  /// `Up`
   String get upToolTip {
     return Intl.message(
       'Up',
@@ -411,6 +457,7 @@ class S {
     );
   }
 
+  /// `Nothing to see here. . .yet`
   String get emptyPage {
     return Intl.message(
       'Nothing to see here. . .yet',
@@ -420,6 +467,7 @@ class S {
     );
   }
 
+  /// `Export`
   String get export {
     return Intl.message(
       'Export',
@@ -429,6 +477,7 @@ class S {
     );
   }
 
+  /// `Import`
   String get import {
     return Intl.message(
       'Import',
@@ -438,6 +487,7 @@ class S {
     );
   }
 
+  /// `Appearance`
   String get appearance {
     return Intl.message(
       'Appearance',
@@ -447,6 +497,7 @@ class S {
     );
   }
 
+  /// `More personalization`
   String get appearanceSubtitle {
     return Intl.message(
       'More personalization',
@@ -456,6 +507,7 @@ class S {
     );
   }
 
+  /// `Credits`
   String get credits {
     return Intl.message(
       'Credits',
@@ -465,6 +517,7 @@ class S {
     );
   }
 
+  /// `Those who make it possible`
   String get creditsSubtitle {
     return Intl.message(
       'Those who make it possible',
@@ -474,6 +527,7 @@ class S {
     );
   }
 
+  /// `Privacy Policy`
   String get privacyPolicy {
     return Intl.message(
       'Privacy Policy',
@@ -483,6 +537,7 @@ class S {
     );
   }
 
+  /// `Therms and conditions`
   String get privacySubtitle {
     return Intl.message(
       'Therms and conditions',
@@ -492,6 +547,7 @@ class S {
     );
   }
 
+  /// `Reset`
   String get reset {
     return Intl.message(
       'Reset',
@@ -501,6 +557,7 @@ class S {
     );
   }
 
+  /// `Reset your wishlist and collection`
   String get resetSubtitle {
     return Intl.message(
       'Reset your wishlist and collection',
@@ -510,6 +567,7 @@ class S {
     );
   }
 
+  /// `Reset your collection`
   String get resetTitleDialog {
     return Intl.message(
       'Reset your collection',
@@ -519,6 +577,7 @@ class S {
     );
   }
 
+  /// `Are you sure? This action can't be undone`
   String get resetContent {
     return Intl.message(
       'Are you sure? This action can\'t be undone',
@@ -528,6 +587,7 @@ class S {
     );
   }
 
+  /// `Wait no!`
   String get cancel {
     return Intl.message(
       'Wait no!',
@@ -537,6 +597,7 @@ class S {
     );
   }
 
+  /// `Save Collection`
   String get saveCollection {
     return Intl.message(
       'Save Collection',
@@ -546,6 +607,7 @@ class S {
     );
   }
 
+  /// `Create a picture of your collection`
   String get saveCollectionSubtitle {
     return Intl.message(
       'Create a picture of your collection',
@@ -555,6 +617,7 @@ class S {
     );
   }
 
+  /// `Select your collection`
   String get saveCollectionTitleDialog {
     return Intl.message(
       'Select your collection',
@@ -564,6 +627,7 @@ class S {
     );
   }
 
+  /// `Could not launch {url}`
   String couldNotLaunchUrl(Object url) {
     return Intl.message(
       'Could not launch $url',
@@ -573,6 +637,7 @@ class S {
     );
   }
 
+  /// `Report bug`
   String get reportBug {
     return Intl.message(
       'Report bug',
@@ -582,6 +647,7 @@ class S {
     );
   }
 
+  /// `Rate me`
   String get rate {
     return Intl.message(
       'Rate me',
@@ -591,6 +657,7 @@ class S {
     );
   }
 
+  /// `What's new`
   String get changelogSubtitle {
     return Intl.message(
       'What\'s new',
@@ -600,6 +667,7 @@ class S {
     );
   }
 
+  /// `Changelog`
   String get changelog {
     return Intl.message(
       'Changelog',
@@ -609,6 +677,7 @@ class S {
     );
   }
 
+  /// `There was an error loading the file`
   String get markdownError {
     return Intl.message(
       'There was an error loading the file',
@@ -618,6 +687,7 @@ class S {
     );
   }
 
+  /// `{choice, select, granted {Storage permission granted} denied {Storage permission denied} neverAskAgain {Storage permission disabled} restricted {Storage permission restricted} other {Unknown permission access}}`
   String storagePermission(Object choice) {
     return Intl.select(
       choice,
@@ -634,6 +704,7 @@ class S {
     );
   }
 
+  /// `Created on`
   String get createdOn {
     return Intl.message(
       'Created on',
@@ -643,6 +714,7 @@ class S {
     );
   }
 
+  /// `Collection reset`
   String get collectionReset {
     return Intl.message(
       'Collection reset',
@@ -652,6 +724,7 @@ class S {
     );
   }
 
+  /// `change`
   String get openAppSettings {
     return Intl.message(
       'change',
@@ -661,6 +734,7 @@ class S {
     );
   }
 
+  /// `Still processing your last file`
   String get recordMessage {
     return Intl.message(
       'Still processing your last file',
@@ -670,6 +744,7 @@ class S {
     );
   }
 
+  /// `Saving your file. This could take a while depending on your device`
   String get savingCollectionMessage {
     return Intl.message(
       'Saving your file. This could take a while depending on your device',
@@ -679,6 +754,7 @@ class S {
     );
   }
 
+  /// `This isn't an Amiibo List`
   String get errorImporting {
     return Intl.message(
       'This isn\'t an Amiibo List',
@@ -688,6 +764,7 @@ class S {
     );
   }
 
+  /// `Amiibo List updated`
   String get successImport {
     return Intl.message(
       'Amiibo List updated',
@@ -697,6 +774,7 @@ class S {
     );
   }
 
+  /// `Export complete`
   String get notificationTitle {
     return Intl.message(
       'Export complete',
@@ -706,6 +784,7 @@ class S {
     );
   }
 
+  /// `Share`
   String get actionText {
     return Intl.message(
       'Share',
@@ -715,6 +794,7 @@ class S {
     );
   }
 
+  /// `Donate`
   String get donate {
     return Intl.message(
       'Donate',
@@ -724,6 +804,7 @@ class S {
     );
   }
 
+  /// `{choice, select, true {Locked} false {Unlocked} other {Unknown}}`
   String lockTooltip(Object choice) {
     return Intl.select(
       choice,

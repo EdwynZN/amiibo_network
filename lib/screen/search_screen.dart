@@ -151,7 +151,7 @@ class _SliverPersistentHeader extends SliverPersistentHeaderDelegate {
       decoration: BoxDecoration(
         gradient: LinearGradient(
           begin: Alignment.topCenter, end: Alignment.bottomCenter,
-          stops: [0.4, 0.7, 0.9],
+          stops: [0.3, 0.6, 0.9],
           colors: [
             _color,
             _color.withOpacity(0.85),

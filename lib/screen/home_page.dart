@@ -527,7 +527,6 @@ class _SortCollectionState extends State<_SortCollection> {
                               onChanged: _selectOrder,
                               title: Text(translate.sortName),
                               selected: order.contains('name'),
-                              activeColor: Theme.of(context).toggleableActiveColor,
                             ),
                             RadioListTile<String>(
                               value: 'owned',
@@ -535,7 +534,6 @@ class _SortCollectionState extends State<_SortCollection> {
                               onChanged: _selectOrder,
                               title: Text(translate.owned),
                               selected: order.contains('owned'),
-                              activeColor: Theme.of(context).toggleableActiveColor,
                             ),
                             RadioListTile<String>(
                               value: 'wishlist',
@@ -543,7 +541,6 @@ class _SortCollectionState extends State<_SortCollection> {
                               onChanged: _selectOrder,
                               title: Text(translate.wished),
                               selected: order.contains('wishlist'),
-                              activeColor: Theme.of(context).toggleableActiveColor,
                             ),
                             RadioListTile<String>(
                               value: 'na',
@@ -557,7 +554,6 @@ class _SortCollectionState extends State<_SortCollection> {
                                 fit: BoxFit.fill,
                                 semanticLabel: translate.na,
                               ),
-                              activeColor: Theme.of(context).toggleableActiveColor,
                             ),
                             RadioListTile<String>(
                               value: 'eu',
@@ -571,7 +567,6 @@ class _SortCollectionState extends State<_SortCollection> {
                                 fit: BoxFit.fill,
                                 semanticLabel: translate.eu,
                               ),
-                              activeColor: Theme.of(context).toggleableActiveColor,
                             ),
                             RadioListTile<String>(
                               value: 'jp',
@@ -591,7 +586,6 @@ class _SortCollectionState extends State<_SortCollection> {
                                   semanticLabel: translate.jp,
                                 ),
                               ),
-                              activeColor: Theme.of(context).toggleableActiveColor,
                             ),
                             RadioListTile<String>(
                               value: 'au',
@@ -605,7 +599,6 @@ class _SortCollectionState extends State<_SortCollection> {
                                 fit: BoxFit.fill,
                                 semanticLabel: translate.au,
                               ),
-                              activeColor: Theme.of(context).toggleableActiveColor,
                             ),
                           ]),
                         );
@@ -698,7 +691,6 @@ class FAB extends StatelessWidget{
 }
 
 class AmiiboGrid extends StatefulWidget {
-
   const AmiiboGrid({Key key,}) : super(key: key);
 
   @override

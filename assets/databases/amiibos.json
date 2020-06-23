@@ -9762,7 +9762,33 @@
       "jp":null,
       "na":"20191210",
       "type":"Figure"
+    },
+    {
+      "key":752,
+      "id":null,
+      "amiiboSeries":"Super Smash Bros.",
+      "character":"Joker",
+      "gameSeries":"Persona 5",
+      "name":"Joker",
+      "au":"202010",
+      "eu":"202010",
+      "jp":"202010",
+      "na":"202010",
+      "type":"Figure"
+    },
+    {
+      "key":753,
+      "id":null,
+      "amiiboSeries":"Super Smash Bros.",
+      "character":"Hero",
+      "gameSeries":"Dragon Quest",
+      "name":"Hero",
+      "au":"202010",
+      "eu":"202010",
+      "jp":"202010",
+      "na":"202010",
+      "type":"Figure"
     }
   ],
-  "lastUpdated": "2020-03-18T17:05:12.666"
+  "lastUpdated": "2020-06-22T16:15:13.138"
 }

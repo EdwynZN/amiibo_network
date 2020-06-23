@@ -7,6 +7,7 @@ import '../model/query_builder.dart';
 import 'package:collection/collection.dart';
 
 extension _StringParsing on AmiiboCategory{
+  //describeEnum(AmiiboCategory.All);
   String get name {
     switch(this){
       case AmiiboCategory.All:

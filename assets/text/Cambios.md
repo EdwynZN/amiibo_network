@@ -1,3 +1,7 @@
+# Version 1.3.2
+- Se agregó a Joker y Hero a las figuras de Super Smash Bros.
+- Corrección de errores
+
 ## Version 1.3.1
 - Nueva función de personalización desde el menu lateral, mantén presionado el botón personalizado para seleccionar solo las series que deseas ver en esa categoría
 - Se agregó la opción de personalización en las estadísticas, donde se muestran solo las sereis seleccionadas previamente en el menu lateral

@@ -1,3 +1,7 @@
+# Version 1.3.2
+- Added Joker and Hero to Super Smash Bros. Figures
+- Fixed minor bugs
+
 ## Version 1.3.1
 - Added Custom tile to the navigation drawer, long press to open and select only the desired series you want to collect
 - Added Custom button to the stats page, showing only the series previously added to the custom tile
