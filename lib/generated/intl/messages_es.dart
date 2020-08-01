@@ -33,7 +33,7 @@ class MessageLookup extends MessageLookupByLibrary {
 
   static m6(serie) => "Serie: ${serie}";
 
-  static m7(choice) => "${Intl.select(choice, {'granted': 'Almacenamiento concedido', 'denied': 'Almacenamiento denegado', 'neverAskAgain': 'Almacenamiento deshabilitado', 'restricted': 'Almacenamiento restringido', 'other': 'Permiso de almacenamiento en estado desconocido', })}";
+  static m7(choice) => "${Intl.select(choice, {'granted': 'Almacenamiento concedido', 'denied': 'Almacenamiento denegado', 'permanentlyDenied': 'Almacenamiento denegado', 'restricted': 'Almacenamiento restringido', 'other': 'Permiso de almacenamiento en estado desconocido', })}";
 
   static m8(choice) => "${Intl.select(choice, {'system': 'Autom.', 'light': 'Claro', 'dark': 'Oscuro', 'other': 'Autom.', })}";
 
@@ -82,7 +82,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "na" : MessageLookupByLibrary.simpleMessage("Norteamérica"),
     "name" : m5,
     "notificationTitle" : MessageLookupByLibrary.simpleMessage("Archivo generado"),
-    "openAppSettings" : MessageLookupByLibrary.simpleMessage("cambiar"),
+    "openAppSettings" : MessageLookupByLibrary.simpleMessage("Cambiar"),
     "ownTooltip" : MessageLookupByLibrary.simpleMessage("Adquirir"),
     "owned" : MessageLookupByLibrary.simpleMessage("Adquiridos"),
     "privacyPolicy" : MessageLookupByLibrary.simpleMessage("Política de Privacidad"),

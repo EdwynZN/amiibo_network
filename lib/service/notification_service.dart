@@ -14,4 +14,15 @@ class NotificationService {
     }
   }
 
+  static Future<bool> saveImage(Map<String,dynamic> args) async {
+    //TODO IOS Platform Channel
+    try {
+      final bool result = await _channel.invokeMethod('saveImage', args);
+      return result;
+    } on PlatformException catch (e) {
+      print(e);
+      return false;
+    }
+  }
+
 }

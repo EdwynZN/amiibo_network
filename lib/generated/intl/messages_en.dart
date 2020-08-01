@@ -33,7 +33,7 @@ class MessageLookup extends MessageLookupByLibrary {
 
   static m6(serie) => "Serie: ${serie}";
 
-  static m7(choice) => "${Intl.select(choice, {'granted': 'Storage permission granted', 'denied': 'Storage permission denied', 'neverAskAgain': 'Storage permission disabled', 'restricted': 'Storage permission restricted', 'other': 'Unknown permission access', })}";
+  static m7(choice) => "${Intl.select(choice, {'granted': 'Storage permission granted', 'denied': 'Storage permission denied', 'permanentlyDenied': 'Storage permission denied', 'restricted': 'Storage permission restricted', 'other': 'Unknown permission access', })}";
 
   static m8(choice) => "${Intl.select(choice, {'system': 'Auto', 'light': 'Light', 'dark': 'Dark', 'other': 'Auto', })}";
 
@@ -82,7 +82,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "na" : MessageLookupByLibrary.simpleMessage("North America"),
     "name" : m5,
     "notificationTitle" : MessageLookupByLibrary.simpleMessage("Export complete"),
-    "openAppSettings" : MessageLookupByLibrary.simpleMessage("change"),
+    "openAppSettings" : MessageLookupByLibrary.simpleMessage("Change"),
     "ownTooltip" : MessageLookupByLibrary.simpleMessage("Own"),
     "owned" : MessageLookupByLibrary.simpleMessage("Owned"),
     "privacyPolicy" : MessageLookupByLibrary.simpleMessage("Privacy Policy"),

@@ -1,4 +1,10 @@
-# Version 1.3.2
+## Version 1.3.3
+- Exported images are now showed in gallery [Fixed]
+- Showing what's new when updating the App
+- Release dates of Joker and Hero
+- Fixed minor bugs
+
+## Version 1.3.2
 - Added Joker and Hero to Super Smash Bros. Figures
 - Fixed minor bugs
 

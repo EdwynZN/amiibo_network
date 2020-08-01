@@ -1,6 +1,50 @@
 import 'dart:io';
 import 'dart:convert';
+import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:amiibo_network/service/info_package.dart';
+import 'package:permission_handler/permission_handler.dart';
+import 'package:amiibo_network/generated/l10n.dart';
+import 'package:flutter/foundation.dart';
+
+/// Date String in format year.month.day_hour.minute.second
+String get dateTaken {
+  DateTime date = DateTime.now();
+  String time = date.toString().split('.')[0];
+  time = time.replaceFirst(' ', '_').replaceAll(RegExp('\-|\:'), '');
+  /*
+  StringBuffer buffer = StringBuffer('_');
+  buffer..write(date.year)..write(date.month)..write(date.day)..write('_')
+    ..write(date.hour)..write(date.minute)..write(date.second);
+  */
+  return time;
+}
+
+/// Ask for write permission in Android 9 and below
+/// If not grqanted and permanently denied shows a snackbar to open settings of the app
+/// to unlock it
+Future<bool> permissionGranted(ScaffoldState scaffoldState) async{
+  S translate = S.current;
+  if(InfoPackage.androidVersionCode == AndroidCode.Unknown) return false;
+  else if(InfoPackage.version < AndroidCode.Q.version && InfoPackage.version > AndroidCode.Lollipop_MR1.version){
+    final permissionStatus = await Permission.storage.request();
+    if(!permissionStatus.isGranted) {
+      if(permissionStatus.isPermanentlyDenied && (scaffoldState?.mounted ?? false)){
+        print(describeEnum(permissionStatus));
+        scaffoldState?.hideCurrentSnackBar();
+        scaffoldState?.showSnackBar(SnackBar(
+          content: Text(translate.storagePermission(describeEnum(permissionStatus))),
+          action: SnackBarAction(
+            label: translate.openAppSettings,
+            onPressed: () => openAppSettings()
+          ),
+        ));
+      }
+      return false;
+    }
+  }
+  return true;
+}
 
 Future<File> createFile([String name = 'MyAmiiboNetwork', String type = 'json']) async{
   Directory dir;

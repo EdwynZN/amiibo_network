@@ -1,3 +1,4 @@
+import 'package:amiibo_network/service/info_package.dart';
 import 'package:amiibo_network/service/update_service.dart';
 import 'package:flutter/material.dart';
 import 'package:amiibo_network/screen/home_page.dart';
@@ -20,6 +21,7 @@ Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   final UpdateService updateService = UpdateService();
   await updateService.initDB();
+  await InfoPackage.versionCode();
   final bool splash = await updateService.compareLastUpdate;
   final SharedPreferences preferences = await SharedPreferences.getInstance();
   final Map<String,int> savedTheme = await getTheme;

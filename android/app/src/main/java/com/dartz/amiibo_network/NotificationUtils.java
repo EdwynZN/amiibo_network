@@ -1,24 +1,27 @@
 package com.dartz.amiibo_network;
-
 import android.app.Notification;
 import android.app.NotificationChannel;
+
+import androidx.annotation.RequiresApi;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 import androidx.core.content.FileProvider;
-
 import android.app.PendingIntent;
 import android.content.Intent;
+import android.content.pm.ResolveInfo;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 import java.io.File;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-
 import android.content.Context;
 import android.content.ContextWrapper;
 import android.annotation.SuppressLint;
 import android.os.Build;
+
+import java.io.IOException;
 import java.util.Map;
-import android.util.Log;
+import java.util.List;
 
 public class NotificationUtils extends ContextWrapper {
 
@@ -30,17 +33,16 @@ public class NotificationUtils extends ContextWrapper {
 
     public NotificationUtils(Context base) {
         super(base);
-        createChannels();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) createChannels();
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
     public void createChannels() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            @SuppressLint("WrongConstant") NotificationChannel notificationChannel =
-                new NotificationChannel(ANDROID_CHANNEL_ID, ANDROID_CHANNEL_NAME, NotificationManagerCompat.IMPORTANCE_LOW);
-            notificationChannel.setDescription("Screenshots and exporting collections");
-            notificationChannel.setShowBadge(false);
-            getManager().createNotificationChannel(notificationChannel);
-        }
+        @SuppressLint("WrongConstant") NotificationChannel notificationChannel =
+            new NotificationChannel(ANDROID_CHANNEL_ID, ANDROID_CHANNEL_NAME, NotificationManagerCompat.IMPORTANCE_LOW);
+        notificationChannel.setDescription("Screenshots and exporting collections");
+        notificationChannel.setShowBadge(false);
+        getManager().createNotificationChannel(notificationChannel);
     }
 
     public void sendNotification(Map<String, Object> arguments){
@@ -53,7 +55,7 @@ public class NotificationUtils extends ContextWrapper {
         getManager().notify(id, notification);
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            Notification summary = createSummary(title, path);
+            Notification summary = createSummary(title);
             getManager().notify(SUMMARY_ID, summary);
         }
     }
@@ -75,25 +77,37 @@ public class NotificationUtils extends ContextWrapper {
             .setGroup(GROUP_ID)
             .setContentText(text);
 
-        Intent intent = new Intent();
-        intent.setAction(Intent.ACTION_VIEW);
-        intent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-
         Intent sendIntent = new Intent();
         sendIntent.setAction(Intent.ACTION_SEND);
-        sendIntent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+        sendIntent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION | Intent.FLAG_GRANT_WRITE_URI_PERMISSION | Intent.FLAG_GRANT_PERSISTABLE_URI_PERMISSION);
         sendIntent.putExtra(Intent.EXTRA_STREAM, uri);
 
+        //Uri imageCollection = MediaStore.Images.Media.getContentUri(MediaStore.VOLUME_EXTERNAL_PRIMARY);
+
         if(type.equals("png")){
+            Intent intent = new Intent();
+            intent.setAction(Intent.ACTION_VIEW);
+            intent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION | Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
             intent.setDataAndType(uri, "image/png");
+
             PendingIntent pContentIntent = PendingIntent.getActivity(this, id,
                 intent, PendingIntent.FLAG_UPDATE_CURRENT);
 
             sendIntent.setType("image/png");
+            Intent chooser = Intent.createChooser(sendIntent, "Share File");
+
+            List<ResolveInfo> resInfoList = this.getPackageManager().queryIntentActivities(chooser, PackageManager.MATCH_DEFAULT_ONLY);
+
+            for (ResolveInfo resolveInfo : resInfoList) {
+                String packageName = resolveInfo.activityInfo.packageName;
+                this.grantUriPermission(packageName, uri, Intent.FLAG_GRANT_WRITE_URI_PERMISSION | Intent.FLAG_GRANT_READ_URI_PERMISSION);
+            }
+
             PendingIntent pShareIntent = PendingIntent.getActivity(this, id,
-                Intent.createChooser(sendIntent, null), PendingIntent.FLAG_UPDATE_CURRENT);
+                chooser, PendingIntent.FLAG_UPDATE_CURRENT);
 
             Bitmap bitmap = BitmapFactory.decodeFile(path);
+
             notificationBuilder
                 .addAction(android.R.drawable.ic_menu_share, actionTitle, pShareIntent)
                 .setContentIntent(pContentIntent)
@@ -110,8 +124,9 @@ public class NotificationUtils extends ContextWrapper {
             //Log.v("message: ", "Notification");
 
             sendIntent.setType("text/plain");
+
             PendingIntent pShareIntent = PendingIntent.getActivity(this, id,
-                Intent.createChooser(sendIntent, null), PendingIntent.FLAG_UPDATE_CURRENT);
+                sendIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
             notificationBuilder//.setContentIntent(pIntent)
                 .addAction(android.R.drawable.ic_menu_share, actionTitle, pShareIntent);
@@ -120,9 +135,57 @@ public class NotificationUtils extends ContextWrapper {
         return notificationBuilder.build();
     }
 
-    private Notification createSummary(String title, String path){
-        String text = path.substring(path.lastIndexOf("/")+1);
+    private Notification imageNotification(String title, String contentText, Uri uri, String actionTitle, Integer id, Bitmap bitmap){
 
+        NotificationCompat.Builder notificationBuilder =
+            new NotificationCompat.Builder(this, ANDROID_CHANNEL_ID);
+        notificationBuilder//.setAutoCancel(true)
+            .setSmallIcon(R.drawable.ic_notification)
+            .setTicker(title)
+            .setPriority(NotificationCompat.PRIORITY_LOW)
+            .setContentTitle(title)
+            .setGroup(GROUP_ID)
+            .setContentText(contentText);
+
+        Intent sendIntent = new Intent();
+        sendIntent.setAction(Intent.ACTION_SEND);
+        sendIntent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION | Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
+        sendIntent.putExtra(Intent.EXTRA_STREAM, uri);
+
+        Intent intent = new Intent();
+        intent.setAction(Intent.ACTION_VIEW);
+        intent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION | Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
+        intent.setDataAndType(uri, "image/png");
+
+        PendingIntent pContentIntent = PendingIntent.getActivity(this, id,
+                intent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+        sendIntent.setType("image/png");
+        Intent chooser = Intent.createChooser(sendIntent, "Share File");
+
+        List<ResolveInfo> resInfoList = this.getPackageManager().queryIntentActivities(chooser, PackageManager.MATCH_DEFAULT_ONLY);
+
+        for (ResolveInfo resolveInfo : resInfoList) {
+            String packageName = resolveInfo.activityInfo.packageName;
+            this.grantUriPermission(packageName, uri, Intent.FLAG_GRANT_WRITE_URI_PERMISSION | Intent.FLAG_GRANT_READ_URI_PERMISSION);
+        }
+
+        PendingIntent pShareIntent = PendingIntent.getActivity(this, id,
+            chooser, PendingIntent.FLAG_UPDATE_CURRENT);
+
+
+        return notificationBuilder
+            .addAction(android.R.drawable.ic_menu_share, actionTitle, pShareIntent)
+            .setContentIntent(pContentIntent)
+            .setLargeIcon(bitmap)
+            .setStyle(new NotificationCompat.BigPictureStyle()
+                .bigPicture(bitmap)
+                .bigLargeIcon(null)
+            )
+            .build();
+    }
+
+    private Notification createSummary(String title){
         NotificationCompat.Builder summaryBuilder =
             new NotificationCompat.Builder(this, ANDROID_CHANNEL_ID);
         summaryBuilder.setAutoCancel(true)
@@ -146,6 +209,28 @@ public class NotificationUtils extends ContextWrapper {
             notificationManager = NotificationManagerCompat.from(this);
         }
         return notificationManager;
+    }
+
+    public void showImageNotification(Map<String, Object> arguments) throws IOException{
+        String name = (String)arguments.get("name");
+        byte[] imageData = (byte[])arguments.get("buffer");
+        String title = (String) arguments.get("title");
+        String actionTitle = (String) arguments.get("actionTitle");
+        Integer id = (Integer) arguments.get("id");
+        if(imageData == null) return;
+        Bitmap bitmap = BitmapFactory.decodeByteArray(imageData, 0, imageData.length);
+        Uri uri;
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) uri = MediaStoreFlutter.updateMediaStore(this, bitmap, name);
+        else uri = MediaStoreFlutter.updateLegacyMediaStore(this, bitmap, name);
+        if(uri != null) {
+            Notification notification = imageNotification(title, name + ".png", uri, actionTitle, id, bitmap);
+            getManager().notify(id, notification);
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                Notification summary = createSummary(title);
+                getManager().notify(SUMMARY_ID, summary);
+            }
+        }
     }
 
 }

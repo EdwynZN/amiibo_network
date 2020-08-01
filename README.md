@@ -1,8 +1,14 @@
 # Amiibo Network [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
-<a href='https://play.google.com/store/apps/details?hl=en_US&id=com.dartz.amiibo_network&pcampaignid=MKT-Other-global-all-co-prtnr-py-PartBadge-Mar2515-1'><img alt='Get it on Google Play' src='https://play.google.com/intl/en_us/badges/images/generic/en_badge_web_generic.png' width=150/></a>
+<p align='left'>
+    <a href='https://play.google.com/store/apps/details?hl=en_US&id=com.dartz.amiibo_network&pcampaignid=MKT-Other-global-all-co-prtnr-py-PartBadge-Mar2515-1'>
+       <img height="56" alt='Get it on Google Play' src='https://play.google.com/intl/en_us/badges/images/generic/en_badge_web_generic.png' />
+    </a>
+</p>
 
 [![ko-fi](https://www.ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/N4N8169NZ)
+
+**Or you can [donate on PayPal](https://paypal.me/EdwynZN)**
 
 An Amiibo collection app with a wishlist and personal collection, screenshot mode to save your collection and stats, so you can always show your amazing Amiibo collection!
 

@@ -19,6 +19,8 @@ import 'dart:math' as math;
 import 'package:amiibo_network/generated/l10n.dart';
 import 'package:amiibo_network/widget/stat_widget.dart';
 import '../utils/preferences_constants.dart';
+import 'package:amiibo_network/widget/markdown_widget.dart';
+import 'package:flutter/services.dart';
 
 class Home extends StatelessWidget {
   @override
@@ -74,16 +76,6 @@ class HomePageState extends State<HomePage>
     );
   }
 
-  @override
-  didChangeDependencies(){
-    super.didChangeDependencies();
-    queryProvider = context.read<QueryProvider>();
-    amiiboProvider = context.read<AmiiboProvider>();
-    selected = context.read<SelectProvider>();
-    _searchProvider = context.read<SearchProvider>();
-    translate = S.of(context);
-  }
-
   void _restartAnimation(){
     _controller.jumpTo(0);
     _animationController.forward();
@@ -112,6 +104,17 @@ class HomePageState extends State<HomePage>
     _animationController = AnimationController(
         duration: const Duration(milliseconds: 300),
         vsync: this)..value = 1.0;
+    WidgetsBinding.instance.addPostFrameCallback((_) => _showWhatsNew());
+  }
+
+  @override
+  didChangeDependencies(){
+    super.didChangeDependencies();
+    queryProvider = context.read<QueryProvider>();
+    amiiboProvider = context.read<AmiiboProvider>();
+    selected = context.read<SelectProvider>();
+    _searchProvider = context.read<SearchProvider>();
+    translate = S.of(context);
   }
 
   @override
@@ -123,7 +126,7 @@ class HomePageState extends State<HomePage>
   }
 
   void _scrollListener(){
-    if((_controller?.hasClients ?? false) && !_animationController.isAnimating){
+    if((_controller?.hasClients ?? false) && !_animationController.isAnimating && _controller.offset > 56.0){
       switch(_controller.position.userScrollDirection){
         case ScrollDirection.forward:
           if(_animationController.isDismissed) _animationController.forward();
@@ -134,6 +137,21 @@ class HomePageState extends State<HomePage>
         case ScrollDirection.idle:
           break;
       }
+    }
+  }
+
+  Future<void> _showWhatsNew() async{
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    final int version = preferences.getInt(sharedVersion) ?? 0;
+    if(version != versionApp){
+      await preferences.setInt(sharedVersion, versionApp);
+      showDialog(
+        context: context,
+        builder: (context) => MarkdownReader(
+          file: translate.changelog,
+          title: translate.changelogSubtitle
+        )
+      );
     }
   }
 
@@ -280,15 +298,15 @@ class HomePageState extends State<HomePage>
                             ),
                             delegate: SliverChildBuilderDelegate((BuildContext _, int index) {
                               return ChangeNotifierProxyProvider<AmiiboLocalDB, SingleAmiibo>(
-                                  create: (_) => SingleAmiibo(),
-                                  update: (_, amiiboList, amiibo) => amiibo
-                                    ..update = amiiboList?.amiibo[index],
-                                  child: FadeSwitchAnimation(
-                                    key: ValueKey<int>(index),
-                                    child: AmiiboGrid(
-                                      key: ValueKey<int>(data?.amiibo[index].key),
-                                    ),
-                                  )
+                                create: (_) => SingleAmiibo(),
+                                update: (_, amiiboList, amiibo) => amiibo
+                                  ..update = amiiboList?.amiibo[index],
+                                child: FadeSwitchAnimation(
+                                  key: ValueKey<int>(index),
+                                  child: AmiiboGrid(
+                                    key: ValueKey<int>(data?.amiibo[index].key),
+                                  ),
+                                )
                               );
                             },
                               //addRepaintBoundaries: false, addAutomaticKeepAlives: false,
@@ -691,7 +709,7 @@ class FAB extends StatelessWidget{
 }
 
 class AmiiboGrid extends StatefulWidget {
-  const AmiiboGrid({Key key,}) : super(key: key);
+  const AmiiboGrid({Key key}) : super(key: key);
 
   @override
   State<StatefulWidget> createState() => AmiiboGridState();

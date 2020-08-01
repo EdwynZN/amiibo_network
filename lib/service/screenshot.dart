@@ -1,11 +1,9 @@
+import 'dart:typed_data';
 import 'package:amiibo_network/model/amiibo_local_db.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:amiibo_network/service/storage.dart';
 import 'package:amiibo_network/provider/theme_provider.dart';
 import 'dart:ui' as ui;
-import 'dart:io';
 import 'package:amiibo_network/service/service.dart';
 import 'package:amiibo_network/provider/stat_provider.dart';
 import 'package:flutter/rendering.dart';
@@ -58,20 +56,20 @@ class Screenshot {
   }
 
   void update(BuildContext context) {
-    //final S translate = S.of(context);
     this..theme = Theme.of(context)
       ..statProvider = context.read<StatProvider>()
-      ..owned = _translate.owned..wished = _translate.wished
+      ..owned = _translate.owned
+      ..wished = _translate.wished
       ..createdOn= _translate.createdOn
       ..materialLocalizations = MaterialLocalizations.of(context);
   }
 
-  Future<bool> saveCollection(Expression expression, File file) async{
+  Future<Uint8List> saveCollection(Expression expression) async{
     AmiiboLocalDB amiibos = await _service.fetchByCategory(expression: expression,
         orderBy: 'CASE WHEN type = "Figure" THEN 1 ''WHEN type = "Yarn" THEN 2 ELSE 3 END, amiiboSeries DESC, na DESC');
     Map<String,dynamic> _listStat = Map<String, dynamic>.from(
         (await _service.fetchSum(expression: expression)).first);
-    if(isRecording || (amiibos?.amiibo?.isEmpty ?? true) || _listStat == null) return false;
+    if(isRecording || (amiibos?.amiibo?.isEmpty ?? true) || _listStat == null) return null;
 
     final double maxSize = 60.0;
     final double width = (amiibos.amiibo.length / 25.0).ceilToDouble().clamp(15.0, 30.0);
@@ -132,29 +130,32 @@ class Screenshot {
       }
     }
 
-    return await _saveFile(maxX.toInt(), maxY.toInt(), file);
+    return await _saveFile(maxX.toInt(), maxY.toInt());
   }
 
-  Future<bool> saveStats(Expression expression, File file) async{
+  Future<Uint8List> saveStats(Expression expression) async{
     final List<Map<String, dynamic>> stats = await _service.fetchSum(group: true, expression: expression);
     final List<Map<String, dynamic>> general = await _service.fetchSum(expression: expression);
 
-    if(isRecording || (stats?.isEmpty ?? true) || (general?.isEmpty ?? true)) return false;
+    if(isRecording || (stats?.isEmpty ?? true) || (general?.isEmpty ?? true)) return null;
 
     final String longestWord = owned.length > wished.length ? owned : wished;
+    final bool fontFeatureStyle = !statProvider.isPercentage && StatProvider.isFontFeatureEnable;
+    /// Activate fontFeature only if StatMode is Ratio and isFontFeatureEnable is true for this device
     TextSpan longestParagraphTest = TextSpan(
-      style: TextStyle(fontSize: statProvider.isPercentage ? 30 : 35,
-        height: statProvider.isPercentage ? null : 1,
+      style: TextStyle(
+        fontSize: fontFeatureStyle ? 35 : 30,
+        height: fontFeatureStyle ? 1 : null,
         fontFeatures: [
-          if(!statProvider.isPercentage) ui.FontFeature.enable('frac'),
-          if(statProvider.isPercentage) ui.FontFeature.tabularFigures()
+          if(fontFeatureStyle) ui.FontFeature.enable('frac'),
+          if(!fontFeatureStyle) ui.FontFeature.tabularFigures()
         ],
       ),
       text: statProvider.isPercentage ? '99.99%' : '99/100',
       children: [
         TextSpan(
-            style: TextStyle(fontSize: 30),
-            text: ' $longestWord'
+          style: TextStyle(fontSize: 30),
+          text: ' $longestWord'
         )
       ]
     );
@@ -224,11 +225,11 @@ class Screenshot {
           _offset.translate(cardSizeX + padding, 40 + padding), divider);
 
       TextSpan ownedText = TextSpan(
-        style: TextStyle(color: textColor, fontSize: statProvider.isPercentage ? 30 : 35,
-          height: statProvider.isPercentage ? null : 1,
+        style: TextStyle(color: textColor, fontSize: fontFeatureStyle ? 35 : 30,
+          height: fontFeatureStyle ? 1 : null,
           fontFeatures: [
-            if(!statProvider.isPercentage) ui.FontFeature.enable('frac'),
-            if(statProvider.isPercentage) ui.FontFeature.tabularFigures()
+            if(fontFeatureStyle) ui.FontFeature.enable('frac'),
+            if(!fontFeatureStyle) ui.FontFeature.tabularFigures()
           ],
         ),
         text: ownedStat,
@@ -245,11 +246,11 @@ class Screenshot {
         ..paint(_canvas, _offset.translate(padding + 75, 62.5 + padding + 25));
 
       TextSpan wishedText = TextSpan(
-          style: TextStyle(color: textColor, fontSize: statProvider.isPercentage ? 30 : 35,
-            height: statProvider.isPercentage ? null : 1,
+          style: TextStyle(color: textColor, fontSize: fontFeatureStyle ? 35 : 30,
+            height: fontFeatureStyle ? 1 : null,
             fontFeatures: [
-              if(!statProvider.isPercentage) ui.FontFeature.enable('frac'),
-              if(statProvider.isPercentage) ui.FontFeature.tabularFigures()
+              if(fontFeatureStyle) ui.FontFeature.enable('frac'),
+              if(!fontFeatureStyle) ui.FontFeature.tabularFigures()
             ],
           ),
           text: wishedStat,
@@ -277,7 +278,7 @@ class Screenshot {
       }
     }
 
-    return await _saveFile(maxX.toInt(), maxY.toInt(), file);
+    return await _saveFile(maxX.toInt(), maxY.toInt());
   }
 
   void _paintSquareStat(Offset a, Offset b, double percent, TextSpan icon){
@@ -314,6 +315,8 @@ class Screenshot {
     final double iconMargin = (banner * 0.2) / 2.0;
     final double maxX = size.width;
     final double maxY = size.height;
+    final bool fontFeatureStyle = !statProvider.isPercentage && StatProvider.isFontFeatureEnable;
+    /// Activate fontFeature only if StatMode is Ratio and isFontFeatureEnable is true for this device
 
     final TextSpan aNetwork = TextSpan(
       style: TextStyle(color: textColor, fontSize: 50),
@@ -324,11 +327,11 @@ class Screenshot {
             text: '\u00A9 '
         ),
         TextSpan(
-            style: TextStyle(color: Colors.black, fontSize: statProvider.isPercentage ? 30 : 35,
+            style: TextStyle(color: Colors.black, fontSize: fontFeatureStyle ? 35 : 30,
               fontWeight: FontWeight.w300, background: ownedCardPaint,
               fontFeatures: [
-                if(!statProvider.isPercentage) ui.FontFeature.enable('frac'),
-                if(statProvider.isPercentage) ui.FontFeature.tabularFigures()
+                if(fontFeatureStyle) ui.FontFeature.enable('frac'),
+                if(!fontFeatureStyle) ui.FontFeature.tabularFigures()
               ],
             ),
             text: ' ${statProvider.statLabel(stat['Owned'].toDouble(), stat['Total'].toDouble())} '
@@ -342,11 +345,11 @@ class Screenshot {
             text: ' '
         ),
         TextSpan(
-            style: TextStyle(color: Colors.black, fontSize: statProvider.isPercentage ? 30 : 35,
+            style: TextStyle(color: Colors.black, fontSize: fontFeatureStyle ? 35 : 30,
               fontWeight: FontWeight.w300, background: wishedCardPaint,
               fontFeatures: [
-                if(!statProvider.isPercentage) ui.FontFeature.enable('frac'),
-                if(statProvider.isPercentage) ui.FontFeature.tabularFigures()
+                if(fontFeatureStyle) ui.FontFeature.enable('frac'),
+                if(!fontFeatureStyle) ui.FontFeature.tabularFigures()
               ],
             ),
             text: ' ${statProvider.statLabel(stat['Wished'].toDouble(), stat['Total'].toDouble())} '
@@ -385,23 +388,19 @@ class Screenshot {
     appIcon?.dispose();
   }
 
-  Future<bool> _saveFile(int maxX, int maxY, File file) async{
+  Future<Uint8List> _saveFile(int maxX, int maxY) async{
     try{
-      final Map<String,dynamic> args = Map<String,dynamic>();
       ui.Picture pic = _recorder.endRecording();
       if(pic == null) throw(AssertionError('The Canvas was empty'));
       ui.Image img = await pic.toImage(maxX, maxY);
       pic.dispose();
       ByteData byteData = await img.toByteData(format: ui.ImageByteFormat.png);
       img.dispose();
-      List<int> buffer = byteData.buffer.asUint8List();
-      args['file'] = file;
-      args['buffer'] = buffer;
-      await compute(writeCollectionFile, args);
-      return true;
+      Uint8List buffer = byteData.buffer.asUint8List();
+      return buffer;
     }on AssertionError catch(e){
       print(e);
-      return false;
+      return null;
     } finally{
       _canvas = null;
       _recorder = null;

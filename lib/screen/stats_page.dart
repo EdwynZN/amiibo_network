@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:provider/provider.dart';
 import 'package:amiibo_network/provider/query_provider.dart';
 import 'package:amiibo_network/provider/theme_provider.dart';
@@ -315,43 +316,45 @@ class _FAB extends StatelessWidget{
       heroTag: 'MenuFAB',
       onPressed: () async {
         final ScaffoldState scaffoldState = Scaffold.of(context, nullOk: true);
+        if(!(await permissionGranted(scaffoldState))) return;
         String message = translate.savingCollectionMessage;
         if(_screenshot.isRecording) message = translate.recordMessage;
         scaffoldState?.hideCurrentSnackBar();
-        scaffoldState?.showSnackBar(SnackBar(content: Text(message),));
-        final permission = true;
-        if(permission && !_screenshot.isRecording) {
+        scaffoldState?.showSnackBar(SnackBar(content: Text(message)));
+        if(!_screenshot.isRecording){
           _screenshot.update(context);
-          String name;
-          int id;
-          switch(_category){
-            case AmiiboCategory.Cards:
-              name = 'MyCardStats';
-              id = 2;
-              break;
-            case AmiiboCategory.Figures:
-              name = 'MyFigureStats';
-              id = 3;
-              break;
-            case AmiiboCategory.Custom:
-              name = 'MyCustomStats';
-              id = 7;
-              break;
-            case AmiiboCategory.All:
-            default:
-              name = 'MyAmiiboStats';
-              id = 1;
-              break;
+          final buffer = await _screenshot.saveStats(_expression);
+          if(buffer != null) {
+            String name;
+            int id;
+            switch(_category){
+              case AmiiboCategory.Cards:
+                name = 'MyCardStats';
+                id = 2;
+                break;
+              case AmiiboCategory.Figures:
+                name = 'MyFigureStats';
+                id = 3;
+                break;
+              case AmiiboCategory.Custom:
+                name = 'MyCustomStats';
+                id = 7;
+                break;
+              case AmiiboCategory.All:
+              default:
+                name = 'MyAmiiboStats';
+                id = 1;
+                break;
+            }
+            final Map<String, dynamic> notificationArgs = <String, dynamic>{
+              'title': translate.notificationTitle,
+              'actionTitle': translate.actionText,
+              'id': id,
+              'buffer' : buffer,
+              'name': '${name}_$dateTaken'
+            };
+            await NotificationService.saveImage(notificationArgs);
           }
-          final file = await createFile(name, 'png');
-          final bool saved = await _screenshot.saveStats(_expression, file);
-          final Map<String, dynamic> notificationArgs = <String, dynamic>{
-            'title': translate.notificationTitle,
-            'path': file.path,
-            'actionTitle': translate.actionText,
-            'id': id
-          };
-          if(saved) await NotificationService.sendNotification(notificationArgs);
         }
       },
     );

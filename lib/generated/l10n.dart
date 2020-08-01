@@ -687,14 +687,14 @@ class S {
     );
   }
 
-  /// `{choice, select, granted {Storage permission granted} denied {Storage permission denied} neverAskAgain {Storage permission disabled} restricted {Storage permission restricted} other {Unknown permission access}}`
+  /// `{choice, select, granted {Storage permission granted} denied {Storage permission denied} permanentlyDenied {Storage permission denied} restricted {Storage permission restricted} other {Unknown permission access}}`
   String storagePermission(Object choice) {
     return Intl.select(
       choice,
       {
         'granted': 'Storage permission granted',
         'denied': 'Storage permission denied',
-        'neverAskAgain': 'Storage permission disabled',
+        'permanentlyDenied': 'Storage permission denied',
         'restricted': 'Storage permission restricted',
         'other': 'Unknown permission access',
       },
@@ -724,10 +724,10 @@ class S {
     );
   }
 
-  /// `change`
+  /// `Change`
   String get openAppSettings {
     return Intl.message(
-      'change',
+      'Change',
       name: 'openAppSettings',
       desc: '',
       args: [],

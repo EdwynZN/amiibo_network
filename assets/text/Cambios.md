@@ -1,10 +1,16 @@
-# Version 1.3.2
+## Version 1.3.3
+- Las imagenes creadas ahora se muestran correctamente en la galería [Arreglado]
+- Diñalogo mostrando lo más nuevo al principio de la App
+- Fecha de lanzamiento de Joker y Hero agregada
+- Corrección de errores
+
+## Version 1.3.2
 - Se agregó a Joker y Hero a las figuras de Super Smash Bros.
 - Corrección de errores
 
 ## Version 1.3.1
 - Nueva función de personalización desde el menu lateral, mantén presionado el botón personalizado para seleccionar solo las series que deseas ver en esa categoría
-- Se agregó la opción de personalización en las estadísticas, donde se muestran solo las sereis seleccionadas previamente en el menu lateral
+- Se agregó la opción de personalización en las estadísticas, donde se muestran solo las series seleccionadas previamente en el menu lateral
 - La opción de guardado de la colección en opciones ahora te permite seleccionar las series que deseas guardar, predeterminado a los previamente agregados al modo personalizado
 - Actualización de la interfaz en la página de estadísticas para tabletas
 - Botón de bloqueo agregado para evitar modificar los amiibos en tu lista de deseos u obtenidos

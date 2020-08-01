@@ -14,9 +14,9 @@ import 'package:launch_review/launch_review.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:amiibo_network/service/service.dart';
 import 'package:amiibo_network/widget/theme_widget.dart';
+import 'package:amiibo_network/widget/markdown_widget.dart';
 import 'package:amiibo_network/generated/l10n.dart';
 import 'package:amiibo_network/utils/urls_constants.dart';
-import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:amiibo_network/service/notification_service.dart';
 import 'package:amiibo_network/model/query_builder.dart';
 import '../widget/selected_chip.dart';
@@ -201,60 +201,6 @@ class _ProjectButtons extends StatelessWidget{
   }
 }
 
-class MarkdownReader extends StatelessWidget {
-  final String title;
-  final String file;
-  const MarkdownReader({Key key, this.title, @required this.file}): super(key: key);
-
-  Future<String> get _localFile => rootBundle.loadString('assets/text/$file.md');
-
-  _launchURL(String url, BuildContext ctx) async {
-    if (await canLaunch(url)) {
-      await launch(url);
-    } else {
-      Scaffold.of(ctx, nullOk: true)?.showSnackBar(SnackBar(content: Text('Could not launch $url')));
-    }
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final S translate = S.of(context);
-    return AlertDialog(
-      title: Text(title),
-      titlePadding: const EdgeInsets.all(12),
-      contentPadding: EdgeInsets.zero,
-      content: Scrollbar(
-        child: SingleChildScrollView(
-          padding: const EdgeInsets.symmetric(horizontal: 12),
-          child: FutureBuilder(
-            future: _localFile,
-            builder: (BuildContext context, AsyncSnapshot<String> snapshot){
-              if(snapshot.hasError)
-                return Center(child: Text(translate.markdownError));
-              if(snapshot.hasData)
-                return MarkdownBody(
-                  data: snapshot.data,
-                  styleSheetTheme: MarkdownStyleSheetBaseTheme.platform,
-                  onTapLink: (url) => _launchURL(url, context),
-                );
-              return const SizedBox.shrink();
-            }
-          )
-        )
-      ),
-      actions: <Widget>[
-        FlatButton(
-          textColor: Theme.of(context).accentColor,
-          child: Text(MaterialLocalizations.of(context).okButtonLabel),
-          onPressed: () async {
-            Navigator.of(context).maybePop();
-          },
-        ),
-      ],
-    );
-  }
-}
-
 class _SaveCollection extends StatefulWidget {
 
   _SaveCollection({Key key}) : super(key: key);
@@ -269,12 +215,21 @@ class __SaveCollectionState extends State<_SaveCollection> {
       expression: InCond.inn('type', ['Figure', 'Yarn']), orderBy: 'amiiboSeries');
   final Future<List<String>> listOfCards = Service().fetchDistinct(column: ['amiiboSeries'],
       expression: Cond.eq('type', 'Card'), orderBy: 'amiiboSeries');
+  S translate;
+  ScaffoldState scaffoldState;
+  QueryProvider filter;
+
+  @override
+  didChangeDependencies(){
+    super.didChangeDependencies();
+    translate = S.of(context);
+    scaffoldState = Scaffold.of(context, nullOk: true);
+    filter = context.read<QueryProvider>();
+  }
 
   Future<void> _saveCollection(AmiiboCategory category, List<String> figures, cards) async {
-    final ScaffoldState scaffoldState = Scaffold.of(context, nullOk: true);
-    final S translate = S.of(context);
     final String message = _screenshot.isRecording ?
-    translate.recordMessage : translate.savingCollectionMessage;
+      translate.recordMessage : translate.savingCollectionMessage;
     scaffoldState?.hideCurrentSnackBar();
     scaffoldState?.showSnackBar(SnackBar(content: Text(message)));
     if(!_screenshot.isRecording) {
@@ -306,27 +261,28 @@ class __SaveCollectionState extends State<_SaveCollection> {
           expression = And();
           break;
       }
-      var file = await createFile(name, 'png');
       _screenshot.update(context);
-      final bool save = await _screenshot.saveCollection(expression, file);
-      final Map<String, dynamic> notificationArgs = <String, dynamic>{
-        'title': translate.notificationTitle,
-        'path': file.path,
-        'actionTitle': translate.actionText,
-        'id': id
-      };
-      if(save) await NotificationService.sendNotification(notificationArgs);
+      final buffer = await _screenshot.saveCollection(expression);
+      if(buffer != null) {
+        final Map<String, dynamic> notificationArgs = <String, dynamic>{
+          'title': translate.notificationTitle,
+          'actionTitle': translate.actionText,
+          'id': id,
+          'buffer' : buffer,
+          'name': '${name}_$dateTaken'
+        };
+        await NotificationService.saveImage(notificationArgs);
+      }
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    final S translate = S.of(context);
     return _CardSettings(title: translate.saveCollection,
       subtitle: translate.saveCollectionSubtitle,
       icon: const Icon(Icons.save),
       onTap: () async {
-        final QueryProvider filter = Provider.of<QueryProvider>(context, listen: false);
+        if(!(await permissionGranted(scaffoldState))) return;
         final List<String> figures = filter.customFigures;
         final List<String> cards = filter.customCards;
         bool save = await showDialog<bool>(
@@ -349,7 +305,7 @@ class __SaveCollectionState extends State<_SaveCollection> {
           if(equalFigures && cards.isEmpty) category = AmiiboCategory.Figures;
           else if(equalCards && figures.isEmpty) category = AmiiboCategory.Cards;
           else if(!equalCards || !equalFigures) category = AmiiboCategory.Custom;
-          _saveCollection(category, figures, cards);
+          await _saveCollection(category, figures, cards);
         }
       }
     );
@@ -481,9 +437,7 @@ class _DropMenu extends StatelessWidget {
 }
 
 class BottomBar extends StatefulWidget {
-  BottomBar({Key key, this.title}) : super(key: key);
-
-  final String title;
+  BottomBar({Key key}) : super(key: key);
 
   @override
   _BottomBarState createState() => _BottomBarState();
@@ -515,6 +469,7 @@ class _BottomBarState extends State<BottomBar> {
   Future<void> _openFileExplorer() async {
     try{
       final file = await FilePicker.getFile(type: FileType.any);
+
       final String _path = file?.path;
       //print('MyPath: $_path');
       if(_path == null) return;
