@@ -1,7 +1,8 @@
 ## Version 1.3.3
 - Las imagenes creadas ahora se muestran correctamente en la galería [Arreglado]
-- Diñalogo mostrando lo más nuevo al principio de la App
+- Diálogo mostrando lo más nuevo al principio de la App
 - Fecha de lanzamiento de Joker y Hero agregada
+- Correción de tamaño de letra al mostrar estadísticas en dispositivos de baja resolución usando Android 5 o inferior
 - Corrección de errores
 
 ## Version 1.3.2

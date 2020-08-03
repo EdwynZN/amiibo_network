@@ -79,7 +79,7 @@ public class NotificationUtils extends ContextWrapper {
 
         Intent sendIntent = new Intent();
         sendIntent.setAction(Intent.ACTION_SEND);
-        sendIntent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION | Intent.FLAG_GRANT_WRITE_URI_PERMISSION | Intent.FLAG_GRANT_PERSISTABLE_URI_PERMISSION);
+        sendIntent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION | Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
         sendIntent.putExtra(Intent.EXTRA_STREAM, uri);
 
         //Uri imageCollection = MediaStore.Images.Media.getContentUri(MediaStore.VOLUME_EXTERNAL_PRIMARY);
@@ -222,14 +222,12 @@ public class NotificationUtils extends ContextWrapper {
         Uri uri;
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) uri = MediaStoreFlutter.updateMediaStore(this, bitmap, name);
         else uri = MediaStoreFlutter.updateLegacyMediaStore(this, bitmap, name);
-        if(uri != null) {
-            Notification notification = imageNotification(title, name + ".png", uri, actionTitle, id, bitmap);
-            getManager().notify(id, notification);
+        Notification notification = imageNotification(title, name + ".png", uri, actionTitle, id, bitmap);
+        getManager().notify(id, notification);
 
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                Notification summary = createSummary(title);
-                getManager().notify(SUMMARY_ID, summary);
-            }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            Notification summary = createSummary(title);
+            getManager().notify(SUMMARY_ID, summary);
         }
     }
 

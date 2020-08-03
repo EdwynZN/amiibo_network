@@ -11,6 +11,7 @@ import 'package:amiibo_network/service/storage.dart';
 import 'package:amiibo_network/provider/theme_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:launch_review/launch_review.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:amiibo_network/service/service.dart';
 import 'package:amiibo_network/widget/theme_widget.dart';

@@ -22,7 +22,8 @@
         android:smallScreens= "true"
         android:normalScreens= "true"
         android:largeScreens= "true"
-        android:xlargeScreens= "true"/>
+        android:xlargeScreens= "true"
+    />
     <application
         android:allowBackup="false"
         android:name="io.flutter.app.FlutterApplication"

@@ -12,6 +12,8 @@ import android.os.Environment;
 import android.os.ParcelFileDescriptor;
 import android.provider.MediaStore;
 import android.util.Log;
+
+import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import java.io.File;
 import java.io.FileInputStream;
@@ -48,7 +50,7 @@ class MediaStoreFlutter extends ContextWrapper {
             imageUri = resolver.insert(imageCollection, pictureContent);
         }
         else {
-            pictureContent.put(MediaStore.Images.Media.DATE_MODIFIED, System.currentTimeMillis());
+            pictureContent.put(MediaStore.Images.Media.DATE_MODIFIED, System.currentTimeMillis() / 1000);
             resolver.update(imageUri, pictureContent, null, null);
         }
 
@@ -81,54 +83,36 @@ class MediaStoreFlutter extends ContextWrapper {
     static public Uri updateLegacyMediaStore(Context context, Bitmap bitmap, String nameFile) throws IOException {
         File directory = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES + File.separator + folder);
         if(!directory.exists()) directory.mkdirs();
-        File file = new File(directory, nameFile + ".png");
 
         Uri imageCollection = MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
         ContentResolver resolver = context.getContentResolver();
-
         Uri imageUri = exists(resolver, imageCollection, nameFile);
 
         ContentValues pictureContent = new ContentValues();
+        if(imageUri == null){
+            File file = new File(directory, nameFile + ".png");
+            pictureContent.put(MediaStore.Images.Media.MIME_TYPE, "image/png");
+            pictureContent.put(MediaStore.Images.Media.DISPLAY_NAME, nameFile + ".png");
+            pictureContent.put(MediaStore.Images.Media.TITLE, nameFile);
+            pictureContent.put(MediaStore.Images.Media.DATE_TAKEN, System.currentTimeMillis());
+            pictureContent.put(MediaStore.Images.Media.BUCKET_DISPLAY_NAME, folder);
+            pictureContent.put(MediaStore.Images.Media.DATA, file.getAbsolutePath());
+            imageUri = resolver.insert(imageCollection, pictureContent);
+        }
 
-
-        /*
-        ContentValues pictureContent = new ContentValues();
-        pictureContent.put(MediaStore.Images.Media.TITLE, nameFile);
-        pictureContent.put(MediaStore.Images.Media.DATE_TAKEN, System.currentTimeMillis());
-        pictureContent.put(MediaStore.Images.Media.DATA, file.getAbsolutePath());
-
-         */
-        Uri result = null;
-
-        try (FileOutputStream stream = new FileOutputStream(file)) {
+        try (OutputStream stream = resolver.openOutputStream(imageUri, "w")) {
             if (!bitmap.compress(Bitmap.CompressFormat.PNG, 95, stream)) throw new IOException("Failed to save bitmap.");
-            stream.flush();
-            stream.close();
-            //stream.getFD().sync();
-            /*AtomicReference<Uri> uri = new AtomicReference<>();
-            MediaScannerConnection.scanFile(context, new String[]{file.getAbsolutePath()}, null,
-                (path, uriContent) -> uri.set(uriContent)
-            );*/
-            if(imageUri == null){
-                pictureContent.put(MediaStore.Images.Media.MIME_TYPE, "image/png");
-                pictureContent.put(MediaStore.Images.Media.DISPLAY_NAME, nameFile + ".png");
-                pictureContent.put(MediaStore.Images.Media.TITLE, nameFile);
-                pictureContent.put(MediaStore.Images.Media.DATE_TAKEN, System.currentTimeMillis());
-                imageUri = resolver.insert(imageCollection, pictureContent);
-            }
-            else {
-                pictureContent.put(MediaStore.Images.Media.DATE_MODIFIED, System.currentTimeMillis());
-                resolver.update(imageUri, pictureContent, null, null);
-            }
-            //result = exists(resolver, imageCollection, nameFile);
-            //if(result == null) result = resolver.insert(imageCollection, pictureContent);
-            //if(result != null) Log.v("uri", result.toString());
+            pictureContent.clear();
+            pictureContent.put(MediaStore.Images.Media.DATE_MODIFIED, System.currentTimeMillis() / 1000);
+            resolver.update(imageUri, pictureContent, null, null);
             return imageUri;
         } catch (IOException e) {
+            if (imageUri != null) resolver.delete(imageUri, null, null);
             throw e;
         }
     }
 
+    @Nullable
     static public Uri exists(ContentResolver resolver, Uri uri, String nameFile){
         String selection = MediaStore.Images.Media.BUCKET_DISPLAY_NAME + " = ? and " + MediaStore.Images.Media.TITLE + " = ?";
         String[] args = new String[] {folder, nameFile};
@@ -146,6 +130,59 @@ class MediaStoreFlutter extends ContextWrapper {
             if(imageID != 0) return Uri.withAppendedPath(uri, String.valueOf(imageID));
         }
         return null;
+    }
+
+    @Deprecated
+    static public Uri updateLegacyMediaStoreOld(Context context, Bitmap bitmap, String nameFile) throws IOException {
+        File directory = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES + File.separator + folder);
+        if(!directory.exists()) directory.mkdirs();
+        File file = new File(directory, nameFile + ".png");
+
+        Uri imageCollection = MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
+        ContentResolver resolver = context.getContentResolver();
+
+        Uri imageUri = exists(resolver, imageCollection, nameFile);
+
+        ContentValues pictureContent = new ContentValues();
+
+
+        /*
+        ContentValues pictureContent = new ContentValues();
+        pictureContent.put(MediaStore.Images.Media.TITLE, nameFile);
+        pictureContent.put(MediaStore.Images.Media.DATE_TAKEN, System.currentTimeMillis());
+        pictureContent.put(MediaStore.Images.Media.DATA, file.getAbsolutePath());
+
+         */
+        //Uri result = null;
+
+        try (FileOutputStream stream = new FileOutputStream(file)) {
+            if (!bitmap.compress(Bitmap.CompressFormat.PNG, 95, stream)) throw new IOException("Failed to save bitmap.");
+            stream.flush();
+            stream.close();
+            //stream.getFD().sync();
+            /*AtomicReference<Uri> uri = new AtomicReference<>();
+            MediaScannerConnection.scanFile(context, new String[]{file.getAbsolutePath()}, null,
+                (path, uriContent) -> uri.set(uriContent)
+            );*/
+            if(imageUri == null){
+                pictureContent.put(MediaStore.Images.Media.MIME_TYPE, "image/png");
+                pictureContent.put(MediaStore.Images.Media.DISPLAY_NAME, nameFile + ".png");
+                pictureContent.put(MediaStore.Images.Media.TITLE, nameFile);
+                pictureContent.put(MediaStore.Images.Media.DATE_TAKEN, System.currentTimeMillis());
+                pictureContent.put(MediaStore.Images.Media.BUCKET_DISPLAY_NAME, folder);
+                imageUri = resolver.insert(imageCollection, pictureContent);
+            }
+            else {
+                pictureContent.put(MediaStore.Images.Media.DATE_MODIFIED, System.currentTimeMillis());
+                resolver.update(imageUri, pictureContent, null, null);
+            }
+            //result = exists(resolver, imageCollection, nameFile);
+            //if(result == null) result = resolver.insert(imageCollection, pictureContent);
+            //if(result != null) Log.v("uri", result.toString());
+            return imageUri;
+        } catch (IOException e) {
+            throw e;
+        }
     }
 
     private void copyFileData(Uri destination, File fileToExport){

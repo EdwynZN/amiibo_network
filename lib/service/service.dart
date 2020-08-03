@@ -12,14 +12,14 @@ class Service{
     bool group = false}) {
     String where = expression.toString();
     List<dynamic> args = expression.args;
-    if(where.isEmpty | args.isEmpty) where = args = null;
+    if(where.isEmpty || args.isEmpty) where = args = null;
     return dao.fetchSum(where, args, group);
   }
 
   Future<AmiiboLocalDB> fetchByCategory({Expression expression, String orderBy}) {
     String where = expression.toString();
     List<dynamic> args = expression.args;
-    if(where.isEmpty | args.isEmpty) where = args = null;
+    if(where.isEmpty || args.isEmpty) where = args = null;
     return dao.fetchByColumn(where, args, orderBy);
   }
 
@@ -35,14 +35,14 @@ class Service{
   Future<List<String>> fetchDistinct({List<String> column, Expression expression, String orderBy}) {
     String where = expression.toString();
     List<dynamic> args = expression.args;
-    if(where.isEmpty | args.isEmpty) where = args = null;
+    if(where.isEmpty || args.isEmpty) where = args = null;
     return dao.fetchDistinct('amiibo', column, where, args, orderBy);
   }
 
   Future<List<String>> searchDB(Expression expression, String column) {
     String where = expression.toString();
     List<dynamic> args = expression.args;
-    if(where.isEmpty | args.isEmpty) where = args = null;
+    if(where.isEmpty || args.isEmpty) where = args = null;
     return dao.fetchLimit(where, args, 10, column);
   }
 

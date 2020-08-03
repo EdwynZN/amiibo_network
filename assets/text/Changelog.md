@@ -1,6 +1,7 @@
 ## Version 1.3.3
 - Exported images are now showed in gallery [Fixed]
 - Showing what's new when updating the App
+- Fixed font size when showing stats in devices running Android 5 or lower
 - Release dates of Joker and Hero
 - Fixed minor bugs
 
