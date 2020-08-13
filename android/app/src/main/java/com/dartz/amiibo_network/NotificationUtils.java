@@ -123,10 +123,11 @@ public class NotificationUtils extends ContextWrapper {
                 intent, PendingIntent.FLAG_UPDATE_CURRENT);*/
             //Log.v("message: ", "Notification");
 
-            sendIntent.setType("text/plain");
+            sendIntent.setType("text/json");
+            Intent chooser = Intent.createChooser(sendIntent, actionTitle);
 
             PendingIntent pShareIntent = PendingIntent.getActivity(this, id,
-                sendIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+                chooser, PendingIntent.FLAG_UPDATE_CURRENT);
 
             notificationBuilder//.setContentIntent(pIntent)
                 .addAction(android.R.drawable.ic_menu_share, actionTitle, pShareIntent);
@@ -158,10 +159,10 @@ public class NotificationUtils extends ContextWrapper {
         intent.setDataAndType(uri, "image/png");
 
         PendingIntent pContentIntent = PendingIntent.getActivity(this, id,
-                intent, PendingIntent.FLAG_UPDATE_CURRENT);
+            intent, PendingIntent.FLAG_UPDATE_CURRENT);
 
         sendIntent.setType("image/png");
-        Intent chooser = Intent.createChooser(sendIntent, "Share File");
+        Intent chooser = Intent.createChooser(sendIntent, contentText);
 
         List<ResolveInfo> resInfoList = this.getPackageManager().queryIntentActivities(chooser, PackageManager.MATCH_DEFAULT_ONLY);
 

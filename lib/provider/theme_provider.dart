@@ -486,7 +486,7 @@ class _Theme{
       default:
         _darkTheme = ThemeData(
           splashFactory: InkRipple.splashFactory,
-          primaryColorLight: Colors.black,//_darkAccentColor.withOpacity(0.75),
+          primaryColorLight: Colors.transparent, //_darkAccentColor.withOpacity(0.55),
           primaryColorDark: _darkAccentColor,
           textSelectionHandleColor: _darkAccentColor,
           textSelectionColor: _darkAccentColor.withOpacity(0.5),

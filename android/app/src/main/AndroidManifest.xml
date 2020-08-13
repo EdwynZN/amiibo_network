@@ -25,7 +25,8 @@
         android:xlargeScreens= "true"
     />
     <application
-        android:allowBackup="false"
+        android:allowBackup="true"
+        android:fullBackupContent="@xml/my_backup_rules"
         android:name="io.flutter.app.FlutterApplication"
         android:label="Amiibo Network"
         android:icon="@mipmap/ic_launcher">

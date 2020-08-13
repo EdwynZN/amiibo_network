@@ -26,7 +26,7 @@ extension _StringParsing on AmiiboCategory{
 
 class SearchProvider{
   final _service = Service();
-  final _searchFetcher = PublishSubject<String>();
+  final _searchFetcher = BehaviorSubject<String>.seeded('');
   final _categoryStream = BehaviorSubject<AmiiboCategory>.seeded(_category);
   static AmiiboCategory _category = AmiiboCategory.Name;
   AmiiboCategory get category => _category;

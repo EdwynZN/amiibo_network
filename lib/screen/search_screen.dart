@@ -13,7 +13,7 @@ class SearchScreen extends StatefulWidget {
 }
 
 class SearchScreenState extends State<SearchScreen>{
-  static final RegExp _regWhiteList = RegExp('^[A-Za-zÀ-ÿ0-9 .\/-]*\$');
+  static final RegExp _regAllowList = RegExp('^[A-Za-zÀ-ÿ0-9 .\/-]*\$');
   final _textController = TextEditingController();
   SearchProvider _search;
   String amiiboCategory;
@@ -74,7 +74,7 @@ class SearchScreenState extends State<SearchScreen>{
                 controller: _textController,
                 inputFormatters: [
                   LengthLimitingTextInputFormatter(25),
-                  WhitelistingTextInputFormatter(_regWhiteList)
+                  FilteringTextInputFormatter.allow(_regAllowList),
                 ],
                 textInputAction: TextInputAction.search,
                 autofocus: true,
