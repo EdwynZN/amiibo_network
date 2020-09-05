@@ -9788,7 +9788,33 @@
       "jp":"20201002",
       "na":"20201002",
       "type":"Figure"
+    },
+    {
+      "key":754,
+      "id":null,
+      "amiiboSeries":"Super Mario Bros.",
+      "character":"Mario",
+      "gameSeries":"Super Mario",
+      "name":"Cat Mario",
+      "au":null,
+      "eu":"20210212",
+      "jp":"20210212",
+      "na":"20210212",
+      "type":"Figure"
+    },
+    {
+      "key":755,
+      "id":null,
+      "amiiboSeries":"Super Mario Bros.",
+      "character":"Peach",
+      "gameSeries":"Super Mario",
+      "name":"Cat Peach",
+      "au":null,
+      "eu":"20210212",
+      "jp":"20210212",
+      "na":"20210212",
+      "type":"Figure"
     }
   ],
-  "lastUpdated": "2020-07-15T14:31:09.822"
+  "lastUpdated": "2020-08-04T14:31:09.822"
 }

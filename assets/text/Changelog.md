@@ -1,4 +1,5 @@
 ## Version 1.3.3
+- Added Cat Mario and Cat Peach to Super Mario Bros.
 - Exported images are now showed in gallery [Fixed]
 - Showing what's new when updating the App
 - Fixed font size when showing stats in devices running Android 5 or lower

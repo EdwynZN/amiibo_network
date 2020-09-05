@@ -1,4 +1,5 @@
 ## Version 1.3.3
+- Se agregaron las figuras de Mario Gato y Peach Gato
 - Las imagenes creadas ahora se muestran correctamente en la galería [Arreglado]
 - Diálogo mostrando lo más nuevo al principio de la App
 - Fecha de lanzamiento de Joker y Hero agregada
