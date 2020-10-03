@@ -366,7 +366,7 @@ class _Theme{
           accentTextTheme: _brightness == Brightness.dark ? __lightAccentTextTheme : __darkAccentTextTheme,
           bottomAppBarTheme: BottomAppBarTheme(
             shape: CircularNotchedRectangle(),
-            color: Colors.blueGrey,
+            color: Colors.blueGrey[900],
             // color: Colors.transparent,
             elevation: 0.0
           ),
