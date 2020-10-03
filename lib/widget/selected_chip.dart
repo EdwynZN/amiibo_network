@@ -77,15 +77,13 @@ class CustomQueryWidget extends StatelessWidget{
         ),
       ),
       actions: <Widget>[
-        FlatButton(
-            textColor: Theme.of(context).accentColor,
-            child: Text(MaterialLocalizations.of(context).cancelButtonLabel),
-            onPressed: () async => Navigator.of(context).maybePop(false)
+        TextButton(
+          child: Text(MaterialLocalizations.of(context).cancelButtonLabel),
+          onPressed: () async => Navigator.of(context).maybePop(false)
         ),
-        FlatButton(
-            textColor: Theme.of(context).accentColor,
-            child: Text(MaterialLocalizations.of(context).okButtonLabel),
-            onPressed: () async => Navigator.of(context).maybePop(true)
+        TextButton(
+          child: Text(MaterialLocalizations.of(context).okButtonLabel),
+          onPressed: () async => Navigator.of(context).maybePop(true)
         ),
       ],
     );

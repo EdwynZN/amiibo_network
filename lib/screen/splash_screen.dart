@@ -70,7 +70,7 @@ class SplashScreenState extends State<SplashScreen>
                     _text = snapshot.data ? translate.splashWelcome : translate.splashError;
                     _child = Image.asset(
                       'assets/images/icon_app.png', fit: BoxFit.fitWidth,
-                      color: Theme.of(context).brightness == Brightness.dark ? Colors.white54 : null,
+                      color: Theme.of(context).primaryColorBrightness == Brightness.dark ? Colors.white54 : null,
                     );
                     _animationController.forward().whenCompleteOrCancel(() =>
                       Navigator.pushReplacementNamed(context, '/home')
@@ -139,7 +139,7 @@ class SwitchIcon extends StatelessWidget{
       child: CustomPaint(
         size: Size(height/11.3, height/4),
         painter: SwitchJoycon(isLeft: isLeft,
-        color: Theme.of(context).brightness == Brightness.light ?
+        color: Theme.of(context).primaryColorBrightness == Brightness.light ?
           null : Colors.grey[850])
       ),
       builder: (_, Widget child) {

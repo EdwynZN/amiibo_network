@@ -399,7 +399,6 @@ class _SortCollection extends StatefulWidget{
 
 class _SortCollectionState extends State<_SortCollection> {
   QueryProvider queryProvider;
-  ButtonTextTheme _buttonTextTheme;
   Color _accentColor, _accentTextThemeColor;
 
   @override
@@ -408,8 +407,6 @@ class _SortCollectionState extends State<_SortCollection> {
     final ThemeData theme = Theme.of(context);
     _accentColor = theme.accentColor;
     _accentTextThemeColor = theme.accentTextTheme.headline6.color;
-    _buttonTextTheme = ThemeData.estimateBrightnessForColor(theme.primaryColor) == Brightness.light
-        ? ButtonTextTheme.normal : ButtonTextTheme.accent;
     super.didChangeDependencies();
   }
 
@@ -457,15 +454,14 @@ class _SortCollectionState extends State<_SortCollection> {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: <Widget>[
                             Text(translate.sort, style: Theme.of(context).textTheme.headline6),
-                            MaterialButton(
-                              height: 34,
-                              materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                              highlightColor: Colors.transparent,
-                              textColor: _accentColor,
-                              splashColor: Theme.of(context).selectedRowColor,
+                            TextButton(
+                              style: TextButton.styleFrom(
+                                tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                                visualDensity: VisualDensity(vertical: -0.5)
+                              ),
                               onPressed: () => Navigator.pop(context),
                               child: Text(translate.done),
-                            )
+                            ),
                           ],
                         ),
                       ),
@@ -482,45 +478,23 @@ class _SortCollectionState extends State<_SortCollection> {
                                 mainAxisSize: MainAxisSize.max,
                                 children: <Widget>[
                                   Expanded(
-                                    child: FlatButton.icon(
-                                      padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                                      textTheme: _buttonTextTheme,
-                                      textColor: sortBy.contains('ASC') ? _accentTextThemeColor : null,
-                                      color: sortBy.contains('ASC') ? _accentColor : null,
-                                      shape: Border.all(
-                                        color: _accentColor,
-                                        width: 2,
-                                      ),
+                                    child: OutlinedButton.icon(
+                                      style: sortBy.contains('ASC') ? OutlinedButton.styleFrom(
+                                        primary: _accentTextThemeColor,
+                                        backgroundColor: _accentColor
+                                      ) : null,
                                       onPressed: () => _sortOrder('ASC'),
                                       icon: const Icon(Icons.arrow_downward, size: 20,),
                                       label: Flexible(child: FittedBox(child: Text(translate.asc),)),
                                     ),
                                   ),
                                   Expanded(
-                                    child: FlatButton.icon(
+                                    child: OutlinedButton.icon(
                                       key: Key('DESC'),
-                                      padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                                      textTheme: _buttonTextTheme,
-                                      textColor: sortBy.contains('DESC') ? _accentTextThemeColor : null,
-                                      color: sortBy.contains('DESC') ? _accentColor : null,
-                                      shape: Border(
-                                        bottom: BorderSide(
-                                          color: _accentColor,
-                                          width: 2,
-                                        ),
-                                        top: BorderSide(
-                                          color: _accentColor,
-                                          width: 2,
-                                        ),
-                                        left: BorderSide(
-                                            color: _accentColor,
-                                            width: 0.0
-                                        ),
-                                        right: BorderSide(
-                                            color: _accentColor,
-                                            width: 2.0
-                                        ),
-                                      ),
+                                      style: sortBy.contains('DESC') ? OutlinedButton.styleFrom(
+                                        primary: _accentTextThemeColor,
+                                        backgroundColor: _accentColor
+                                      ) : null,
                                       onPressed: () => _sortOrder('DESC'),
                                       icon: const Icon(Icons.arrow_upward, size: 20),
                                       label: Flexible(child: FittedBox(child: Text(translate.desc),)),

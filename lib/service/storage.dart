@@ -6,7 +6,6 @@ import 'package:amiibo_network/service/info_package.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:amiibo_network/generated/l10n.dart';
 import 'package:flutter/foundation.dart';
-
 /// Date String in format year.month.day_hour.minute.second
 String get dateTaken {
   DateTime date = DateTime.now();
@@ -57,8 +56,9 @@ Future<File> createFile([String name = 'MyAmiiboNetwork', String type = 'json'])
   return file;
 }
 
-Map<String,dynamic> readFile(File file) {
+Map<String,dynamic> readFile(String path) {
   try{
+    final file = File(path);
     String data = file.readAsStringSync();
     final Map<String, dynamic> jResult = jsonDecode(data);
     if(!jResult.containsKey('amiibo')) return null;

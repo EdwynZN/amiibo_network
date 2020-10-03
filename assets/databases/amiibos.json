@@ -9765,7 +9765,7 @@
     },
     {
       "key":752,
-      "id":null,
+      "id":"3A00000003A10002",
       "amiiboSeries":"Super Smash Bros.",
       "character":"Joker",
       "gameSeries":"Persona 5",
@@ -9778,7 +9778,7 @@
     },
     {
       "key":753,
-      "id":null,
+      "id":"3640000003A20002",
       "amiiboSeries":"Super Smash Bros.",
       "character":"Hero",
       "gameSeries":"Dragon Quest",
@@ -9814,7 +9814,85 @@
       "jp":"20210212",
       "na":"20210212",
       "type":"Figure"
+    },
+    {
+      "key":756,
+      "id":null,
+      "amiiboSeries":"Monster Hunter",
+      "character":"Magnamalo",
+      "gameSeries":"Monster Hunter Rise",
+      "name":"Magnamalo",
+      "au":null,
+      "eu":"202103",
+      "jp":"20210326",
+      "na":"20210326",
+      "type":"Figure"
+    },
+    {
+      "key":757,
+      "id":null,
+      "amiiboSeries":"Monster Hunter",
+      "character":"Palamute",
+      "gameSeries":"Monster Hunter Rise",
+      "name":"Palamute",
+      "au":null,
+      "eu":"202103",
+      "jp":"20210326",
+      "na":"20210326",
+      "type":"Figure"
+    },
+    {
+      "key":758,
+      "id":null,
+      "amiiboSeries":"Monster Hunter",
+      "character":"Palico",
+      "gameSeries":"Monster Hunter Rise",
+      "name":"Palico",
+      "au":null,
+      "eu":"202103",
+      "jp":"20210326",
+      "na":"20210326",
+      "type":"Figure"
+    },
+    {
+      "key":759,
+      "id":null,
+      "amiiboSeries":"Super Smash Bros.",
+      "character":"Banjo & Kazooie",
+      "gameSeries":"Banjo-Kazooie",
+      "name":"Banjo & Kazooie",
+      "au":null,
+      "eu":"2021",
+      "jp":"2021",
+      "na":"2021",
+      "type":"Figure"
+    },
+    {
+      "key":760,
+      "id":null,
+      "amiiboSeries":"Super Smash Bros.",
+      "character":"Terry Bogard",
+      "gameSeries":"Fatal Fury: King of Fighters",
+      "name":"Terry Bogard",
+      "au":null,
+      "eu":"2021",
+      "jp":"2021",
+      "na":"2021",
+      "type":"Figure"
+    },
+    {
+      "key":761,
+      "id":null,
+      "amiiboSeries":"Super Smash Bros.",
+      "character":"Byleth",
+      "gameSeries":"Fire Emblem",
+      "name":"Byleth Eisner",
+      "au":null,
+      "eu":"2021",
+      "jp":"2021",
+      "na":"2021",
+      "type":"Figure"
     }
   ],
-  "lastUpdated": "2020-08-04T14:31:09.822"
+  "lastUpdated": "2020-10-03T12:02:59.957"
 }

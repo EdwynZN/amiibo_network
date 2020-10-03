@@ -161,7 +161,7 @@ class ThemeButton extends StatelessWidget{
       radius: 18,
       splashFactory: InkRipple.splashFactory,
       highlightColor: Colors.transparent,
-      splashColor: Theme.of(context).primaryColorDark,
+      splashColor: Theme.of(context).indicatorColor,
       child: AnimatedSwitcher(
         duration: const Duration(milliseconds: 800),
         reverseDuration: const Duration(milliseconds: 400),
@@ -169,11 +169,11 @@ class ThemeButton extends StatelessWidget{
         switchOutCurve: Curves.easeOutBack,
         transitionBuilder: (child, animation){
           return RotationTransition(
-              turns: animation,
-              child: FadeTransition(
-                opacity: animation,
-                child: child,
-              )
+            turns: animation,
+            child: FadeTransition(
+              opacity: animation,
+              child: child,
+            )
           );
         },
         child: _selectWidget(theme),

@@ -1,3 +1,8 @@
+## Version 1.3.4
+- Added Super Smash Bros. series Banjo & Kazooie, Terry y Byleth
+- Added Monster Hunter Rise series Magnamallo, Palamute and Palico
+- Fixed minor bugs related to text color with themes with high contrasts
+
 ## Version 1.3.3
 - Added Cat Mario and Cat Peach to Super Mario Bros.
 - Exported images are now showed in gallery [Fixed]

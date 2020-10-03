@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../utils/preferences_constants.dart';
 
@@ -158,7 +159,7 @@ class _Theme{
       primaryIconTheme: const IconThemeData(color: Colors.black),
       textSelectionHandleColor: color[300],
       textSelectionColor: accentColor.withOpacity(0.5),
-      brightness: Brightness.light,
+      brightness: _brightnessColor,
       appBarTheme: AppBarTheme(
         elevation: 0.0,
         color: color,
@@ -199,8 +200,18 @@ class _Theme{
       primaryTextTheme: _brightnessPrimaryColor == Brightness.dark ? __lightAccentTextTheme : __darkAccentTextTheme,
       accentTextTheme: _brightnessAccentTextTheme == Brightness.dark ? __lightAccentTextTheme : __darkAccentTextTheme,
       bottomAppBarTheme: BottomAppBarTheme(
-          color: Colors.transparent,
-          elevation: 0.0
+        shape: CircularNotchedRectangle(),
+        color: color,
+        // color: Colors.transparent,
+        elevation: 0.0
+      ),
+      bottomNavigationBarTheme: BottomNavigationBarThemeData(
+        type: BottomNavigationBarType.fixed,
+        backgroundColor: Colors.transparent,
+        elevation: 0.0,
+        selectedItemColor: _brightnessAccentColor == Brightness.dark ? Colors.white : Colors.black,
+        unselectedItemColor: _brightnessAccentColor == Brightness.dark ? color[100].withOpacity(0.75) : Colors.black38,
+        showUnselectedLabels: true,
       ),
       dialogTheme: DialogTheme(
         titleTextStyle: __darkAccentTextTheme.headline6,
@@ -218,6 +229,44 @@ class _Theme{
             side: BorderSide(color: accentColor)
         ),
         behavior: SnackBarBehavior.floating,
+      ),
+      outlinedButtonTheme: OutlinedButtonThemeData(
+        style: ButtonStyle(
+          mouseCursor: MaterialStateProperty.all<MouseCursor>(MaterialStateMouseCursor.clickable),
+          //enableFeedback: false,
+          shape: MaterialStateProperty.all<OutlinedBorder>(RoundedRectangleBorder()),
+          side: MaterialStateProperty.all<BorderSide>(BorderSide(
+            color: accentColor[700],
+            width: 1,
+          )),
+          backgroundColor: MaterialStateProperty.all<Color>(Colors.transparent),
+          foregroundColor: MaterialStateProperty.all<Color>(_brightnessAccentColor == Brightness.dark ? accentColor[700] : Colors.black),
+        )
+      ),
+      textButtonTheme: TextButtonThemeData(
+        style: ButtonStyle(
+          mouseCursor: MaterialStateProperty.all<MouseCursor>(MaterialStateMouseCursor.clickable),
+          //enableFeedback: false,
+          shape: MaterialStateProperty.all<OutlinedBorder>(RoundedRectangleBorder(borderRadius: BorderRadius.circular(8))),
+          backgroundColor: MaterialStateProperty.all<Color>(Colors.transparent),
+          foregroundColor: MaterialStateProperty.all<Color>(_brightnessAccentColor == Brightness.dark ? accentColor[700] : Colors.black),
+        )
+      ),
+      elevatedButtonTheme: ElevatedButtonThemeData(
+        style: ButtonStyle(
+          mouseCursor: MaterialStateProperty.all<MouseCursor>(MaterialStateMouseCursor.clickable),
+          //enableFeedback: false,
+          shape: MaterialStateProperty.all<OutlinedBorder>(RoundedRectangleBorder(borderRadius: BorderRadius.circular(8))),
+          elevation: MaterialStateProperty.resolveWith<double>((states) {
+            if(states.contains(MaterialState.pressed)) return 0.0;
+            return 8.0;
+          }),
+          backgroundColor: MaterialStateProperty.all<Color>(color[100]),
+          foregroundColor: MaterialStateProperty.all<Color>(__darkAccentTextTheme.headline1.color),
+          textStyle: MaterialStateProperty.all<TextStyle>(__darkAccentTextTheme.bodyText1),
+          overlayColor: MaterialStateProperty.all<Color>(_darkAccentColor.withOpacity(0.24)),
+          visualDensity: VisualDensity(vertical: 2.5)
+        )
       ),
       buttonTheme: ButtonThemeData(
         textTheme: ButtonTextTheme.normal,
@@ -256,7 +305,7 @@ class _Theme{
         groupAlignment: 1.0,
         selectedIconTheme: IconThemeData(color: accentColor[700]),
         selectedLabelTextStyle: __lightAccentTextTheme.bodyText2.apply(
-            color: _brightnessAccentTextTheme == Brightness.dark ? accentColor[700] : Colors.black
+          color: _brightnessAccentTextTheme == Brightness.dark ? accentColor[700] : Colors.black
         ),
         unselectedIconTheme: const IconThemeData(color: Colors.black),
         unselectedLabelTextStyle: __darkAccentTextTheme.bodyText2
@@ -316,8 +365,18 @@ class _Theme{
           primaryTextTheme: __lightAccentTextTheme,
           accentTextTheme: _brightness == Brightness.dark ? __lightAccentTextTheme : __darkAccentTextTheme,
           bottomAppBarTheme: BottomAppBarTheme(
-            color: Colors.transparent,
+            shape: CircularNotchedRectangle(),
+            color: Colors.blueGrey,
+            // color: Colors.transparent,
             elevation: 0.0
+          ),
+          bottomNavigationBarTheme: BottomNavigationBarThemeData(
+            type: BottomNavigationBarType.fixed,
+            backgroundColor: Colors.transparent,
+            elevation: 0.0,
+            selectedItemColor: _darkAccentColor,
+            unselectedItemColor: Colors.blueGrey[700],
+            showUnselectedLabels: true,
           ),
           dialogTheme: DialogTheme(
             titleTextStyle: TextStyle(color: Colors.white70, fontSize: 18, fontWeight: FontWeight.w600),
@@ -334,6 +393,45 @@ class _Theme{
               side: BorderSide(color:const Color.fromRGBO(207, 102, 121, 1))
             ),
             behavior: SnackBarBehavior.floating,
+          ),
+          outlinedButtonTheme: OutlinedButtonThemeData(
+            style: ButtonStyle(
+              mouseCursor: MaterialStateProperty.all<MouseCursor>(MaterialStateMouseCursor.clickable),
+              //enableFeedback: false,
+              shape: MaterialStateProperty.all<OutlinedBorder>(RoundedRectangleBorder()),
+              side: MaterialStateProperty.all<BorderSide>(BorderSide(
+                color: _darkAccentColor,
+                width: 1,
+              )),
+              backgroundColor: MaterialStateProperty.all<Color>(Colors.transparent),
+              foregroundColor: MaterialStateProperty.all<Color>(_darkAccentColor),
+            )
+          ),
+          textButtonTheme: TextButtonThemeData(
+            style: ButtonStyle(
+                mouseCursor: MaterialStateProperty.all<MouseCursor>(MaterialStateMouseCursor.clickable),
+                //enableFeedback: false,
+                shape: MaterialStateProperty.all<OutlinedBorder>(RoundedRectangleBorder(borderRadius: BorderRadius.circular(8))),
+                backgroundColor: MaterialStateProperty.all<Color>(Colors.transparent),
+                foregroundColor: MaterialStateProperty.all<Color>(_darkAccentColor),
+                overlayColor: MaterialStateProperty.all<Color>(_darkAccentColor.withOpacity(0.24)),
+              )
+          ),
+          elevatedButtonTheme: ElevatedButtonThemeData(
+            style: ButtonStyle(
+              mouseCursor: MaterialStateProperty.all<MouseCursor>(MaterialStateMouseCursor.clickable),
+              //enableFeedback: false,
+              shape: MaterialStateProperty.all<OutlinedBorder>(RoundedRectangleBorder(borderRadius: BorderRadius.circular(8))),
+              elevation: MaterialStateProperty.resolveWith<double>((states) {
+                if(states.contains(MaterialState.pressed)) return 0.0;
+                return 8.0;
+              }),
+              backgroundColor: MaterialStateProperty.all<Color>(Colors.blueGrey[800]),
+              foregroundColor: MaterialStateProperty.all<Color>(__lightAccentTextTheme.headline1.color),
+              textStyle: MaterialStateProperty.all<TextStyle>(__lightAccentTextTheme.bodyText1),
+              overlayColor: MaterialStateProperty.all<Color>(_darkAccentColor.withOpacity(0.24)),
+              visualDensity: VisualDensity(vertical: 2.5)
+            )
           ),
           buttonTheme: ButtonThemeData(
             textTheme: ButtonTextTheme.normal,
@@ -421,8 +519,18 @@ class _Theme{
           primaryTextTheme: __lightAccentTextTheme,
           accentTextTheme: _brightness == Brightness.dark ? __lightAccentTextTheme : __darkAccentTextTheme,
           bottomAppBarTheme: BottomAppBarTheme(
-              color: Colors.transparent,
-              elevation: 0.0
+            shape: CircularNotchedRectangle(),
+            color: Colors.grey[900],
+            //color: Colors.transparent,
+            elevation: 0.0
+          ),
+          bottomNavigationBarTheme: BottomNavigationBarThemeData(
+            type: BottomNavigationBarType.fixed,
+            backgroundColor: Colors.transparent,
+            elevation: 0.0,
+            selectedItemColor: _darkAccentColor,
+            unselectedItemColor: Colors.grey[700],
+            showUnselectedLabels: true,
           ),
           dialogTheme: DialogTheme(
             titleTextStyle: TextStyle(color: Colors.white70, fontSize: 18, fontWeight: FontWeight.w600),
@@ -439,6 +547,45 @@ class _Theme{
                 side: BorderSide(color:const Color.fromRGBO(207, 102, 121, 1))
             ),
             behavior: SnackBarBehavior.floating,
+          ),
+          outlinedButtonTheme: OutlinedButtonThemeData(
+            style: ButtonStyle(
+              mouseCursor: MaterialStateProperty.all<MouseCursor>(MaterialStateMouseCursor.clickable),
+              // enableFeedback: false,
+              shape: MaterialStateProperty.all<OutlinedBorder>(RoundedRectangleBorder()),
+              side: MaterialStateProperty.all<BorderSide>(BorderSide(
+                color: _darkAccentColor,
+                width: 1,
+              )),
+              backgroundColor: MaterialStateProperty.all<Color>(Colors.transparent),
+              foregroundColor: MaterialStateProperty.all<Color>(_darkAccentColor),
+            )
+          ),
+          textButtonTheme: TextButtonThemeData(
+              style: ButtonStyle(
+                mouseCursor: MaterialStateProperty.all<MouseCursor>(MaterialStateMouseCursor.clickable),
+                //enableFeedback: false,
+                shape: MaterialStateProperty.all<OutlinedBorder>(RoundedRectangleBorder(borderRadius: BorderRadius.circular(8))),
+                backgroundColor: MaterialStateProperty.all<Color>(Colors.transparent),
+                foregroundColor: MaterialStateProperty.all<Color>(_darkAccentColor),
+                overlayColor: MaterialStateProperty.all<Color>(_darkAccentColor.withOpacity(0.24)),
+              )
+          ),
+          elevatedButtonTheme: ElevatedButtonThemeData(
+            style: ButtonStyle(
+              mouseCursor: MaterialStateProperty.all<MouseCursor>(MaterialStateMouseCursor.clickable),
+              //enableFeedback: false,
+              shape: MaterialStateProperty.all<OutlinedBorder>(RoundedRectangleBorder(borderRadius: BorderRadius.circular(8))),
+              elevation: MaterialStateProperty.resolveWith<double>((states) {
+                if(states.contains(MaterialState.pressed)) return 0.0;
+                return 8.0;
+              }),
+              backgroundColor: MaterialStateProperty.all<Color>(Colors.grey[850]),
+              foregroundColor: MaterialStateProperty.all<Color>(__lightAccentTextTheme.headline1.color),
+              textStyle: MaterialStateProperty.all<TextStyle>(__lightAccentTextTheme.bodyText1),
+              overlayColor: MaterialStateProperty.all<Color>(_darkAccentColor.withOpacity(0.24)),
+              visualDensity: VisualDensity(vertical: 2.5)
+            )
           ),
           buttonTheme: ButtonThemeData(
               textTheme: ButtonTextTheme.normal,
@@ -521,8 +668,8 @@ class _Theme{
             color: Colors.transparent,
             margin: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
             shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(8),
-                side: BorderSide(color: Colors.grey[900], width: 2)
+              borderRadius: BorderRadius.circular(8),
+              side: BorderSide(color: Colors.grey[900], width: 2)
             ),
             elevation: 0,
           ),
@@ -537,8 +684,18 @@ class _Theme{
           primaryTextTheme: __lightAccentTextTheme,
           accentTextTheme: _brightness == Brightness.dark ? __lightAccentTextTheme : __darkAccentTextTheme,
           bottomAppBarTheme: BottomAppBarTheme(
-              color: Colors.transparent,
-              elevation: 0.0
+            shape: CircularNotchedRectangle(),
+            color: Colors.black,
+            // color: Colors.transparent,
+            elevation: 0.0
+          ),
+          bottomNavigationBarTheme: BottomNavigationBarThemeData(
+            type: BottomNavigationBarType.fixed,
+            backgroundColor: Colors.transparent,
+            elevation: 0.0,
+            selectedItemColor: _darkAccentColor,
+            unselectedItemColor: Colors.white70,
+            showUnselectedLabels: true,
           ),
           dialogTheme: DialogTheme(
             titleTextStyle: TextStyle(color: Colors.white70, fontSize: 18, fontWeight: FontWeight.w600),
@@ -556,6 +713,48 @@ class _Theme{
                 side: BorderSide(color: _darkAccentColor)
             ),
             behavior: SnackBarBehavior.floating,
+          ),
+          outlinedButtonTheme: OutlinedButtonThemeData(
+            style: ButtonStyle(
+              mouseCursor: MaterialStateProperty.all<MouseCursor>(MaterialStateMouseCursor.clickable),
+              enableFeedback: false,
+              shape: MaterialStateProperty.all<OutlinedBorder>(RoundedRectangleBorder()),
+              side: MaterialStateProperty.all<BorderSide>(BorderSide(
+                color: _darkAccentColor,
+                width: 1,
+              )),
+              overlayColor: MaterialStateProperty.all<Color>(_darkAccentColor.withOpacity(0.5)),
+              backgroundColor: MaterialStateProperty.all<Color>(Colors.transparent),
+              foregroundColor: MaterialStateProperty.all<Color>(_darkAccentColor),
+            )
+          ),
+          textButtonTheme: TextButtonThemeData(
+            style: ButtonStyle(
+              mouseCursor: MaterialStateProperty.all<MouseCursor>(MaterialStateMouseCursor.clickable),
+              //enableFeedback: false,
+              shape: MaterialStateProperty.all<OutlinedBorder>(RoundedRectangleBorder(borderRadius: BorderRadius.circular(8))),
+              backgroundColor: MaterialStateProperty.all<Color>(Colors.transparent),
+              foregroundColor: MaterialStateProperty.all<Color>(_darkAccentColor),
+              overlayColor: MaterialStateProperty.all<Color>(_darkAccentColor.withOpacity(0.24)),
+            )
+          ),
+          elevatedButtonTheme: ElevatedButtonThemeData(
+            style: ButtonStyle(
+              mouseCursor: MaterialStateProperty.all<MouseCursor>(MaterialStateMouseCursor.clickable),
+              //enableFeedback: false,
+              shape: MaterialStateProperty.all<OutlinedBorder>(RoundedRectangleBorder(borderRadius: BorderRadius.circular(8))),
+              // side: MaterialStateProperty.all<BorderSide>(BorderSide(color: Colors.grey[900], width: 2)),
+              side: MaterialStateProperty.resolveWith<BorderSide>((states) {
+                  if(states.contains(MaterialState.pressed)) return BorderSide(color: _darkAccentColor, width: 2);
+                  return BorderSide(color: Colors.grey[900], width: 2);
+                }),
+              elevation: MaterialStateProperty.all<double>(0.0),
+              backgroundColor: MaterialStateProperty.all<Color>(Colors.transparent),
+              foregroundColor: MaterialStateProperty.all<Color>(__lightAccentTextTheme.headline1.color),
+              textStyle: MaterialStateProperty.all<TextStyle>(__lightAccentTextTheme.bodyText1),
+              overlayColor: MaterialStateProperty.all<Color>(_darkAccentColor.withOpacity(0.24)),
+              visualDensity: VisualDensity(vertical: 2.5)
+            )
           ),
           buttonTheme: ButtonThemeData(
               textTheme: ButtonTextTheme.normal,

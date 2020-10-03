@@ -46,13 +46,12 @@ class MarkdownReader extends StatelessWidget {
           )
       ),
       actions: <Widget>[
-        FlatButton(
-          textColor: Theme.of(context).accentColor,
+        TextButton(
           child: Text(MaterialLocalizations.of(context).okButtonLabel),
           onPressed: () async {
             Navigator.of(context).maybePop();
           },
-        ),
+        )
       ],
     );
   }

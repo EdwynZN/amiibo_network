@@ -13,7 +13,7 @@ class SearchScreen extends StatefulWidget {
 }
 
 class SearchScreenState extends State<SearchScreen>{
-  static final RegExp _regAllowList = RegExp('^[A-Za-zÀ-ÿ0-9 .\/-]*\$');
+  static final RegExp _regAllowList = RegExp(r'^[A-Za-zÀ-ÿ0-9 .\-\&]*$');
   final _textController = TextEditingController();
   SearchProvider _search;
   String amiiboCategory;
@@ -161,7 +161,7 @@ class _SliverPersistentHeader extends SliverPersistentHeaderDelegate {
       ),
       padding: const EdgeInsets.symmetric(horizontal: 12),
       height: maxExtent,
-      child: CategoryControl(),
+      child: const CategoryControl(),
     );
   }
 
@@ -177,12 +177,13 @@ class _SliverPersistentHeader extends SliverPersistentHeaderDelegate {
 }
 
 class CategoryControl extends StatefulWidget {
+  const CategoryControl({Key key}) : super(key: key);
+
   @override
   State<StatefulWidget> createState() => CategoryControlState();
 }
 
 class CategoryControlState extends State<CategoryControl>{
-  ButtonTextTheme _buttonTextTheme;
   Color _accentColor, _accentTextThemeColor;
 
   @override
@@ -190,8 +191,6 @@ class CategoryControlState extends State<CategoryControl>{
     final ThemeData theme = Theme.of(context);
     _accentColor = theme.accentColor;
     _accentTextThemeColor = theme.accentTextTheme.headline6.color;
-    _buttonTextTheme = ThemeData.estimateBrightnessForColor(theme.primaryColor) == Brightness.light
-        ? ButtonTextTheme.normal : ButtonTextTheme.accent;
     super.didChangeDependencies();
   }
 
@@ -211,17 +210,13 @@ class CategoryControlState extends State<CategoryControl>{
       mainAxisSize: MainAxisSize.max,
       children: <Widget>[
         Expanded(
-          child: FlatButton.icon(
-            padding: const EdgeInsets.symmetric(horizontal: 8.0),
-            textTheme: _buttonTextTheme,
-            textColor: _search.category == AmiiboCategory.Name ? _accentTextThemeColor : null,
-            color: _search.category == AmiiboCategory.Name ? _accentColor : null,
-            shape: RoundedRectangleBorder(
-              borderRadius: const BorderRadius.horizontal(left: Radius.circular(8)),
-              side: BorderSide(
-                color: _accentColor,
-                width: 2,
-              )
+          child: OutlinedButton.icon(
+            style: OutlinedButton.styleFrom(
+              primary: _search.category == AmiiboCategory.Name ? _accentTextThemeColor : null,
+              shape: RoundedRectangleBorder(
+                  borderRadius: const BorderRadius.horizontal(left: Radius.circular(8)),
+              ),
+              backgroundColor: _search.category == AmiiboCategory.Name ? _accentColor : null
             ),
             onPressed: () => _selectCategory(AmiiboCategory.Name),
             icon: const Icon(Icons.group, size: 20,),
@@ -229,35 +224,24 @@ class CategoryControlState extends State<CategoryControl>{
           ),
         ),
         Expanded(
-          child: FlatButton.icon(
-            padding: const EdgeInsets.symmetric(horizontal: 8.0),
-            textTheme: _buttonTextTheme,
-            textColor: _search.category == AmiiboCategory.Game ? _accentTextThemeColor : null,
-            color: _search.category == AmiiboCategory.Game ? _accentColor : null,
-            shape: Border.symmetric(
-                vertical: BorderSide(
-                  color: _accentColor,
-                  width: 2,
-                ),
-                horizontal: BorderSide.none
-            ),
+          child: OutlinedButton.icon(
+            style: _search.category == AmiiboCategory.Game ? OutlinedButton.styleFrom(
+              primary: _accentTextThemeColor,
+              backgroundColor: _accentColor
+            ) : null,
             onPressed: () => _selectCategory(AmiiboCategory.Game),
             icon: const Icon(Icons.games, size: 20,),
             label: Flexible(child: FittedBox(child: Text(translate.category(AmiiboCategory.Game)),)),
           ),
         ),
         Expanded(
-          child: FlatButton.icon(
-            padding: const EdgeInsets.symmetric(horizontal: 8.0),
-            textTheme: _buttonTextTheme,
-            textColor: _search.category == AmiiboCategory.AmiiboSeries ? _accentTextThemeColor : null,
-            color: _search.category == AmiiboCategory.AmiiboSeries ? _accentColor : null,
-            shape: RoundedRectangleBorder(
-              borderRadius: const BorderRadius.horizontal(right: Radius.circular(8)),
-              side: BorderSide(
-                color: _accentColor,
-                width: 2,
-              )
+          child: OutlinedButton.icon(
+            style: OutlinedButton.styleFrom(
+              primary: _search.category == AmiiboCategory.AmiiboSeries ? _accentTextThemeColor : null,
+              shape: RoundedRectangleBorder(
+                borderRadius: const BorderRadius.horizontal(right: Radius.circular(8)),
+              ),
+              backgroundColor: _search.category == AmiiboCategory.AmiiboSeries ? _accentColor : null
             ),
             onPressed: () => _selectCategory(AmiiboCategory.AmiiboSeries),
             icon: const Icon(Icons.nfc, size: 20,),

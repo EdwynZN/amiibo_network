@@ -79,8 +79,10 @@ class AmiiboNetwork extends StatelessWidget {
                     builder: (BuildContext context){
                       return AnnotatedRegion<SystemUiOverlayStyle>(
                         value: SystemUiOverlayStyle(
-                            statusBarColor: Theme.of(context).appBarTheme.color,
-                            systemNavigationBarColor: Theme.of(context).appBarTheme.color
+                          statusBarIconBrightness: Theme.of(context).brightness == Brightness.light ? Brightness.dark : Brightness.light,
+                          systemNavigationBarIconBrightness: Theme.of(context).brightness == Brightness.light ? Brightness.dark : Brightness.light,
+                          statusBarColor: Theme.of(context).appBarTheme.color,
+                          systemNavigationBarColor: Theme.of(context).appBarTheme.color
                         ),
                         child: child,
                       );

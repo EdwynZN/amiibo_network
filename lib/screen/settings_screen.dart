@@ -11,7 +11,6 @@ import 'package:amiibo_network/service/storage.dart';
 import 'package:amiibo_network/provider/theme_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:launch_review/launch_review.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:amiibo_network/service/service.dart';
 import 'package:amiibo_network/widget/theme_widget.dart';
@@ -99,15 +98,15 @@ class SettingsPage extends StatelessWidget{
                 ]),
               ),
               SliverFillRemaining(
-                  hasScrollBody: false,
-                  child: SizedBox(
-                    height: 0,
-                    child: Image.asset('assets/images/icon_app.png',
-                      fit: BoxFit.scaleDown,
-                      color: Theme.of(context).brightness == Brightness.dark
-                          ? Colors.white54 : null,
-                    ),
-                  )
+                hasScrollBody: false,
+                child: SizedBox(
+                  height: 0,
+                  child: Image.asset('assets/images/icon_app.png',
+                    fit: BoxFit.scaleDown,
+                    color: Theme.of(context).primaryColorBrightness == Brightness.dark
+                        ? Colors.white54 : null,
+                  ),
+                )
               )
             ],
           )
@@ -136,29 +135,31 @@ class _SupportButtons extends StatelessWidget{
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: <Widget>[
         Expanded(
-          child: Card(
-            child: FlatButton.icon(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+            child: ElevatedButton.icon(
               onPressed: LaunchReview.launch,
               icon: Image.asset('assets/images/icon_app.png',
                 height: 30, width: 30, fit: BoxFit.fill,
-                color: Theme.of(context).brightness == Brightness.dark
+                color: Theme.of(context).primaryColorBrightness == Brightness.dark
                     ? Colors.white54 : null,
               ),
-              label: Flexible(child: FittedBox(child: Text(translate.rate, style: Theme.of(context).textTheme.bodyText1, overflow: TextOverflow.fade,),))
+              label: Flexible(child: FittedBox(child: Text(translate.rate, overflow: TextOverflow.fade,),))
             ),
           ),
         ),
         Expanded(
-          child: Card(
-            child: FlatButton.icon(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+            child: ElevatedButton.icon(
               onPressed: () => _launchURL(kofi, context),
               icon: Image.asset('assets/images/ko-fi_icon.png',
                 height: 30, width: 30, fit: BoxFit.fill,
                 colorBlendMode: BlendMode.srcATop,
-                color: Theme.of(context).brightness == Brightness.dark
+                color: Theme.of(context).primaryColorBrightness == Brightness.dark
                     ? Colors.black38 : null,
               ),
-              label: Flexible(child: FittedBox(child: Text(translate.donate, style: Theme.of(context).textTheme.bodyText1, overflow: TextOverflow.fade,),))
+              label: Flexible(child: FittedBox(child: Text(translate.donate, overflow: TextOverflow.fade,),))
             ),
           ),
         ),
@@ -189,13 +190,14 @@ class _ProjectButtons extends StatelessWidget{
       children: <Widget>[
         for(int index = 0; index < icons.length ;index++)
           Expanded(
-            child: Card(
-              child: FlatButton.icon(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+              child: ElevatedButton.icon(
                 onPressed: () => _launchURL(urls[index], context),
-                icon: Icon(icons[index], color: Theme.of(context).iconTheme.color,),
-                label: Flexible(child: FittedBox(child: Text(titles[index], style: Theme.of(context).textTheme.bodyText1, overflow: TextOverflow.fade,),))
+                icon: Icon(icons[index]),
+                label: Flexible(child: FittedBox(child: Text(titles[index], overflow: TextOverflow.fade,),))
               ),
-            ),
+            )
           ),
       ],
     );
@@ -328,13 +330,11 @@ class _ResetCollection extends StatelessWidget{
           contentPadding: const EdgeInsets.symmetric(horizontal: 12),
           content: Text(translate.resetContent),
           actions: <Widget>[
-            FlatButton(
+            TextButton(
               child: Text(translate.cancel),
               onPressed: Navigator.of(context).pop,
-              textColor: Theme.of(context).accentColor,
             ),
-            FlatButton(
-              textColor: Theme.of(context).accentColor,
+            TextButton(
               child: Text(translate.sure),
               onPressed: () async => Navigator.of(context).pop(true)
             ),
@@ -372,7 +372,6 @@ class _ResetCollection extends StatelessWidget{
       },
     );
   }
-
 }
 
 class _DropMenu extends StatelessWidget {
@@ -469,16 +468,17 @@ class _BottomBarState extends State<BottomBar> {
 
   Future<void> _openFileExplorer() async {
     try{
-      final file = await FilePicker.getFile(type: FileType.any);
+      final file = await FilePicker.platform.pickFiles(type: FileType.any,
+        //allowedExtensions: ['json'],
+      );
 
-      final String _path = file?.path;
-      //print('MyPath: $_path');
+      final String _path = file?.files?.single?.path;
       if(_path == null) return;
-      else if(_path.substring(_path.lastIndexOf('.')) != '.json') {
+      else if(file?.files?.single?.extension != 'json') {
         openSnackBar(translate.errorImporting);
       }
       else{
-        Map<String,dynamic> map = await compute(readFile, file);
+        Map<String,dynamic> map = await compute(readFile, file?.files?.single?.path);
         if(map == null)
           openSnackBar(translate.errorImporting);
         else{
@@ -488,7 +488,7 @@ class _BottomBarState extends State<BottomBar> {
           openSnackBar(translate.successImport);
         }
       }
-      await FilePicker.clearTemporaryFiles();
+      await FilePicker.platform.clearTemporaryFiles();
     } on PlatformException catch(e){
       debugPrint(e.message);
       openSnackBar(translate.storagePermission('denied'));
@@ -519,16 +519,18 @@ class _BottomBarState extends State<BottomBar> {
   Widget build(BuildContext context) {
     final S translate = S.of(context);
     return BottomAppBar(
-      //color: Theme.of(context).appBarTheme.color,
       child: Row(
         mainAxisSize: MainAxisSize.min,
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
           Expanded(
-            child: FlatButton.icon(
-              color: Theme.of(context).buttonColor,
-              shape: BeveledRectangleBorder(),
-              textColor: Theme.of(context).textTheme.headline6.color,
+            child: TextButton.icon(
+              style: TextButton.styleFrom(
+                minimumSize: Size.fromHeight(48),
+                shape: BeveledRectangleBorder(),
+                primary: Theme.of(context).textTheme.headline6.color,
+                backgroundColor: Theme.of(context).buttonColor
+              ),
               onPressed: () async => await _writePermission(),
               icon: const Icon(Icons.file_upload),
               label: Text(translate.export)
@@ -536,10 +538,13 @@ class _BottomBarState extends State<BottomBar> {
           ),
           const Padding(padding: const EdgeInsets.symmetric(horizontal: 0.5)),
           Expanded(
-            child: FlatButton.icon(
-              color: Theme.of(context).buttonColor,
-              shape: BeveledRectangleBorder(),
-              textColor: Theme.of(context).textTheme.headline6.color,
+            child: TextButton.icon(
+              style: TextButton.styleFrom(
+                minimumSize: Size.fromHeight(48),
+                shape: BeveledRectangleBorder(),
+                primary: Theme.of(context).textTheme.headline6.color,
+                backgroundColor: Theme.of(context).buttonColor
+              ),
               onPressed: () async => await _openFileExplorer(),
               icon: const Icon(Icons.file_download),
               label: Text(translate.import)
@@ -563,7 +568,7 @@ class _CardSettings extends StatelessWidget{
     this.subtitle,
     this.icon,
     this.onTap
-  });
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context){

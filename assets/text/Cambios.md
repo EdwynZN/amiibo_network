@@ -1,3 +1,8 @@
+## Version 1.3.4
+- Se agregaron las figuras de Banjo & Kazooie, Terry y Byleth de la serie Super Smash Bros.
+- Se agregaron las figuras de Magnamallo, Palamute y Palico de la serie Monster Hunter Rise
+- Corrección de errores de texto relacionado con temas claros que usaban colores con mucho contraste
+
 ## Version 1.3.3
 - Se agregaron las figuras de Mario Gato y Peach Gato
 - Las imagenes creadas ahora se muestran correctamente en la galería [Arreglado]

@@ -40,7 +40,6 @@ class _SliverFloatingBarState extends State<SliverFloatingBar>
   void _updateSnapConfiguration() {
     if(widget.snap)
       _snapConfiguration = FloatingHeaderSnapConfiguration(
-        vsync: this,
         curve: Curves.easeOut,
         duration: const Duration(milliseconds: 200),
       );
@@ -65,6 +64,7 @@ class _SliverFloatingBarState extends State<SliverFloatingBar>
       floating: widget.floating,
       pinned: widget.pinned,
       delegate: _SliverFloatingPersistentHeader(
+        vsync: this,
         snap: widget.forward,
         snapConfiguration: _snapConfiguration,
         leading: widget.leading,
@@ -90,6 +90,7 @@ class _SliverFloatingPersistentHeader extends SliverPersistentHeaderDelegate {
   final Color backgroundColor;
 
   const _SliverFloatingPersistentHeader({
+    this.vsync,
     this.snap = false,
     this.snapConfiguration,
     this.elevation,
@@ -147,6 +148,9 @@ class _SliverFloatingPersistentHeader extends SliverPersistentHeaderDelegate {
       ),
     );
   }
+
+  @override
+  final TickerProvider vsync;
 
   @override
   final FloatingHeaderSnapConfiguration snapConfiguration;

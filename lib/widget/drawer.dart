@@ -238,8 +238,7 @@ class _CollectionDrawerState extends State<CollectionDrawer> {
             ListTile(
               dense: true,
               onTap: () {
-                Navigator.pop(context);
-                Navigator.pushNamed(context,"/settings");
+                Navigator.popAndPushNamed(context,"/settings");
               },
               leading: const Icon(Icons.settings),
               title: Text(translate.settings),
@@ -264,7 +263,7 @@ class _HeaderDrawer extends StatelessWidget {
       padding: EdgeInsets.zero,
       child: Image.asset('assets/images/icon_app.png',
         fit: BoxFit.fitHeight,
-        color: Theme.of(context).brightness == Brightness.dark
+        color: Theme.of(context).primaryColorBrightness == Brightness.dark
           ? Colors.white54 : null,
       ),
     );

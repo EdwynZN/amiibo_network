@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:provider/provider.dart';
 import 'package:amiibo_network/provider/query_provider.dart';
@@ -23,21 +24,10 @@ class _StatsPageState extends State<StatsPage> {
   AmiiboCategory category = AmiiboCategory.All;
   Expression expression = And();
   QueryProvider _queryProvider;
-  static const Color _selectedColor = Colors.black;
-  Color _appBarColor, _indicatorColor, _unselectedColor;
-
-  @override
-  void initState(){
-    super.initState();
-  }
 
   @override
   void didChangeDependencies() {
     _queryProvider = context.read<QueryProvider>();
-    final ThemeData theme = Theme.of(context);
-    _appBarColor = theme.appBarTheme.color;
-    _indicatorColor = theme.indicatorColor;
-    _unselectedColor = theme.appBarTheme.textTheme.headline6.color;
     super.didChangeDependencies();
   }
 
@@ -128,87 +118,42 @@ class _StatsPageState extends State<StatsPage> {
       );
     return SafeArea(
       child: Scaffold(
-        body: _BodyStats(expression),
+        body: _BodyStats(expression, true),
         floatingActionButton: _canSave ? _FAB(category, expression) : null,
+        floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,
+        extendBody: true,
         bottomNavigationBar: BottomAppBar(
-          color: _appBarColor,
-          child: Padding(
-            padding: EdgeInsets.symmetric(horizontal: 8, vertical: 6),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              mainAxisSize: MainAxisSize.max,
-              children: <Widget>[
-                Expanded(
-                  child: FlatButton(
-                    shape: RoundedRectangleBorder(
-                        borderRadius: const BorderRadius.horizontal(left: Radius.circular(8)),
-                        side: BorderSide(
-                          color: _indicatorColor,
-                          width: 2,
-                        )
-                    ),
-                    textColor: category == AmiiboCategory.All ? _selectedColor : _unselectedColor,
-                    color: category == AmiiboCategory.All ? _indicatorColor : null,
-                    onPressed: () => category == AmiiboCategory.All ? null : _updateCategory(AmiiboCategory.All),
-                    child: Text(translate.all, softWrap: false, overflow: TextOverflow.fade),
-                  ),
+          shape: CircularNotchedRectangle(),
+          child: AnimatedContainer(
+            duration: const Duration(milliseconds: 300),
+            padding: _canSave ? const EdgeInsetsDirectional.only(end: 64) : EdgeInsets.zero,
+            child: BottomNavigationBar(
+              backgroundColor: Colors.transparent,
+              elevation: 0.0,
+              items: [
+                BottomNavigationBarItem(
+                    icon: const Icon(Icons.all_inclusive_outlined),
+                    activeIcon: const Icon(Icons.all_inclusive_sharp),
+                    label: translate.all
                 ),
-                Expanded(
-                  child: FlatButton(
-                    shape: Border(
-                      top: BorderSide(
-                        color: _indicatorColor,
-                        width: 2,
-                      ),
-                      bottom: BorderSide(
-                        color: _indicatorColor,
-                        width: 2,
-                      ),
-                      right: BorderSide(
-                        color: _indicatorColor,
-                        width: 2,
-                      ),
-                    ),
-                    textColor: category == AmiiboCategory.Custom ? _selectedColor : _unselectedColor,
-                    color: category == AmiiboCategory.Custom ? _indicatorColor : null,
-                    onPressed: () => category == AmiiboCategory.Custom ? null : _updateCategory(AmiiboCategory.Custom),
-                    child: Text(translate.category(AmiiboCategory.Custom), softWrap: false, overflow: TextOverflow.fade),
-                  ),
+                BottomNavigationBarItem(
+                  icon: const Icon(Icons.edit),
+                  label: translate.category(AmiiboCategory.Custom),
                 ),
-                Expanded(
-                  child: FlatButton(
-                    shape: Border.symmetric(
-                        vertical: BorderSide(
-                          color: _indicatorColor,
-                          width: 2,
-                        ),
-                        horizontal: BorderSide.none
-                    ),
-                    textColor: category == AmiiboCategory.Figures ? _selectedColor : _unselectedColor,
-                    color: category == AmiiboCategory.Figures ? _indicatorColor : null,
-                    onPressed: () => category == AmiiboCategory.Figures ? null : _updateCategory(AmiiboCategory.Figures),
-                    child: Text(translate.figures, softWrap: false, overflow: TextOverflow.fade),
-                  ),
+                BottomNavigationBarItem(
+                  icon: const Icon(Icons.toys),
+                  label: translate.figures,
                 ),
-                Expanded(
-                  child: FlatButton(
-                    shape: RoundedRectangleBorder(
-                        borderRadius: const BorderRadius.horizontal(right: Radius.circular(8)),
-                        side: BorderSide(
-                          color: _indicatorColor,
-                          width: 2,
-                        )
-                    ),
-                    textColor: category == AmiiboCategory.Cards ? _selectedColor : _unselectedColor,
-                    color: category == AmiiboCategory.Cards ? _indicatorColor : null,
-                    onPressed: () => category == AmiiboCategory.Cards ? null : _updateCategory(AmiiboCategory.Cards),
-                    child: Text(translate.cards, softWrap: false, overflow: TextOverflow.fade),
-                  ),
-                ),
+                BottomNavigationBarItem(
+                    icon: const Icon(Icons.view_carousel),
+                    label: translate.cards
+                )
               ],
+              currentIndex: category.index,
+              onTap: (selected) => _updateCategory(AmiiboCategory.values[selected]),
             ),
           ),
-        ),
+        )
       )
     );
   }
@@ -217,8 +162,9 @@ class _StatsPageState extends State<StatsPage> {
 class _BodyStats extends StatelessWidget {
   final _service = Service();
   final Expression expression;
+  final bool expanded;
 
-  _BodyStats(this.expression);
+  _BodyStats(this.expression, [this.expanded = false]);
 
   Future<List<Map<String, dynamic>>> get _stats async{
     return <Map<String, dynamic>>[
@@ -283,15 +229,15 @@ class _BodyStats extends StatelessWidget {
                             childCount: stats.length,
                           )
                       ),
-                    const SliverToBoxAdapter(child: const SizedBox(height: 80))
+                    if(expanded) const SliverToBoxAdapter(child: const SizedBox(height: 84))
                   ],
                 )
             );
           return DefaultTextStyle(
-              style: Theme.of(context).textTheme.headline4,
-              child: Center(
-                child: Text(translate.emptyPage,),
-              )
+            style: Theme.of(context).textTheme.headline4,
+            child: Center(
+              child: Text(translate.emptyPage,),
+            )
           );
         }
         return const SizedBox();
@@ -311,6 +257,7 @@ class _FAB extends StatelessWidget{
   Widget build(BuildContext context) {
     final S translate = S.of(context);
     return FloatingActionButton(
+      elevation: 0.0,
       child: const Icon(Icons.save),
       tooltip: translate.saveStatsTooltip,
       heroTag: 'MenuFAB',

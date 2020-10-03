@@ -36,6 +36,8 @@ CupertinoPageRoute cupertinoRoute({Widget child, RouteSettings settings, bool fu
     fullscreenDialog: fullscreenDialog,
     builder: (ctx) => AnnotatedRegion<SystemUiOverlayStyle>(
       value: SystemUiOverlayStyle(
+        statusBarIconBrightness: Theme.of(ctx).brightness == Brightness.light ? Brightness.dark : Brightness.light,
+        systemNavigationBarIconBrightness: Theme.of(ctx).brightness == Brightness.light ? Brightness.dark : Brightness.light,
         statusBarColor: Theme.of(ctx).appBarTheme.color,
         systemNavigationBarColor: Theme.of(ctx).appBarTheme.color,
       ),
@@ -50,6 +52,8 @@ MaterialPageRoute materialRoute({Widget child, RouteSettings settings, bool full
     fullscreenDialog: fullscreenDialog,
     builder: (ctx) => AnnotatedRegion<SystemUiOverlayStyle>(
       value: SystemUiOverlayStyle(
+        statusBarIconBrightness: Theme.of(ctx).brightness == Brightness.light ? Brightness.dark : Brightness.light,
+        systemNavigationBarIconBrightness: Theme.of(ctx).brightness == Brightness.light ? Brightness.dark : Brightness.light,
         statusBarColor: Theme.of(ctx).appBarTheme.color,
         systemNavigationBarColor: Theme.of(ctx).appBarTheme.color,
       ),
@@ -67,6 +71,8 @@ class FadeRoute<T> extends MaterialPageRoute<T> {
       Animation<double> secondaryAnimation, Widget child) {
     return AnnotatedRegion<SystemUiOverlayStyle>(
       value: SystemUiOverlayStyle(
+        statusBarIconBrightness: Theme.of(context).brightness == Brightness.light ? Brightness.dark : Brightness.light,
+        systemNavigationBarIconBrightness: Theme.of(context).brightness == Brightness.light ? Brightness.dark : Brightness.light,
         statusBarColor: Theme.of(context).appBarTheme.color,
         systemNavigationBarColor: Theme.of(context).appBarTheme.color,
       ),
@@ -111,6 +117,8 @@ class VerticalSlideRoute<T> extends PageRoute<T> {
     final double maxHeight = MediaQuery.of(context).size.height;
     return AnnotatedRegion<SystemUiOverlayStyle>(
       value: SystemUiOverlayStyle(
+        statusBarIconBrightness: Theme.of(context).brightness == Brightness.light ? Brightness.dark : Brightness.light,
+        systemNavigationBarIconBrightness: Theme.of(context).brightness == Brightness.light ? Brightness.dark : Brightness.light,
         statusBarColor: Theme.of(context).appBarTheme.color,
         systemNavigationBarColor: Theme.of(context).appBarTheme.color,
       ),
