@@ -537,10 +537,10 @@ class S {
     );
   }
 
-  /// `Therms and conditions`
+  /// `Terms and conditions`
   String get privacySubtitle {
     return Intl.message(
-      'Therms and conditions',
+      'Terms and conditions',
       name: 'privacySubtitle',
       desc: '',
       args: [],
@@ -827,6 +827,7 @@ class AppLocalizationDelegate extends LocalizationsDelegate<S> {
     return const <Locale>[
       Locale.fromSubtags(languageCode: 'en'),
       Locale.fromSubtags(languageCode: 'es'),
+      Locale.fromSubtags(languageCode: 'fr'),
     ];
   }
 

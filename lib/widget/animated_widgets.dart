@@ -58,7 +58,8 @@ class _FadeSwitchAnimationState extends State<FadeSwitchAnimation>
     _controller = AnimationController(
       duration: widget.duration,
       vsync: this,
-    )..forward();
+      value: 1.0
+    );
   }
 
   @override

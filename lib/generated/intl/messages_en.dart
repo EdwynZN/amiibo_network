@@ -86,7 +86,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "ownTooltip" : MessageLookupByLibrary.simpleMessage("Own"),
     "owned" : MessageLookupByLibrary.simpleMessage("Owned"),
     "privacyPolicy" : MessageLookupByLibrary.simpleMessage("Privacy Policy"),
-    "privacySubtitle" : MessageLookupByLibrary.simpleMessage("Therms and conditions"),
+    "privacySubtitle" : MessageLookupByLibrary.simpleMessage("Terms and conditions"),
     "rate" : MessageLookupByLibrary.simpleMessage("Rate me"),
     "recordMessage" : MessageLookupByLibrary.simpleMessage("Still processing your last file"),
     "removeTooltip" : MessageLookupByLibrary.simpleMessage("Remove"),

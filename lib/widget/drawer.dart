@@ -64,8 +64,8 @@ class _CollectionDrawerState extends State<CollectionDrawer> {
             Expanded(
               child: CustomScrollView(
                 slivers: <Widget>[
-                  SliverToBoxAdapter(
-                    child: _HeaderDrawer(),
+                  const SliverToBoxAdapter(
+                    child: const _HeaderDrawer(),
                   ),
                   SliverToBoxAdapter(
                     child: Consumer<StatProvider>(

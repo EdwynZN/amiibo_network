@@ -62,7 +62,6 @@ public class NotificationUtils extends ContextWrapper {
 
     private Notification createNotification(String title, String path, String actionTitle, Integer id){
         String text = path.substring(path.lastIndexOf("/")+1);
-        String type = path.substring(path.lastIndexOf(".")+1);
         File file = new File(path);
         Uri uri = FileProvider.getUriForFile(this, BuildConfig.APPLICATION_ID, file);
         //Log.v("Uri: ", uri.toString());
@@ -84,60 +83,25 @@ public class NotificationUtils extends ContextWrapper {
 
         //Uri imageCollection = MediaStore.Images.Media.getContentUri(MediaStore.VOLUME_EXTERNAL_PRIMARY);
 
-        if(type.equals("png")){
-            Intent intent = new Intent();
-            intent.setAction(Intent.ACTION_VIEW);
-            intent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION | Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
-            intent.setDataAndType(uri, "image/png");
+        sendIntent.setType("text/json");
+        Intent chooser = Intent.createChooser(sendIntent, actionTitle);
 
-            PendingIntent pContentIntent = PendingIntent.getActivity(this, id,
-                intent, PendingIntent.FLAG_UPDATE_CURRENT);
-
-            sendIntent.setType("image/png");
-            Intent chooser = Intent.createChooser(sendIntent, "Share File");
-
-            List<ResolveInfo> resInfoList = this.getPackageManager().queryIntentActivities(chooser, PackageManager.MATCH_DEFAULT_ONLY);
-
-            for (ResolveInfo resolveInfo : resInfoList) {
-                String packageName = resolveInfo.activityInfo.packageName;
-                this.grantUriPermission(packageName, uri, Intent.FLAG_GRANT_WRITE_URI_PERMISSION | Intent.FLAG_GRANT_READ_URI_PERMISSION);
-            }
-
-            PendingIntent pShareIntent = PendingIntent.getActivity(this, id,
-                chooser, PendingIntent.FLAG_UPDATE_CURRENT);
-
-            Bitmap bitmap = BitmapFactory.decodeFile(path);
-
-            notificationBuilder
-                .addAction(android.R.drawable.ic_menu_share, actionTitle, pShareIntent)
-                .setContentIntent(pContentIntent)
-                .setLargeIcon(bitmap)
-                .setStyle(new NotificationCompat.BigPictureStyle()
-                    .bigPicture(bitmap)
-                    .bigLargeIcon(null)
-                );
+        List<ResolveInfo> resInfoList = this.getPackageManager().queryIntentActivities(chooser, PackageManager.MATCH_DEFAULT_ONLY);
+        for (ResolveInfo resolveInfo : resInfoList) {
+            String packageName = resolveInfo.activityInfo.packageName;
+            this.grantUriPermission(packageName, uri, Intent.FLAG_GRANT_WRITE_URI_PERMISSION | Intent.FLAG_GRANT_READ_URI_PERMISSION);
         }
-        if(type.equals("json")){
-            /*intent.setDataAndType(uri, "text/plain");
-            PendingIntent pIntent = PendingIntent.getActivity(this, id,
-                intent, PendingIntent.FLAG_UPDATE_CURRENT);*/
-            //Log.v("message: ", "Notification");
 
-            sendIntent.setType("text/json");
-            Intent chooser = Intent.createChooser(sendIntent, actionTitle);
+        PendingIntent pShareIntent = PendingIntent.getActivity(this, id,
+            chooser, PendingIntent.FLAG_UPDATE_CURRENT);
 
-            PendingIntent pShareIntent = PendingIntent.getActivity(this, id,
-                chooser, PendingIntent.FLAG_UPDATE_CURRENT);
-
-            notificationBuilder//.setContentIntent(pIntent)
-                .addAction(android.R.drawable.ic_menu_share, actionTitle, pShareIntent);
-        }
+        notificationBuilder//.setContentIntent(pIntent)
+            .addAction(android.R.drawable.ic_menu_share, actionTitle, pShareIntent);
 
         return notificationBuilder.build();
     }
 
     private Notification imageNotification(String title, String contentText, Uri uri, String actionTitle, Integer id, Bitmap bitmap){
-
         NotificationCompat.Builder notificationBuilder =
             new NotificationCompat.Builder(this, ANDROID_CHANNEL_ID);
         notificationBuilder//.setAutoCancel(true)

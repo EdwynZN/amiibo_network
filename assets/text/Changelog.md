@@ -1,6 +1,6 @@
 ## Version 1.3.4
-- Added Super Smash Bros. series Banjo & Kazooie, Terry y Byleth
-- Added Monster Hunter Rise series Magnamallo, Palamute and Palico
+- Added Super Smash Bros. series Banjo & Kazooie, Terry and Byleth
+- Added Monster Hunter Rise series Magnamalo, Palamute and Palico
 - Fixed minor bugs related to text color with themes with high contrasts
 
 ## Version 1.3.3

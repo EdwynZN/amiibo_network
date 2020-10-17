@@ -57,11 +57,11 @@ class SettingsPage extends StatelessWidget{
                     icon: const Icon(Icons.build),
                     onTap: () {
                       showDialog(
-                          context: context,
-                          builder: (context) => MarkdownReader(
-                              file: translate.changelog,
-                              title: translate.changelogSubtitle
-                          )
+                        context: context,
+                        builder: (context) => MarkdownReader(
+                          file: translate.changelog.replaceAll(' ', '_'),
+                          title: translate.changelogSubtitle
+                        )
                       );
                     },
                   ),
@@ -70,11 +70,11 @@ class SettingsPage extends StatelessWidget{
                       subtitle: translate.creditsSubtitle,
                       icon: const Icon(Icons.theaters),
                       onTap: () => showDialog(
-                          context: context,
-                          builder: (context) => MarkdownReader(
-                              file: 'Credits',
-                              title: translate.creditsSubtitle
-                          )
+                        context: context,
+                        builder: (context) => MarkdownReader(
+                          file: 'Credits',
+                          title: translate.creditsSubtitle
+                        )
                       )
                   ),
                   _CardSettings(
@@ -82,11 +82,11 @@ class SettingsPage extends StatelessWidget{
                     subtitle: translate.privacySubtitle,
                     icon: const Icon(Icons.help),
                     onTap: () => showDialog(
-                        context: context,
-                        builder: (context) => MarkdownReader(
-                            file: translate.privacyPolicy.replaceAll(' ', '_'),
-                            title: translate.privacySubtitle
-                        )
+                      context: context,
+                      builder: (context) => MarkdownReader(
+                        file: translate.privacyPolicy.replaceAll(' ', '_'),
+                        title: translate.privacySubtitle
+                      )
                     )
                   ),
                   _ProjectButtons(

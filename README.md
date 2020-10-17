@@ -43,6 +43,9 @@ Light                      |             Dark
 <img src="screenshots/MyFigureCollection.png" height="350"> | <img src="screenshots/MyFigureCollection_dark.png" height="350">
 <img src="screenshots/MyAmiiboStats.png" height="350"> | <img src="screenshots/MyAmiiboStats_dark.png" height="350">
 
+## Special Thanks
+French translation by Michael Put (De Liège Belgium)
+
 ## Getting Started
 
 This project is a starting point for a Flutter application.

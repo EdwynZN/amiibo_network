@@ -82,11 +82,8 @@ class HomePageState extends State<HomePage>
     _cancelSelection();
   }
 
-  void _updateSelection({int wished = 0, int owned = 0}) async {
-    AmiiboLocalDB amiibos = AmiiboLocalDB(amiibo: List<AmiiboDB>.of(
-        selected.set.map((x) => AmiiboDB(key: x.value, wishlist: wished, owned: owned))
-      )
-    );
+  void _updateSelection([SelectedType type = SelectedType.Clear]) {
+    AmiiboLocalDB amiibos = selected.amiibos(type);
     selected.clearSelected();
     amiiboProvider..updateAmiiboDB(amiibos: amiibos)..refreshAmiibos;
   }
@@ -148,7 +145,7 @@ class HomePageState extends State<HomePage>
       showDialog(
         context: context,
         builder: (context) => MarkdownReader(
-          file: translate.changelog,
+          file: translate.changelog.replaceAll(' ', '_'),
           title: translate.changelogSubtitle
         )
       );
@@ -235,12 +232,12 @@ class HomePageState extends State<HomePage>
                           ),
                           IconButton(
                             icon: const Icon(iconOwned),
-                            onPressed: () => _updateSelection(owned: 1),
+                            onPressed: () => _updateSelection(SelectedType.Owned),
                             tooltip: translate.ownTooltip,
                           ),
                           IconButton(
                             icon: const Icon(iconWished),
-                            onPressed: () => _updateSelection(wished: 1),
+                            onPressed: () => _updateSelection(SelectedType.Wished),
                             tooltip: translate.wishTooltip,
                           ),
                         ],
@@ -301,15 +298,15 @@ class HomePageState extends State<HomePage>
                                 create: (_) => SingleAmiibo(),
                                 update: (_, amiiboList, amiibo) => amiibo
                                   ..update = amiiboList?.amiibo[index],
-                                child: FadeSwitchAnimation(
-                                  key: ValueKey<int>(index),
+                                child: AnimatedSwitcher(
+                                  duration: const Duration(milliseconds: 500),
                                   child: AmiiboGrid(
                                     key: ValueKey<int>(data?.amiibo[index].key),
                                   ),
                                 )
                               );
                             },
-                              //addRepaintBoundaries: false, addAutomaticKeepAlives: false,
+                              // addRepaintBoundaries: false, addAutomaticKeepAlives: false,
                               childCount: data?.amiibo != null ? data?.amiibo?.length : 0,
                             )
                           ),

@@ -380,7 +380,7 @@ class Screenshot {
     ).then((codec) => codec.getNextFrame())
         .then((frame) => frame.image).catchError((e) => print(e));
 
-    if(theme.brightness == Brightness.dark)
+    if(theme.primaryColorBrightness == Brightness.dark)
       paint.colorFilter = ColorFilter.mode(Colors.white54, BlendMode.srcIn);
 
     _canvas.drawImage(appIcon, Offset(margin, maxY - margin - iconSize - iconMargin), paint);

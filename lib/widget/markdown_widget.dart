@@ -27,30 +27,28 @@ class MarkdownReader extends StatelessWidget {
       titlePadding: const EdgeInsets.all(12),
       contentPadding: EdgeInsets.zero,
       content: Scrollbar(
-          child: SingleChildScrollView(
-              padding: const EdgeInsets.symmetric(horizontal: 12),
-              child: FutureBuilder(
-                  future: _localFile,
-                  builder: (BuildContext context, AsyncSnapshot<String> snapshot){
-                    if(snapshot.hasError)
-                      return Center(child: Text(translate.markdownError));
-                    if(snapshot.hasData)
-                      return MarkdownBody(
-                        data: snapshot.data,
-                        styleSheetTheme: MarkdownStyleSheetBaseTheme.platform,
-                        onTapLink: (url) => _launchURL(url, context),
-                      );
-                    return const SizedBox.shrink();
-                  }
-              )
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.symmetric(horizontal: 12),
+          child: FutureBuilder(
+            future: _localFile,
+            builder: (BuildContext context, AsyncSnapshot<String> snapshot){
+              if(snapshot.hasError)
+                return Center(child: Text(translate.markdownError));
+              if(snapshot.hasData)
+                return MarkdownBody(
+                  data: snapshot.data,
+                  styleSheetTheme: MarkdownStyleSheetBaseTheme.platform,
+                  onTapLink: (url) => _launchURL(url, context),
+                );
+              return const SizedBox.shrink();
+            }
           )
+        )
       ),
       actions: <Widget>[
         TextButton(
           child: Text(MaterialLocalizations.of(context).okButtonLabel),
-          onPressed: () async {
-            Navigator.of(context).maybePop();
-          },
+          onPressed: () async => Navigator.of(context).maybePop(),
         )
       ],
     );
