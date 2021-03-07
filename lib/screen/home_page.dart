@@ -33,6 +33,7 @@ class Home extends StatelessWidget {
           dispose: (_, amiiboProvider) => amiiboProvider.dispose(),
         ),
         StreamProvider<AmiiboLocalDB>(
+          initialData: null,
           create: (context) => Provider.of<AmiiboProvider>(context, listen: false).amiiboList,
         ),
         StreamProvider<Map<String,dynamic>>(

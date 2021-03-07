@@ -35,6 +35,7 @@ class CustomQueryWidget extends StatelessWidget{
               child: Text(translate.figures),
             ),
             FutureProvider<List<String>>.value(
+              initialData: null,
               value: figureSeriesList,
               child: Consumer<List<String>>(
                 child: const SizedBox(),
@@ -56,6 +57,7 @@ class CustomQueryWidget extends StatelessWidget{
               child: Text(translate.cards),
             ),
             FutureProvider<List<String>>.value(
+              initialData: null,
               value: cardSeriesList,
               child: Consumer<List<String>>(
                 child: const SizedBox(),

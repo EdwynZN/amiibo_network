@@ -378,7 +378,7 @@ class Screenshot {
         _ima.buffer.asUint8List(),
         targetWidth: iconSize.toInt(), targetHeight: iconSize.toInt()
     ).then((codec) => codec.getNextFrame())
-        .then((frame) => frame.image).catchError((e) => print(e));
+        .then((frame) => frame.image).catchError((e) => null);
 
     if(theme.primaryColorBrightness == Brightness.dark)
       paint.colorFilter = ColorFilter.mode(Colors.white54, BlendMode.srcIn);

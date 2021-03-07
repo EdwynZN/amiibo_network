@@ -22,7 +22,7 @@ String get dateTaken {
 /// Ask for write permission in Android 9 and below
 /// If not grqanted and permanently denied shows a snackbar to open settings of the app
 /// to unlock it
-Future<bool> permissionGranted(ScaffoldState scaffoldState) async{
+Future<bool> permissionGranted(ScaffoldMessengerState scaffoldState) async{
   S translate = S.current;
   if(InfoPackage.androidVersionCode == AndroidCode.Unknown) return false;
   else if(InfoPackage.version < AndroidCode.Q.version && InfoPackage.version > AndroidCode.Lollipop_MR1.version){

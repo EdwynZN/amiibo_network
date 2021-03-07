@@ -122,7 +122,7 @@ class _SupportButtons extends StatelessWidget{
     if (await canLaunch(url)) {
       await launch(url);
     } else {
-      Scaffold.of(context).showSnackBar(SnackBar(content: Text(S.of(context).couldNotLaunchUrl(url))));
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(S.of(context).couldNotLaunchUrl(url))));
     }
   }
 
@@ -179,7 +179,7 @@ class _ProjectButtons extends StatelessWidget{
     if (await canLaunch(url)) {
       await launch(url);
     } else {
-      Scaffold.of(context).showSnackBar(SnackBar(content: Text(S.of(context).couldNotLaunchUrl(url))));
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(S.of(context).couldNotLaunchUrl(url))));
     }
   }
 
@@ -219,14 +219,14 @@ class __SaveCollectionState extends State<_SaveCollection> {
   final Future<List<String>> listOfCards = Service().fetchDistinct(column: ['amiiboSeries'],
       expression: Cond.eq('type', 'Card'), orderBy: 'amiiboSeries');
   S translate;
-  ScaffoldState scaffoldState;
+  ScaffoldMessengerState scaffoldState;
   QueryProvider filter;
 
   @override
   didChangeDependencies(){
     super.didChangeDependencies();
     translate = S.of(context);
-    scaffoldState = Scaffold.of(context, nullOk: true);
+    scaffoldState = ScaffoldMessenger.maybeOf(context);
     filter = context.read<QueryProvider>();
   }
 
@@ -344,7 +344,7 @@ class _ResetCollection extends StatelessWidget{
     );
   }
 
-  void _message(ScaffoldState scaffoldState, String message){
+  void _message(ScaffoldMessengerState scaffoldState, String message){
     if(!scaffoldState.mounted) return;
     scaffoldState?.hideCurrentSnackBar();
     scaffoldState?.showSnackBar(SnackBar(content: Text(message)));
@@ -361,7 +361,7 @@ class _ResetCollection extends StatelessWidget{
       onTap: () async {
         final bool reset = await _dialog(context);
         if(reset ?? false){
-          final ScaffoldState scaffoldState = Scaffold.of(context, nullOk: true);
+          final ScaffoldMessengerState scaffoldState = ScaffoldMessenger.maybeOf(context);
           try{
             await queryProvider.resetCollection();
             _message(scaffoldState, translate.collectionReset);
@@ -445,7 +445,7 @@ class BottomBar extends StatefulWidget {
 
 class _BottomBarState extends State<BottomBar> {
   S translate;
-  ScaffoldState scaffoldState;
+  ScaffoldMessengerState scaffoldState;
   QueryProvider queryProvider;
   final _service = Service();
 
@@ -453,7 +453,7 @@ class _BottomBarState extends State<BottomBar> {
   void didChangeDependencies() {
     super.didChangeDependencies();
     translate = S.of(context);
-    scaffoldState = Scaffold.of(context, nullOk: true);
+    scaffoldState = ScaffoldMessenger.maybeOf(context);
     queryProvider = Provider.of<QueryProvider>(context, listen: false);
   }
 

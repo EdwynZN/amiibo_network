@@ -15,7 +15,7 @@ class MarkdownReader extends StatelessWidget {
     if (await canLaunch(url)) {
       await launch(url);
     } else {
-      Scaffold.of(ctx, nullOk: true)?.showSnackBar(SnackBar(content: Text('Could not launch $url')));
+      ScaffoldMessenger.of(ctx)?.showSnackBar(SnackBar(content: Text('Could not launch $url')));
     }
   }
 
@@ -36,9 +36,10 @@ class MarkdownReader extends StatelessWidget {
                 return Center(child: Text(translate.markdownError));
               if(snapshot.hasData)
                 return MarkdownBody(
+                  listItemCrossAxisAlignment: MarkdownListItemCrossAxisAlignment.start,
                   data: snapshot.data,
                   styleSheetTheme: MarkdownStyleSheetBaseTheme.platform,
-                  onTapLink: (url) => _launchURL(url, context),
+                  onTapLink: (url, _, __) => _launchURL(url, context),
                 );
               return const SizedBox.shrink();
             }

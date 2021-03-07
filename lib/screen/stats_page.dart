@@ -262,7 +262,7 @@ class _FAB extends StatelessWidget{
       tooltip: translate.saveStatsTooltip,
       heroTag: 'MenuFAB',
       onPressed: () async {
-        final ScaffoldState scaffoldState = Scaffold.of(context, nullOk: true);
+        final ScaffoldMessengerState scaffoldState = ScaffoldMessenger.of(context);
         if(!(await permissionGranted(scaffoldState))) return;
         String message = translate.savingCollectionMessage;
         if(_screenshot.isRecording) message = translate.recordMessage;

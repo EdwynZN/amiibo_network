@@ -9791,7 +9791,7 @@
     },
     {
       "key":754,
-      "id":null,
+      "id":"0000030003A60102",
       "amiiboSeries":"Super Mario Bros.",
       "character":"Mario",
       "gameSeries":"Super Mario",
@@ -9804,7 +9804,7 @@
     },
     {
       "key":755,
-      "id":null,
+      "id":"0002010003A70102",
       "amiiboSeries":"Super Mario Bros.",
       "character":"Peach",
       "gameSeries":"Super Mario",
@@ -9894,5 +9894,5 @@
       "type":"Figure"
     }
   ],
-  "lastUpdated": "2020-10-03T12:02:59.957"
+  "lastUpdated": "2021-03-06T17:12:28.239"
 }

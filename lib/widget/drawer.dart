@@ -136,6 +136,7 @@ class _CollectionDrawerState extends State<CollectionDrawer> {
                             selected: _selected == 'Stats',
                           ),
                           FutureProvider<List<String>>(
+                            initialData: null,
                             create: (_) => _listOfFigures,
                             child: Consumer<List<String>>(
                               child: ListTile(
@@ -182,6 +183,7 @@ class _CollectionDrawerState extends State<CollectionDrawer> {
                             ),
                           ),
                           FutureProvider<List<String>>(
+                            initialData: null,
                             create: (_) => _listOfCards,
                             child: Consumer<List<String>>(
                               child: ListTile(
