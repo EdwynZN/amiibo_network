@@ -1,12 +1,12 @@
 import 'package:amiibo_network/dao/SQLite/amiibo_sqlite.dart';
-import '../model/amiibo_local_db.dart';
-import '../model/query_builder.dart';
+import 'package:amiibo_network/model/search_result.dart';
 import 'dart:convert';
+import 'package:amiibo_network/model/amiibo.dart';
 
 class Service{
   final AmiiboSQLite dao = AmiiboSQLite();
 
-  Future<AmiiboLocalDB> fetchAllAmiiboDB([String orderBy]) => dao.fetchAll(orderBy);
+  Future<List<Amiibo>> fetchAllAmiiboDB([String orderBy]) => dao.fetchAll(orderBy);
 
   Future<List<Map<String,dynamic>>> fetchSum({Expression expression,
     bool group = false}) {
@@ -16,7 +16,7 @@ class Service{
     return dao.fetchSum(where, args, group);
   }
 
-  Future<AmiiboLocalDB> fetchByCategory({Expression expression, String orderBy}) {
+  Future<List<Amiibo>> fetchByCategory({Expression expression, String orderBy}) {
     String where = expression.toString();
     List<dynamic> args = expression.args;
     if(where.isEmpty || args.isEmpty) where = args = null;
@@ -24,13 +24,13 @@ class Service{
   }
 
   Future<String> jsonFileDB() async {
-    final AmiiboLocalDB amiibos = await dao.fetchAll();
+    final List<Amiibo> amiibos = await dao.fetchAll();
     return jsonEncode(amiibos);
   }
 
-  Future<AmiiboDB> fetchAmiiboDBByKey(String key) => dao.fetchByKey(key);
+  Future<Amiibo> fetchAmiiboDBByKey(String key) => dao.fetchByKey(key);
 
-  Future<void> update(AmiiboLocalDB amiibos) => dao.insertImport(amiibos);
+  Future<void> update(List<Amiibo> amiibos) => dao.insertImport(amiibos);
 
   Future<List<String>> fetchDistinct({List<String> column, Expression expression, String orderBy}) {
     String where = expression.toString();

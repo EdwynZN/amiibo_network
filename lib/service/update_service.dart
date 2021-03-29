@@ -1,10 +1,10 @@
 import 'package:amiibo_network/dao/SQLite/amiibo_sqlite.dart';
 import 'package:flutter/foundation.dart';
-import '../model/amiibo_local_db.dart';
 import 'dart:convert';
 import 'package:flutter/services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../utils/preferences_constants.dart';
+import 'package:amiibo_network/model/amiibo.dart';
 
 class UpdateService{
   static Map<String, dynamic> _jsonFile;
@@ -22,7 +22,7 @@ class UpdateService{
     return _jsonFile ??= jsonDecode(await rootBundle.loadString('assets/databases/amiibos.json'));
   }
 
-  Future<AmiiboLocalDB> fetchAllAmiibo() async => compute(entityFromMap, await jsonFile);
+  Future<List<Amiibo>> fetchAllAmiibo() async => compute(entityFromMap, await jsonFile);
 
   Future<DateTime> get lastUpdateDB async{
     final SharedPreferences preferences = await SharedPreferences.getInstance();
@@ -44,8 +44,8 @@ class UpdateService{
     });
   }
 
-  _updateDB(AmiiboLocalDB amiiboDB) async{
-    dao.insertAll(amiiboDB, "amiibo").then((_) async{
+  _updateDB(List<Amiibo> amiibo) async{
+    dao.insertAll(amiibo, "amiibo").then((_) async{
       final SharedPreferences preferences = await SharedPreferences.getInstance();
       final DateTime dateTime = await lastUpdate;
       await preferences.setString(sharedDateDB, dateTime?.toIso8601String());

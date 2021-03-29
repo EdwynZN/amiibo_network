@@ -1,19 +1,19 @@
 import 'dart:typed_data';
-import 'package:amiibo_network/model/amiibo_local_db.dart';
+import 'package:amiibo_network/repository/theme_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:amiibo_network/provider/theme_provider.dart';
 import 'dart:ui' as ui;
 import 'package:amiibo_network/service/service.dart';
-import 'package:amiibo_network/provider/stat_provider.dart';
+import 'package:amiibo_network/riverpod/stat_provider.dart' as stat;
 import 'package:flutter/rendering.dart';
-import 'package:provider/provider.dart';
 import 'package:amiibo_network/generated/l10n.dart';
-import '../model/query_builder.dart';
+import 'package:amiibo_network/model/search_result.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:amiibo_network/model/amiibo.dart';
 
 class Screenshot {
   ThemeData theme;
-  StatProvider statProvider;
+  stat.StatProvider statProvider;
   MaterialLocalizations materialLocalizations;
   String owned;
   String wished;
@@ -57,7 +57,7 @@ class Screenshot {
 
   void update(BuildContext context) {
     this..theme = Theme.of(context)
-      ..statProvider = context.read<StatProvider>()
+      ..statProvider = context.read(stat.statProvider)
       ..owned = _translate.owned
       ..wished = _translate.wished
       ..createdOn= _translate.createdOn
@@ -65,16 +65,16 @@ class Screenshot {
   }
 
   Future<Uint8List> saveCollection(Expression expression) async{
-    AmiiboLocalDB amiibos = await _service.fetchByCategory(expression: expression,
+    List<Amiibo> amiibos = await _service.fetchByCategory(expression: expression,
         orderBy: 'CASE WHEN type = "Figure" THEN 1 ''WHEN type = "Yarn" THEN 2 ELSE 3 END, amiiboSeries DESC, na DESC');
     Map<String,dynamic> _listStat = Map<String, dynamic>.from(
         (await _service.fetchSum(expression: expression)).first);
-    if(isRecording || (amiibos?.amiibo?.isEmpty ?? true) || _listStat == null) return null;
+    if(isRecording || (amiibos?.isEmpty ?? true) || _listStat == null) return null;
 
     final double maxSize = 60.0;
-    final double width = (amiibos.amiibo.length / 25.0).ceilToDouble().clamp(15.0, 30.0);
+    final double width = (amiibos.length / 25.0).ceilToDouble().clamp(15.0, 30.0);
     final double maxX = (width * (1 + space) - space) * (maxSize + 2*padding) + 2*margin;
-    final double maxY = ((amiibos.amiibo.length / width).ceilToDouble()
+    final double maxY = ((amiibos.length / width).ceilToDouble()
         * (1 + 0.5*space) - 0.5*space) * (1.5*maxSize + 2*padding) + banner + 2*margin;
     double xOffset = margin;
     double yOffset = margin;
@@ -84,7 +84,7 @@ class Screenshot {
     _canvas.drawColor(paint.color, BlendMode.src);
     await _paintBanner(Size(maxX, maxY), _listStat);
 
-    for(AmiiboDB amiibo in amiibos.amiibo) {
+    for(Amiibo amiibo in amiibos) {
       final String strImage = 'assets/collection/icon_${amiibo.key}.png';
       final Offset _offset = Offset(xOffset, yOffset);
       final RRect cardPath = RRect.fromRectAndRadius(
@@ -96,9 +96,9 @@ class Screenshot {
       );
       final ByteData imageAsset = await rootBundle.load(strImage);
 
-      if((amiibo?.owned?.isOdd ?? false) || (amiibo?.wishlist?.isOdd ?? false)){
+      if((amiibo?.owned ?? false) || (amiibo?.wishlist ?? false)){
         _canvas.drawRRect(cardPath,
-            amiibo?.owned?.isOdd ?? false ? ownedCardPaint : wishedCardPaint);
+            amiibo?.owned ?? false ? ownedCardPaint : wishedCardPaint);
       }
 
       ui.Image _image = await ui.instantiateImageCodec(
@@ -140,7 +140,7 @@ class Screenshot {
     if(isRecording || (stats?.isEmpty ?? true) || (general?.isEmpty ?? true)) return null;
 
     final String longestWord = owned.length > wished.length ? owned : wished;
-    final bool fontFeatureStyle = !statProvider.isPercentage && StatProvider.isFontFeatureEnable;
+    final bool fontFeatureStyle = !statProvider.isPercentage && stat.isFontFeatureEnable;
     /// Activate fontFeature only if StatMode is Ratio and isFontFeatureEnable is true for this device
     TextSpan longestParagraphTest = TextSpan(
       style: TextStyle(
@@ -306,7 +306,7 @@ class Screenshot {
       ..paint(_canvas, a.translate(5 , 5));
   }
 
-  Future<void> _paintBanner(Size size, Map<String, dynamic> stat) async{
+  Future<void> _paintBanner(Size size, Map<String, dynamic> stats) async{
     final Color textColor = theme.textTheme.headline6.color;
     final Paint paint = Paint();
     String date = materialLocalizations.formatFullDate(DateTime.now());
@@ -315,7 +315,7 @@ class Screenshot {
     final double iconMargin = (banner * 0.2) / 2.0;
     final double maxX = size.width;
     final double maxY = size.height;
-    final bool fontFeatureStyle = !statProvider.isPercentage && StatProvider.isFontFeatureEnable;
+    final bool fontFeatureStyle = !statProvider.isPercentage && stat.isFontFeatureEnable;
     /// Activate fontFeature only if StatMode is Ratio and isFontFeatureEnable is true for this device
 
     final TextSpan aNetwork = TextSpan(
@@ -334,7 +334,7 @@ class Screenshot {
                 if(!fontFeatureStyle) ui.FontFeature.tabularFigures()
               ],
             ),
-            text: ' ${statProvider.statLabel(stat['Owned'].toDouble(), stat['Total'].toDouble())} '
+            text: ' ${statProvider.statLabel(stats['Owned'].toDouble(), stats['Total'].toDouble())} '
         ),
         TextSpan(
           style: TextStyle(color: textColor, fontSize: 35),
@@ -352,7 +352,7 @@ class Screenshot {
                 if(!fontFeatureStyle) ui.FontFeature.tabularFigures()
               ],
             ),
-            text: ' ${statProvider.statLabel(stat['Wished'].toDouble(), stat['Total'].toDouble())} '
+            text: ' ${statProvider.statLabel(stats['Wished'].toDouble(), stats['Total'].toDouble())} '
         ),
         TextSpan(
             style: TextStyle(color: textColor, fontSize: 35),

@@ -1,18 +1,19 @@
 import '../dao.dart';
-import '../../model/amiibo_local_db.dart';
 import '../../data/database.dart';
 import 'package:sqflite/sqflite.dart';
+import 'package:amiibo_network/model/amiibo.dart';
 
-class AmiiboSQLite implements Dao<AmiiboLocalDB, String, AmiiboDB>{
+class AmiiboSQLite implements Dao<Amiibo, String>{
   static ConnectionFactory connectionFactory = ConnectionFactory();
 
   Future<void> initDB() async => await connectionFactory.database;
 
-  Future<AmiiboLocalDB> fetchAll([String orderBy = 'na']) async{
+  Future<List<Amiibo>> fetchAll([String orderBy = 'na']) async{
     Database _db = await connectionFactory.database;
-    List<Map<String, dynamic>> maps = await _db.query('amiibo',
+    List<Map<String, dynamic>> list = await _db.query('amiibo',
       orderBy: orderBy);
-    return entityFromList(maps);
+    return list.map((dynamic i) => Amiibo.fromJson(i as Map<String, dynamic>))
+        .toList();
   }
 
   Future<List<String>> fetchDistinct(String name, List<String> column,
@@ -36,14 +37,15 @@ class AmiiboSQLite implements Dao<AmiiboLocalDB, String, AmiiboDB>{
     return List<String>.from(maps.map((x) => x[column]));
   }
 
-  Future<AmiiboLocalDB> fetchByColumn(String where, List<dynamic> args,
+  Future<List<Amiibo>> fetchByColumn(String where, List<dynamic> args,
     [String orderBy = 'na']) async{
     Database _db = await connectionFactory.database;
-    List<Map<String, dynamic>> maps = await _db.query('amiibo',
+    List<Map<String, dynamic>> list = await _db.query('amiibo',
       where: where,
       whereArgs: args,
       orderBy: orderBy);
-    return entityFromList(maps);
+    return list.map((dynamic i) => Amiibo.fromJson(i as Map<String, dynamic>))
+      .toList();
   }
 
   Future<List<Map<String, dynamic>>> fetchSum(String where,
@@ -63,19 +65,19 @@ class AmiiboSQLite implements Dao<AmiiboLocalDB, String, AmiiboDB>{
     return result;
   }
 
-  Future<AmiiboDB> fetchByKey(String key) async{
+  Future<Amiibo> fetchByKey(String key) async{
     Database _db = await connectionFactory.database;
     List<Map<String, dynamic>> maps = await _db.query('amiibo',
       where: 'key = ?',
       whereArgs: [key]);
-    if(maps.length > 0) return AmiiboDB.fromMap(maps.first);
+    if(maps.length > 0) return Amiibo.fromJson(maps.first);
     return null;
   }
 
-  Future<void> insertAll(AmiiboLocalDB list, String name) async{
+  Future<void> insertAll(List<Amiibo> list, String name) async{
     Database _db = await connectionFactory.database;
     final batch = _db.batch();
-    for (AmiiboDB query in list.amiibo) {
+    for (Amiibo query in list) {
       batch.execute('''INSERT OR REPLACE INTO amiibo
       VALUES(?,?,?,?,?,?,?,?,?,?,?,
       (SELECT wishlist FROM amiibo WHERE key = ?),
@@ -89,10 +91,10 @@ class AmiiboSQLite implements Dao<AmiiboLocalDB, String, AmiiboDB>{
     await batch.commit(noResult: true, continueOnError: true);
   }
 
-  Future<void> insertImport(AmiiboLocalDB list) async{
+  Future<void> insertImport(List<Amiibo> list) async{
     Database _db = await connectionFactory.database;
     final batch = _db.batch();
-    for (var query in list.amiibo) {
+    for (var query in list) {
       batch.execute('''UPDATE amiibo
         SET wishlist = ?, owned = ?
         WHERE ${query.key != null ? 'key' : 'id'} = ?;
@@ -102,7 +104,7 @@ class AmiiboSQLite implements Dao<AmiiboLocalDB, String, AmiiboDB>{
     await batch.commit(noResult: true, continueOnError: true);
   }
 
-  Future<void> insert(AmiiboDB map, String name) async{
+  Future<void> insert(Amiibo map, String name) async{
     Database _db = await connectionFactory.database;
     final batch = _db.batch();
     batch.execute('''INSERT OR REPLACE INTO amiibo
@@ -117,10 +119,10 @@ class AmiiboSQLite implements Dao<AmiiboLocalDB, String, AmiiboDB>{
     batch.commit(noResult: true, continueOnError: true);
   }
 
-  Future<void> update(AmiiboDB map, String name) async{
+  Future<void> update(Amiibo map, String name) async{
     Database _db = await connectionFactory.database;
     await _db.transaction((tx) async{
-      tx.update(name, map.toMap(),
+      tx.update(name, map.toJson(),
         where: 'key = ?',
         whereArgs: [map.key]);
     });

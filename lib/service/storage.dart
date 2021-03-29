@@ -70,7 +70,12 @@ Map<String,dynamic> readFile(String path) {
 }
 
 void writeFile(Map<String,dynamic> arg) =>
-  arg['file'].writeAsStringSync(jsonEncode(arg['amiibos']));
+  arg['file'].writeAsStringSync(
+    jsonEncode(<String, dynamic>{
+        'amiibo' : arg['amiibos'],
+      },
+    ),
+  );
 
 void writeCollectionFile(Map<String, dynamic> arg) =>
   arg['file'].writeAsBytesSync(arg['buffer'], flush: true);

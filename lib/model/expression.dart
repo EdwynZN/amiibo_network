@@ -1,6 +1,6 @@
-part of 'query_builder.dart';
+part of 'search_result.dart';
 
-abstract class Expression {
+abstract class Expression extends Equatable {
   const Expression();
 
   /// Returns the number of sub-expressions this expression has if this expression
@@ -18,7 +18,7 @@ abstract class Expression {
   List<dynamic> get args;
 }
 
-class And extends Expression{
+class And extends Expression {
   final _expression = <Expression>[];
 
   int get length => _expression.length;
@@ -52,6 +52,9 @@ class And extends Expression{
     _buffer.writeAll(_expression, ' AND ');
     return _buffer.toString();
   }
+
+  @override
+  List<Object> get props => _expression;
 }
 
 class Or extends Expression{
@@ -89,6 +92,9 @@ class Or extends Expression{
     return _buffer.toString();
   }
 
+  @override
+  List<Object> get props => _expression;
+
 }
 
 class Bracket extends Expression{
@@ -118,6 +124,10 @@ class Bracket extends Expression{
     _buffer..write(_expression)..write(')');
     return _buffer.toString();
   }
+
+  @override
+  List<Object> get props => [_expression];
+
 }
 
 class Cond extends Expression {
@@ -151,6 +161,9 @@ class Cond extends Expression {
     Or ret = Or();
     return ret.or(this).or(exp);
   }
+
+  @override
+  List<Object> get props => [field, op, value];
 
   @override
   toString() => args.isEmpty ? '' : '$field $op ?';
@@ -206,6 +219,9 @@ class BetweenCond extends Expression {
   }
 
   @override
+  List<Object> get props => [field, op, low, high];
+
+  @override
   toString() => args.isEmpty ? '' : '$field $op ? AND ?';
 
   factory BetweenCond.between(String field, double low, double high) => BetweenCond._(field, 'BETWEEN', low, high);
@@ -240,6 +256,9 @@ class InCond extends Expression {
     Or ret = Or();
     return ret.or(this).or(exp);
   }
+
+  @override
+  List<Object> get props => [field, op, inside];
 
   @override
   toString() {
