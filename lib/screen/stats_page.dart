@@ -1,5 +1,5 @@
-import 'package:amiibo_network/repository/theme_repository.dart';
 import 'package:amiibo_network/riverpod/query_provider.dart';
+import 'package:amiibo_network/riverpod/stat_provider.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:amiibo_network/service/screenshot.dart';
@@ -8,7 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:amiibo_network/service/storage.dart';
 import 'package:amiibo_network/generated/l10n.dart';
-import 'package:amiibo_network/widget/stat_widget.dart';
+import 'package:amiibo_network/widget/single_stat.dart';
 import 'package:amiibo_network/service/notification_service.dart';
 import 'package:amiibo_network/model/search_result.dart';
 import 'package:amiibo_network/utils/amiibo_category.dart';
@@ -65,8 +65,10 @@ class _StatsPageState extends State<StatsPage> {
   @override
   Widget build(BuildContext context) {
     final _canSave = useProvider(
-      queryProvider.state.select((value) => AmiiboCategory.Custom != category ||
-          value.customFigures.isNotEmpty || value.customCards.isNotEmpty),
+      queryProvider.state.select((value) =>
+          AmiiboCategory.Custom != category ||
+          value.customFigures.isNotEmpty ||
+          value.customCards.isNotEmpty),
     );
     if (size.longestSide >= 800)
       return SafeArea(
@@ -183,37 +185,37 @@ class _BodyStats extends HookWidget {
       final List<Map<String, dynamic>> stats = snapshot.data.sublist(1);
       if (generalStats.isNotEmpty && stats.isNotEmpty)
         return Scrollbar(
-            child: CustomScrollView(
-          slivers: <Widget>[
-            if (stats.length > 1)
-              SliverToBoxAdapter(
-                  key: Key('Amiibo Network'),
-                  child: SingleStat(
-                    title: 'Amiibo Network',
-                    owned: generalStats['Owned'],
-                    total: generalStats['Total'],
-                    wished: generalStats['Wished'],
-                  )),
-            if (MediaQuery.of(context).size.width <= 600)
-              SliverList(
-                delegate: SliverChildBuilderDelegate(
-                  (BuildContext context, int index) => SingleStat(
-                    key: ValueKey(index),
-                    title: stats[index]['amiiboSeries'],
-                    owned: stats[index]['Owned'],
-                    total: stats[index]['Total'],
-                    wished: stats[index]['Wished'],
+          child: CustomScrollView(
+            slivers: <Widget>[
+              if (stats.length > 1)
+                SliverToBoxAdapter(
+                    key: Key('Amiibo Network'),
+                    child: SingleStat(
+                      title: 'Amiibo Network',
+                      owned: generalStats['Owned'],
+                      total: generalStats['Total'],
+                      wished: generalStats['Wished'],
+                    )),
+              if (MediaQuery.of(context).size.width <= 600)
+                SliverList(
+                  delegate: SliverChildBuilderDelegate(
+                    (BuildContext context, int index) => SingleStat(
+                      key: ValueKey(index),
+                      title: stats[index]['amiiboSeries'],
+                      owned: stats[index]['Owned'],
+                      total: stats[index]['Total'],
+                      wished: stats[index]['Wished'],
+                    ),
+                    semanticIndexOffset: 1,
+                    childCount: stats.length,
                   ),
-                  semanticIndexOffset: 1,
-                  childCount: stats.length,
                 ),
-              ),
-            if (MediaQuery.of(context).size.width > 600)
-              SliverGrid(
+              if (MediaQuery.of(context).size.width > 600)
+                SliverGrid(
                   gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
                     maxCrossAxisExtent: 230,
-                    childAspectRatio: 1.22,
                     mainAxisSpacing: 8.0,
+                    mainAxisExtent: 140,
                   ),
                   delegate: SliverChildBuilderDelegate(
                     (BuildContext context, int index) => SingleStat(
@@ -225,17 +227,17 @@ class _BodyStats extends HookWidget {
                     ),
                     semanticIndexOffset: 1,
                     childCount: stats.length,
-                  )),
-            if (expanded)
-              const SliverToBoxAdapter(child: const SizedBox(height: 84))
-          ],
-        ));
-      return DefaultTextStyle(
-        style: Theme.of(context).textTheme.headline4,
-        child: Center(
-          child: Text(
-            translate.emptyPage,
+                  ),
+                ),
+              if (expanded)
+                const SliverToBoxAdapter(child: SizedBox(height: 96))
+            ],
           ),
+        );
+      return Center(
+        child: Text(
+          translate.emptyPage,
+          style: Theme.of(context).textTheme.headline4,
         ),
       );
     }
@@ -303,67 +305,5 @@ class _FAB extends StatelessWidget {
         }
       },
     );
-  }
-}
-
-class SingleStat extends StatelessWidget {
-  final String title;
-  final int owned;
-  final int wished;
-  final int total;
-  final WrapAlignment wrapAlignment;
-
-  const SingleStat(
-      {Key key,
-      this.title,
-      this.owned,
-      this.wished,
-      this.total,
-      this.wrapAlignment = WrapAlignment.spaceAround})
-      : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    final S translate = S.of(context);
-    return Card(
-        child: Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-      child: Wrap(
-        alignment: wrapAlignment,
-        children: <Widget>[
-          SizedBox(
-            height: 21.24,
-            width: double.infinity,
-            child: FittedBox(
-              alignment: Alignment.center,
-              child: Text(
-                title,
-                softWrap: false,
-                textAlign: TextAlign.center,
-                overflow: TextOverflow.fade,
-                style: Theme.of(context).textTheme.headline4,
-              ),
-            ),
-          ),
-          const Divider(height: 12),
-          Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-              child: StatWidget(
-                  num: owned.toDouble(),
-                  den: total.toDouble(),
-                  text: translate.owned,
-                  icon: Icon(iconOwnedDark, color: Colors.green[800]))),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-            child: StatWidget(
-              num: wished.toDouble(),
-              den: total.toDouble(),
-              text: translate.wished,
-              icon: Icon(Icons.whatshot, color: Colors.amber[800]),
-            ),
-          ),
-        ],
-      ),
-    ));
   }
 }

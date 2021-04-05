@@ -3,7 +3,7 @@ import '../../data/database.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:amiibo_network/model/amiibo.dart';
 
-class AmiiboSQLite implements Dao<Amiibo, String>{
+class AmiiboSQLite implements Dao<Amiibo, int>{
   static ConnectionFactory connectionFactory = ConnectionFactory();
 
   Future<void> initDB() async => await connectionFactory.database;
@@ -65,7 +65,7 @@ class AmiiboSQLite implements Dao<Amiibo, String>{
     return result;
   }
 
-  Future<Amiibo> fetchByKey(String key) async{
+  Future<Amiibo> fetchByKey(int key) async{
     Database _db = await connectionFactory.database;
     List<Map<String, dynamic>> maps = await _db.query('amiibo',
       where: 'key = ?',

@@ -266,7 +266,8 @@ class _Theme implements AmiiboTheme {
         elevation: 0.0,
         backgroundColor: Colors.transparent,
         shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.vertical(top: Radius.circular(8))),
+          borderRadius: BorderRadius.vertical(top: Radius.circular(8)),
+        ),
       ),
       chipTheme: ChipThemeData(
           checkmarkColor:
@@ -282,7 +283,8 @@ class _Theme implements AmiiboTheme {
           secondaryLabelStyle: __darkAccentTextTheme.bodyText2.apply(
               color: _brightnessColor == Brightness.light ? null : color[500]),
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-          brightness: _brightnessColor),
+          brightness: _brightnessColor,
+    ),
       navigationRailTheme: NavigationRailThemeData(
           labelType: NavigationRailLabelType.selected,
           backgroundColor: color[50],
@@ -294,7 +296,8 @@ class _Theme implements AmiiboTheme {
                   ? accentColor[700]
                   : Colors.black),
           unselectedIconTheme: const IconThemeData(color: Colors.black),
-          unselectedLabelTextStyle: __darkAccentTextTheme.bodyText2),
+        unselectedLabelTextStyle: __darkAccentTextTheme.bodyText2,
+      ),
       toggleableActiveColor: accentColor[700],
       indicatorColor: color[100],
       buttonColor: color[100],

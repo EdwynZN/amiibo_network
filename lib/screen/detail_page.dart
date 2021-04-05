@@ -20,12 +20,12 @@ class _BottomSheetDetail extends ConsumerWidget {
   @override
   Widget build(BuildContext context, ScopedReader watch) {
     final index = watch(indexAmiiboProvider);
-    final asyncAmiibo = watch(singleAmiiboProvider(index));
+    final asyncAmiibo = watch(detailAmiiboProvider(index));
     final Size size = MediaQuery.of(context).size;
     final S translate = S.of(context);
     EdgeInsetsGeometry padding = EdgeInsets.zero;
     int flex = 4;
-    if (asyncAmiibo is! AsyncData) return const SizedBox();
+    //if (asyncAmiibo is! AsyncData) return const SizedBox();
     final amiibo = asyncAmiibo.data.value;
     if (size.longestSide >= 800)
       padding = EdgeInsets.symmetric(
@@ -133,8 +133,8 @@ class _BottomSheetDetail extends ConsumerWidget {
                   ),
                   const VerticalDivider(indent: 10, endIndent: 10),
                   Expanded(
-                    child: const _AmiiboInfo(),
-                    /* Column(
+                    child: //const _AmiiboInfo(),
+                    Column(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
@@ -159,7 +159,7 @@ class _BottomSheetDetail extends ConsumerWidget {
                         if (amiibo.jp != null)
                           RegionDetail(amiibo.jp, 'jp', translate.jp),
                       ],
-                    ), */
+                    ),
                     flex: 7,
                   )
                 ],

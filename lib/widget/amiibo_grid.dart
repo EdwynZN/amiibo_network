@@ -14,9 +14,10 @@ class AmiiboGrid extends ConsumerWidget {
         child: Center(
           child: CircularProgressIndicator(),
         ),
-      ), 
+      ),
       error: (error, stackTrace) => const Card(),
       data: (amiibo) {
+        final theme = Theme.of(context);
         Widget icon = const SizedBox.shrink();
         if (amiibo.wishlist)
           icon = const Icon(
@@ -26,62 +27,60 @@ class AmiiboGrid extends ConsumerWidget {
             color: colorWished,
           );
         else if (amiibo.owned)
-          icon = Theme.of(context).brightness == Brightness.light
-              ? const Icon(iconOwned, size: 28, key: ValueKey(1), color: colorOwned)
+          icon = theme.brightness == Brightness.light
+              ? const Icon(iconOwned,
+                  size: 28, key: ValueKey(1), color: colorOwned)
               : const Icon(iconOwnedDark,
                   size: 28, key: ValueKey(1), color: colorOwned);
         return Stack(
           children: <Widget>[
             Card(
               child: Column(
-                mainAxisSize: MainAxisSize.max,
-                mainAxisAlignment: MainAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.end,
                 textBaseline: TextBaseline.alphabetic,
                 children: <Widget>[
-                  Expanded(
-                    child: Padding(
-                      padding:
-                          const EdgeInsets.only(top: 4.0, left: 4.0, right: 4.0),
-                      child: Hero(
-                        placeholderBuilder: (context, size, child) {
-                          final Color color =
-                              Theme.of(context).scaffoldBackgroundColor ==
-                                      Colors.black
-                                  ? Colors.white24
-                                  : Colors.black54;
-                          return ColorFiltered(
+                  Flexible(
+                    child: Center(
+                      child: Padding(
+                        padding: const EdgeInsets.all(4.0),
+                        child: Hero(
+                          placeholderBuilder: (context, size, child) {
+                            final Color color =
+                              theme.scaffoldBackgroundColor == Colors.black
+                                ? Colors.white24
+                                : Colors.black54;
+                            return ColorFiltered(
                               colorFilter: ColorFilter.mode(color, BlendMode.srcIn),
-                              child: child);
-                        },
-                        transitionOnUserGestures: true,
-                        tag: key,
-                        child: Image.asset(
-                          'assets/collection/icon_$key.png',
-                          fit: BoxFit.scaleDown,
-                        ),
-                      ),
-                    ),
-                    flex: 9,
-                  ),
-                  Expanded(
-                    child: Container(
-                      decoration: ShapeDecoration(
-                        color: Theme.of(context).primaryColorLight,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.vertical(
-                            bottom: Radius.circular(8),
+                              child: child,
+                            );
+                          },
+                          transitionOnUserGestures: true,
+                          tag: key,
+                          child: Image.asset(
+                            'assets/collection/icon_$key.png',
+                            fit: BoxFit.contain,
                           ),
                         ),
                       ),
-                      alignment: Alignment.center,
-                      padding: EdgeInsets.symmetric(horizontal: 5),
-                      child: Text('${amiibo.name}',
-                        softWrap: false,
-                        overflow: TextOverflow.fade,
-                        style: Theme.of(context).primaryTextTheme.headline2,
+                    ),
+                  ),
+                  Container(
+                    decoration: ShapeDecoration(
+                      color: Theme.of(context).primaryColorLight,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.vertical(
+                          bottom: Radius.circular(8),
+                        ),
                       ),
                     ),
-                    flex: 2,
+                    alignment: Alignment.center,
+                    padding: EdgeInsets.symmetric(horizontal: 5),
+                    child: Text(
+                      '${amiibo.name}',
+                      softWrap: false,
+                      overflow: TextOverflow.fade,
+                      style: Theme.of(context).primaryTextTheme.headline2,
+                    ),
                   ),
                 ],
               ),
@@ -93,16 +92,16 @@ class AmiiboGrid extends ConsumerWidget {
                 switchInCurve: Curves.easeInToLinear,
                 switchOutCurve: Curves.easeOutCirc,
                 transitionBuilder: (Widget child, Animation<double> animation) =>
-                    ScaleTransition(
-                  scale: animation,
-                  child: child,
+                  ScaleTransition(
+                    scale: animation,
+                    child: child,
                 ),
                 child: icon,
               ),
             ),
           ],
         );
-      }, 
+      },
     );
   }
 }

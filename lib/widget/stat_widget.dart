@@ -41,18 +41,21 @@ class StatWidget extends StatelessWidget {
           /// Activate fontFeature only if StatMode is Ratio and isFontFeatureEnable is true for this device
           return RichText(
             text: TextSpan(
-                text: myStat,
-                style: Theme.of(context).textTheme.subtitle1.copyWith(
-                    fontSize: fontFeatureStyle ? 22 : null,
-                    fontFeatures: [
-                      if (fontFeatureStyle) ui.FontFeature.enable('frac'),
-                      if (!fontFeatureStyle) ui.FontFeature.tabularFigures()
-                    ]),
-                children: [
-                  TextSpan(
-                      style: Theme.of(context).textTheme.subtitle1,
-                      text: ' $text')
-                ]),
+              text: myStat,
+              style: Theme.of(context).textTheme.subtitle1.copyWith(
+                fontSize: fontFeatureStyle ? 22 : null,
+                fontFeatures: [
+                  if (fontFeatureStyle) ui.FontFeature.enable('frac'),
+                  if (!fontFeatureStyle) ui.FontFeature.tabularFigures()
+                ],
+              ),
+              children: [
+                TextSpan(
+                  style: Theme.of(context).textTheme.subtitle1,
+                  text: ' $text',
+                )
+              ],
+            ),
           );
         }),
       )),

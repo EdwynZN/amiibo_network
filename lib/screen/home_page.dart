@@ -235,15 +235,14 @@ class HomeState extends State<Home> with SingleTickerProviderStateMixin {
                                   delegate: SliverChildBuilderDelegate(
                                     (BuildContext _, int index) {
                                       return AnimatedSwitcher(
-                                        duration:
-                                            const Duration(milliseconds: 500),
+                                        duration: const Duration(milliseconds: 500),
                                         child: ProviderScope(
-                                          key: ValueKey<int>(
-                                              data[index].key),
+                                          key: ValueKey<int>(data[index].key),
                                           overrides: [
                                             indexAmiiboProvider
-                                                .overrideWithValue(
-                                                    data[index].key),
+                                              .overrideWithValue(
+                                                data[index].key,
+                                            ),
                                           ],
                                           child: const AnimatedSelection(),
                                         ),

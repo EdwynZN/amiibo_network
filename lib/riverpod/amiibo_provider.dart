@@ -28,6 +28,7 @@ final statHomeProvider = StreamProvider.autoDispose<Stat>((ref) async* {
     removeListener();
     streamController.close();
   });
+
   yield* streamController.stream;
 });
 
@@ -39,10 +40,23 @@ final singleAmiiboProvider =
 });
 
 final detailAmiiboProvider =
-    Provider.autoDispose.family<AsyncValue<Amiibo>, int>((ref, index) {
-  return ref
-      .watch(controlProvider.state)
-      .whenData((value) => value?.firstWhere((cb) => cb.key == index));
+    StreamProvider.autoDispose.family<Amiibo, int>((ref, key) async* {
+  final control = ref.watch(controlProvider);
+  final service = ref.watch(serviceProvider);
+  final streamController = StreamController<int>();
+
+  final removeListener = control.addListener((state) {
+    state.whenData((value) {
+      streamController.sink.add(key);
+    });
+  });
+
+  ref.onDispose(() {
+    removeListener();
+    streamController.close();
+  });
+
+  yield* streamController.stream.asyncMap((cb) => service.fetchAmiiboDBByKey(cb));
 });
 
 final controlProvider =

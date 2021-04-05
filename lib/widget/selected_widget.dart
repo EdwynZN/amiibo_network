@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:amiibo_network/widget/amiibo_grid.dart';
+import 'package:amiibo_network/model/selection.dart';
 
 class AnimatedSelection extends StatefulHookWidget {
   const AnimatedSelection({Key key}) : super(key: key);
@@ -26,23 +27,26 @@ class _AnimatedSelectionState extends State<AnimatedSelection> {
   @override
   Widget build(BuildContext context) {
     final key = useProvider(indexAmiiboProvider);
-    final _multipleSelected =
-        useProvider(selectProvider.select((cb) => cb.multipleSelected));
-    final _isSelected = useProvider(
-        selectProvider.select((cb) => cb.isSelected(key)));
+    final select = useProvider(
+        selectProvider.select((cb) => Selection(
+          activated: cb.multipleSelected,
+          selected: cb.isSelected(key),
+        ),
+      ),
+    );
     return GestureDetector(
-      onDoubleTap: _multipleSelected ? null : () => _onDoubleTap(key),
-      onTap: _multipleSelected ? () => _onLongPress(key) :  () => _onTap(key),
+      onDoubleTap: select.activated ? null : () => _onDoubleTap(key),
+      onTap: select.activated ? () => _onLongPress(key) : () => _onTap(key),
       onLongPress: () => _onLongPress(key),
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 200),
         curve: Curves.linearToEaseOut,
-        margin: _isSelected
+        margin: select.selected
             ? const EdgeInsets.symmetric(horizontal: 8, vertical: 4)
             : EdgeInsets.zero,
-        padding: _isSelected ? const EdgeInsets.all(8) : EdgeInsets.zero,
+        padding: select.selected ? const EdgeInsets.all(8) : EdgeInsets.zero,
         decoration: BoxDecoration(
-          color: _isSelected
+          color: select.selected
               ? Theme.of(context).selectedRowColor
               : Colors.transparent,
           borderRadius: BorderRadius.circular(8),

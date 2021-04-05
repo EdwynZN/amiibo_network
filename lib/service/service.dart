@@ -28,7 +28,7 @@ class Service{
     return jsonEncode(amiibos);
   }
 
-  Future<Amiibo> fetchAmiiboDBByKey(String key) => dao.fetchByKey(key);
+  Future<Amiibo> fetchAmiiboDBByKey(int key) => dao.fetchByKey(key);
 
   Future<void> update(List<Amiibo> amiibos) => dao.insertImport(amiibos);
 
