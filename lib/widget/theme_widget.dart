@@ -169,7 +169,7 @@ class ThemeButton extends HookWidget {
     );
   }
 
-  Widget _selectWidget(ThemeMode value) {
+  Widget _selectWidget(ThemeMode? value) {
     switch (value) {
       case ThemeMode.light:
         return const Icon(
@@ -190,7 +190,7 @@ class ThemeButton extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
-    final ThemeMode theme =
+    final ThemeMode? theme =
         useProvider(themeProvider.select((value) => value.preferredTheme));
     return InkResponse(
       radius: 18,

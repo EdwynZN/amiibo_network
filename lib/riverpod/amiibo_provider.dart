@@ -8,10 +8,10 @@ import 'package:amiibo_network/riverpod/query_provider.dart';
 import 'package:amiibo_network/riverpod/repository_provider.dart';
 import 'package:amiibo_network/model/amiibo.dart';
 
-final indexAmiiboProvider = ScopedProvider<int>(null);
+final indexAmiiboProvider = ScopedProvider<int>((_) => throw UnsupportedError('No amiibo id selected'));
 
 final statHomeProvider = StreamProvider.autoDispose<Stat>((ref) async* {
-  final control = ref.watch(controlProvider);
+  final control = ref.watch(controlProvider.notifier);
   final streamController = StreamController<Stat>();
 
   final removeListener = control.addListener((state) {
@@ -35,13 +35,13 @@ final statHomeProvider = StreamProvider.autoDispose<Stat>((ref) async* {
 final singleAmiiboProvider =
     Provider.autoDispose.family<AsyncValue<Amiibo>, int>((ref, index) {
   return ref
-      .watch(controlProvider.state)
-      .whenData((value) => value?.firstWhere((cb) => cb.key == index));
+      .watch(controlProvider)
+      .whenData((value) => value.firstWhere((cb) => cb.key == index));
 });
 
 final detailAmiiboProvider =
-    StreamProvider.autoDispose.family<Amiibo, int>((ref, key) async* {
-  final control = ref.watch(controlProvider);
+    StreamProvider.autoDispose.family<Amiibo?, int>((ref, key) async* {
+  final control = ref.watch(controlProvider.notifier);
   final service = ref.watch(serviceProvider);
   final streamController = StreamController<int>();
 
@@ -56,13 +56,13 @@ final detailAmiiboProvider =
     streamController.close();
   });
 
-  yield* streamController.stream.asyncMap((cb) => service.fetchAmiiboDBByKey(cb));
+  yield* streamController.stream.asyncMap(((cb) => service.fetchAmiiboDBByKey(cb)));
 });
 
 final controlProvider =
-    StateNotifierProvider.autoDispose<AmiiboProvider>((ref) {
+    StateNotifierProvider.autoDispose<AmiiboProvider, AsyncValue<List<Amiibo>>>((ref) {
   final service = ref.watch(serviceProvider);
-  final query = ref.watch(expressionProvider);
+  final query = ref.watch(expressionProvider.notifier);
   final provider = AmiiboProvider(service);
 
   final removeListener = query.addListener(provider.update);
@@ -75,32 +75,31 @@ final controlProvider =
 });
 
 class AmiiboProvider extends StateNotifier<AsyncValue<List<Amiibo>>> {
-  QueryBuilder _queryBuilder;
+  late QueryBuilder _queryBuilder;
   final Service _service;
 
   AmiiboProvider(this._service) : super(AsyncLoading());
 
-  Expression get where => _queryBuilder.where;
+  Expression? get where => _queryBuilder.where;
 
-  Future<void> update([QueryBuilder query]) async {
+  Future<void> update([QueryBuilder? query]) async {
     if (query != null) _queryBuilder = query;
     state = await AsyncValue.guard(() => _service.fetchByCategory(
-        expression: _queryBuilder.where, orderBy: _queryBuilder.order));
+        expression: _queryBuilder.where!, orderBy: _queryBuilder.order));
   }
 
-  Future<void> updateAmiiboDB({Amiibo amiibo, List<Amiibo> amiibos}) async {
-    amiibos ??= [amiibo];
+  Future<void> updateAmiiboDB(List<Amiibo> amiibos) async {
     await _service.update(amiibos);
     await update();
   }
 
-  Future<void> shift(int key) async {
-    final amiibo = state.data.value.firstWhere((element) => element.key == key);
-    final amiiboUpdated = amiibo.copyWith(
+  Future<void> shift(int? key) async {
+    final Amiibo amiibo = state.data!.value.firstWhere((element) => element.key == key);
+    final Amiibo amiiboUpdated = amiibo.copyWith(
       wishlist: amiibo.owned,
       owned: !(amiibo.wishlist ^ amiibo.owned),
     );
-    updateAmiiboDB(amiibo: amiiboUpdated);
+    updateAmiiboDB([amiiboUpdated]);
   }
 
   Future<void> resetCollection() async {

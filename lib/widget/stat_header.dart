@@ -15,8 +15,8 @@ class SliverStatsHeader extends SliverPersistentHeaderDelegate {
   @override
   Widget build(
       BuildContext context, double shrinkOffset, bool overlapsContent) {
-    final Color _color = Theme.of(context).appBarTheme.color;
-    final S translate = S.of(context);
+    final Color _color = Theme.of(context).appBarTheme.color!;
+    final S? translate = S.of(context);
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 12),
       decoration: BoxDecoration(
@@ -40,18 +40,18 @@ class SliverStatsHeader extends SliverPersistentHeaderDelegate {
         builder: (context, watch, child) {
           return watch(statHomeProvider).maybeWhen(
             data: (statList) {
-              if (statList == const Stat()) return child;
+              if (statList == const Stat()) return child!;
               final double total = statList.total;
               final double owned = statList.owned;
               final double wished = statList.wished;
-              if (total == 0 && owned == 0 && wished == 0) return child;
+              if (total == 0 && owned == 0 && wished == 0) return child!;
               return Row(
                 children: <Widget>[
                   Expanded(
                     child: StatWidget(
                       num: owned,
                       den: total,
-                      text: translate.owned,
+                      text: translate!.owned,
                       icon: Icon(iconOwnedDark, color: Colors.green[800]),
                     ),
                   ),
@@ -67,10 +67,9 @@ class SliverStatsHeader extends SliverPersistentHeaderDelegate {
                 ],
               );
             },
-            orElse: () => child,
+            orElse: (() => child!),
           );
-        },
-      ),
+        }),
     );
   }
 

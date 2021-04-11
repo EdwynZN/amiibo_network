@@ -11,7 +11,7 @@ abstract class Dao<T, K> {
 
   Future<void> update(T map, String name);
 
-  Future<void> updateAll(String name, Map<String,dynamic> map, {String category, String columnCategory});
+  Future<void> updateAll(String name, Map<String,dynamic> map, {String? category, String? columnCategory});
 
-  Future<void> remove({String name, String column, String value});
+  Future<void> remove({String? name, String? column, String? value});
 }

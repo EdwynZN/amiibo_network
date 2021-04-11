@@ -15,18 +15,18 @@ abstract class Expression extends Equatable {
   Or operator |(Expression other) => or(other);
   Or or(Expression exp);
 
-  List<dynamic> get args;
+  List<Object> get args;
 }
 
 class And extends Expression {
-  final _expression = <Expression>[];
+  final List<Expression> _expression = <Expression>[];
 
   int get length => _expression.length;
 
-  List<dynamic> get args {
+  List<Object> get args {
     if(this._expression.isEmpty) return [];
-    List<dynamic> arg = <dynamic>[];
-    arg = this._expression.expand((i) => i?.args).toList();
+    List<Object> arg = <Object>[];
+    arg = this._expression.expand((i) => i.args).toList();
     return arg;
   }
 
@@ -62,10 +62,10 @@ class Or extends Expression{
 
   int get length => _expression.length;
 
-  List<dynamic> get args {
+  List<Object> get args {
     if(this._expression.isEmpty) return [];
-    List<dynamic> arg = <dynamic>[];
-    arg = this._expression.expand((i) => i?.args).toList();
+    List<Object> arg = <Object>[];
+    arg = this._expression.expand((i) => i.args).toList();
     return arg;
   }
 
@@ -104,7 +104,7 @@ class Bracket extends Expression{
 
   int get length => _expression.length;
 
-  List<dynamic> get args => _expression.args;
+  List<Object> get args => _expression.args;
 
   /// Creates a 'logical and' expression of this expression and the [other]
   And and(Expression exp) {
@@ -140,13 +140,13 @@ class Cond extends Expression {
   /// The value of the relational expression the [field] is being compared against
   final String value;
 
-  const Cond._(this.field, this.op, this.value) : assert(field != null), assert(value != null);
+  const Cond._(this.field, this.op, this.value);
 
   /// Always returns 1 because relational condition is not a composite expressions
   int get length => 1;
 
-  List<dynamic> get args {
-    List<dynamic> arg = <dynamic>[];
+  List<Object> get args {
+    List<Object> arg = <Object>[];
     return arg..add(value);
   }
 
@@ -193,16 +193,13 @@ class BetweenCond extends Expression {
   /// The value of the relational expression the [field] is being compared against
   final double high;
 
-  const BetweenCond._(this.field, this.op, this.low, this.high) :
-        assert(low != null),
-        assert(high != null),
-        assert(low < high);
+  const BetweenCond._(this.field, this.op, this.low, this.high) : assert(low < high);
 
   /// Always returns 1 because relational condition is not a composite expressions
   int get length => 1;
 
-  List<dynamic> get args {
-    List<dynamic> arg = <dynamic>[];
+  List<Object> get args {
+    List<Object> arg = <Object>[];
     return arg..add(low)..add(high);
   }
 
@@ -236,14 +233,14 @@ class InCond extends Expression {
   final String op;
 
   /// List of conditions
-  final List<dynamic> inside;
+  final List<Object> inside;
 
-  const InCond._(this.field, this.op, this.inside) : assert(inside != null);
+  const InCond._(this.field, this.op, this.inside);
 
   /// Always returns 1 because relational condition is not a composite expressions
   int get length => 1;
 
-  List<dynamic> get args => inside.isEmpty ? [''] : inside;
+  List<Object> get args => inside.isEmpty ? [''] : inside;
 
   /// Creates a 'logical and' expression of this expression and the [other]
   And and(Expression exp) {
@@ -263,10 +260,10 @@ class InCond extends Expression {
   @override
   toString() {
     if(inside.isEmpty) return '$field $op(?)';
-    final String args = inside?.skip(1)?.fold<String>('?', (curr, next) => curr + ',?');
+    final String args = inside.skip(1).fold<String>('?', (curr, next) => curr + ',?');
     return '$field $op($args)';
   }
 
-  factory InCond.inn(String field, List<dynamic> inside) => InCond._(field, 'IN', inside);
-  factory InCond.notInn(String field, List<dynamic> inside) => InCond._(field, 'NOT IN', inside);
+  factory InCond.inn(String field, List<Object> inside) => InCond._(field, 'IN', inside);
+  factory InCond.notInn(String field, List<Object> inside) => InCond._(field, 'NOT IN', inside);
 }

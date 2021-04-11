@@ -22,20 +22,20 @@ class StatProvider extends ValueNotifier<StatMode> {
 
   bool get isPercentage => value == StatMode.Percentage;
 
-  Future<void> toggleStat(bool newValue) async {
+  Future<void> toggleStat(bool? newValue) async {
     if (newValue != isPercentage) {
       final SharedPreferences preferences = _read(preferencesProvider);
-      await preferences.setBool(sharedStatMode, newValue);
+      await preferences.setBool(sharedStatMode, newValue!);
       value = isPercentage ? StatMode.Ratio : StatMode.Percentage;
     }
   }
 
-  String statLabel(double num, double den) {
+  String statLabel(double? num, double? den) {
     if (isPercentage) {
       if (den == 0 || num == 0) return '0%';
-      final double result = num * 100 / den;
-      return '${_regPercent.firstMatch(result.toStringAsFixed(2))[1]}%';
+      final double result = num! * 100 / den!;
+      return '${_regPercent.firstMatch(result.toStringAsFixed(2))![1]}%';
     }
-    return '${num.toInt()}/' '${den.toInt()}';
+    return '${num!.toInt()}/' '${den!.toInt()}';
   }
 }

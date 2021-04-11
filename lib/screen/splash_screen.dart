@@ -6,7 +6,7 @@ import 'package:amiibo_network/service/update_service.dart';
 import 'package:amiibo_network/generated/l10n.dart';
 
 class SplashScreen extends StatefulWidget {
-  const SplashScreen({Key key}) : super(key: key);
+  const SplashScreen({Key? key}) : super(key: key);
 
   @override
   State<StatefulWidget> createState() => SplashScreenState();
@@ -14,7 +14,7 @@ class SplashScreen extends StatefulWidget {
 
 class SplashScreenState extends State<SplashScreen>
     with SingleTickerProviderStateMixin {
-  AnimationController _animationController;
+  late AnimationController _animationController;
 
   Future<bool> get updateDB async {
     final UpdateService updateService = UpdateService();
@@ -80,7 +80,7 @@ class SplashScreenState extends State<SplashScreen>
                             String _text = translate.splashMessage;
                             if (snapshot.hasData) {
                               key = 1;
-                              _text = snapshot.data
+                              _text = snapshot.data!
                                   ? translate.splashWelcome
                                   : translate.splashError;
                               _child = Image.asset(
@@ -128,15 +128,15 @@ class _SwitchIcon extends StatelessWidget {
   final Animation<double> controller;
 
   const _SwitchIcon({
-    Key key,
+    Key? key,
     this.isLeft = true,
-    @required this.controller,
+    required this.controller,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     final SwitchAnimation animation =
-        SwitchAnimation(controller: controller, delay: isLeft ? 0.1 : 0.6);
+        SwitchAnimation(controller: controller as AnimationController, delay: isLeft ? 0.1 : 0.6);
     return AnimatedBuilder(
         animation: controller,
         child: CustomPaint(
@@ -155,10 +155,10 @@ class _SwitchIcon extends StatelessWidget {
 }
 
 class ScreenAnimation extends StatelessWidget {
-  final Widget child;
-  final String text;
+  final Widget? child;
+  final String? text;
 
-  ScreenAnimation({Key key, this.child, this.text}) : super(key: key);
+  ScreenAnimation({Key? key, this.child, this.text}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -172,7 +172,7 @@ class ScreenAnimation extends StatelessWidget {
             child: FittedBox(
           alignment: Alignment.center,
           fit: BoxFit.scaleDown,
-          child: Text(text, style: TextStyle(color: Colors.white)),
+          child: Text(text!, style: TextStyle(color: Colors.white)),
         )),
         Expanded(flex: 3, child: Center(child: child)),
       ],
@@ -181,7 +181,7 @@ class ScreenAnimation extends StatelessWidget {
 }
 
 class SwitchAnimation {
-  SwitchAnimation({@required this.controller, @required this.delay})
+  SwitchAnimation({required this.controller, required this.delay})
       : translation = TweenSequence<Offset>([
           TweenSequenceItem<Offset>(
               tween: Tween<Offset>(

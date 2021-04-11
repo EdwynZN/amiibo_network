@@ -6,13 +6,13 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:amiibo_network/widget/floating_bar.dart';
-import 'package:amiibo_network/utils/amiibo_category.dart';
+import 'package:amiibo_network/enum/amiibo_category_enum.dart';
 import 'package:amiibo_network/generated/l10n.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 
 class SearchScreen extends StatefulHookWidget {
-  const SearchScreen({Key key}) : super(key: key);
+  const SearchScreen({Key? key}) : super(key: key);
   
   @override
   State<StatefulWidget> createState() => SearchScreenState();
@@ -20,7 +20,7 @@ class SearchScreen extends StatefulHookWidget {
 
 class SearchScreenState extends State<SearchScreen> {
   static final RegExp _regAllowList = RegExp(r'^[A-Za-zÀ-ÿ0-9 .\-\&]*$');
-  S translate;
+  late S translate;
 
   @override
   didChangeDependencies() {
@@ -31,7 +31,7 @@ class SearchScreenState extends State<SearchScreen> {
   @override
   Widget build(BuildContext context) {
     final _textController = useTextEditingController();
-    final amiiboCategory = useProvider(queryProvider.state
+    final amiiboCategory = useProvider(queryProvider
         .select((value) => value.search ?? describeEnum(value.category)));
     return SafeArea(
       child: Scaffold(
@@ -41,23 +41,25 @@ class SearchScreenState extends State<SearchScreen> {
               backgroundColor: Theme.of(context).scaffoldBackgroundColor,
               pinned: true,
               leading: IconButton(
-                  icon: Hero(
-                      flightShuttleBuilder: (
-                        BuildContext flightContext,
-                        Animation<double> animation,
-                        HeroFlightDirection flightDirection,
-                        BuildContext fromHeroContext,
-                        BuildContext toHeroContext,
-                      ) {
-                        return AnimatedIcon(
-                          icon: AnimatedIcons.menu_arrow,
-                          progress: animation,
-                        );
-                      },
-                      tag: 'MenuButton',
-                      child: const BackButtonIcon()),
-                  tooltip: MaterialLocalizations.of(context).backButtonTooltip,
-                  onPressed: Navigator.of(context).pop),
+                icon: Hero(
+                  flightShuttleBuilder: (
+                    BuildContext flightContext,
+                    Animation<double> animation,
+                    HeroFlightDirection flightDirection,
+                    BuildContext fromHeroContext,
+                    BuildContext toHeroContext,
+                  ) {
+                    return AnimatedIcon(
+                      icon: AnimatedIcons.menu_arrow,
+                      progress: animation,
+                    );
+                  },
+                  tag: 'MenuButton',
+                  child: const BackButtonIcon(),
+                ),
+                tooltip: MaterialLocalizations.of(context).backButtonTooltip,
+                onPressed: Navigator.of(context).pop,
+              ),
               title: TextField(
                 controller: _textController,
                 inputFormatters: [
@@ -77,11 +79,11 @@ class SearchScreenState extends State<SearchScreen> {
                 decoration: InputDecoration(
                   isDense: true,
                   hintText: translate.category(amiiboCategory),
-                  hintStyle: Theme.of(context).textTheme.headline4.copyWith(
+                  hintStyle: Theme.of(context).textTheme.headline4!.copyWith(
                         color: Theme.of(context)
                             .textTheme
-                            .headline4
-                            .color
+                            .headline4!
+                            .color!
                             .withOpacity(0.5),
                       ),
                   border: InputBorder.none,
@@ -98,7 +100,7 @@ class SearchScreenState extends State<SearchScreen> {
                         : IconButton(
                             highlightColor: Colors.transparent,
                             icon: const Icon(Icons.close),
-                            onPressed: () => _textController?.clear(),
+                            onPressed: () => _textController.clear(),
                             tooltip: 'Clear',
                           ),
                   );
@@ -126,7 +128,7 @@ class SearchScreenState extends State<SearchScreen> {
 String _useDecouncedSearch(TextEditingController textEditingController) {
   final search = useState(textEditingController.text);
   useEffect(() {
-    Timer timer;
+    Timer? timer;
     void listener() {
       timer?.cancel();
       timer = Timer(
@@ -146,16 +148,16 @@ String _useDecouncedSearch(TextEditingController textEditingController) {
 }
 
 class _Suggestions extends HookWidget {
-  final TextEditingController textEditingController;
+  final TextEditingController? textEditingController;
   const _Suggestions({
-    Key key,
+    Key? key,
     this.textEditingController,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    final search = _useDecouncedSearch(textEditingController);
-    final suggestions = useProvider(searchProvider(search));
+    final search = _useDecouncedSearch(textEditingController!);
+    final suggestions = useProvider(searchProvider!(search));
     return SliverList(
       delegate: SliverChildBuilderDelegate(
         (BuildContext context, int index) {
@@ -182,7 +184,7 @@ class _Suggestions extends HookWidget {
             orElse: () => const SizedBox.shrink(),
           );
         },
-        childCount: suggestions.data?.value?.length ?? 10,
+        childCount: suggestions.data?.value.length ?? 10,
       ),
     );
   }
@@ -227,22 +229,22 @@ class _SliverPersistentHeader extends SliverPersistentHeaderDelegate {
 }
 
 class CategoryControl extends StatefulHookWidget {
-  const CategoryControl({Key key}) : super(key: key);
+  const CategoryControl({Key? key}) : super(key: key);
 
   @override
   State<StatefulWidget> createState() => CategoryControlState();
 }
 
 class CategoryControlState extends State<CategoryControl> {
-  Color _accentColor, _accentTextThemeColor;
-  S translate;
+  Color? _accentColor, _accentTextThemeColor;
+  S? translate;
 
   @override
   void didChangeDependencies() {
     translate = S.of(context);
     final ThemeData theme = Theme.of(context);
     _accentColor = theme.accentColor;
-    _accentTextThemeColor = theme.accentTextTheme.headline6.color;
+    _accentTextThemeColor = theme.accentTextTheme.headline6!.color;
     super.didChangeDependencies();
   }
 
@@ -278,7 +280,7 @@ class CategoryControlState extends State<CategoryControl> {
             ),
             label: Flexible(
                 child: FittedBox(
-              child: Text(translate.category(AmiiboCategory.Name)),
+              child: Text(translate!.category(AmiiboCategory.Name)),
             )),
           ),
         ),
@@ -296,7 +298,7 @@ class CategoryControlState extends State<CategoryControl> {
             ),
             label: Flexible(
                 child: FittedBox(
-              child: Text(translate.category(AmiiboCategory.Game)),
+              child: Text(translate!.category(AmiiboCategory.Game)),
             )),
           ),
         ),
@@ -320,7 +322,7 @@ class CategoryControlState extends State<CategoryControl> {
             ),
             label: Flexible(
                 child: FittedBox(
-              child: Text(translate.category(AmiiboCategory.AmiiboSeries)),
+              child: Text(translate!.category(AmiiboCategory.AmiiboSeries)),
             )),
           ),
         ),

@@ -1,3 +1,4 @@
+import 'package:amiibo_network/enum/sort_enum.dart';
 import 'package:amiibo_network/generated/l10n.dart';
 import 'package:amiibo_network/riverpod/query_provider.dart';
 import 'package:flutter/foundation.dart';
@@ -7,7 +8,7 @@ import 'package:flutter/rendering.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 class SortCollection extends StatelessWidget {
-  const SortCollection({Key key}) : super(key: key);
+  const SortCollection({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -28,14 +29,14 @@ class SortCollection extends StatelessWidget {
 }
 
 class _BottomSheetSort extends StatelessWidget {
-  const _BottomSheetSort({Key key}) : super(key: key);
+  const _BottomSheetSort({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     final ThemeData theme = Theme.of(context);
     final _accentColor = theme.accentColor;
-    final _accentTextThemeColor = theme.accentTextTheme.headline6.color;
-    final S translate = S.of(context);
+    final _accentTextThemeColor = theme.accentTextTheme.headline6!.color;
+    final S? translate = S.of(context);
     final Size size = MediaQuery.of(context).size;
     final double height = (460.0 / size.height).clamp(0.25, 0.66);
     EdgeInsetsGeometry padding = EdgeInsets.zero;
@@ -62,7 +63,7 @@ class _BottomSheetSort extends StatelessWidget {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: <Widget>[
-                        Text(translate.sort,
+                        Text(translate!.sort,
                             style: Theme.of(context).textTheme.headline6),
                         TextButton(
                           style: TextButton.styleFrom(
@@ -83,21 +84,21 @@ class _BottomSheetSort extends StatelessWidget {
                       height: 36,
                       child: Consumer(
                         builder: (context, watch, _) {
-                          final sortBy = watch(sortByProvider.state);
+                          final sortBy = watch(sortByProvider);
                           return Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             mainAxisSize: MainAxisSize.max,
                             children: <Widget>[
                               Expanded(
                                 child: OutlinedButton.icon(
-                                  style: sortBy.contains('ASC')
+                                  style: sortBy == SortBy.ASC
                                       ? OutlinedButton.styleFrom(
                                           primary: _accentTextThemeColor,
                                           backgroundColor: _accentColor)
                                       : null,
                                   onPressed: () => context
-                                      .read(sortByProvider)
-                                      .changeState('ASC'),
+                                      .read(sortByProvider.notifier)
+                                      .changeState(SortBy.ASC),
                                   icon: const Icon(
                                     Icons.arrow_downward,
                                     size: 20,
@@ -111,14 +112,14 @@ class _BottomSheetSort extends StatelessWidget {
                               Expanded(
                                 child: OutlinedButton.icon(
                                   key: Key('DESC'),
-                                  style: sortBy.contains('DESC')
+                                  style: sortBy == SortBy.DESC
                                       ? OutlinedButton.styleFrom(
                                           primary: _accentTextThemeColor,
                                           backgroundColor: _accentColor)
                                       : null,
                                   onPressed: () => context
-                                      .read(sortByProvider)
-                                      .changeState('DESC'),
+                                      .read(sortByProvider.notifier)
+                                      .changeState(SortBy.DESC),
                                   icon:
                                       const Icon(Icons.arrow_upward, size: 20),
                                   label: Flexible(
@@ -136,40 +137,40 @@ class _BottomSheetSort extends StatelessWidget {
                 ),
                 Consumer(
                   builder: (context, watch, _) {
-                    final order = watch(orderCategoryProvider.state);
+                    final order = watch(orderCategoryProvider);
                     return SliverList(
                       delegate: SliverChildListDelegate([
-                        RadioListTile<String>(
-                          value: 'name',
+                        RadioListTile<OrderBy>(
+                          value: OrderBy.Name,
                           groupValue: order,
                           onChanged:
-                              context.read(orderCategoryProvider).changeState,
+                              context.read(orderCategoryProvider.notifier).changeState,
                           title: Text(translate.sortName),
-                          selected: order.contains('name'),
+                          selected: order == OrderBy.Name,
                         ),
-                        RadioListTile<String>(
-                          value: 'owned',
+                        RadioListTile<OrderBy>(
+                          value: OrderBy.Owned,
                           groupValue: order,
                           onChanged:
-                              context.read(orderCategoryProvider).changeState,
+                              context.read(orderCategoryProvider.notifier).changeState,
                           title: Text(translate.owned),
-                          selected: order.contains('owned'),
+                          selected: order == OrderBy.Owned,
                         ),
-                        RadioListTile<String>(
-                          value: 'wishlist',
+                        RadioListTile<OrderBy>(
+                          value: OrderBy.Wishlist,
                           groupValue: order,
                           onChanged:
-                              context.read(orderCategoryProvider).changeState,
+                              context.read(orderCategoryProvider.notifier).changeState,
                           title: Text(translate.wished),
-                          selected: order.contains('wishlist'),
+                          selected: order == OrderBy.Wishlist,
                         ),
-                        RadioListTile<String>(
-                          value: 'na',
+                        RadioListTile<OrderBy>(
+                          value: OrderBy.NA,
                           groupValue: order,
                           onChanged:
-                              context.read(orderCategoryProvider).changeState,
+                              context.read(orderCategoryProvider.notifier).changeState,
                           title: Text(translate.na),
-                          selected: order == 'na',
+                          selected:order == OrderBy.NA,
                           secondary: Image.asset(
                             'assets/images/na.png',
                             height: 16,
@@ -178,13 +179,13 @@ class _BottomSheetSort extends StatelessWidget {
                             semanticLabel: translate.na,
                           ),
                         ),
-                        RadioListTile<String>(
-                          value: 'eu',
+                        RadioListTile<OrderBy>(
+                          value: OrderBy.EU,
                           groupValue: order,
                           onChanged:
-                              context.read(orderCategoryProvider).changeState,
+                              context.read(orderCategoryProvider.notifier).changeState,
                           title: Text(translate.eu),
-                          selected: order.contains('eu'),
+                          selected:order == OrderBy.EU,
                           secondary: Image.asset(
                             'assets/images/eu.png',
                             height: 16,
@@ -193,13 +194,13 @@ class _BottomSheetSort extends StatelessWidget {
                             semanticLabel: translate.eu,
                           ),
                         ),
-                        RadioListTile<String>(
-                          value: 'jp',
+                        RadioListTile<OrderBy>(
+                          value: OrderBy.JP,
                           groupValue: order,
                           onChanged:
-                              context.read(orderCategoryProvider).changeState,
+                              context.read(orderCategoryProvider.notifier).changeState,
                           title: Text(translate.jp),
-                          selected: order.contains('jp'),
+                          selected:order == OrderBy.JP,
                           secondary: DecoratedBox(
                             decoration:
                                 BoxDecoration(border: Border.all(width: 0.75)),
@@ -213,13 +214,13 @@ class _BottomSheetSort extends StatelessWidget {
                             ),
                           ),
                         ),
-                        RadioListTile<String>(
-                          value: 'au',
+                        RadioListTile<OrderBy>(
+                          value: OrderBy.AU,
                           groupValue: order,
                           onChanged:
-                              context.read(orderCategoryProvider).changeState,
+                              context.read(orderCategoryProvider.notifier).changeState,
                           title: Text(translate.au),
-                          selected: order.contains('au'),
+                          selected:order == OrderBy.AU,
                           secondary: Image.asset(
                             'assets/images/au.png',
                             height: 16,
@@ -243,7 +244,7 @@ class _BottomSheetSort extends StatelessWidget {
 
 class _BottomSheetHeader extends SliverPersistentHeaderDelegate {
   final Widget child;
-  const _BottomSheetHeader({@required this.child});
+  const _BottomSheetHeader({required this.child});
 
   @override
   Widget build(

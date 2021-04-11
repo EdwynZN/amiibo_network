@@ -25,28 +25,28 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:amiibo_network/widget/stat_header.dart';
 import 'package:amiibo_network/model/search_result.dart';
 
-final _titleProvider = Provider.autoDispose<String>((ref) {
-  final count = ref.watch(selectProvider);
-  final query = ref.watch(queryProvider.state);
+final AutoDisposeProvider<String>? _titleProvider = Provider.autoDispose<String>((ref) {
+  final count = ref.watch(selectProvider!);
+  final query = ref.watch(queryProvider);
   return count.multipleSelected
       ? count.length.toString()
       : (query.search ?? describeEnum(query.category));
 });
 
 class Home extends StatefulWidget {
-  const Home({Key key}) : super(key: key);
+  const Home({Key? key}) : super(key: key);
 
   @override
   State<StatefulWidget> createState() => HomeState();
 }
 
 class HomeState extends State<Home> with SingleTickerProviderStateMixin {
-  ScrollController _controller;
-  AnimationController _animationController;
-  S translate;
-  MaterialLocalizations localizations;
+  ScrollController? _controller;
+  AnimationController? _animationController;
+  S? translate;
+  late MaterialLocalizations localizations;
   static Widget _defaultLayoutBuilder(
-      Widget currentChild, List<Widget> previousChildren) {
+      Widget? currentChild, List<Widget> previousChildren) {
     List<Widget> children = previousChildren;
     if (currentChild != null) children = children.toList()..add(currentChild);
     return Stack(
@@ -56,12 +56,12 @@ class HomeState extends State<Home> with SingleTickerProviderStateMixin {
   }
 
   void _restartAnimation() {
-    _controller.jumpTo(0);
-    _animationController.forward();
-    context.read(selectProvider).clearSelected();
+    _controller!.jumpTo(0);
+    _animationController!.forward();
+    context.read(selectProvider!).clearSelected();
   }
 
-  void _cancelSelection() => context.read(selectProvider).clearSelected();
+  void _cancelSelection() => context.read(selectProvider!).clearSelected();
 
   @override
   void initState() {
@@ -70,7 +70,7 @@ class HomeState extends State<Home> with SingleTickerProviderStateMixin {
     _animationController = AnimationController(
         duration: const Duration(milliseconds: 300), vsync: this)
       ..value = 1.0;
-    WidgetsBinding.instance.addPostFrameCallback((_) => _showWhatsNew());
+    WidgetsBinding.instance!.addPostFrameCallback((_) => _showWhatsNew());
   }
 
   @override
@@ -90,14 +90,14 @@ class HomeState extends State<Home> with SingleTickerProviderStateMixin {
 
   void _scrollListener() {
     if ((_controller?.hasClients ?? false) &&
-        !_animationController.isAnimating &&
-        _controller.offset > 56.0) {
-      switch (_controller.position.userScrollDirection) {
+        !_animationController!.isAnimating &&
+        _controller!.offset > 56.0) {
+      switch (_controller!.position.userScrollDirection) {
         case ScrollDirection.forward:
-          if (_animationController.isDismissed) _animationController.forward();
+          if (_animationController!.isDismissed) _animationController!.forward();
           break;
         case ScrollDirection.reverse:
-          if (_animationController.isCompleted) _animationController.reverse();
+          if (_animationController!.isCompleted) _animationController!.reverse();
           break;
         case ScrollDirection.idle:
           break;
@@ -113,24 +113,24 @@ class HomeState extends State<Home> with SingleTickerProviderStateMixin {
       showDialog(
         context: context,
         builder: (context) => MarkdownReader(
-          file: translate.changelog.replaceAll(' ', '_'),
-          title: translate.changelogSubtitle,
+          file: translate!.changelog.replaceAll(' ', '_'),
+          title: translate!.changelogSubtitle,
         ),
       );
     }
   }
 
   Future<void> _search() async {
-    Search value = await Navigator.pushNamed<Search>(context, searchRoute);
-    if (value != null && (value.search?.trim()?.isNotEmpty ?? false)) {
-      final query = context.read(queryProvider);
-      query.updateOption(value);
+    Search? value = await Navigator.pushNamed<Search>(context, searchRoute);
+    if (value?.search?.trim().isNotEmpty ?? false) {
+      final query = context.read(queryProvider.notifier);
+      query.updateOption(value!);
       _restartAnimation();
     }
   }
 
   Future<bool> _exitApp() async {
-    final selected = context.read(selectProvider);
+    final selected = context.read(selectProvider!);
     if (selected.multipleSelected) {
       selected.clearSelected();
       return false;
@@ -148,7 +148,7 @@ class HomeState extends State<Home> with SingleTickerProviderStateMixin {
         child: HookBuilder(
           builder: (_) {
             final _multipleSelection = useProvider(
-                selectProvider.select((value) => value.multipleSelected));
+                selectProvider!.select((value) => value.multipleSelected));
             return Scaffold(
               resizeToAvoidBottomInset: false,
               drawer: _multipleSelection
@@ -204,19 +204,19 @@ class HomeState extends State<Home> with SingleTickerProviderStateMixin {
                             alignment: Alignment.center,
                             heightFactor: 10,
                             child: Text(
-                              translate.emptyPage,
+                              translate!.emptyPage,
                               textAlign: TextAlign.center,
                             ),
                           ),
                         ),
                         builder: (ctx, watch, child) {
                           final ignore = watch(lockProvider).lock;
-                          return watch(controlProvider.state).maybeWhen(
+                          return watch(controlProvider).maybeWhen(
                             data: (data) {
-                              if ((data?.length ?? 1) == 0)
+                              if (data.length == 0)
                                 return DefaultTextStyle(
-                                  style: Theme.of(context).textTheme.headline4,
-                                  child: child,
+                                  style: Theme.of(context).textTheme.headline4!,
+                                  child: child!,
                                 );
                               final bool bigGrid =
                                   MediaQuery.of(context).size.width >= 600;
@@ -237,7 +237,7 @@ class HomeState extends State<Home> with SingleTickerProviderStateMixin {
                                       return AnimatedSwitcher(
                                         duration: const Duration(milliseconds: 500),
                                         child: ProviderScope(
-                                          key: ValueKey<int>(data[index].key),
+                                          key: ValueKey<int?>(data[index].key),
                                           overrides: [
                                             indexAmiiboProvider
                                               .overrideWithValue(
@@ -248,7 +248,7 @@ class HomeState extends State<Home> with SingleTickerProviderStateMixin {
                                         ),
                                       );
                                     },
-                                    childCount: data?.length ?? 0,
+                                    childCount: data.length,
                                   ),
                                 ),
                               );
@@ -262,8 +262,8 @@ class HomeState extends State<Home> with SingleTickerProviderStateMixin {
                 ),
               ),
               floatingActionButton: FAB(
-                _animationController,
-                () => _controller.jumpTo(0),
+                _animationController!,
+                () => _controller!.jumpTo(0),
               ),
             );
           },
@@ -274,7 +274,7 @@ class HomeState extends State<Home> with SingleTickerProviderStateMixin {
 }
 
 class _DefaultOptions extends StatelessWidget {
-  const _DefaultOptions({Key key}) : super(key: key);
+  const _DefaultOptions({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -290,25 +290,25 @@ class _DefaultOptions extends StatelessWidget {
 }
 
 class _TitleAppBar extends ConsumerWidget {
-  const _TitleAppBar({Key key}) : super(key: key);
+  const _TitleAppBar({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context, ScopedReader watch) {
     final MaterialLocalizations localizations =
         MaterialLocalizations.of(context);
     final S translate = S.of(context);
-    final title = watch(_titleProvider);
+    final title = watch(_titleProvider!);
     return Tooltip(
       message: num.tryParse(title) == null
           ? localizations.searchFieldLabel
-          : localizations.selectedRowCountTitle(num.parse(title)),
+          : localizations.selectedRowCountTitle(num.parse(title) as int),
       child: Text(translate.category(title)),
     );
   }
 }
 
 class _SelectedOptions extends StatelessWidget {
-  const _SelectedOptions({Key key}) : super(key: key);
+  const _SelectedOptions({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -320,19 +320,19 @@ class _SelectedOptions extends StatelessWidget {
         IconButton(
           icon: const Icon(Icons.remove),
           onPressed: () =>
-              context.read(selectProvider).updateAmiibos(SelectedType.Clear),
+              context.read(selectProvider!).updateAmiibos(SelectedType.Clear),
           tooltip: translate.removeTooltip,
         ),
         IconButton(
           icon: const Icon(iconOwned),
           onPressed: () =>
-              context.read(selectProvider).updateAmiibos(SelectedType.Owned),
+              context.read(selectProvider!).updateAmiibos(SelectedType.Owned),
           tooltip: translate.ownTooltip,
         ),
         IconButton(
           icon: const Icon(iconWished),
           onPressed: () =>
-              context.read(selectProvider).updateAmiibos(SelectedType.Wished),
+              context.read(selectProvider!).updateAmiibos(SelectedType.Wished),
           tooltip: translate.wishTooltip,
         ),
       ],

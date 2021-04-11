@@ -34,7 +34,7 @@ final themeProvider = ChangeNotifierProvider<ThemeProvider>((ref) {
 });
 
 class ThemeProvider extends ChangeNotifier {
-  ThemeMode _preferredTheme;
+  ThemeMode? _preferredTheme;
   int _lightColor;
   int _darkColor;
   final AmiiboTheme theme;
@@ -45,13 +45,13 @@ class ThemeProvider extends ChangeNotifier {
       : _preferredTheme = ThemeMode.values[themeMode],
         theme = AmiiboTheme(light: _lightColor, dark: _darkColor);
 
-  ThemeMode get preferredTheme => _preferredTheme;
+  ThemeMode? get preferredTheme => _preferredTheme;
 
-  int get lightOption => _lightColor ?? 0;
-  int get darkOption => _darkColor ?? 2;
+  int get lightOption => _lightColor;
+  int get darkOption => _darkColor;
 
   lightTheme(int light) async {
-    light = light?.clamp(0, 17) ?? 0;
+    light = light.clamp(0, 17);
     if (light != _lightColor) {
       _lightColor = light;
       await _preferences.setInt(sharedLightTheme, light);
@@ -63,7 +63,7 @@ class ThemeProvider extends ChangeNotifier {
   }
 
   darkTheme(int dark) async {
-    dark = dark?.clamp(0, 17) ?? 0;
+    dark = dark.clamp(0, 17);
     if (dark != _darkColor) {
       final SharedPreferences preferences =
           await SharedPreferences.getInstance();
@@ -74,7 +74,7 @@ class ThemeProvider extends ChangeNotifier {
     }
   }
 
-  Future<void> themeDB(ThemeMode value) async {
+  Future<void> themeDB(ThemeMode? value) async {
     if (value == null) value = ThemeMode.system;
     if (value != preferredTheme) {
       _preferredTheme = value;

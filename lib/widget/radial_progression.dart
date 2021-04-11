@@ -4,9 +4,9 @@ import 'dart:math';
 class RadialProgression extends CustomPainter{
   final Paint line;
   final Paint progressLine;
-  final double percent;
+  final double? percent;
 
-  RadialProgression({this.percent, Color color}):
+  RadialProgression({this.percent, required Color color}):
     progressLine = Paint()
       ..color = color
       ..style = PaintingStyle.stroke
@@ -23,7 +23,7 @@ class RadialProgression extends CustomPainter{
     canvas..drawCircle(center, radius, line)..drawArc(
       Rect.fromCircle(center: center, radius: radius),
       -pi/2,
-      2*pi*percent,
+      2*pi*percent!,
       false,
       progressLine
     );

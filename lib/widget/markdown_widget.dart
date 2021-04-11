@@ -5,9 +5,9 @@ import 'package:amiibo_network/generated/l10n.dart';
 import 'package:flutter/services.dart';
 
 class MarkdownReader extends StatelessWidget {
-  final String title;
+  final String? title;
   final String file;
-  const MarkdownReader({Key key, this.title, @required this.file}): super(key: key);
+  const MarkdownReader({Key? key, this.title, required this.file}): super(key: key);
 
   Future<String> get _localFile => rootBundle.loadString('assets/text/$file.md');
 
@@ -15,15 +15,15 @@ class MarkdownReader extends StatelessWidget {
     if (await canLaunch(url)) {
       await launch(url);
     } else {
-      ScaffoldMessenger.of(ctx)?.showSnackBar(SnackBar(content: Text('Could not launch $url')));
+      ScaffoldMessenger.maybeOf(ctx)?.showSnackBar(SnackBar(content: Text('Could not launch $url')));
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    final S translate = S.of(context);
+    final S? translate = S.of(context);
     return AlertDialog(
-      title: Text(title),
+      title: Text(title!),
       titlePadding: const EdgeInsets.all(12),
       contentPadding: EdgeInsets.zero,
       content: Scrollbar(
@@ -33,11 +33,11 @@ class MarkdownReader extends StatelessWidget {
             future: _localFile,
             builder: (BuildContext context, AsyncSnapshot<String> snapshot){
               if(snapshot.hasError)
-                return Center(child: Text(translate.markdownError));
+                return Center(child: Text(translate!.markdownError));
               if(snapshot.hasData)
                 return MarkdownBody(
                   listItemCrossAxisAlignment: MarkdownListItemCrossAxisAlignment.start,
-                  data: snapshot.data,
+                  data: snapshot.data!,
                   styleSheetTheme: MarkdownStyleSheetBaseTheme.platform,
                   onTapLink: (url, _, __) => _launchURL(url, context),
                 );

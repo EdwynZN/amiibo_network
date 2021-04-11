@@ -13,12 +13,12 @@ import 'package:amiibo_network/utils/routes_constants.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 class Routes{
-  static Route<dynamic> getRoute(RouteSettings settings) {
+  static Route<dynamic>? getRoute(RouteSettings settings) {
     switch(settings.name){
       case detailsRoute:
         return VerticalSlideRoute(builder: (_) => ProviderScope(
           overrides: [
-            indexAmiiboProvider.overrideWithValue(settings.arguments as int)
+            indexAmiiboProvider.overrideWithValue((settings.arguments as int?) ?? 0)
           ],
           child: const DetailPage(),
         ), settings: settings);
@@ -36,7 +36,7 @@ class Routes{
   }
 }
 
-CupertinoPageRoute cupertinoRoute({Widget child, RouteSettings settings, bool fullscreenDialog = false}){
+CupertinoPageRoute cupertinoRoute({Widget? child, RouteSettings? settings, bool fullscreenDialog = false}){
   return CupertinoPageRoute(
     settings: settings,
     fullscreenDialog: fullscreenDialog,
@@ -47,12 +47,12 @@ CupertinoPageRoute cupertinoRoute({Widget child, RouteSettings settings, bool fu
         statusBarColor: Theme.of(ctx).appBarTheme.color,
         systemNavigationBarColor: Theme.of(ctx).appBarTheme.color,
       ),
-      child: child
+      child: child!
     )
   );
 }
 
-MaterialPageRoute materialRoute({Widget child, RouteSettings settings, bool fullscreenDialog = false}) {
+MaterialPageRoute materialRoute({Widget? child, RouteSettings? settings, bool fullscreenDialog = false}) {
   return MaterialPageRoute(
     settings: settings,
     fullscreenDialog: fullscreenDialog,
@@ -63,13 +63,13 @@ MaterialPageRoute materialRoute({Widget child, RouteSettings settings, bool full
         statusBarColor: Theme.of(ctx).appBarTheme.color,
         systemNavigationBarColor: Theme.of(ctx).appBarTheme.color,
       ),
-      child: child,
+      child: child!,
     )
   );
 }
 
 class FadeRoute<T> extends MaterialPageRoute<T> {
-  FadeRoute({WidgetBuilder builder, RouteSettings settings, bool fullscreenDialog = false})
+  FadeRoute({required WidgetBuilder builder, RouteSettings? settings, bool fullscreenDialog = false})
       : super(builder: builder, settings: settings, fullscreenDialog: fullscreenDialog);
 
   @override
@@ -88,16 +88,16 @@ class FadeRoute<T> extends MaterialPageRoute<T> {
 }
 
 class VerticalSlideRoute<T> extends PageRoute<T> {
-  VerticalSlideRoute({Key key, this.builder, RouteSettings settings, bool fullscreenDialog = false})
+  VerticalSlideRoute({Key? key, this.builder, RouteSettings? settings, bool fullscreenDialog = false})
       : super(settings: settings, fullscreenDialog: fullscreenDialog);
 
-  final WidgetBuilder builder;
+  final WidgetBuilder? builder;
 
   @override
   bool get opaque => false;
 
   @override
-  String get barrierLabel => null;
+  String? get barrierLabel => null;
 
   @override
   bool get barrierDismissible => true;
@@ -114,7 +114,7 @@ class VerticalSlideRoute<T> extends PageRoute<T> {
   @override
   Widget buildPage(BuildContext context, Animation<double> animation,
       Animation<double> secondaryAnimation) {
-    return builder(context);
+    return builder!(context);
   }
 
   @override
@@ -141,46 +141,46 @@ class VerticalSlideRoute<T> extends PageRoute<T> {
   }
 
   void _handleDragUpdate(DragUpdateDetails details, double maxHeight){
-    if(!navigator.userGestureInProgress) navigator.didStartUserGesture();
-    controller.value -= details.primaryDelta / maxHeight;
-    if(controller.value == 1.0 && navigator.userGestureInProgress) navigator.didStopUserGesture();
+    if(!navigator!.userGestureInProgress) navigator!.didStartUserGesture();
+    controller!.value -= details.primaryDelta! / maxHeight;
+    if(controller!.value == 1.0 && navigator!.userGestureInProgress) navigator!.didStopUserGesture();
   }
 
   void _handleDragEnd(DragEndDetails details, double maxHeight){
-    final NavigatorState _navigator = navigator;
-    if(controller.value == 1.0 && !_navigator.userGestureInProgress) return;
+    final NavigatorState? _navigator = navigator;
+    if(controller!.value == 1.0 && !_navigator!.userGestureInProgress) return;
     bool animateForward;
 
-    final double flingVelocity = details.primaryVelocity / maxHeight;
+    final double flingVelocity = details.primaryVelocity! / maxHeight;
     if (flingVelocity.abs() >= 2.0)
       animateForward = flingVelocity <= 0;
     else
-      animateForward = controller.value > 0.85;
+      animateForward = controller!.value > 0.85;
 
     if(animateForward){
-      controller.fling(velocity: math.max(2.0, -flingVelocity));
+      controller!.fling(velocity: math.max(2.0, -flingVelocity));
     } else{
-      _navigator.pop();
-      if (controller.isAnimating)
-        controller.fling(velocity: math.min(-2.0, -flingVelocity));
+      _navigator!.pop();
+      if (controller!.isAnimating)
+        controller!.fling(velocity: math.min(-2.0, -flingVelocity));
     }
 
-    if (controller.isAnimating) {
-      AnimationStatusListener animationStatusCallback;
+    if (controller!.isAnimating) {
+      late AnimationStatusListener animationStatusCallback;
       animationStatusCallback = (AnimationStatus status) {
-        _navigator.didStopUserGesture();
-        controller.removeStatusListener(animationStatusCallback);
+        _navigator!.didStopUserGesture();
+        controller!.removeStatusListener(animationStatusCallback);
       };
-      controller.addStatusListener(animationStatusCallback);
+      controller!.addStatusListener(animationStatusCallback);
     } else {
-      _navigator.didStopUserGesture();
+      _navigator!.didStopUserGesture();
     }
   }
 
 }
 
 class SlideRoute<T> extends MaterialPageRoute<T> {
-  SlideRoute({Key key, WidgetBuilder builder, RouteSettings settings, bool fullscreenDialog = false})
+  SlideRoute({Key? key, required WidgetBuilder builder, RouteSettings? settings, bool fullscreenDialog = false})
       : super(builder: builder, settings: settings, fullscreenDialog: fullscreenDialog);
 
   @override
@@ -205,39 +205,39 @@ class SlideRoute<T> extends MaterialPageRoute<T> {
   }
 
   void _handleDragUpdate(DragUpdateDetails details, double maxWidth){
-    if(!navigator.userGestureInProgress) navigator.didStartUserGesture();
-    controller.value -= details.primaryDelta / maxWidth;
-    if(controller.value == 1.0 && navigator.userGestureInProgress) navigator.didStopUserGesture();
+    if(!navigator!.userGestureInProgress) navigator!.didStartUserGesture();
+    controller!.value -= details.primaryDelta! / maxWidth;
+    if(controller!.value == 1.0 && navigator!.userGestureInProgress) navigator!.didStopUserGesture();
   }
 
   void _handleDragEnd(DragEndDetails details, double maxWidth){
-    final NavigatorState _navigator = navigator;
-    if(controller.value == 1.0 && !_navigator.userGestureInProgress) return;
+    final NavigatorState? _navigator = navigator;
+    if(controller!.value == 1.0 && !_navigator!.userGestureInProgress) return;
     bool animateForward;
 
-    final double flingVelocity = details.primaryVelocity / maxWidth;
+    final double flingVelocity = details.primaryVelocity! / maxWidth;
     if (flingVelocity.abs() >= 2.0)
       animateForward = flingVelocity <= 0;
     else
-      animateForward = controller.value > 0.8;
+      animateForward = controller!.value > 0.8;
 
     if(animateForward){
-      controller.fling(velocity: math.max(2.0, -flingVelocity));
+      controller!.fling(velocity: math.max(2.0, -flingVelocity));
     } else{
-      _navigator.pop();
-      if (controller.isAnimating)
-        controller.fling(velocity: math.min(-2.0, -flingVelocity));
+      _navigator!.pop();
+      if (controller!.isAnimating)
+        controller!.fling(velocity: math.min(-2.0, -flingVelocity));
     }
 
-    if (controller.isAnimating) {
-      AnimationStatusListener animationStatusCallback;
+    if (controller!.isAnimating) {
+      late AnimationStatusListener animationStatusCallback;
       animationStatusCallback = (AnimationStatus status) {
-        _navigator.didStopUserGesture();
-        controller.removeStatusListener(animationStatusCallback);
+        _navigator!.didStopUserGesture();
+        controller!.removeStatusListener(animationStatusCallback);
       };
-      controller.addStatusListener(animationStatusCallback);
+      controller!.addStatusListener(animationStatusCallback);
     } else {
-      _navigator.didStopUserGesture();
+      _navigator!.didStopUserGesture();
     }
   }
 

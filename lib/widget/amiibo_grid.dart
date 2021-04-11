@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 class AmiiboGrid extends ConsumerWidget {
-  const AmiiboGrid({Key key}) : super(key: key);
+  const AmiiboGrid({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context, ScopedReader watch) {

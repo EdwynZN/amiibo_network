@@ -4,14 +4,14 @@ import 'package:amiibo_network/widget/stat_widget.dart';
 import 'package:flutter/material.dart';
 
 class SingleStat extends StatelessWidget {
-  final String title;
-  final int owned;
-  final int wished;
-  final int total;
+  final String? title;
+  final int? owned;
+  final int? wished;
+  final int? total;
   final WrapAlignment wrapAlignment;
 
   const SingleStat(
-      {Key key,
+      {Key? key,
       this.title,
       this.owned,
       this.wished,
@@ -34,7 +34,7 @@ class SingleStat extends StatelessWidget {
               child: FittedBox(
                 alignment: Alignment.center,
                 child: Text(
-                  title,
+                  title!,
                   softWrap: false,
                   textAlign: TextAlign.center,
                   overflow: TextOverflow.fade,
@@ -46,8 +46,8 @@ class SingleStat extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
               child: StatWidget(
-                num: owned.toDouble(),
-                den: total.toDouble(),
+                num: owned!.toDouble(),
+                den: total!.toDouble(),
                 text: translate.owned,
                 icon: Icon(iconOwnedDark, color: Colors.green[800]),
               ),
@@ -55,8 +55,8 @@ class SingleStat extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
               child: StatWidget(
-                num: wished.toDouble(),
-                den: total.toDouble(),
+                num: wished!.toDouble(),
+                den: total!.toDouble(),
                 text: translate.wished,
                 icon: Icon(Icons.whatshot, color: Colors.amber[800]),
               ),

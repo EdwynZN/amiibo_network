@@ -2,10 +2,14 @@
 const String sharedLock = 'Lock';
 /// @Deprecated old Sort preferences
 const String sharedOldSort = 'Sort';
-/// New Sort preferences
+/// @Deprecated old Sort preferences
 const String sharedSort = 'SortBy';
-/// Order Preferences
+/// @Deprecated old Order Preferences
 const String sharedOrder = 'OrderCategory';
+/// New Sort preferences SortBy
+const String sortPreference = 'SortEnum';
+/// New Order Preferences OrderCategory
+const String orderPreference = 'OrderEnum';
 /// Date of Update of DB
 const String sharedDateDB = 'Date';
 /// @Deprecated old ThemeMode preferences

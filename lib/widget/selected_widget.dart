@@ -8,27 +8,27 @@ import 'package:amiibo_network/widget/amiibo_grid.dart';
 import 'package:amiibo_network/model/selection.dart';
 
 class AnimatedSelection extends StatefulHookWidget {
-  const AnimatedSelection({Key key}) : super(key: key);
+  const AnimatedSelection({Key? key}) : super(key: key);
 
   @override
   _AnimatedSelectionState createState() => _AnimatedSelectionState();
 }
 
 class _AnimatedSelectionState extends State<AnimatedSelection> {
-  void _onDoubleTap(int key) => Navigator.pushNamed(context, detailsRoute,
+  void _onDoubleTap(int? key) => Navigator.pushNamed(context, detailsRoute,
       arguments: key);
 
-  void _onTap(int key) {
-    context.read(controlProvider).shift(key);
+  void _onTap(int? key) {
+    context.read(controlProvider.notifier).shift(key);
   }
 
-  void _onLongPress(int key) => context.read(selectProvider).onLongPress(key);
+  void _onLongPress(int key) => context.read(selectProvider!).onLongPress(key);
 
   @override
   Widget build(BuildContext context) {
     final key = useProvider(indexAmiiboProvider);
     final select = useProvider(
-        selectProvider.select((cb) => Selection(
+        selectProvider!.select((cb) => Selection(
           activated: cb.multipleSelected,
           selected: cb.isSelected(key),
         ),

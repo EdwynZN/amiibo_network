@@ -4,7 +4,7 @@ import 'package:amiibo_network/riverpod/query_provider.dart';
 import 'package:amiibo_network/riverpod/stat_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:amiibo_network/widget/theme_widget.dart';
-import 'package:amiibo_network/utils/amiibo_category.dart';
+import 'package:amiibo_network/enum/amiibo_category_enum.dart';
 import 'package:amiibo_network/generated/l10n.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:amiibo_network/widget/selected_chip.dart';
@@ -12,9 +12,9 @@ import 'package:amiibo_network/utils/routes_constants.dart';
 import 'package:amiibo_network/model/search_result.dart';
 
 class CollectionDrawer extends StatefulWidget {
-  final VoidCallback restart;
+  final VoidCallback? restart;
 
-  CollectionDrawer({Key key, this.restart}) : super(key: key);
+  CollectionDrawer({Key? key, this.restart}) : super(key: key);
 
   @override
   _CollectionDrawerState createState() => _CollectionDrawerState();
@@ -23,7 +23,7 @@ class CollectionDrawer extends StatefulWidget {
 class _CollectionDrawerState extends State<CollectionDrawer> {
   static bool _figureExpand = false;
   static bool _cardExpand = false;
-  ThemeData theme;
+  late ThemeData theme;
 
   @override
   void didChangeDependencies() {
@@ -35,13 +35,13 @@ class _CollectionDrawerState extends State<CollectionDrawer> {
   void cardExpand(bool x) => _cardExpand = x;
 
   _onTapTile(AmiiboCategory category, String tile) {
-    final query = context.read(queryProvider.state);
+    final query = context.read(queryProvider);
     if (query.search != tile || query.category != category) {
-      context.read(queryProvider).updateOption(Search(
+      context.read(queryProvider.notifier).updateOption(Search(
         category: category,
         search: tile
       ));
-      widget.restart();
+      widget.restart!();
     }
     Navigator.pop(context);
   }
@@ -51,7 +51,7 @@ class _CollectionDrawerState extends State<CollectionDrawer> {
     final S translate = S.of(context);
     return ListTileTheme(
       iconColor: theme.iconTheme.color,
-      textColor: theme.textTheme.bodyText2.color,
+      textColor: theme.textTheme.bodyText2!.color,
       style: ListTileStyle.drawer,
       selectedColor: theme.toggleableActiveColor,
       child: Drawer(
@@ -86,8 +86,8 @@ class _CollectionDrawerState extends State<CollectionDrawer> {
                 ),
                 Consumer(
                   builder: (context, watch, child) {
-                    final query = watch(queryProvider.state);
-                    final String _selected = query.search;
+                    final query = watch(queryProvider);
+                    final String? _selected = query.search;
                     final AmiiboCategory _category = query.category;
                     return SliverList(
                       delegate: SliverChildListDelegate([
@@ -95,8 +95,8 @@ class _CollectionDrawerState extends State<CollectionDrawer> {
                           onTap: () =>
                               _onTapTile(AmiiboCategory.Custom, 'Custom'),
                           onLongPress: () async {
-                            final List<String> figures = query.customFigures;
-                            final List<String> cards = query.customCards;
+                            final List<String>? figures = query.customFigures;
+                            final List<String>? cards = query.customCards;
                             bool save = await showDialog<bool>(
                               context: context,
                               builder: (BuildContext context) =>
@@ -109,7 +109,7 @@ class _CollectionDrawerState extends State<CollectionDrawer> {
                               ) ?? false;
                             if (save)
                               await context
-                                  .read(queryProvider)
+                                  .read(queryProvider.notifier)
                                   .updateCustom(figures, cards);
                           },
                           leading: const Icon(Icons.create),
@@ -148,7 +148,7 @@ class _CollectionDrawerState extends State<CollectionDrawer> {
                         ),
                         HookBuilder(builder: (context) {
                           final snapshot = useProvider(
-                            figuresProvider,
+                            figuresProvider!,
                           );
                           return Theme(
                             data: theme.copyWith(
@@ -179,9 +179,8 @@ class _CollectionDrawerState extends State<CollectionDrawer> {
                                       AmiiboCategory.Figures, 'Figures'),
                                   selected: _selected == 'Figures',
                                 ),
-                                if (snapshot is AsyncData &&
-                                    snapshot.data.value != null)
-                                  for (String series in snapshot.data.value)
+                                if (snapshot is AsyncData<List<String>>)
+                                  for (String series in snapshot.value)
                                     ListTile(
                                       leading: CircleAvatar(
                                         backgroundColor:
@@ -204,7 +203,7 @@ class _CollectionDrawerState extends State<CollectionDrawer> {
                           );
                         }),
                         HookBuilder(builder: (context) {
-                          final snapshot = useProvider(cardsProvider);
+                          final snapshot = useProvider(cardsProvider!);
                           return Theme(
                             data: theme.copyWith(
                               dividerColor: Colors.transparent,
@@ -234,9 +233,8 @@ class _CollectionDrawerState extends State<CollectionDrawer> {
                                       _onTapTile(AmiiboCategory.Cards, 'Cards'),
                                   selected: _selected == 'Cards',
                                 ),
-                                if (snapshot is AsyncData &&
-                                    snapshot.data.value != null)
-                                  for (String series in snapshot.data.value)
+                                if (snapshot is AsyncData<List<String>>)
+                                  for (String series in snapshot.value)
                                     ListTile(
                                       leading: CircleAvatar(
                                         backgroundColor:
@@ -282,7 +280,7 @@ class _CollectionDrawerState extends State<CollectionDrawer> {
 }
 
 class _HeaderDrawer extends StatelessWidget {
-  const _HeaderDrawer({Key key}) : super(key: key);
+  const _HeaderDrawer({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

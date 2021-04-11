@@ -3,7 +3,7 @@ import 'package:amiibo_network/riverpod/query_provider.dart';
 import 'package:amiibo_network/riverpod/repository_provider.dart';
 import 'package:amiibo_network/riverpod/theme_provider.dart';
 import 'package:amiibo_network/service/screenshot.dart';
-import 'package:amiibo_network/utils/amiibo_category.dart';
+import 'package:amiibo_network/enum/amiibo_category_enum.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -22,7 +22,7 @@ import 'package:amiibo_network/widget/selected_chip.dart';
 import 'package:amiibo_network/model/amiibo.dart';
 
 class SettingsPage extends StatelessWidget {
-  const SettingsPage({Key key}) : super(key: key);
+  const SettingsPage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -121,7 +121,7 @@ class _SupportButtons extends StatelessWidget {
     }
   }
 
-  _SupportButtons({Key key}) : super(key: key);
+  _SupportButtons({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -188,8 +188,10 @@ class _ProjectButtons extends StatelessWidget {
   final List<String> titles;
   final List<String> urls;
 
-  const _ProjectButtons({this.icons, this.titles, this.urls})
+  const _ProjectButtons(
+      {required this.icons, required this.titles, required this.urls})
       : assert(icons.length == titles.length && icons.length == urls.length);
+
   Future<void> _launchURL(String url, BuildContext context) async {
     if (await canLaunch(url)) {
       await launch(url);
@@ -225,7 +227,7 @@ class _ProjectButtons extends StatelessWidget {
 }
 
 class _SaveCollection extends StatefulWidget {
-  _SaveCollection({Key key}) : super(key: key);
+  _SaveCollection({Key? key}) : super(key: key);
 
   @override
   __SaveCollectionState createState() => __SaveCollectionState();
@@ -233,8 +235,8 @@ class _SaveCollection extends StatefulWidget {
 
 class __SaveCollectionState extends State<_SaveCollection> {
   static final Screenshot _screenshot = Screenshot();
-  S translate;
-  ScaffoldMessengerState scaffoldState;
+  late S translate;
+  ScaffoldMessengerState? scaffoldState;
 
   @override
   didChangeDependencies() {
@@ -244,7 +246,7 @@ class __SaveCollectionState extends State<_SaveCollection> {
   }
 
   Future<void> _saveCollection(
-      AmiiboCategory category, List<String> figures, cards) async {
+      AmiiboCategory category, List<String>? figures, cards) async {
     final String message = _screenshot.isRecording
         ? translate.recordMessage
         : translate.savingCollectionMessage;
@@ -269,7 +271,7 @@ class __SaveCollectionState extends State<_SaveCollection> {
           name = 'MyCustomCollection';
           id = 8;
           expression = Bracket(InCond.inn('type', ['Figure', 'Yarn']) &
-                  InCond.inn('amiiboSeries', figures)) |
+                  InCond.inn('amiiboSeries', figures!)) |
               Bracket(
                   Cond.eq('type', 'Card') & InCond.inn('amiiboSeries', cards));
           break;
@@ -303,9 +305,9 @@ class __SaveCollectionState extends State<_SaveCollection> {
       icon: const Icon(Icons.save),
       onTap: () async {
         if (!(await permissionGranted(scaffoldState))) return;
-        final filter = context.read(queryProvider.state);
-        final List<String> figures = filter.customFigures;
-        final List<String> cards = filter.customCards;
+        final filter = context.read(queryProvider);
+        final List<String>? figures = filter.customFigures;
+        final List<String>? cards = filter.customCards;
         bool save = await showDialog<bool>(
               context: context,
               builder: (BuildContext context) => CustomQueryWidget(
@@ -315,19 +317,19 @@ class __SaveCollectionState extends State<_SaveCollection> {
               ),
             ) ??
             false;
-        if (save && (figures.isNotEmpty || cards.isNotEmpty)) {
-          bool equalFigures = false;
-          bool equalCards = false;
+        if (save && (figures!.isNotEmpty || cards!.isNotEmpty)) {
+          bool? equalFigures = false;
+          bool? equalCards = false;
           AmiiboCategory category = AmiiboCategory.All;
-          final listOfFigures = await context.read(figuresProvider.future);
-          final listOfCards = await context.read(cardsProvider.future);
+          final listOfFigures = await context.read(figuresProvider!.future);
+          final listOfCards = await context.read(cardsProvider!.future);
           if (figures.isNotEmpty)
             equalFigures = QueryProvider.checkEquality(figures, listOfFigures);
-          if (cards.isNotEmpty)
+          if (cards!.isNotEmpty)
             equalCards = QueryProvider.checkEquality(cards, listOfCards);
-          if (equalFigures && cards.isEmpty)
+          if (equalFigures! && cards.isEmpty)
             category = AmiiboCategory.Figures;
-          else if (equalCards && figures.isEmpty)
+          else if (equalCards! && figures.isEmpty)
             category = AmiiboCategory.Cards;
           else if (!equalCards || !equalFigures)
             category = AmiiboCategory.Custom;
@@ -339,9 +341,9 @@ class __SaveCollectionState extends State<_SaveCollection> {
 }
 
 class _ResetCollection extends StatelessWidget {
-  _ResetCollection({Key key}) : super(key: key);
+  _ResetCollection({Key? key}) : super(key: key);
 
-  Future<bool> _dialog(BuildContext context) async {
+  Future<bool?> _dialog(BuildContext context) async {
     final S translate = S.of(context);
     return showDialog(
       context: context,
@@ -366,8 +368,8 @@ class _ResetCollection extends StatelessWidget {
     );
   }
 
-  void _message(ScaffoldMessengerState scaffoldState, String message) {
-    if (!scaffoldState.mounted) return;
+  void _message(ScaffoldMessengerState? scaffoldState, String message) {
+    if (!(scaffoldState?.mounted ?? false)) return;
     scaffoldState?.hideCurrentSnackBar();
     scaffoldState?.showSnackBar(SnackBar(content: Text(message)));
   }
@@ -380,12 +382,12 @@ class _ResetCollection extends StatelessWidget {
       subtitle: translate.resetSubtitle,
       icon: const Icon(Icons.warning),
       onTap: () async {
-        final bool reset = await _dialog(context);
+        final bool? reset = await _dialog(context);
         if (reset ?? false) {
-          final ScaffoldMessengerState scaffoldState =
-              ScaffoldMessenger.maybeOf(context);
+          final ScaffoldMessengerState? scaffoldState =
+              ScaffoldMessenger.maybeOf(context)!;
           try {
-            await context.read(controlProvider).resetCollection();
+            await context.read(controlProvider.notifier).resetCollection();
             _message(scaffoldState, translate.collectionReset);
           } catch (e) {
             _message(scaffoldState, translate.splashError);
@@ -397,7 +399,7 @@ class _ResetCollection extends StatelessWidget {
 }
 
 class _DropMenu extends ConsumerWidget {
-  _DropMenu({Key key}) : super(key: key);
+  _DropMenu({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context, ScopedReader watch) {
@@ -446,7 +448,7 @@ class _DropMenu extends ConsumerWidget {
       ],
       onChanged: themeMode.themeDB,
       //underline: const SizedBox.shrink(),
-      iconEnabledColor: themeStyle.iconTheme.color,
+      iconEnabledColor: themeStyle.iconTheme!.color,
       hint: Row(
         mainAxisSize: MainAxisSize.max,
         mainAxisAlignment: MainAxisAlignment.end,
@@ -454,8 +456,8 @@ class _DropMenu extends ConsumerWidget {
           const Icon(Icons.color_lens),
           Padding(
             padding: const EdgeInsets.only(left: 8),
-            child: Text(translate.themeMode(themeMode.preferredTheme),
-                style: themeStyle.textTheme.subtitle2),
+            child: Text(translate.themeMode(themeMode.preferredTheme!),
+                style: themeStyle.textTheme!.subtitle2),
           )
         ],
       ),
@@ -464,15 +466,15 @@ class _DropMenu extends ConsumerWidget {
 }
 
 class BottomBar extends StatefulWidget {
-  BottomBar({Key key}) : super(key: key);
+  BottomBar({Key? key}) : super(key: key);
 
   @override
   _BottomBarState createState() => _BottomBarState();
 }
 
 class _BottomBarState extends State<BottomBar> {
-  S translate;
-  ScaffoldMessengerState scaffoldState;
+  late S translate;
+  ScaffoldMessengerState? scaffoldState;
 
   @override
   void didChangeDependencies() {
@@ -481,7 +483,7 @@ class _BottomBarState extends State<BottomBar> {
     scaffoldState = ScaffoldMessenger.maybeOf(context);
   }
 
-  void openSnackBar(String message, {SnackBarAction action}) {
+  void openSnackBar(String message, {SnackBarAction? action}) {
     if (!(scaffoldState?.mounted ?? false)) return;
     scaffoldState?.hideCurrentSnackBar();
     scaffoldState?.showSnackBar(SnackBar(
@@ -492,26 +494,25 @@ class _BottomBarState extends State<BottomBar> {
 
   Future<void> _openFileExplorer() async {
     try {
-      final _service = context.read(controlProvider);
+      final control = context.read(controlProvider.notifier);
+      final _service = context.read(controlProvider.notifier);
       final file = await FilePicker.platform.pickFiles(
         type: FileType.any,
         //allowedExtensions: ['json'],
       );
-
-      final String _path = file?.files?.single?.path;
+      final String? _path = file?.files.single.path;
       if (_path == null)
         return;
-      else if (file?.files?.single?.extension != 'json') {
+      else if (file?.files.single.extension != 'json') {
         openSnackBar(translate.errorImporting);
       } else {
-        Map<String, dynamic> map =
-            await compute(readFile, file?.files?.single?.path);
+        Map<String, dynamic>? map = await compute(readFile, _path);
         if (map == null)
           openSnackBar(translate.errorImporting);
         else {
           List<Amiibo> amiibos = await compute(entityFromMap, map);
-          await _service.updateAmiiboDB(amiibos: amiibos);
-          context.read(controlProvider).update();
+          await _service.updateAmiiboDB(amiibos);
+          control.update();
           openSnackBar(translate.successImport);
         }
       }
@@ -556,7 +557,7 @@ class _BottomBarState extends State<BottomBar> {
                 style: TextButton.styleFrom(
                     minimumSize: Size.fromHeight(48),
                     shape: BeveledRectangleBorder(),
-                    primary: Theme.of(context).textTheme.headline6.color,
+                    primary: Theme.of(context).textTheme.headline6!.color,
                     backgroundColor: Theme.of(context).buttonColor),
                 onPressed: () async => await _writePermission(),
                 icon: const Icon(Icons.file_upload),
@@ -565,14 +566,15 @@ class _BottomBarState extends State<BottomBar> {
           const Padding(padding: const EdgeInsets.symmetric(horizontal: 0.5)),
           Expanded(
             child: TextButton.icon(
-                style: TextButton.styleFrom(
-                    minimumSize: Size.fromHeight(48),
-                    shape: BeveledRectangleBorder(),
-                    primary: Theme.of(context).textTheme.headline6.color,
-                    backgroundColor: Theme.of(context).buttonColor),
-                onPressed: () async => await _openFileExplorer(),
-                icon: const Icon(Icons.file_download),
-                label: Text(translate.import)),
+              style: TextButton.styleFrom(
+                  minimumSize: Size.fromHeight(48),
+                  shape: BeveledRectangleBorder(),
+                  primary: Theme.of(context).textTheme.headline6!.color,
+                  backgroundColor: Theme.of(context).buttonColor),
+              onPressed: () async => await _openFileExplorer(),
+              icon: const Icon(Icons.file_download),
+              label: Text(translate.import),
+            ),
           )
         ],
       ),
@@ -581,12 +583,12 @@ class _BottomBarState extends State<BottomBar> {
 }
 
 class _CardSettings extends StatelessWidget {
-  final String title;
-  final String subtitle;
-  final Widget icon;
-  final VoidCallback onTap;
+  final String? title;
+  final String? subtitle;
+  final Widget? icon;
+  final VoidCallback? onTap;
 
-  _CardSettings({Key key, this.title, this.subtitle, this.icon, this.onTap})
+  _CardSettings({Key? key, this.title, this.subtitle, this.icon, this.onTap})
       : super(key: key);
 
   @override
@@ -594,16 +596,16 @@ class _CardSettings extends StatelessWidget {
     return Card(
         child: ListTileTheme(
       iconColor: Theme.of(context).iconTheme.color,
-      textColor: Theme.of(context).textTheme.bodyText2.color,
+      textColor: Theme.of(context).textTheme.bodyText2!.color,
       child: Material(
         color: Colors.transparent,
         shape: Theme.of(context).cardTheme.shape,
         clipBehavior: Clip.hardEdge,
         child: ListTile(
-            title: Text(title),
+            title: Text(title!),
             subtitle: subtitle == null
                 ? null
-                : Text(subtitle,
+                : Text(subtitle!,
                     softWrap: false, overflow: TextOverflow.ellipsis),
             onTap: onTap,
             leading: Container(

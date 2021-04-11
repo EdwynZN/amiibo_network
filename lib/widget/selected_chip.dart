@@ -6,13 +6,13 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 class CustomQueryWidget extends StatelessWidget{
   final String title;
-  final List<String> figures;
-  final List<String> cards;
+  final List<String>? figures;
+  final List<String>? cards;
 
   CustomQueryWidget(
     this.title,{
-    @required this.figures,
-    @required this.cards
+    required this.figures,
+    required this.cards
   });
 
   @override
@@ -34,7 +34,7 @@ class CustomQueryWidget extends StatelessWidget{
             HookBuilder(
               builder: (context) {
                 return useProvider(
-                  figuresProvider,
+                  figuresProvider!,
                 ).maybeWhen(
                   data: (data) {
                     return ConstrainedBox(
@@ -56,7 +56,7 @@ class CustomQueryWidget extends StatelessWidget{
             HookBuilder(
               builder: (context) {
                 return useProvider(
-                  cardsProvider,
+                  cardsProvider!,
                 ).maybeWhen(
                   data: (data) {
                     return ConstrainedBox(
@@ -89,8 +89,8 @@ class CustomQueryWidget extends StatelessWidget{
 }
 
 class SelectedWrap extends StatefulWidget {
-  final List<String> series;
-  final List<String> mySeries;
+  final List<String>? series;
+  final List<String>? mySeries;
 
   SelectedWrap({this.series, this.mySeries});
 
@@ -99,7 +99,7 @@ class SelectedWrap extends StatefulWidget {
 }
 
 class _SelectedWrapState extends State<SelectedWrap> {
-  S translate;
+  S? translate;
 
   @override
   void didChangeDependencies() {
@@ -113,23 +113,23 @@ class _SelectedWrapState extends State<SelectedWrap> {
       spacing: 8.0,
       children: <Widget>[
         ChoiceChip(
-          label: Text(translate.all),
-          tooltip: translate.all,
+          label: Text(translate!.all),
+          tooltip: translate!.all,
           onSelected: (isSelected) => setState((){
-            widget.mySeries.clear();
-            if(isSelected) widget.mySeries.addAll(widget.series);
+            widget.mySeries!.clear();
+            if(isSelected) widget.mySeries!.addAll(widget.series!);
           }),
-          selected: QueryProvider.checkEquality(widget.mySeries, widget.series)
+          selected: QueryProvider.checkEquality(widget.mySeries, widget.series)!
         ),
-        for(String series in widget.series)
+        for(String series in widget.series!)
           ChoiceChip(
             label: Text(series),
             tooltip: series,
             onSelected: (isSelected) => setState((){
-              final bool removed = widget.mySeries.remove(series);
-              if(!removed && isSelected) widget.mySeries.add(series);
+              final bool removed = widget.mySeries!.remove(series);
+              if(!removed && isSelected) widget.mySeries!.add(series);
             }),
-            selected: widget.mySeries.contains(series)
+            selected: widget.mySeries!.contains(series)
           ),
       ],
     );

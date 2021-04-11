@@ -1,5 +1,4 @@
 import 'package:amiibo_network/riverpod/query_provider.dart';
-import 'package:amiibo_network/riverpod/stat_provider.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:amiibo_network/service/screenshot.dart';
@@ -11,12 +10,12 @@ import 'package:amiibo_network/generated/l10n.dart';
 import 'package:amiibo_network/widget/single_stat.dart';
 import 'package:amiibo_network/service/notification_service.dart';
 import 'package:amiibo_network/model/search_result.dart';
-import 'package:amiibo_network/utils/amiibo_category.dart';
+import 'package:amiibo_network/enum/amiibo_category_enum.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 class StatsPage extends StatefulHookWidget {
-  const StatsPage({Key key}) : super(key: key);
+  const StatsPage({Key? key}) : super(key: key);
 
   @override
   _StatsPageState createState() => _StatsPageState();
@@ -25,8 +24,8 @@ class StatsPage extends StatefulHookWidget {
 class _StatsPageState extends State<StatsPage> {
   AmiiboCategory category = AmiiboCategory.All;
   Expression expression = And();
-  S translate;
-  Size size;
+  S? translate;
+  late Size size;
 
   @override
   void didChangeDependencies() {
@@ -44,11 +43,11 @@ class _StatsPageState extends State<StatsPage> {
           expression = And();
           break;
         case AmiiboCategory.Custom:
-          final query = context.read(queryProvider.state);
+          final query = context.read(queryProvider);
           expression = Bracket(InCond.inn('type', ['Figure', 'Yarn']) &
-                  InCond.inn('amiiboSeries', query.customFigures)) |
+                  InCond.inn('amiiboSeries', query.customFigures!)) |
               Bracket(Cond.eq('type', 'Card') &
-                  InCond.inn('amiiboSeries', query.customCards));
+                  InCond.inn('amiiboSeries', query.customCards!));
           break;
         case AmiiboCategory.Figures:
           expression = InCond.inn('type', ['Figure', 'Yarn']);
@@ -65,10 +64,10 @@ class _StatsPageState extends State<StatsPage> {
   @override
   Widget build(BuildContext context) {
     final _canSave = useProvider(
-      queryProvider.state.select((value) =>
+      queryProvider.select((value) =>
           AmiiboCategory.Custom != category ||
-          value.customFigures.isNotEmpty ||
-          value.customCards.isNotEmpty),
+          value.customFigures!.isNotEmpty ||
+          value.customCards!.isNotEmpty),
     );
     if (size.longestSide >= 800)
       return SafeArea(
@@ -80,16 +79,16 @@ class _StatsPageState extends State<StatsPage> {
               destinations: <NavigationRailDestination>[
                 NavigationRailDestination(
                     icon: const Icon(Icons.all_inclusive),
-                    label: Text(translate.all)),
+                    label: Text(translate!.all)),
                 NavigationRailDestination(
                     icon: const Icon(Icons.edit),
-                    label: Text(translate.category(AmiiboCategory.Custom))),
+                    label: Text(translate!.category(AmiiboCategory.Custom))),
                 NavigationRailDestination(
                     icon: const Icon(Icons.toys),
-                    label: Text(translate.figures)),
+                    label: Text(translate!.figures)),
                 NavigationRailDestination(
                     icon: const Icon(Icons.view_carousel),
-                    label: Text(translate.cards))
+                    label: Text(translate!.cards))
               ],
               selectedIndex: category.index,
               trailing: Padding(
@@ -136,19 +135,19 @@ class _StatsPageState extends State<StatsPage> {
                 BottomNavigationBarItem(
                   icon: const Icon(Icons.all_inclusive_outlined),
                   activeIcon: const Icon(Icons.all_inclusive_sharp),
-                  label: translate.all,
+                  label: translate!.all,
                 ),
                 BottomNavigationBarItem(
                   icon: const Icon(Icons.edit),
-                  label: translate.category(AmiiboCategory.Custom),
+                  label: translate!.category(AmiiboCategory.Custom),
                 ),
                 BottomNavigationBarItem(
                   icon: const Icon(Icons.toys),
-                  label: translate.figures,
+                  label: translate!.figures,
                 ),
                 BottomNavigationBarItem(
                   icon: const Icon(Icons.view_carousel),
-                  label: translate.cards,
+                  label: translate!.cards,
                 )
               ],
               currentIndex: category.index,
@@ -178,11 +177,11 @@ class _BodyStats extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
-    final S translate = S.of(context);
+    final S? translate = S.of(context);
     final snapshot = useFuture(_stats, initialData: null);
     if (snapshot.hasData) {
-      final Map<String, dynamic> generalStats = snapshot.data.first;
-      final List<Map<String, dynamic>> stats = snapshot.data.sublist(1);
+      final Map<String, dynamic> generalStats = snapshot.data!.first;
+      final List<Map<String, dynamic>> stats = snapshot.data!.sublist(1);
       if (generalStats.isNotEmpty && stats.isNotEmpty)
         return Scrollbar(
           child: CustomScrollView(
@@ -236,7 +235,7 @@ class _BodyStats extends HookWidget {
         );
       return Center(
         child: Text(
-          translate.emptyPage,
+          translate!.emptyPage,
           style: Theme.of(context).textTheme.headline4,
         ),
       );
@@ -266,8 +265,8 @@ class _FAB extends StatelessWidget {
         if (!(await permissionGranted(scaffoldState))) return;
         String message = translate.savingCollectionMessage;
         if (_screenshot.isRecording) message = translate.recordMessage;
-        scaffoldState?.hideCurrentSnackBar();
-        scaffoldState?.showSnackBar(SnackBar(content: Text(message)));
+        scaffoldState.hideCurrentSnackBar();
+        scaffoldState.showSnackBar(SnackBar(content: Text(message)));
         if (!_screenshot.isRecording) {
           _screenshot.update(context);
           final buffer = await _screenshot.saveStats(_expression);

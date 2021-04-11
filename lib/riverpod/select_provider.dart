@@ -5,10 +5,10 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:amiibo_network/enum/selected_enum.dart';
 import 'package:amiibo_network/model/amiibo.dart';
 
-final selectProvider = ChangeNotifierProvider.autoDispose<SelectProvider>(
+final AutoDisposeChangeNotifierProvider<SelectProvider>? selectProvider = ChangeNotifierProvider.autoDispose<SelectProvider>(
   (ref) {
-    final service = ref.watch(controlProvider);
-    ref.watch(queryProvider);
+    final service = ref.watch(controlProvider.notifier);
+    ref.watch(queryProvider.notifier);
     return SelectProvider(service);
   },
 );
@@ -22,8 +22,8 @@ class SelectProvider extends ChangeNotifier {
   bool get multipleSelected => _set.isNotEmpty;
   int get length => _set.length;
   bool addSelected(int value) => _set.add(value);
-  bool removeSelected(int value) => _set.remove(value);
-  bool isSelected(int value) => _set.contains(value);
+  bool removeSelected(int? value) => _set.remove(value);
+  bool isSelected(int? value) => _set.contains(value);
 
   void updateAmiibos(SelectedType type) {
     bool wished = type == SelectedType.Wished;
@@ -31,7 +31,7 @@ class SelectProvider extends ChangeNotifier {
     final amiibos = _set.map(
       (cb) => Amiibo(key: cb, wishlist: wished, owned: owned),
     ).toList();
-    provider.updateAmiiboDB(amiibos: amiibos);
+    provider.updateAmiiboDB(amiibos);
     clearSelected();
   }
 

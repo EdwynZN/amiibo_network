@@ -5,7 +5,7 @@ part 'selection.freezed.dart';
 @freezed
 abstract class Selection with _$Selection {
   const factory Selection({
-    @required bool activated,
-    @required bool selected,
+    required bool activated,
+    required bool selected,
   }) = _Selection;
 }

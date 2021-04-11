@@ -34,12 +34,12 @@ Future<void> main() async {
 
 class AmiiboNetwork extends ConsumerWidget {
   
-  final Widget firstPage;
+  final Widget? firstPage;
   const AmiiboNetwork({this.firstPage});
 
   @override
   Widget build(BuildContext context, ScopedReader watch) {
-    final ThemeProvider themeMode = watch(themeProvider);
+    final ThemeProvider themeMode = watch(themeProvider.notifier);
     return MaterialApp(
       localizationsDelegates: [
         S.delegate,
@@ -68,7 +68,7 @@ class AmiiboNetwork extends ConsumerWidget {
                 statusBarColor: Theme.of(context).appBarTheme.color,
                 systemNavigationBarColor:
                     Theme.of(context).appBarTheme.color),
-            child: firstPage,
+            child: firstPage!,
           );
         },
       ),
