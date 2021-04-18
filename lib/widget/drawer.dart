@@ -95,14 +95,14 @@ class _CollectionDrawerState extends State<CollectionDrawer> {
                           onTap: () =>
                               _onTapTile(AmiiboCategory.Custom, 'Custom'),
                           onLongPress: () async {
-                            final List<String>? figures = query.customFigures;
-                            final List<String>? cards = query.customCards;
+                            final filter = context.read(queryProvider.notifier);
+                            final List<String>? figures = filter.customFigures;
+                            final List<String>? cards = filter.customCards;
                             bool save = await showDialog<bool>(
                               context: context,
                               builder: (BuildContext context) =>
                                 CustomQueryWidget(
-                                  translate
-                                      .category(AmiiboCategory.Custom),
+                                  translate.category(AmiiboCategory.Custom),
                                   figures: figures,
                                   cards: cards,
                                 ),
@@ -148,7 +148,7 @@ class _CollectionDrawerState extends State<CollectionDrawer> {
                         ),
                         HookBuilder(builder: (context) {
                           final snapshot = useProvider(
-                            figuresProvider!,
+                            figuresProvider,
                           );
                           return Theme(
                             data: theme.copyWith(
@@ -203,7 +203,7 @@ class _CollectionDrawerState extends State<CollectionDrawer> {
                           );
                         }),
                         HookBuilder(builder: (context) {
-                          final snapshot = useProvider(cardsProvider!);
+                          final snapshot = useProvider(cardsProvider);
                           return Theme(
                             data: theme.copyWith(
                               dividerColor: Colors.transparent,

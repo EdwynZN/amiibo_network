@@ -102,7 +102,7 @@ final expressionProvider = StateNotifierProvider.autoDispose<
   return controller;
 });
 
-final AutoDisposeFutureProvider<List<String>>? figuresProvider =
+final figuresProvider =
     FutureProvider.autoDispose<List<String>>((ref) async {
   final service = ref.watch(serviceProvider);
 
@@ -117,7 +117,7 @@ final AutoDisposeFutureProvider<List<String>>? figuresProvider =
   return list;
 });
 
-final AutoDisposeFutureProvider<List<String>>? cardsProvider =
+final cardsProvider =
     FutureProvider.autoDispose<List<String>>((ref) async {
   final service = ref.watch(serviceProvider);
 
@@ -169,6 +169,9 @@ class QueryProvider extends StateNotifier<Search> {
             category: AmiiboCategory.All,
             customFigures: figures,
             customCards: cards));
+
+  List<String> get customFigures => List<String>.of(state.customFigures!);
+  List<String> get customCards => List<String>.of(state.customCards!);
 
   void updateQuery(Query query) {
     if (query != state) state = query as Search;

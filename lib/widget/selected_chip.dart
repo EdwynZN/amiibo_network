@@ -34,7 +34,7 @@ class CustomQueryWidget extends StatelessWidget{
             HookBuilder(
               builder: (context) {
                 return useProvider(
-                  figuresProvider!,
+                  figuresProvider,
                 ).maybeWhen(
                   data: (data) {
                     return ConstrainedBox(
@@ -56,7 +56,7 @@ class CustomQueryWidget extends StatelessWidget{
             HookBuilder(
               builder: (context) {
                 return useProvider(
-                  cardsProvider!,
+                  cardsProvider,
                 ).maybeWhen(
                   data: (data) {
                     return ConstrainedBox(
@@ -99,7 +99,7 @@ class SelectedWrap extends StatefulWidget {
 }
 
 class _SelectedWrapState extends State<SelectedWrap> {
-  S? translate;
+  late S translate;
 
   @override
   void didChangeDependencies() {
@@ -113,8 +113,8 @@ class _SelectedWrapState extends State<SelectedWrap> {
       spacing: 8.0,
       children: <Widget>[
         ChoiceChip(
-          label: Text(translate!.all),
-          tooltip: translate!.all,
+          label: Text(translate.all),
+          tooltip: translate.all,
           onSelected: (isSelected) => setState((){
             widget.mySeries!.clear();
             if(isSelected) widget.mySeries!.addAll(widget.series!);

@@ -305,7 +305,7 @@ class __SaveCollectionState extends State<_SaveCollection> {
       icon: const Icon(Icons.save),
       onTap: () async {
         if (!(await permissionGranted(scaffoldState))) return;
-        final filter = context.read(queryProvider);
+        final filter = context.read(queryProvider.notifier);
         final List<String>? figures = filter.customFigures;
         final List<String>? cards = filter.customCards;
         bool save = await showDialog<bool>(
@@ -321,8 +321,8 @@ class __SaveCollectionState extends State<_SaveCollection> {
           bool? equalFigures = false;
           bool? equalCards = false;
           AmiiboCategory category = AmiiboCategory.All;
-          final listOfFigures = await context.read(figuresProvider!.future);
-          final listOfCards = await context.read(cardsProvider!.future);
+          final listOfFigures = await context.read(figuresProvider.future);
+          final listOfCards = await context.read(cardsProvider.future);
           if (figures.isNotEmpty)
             equalFigures = QueryProvider.checkEquality(figures, listOfFigures);
           if (cards!.isNotEmpty)
