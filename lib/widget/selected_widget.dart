@@ -15,20 +15,21 @@ class AnimatedSelection extends StatefulHookWidget {
 }
 
 class _AnimatedSelectionState extends State<AnimatedSelection> {
-  void _onDoubleTap(int? key) => Navigator.pushNamed(context, detailsRoute,
-      arguments: key);
+  void _onDoubleTap(int? key) =>
+      Navigator.pushNamed(context, detailsRoute, arguments: key);
 
   void _onTap(int? key) {
     context.read(controlProvider.notifier).shift(key);
   }
 
-  void _onLongPress(int key) => context.read(selectProvider!).onLongPress(key);
+  void _onLongPress(int key) => context.read(selectProvider).onLongPress(key);
 
   @override
   Widget build(BuildContext context) {
-    final key = useProvider(indexAmiiboProvider);
+    final key = useProvider(keyAmiiboProvider);
     final select = useProvider(
-        selectProvider!.select((cb) => Selection(
+      selectProvider.select(
+        (cb) => Selection(
           activated: cb.multipleSelected,
           selected: cb.isSelected(key),
         ),

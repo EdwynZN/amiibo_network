@@ -1,21 +1,28 @@
+import 'package:amiibo_network/model/amiibo.dart';
 import 'package:amiibo_network/repository/theme_repository.dart';
 import 'package:amiibo_network/riverpod/amiibo_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+
+final _singleAmiibo = Provider.autoDispose
+  .family<AsyncValue<Amiibo>, int>((ref, index) =>
+  ref.watch(controlProvider).whenData((value) => value[index]),
+  name: 'Amiibo index '
+);
 
 class AmiiboGrid extends ConsumerWidget {
   const AmiiboGrid({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context, ScopedReader watch) {
-    final key = watch(indexAmiiboProvider);
-    return watch(singleAmiiboProvider(key)).when(
+    final index = watch(indexAmiiboProvider);
+    return watch(_singleAmiibo(index)).when(
       loading: () => const Card(
         child: Center(
           child: CircularProgressIndicator(),
         ),
       ),
-      error: (error, stackTrace) => const Card(),
+      error: (_, __) => const Card(),
       data: (amiibo) {
         final theme = Theme.of(context);
         Widget icon = const SizedBox.shrink();
@@ -55,9 +62,9 @@ class AmiiboGrid extends ConsumerWidget {
                             );
                           },
                           transitionOnUserGestures: true,
-                          tag: key,
+                          tag: amiibo.key,
                           child: Image.asset(
-                            'assets/collection/icon_$key.png',
+                            'assets/collection/icon_${amiibo.key}.png',
                             fit: BoxFit.contain,
                           ),
                         ),

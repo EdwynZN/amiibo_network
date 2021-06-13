@@ -1,24 +1,25 @@
 import 'dart:async';
-
 import 'package:amiibo_network/model/search_result.dart';
 import 'package:amiibo_network/model/stat.dart';
+import 'package:amiibo_network/riverpod/service_provider.dart';
 import 'package:amiibo_network/service/service.dart';
 import 'package:riverpod/riverpod.dart';
 import 'package:amiibo_network/riverpod/query_provider.dart';
-import 'package:amiibo_network/riverpod/repository_provider.dart';
 import 'package:amiibo_network/model/amiibo.dart';
+
+final keyAmiiboProvider = ScopedProvider<int>(null);
 
 final indexAmiiboProvider = ScopedProvider<int>((_) => throw UnsupportedError('No amiibo id selected'));
 
-final statHomeProvider = StreamProvider.autoDispose<Stat>((ref) async* {
+final statHomeProvider = StreamProvider.autoDispose<Stat>((ref) {
   final control = ref.watch(controlProvider.notifier);
   final streamController = StreamController<Stat>();
 
   final removeListener = control.addListener((state) {
     state.whenData((value) {
-      final total = value.length.toDouble();
-      final owned = value.where((e) => e.owned).toList().length.toDouble();
-      final wished = value.where((e) => e.wishlist).toList().length.toDouble();
+      final total = value.length;
+      final owned = value.where((e) => e.owned).toList().length;
+      final wished = value.where((e) => e.wishlist).toList().length;
       streamController.sink
           .add(Stat(total: total, owned: owned, wished: wished));
     });
@@ -29,7 +30,7 @@ final statHomeProvider = StreamProvider.autoDispose<Stat>((ref) async* {
     streamController.close();
   });
 
-  yield* streamController.stream;
+  return streamController.stream;
 });
 
 final singleAmiiboProvider =
@@ -40,9 +41,9 @@ final singleAmiiboProvider =
 });
 
 final detailAmiiboProvider =
-    StreamProvider.autoDispose.family<Amiibo?, int>((ref, key) async* {
+    StreamProvider.autoDispose.family<Amiibo?, int>((ref, key) {
   final control = ref.watch(controlProvider.notifier);
-  final service = ref.watch(serviceProvider);
+  final service = ref.watch(serviceProvider.notifier);
   final streamController = StreamController<int>();
 
   final removeListener = control.addListener((state) {
@@ -56,12 +57,12 @@ final detailAmiiboProvider =
     streamController.close();
   });
 
-  yield* streamController.stream.asyncMap(((cb) => service.fetchAmiiboDBByKey(cb)));
+  return streamController.stream.asyncMap(service.fetchAmiiboDBByKey);
 });
 
 final controlProvider =
     StateNotifierProvider.autoDispose<AmiiboProvider, AsyncValue<List<Amiibo>>>((ref) {
-  final service = ref.watch(serviceProvider);
+  final service = ref.watch(serviceProvider.notifier);
   final query = ref.watch(expressionProvider.notifier);
   final provider = AmiiboProvider(service);
 

@@ -6,20 +6,20 @@ import 'dart:ui' as ui show FontFeature;
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 class StatWidget extends StatelessWidget {
-  final double num;
+  final double numerator;
   final double den;
   final double stat;
   final String text;
   final Widget icon;
 
-  StatWidget(
-      {required this.num,
-      required this.den,
-      required this.text,
-      required this.icon,
-      Key? key})
-      : stat = den != 0 ? num / den : 0,
-        super(key: key);
+  StatWidget({
+    Key? key,
+    required this.numerator,
+    required this.den,
+    required this.text,
+    required this.icon,
+  }) : stat = den != 0 ? numerator / den : 0,
+      super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -35,7 +35,7 @@ class StatWidget extends StatelessWidget {
         child: Consumer(
           builder: (ctx, watch, _) {
             final stats = watch(statProvider);
-            final String myStat = stats.statLabel(num, den);
+            final String myStat = stats.statLabel(numerator, den);
             final bool fontFeatureStyle =
                 !stats.isPercentage && isFontFeatureEnable;
 

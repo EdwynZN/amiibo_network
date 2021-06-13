@@ -18,15 +18,16 @@ import 'package:amiibo_network/widget/animated_widgets.dart';
 import 'package:amiibo_network/widget/floating_bar.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:amiibo_network/generated/l10n.dart';
-import '../utils/preferences_constants.dart';
+import 'package:amiibo_network/utils/preferences_constants.dart';
 import 'package:amiibo_network/widget/markdown_widget.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:amiibo_network/widget/stat_header.dart';
 import 'package:amiibo_network/model/search_result.dart';
 
-final AutoDisposeProvider<String>? _titleProvider = Provider.autoDispose<String>((ref) {
-  final count = ref.watch(selectProvider!);
+final AutoDisposeProvider<String>? _titleProvider =
+    Provider.autoDispose<String>((ref) {
+  final count = ref.watch(selectProvider);
   final query = ref.watch(queryProvider);
   return count.multipleSelected
       ? count.length.toString()
@@ -43,7 +44,7 @@ class Home extends StatefulWidget {
 class HomeState extends State<Home> with SingleTickerProviderStateMixin {
   ScrollController? _controller;
   AnimationController? _animationController;
-  S? translate;
+  late S translate;
   late MaterialLocalizations localizations;
   static Widget _defaultLayoutBuilder(
       Widget? currentChild, List<Widget> previousChildren) {
@@ -58,10 +59,10 @@ class HomeState extends State<Home> with SingleTickerProviderStateMixin {
   void _restartAnimation() {
     _controller!.jumpTo(0);
     _animationController!.forward();
-    context.read(selectProvider!).clearSelected();
+    context.read(selectProvider).clearSelected();
   }
 
-  void _cancelSelection() => context.read(selectProvider!).clearSelected();
+  void _cancelSelection() => context.read(selectProvider).clearSelected();
 
   @override
   void initState() {
@@ -94,10 +95,12 @@ class HomeState extends State<Home> with SingleTickerProviderStateMixin {
         _controller!.offset > 56.0) {
       switch (_controller!.position.userScrollDirection) {
         case ScrollDirection.forward:
-          if (_animationController!.isDismissed) _animationController!.forward();
+          if (_animationController!.isDismissed)
+            _animationController!.forward();
           break;
         case ScrollDirection.reverse:
-          if (_animationController!.isCompleted) _animationController!.reverse();
+          if (_animationController!.isCompleted)
+            _animationController!.reverse();
           break;
         case ScrollDirection.idle:
           break;
@@ -113,8 +116,8 @@ class HomeState extends State<Home> with SingleTickerProviderStateMixin {
       showDialog(
         context: context,
         builder: (context) => MarkdownReader(
-          file: translate!.changelog.replaceAll(' ', '_'),
-          title: translate!.changelogSubtitle,
+          file: translate.changelog.replaceAll(' ', '_'),
+          title: translate.changelogSubtitle,
         ),
       );
     }
@@ -130,7 +133,7 @@ class HomeState extends State<Home> with SingleTickerProviderStateMixin {
   }
 
   Future<bool> _exitApp() async {
-    final selected = context.read(selectProvider!);
+    final selected = context.read(selectProvider);
     if (selected.multipleSelected) {
       selected.clearSelected();
       return false;
@@ -148,7 +151,7 @@ class HomeState extends State<Home> with SingleTickerProviderStateMixin {
         child: HookBuilder(
           builder: (_) {
             final _multipleSelection = useProvider(
-                selectProvider!.select((value) => value.multipleSelected));
+                selectProvider.select((value) => value.multipleSelected));
             return Scaffold(
               resizeToAvoidBottomInset: false,
               drawer: _multipleSelection
@@ -195,68 +198,9 @@ class HomeState extends State<Home> with SingleTickerProviderStateMixin {
                       delegate: SliverStatsHeader(),
                       pinned: true,
                     ),
-                    SliverPadding(
-                      padding: const EdgeInsets.symmetric(horizontal: 4),
-                      sliver: Consumer(
-                        child: SliverFillRemaining(
-                          hasScrollBody: false,
-                          child: Align(
-                            alignment: Alignment.center,
-                            heightFactor: 10,
-                            child: Text(
-                              translate!.emptyPage,
-                              textAlign: TextAlign.center,
-                            ),
-                          ),
-                        ),
-                        builder: (ctx, watch, child) {
-                          final ignore = watch(lockProvider).lock;
-                          return watch(controlProvider).maybeWhen(
-                            data: (data) {
-                              if (data.length == 0)
-                                return DefaultTextStyle(
-                                  style: Theme.of(context).textTheme.headline4!,
-                                  child: child!,
-                                );
-                              final bool bigGrid =
-                                  MediaQuery.of(context).size.width >= 600;
-                              return SliverIgnorePointer(
-                                ignoring: ignore,
-                                sliver: SliverGrid(
-                                  gridDelegate: bigGrid
-                                      ? SliverGridDelegateWithMaxCrossAxisExtent(
-                                          maxCrossAxisExtent: 192,
-                                          mainAxisSpacing: 8.0,
-                                        )
-                                      : SliverGridDelegateWithFixedCrossAxisCount(
-                                          crossAxisCount: 3,
-                                          mainAxisSpacing: 8.0,
-                                        ),
-                                  delegate: SliverChildBuilderDelegate(
-                                    (BuildContext _, int index) {
-                                      return AnimatedSwitcher(
-                                        duration: const Duration(milliseconds: 500),
-                                        child: ProviderScope(
-                                          key: ValueKey<int?>(data[index].key),
-                                          overrides: [
-                                            indexAmiiboProvider
-                                              .overrideWithValue(
-                                                data[index].key,
-                                            ),
-                                          ],
-                                          child: const AnimatedSelection(),
-                                        ),
-                                      );
-                                    },
-                                    childCount: data.length,
-                                  ),
-                                ),
-                              );
-                            },
-                            orElse: () => const SliverToBoxAdapter(),
-                          );
-                        },
-                      ),
+                    const SliverPadding(
+                      padding: EdgeInsets.symmetric(horizontal: 4),
+                      sliver: _AmiiboListWidget(),
                     ),
                   ],
                 ),
@@ -269,6 +213,71 @@ class HomeState extends State<Home> with SingleTickerProviderStateMixin {
           },
         ),
       ),
+    );
+  }
+}
+
+class _AmiiboListWidget extends ConsumerWidget {
+  const _AmiiboListWidget({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context, ScopedReader watch) {
+    final ignore = watch(lockProvider).lock;
+    return watch(controlProvider).maybeWhen(
+      data: (data) {
+        if (data.isEmpty) {
+          final S translate = S.of(context);
+          return DefaultTextStyle(
+            style: Theme.of(context).textTheme.headline4!,
+            child: SliverFillRemaining(
+              hasScrollBody: false,
+              child: Align(
+                alignment: Alignment.center,
+                heightFactor: 10,
+                child: Text(
+                  translate.emptyPage,
+                  textAlign: TextAlign.center,
+                ),
+              ),
+            ),
+          );
+        }
+        late final SliverGridDelegate grid;
+        final bool bigGrid = MediaQuery.of(context).size.width >= 600;
+        if (bigGrid)
+          grid = SliverGridDelegateWithMaxCrossAxisExtent(
+            maxCrossAxisExtent: 192,
+            mainAxisSpacing: 8.0,
+          );
+        else
+          grid = SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: 3,
+            mainAxisSpacing: 8.0,
+          );
+        return SliverIgnorePointer(
+          ignoring: ignore,
+          sliver: SliverGrid(
+            gridDelegate: grid,
+            delegate: SliverChildBuilderDelegate(
+              (BuildContext _, int index) {
+                return AnimatedSwitcher(
+                  duration: const Duration(milliseconds: 500),
+                  child: ProviderScope(
+                    key: ValueKey<int?>(data[index].key),
+                    overrides: [
+                      indexAmiiboProvider.overrideWithValue(index),
+                      keyAmiiboProvider.overrideWithValue(data[index].key),
+                    ],
+                    child: const AnimatedSelection(),
+                  ),
+                );
+              },
+              childCount: data.length,
+            ),
+          ),
+        );
+      },
+      orElse: () => const SliverToBoxAdapter(),
     );
   }
 }
@@ -320,19 +329,19 @@ class _SelectedOptions extends StatelessWidget {
         IconButton(
           icon: const Icon(Icons.remove),
           onPressed: () =>
-              context.read(selectProvider!).updateAmiibos(SelectedType.Clear),
+              context.read(selectProvider).updateAmiibos(SelectedType.Clear),
           tooltip: translate.removeTooltip,
         ),
         IconButton(
           icon: const Icon(iconOwned),
           onPressed: () =>
-              context.read(selectProvider!).updateAmiibos(SelectedType.Owned),
+              context.read(selectProvider).updateAmiibos(SelectedType.Owned),
           tooltip: translate.ownTooltip,
         ),
         IconButton(
           icon: const Icon(iconWished),
           onPressed: () =>
-              context.read(selectProvider!).updateAmiibos(SelectedType.Wished),
+              context.read(selectProvider).updateAmiibos(SelectedType.Wished),
           tooltip: translate.wishTooltip,
         ),
       ],

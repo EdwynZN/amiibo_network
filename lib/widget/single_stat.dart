@@ -46,7 +46,7 @@ class SingleStat extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
               child: StatWidget(
-                num: owned!.toDouble(),
+                numerator: owned!.toDouble(),
                 den: total!.toDouble(),
                 text: translate.owned,
                 icon: Icon(iconOwnedDark, color: Colors.green[800]),
@@ -55,7 +55,7 @@ class SingleStat extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
               child: StatWidget(
-                num: wished!.toDouble(),
+                numerator: wished!.toDouble(),
                 den: total!.toDouble(),
                 text: translate.wished,
                 icon: Icon(Icons.whatshot, color: Colors.amber[800]),

@@ -6,9 +6,10 @@ part 'stat.g.dart';
 @freezed
 abstract class Stat with _$Stat {
   const factory Stat({
-    @Default(0) @JsonKey(includeIfNull: true, defaultValue: 0) double total,
-    @Default(0) @JsonKey(includeIfNull: true, defaultValue: 0) double owned,
-    @Default(0) @JsonKey(includeIfNull: true, defaultValue: 0) double wished,
+    @Default('Amiibo Network') @JsonKey(name: 'amiiboSeries', includeIfNull: true, defaultValue: 'Amiibo Network') String name,
+    @Default(0) @JsonKey(name: 'Total', includeIfNull: true, defaultValue: 0) int total,
+    @Default(0) @JsonKey(name: 'Owned', includeIfNull: true, defaultValue: 0) int owned,
+    @Default(0) @JsonKey(name: 'Wished', includeIfNull: true, defaultValue: 0) int wished,
   }) = _Stat;
 	
   factory Stat.fromJson(Map<String, dynamic> json) =>

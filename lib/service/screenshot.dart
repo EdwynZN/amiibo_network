@@ -1,4 +1,5 @@
 import 'dart:typed_data';
+import 'package:amiibo_network/model/stat.dart';
 import 'package:amiibo_network/repository/theme_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -70,8 +71,8 @@ class Screenshot {
         expression: expression,
         orderBy: 'CASE WHEN type = "Figure" THEN 1 '
             'WHEN type = "Yarn" THEN 2 ELSE 3 END, amiiboSeries DESC, na DESC');
-    Map<String, dynamic> _listStat = Map<String, dynamic>.from(
-        (await _service.fetchSum(expression: expression)).first);
+    Stat _listStat = List<Stat>.from(
+      await _service.fetchStats(expression: expression)).first;
     if (isRecording || amiibos.isEmpty) return null;
 
     final double maxSize = 60.0;
@@ -146,10 +147,10 @@ class Screenshot {
   }
 
   Future<Uint8List?> saveStats(Expression expression) async {
-    final List<Map<String, dynamic>> stats =
-        await _service.fetchSum(group: true, expression: expression);
-    final List<Map<String, dynamic>> general =
-        await _service.fetchSum(expression: expression);
+    final List<Stat> stats =
+        await _service.fetchStats(group: true, expression: expression);
+    final List<Stat> general =
+        await _service.fetchStats(expression: expression);
 
     if (isRecording || stats.isEmpty || general.isEmpty) return null;
 
@@ -228,7 +229,7 @@ class Screenshot {
       text: String.fromCharCode(iconWhatsHot.codePoint),
     );
 
-    for (Map<String, dynamic> singleStat in stats) {
+    for (Stat singleStat in stats) {
       final Offset _offset = Offset(xOffset, yOffset);
       final RRect cardPath = RRect.fromRectAndRadius(
           Rect.fromPoints(
@@ -237,18 +238,18 @@ class Screenshot {
                   cardSizeX + 2 * padding, cardSizeY + 2 * padding)),
           Radius.circular(8.0));
       final double? ownedPercent =
-          singleStat['Owned'].toDouble() / singleStat['Total'].toDouble();
+          singleStat.owned.toDouble() / singleStat.total.toDouble();
       final double? wishedPercent =
-          singleStat['Wished'].toDouble() / singleStat['Total'].toDouble();
+          singleStat.wished.toDouble() / singleStat.total.toDouble();
       final String ownedStat = statProvider.statLabel(
-          singleStat['Owned'].toDouble(), singleStat['Total'].toDouble());
+          singleStat.owned.toDouble(), singleStat.total.toDouble());
       final String wishedStat = statProvider.statLabel(
-          singleStat['Wished'].toDouble(), singleStat['Total'].toDouble());
+          singleStat.wished.toDouble(), singleStat.total.toDouble());
       _canvas!.drawRRect(cardPath, cardColor);
 
       TextSpan title = TextSpan(
         style: TextStyle(color: textColor, fontSize: 25),
-        text: singleStat['amiiboSeries'],
+        text: singleStat.name,
       );
       TextPainter(
           text: title,
@@ -364,7 +365,7 @@ class Screenshot {
         ..paint(_canvas!, a.translate(5, 5));
   }
 
-  Future<void> _paintBanner(Size size, Map<String, dynamic> stats) async {
+  Future<void> _paintBanner(Size size, Stat stats) async {
     final Color? textColor = theme.textTheme.headline6!.color;
     final Paint paint = Paint();
     String date = materialLocalizations.formatFullDate(DateTime.now());
@@ -397,7 +398,7 @@ class Screenshot {
                 ],
               ),
               text:
-                  ' ${statProvider.statLabel(stats['Owned'].toDouble(), stats['Total'].toDouble())} '),
+                  ' ${statProvider.statLabel(stats.owned.toDouble(), stats.total.toDouble())} '),
           TextSpan(
               style: TextStyle(color: textColor, fontSize: 35),
               text: ' $owned'),
@@ -417,7 +418,7 @@ class Screenshot {
                 ],
               ),
               text:
-                  ' ${statProvider.statLabel(stats['Wished'].toDouble(), stats['Total'].toDouble())} '),
+                  ' ${statProvider.statLabel(stats.wished.toDouble(), stats.total.toDouble())} '),
           TextSpan(
               style: TextStyle(color: textColor, fontSize: 35),
               text: ' $wished'),

@@ -1,6 +1,6 @@
 import 'package:amiibo_network/riverpod/amiibo_provider.dart';
 import 'package:amiibo_network/riverpod/query_provider.dart';
-import 'package:amiibo_network/riverpod/repository_provider.dart';
+import 'package:amiibo_network/riverpod/service_provider.dart';
 import 'package:amiibo_network/riverpod/theme_provider.dart';
 import 'package:amiibo_network/service/screenshot.dart';
 import 'package:amiibo_network/enum/amiibo_category_enum.dart';
@@ -495,7 +495,6 @@ class _BottomBarState extends State<BottomBar> {
   Future<void> _openFileExplorer() async {
     try {
       final control = context.read(controlProvider.notifier);
-      final _service = context.read(controlProvider.notifier);
       final file = await FilePicker.platform.pickFiles(
         type: FileType.any,
         //allowedExtensions: ['json'],
@@ -511,7 +510,7 @@ class _BottomBarState extends State<BottomBar> {
           openSnackBar(translate.errorImporting);
         else {
           List<Amiibo> amiibos = await compute(entityFromMap, map);
-          await _service.updateAmiiboDB(amiibos);
+          await control.updateAmiiboDB(amiibos);
           control.update();
           openSnackBar(translate.successImport);
         }
@@ -525,7 +524,7 @@ class _BottomBarState extends State<BottomBar> {
 
   Future<void> _writePermission() async {
     try {
-      final _service = context.read(serviceProvider);
+      final _service = context.read(serviceProvider.notifier);
       openSnackBar(translate.savingCollectionMessage);
       final Map<String, dynamic> args = Map<String, dynamic>();
       args['amiibos'] = await _service.fetchAllAmiiboDB();

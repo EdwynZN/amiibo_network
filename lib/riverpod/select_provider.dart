@@ -5,7 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:amiibo_network/enum/selected_enum.dart';
 import 'package:amiibo_network/model/amiibo.dart';
 
-final AutoDisposeChangeNotifierProvider<SelectProvider>? selectProvider = ChangeNotifierProvider.autoDispose<SelectProvider>(
+final selectProvider = ChangeNotifierProvider.autoDispose<SelectProvider>(
   (ref) {
     final service = ref.watch(controlProvider.notifier);
     ref.watch(queryProvider.notifier);

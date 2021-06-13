@@ -1,3 +1,4 @@
+import 'package:amiibo_network/riverpod/service_provider.dart';
 import 'package:amiibo_network/utils/preferences_constants.dart';
 import 'package:flutter/foundation.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -104,7 +105,7 @@ final expressionProvider = StateNotifierProvider.autoDispose<
 
 final figuresProvider =
     FutureProvider.autoDispose<List<String>>((ref) async {
-  final service = ref.watch(serviceProvider);
+  final service = ref.watch(serviceProvider.notifier);
 
   final list = await service.fetchDistinct(
     column: ['amiiboSeries'],
@@ -119,7 +120,7 @@ final figuresProvider =
 
 final cardsProvider =
     FutureProvider.autoDispose<List<String>>((ref) async {
-  final service = ref.watch(serviceProvider);
+  final service = ref.watch(serviceProvider.notifier);
 
   final list = await service.fetchDistinct(
     column: ['amiiboSeries'],

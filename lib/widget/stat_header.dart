@@ -41,15 +41,15 @@ class SliverStatsHeader extends SliverPersistentHeaderDelegate {
           return watch(statHomeProvider).maybeWhen(
             data: (statList) {
               if (statList == const Stat()) return child!;
-              final double total = statList.total;
-              final double owned = statList.owned;
-              final double wished = statList.wished;
+              final double total = statList.total.toDouble();
+              final double owned = statList.owned.toDouble();
+              final double wished = statList.wished.toDouble();
               if (total == 0 && owned == 0 && wished == 0) return child!;
               return Row(
                 children: <Widget>[
                   Expanded(
                     child: StatWidget(
-                      num: owned,
+                      numerator: owned,
                       den: total,
                       text: translate!.owned,
                       icon: Icon(iconOwnedDark, color: Colors.green[800]),
@@ -58,7 +58,7 @@ class SliverStatsHeader extends SliverPersistentHeaderDelegate {
                   const SizedBox(width: 8.0),
                   Expanded(
                     child: StatWidget(
-                      num: wished,
+                      numerator: wished,
                       den: total,
                       text: translate.wished,
                       icon: Icon(Icons.whatshot, color: Colors.amber[800]),

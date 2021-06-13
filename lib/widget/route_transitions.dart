@@ -18,7 +18,7 @@ class Routes{
       case detailsRoute:
         return VerticalSlideRoute(builder: (_) => ProviderScope(
           overrides: [
-            indexAmiiboProvider.overrideWithValue((settings.arguments as int?) ?? 0)
+            keyAmiiboProvider.overrideWithValue((settings.arguments as int?) ?? 0)
           ],
           child: const DetailPage(),
         ), settings: settings);

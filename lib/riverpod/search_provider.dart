@@ -1,6 +1,6 @@
+import 'package:amiibo_network/riverpod/service_provider.dart';
 import 'package:riverpod/riverpod.dart';
 import 'package:amiibo_network/enum/amiibo_category_enum.dart';
-import 'package:amiibo_network/riverpod/repository_provider.dart';
 import 'package:amiibo_network/model/search_result.dart';
 
 extension _StringParsing on AmiiboCategory {
@@ -58,7 +58,7 @@ final categorySearchProvider =
 
 final AutoDisposeFutureProviderFamily<List<String>, String>? searchProvider =
   FutureProvider.autoDispose.family<List<String>, String>((ref, search) {
-  final service = ref.watch(serviceProvider);
+  final service = ref.watch(serviceProvider.notifier);
   final category = ref.watch(categorySearchProvider).state;
   final exp = category.whereExpression(search)!;
 

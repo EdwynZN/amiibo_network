@@ -6,151 +6,148 @@ import 'package:amiibo_network/generated/l10n.dart';
 import 'package:amiibo_network/utils/format_date.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-class DetailPage extends StatelessWidget {
+class DetailPage extends ConsumerWidget {
   const DetailPage({Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
-    return SafeArea(child: _BottomSheetDetail());
-  }
-}
-
-class _BottomSheetDetail extends ConsumerWidget {
-  const _BottomSheetDetail({Key? key}) : super(key: key);
-
-  @override
   Widget build(BuildContext context, ScopedReader watch) {
-    final index = watch(indexAmiiboProvider);
+    final key = watch(keyAmiiboProvider);
     final Size size = MediaQuery.of(context).size;
-    final S translate = S.of(context);
     EdgeInsetsGeometry padding = EdgeInsets.zero;
     int flex = 4;
     if (size.longestSide >= 800)
       padding = EdgeInsets.symmetric(
           horizontal: (size.width / 2 - 250).clamp(0.0, double.infinity));
     if (size.width >= 400) flex = 6;
-    return Align(
-      alignment: Alignment.bottomCenter,
-      child: Padding(
-        padding: padding,
-        child: Material(
-          type: MaterialType.card,
-          shape: const RoundedRectangleBorder(
-            borderRadius: const BorderRadius.vertical(
-              top: Radius.circular(8),
+    return SafeArea(
+      child: Align(
+        alignment: Alignment.bottomCenter,
+        child: Padding(
+          padding: padding,
+          child: Material(
+            type: MaterialType.card,
+            shape: const RoundedRectangleBorder(
+              borderRadius: const BorderRadius.vertical(
+                top: Radius.circular(8),
+              ),
             ),
-          ),
-          clipBehavior: Clip.antiAlias,
-          child: SingleChildScrollView(
-            child: LimitedBox(
-              maxHeight: 250,
-              child: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: <Widget>[
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      mainAxisSize: MainAxisSize.min,
-                      children: <Widget>[
-                        Expanded(
-                          child: Padding(
-                            padding: const EdgeInsets.only(top: 4.0, left: 4.0),
-                            child: Hero(
-                              transitionOnUserGestures: true,
-                              tag: index,
-                              child: Image.asset(
-                                'assets/collection/icon_$index.png',
-                                fit: BoxFit.scaleDown,
+            clipBehavior: Clip.antiAlias,
+            child: SingleChildScrollView(
+              child: LimitedBox(
+                maxHeight: 250,
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: <Widget>[
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        mainAxisSize: MainAxisSize.min,
+                        children: <Widget>[
+                          Expanded(
+                            child: Padding(
+                              padding: const EdgeInsets.only(top: 4.0, left: 4.0),
+                              child: Hero(
+                                transitionOnUserGestures: true,
+                                tag: key,
+                                child: Image.asset(
+                                  'assets/collection/icon_$key.png',
+                                  fit: BoxFit.scaleDown,
+                                ),
                               ),
                             ),
+                            flex: 7,
                           ),
-                          flex: 7,
-                        ),
-                        Expanded(
-                          child: Consumer(builder: (context, watch, _) {
-                            late final amiibo;
-                            final asyncAmiibo =
-                                watch(detailAmiiboProvider(index));
-                            if (asyncAmiibo is! AsyncData<Amiibo?>)
-                              return const SizedBox();
-                            amiibo = asyncAmiibo.value;
-                            return Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                              children: <Widget>[
-                                Expanded(
-                                  child: FittedBox(
-                                    child: IconButton(
-                                      icon: amiibo.owned
-                                          ? const Icon(iconOwned)
-                                          : const Icon(
-                                              Icons.radio_button_unchecked),
-                                      color: colorOwned,
-                                      iconSize: 30.0,
-                                      tooltip: translate.ownTooltip,
-                                      splashColor: colorOwned[100],
-                                      onPressed: () {
-                                        bool newValue = !amiibo.owned;
-                                        context
-                                            .read(controlProvider.notifier)
-                                            .updateAmiiboDB(
-                                          [
-                                            amiibo.copyWith(
-                                              owned: newValue,
-                                              wishlist: newValue
-                                                  ? false
-                                                  : amiibo.wishlist,
-                                            )
-                                          ],
-                                        );
-                                      },
+                          Expanded(
+                            child: const _Buttons(),
+                            flex: 2,
+                          ),
+                        ],
+                          /* Expanded(
+                            child: Consumer(builder: (context, watch, _) {
+                              late final amiibo;
+                              final asyncAmiibo =
+                                  watch(detailAmiiboProvider(key));
+                              if (asyncAmiibo is! AsyncData<Amiibo?>)
+                                return const SizedBox();
+                              amiibo = asyncAmiibo.value;
+                              return Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                children: <Widget>[
+                                  Expanded(
+                                    child: FittedBox(
+                                      child: IconButton(
+                                        icon: amiibo.owned
+                                            ? const Icon(iconOwned)
+                                            : const Icon(
+                                                Icons.radio_button_unchecked),
+                                        color: colorOwned,
+                                        iconSize: 30.0,
+                                        tooltip: translate.ownTooltip,
+                                        splashColor: colorOwned[100],
+                                        onPressed: () {
+                                          bool newValue = !amiibo.owned;
+                                          context
+                                              .read(controlProvider.notifier)
+                                              .updateAmiiboDB(
+                                            [
+                                              amiibo.copyWith(
+                                                owned: newValue,
+                                                wishlist: newValue
+                                                    ? false
+                                                    : amiibo.wishlist,
+                                              )
+                                            ],
+                                          );
+                                        },
+                                      ),
                                     ),
                                   ),
-                                ),
-                                Expanded(
-                                  child: FittedBox(
-                                    child: IconButton(
-                                      icon: amiibo.wishlist
-                                          ? const Icon(iconWished)
-                                          : const Icon(
-                                              Icons.check_box_outline_blank),
-                                      color: colorWished,
-                                      iconSize: 30.0,
-                                      tooltip: translate.wishTooltip,
-                                      splashColor: Colors.amberAccent[100],
-                                      onPressed: () {
-                                        bool newValue = !amiibo.wishlist;
-                                        context
-                                            .read(controlProvider.notifier)
-                                            .updateAmiiboDB(
-                                          [
-                                            amiibo.copyWith(
-                                              owned: newValue
-                                                  ? false
-                                                  : amiibo.owned,
-                                              wishlist: newValue,
-                                            )
-                                          ],
-                                        );
-                                      },
+                                  Expanded(
+                                    child: FittedBox(
+                                      child: IconButton(
+                                        icon: amiibo.wishlist
+                                            ? const Icon(iconWished)
+                                            : const Icon(
+                                                Icons.check_box_outline_blank),
+                                        color: colorWished,
+                                        iconSize: 30.0,
+                                        tooltip: translate.wishTooltip,
+                                        splashColor: Colors.amberAccent[100],
+                                        onPressed: () {
+                                          bool newValue = !amiibo.wishlist;
+                                          context
+                                              .read(controlProvider.notifier)
+                                              .updateAmiiboDB(
+                                            [
+                                              amiibo.copyWith(
+                                                owned: newValue
+                                                    ? false
+                                                    : amiibo.owned,
+                                                wishlist: newValue,
+                                              )
+                                            ],
+                                          );
+                                        },
+                                      ),
                                     ),
                                   ),
-                                ),
-                              ],
-                            );
-                          }),
-                          flex: 2,
-                        ),
-                      ],
+                                ],
+                              );
+                            }),
+                            flex: 2,
+                          ),
+                        ], */
+                      ),
+                      flex: flex,
                     ),
-                    flex: flex,
-                  ),
-                  const VerticalDivider(indent: 10, endIndent: 10),
-                  Expanded(
-                    child: const _AmiiboDetailInfo(),
-                    flex: 7,
-                  )
-                ],
+                    const VerticalDivider(indent: 10, endIndent: 10),
+                    Expanded(
+                      child: const _AmiiboDetailInfo(),
+                      flex: 7,
+                    )
+                  ],
+                ),
               ),
             ),
           ),
@@ -160,14 +157,111 @@ class _BottomSheetDetail extends ConsumerWidget {
   }
 }
 
+class _Buttons extends ConsumerWidget {
+  const _Buttons({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context, ScopedReader watch) {
+    final key = watch(keyAmiiboProvider);
+    final asyncAmiibo = watch(detailAmiiboProvider(key));
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      children: <Widget>[
+        Expanded(
+          child: FittedBox(
+            child: OwnedButton(amiibo: asyncAmiibo.data?.value),
+          ),
+        ),
+        Expanded(
+          child: FittedBox(
+            child: WishedButton(amiibo: asyncAmiibo.data?.value),
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class WishedButton extends StatelessWidget {
+  WishedButton({
+    Key? key,
+    required this.amiibo,
+  })  : isActive = amiibo != null && amiibo.wishlist,
+        super(key: key);
+
+  final Amiibo? amiibo;
+  final bool isActive;
+
+  @override
+  Widget build(BuildContext context) {
+    final S translate = S.of(context);
+    return IconButton(
+      icon: isActive
+          ? const Icon(iconWished)
+          : const Icon(Icons.check_box_outline_blank),
+      color: colorWished,
+      iconSize: 30.0,
+      tooltip: translate.wishTooltip,
+      splashColor: Colors.amberAccent[100],
+      onPressed: () {
+        if (amiibo == null) return;
+        final bool newValue = !isActive;
+        context.read(controlProvider.notifier).updateAmiiboDB(
+          [
+            amiibo!.copyWith(
+              owned: newValue ? false : amiibo!.owned,
+              wishlist: newValue,
+            )
+          ],
+        );
+      },
+    );
+  }
+}
+
+class OwnedButton extends StatelessWidget {
+  OwnedButton({
+    Key? key,
+    required this.amiibo,
+  }) : isActive = amiibo != null && amiibo.owned,
+      super(key: key);
+
+  final Amiibo? amiibo;
+  final bool isActive;
+
+  @override
+  Widget build(BuildContext context) {
+    final S translate = S.of(context);
+    return IconButton(
+      icon: isActive ? const Icon(iconOwned) : const Icon(Icons.radio_button_unchecked),
+      color: colorOwned,
+      iconSize: 30.0,
+      tooltip: translate.ownTooltip,
+      splashColor: colorOwned[100],
+      onPressed: () {
+        if (amiibo == null) return;
+        final bool newValue = !isActive;
+        context.read(controlProvider.notifier).updateAmiiboDB(
+          [
+            amiibo!.copyWith(
+              owned: newValue,
+              wishlist: newValue ? false : amiibo!.wishlist,
+            ),
+          ],
+        );
+      },
+    );
+  }
+}
+
 class _AmiiboDetailInfo extends ConsumerWidget {
   const _AmiiboDetailInfo({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context, ScopedReader watch) {
-    final index = watch(indexAmiiboProvider);
+    final key = watch(keyAmiiboProvider);
     final S translate = S.of(context);
-    return watch(detailAmiiboProvider(index)).when(
+    return watch(detailAmiiboProvider(key)).when(
       data: (amiibo) {
         if (amiibo == null) return const SizedBox();
         return Column(
@@ -192,7 +286,7 @@ class _AmiiboDetailInfo extends ConsumerWidget {
       },
       error: (_, __) => Center(
         child: TextButton(
-          onPressed: () => context.refresh(detailAmiiboProvider(index)),
+          onPressed: () => context.refresh(detailAmiiboProvider(key)),
           child: Text(translate.splashError),
         ),
       ),
