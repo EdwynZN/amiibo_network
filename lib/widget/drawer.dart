@@ -35,7 +35,7 @@ class _CollectionDrawerState extends State<CollectionDrawer> {
   void cardExpand(bool x) => _cardExpand = x;
 
   _onTapTile(AmiiboCategory category, String tile) {
-    final query = context.read(queryProvider);
+    final query = context.read(querySearchProvider);
     if (query.search != tile || query.category != category) {
       context.read(queryProvider.notifier).updateOption(Search(
         category: category,
@@ -86,7 +86,7 @@ class _CollectionDrawerState extends State<CollectionDrawer> {
                 ),
                 Consumer(
                   builder: (context, watch, child) {
-                    final query = watch(queryProvider);
+                    final query = watch(querySearchProvider);
                     final String? _selected = query.search;
                     final AmiiboCategory _category = query.category;
                     return SliverList(

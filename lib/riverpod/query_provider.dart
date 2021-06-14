@@ -9,102 +9,22 @@ import 'package:amiibo_network/riverpod/repository_provider.dart';
 import 'package:collection/collection.dart';
 import 'package:amiibo_network/model/search_result.dart';
 
-final orderCategoryProvider =
-    StateNotifierProvider<OrderProvider, OrderBy>((ref) {
-  final preferences = ref.watch(preferencesProvider);
-  final int order = preferences.getInt(orderPreference) ?? 0;
-  return OrderProvider(ref.read, order);
+final orderCategoryProvider = Provider.autoDispose<OrderBy>((ref) {
+  ref.watch(queryProvider);
+  return ref.watch(queryProvider.notifier).orderBy;
 });
 
-final sortByProvider = StateNotifierProvider<SortProvider, SortBy>((ref) {
-    final preferences = ref.watch(preferencesProvider);
-    final int sort = preferences.getInt(sortPreference) ?? 0;
-    return SortProvider(ref.read, sort);
-  },
-);
-
-final queryProvider = StateNotifierProvider<QueryProvider, Search>(
-  (ref) {
-    final preferences = ref.watch(preferencesProvider);
-    final _customFigures =
-        preferences.getStringList(sharedCustomFigures) ?? <String>[];
-    final _customCards =
-        preferences.getStringList(sharedCustomCards) ?? <String>[];
-    return QueryProvider(ref.read, _customFigures, _customCards);
-  },
-);
-
-final expressionProvider = StateNotifierProvider.autoDispose<
-    StateController<QueryBuilder>, QueryBuilder>((ref) {
-  final StateController<QueryBuilder> controller =
-      StateController<QueryBuilder>(QueryBuilder());
-  final provider = ref.watch(queryProvider.notifier);
-  final order = ref.watch(orderCategoryProvider.notifier);
-  final sort = ref.watch(sortByProvider.notifier);
-
-  final removeListener = provider.addListener((query) {
-    Expression where;
-    switch (query.category) {
-      case AmiiboCategory.Owned:
-      case AmiiboCategory.Wishlist:
-        where = Cond.iss(query.search ?? describeEnum(query.category), '1');
-        break;
-      case AmiiboCategory.Figures:
-        where = InCond.inn('type', ['Figure', 'Yarn']);
-        break;
-      case AmiiboCategory.FigureSeries:
-        where = InCond.inn('type', ['Figure', 'Yarn']) &
-            Cond.eq('amiiboSeries', query.search!);
-        break;
-      case AmiiboCategory.CardSeries:
-        where =
-            Cond.eq('type', 'Card') & Cond.eq('amiiboSeries', query.search!);
-        break;
-      case AmiiboCategory.Cards:
-        where = Cond.eq('type', 'Card');
-        break;
-      case AmiiboCategory.Game:
-        where = Cond.like('gameSeries', '%${query.search}%');
-        break;
-      case AmiiboCategory.Name:
-        where = Cond.like('name', '%${query.search}%') |
-            Cond.like('character', '%${query.search}%');
-        break;
-      case AmiiboCategory.AmiiboSeries:
-        where = Cond.like('amiiboSeries', '%${query.search}%');
-        break;
-      case AmiiboCategory.Custom:
-        where = Bracket(InCond.inn('type', ['Figure', 'Yarn']) &
-                InCond.inn('amiiboSeries', query.customFigures!)) |
-            Bracket(Cond.eq('type', 'Card') &
-                InCond.inn('amiiboSeries', query.customCards!));
-        break;
-      case AmiiboCategory.All:
-      default:
-        where = And();
-    }
-    controller.state = controller.state.copyWith(where: where);
-  });
-
-  final removeOrderListener = order.addListener((order) {
-    controller.state = controller.state.copyWith(orderBy: describeEnum(order));
-  });
-
-  final removeSortListener = sort.addListener((sort) {
-    controller.state = controller.state.copyWith(sortBy: describeEnum(sort));
-  });
-
-  ref.onDispose(() {
-    removeListener();
-    removeOrderListener();
-    removeSortListener();
-  });
-
-  return controller;
+final sortByProvider = Provider.autoDispose<SortBy>((ref) {
+  ref.watch(queryProvider);
+  return ref.watch(queryProvider.notifier).sortBy;
 });
 
-final figuresProvider =
-    FutureProvider.autoDispose<List<String>>((ref) async {
+final querySearchProvider = Provider.autoDispose<Search>((ref) {
+  ref.watch(queryProvider);
+  return ref.watch(queryProvider.notifier).search;
+});
+
+final figuresProvider = FutureProvider.autoDispose<List<String>>((ref) async {
   final service = ref.watch(serviceProvider.notifier);
 
   final list = await service.fetchDistinct(
@@ -118,8 +38,7 @@ final figuresProvider =
   return list;
 });
 
-final cardsProvider =
-    FutureProvider.autoDispose<List<String>>((ref) async {
+final cardsProvider = FutureProvider.autoDispose<List<String>>((ref) async {
   final service = ref.watch(serviceProvider.notifier);
 
   final list = await service.fetchDistinct(
@@ -133,70 +52,142 @@ final cardsProvider =
   return list;
 });
 
-class SortProvider extends StateNotifier<SortBy> {
-  SortProvider(this._read, int mode) : super(SortBy.values[mode]);
+final queryProvider = StateNotifierProvider<QueryBuilderProvider, QueryBuilder>(
+  (ref) {
+    final preferences = ref.watch(preferencesProvider);
+    final _customFigures =
+        preferences.getStringList(sharedCustomFigures) ?? <String>[];
+    final _customCards =
+        preferences.getStringList(sharedCustomCards) ?? <String>[];
+    final int order = (preferences.getInt(orderPreference) ?? 0)
+        .clamp(0, OrderBy.values.length - 1);
+    final int sort = (preferences.getInt(sortPreference) ?? 0)
+        .clamp(0, SortBy.values.length - 1);
 
-  final Reader _read;
+    final orderBy = OrderBy.values[order];
+    final sortBy = SortBy.values[sort];
+    final search = Search(
+      category: AmiiboCategory.All,
+      customCards: _customCards,
+      customFigures: _customFigures,
+    );
+    return QueryBuilderProvider(
+      ref.read,
+      search,
+      orderBy,
+      sortBy,
+    );
+  },
+);
 
-  Future<void> changeState(SortBy? mode) async {
-    if (mode != null && mode != state) {
-      await _read(preferencesProvider).setInt(sortPreference, mode.index);
-      state = mode;
-    }
-  }
-}
-
-class OrderProvider extends StateNotifier<OrderBy> {
-  OrderProvider(this._read, int mode) : super(OrderBy.values[mode]);
-
-  final Reader _read;
-
-  Future<void> changeState(OrderBy? mode) async {
-    if (mode != null && mode != state) {
-      await _read(preferencesProvider).setInt(orderPreference, mode.index);
-      state = mode;
-    }
-  }
-}
-
-class QueryProvider extends StateNotifier<Search> {
+class QueryBuilderProvider extends StateNotifier<QueryBuilder> {
   static final Function deepEq =
       const DeepCollectionEquality.unordered().equals;
   static bool? checkEquality(List<String>? eq1, List<String>? eq2) =>
       deepEq(eq1, eq2);
   final Reader _read;
-  QueryProvider(this._read, List<String> figures, List<String> cards)
-      : super(Search(
-            category: AmiiboCategory.All,
-            customFigures: figures,
-            customCards: cards));
+  Search _query;
+  OrderBy _orderBy;
+  SortBy _sortBy;
+  QueryBuilderProvider(this._read,
+      this._query, this._orderBy, this._sortBy)
+      : super(QueryBuilder(
+          where: And(),
+          sortBy: describeEnum(_sortBy),
+          orderBy: describeEnum(_orderBy),
+        ));
 
-  List<String> get customFigures => List<String>.of(state.customFigures!);
-  List<String> get customCards => List<String>.of(state.customCards!);
+  Search get search => _query;
+  OrderBy get orderBy => _orderBy;
+  SortBy get sortBy => _sortBy;
 
-  void updateQuery(Query query) {
-    if (query != state) state = query as Search;
+  List<String> get customFigures => List<String>.of(_query.customFigures!);
+  List<String> get customCards => List<String>.of(_query.customCards!);
+
+  void _updateExpression() {
+    late final Expression where;
+    switch (_query.category) {
+      case AmiiboCategory.Owned:
+      case AmiiboCategory.Wishlist:
+        where = Cond.iss(_query.search ?? describeEnum(_query.category), '1');
+        break;
+      case AmiiboCategory.Figures:
+        where = InCond.inn('type', ['Figure', 'Yarn']);
+        break;
+      case AmiiboCategory.FigureSeries:
+        where = InCond.inn('type', ['Figure', 'Yarn']) &
+            Cond.eq('amiiboSeries', _query.search!);
+        break;
+      case AmiiboCategory.CardSeries:
+        where =
+            Cond.eq('type', 'Card') & Cond.eq('amiiboSeries', _query.search!);
+        break;
+      case AmiiboCategory.Cards:
+        where = Cond.eq('type', 'Card');
+        break;
+      case AmiiboCategory.Game:
+        where = Cond.like('gameSeries', '%${_query.search}%');
+        break;
+      case AmiiboCategory.Name:
+        where = Cond.like('name', '%${_query.search}%') |
+            Cond.like('character', '%${_query.search}%');
+        break;
+      case AmiiboCategory.AmiiboSeries:
+        where = Cond.like('amiiboSeries', '%${_query.search}%');
+        break;
+      case AmiiboCategory.Custom:
+        where = Bracket(InCond.inn('type', ['Figure', 'Yarn']) &
+                InCond.inn('amiiboSeries', _query.customFigures!)) |
+            Bracket(Cond.eq('type', 'Card') &
+                InCond.inn('amiiboSeries', _query.customCards!));
+        break;
+      case AmiiboCategory.All:
+      default:
+        where = And();
+    }
+    if (where != state.where) state = state.copyWith(where: where);
+  }
+
+  void updateSearch(Search search) {
+    if (_query == search) return;
+    _query = search;
   }
 
   void updateOption(Search result) {
-    if (result.category != state.category || result.search != state.search)
-      state = state.copyWith(
-        category: result.category,
-        search: result.search,
-      );
+    if (result.category == _query.category && result.search == _query.search)
+      return;
+    _query = _query.copyWith(
+      category: result.category,
+      search: result.search,
+    );
+    _updateExpression();
   }
 
   Future<void> updateCustom(List<String>? figures, List<String>? cards) async {
-    final bool equal = checkEquality(figures, state.customFigures)! &&
-        checkEquality(cards, state.customCards)!;
+    final bool equal = checkEquality(figures, _query.customFigures)! &&
+        checkEquality(cards, _query.customCards)!;
     if (!equal) {
       final preferences = _read(preferencesProvider);
       await preferences.setStringList(sharedCustomCards, cards!);
       await preferences.setStringList(sharedCustomFigures, figures!);
-      state = state.copyWith(
-        customCards: cards,
-        customFigures: figures,
-      );
+      _query = _query.copyWith(customCards: cards, customFigures: figures);
+      _updateExpression();
+    }
+  }
+
+  Future<void> changeOrder(OrderBy? mode) async {
+    if (mode != null && mode != _orderBy) {
+      await _read(preferencesProvider).setInt(orderPreference, mode.index);
+      _orderBy = mode;
+      state = state.copyWith(orderBy: describeEnum(mode));
+    }
+  }
+
+  Future<void> changeSort(SortBy? mode) async {
+    if (mode != null && mode != _sortBy) {
+      await _read(preferencesProvider).setInt(sortPreference, mode.index);
+      _sortBy = mode;
+      state = state.copyWith(sortBy: describeEnum(mode));
     }
   }
 }

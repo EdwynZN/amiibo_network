@@ -1,6 +1,7 @@
 import 'package:amiibo_network/model/amiibo.dart';
 import 'package:amiibo_network/repository/theme_repository.dart';
 import 'package:amiibo_network/riverpod/amiibo_provider.dart';
+import 'package:amiibo_network/riverpod/service_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:amiibo_network/generated/l10n.dart';
 import 'package:amiibo_network/utils/format_date.dart';
@@ -206,7 +207,7 @@ class WishedButton extends StatelessWidget {
       onPressed: () {
         if (amiibo == null) return;
         final bool newValue = !isActive;
-        context.read(controlProvider.notifier).updateAmiiboDB(
+        context.read(serviceProvider.notifier).update(
           [
             amiibo!.copyWith(
               owned: newValue ? false : amiibo!.owned,
@@ -241,7 +242,7 @@ class OwnedButton extends StatelessWidget {
       onPressed: () {
         if (amiibo == null) return;
         final bool newValue = !isActive;
-        context.read(controlProvider.notifier).updateAmiiboDB(
+        context.read(serviceProvider.notifier).update(
           [
             amiibo!.copyWith(
               owned: newValue,
@@ -306,8 +307,9 @@ class _AmiiboInfo extends ConsumerWidget {
   Widget build(BuildContext context, ScopedReader watch) {
     final index = watch(indexAmiiboProvider);
     final S translate = S.of(context);
-    return watch(singleAmiiboProvider(index)).maybeWhen(
+    return watch(detailAmiiboProvider(index)).maybeWhen(
       data: (amiibo) {
+        if (amiibo == null) return const SizedBox();
         List<InlineSpan> span = <InlineSpan>[
           if (amiibo.character != amiibo.name)
             TextSpan(text: translate.name(amiibo.name)),

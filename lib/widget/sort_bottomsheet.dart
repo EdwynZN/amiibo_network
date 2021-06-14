@@ -97,8 +97,8 @@ class _BottomSheetSort extends StatelessWidget {
                                           backgroundColor: _accentColor)
                                       : null,
                                   onPressed: () => context
-                                      .read(sortByProvider.notifier)
-                                      .changeState(SortBy.ASC),
+                                      .read(queryProvider.notifier)
+                                      .changeSort(SortBy.ASC),
                                   icon: const Icon(
                                     Icons.arrow_downward,
                                     size: 20,
@@ -118,8 +118,8 @@ class _BottomSheetSort extends StatelessWidget {
                                           backgroundColor: _accentColor)
                                       : null,
                                   onPressed: () => context
-                                      .read(sortByProvider.notifier)
-                                      .changeState(SortBy.DESC),
+                                      .read(queryProvider.notifier)
+                                      .changeSort(SortBy.DESC),
                                   icon:
                                       const Icon(Icons.arrow_upward, size: 20),
                                   label: Flexible(
@@ -144,7 +144,7 @@ class _BottomSheetSort extends StatelessWidget {
                           value: OrderBy.Name,
                           groupValue: order,
                           onChanged:
-                              context.read(orderCategoryProvider.notifier).changeState,
+                              context.read(queryProvider.notifier).changeOrder,
                           title: Text(translate.sortName),
                           selected: order == OrderBy.Name,
                         ),
@@ -152,7 +152,7 @@ class _BottomSheetSort extends StatelessWidget {
                           value: OrderBy.Owned,
                           groupValue: order,
                           onChanged:
-                              context.read(orderCategoryProvider.notifier).changeState,
+                              context.read(queryProvider.notifier).changeOrder,
                           title: Text(translate.owned),
                           selected: order == OrderBy.Owned,
                         ),
@@ -160,7 +160,7 @@ class _BottomSheetSort extends StatelessWidget {
                           value: OrderBy.Wishlist,
                           groupValue: order,
                           onChanged:
-                              context.read(orderCategoryProvider.notifier).changeState,
+                              context.read(queryProvider.notifier).changeOrder,
                           title: Text(translate.wished),
                           selected: order == OrderBy.Wishlist,
                         ),
@@ -168,7 +168,7 @@ class _BottomSheetSort extends StatelessWidget {
                           value: OrderBy.NA,
                           groupValue: order,
                           onChanged:
-                              context.read(orderCategoryProvider.notifier).changeState,
+                              context.read(queryProvider.notifier).changeOrder,
                           title: Text(translate.na),
                           selected:order == OrderBy.NA,
                           secondary: Image.asset(
@@ -183,7 +183,7 @@ class _BottomSheetSort extends StatelessWidget {
                           value: OrderBy.EU,
                           groupValue: order,
                           onChanged:
-                              context.read(orderCategoryProvider.notifier).changeState,
+                              context.read(queryProvider.notifier).changeOrder,
                           title: Text(translate.eu),
                           selected:order == OrderBy.EU,
                           secondary: Image.asset(
@@ -198,7 +198,7 @@ class _BottomSheetSort extends StatelessWidget {
                           value: OrderBy.JP,
                           groupValue: order,
                           onChanged:
-                              context.read(orderCategoryProvider.notifier).changeState,
+                              context.read(queryProvider.notifier).changeOrder,
                           title: Text(translate.jp),
                           selected:order == OrderBy.JP,
                           secondary: DecoratedBox(
@@ -218,7 +218,7 @@ class _BottomSheetSort extends StatelessWidget {
                           value: OrderBy.AU,
                           groupValue: order,
                           onChanged:
-                              context.read(orderCategoryProvider.notifier).changeState,
+                              context.read(queryProvider.notifier).changeOrder,
                           title: Text(translate.au),
                           selected:order == OrderBy.AU,
                           secondary: Image.asset(

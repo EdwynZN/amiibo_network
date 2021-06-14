@@ -6,7 +6,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 final _singleAmiibo = Provider.autoDispose
   .family<AsyncValue<Amiibo>, int>((ref, index) =>
-  ref.watch(controlProvider).whenData((value) => value[index]),
+  ref.watch(amiiboHomeListProvider).whenData((value) => value[index]),
   name: 'Amiibo index '
 );
 

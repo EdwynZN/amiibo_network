@@ -31,7 +31,7 @@ class SearchScreenState extends State<SearchScreen> {
   @override
   Widget build(BuildContext context) {
     final _textController = useTextEditingController();
-    final amiiboCategory = useProvider(queryProvider
+    final amiiboCategory = useProvider(querySearchProvider
         .select((value) => value.search ?? describeEnum(value.category)));
     return SafeArea(
       child: Scaffold(

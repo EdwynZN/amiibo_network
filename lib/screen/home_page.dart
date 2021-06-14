@@ -28,7 +28,7 @@ import 'package:amiibo_network/model/search_result.dart';
 final AutoDisposeProvider<String>? _titleProvider =
     Provider.autoDispose<String>((ref) {
   final count = ref.watch(selectProvider);
-  final query = ref.watch(queryProvider);
+  final query = ref.watch(querySearchProvider);
   return count.multipleSelected
       ? count.length.toString()
       : (query.search ?? describeEnum(query.category));
@@ -223,7 +223,7 @@ class _AmiiboListWidget extends ConsumerWidget {
   @override
   Widget build(BuildContext context, ScopedReader watch) {
     final ignore = watch(lockProvider).lock;
-    return watch(controlProvider).maybeWhen(
+    return watch(amiiboHomeListProvider).maybeWhen(
       data: (data) {
         if (data.isEmpty) {
           final S translate = S.of(context);

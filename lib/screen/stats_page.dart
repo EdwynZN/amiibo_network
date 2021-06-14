@@ -67,11 +67,11 @@ class _StatsPageState extends State<StatsPage> {
           expression = And();
           break;
         case AmiiboCategory.Custom:
-          final query = context.read(queryProvider);
+          final query = context.read(queryProvider.notifier);
           expression = Bracket(InCond.inn('type', ['Figure', 'Yarn']) &
-                  InCond.inn('amiiboSeries', query.customFigures!)) |
+                  InCond.inn('amiiboSeries', query.customFigures)) |
               Bracket(Cond.eq('type', 'Card') &
-                  InCond.inn('amiiboSeries', query.customCards!));
+                  InCond.inn('amiiboSeries', query.customCards));
           break;
         case AmiiboCategory.Figures:
           expression = InCond.inn('type', ['Figure', 'Yarn']);
@@ -88,7 +88,7 @@ class _StatsPageState extends State<StatsPage> {
   @override
   Widget build(BuildContext context) {
     final _canSave = useProvider(
-      queryProvider.select((value) =>
+      querySearchProvider.select((value) =>
           AmiiboCategory.Custom != category ||
           value.customFigures!.isNotEmpty ||
           value.customCards!.isNotEmpty),

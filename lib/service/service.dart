@@ -7,6 +7,10 @@ import 'package:amiibo_network/model/stat.dart';
 class Service {
   final AmiiboSQLite dao = AmiiboSQLite();
 
+  Future<Amiibo?> fetchOne(int key) {
+    return dao.fetchByKey(key);
+  }
+
   Future<List<Amiibo>> fetchAllAmiiboDB([String? orderBy]) =>
       dao.fetchAll(orderBy);
 

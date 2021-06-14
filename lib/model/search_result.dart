@@ -18,7 +18,7 @@ abstract class Query with _$Query {
 
   @With(_OrderBy)
   factory Query.builder({
-    Expression? where,
+    required Expression where,
     String? orderBy,
     String? sortBy,
   }) = QueryBuilder;

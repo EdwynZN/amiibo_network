@@ -1,5 +1,6 @@
 import 'package:amiibo_network/riverpod/amiibo_provider.dart';
 import 'package:amiibo_network/riverpod/select_provider.dart';
+import 'package:amiibo_network/riverpod/service_provider.dart';
 import 'package:amiibo_network/utils/routes_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
@@ -15,11 +16,11 @@ class AnimatedSelection extends StatefulHookWidget {
 }
 
 class _AnimatedSelectionState extends State<AnimatedSelection> {
-  void _onDoubleTap(int? key) =>
+  void _onDoubleTap(int key) =>
       Navigator.pushNamed(context, detailsRoute, arguments: key);
 
-  void _onTap(int? key) {
-    context.read(controlProvider.notifier).shift(key);
+  void _onTap(int key) {
+    context.read(serviceProvider.notifier).shift(key);
   }
 
   void _onLongPress(int key) => context.read(selectProvider).onLongPress(key);

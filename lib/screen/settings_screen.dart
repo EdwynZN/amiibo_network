@@ -1,4 +1,3 @@
-import 'package:amiibo_network/riverpod/amiibo_provider.dart';
 import 'package:amiibo_network/riverpod/query_provider.dart';
 import 'package:amiibo_network/riverpod/service_provider.dart';
 import 'package:amiibo_network/riverpod/theme_provider.dart';
@@ -324,9 +323,9 @@ class __SaveCollectionState extends State<_SaveCollection> {
           final listOfFigures = await context.read(figuresProvider.future);
           final listOfCards = await context.read(cardsProvider.future);
           if (figures.isNotEmpty)
-            equalFigures = QueryProvider.checkEquality(figures, listOfFigures);
+            equalFigures = QueryBuilderProvider.checkEquality(figures, listOfFigures);
           if (cards!.isNotEmpty)
-            equalCards = QueryProvider.checkEquality(cards, listOfCards);
+            equalCards = QueryBuilderProvider.checkEquality(cards, listOfCards);
           if (equalFigures! && cards.isEmpty)
             category = AmiiboCategory.Figures;
           else if (equalCards! && figures.isEmpty)
@@ -387,7 +386,7 @@ class _ResetCollection extends StatelessWidget {
           final ScaffoldMessengerState? scaffoldState =
               ScaffoldMessenger.maybeOf(context)!;
           try {
-            await context.read(controlProvider.notifier).resetCollection();
+            await context.read(serviceProvider.notifier).resetCollection();
             _message(scaffoldState, translate.collectionReset);
           } catch (e) {
             _message(scaffoldState, translate.splashError);
@@ -494,7 +493,7 @@ class _BottomBarState extends State<BottomBar> {
 
   Future<void> _openFileExplorer() async {
     try {
-      final control = context.read(controlProvider.notifier);
+      final service = context.read(serviceProvider.notifier);
       final file = await FilePicker.platform.pickFiles(
         type: FileType.any,
         //allowedExtensions: ['json'],
@@ -510,8 +509,7 @@ class _BottomBarState extends State<BottomBar> {
           openSnackBar(translate.errorImporting);
         else {
           List<Amiibo> amiibos = await compute(entityFromMap, map);
-          await control.updateAmiiboDB(amiibos);
-          control.update();
+          await service.update(amiibos);
           openSnackBar(translate.successImport);
         }
       }

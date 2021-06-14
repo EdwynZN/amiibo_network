@@ -9,8 +9,18 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 final serviceProvider = ChangeNotifierProvider((_) => ServiceNotifier());
 
-class ServiceNotifier extends ChangeNotifier implements Service{
+class ServiceNotifier extends ChangeNotifier implements Service {
   final AmiiboSQLite dao = AmiiboSQLite();
+
+  Future<void> shift(int key) async {
+    final Amiibo? amiibo = await fetchOne(key);
+    if (amiibo == null) return;
+    final Amiibo amiiboUpdated = amiibo.copyWith(
+      wishlist: amiibo.owned,
+      owned: !(amiibo.wishlist ^ amiibo.owned),
+    );
+    return update([amiiboUpdated]);
+  }
 
   @override
   Future<List<Amiibo>> fetchAllAmiiboDB([String? orderBy]) =>
@@ -72,4 +82,7 @@ class ServiceNotifier extends ChangeNotifier implements Service{
     await dao.updateAll('amiibo', {'wishlist': 0, 'owned': 0});
     notifyListeners();
   }
+
+  @override
+  Future<Amiibo?> fetchOne(int key) => dao.fetchByKey(key);
 }

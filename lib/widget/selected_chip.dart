@@ -33,17 +33,15 @@ class CustomQueryWidget extends StatelessWidget{
             ),
             HookBuilder(
               builder: (context) {
-                return useProvider(
-                  figuresProvider,
-                ).maybeWhen(
+                return useProvider(figuresProvider).maybeWhen(
                   data: (data) {
                     return ConstrainedBox(
-                    constraints: const BoxConstraints(maxWidth: 416),
-                    child: SelectedWrap(
-                      series: data,
-                      mySeries: figures,
-                    ),
-                  );
+                      constraints: const BoxConstraints(maxWidth: 416),
+                      child: SelectedWrap(
+                        series: data,
+                        mySeries: figures,
+                      ),
+                    );
                   },
                   orElse: () => const SizedBox()
                 );
@@ -119,7 +117,7 @@ class _SelectedWrapState extends State<SelectedWrap> {
             widget.mySeries!.clear();
             if(isSelected) widget.mySeries!.addAll(widget.series!);
           }),
-          selected: QueryProvider.checkEquality(widget.mySeries, widget.series)!
+          selected: QueryBuilderProvider.checkEquality(widget.mySeries, widget.series)!
         ),
         for(String series in widget.series!)
           ChoiceChip(
