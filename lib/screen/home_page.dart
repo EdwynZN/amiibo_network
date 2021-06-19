@@ -1,3 +1,4 @@
+import 'package:amiibo_network/enum/amiibo_category_enum.dart';
 import 'package:amiibo_network/enum/selected_enum.dart';
 import 'package:amiibo_network/repository/theme_repository.dart';
 import 'package:amiibo_network/riverpod/amiibo_provider.dart';
@@ -6,6 +7,7 @@ import 'package:amiibo_network/riverpod/query_provider.dart';
 import 'package:amiibo_network/riverpod/select_provider.dart';
 import 'package:amiibo_network/utils/routes_constants.dart';
 import 'package:amiibo_network/widget/lock_icon.dart';
+import 'package:amiibo_network/widget/selected_chip.dart';
 import 'package:amiibo_network/widget/selected_widget.dart';
 import 'package:amiibo_network/widget/sort_bottomsheet.dart';
 import 'package:flutter/foundation.dart';
@@ -28,10 +30,9 @@ import 'package:amiibo_network/model/search_result.dart';
 final AutoDisposeProvider<String>? _titleProvider =
     Provider.autoDispose<String>((ref) {
   final count = ref.watch(selectProvider);
+  if (count.multipleSelected) return count.length.toString();
   final query = ref.watch(querySearchProvider);
-  return count.multipleSelected
-      ? count.length.toString()
-      : (query.search ?? describeEnum(query.category));
+  return query.search ?? describeEnum(query.category);
 });
 
 class Home extends StatefulWidget {
@@ -226,20 +227,47 @@ class _AmiiboListWidget extends ConsumerWidget {
     return watch(amiiboHomeListProvider).maybeWhen(
       data: (data) {
         if (data.isEmpty) {
+          late final Widget child;
+          final theme = Theme.of(context);
           final S translate = S.of(context);
-          return DefaultTextStyle(
-            style: Theme.of(context).textTheme.headline4!,
-            child: SliverFillRemaining(
-              hasScrollBody: false,
-              child: Align(
-                alignment: Alignment.center,
-                heightFactor: 10,
-                child: Text(
-                  translate.emptyPage,
-                  textAlign: TextAlign.center,
-                ),
+          final isCustom = watch(queryProvider.notifier).search.category ==
+              AmiiboCategory.Custom;
+          if (!isCustom)
+            child = Text(
+              translate.emptyPage,
+              textAlign: TextAlign.center,
+              style: theme.textTheme.headline4!,
+            );
+          else
+            child = TextButton.icon(
+              style: theme.textButtonTheme.style?.copyWith(
+                textStyle: MaterialStateProperty.all(theme.textTheme.headline4),
               ),
-            ),
+              onPressed: () async {
+                final filter = context.read(queryProvider.notifier);
+                final List<String>? figures = filter.customFigures;
+                final List<String>? cards = filter.customCards;
+                bool save = await showDialog<bool>(
+                      context: context,
+                      builder: (BuildContext context) => CustomQueryWidget(
+                        translate.category(AmiiboCategory.Custom),
+                        figures: figures,
+                        cards: cards,
+                      ),
+                    ) ??
+                    false;
+                if (save)
+                  await context
+                      .read(queryProvider.notifier)
+                      .updateCustom(figures, cards);
+              },
+              icon: const Icon(Icons.create),
+              label: Text(translate.emptyPage),
+            );
+
+          return SliverFillRemaining(
+            hasScrollBody: false,
+            child: Center(child: child),
           );
         }
         late final SliverGridDelegate grid;

@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:amiibo_network/model/search_result.dart';
 import 'package:amiibo_network/model/stat.dart';
 import 'package:amiibo_network/riverpod/service_provider.dart';
 import 'package:riverpod/riverpod.dart';
@@ -41,9 +42,22 @@ final detailAmiiboProvider =
 final amiiboHomeListProvider =
     StreamProvider.autoDispose<List<Amiibo>>((ref) async* {
   final service = ref.watch(serviceProvider.notifier);
-  final query = ref.watch(queryProvider.notifier);
+  final queryBuilder = ref.watch(queryProvider.notifier);
+  final streamController = StreamController<QueryBuilder>();
+  final subscription = queryBuilder.stream.listen(streamController.sink.add);
 
-  yield await service.fetchByCategory(expression: query.state.where, orderBy: query.state.order);
-  yield* query.stream.asyncMap((query) =>
-      service.fetchByCategory(expression: query.where, orderBy: query.order));
+  void listen() {
+    streamController.sink.add(queryBuilder.query);
+  }
+
+  service.addListener(listen);
+
+  ref.onDispose(() {
+    subscription.cancel();
+    service.removeListener(listen);
+    streamController.close();
+  });
+
+  yield await service.fetchByCategory(queryBuilder.query);
+  yield* streamController.stream.asyncMap(service.fetchByCategory);
 });

@@ -166,15 +166,18 @@ class _StatsPageState extends State<StatsPage> {
                   label: translate!.all,
                 ),
                 BottomNavigationBarItem(
-                  icon: const Icon(Icons.edit),
+                  icon: const Icon(Icons.edit_outlined),
+                  activeIcon: const Icon(Icons.edit),
                   label: translate!.category(AmiiboCategory.Custom),
                 ),
                 BottomNavigationBarItem(
-                  icon: const Icon(Icons.nfc_outlined),
+                  icon: const Icon(Icons.sports_esports_outlined),
+                  activeIcon: const Icon(Icons.sports_esports),
                   label: translate!.figures,
                 ),
                 BottomNavigationBarItem(
-                  icon: const Icon(Icons.view_carousel),
+                  icon: const Icon(Icons.view_carousel_outlined),
+                  activeIcon: const Icon(Icons.view_carousel),
                   label: translate!.cards,
                 )
               ],

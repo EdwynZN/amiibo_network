@@ -156,7 +156,7 @@ class _CollectionDrawerState extends State<CollectionDrawer> {
                               accentColor: theme.iconTheme.color,
                             ),
                             child: ExpansionTile(
-                              leading: const Icon(Icons.toys),
+                              leading: const Icon(Icons.sports_esports),
                               title: Text(translate.figures),
                               initiallyExpanded: _figureExpand,
                               onExpansionChanged: figureExpand,

@@ -37,12 +37,11 @@ class ServiceNotifier extends ChangeNotifier implements Service {
   }
 
   @override
-  Future<List<Amiibo>> fetchByCategory(
-      {required Expression expression, String? orderBy}) {
-    String? where = expression.toString();
-    List<dynamic>? args = expression.args;
+  Future<List<Amiibo>> fetchByCategory(QueryBuilder builder) {
+    String? where = builder.where.toString();
+    List<dynamic>? args = builder.where.args;
     if (where.isEmpty || args.isEmpty) where = args = null;
-    return dao.fetchByColumn(where, args, orderBy);
+    return dao.fetchByColumn(where, args, builder.order);
   }
 
   @override

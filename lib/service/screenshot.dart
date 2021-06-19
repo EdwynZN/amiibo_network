@@ -12,6 +12,9 @@ import 'package:amiibo_network/model/search_result.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:amiibo_network/model/amiibo.dart';
 
+const String _order = 'CASE WHEN type = "Figure" THEN 1 '
+    'WHEN type = "Yarn" THEN 2 ELSE 3 END, amiiboSeries DESC, na DESC';
+
 class Screenshot {
   late ThemeData theme;
   late stat.StatProvider statProvider;
@@ -67,12 +70,11 @@ class Screenshot {
   }
 
   Future<Uint8List?> saveCollection(Expression expression) async {
-    List<Amiibo> amiibos = await _service.fetchByCategory(
-        expression: expression,
-        orderBy: 'CASE WHEN type = "Figure" THEN 1 '
-            'WHEN type = "Yarn" THEN 2 ELSE 3 END, amiiboSeries DESC, na DESC');
-    Stat _listStat = List<Stat>.from(
-      await _service.fetchStats(expression: expression)).first;
+    final QueryBuilder query = QueryBuilder(where: expression, orderBy: _order);
+    List<Amiibo> amiibos = await _service.fetchByCategory(query);
+    Stat _listStat =
+        List<Stat>.from(await _service.fetchStats(expression: expression))
+            .first;
     if (isRecording || amiibos.isEmpty) return null;
 
     final double maxSize = 60.0;
@@ -443,8 +445,9 @@ class Screenshot {
             targetWidth: iconSize.toInt(), targetHeight: iconSize.toInt())
         .then((codec) => codec.getNextFrame())
         .then((frame) => frame.image)
+        // ignore: invalid_return_type_for_catch_error
         .catchError((e) => null);
-        
+
     if (theme.primaryColorBrightness == Brightness.dark)
       paint.colorFilter = ColorFilter.mode(Colors.white54, BlendMode.srcIn);
 

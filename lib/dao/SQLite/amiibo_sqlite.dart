@@ -38,12 +38,12 @@ class AmiiboSQLite implements Dao<Amiibo?, int>{
   }
 
   Future<List<Amiibo>> fetchByColumn(String? where, List<dynamic>? args,
-    [String? orderBy = 'na']) async{
+    [String? orderBy]) async{
     Database _db = await connectionFactory.database;
     List<Map<String, dynamic>> list = await _db.query('amiibo',
       where: where,
       whereArgs: args,
-      orderBy: orderBy);
+      orderBy: orderBy ?? 'na');
     return list.map((dynamic i) => Amiibo.fromJson(i as Map<String, dynamic>))
       .toList();
   }

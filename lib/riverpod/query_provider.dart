@@ -89,17 +89,18 @@ class QueryBuilderProvider extends StateNotifier<QueryBuilder> {
   Search _query;
   OrderBy _orderBy;
   SortBy _sortBy;
-  QueryBuilderProvider(this._read,
-      this._query, this._orderBy, this._sortBy)
+  QueryBuilderProvider(this._read, this._query, this._orderBy, this._sortBy)
       : super(QueryBuilder(
           where: And(),
           sortBy: describeEnum(_sortBy),
           orderBy: describeEnum(_orderBy),
-        ));
+        )) {
+  }
 
   Search get search => _query;
   OrderBy get orderBy => _orderBy;
   SortBy get sortBy => _sortBy;
+  QueryBuilder get query => state;
 
   List<String> get customFigures => List<String>.of(_query.customFigures!);
   List<String> get customCards => List<String>.of(_query.customCards!);
