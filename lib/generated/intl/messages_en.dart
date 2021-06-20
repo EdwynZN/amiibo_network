@@ -49,6 +49,12 @@ class MessageLookup extends MessageLookupByLibrary {
   static String m6(serie) => "Serie: ${serie}";
 
   static String m7(choice) => "${Intl.select(choice, {
+            'true': 'Percentage',
+            'false': 'Fraction',
+            'other': 'Unknown',
+          })}";
+
+  static String m8(choice) => "${Intl.select(choice, {
             'granted': 'Storage permission granted',
             'denied': 'Storage permission denied',
             'permanentlyDenied': 'Storage permission denied',
@@ -56,19 +62,20 @@ class MessageLookup extends MessageLookupByLibrary {
             'other': 'Unknown permission access',
           })}";
 
-  static String m8(choice) => "${Intl.select(choice, {
+  static String m9(choice) => "${Intl.select(choice, {
             'system': 'Auto',
             'light': 'Light',
             'dark': 'Dark',
             'other': 'Auto',
           })}";
 
-  static String m9(type) => "Type: ${type}";
+  static String m10(type) => "Type: ${type}";
 
-  static String m10(choice) => "${Intl.select(choice, {
+  static String m11(choice) => "${Intl.select(choice, {
             'Figure': 'Type: Figure',
             'Card': 'Type: Card',
             'Yarn': 'Type: Yarn',
+            'Band': 'Type: Band',
             'other': 'Type: Other',
           })}";
 
@@ -159,14 +166,15 @@ class MessageLookup extends MessageLookupByLibrary {
         "splashMessage":
             MessageLookupByLibrary.simpleMessage("Just a second . . ."),
         "splashWelcome": MessageLookupByLibrary.simpleMessage("WELCOME"),
+        "statTooltip": m7,
         "stats": MessageLookupByLibrary.simpleMessage("Stats"),
-        "storagePermission": m7,
+        "storagePermission": m8,
         "successImport":
             MessageLookupByLibrary.simpleMessage("Amiibo List updated"),
         "sure": MessageLookupByLibrary.simpleMessage("Sure"),
-        "themeMode": m8,
-        "type": m9,
-        "types": m10,
+        "themeMode": m9,
+        "type": m10,
+        "types": m11,
         "upToolTip": MessageLookupByLibrary.simpleMessage("Up"),
         "wishTooltip": MessageLookupByLibrary.simpleMessage("Wish"),
         "wished": MessageLookupByLibrary.simpleMessage("Wished")

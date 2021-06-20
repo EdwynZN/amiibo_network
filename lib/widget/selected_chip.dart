@@ -26,6 +26,7 @@ class CustomQueryWidget extends StatelessWidget{
       content: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisSize: MainAxisSize.min,
           children: <Widget>[
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 16),
@@ -111,6 +112,7 @@ class _SelectedWrapState extends State<SelectedWrap> {
       spacing: 8.0,
       children: <Widget>[
         ChoiceChip(
+          padding: const EdgeInsets.symmetric(vertical: 4.0, horizontal: 12.0),
           label: Text(translate.all),
           tooltip: translate.all,
           onSelected: (isSelected) => setState((){

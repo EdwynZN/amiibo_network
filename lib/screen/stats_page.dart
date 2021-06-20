@@ -68,13 +68,13 @@ class _StatsPageState extends State<StatsPage> {
           break;
         case AmiiboCategory.Custom:
           final query = context.read(queryProvider.notifier);
-          expression = Bracket(InCond.inn('type', ['Figure', 'Yarn']) &
+          expression = Bracket(InCond.inn('type', figureType) &
                   InCond.inn('amiiboSeries', query.customFigures)) |
               Bracket(Cond.eq('type', 'Card') &
                   InCond.inn('amiiboSeries', query.customCards));
           break;
         case AmiiboCategory.Figures:
-          expression = InCond.inn('type', ['Figure', 'Yarn']);
+          expression = InCond.inn('type', figureType);
           break;
         case AmiiboCategory.Cards:
           expression = Cond.eq('type', 'Card');
@@ -195,7 +195,8 @@ class _StatsPageState extends State<StatsPage> {
 AsyncValue<List<Stat>> _usePreviousStat(Expression expression) {
   final snapshot = useProvider(_statsProvider(expression));
   final previous = usePrevious(snapshot);
-  if (previous is AsyncData<List<Stat>> && snapshot is! AsyncData<List<Stat>>) return previous;
+  if (previous is AsyncData<List<Stat>> && snapshot is! AsyncData<List<Stat>>)
+    return previous;
   return snapshot;
 }
 
@@ -211,7 +212,7 @@ class _BodyStats extends HookWidget {
     final S translate = S.of(context);
     final snapshot = _usePreviousStat(expression);
     if (snapshot is AsyncData<List<Stat>>) {
-      if (snapshot.value.isEmpty)
+      if (snapshot.value.length <= 1)
         return Center(
           child: Text(
             translate.emptyPage,
@@ -226,13 +227,14 @@ class _BodyStats extends HookWidget {
           slivers: <Widget>[
             if (stats.length > 1)
               SliverToBoxAdapter(
-                  key: Key('Amiibo Network'),
-                  child: SingleStat(
-                    title: generalStats.name,
-                    owned: generalStats.owned,
-                    total: generalStats.total,
-                    wished: generalStats.wished,
-                  )),
+                key: Key('Amiibo Network'),
+                child: SingleStat(
+                  title: generalStats.name,
+                  owned: generalStats.owned,
+                  total: generalStats.total,
+                  wished: generalStats.wished,
+                ),
+              ),
             if (MediaQuery.of(context).size.width <= 600)
               SliverList(
                 delegate: SliverChildBuilderDelegate(

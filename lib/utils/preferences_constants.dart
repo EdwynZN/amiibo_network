@@ -29,4 +29,4 @@ const String sharedCustomCards = 'CustomCards';
 /// Version of the App
 const String sharedVersion = 'Version';
 /// Version of the App
-const int versionApp = 33;
+const int versionApp = 38;

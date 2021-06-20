@@ -263,13 +263,13 @@ class __SaveCollectionState extends State<_SaveCollection> {
           break;
         case AmiiboCategory.Figures:
           name = 'MyFigureCollection';
-          expression = InCond.inn('type', ['Figure', 'Yarn']);
+          expression = InCond.inn('type', figureType);
           id = 5;
           break;
         case AmiiboCategory.Custom:
           name = 'MyCustomCollection';
           id = 8;
-          expression = Bracket(InCond.inn('type', ['Figure', 'Yarn']) &
+          expression = Bracket(InCond.inn('type', figureType) &
                   InCond.inn('amiiboSeries', figures!)) |
               Bracket(
                   Cond.eq('type', 'Card') & InCond.inn('amiiboSeries', cards));
@@ -323,7 +323,8 @@ class __SaveCollectionState extends State<_SaveCollection> {
           final listOfFigures = await context.read(figuresProvider.future);
           final listOfCards = await context.read(cardsProvider.future);
           if (figures.isNotEmpty)
-            equalFigures = QueryBuilderProvider.checkEquality(figures, listOfFigures);
+            equalFigures =
+                QueryBuilderProvider.checkEquality(figures, listOfFigures);
           if (cards!.isNotEmpty)
             equalCards = QueryBuilderProvider.checkEquality(cards, listOfCards);
           if (equalFigures! && cards.isEmpty)

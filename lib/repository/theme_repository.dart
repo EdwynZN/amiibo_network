@@ -270,32 +270,32 @@ class _Theme implements AmiiboTheme {
         ),
       ),
       chipTheme: ChipThemeData(
-          checkmarkColor:
-              _brightnessColor == Brightness.dark ? Colors.white : Colors.black,
-          backgroundColor: Colors.black12,
-          deleteIconColor: Colors.black87,
-          disabledColor: Colors.black.withAlpha(0x0c),
-          selectedColor: Colors.black26,
-          secondarySelectedColor: color[100]!,
-          labelPadding: const EdgeInsets.symmetric(horizontal: 4.0),
-          padding: const EdgeInsets.all(4.0),
-          labelStyle: __darkAccentTextTheme.bodyText2!,
-          secondaryLabelStyle: __darkAccentTextTheme.bodyText2!.apply(
-              color: _brightnessColor == Brightness.light ? null : color[500]),
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-          brightness: _brightnessColor,
-    ),
+        checkmarkColor:
+            _brightnessColor == Brightness.dark ? Colors.white : Colors.black,
+        backgroundColor: Colors.black12,
+        deleteIconColor: Colors.black87,
+        disabledColor: Colors.black.withAlpha(0x0c),
+        selectedColor: Colors.black26,
+        secondarySelectedColor: color[100]!,
+        labelPadding: const EdgeInsets.symmetric(horizontal: 4.0),
+        padding: const EdgeInsets.all(4.0),
+        labelStyle: __darkAccentTextTheme.bodyText2!,
+        secondaryLabelStyle: __darkAccentTextTheme.bodyText2!.apply(
+            color: _brightnessColor == Brightness.light ? null : color[500]),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+        brightness: _brightnessColor,
+      ),
       navigationRailTheme: NavigationRailThemeData(
-          labelType: NavigationRailLabelType.selected,
-          backgroundColor: color[50],
-          elevation: 8.0,
-          groupAlignment: 1.0,
-          selectedIconTheme: IconThemeData(color: accentColor[700]),
-          selectedLabelTextStyle: __lightAccentTextTheme.bodyText2!.apply(
-              color: _brightnessAccentTextTheme == Brightness.dark
-                  ? accentColor[700]
-                  : Colors.black),
-          unselectedIconTheme: const IconThemeData(color: Colors.black),
+        labelType: NavigationRailLabelType.selected,
+        backgroundColor: color[50],
+        elevation: 8.0,
+        groupAlignment: 1.0,
+        selectedIconTheme: IconThemeData(color: accentColor[700]),
+        selectedLabelTextStyle: __lightAccentTextTheme.bodyText2!.apply(
+            color: _brightnessAccentTextTheme == Brightness.dark
+                ? accentColor[700]
+                : Colors.black),
+        unselectedIconTheme: const IconThemeData(color: Colors.black),
         unselectedLabelTextStyle: __darkAccentTextTheme.bodyText2,
       ),
       toggleableActiveColor: accentColor[700],

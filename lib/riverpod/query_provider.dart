@@ -29,7 +29,7 @@ final figuresProvider = FutureProvider.autoDispose<List<String>>((ref) async {
 
   final list = await service.fetchDistinct(
     column: ['amiiboSeries'],
-    expression: InCond.inn('type', ['Figure', 'Yarn']),
+    expression: InCond.inn('type', figureType),
     orderBy: 'amiiboSeries',
   );
 
@@ -94,8 +94,7 @@ class QueryBuilderProvider extends StateNotifier<QueryBuilder> {
           where: And(),
           sortBy: describeEnum(_sortBy),
           orderBy: describeEnum(_orderBy),
-        )) {
-  }
+        )) {}
 
   Search get search => _query;
   OrderBy get orderBy => _orderBy;
@@ -113,10 +112,10 @@ class QueryBuilderProvider extends StateNotifier<QueryBuilder> {
         where = Cond.iss(_query.search ?? describeEnum(_query.category), '1');
         break;
       case AmiiboCategory.Figures:
-        where = InCond.inn('type', ['Figure', 'Yarn']);
+        where = InCond.inn('type', figureType);
         break;
       case AmiiboCategory.FigureSeries:
-        where = InCond.inn('type', ['Figure', 'Yarn']) &
+        where = InCond.inn('type', figureType) &
             Cond.eq('amiiboSeries', _query.search!);
         break;
       case AmiiboCategory.CardSeries:
@@ -137,7 +136,7 @@ class QueryBuilderProvider extends StateNotifier<QueryBuilder> {
         where = Cond.like('amiiboSeries', '%${_query.search}%');
         break;
       case AmiiboCategory.Custom:
-        where = Bracket(InCond.inn('type', ['Figure', 'Yarn']) &
+        where = Bracket(InCond.inn('type', figureType) &
                 InCond.inn('amiiboSeries', _query.customFigures!)) |
             Bracket(Cond.eq('type', 'Card') &
                 InCond.inn('amiiboSeries', _query.customCards!));

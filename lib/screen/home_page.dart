@@ -10,6 +10,7 @@ import 'package:amiibo_network/widget/lock_icon.dart';
 import 'package:amiibo_network/widget/selected_chip.dart';
 import 'package:amiibo_network/widget/selected_widget.dart';
 import 'package:amiibo_network/widget/sort_bottomsheet.dart';
+import 'package:amiibo_network/widget/stat_icon.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -320,6 +321,7 @@ class _DefaultOptions extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.end,
       children: <Widget>[
         const LockButton(),
+        const StatButton(),
         const SortCollection(),
       ],
     );

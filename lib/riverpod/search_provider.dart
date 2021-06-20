@@ -28,9 +28,9 @@ extension _StringParsing on AmiiboCategory {
     if (filter.isEmpty) return null;
     switch (this) {
       case AmiiboCategory.Figures:
-        return InCond.inn('type', ['Figure', 'Yarn']);
+        return InCond.inn('type', figureType);
       case AmiiboCategory.FigureSeries:
-        return InCond.inn('type', ['Figure', 'Yarn']) &
+        return InCond.inn('type', figureType) &
             Cond.like('amiiboSeries', '%$filter%');
       case AmiiboCategory.CardSeries:
         return Cond.eq('type', 'Card') & Cond.like('amiiboSeries', '%$filter%');
@@ -57,7 +57,7 @@ final categorySearchProvider =
     StateProvider<AmiiboCategory>((_) => AmiiboCategory.Name);
 
 final AutoDisposeFutureProviderFamily<List<String>, String>? searchProvider =
-  FutureProvider.autoDispose.family<List<String>, String>((ref, search) {
+    FutureProvider.autoDispose.family<List<String>, String>((ref, search) {
   final service = ref.watch(serviceProvider.notifier);
   final category = ref.watch(categorySearchProvider).state;
   final exp = category.whereExpression(search)!;

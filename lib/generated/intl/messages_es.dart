@@ -49,6 +49,12 @@ class MessageLookup extends MessageLookupByLibrary {
   static String m6(serie) => "Serie: ${serie}";
 
   static String m7(choice) => "${Intl.select(choice, {
+            'true': 'Porcentaje',
+            'false': 'Fracción',
+            'other': 'Unknown',
+          })}";
+
+  static String m8(choice) => "${Intl.select(choice, {
             'granted': 'Almacenamiento concedido',
             'denied': 'Almacenamiento denegado',
             'permanentlyDenied': 'Almacenamiento denegado',
@@ -56,19 +62,20 @@ class MessageLookup extends MessageLookupByLibrary {
             'other': 'Permiso de almacenamiento en estado desconocido',
           })}";
 
-  static String m8(choice) => "${Intl.select(choice, {
+  static String m9(choice) => "${Intl.select(choice, {
             'system': 'Autom.',
             'light': 'Claro',
             'dark': 'Oscuro',
             'other': 'Autom.',
           })}";
 
-  static String m9(type) => "Tipo: ${type}";
+  static String m10(type) => "Tipo: ${type}";
 
-  static String m10(choice) => "${Intl.select(choice, {
+  static String m11(choice) => "${Intl.select(choice, {
             'Figure': 'Tipo: Figura',
             'Card': 'Tipo: Tarjeta',
             'Yarn': 'Tipo: Lana',
+            'Band': 'Type: Pulsera',
             'other': 'Tipo: Otro',
           })}";
 
@@ -160,14 +167,15 @@ class MessageLookup extends MessageLookupByLibrary {
         "splashMessage":
             MessageLookupByLibrary.simpleMessage("Espere un momento..."),
         "splashWelcome": MessageLookupByLibrary.simpleMessage("Bienvenido"),
+        "statTooltip": m7,
         "stats": MessageLookupByLibrary.simpleMessage("Estadísticas"),
-        "storagePermission": m7,
+        "storagePermission": m8,
         "successImport":
             MessageLookupByLibrary.simpleMessage("Colección actualizada"),
         "sure": MessageLookupByLibrary.simpleMessage("Seguro"),
-        "themeMode": m8,
-        "type": m9,
-        "types": m10,
+        "themeMode": m9,
+        "type": m10,
+        "types": m11,
         "upToolTip": MessageLookupByLibrary.simpleMessage("Arriba"),
         "wishTooltip": MessageLookupByLibrary.simpleMessage("Desear"),
         "wished": MessageLookupByLibrary.simpleMessage("Deseados")

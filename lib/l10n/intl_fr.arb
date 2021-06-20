@@ -9,7 +9,7 @@
   "owned": "Possédé",
   "wished": "Souhaité",
   "stats": "Statistiques",
-  "types": "{choice, select, Figure {Type: Figurine} Card {Type: Carte} Yarn {Type: Laine} other {Type: Autre}}",
+  "types": "{choice, select, Figure {Type: Figurine} Card {Type: Carte} Yarn {Type: Laine} Band {Type: Bracelet} other {Type: Autre}}",
   "figures": "Figurines",
   "cards": "Cartes",
   "name": "Nom: {name}",
@@ -74,5 +74,6 @@
   "notificationTitle": "Fichier généré",
   "actionText": "Partager",
   "donate": "Faire un don",
-  "lockTooltip": "{choice, select, true {Fermé à clé} false {Déverrouillé} other {inconnue}}"
+  "lockTooltip": "{choice, select, true {Fermé à clé} false {Déverrouillé} other {inconnue}}",
+  "statTooltip": "{choice, select, true {Pourcentage} false {Fraction} other {inconnue}}"
 }

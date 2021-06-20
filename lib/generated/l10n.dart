@@ -152,7 +152,7 @@ class S {
     );
   }
 
-  /// `{choice, select, Figure {Type: Figure} Card {Type: Card} Yarn {Type: Yarn} other {Type: Other}}`
+  /// `{choice, select, Figure {Type: Figure} Card {Type: Card} Yarn {Type: Yarn} Band {Type: Band} other {Type: Other}}`
   String types(Object choice) {
     return Intl.select(
       choice,
@@ -160,6 +160,7 @@ class S {
         'Figure': 'Type: Figure',
         'Card': 'Type: Card',
         'Yarn': 'Type: Yarn',
+        'Band': 'Type: Band',
         'other': 'Type: Other',
       },
       name: 'types',
@@ -831,6 +832,21 @@ class S {
         'other': 'Unknown',
       },
       name: 'lockTooltip',
+      desc: '',
+      args: [choice],
+    );
+  }
+
+  /// `{choice, select, true {Percentage} false {Fraction} other {Unknown}}`
+  String statTooltip(Object choice) {
+    return Intl.select(
+      choice,
+      {
+        'true': 'Percentage',
+        'false': 'Fraction',
+        'other': 'Unknown',
+      },
+      name: 'statTooltip',
       desc: '',
       args: [choice],
     );

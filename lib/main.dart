@@ -22,14 +22,16 @@ Future<void> main() async {
   final bool splash = await updateService.compareLastUpdate;
   final SharedPreferences preferences = await SharedPreferences.getInstance();
   await updateOldTheme();
-  runApp(ProviderScope(
-    overrides: [
-      preferencesProvider.overrideWithValue(preferences),
-    ],
-    child: AmiiboNetwork(
-      firstPage: splash ? const Home() : const SplashScreen(),
+  runApp(
+    ProviderScope(
+      overrides: [
+        preferencesProvider.overrideWithValue(preferences),
+      ],
+      child: AmiiboNetwork(
+        firstPage: splash ? const Home() : const SplashScreen(),
+      ),
     ),
-  ));
+  );
 }
 
 class AmiiboNetwork extends ConsumerWidget {
@@ -39,7 +41,7 @@ class AmiiboNetwork extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, ScopedReader watch) {
-    final ThemeProvider themeMode = watch(themeProvider.notifier);
+    final ThemeProvider themeMode = watch(themeProvider);
     return MaterialApp(
       localizationsDelegates: [
         S.delegate,

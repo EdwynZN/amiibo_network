@@ -9,7 +9,7 @@
   "owned": "Owned",
   "wished": "Wished",
   "stats": "Stats",
-  "types": "{choice, select, Figure {Type: Figure} Card {Type: Card} Yarn {Type: Yarn} other {Type: Other}}",
+  "types": "{choice, select, Figure {Type: Figure} Card {Type: Card} Yarn {Type: Yarn} Band {Type: Band} other {Type: Other}}",
   "figures": "Figures",
   "cards": "Cards",
   "name": "Name: {name}",
@@ -74,5 +74,6 @@
   "notificationTitle": "Export complete",
   "actionText": "Share",
   "donate": "Donate",
-  "lockTooltip": "{choice, select, true {Locked} false {Unlocked} other {Unknown}}"
+  "lockTooltip": "{choice, select, true {Locked} false {Unlocked} other {Unknown}}",
+  "statTooltip": "{choice, select, true {Percentage} false {Fraction} other {Unknown}}"
 }

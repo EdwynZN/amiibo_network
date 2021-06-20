@@ -64,26 +64,6 @@ class _CollectionDrawerState extends State<CollectionDrawer> {
                 const SliverToBoxAdapter(
                   child: _HeaderDrawer(),
                 ),
-                SliverToBoxAdapter(
-                  child: Consumer(
-                    child: Text(
-                      translate.showPercentage,
-                      overflow: TextOverflow.fade,
-                    ),
-                    builder: (ctx, watch, child) {
-                      final statMode = watch(statProvider);
-                      return CheckboxListTile(
-                        controlAffinity: ListTileControlAffinity.leading,
-                        title: child,
-                        value: statMode.isPercentage,
-                        onChanged: statMode.toggleStat,
-                        checkColor: theme
-                            .floatingActionButtonTheme
-                            .foregroundColor,
-                      );
-                    },
-                  ),
-                ),
                 Consumer(
                   builder: (context, watch, child) {
                     final query = watch(querySearchProvider);
@@ -153,13 +133,14 @@ class _CollectionDrawerState extends State<CollectionDrawer> {
                           return Theme(
                             data: theme.copyWith(
                               dividerColor: Colors.transparent,
-                              accentColor: theme.iconTheme.color,
                             ),
                             child: ExpansionTile(
                               leading: const Icon(Icons.sports_esports),
                               title: Text(translate.figures),
                               initiallyExpanded: _figureExpand,
                               onExpansionChanged: figureExpand,
+                              iconColor: theme.iconTheme.color,
+                              textColor: theme.iconTheme.color,
                               children: <Widget>[
                                 ListTile(
                                   leading: CircleAvatar(
@@ -207,13 +188,14 @@ class _CollectionDrawerState extends State<CollectionDrawer> {
                           return Theme(
                             data: theme.copyWith(
                               dividerColor: Colors.transparent,
-                              accentColor: theme.iconTheme.color,
                             ),
                             child: ExpansionTile(
                               leading: const Icon(Icons.view_carousel),
                               title: Text(translate.cards),
                               initiallyExpanded: _cardExpand,
                               onExpansionChanged: cardExpand,
+                              iconColor: theme.iconTheme.color,
+                              textColor: theme.iconTheme.color,
                               children: <Widget>[
                                 ListTile(
                                   leading: CircleAvatar(

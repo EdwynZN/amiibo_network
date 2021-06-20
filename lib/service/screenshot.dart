@@ -13,7 +13,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:amiibo_network/model/amiibo.dart';
 
 const String _order = 'CASE WHEN type = "Figure" THEN 1 '
-    'WHEN type = "Yarn" THEN 2 ELSE 3 END, amiiboSeries DESC, na DESC';
+    'WHEN type = "Yarn" OR type = "Band" THEN 2 ELSE 3 END, amiiboSeries DESC, na DESC';
 
 class Screenshot {
   late ThemeData theme;

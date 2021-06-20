@@ -9,7 +9,7 @@
   "owned": "Adquiridos",
   "wished": "Deseados",
   "stats": "Estadísticas",
-  "types": "{choice, select, Figure {Tipo: Figura} Card {Tipo: Tarjeta} Yarn {Tipo: Lana} other {Tipo: Otro}}",
+  "types": "{choice, select, Figure {Tipo: Figura} Card {Tipo: Tarjeta} Yarn {Tipo: Lana} Band {Type: Pulsera} other {Tipo: Otro}}",
   "figures": "Figuras",
   "cards": "Tarjetas",
   "name": "Nombre: {name}",
@@ -74,5 +74,6 @@
   "notificationTitle": "Archivo generado",
   "actionText": "Compartir",
   "donate": "Donaciones",
-  "lockTooltip": "{choice, select, true {Bloqueado} false {Desbloqueado} other {Desconocido}}"
+  "lockTooltip": "{choice, select, true {Bloqueado} false {Desbloqueado} other {Desconocido}}",
+  "statTooltip": "{choice, select, true {Porcentaje} false {Fracción} other {Unknown}}"
 }

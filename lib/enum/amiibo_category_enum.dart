@@ -1,4 +1,6 @@
-enum AmiiboCategory{
+const figureType = ['Figure', 'Yarn', 'Band'];
+
+enum AmiiboCategory {
   All,
   Custom,
   Figures,
