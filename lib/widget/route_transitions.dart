@@ -16,6 +16,15 @@ class Routes{
   static Route<dynamic>? getRoute(RouteSettings settings) {
     switch(settings.name){
       case detailsRoute:
+        return cupertinoRoute(
+          child: ProviderScope(
+            overrides: [
+              keyAmiiboProvider.overrideWithValue((settings.arguments as int?) ?? 0)
+            ],
+            child: const DetailPage(),
+          ), 
+          settings: settings,
+        );
         return VerticalSlideRoute(builder: (_) => ProviderScope(
           overrides: [
             keyAmiiboProvider.overrideWithValue((settings.arguments as int?) ?? 0)

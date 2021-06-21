@@ -1,7 +1,9 @@
 import 'package:amiibo_network/model/amiibo.dart';
 import 'package:amiibo_network/repository/theme_repository.dart';
 import 'package:amiibo_network/riverpod/amiibo_provider.dart';
+import 'package:amiibo_network/riverpod/game_provider.dart';
 import 'package:amiibo_network/riverpod/service_provider.dart';
+import 'package:amiibo_network/widget/game_list.dart';
 import 'package:flutter/material.dart';
 import 'package:amiibo_network/generated/l10n.dart';
 import 'package:amiibo_network/utils/format_date.dart';
@@ -13,6 +15,67 @@ class DetailPage extends ConsumerWidget {
   @override
   Widget build(BuildContext context, ScopedReader watch) {
     final key = watch(keyAmiiboProvider);
+    return Scaffold(
+      appBar: AppBar(
+        title: watch(characterProvider(key)).maybeWhen(
+          data: (name) => name != null ? Text(name) : null,
+          orElse: () => null,
+        ),
+      ),
+      body: CustomScrollView(
+        slivers: [
+          SliverToBoxAdapter(
+            child: LimitedBox(
+                maxHeight: 250,
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: <Widget>[
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        mainAxisSize: MainAxisSize.min,
+                        children: <Widget>[
+                          Expanded(
+                            child: Padding(
+                              padding:
+                                  const EdgeInsets.only(top: 4.0, left: 4.0),
+                              child: Hero(
+                                transitionOnUserGestures: true,
+                                tag: key,
+                                child: Image.asset(
+                                  'assets/collection/icon_$key.png',
+                                  fit: BoxFit.scaleDown,
+                                ),
+                              ),
+                            ),
+                            flex: 7,
+                          ),
+                          Expanded(
+                            child: const _Buttons(),
+                            flex: 2,
+                          ),
+                        ],
+                      ),
+                      flex: 4,
+                    ),
+                    const VerticalDivider(indent: 10, endIndent: 10),
+                    Expanded(
+                      child: const _AmiiboInfo(),
+                      flex: 7,
+                    )
+                  ],
+                ),
+              ),
+          ),
+          const SliverPadding(
+            padding: EdgeInsets.symmetric(vertical: 8.0),
+            sliver: GameListWidget(),
+          ),
+        ],
+      ),
+    );
+
     final Size size = MediaQuery.of(context).size;
     EdgeInsetsGeometry padding = EdgeInsets.zero;
     int flex = 4;
@@ -47,7 +110,8 @@ class DetailPage extends ConsumerWidget {
                         children: <Widget>[
                           Expanded(
                             child: Padding(
-                              padding: const EdgeInsets.only(top: 4.0, left: 4.0),
+                              padding:
+                                  const EdgeInsets.only(top: 4.0, left: 4.0),
                               child: Hero(
                                 transitionOnUserGestures: true,
                                 tag: key,
@@ -64,81 +128,6 @@ class DetailPage extends ConsumerWidget {
                             flex: 2,
                           ),
                         ],
-                          /* Expanded(
-                            child: Consumer(builder: (context, watch, _) {
-                              late final amiibo;
-                              final asyncAmiibo =
-                                  watch(detailAmiiboProvider(key));
-                              if (asyncAmiibo is! AsyncData<Amiibo?>)
-                                return const SizedBox();
-                              amiibo = asyncAmiibo.value;
-                              return Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                                children: <Widget>[
-                                  Expanded(
-                                    child: FittedBox(
-                                      child: IconButton(
-                                        icon: amiibo.owned
-                                            ? const Icon(iconOwned)
-                                            : const Icon(
-                                                Icons.radio_button_unchecked),
-                                        color: colorOwned,
-                                        iconSize: 30.0,
-                                        tooltip: translate.ownTooltip,
-                                        splashColor: colorOwned[100],
-                                        onPressed: () {
-                                          bool newValue = !amiibo.owned;
-                                          context
-                                              .read(controlProvider.notifier)
-                                              .updateAmiiboDB(
-                                            [
-                                              amiibo.copyWith(
-                                                owned: newValue,
-                                                wishlist: newValue
-                                                    ? false
-                                                    : amiibo.wishlist,
-                                              )
-                                            ],
-                                          );
-                                        },
-                                      ),
-                                    ),
-                                  ),
-                                  Expanded(
-                                    child: FittedBox(
-                                      child: IconButton(
-                                        icon: amiibo.wishlist
-                                            ? const Icon(iconWished)
-                                            : const Icon(
-                                                Icons.check_box_outline_blank),
-                                        color: colorWished,
-                                        iconSize: 30.0,
-                                        tooltip: translate.wishTooltip,
-                                        splashColor: Colors.amberAccent[100],
-                                        onPressed: () {
-                                          bool newValue = !amiibo.wishlist;
-                                          context
-                                              .read(controlProvider.notifier)
-                                              .updateAmiiboDB(
-                                            [
-                                              amiibo.copyWith(
-                                                owned: newValue
-                                                    ? false
-                                                    : amiibo.owned,
-                                                wishlist: newValue,
-                                              )
-                                            ],
-                                          );
-                                        },
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              );
-                            }),
-                            flex: 2,
-                          ),
-                        ], */
                       ),
                       flex: flex,
                     ),
@@ -224,8 +213,8 @@ class OwnedButton extends StatelessWidget {
   OwnedButton({
     Key? key,
     required this.amiibo,
-  }) : isActive = amiibo != null && amiibo.owned,
-      super(key: key);
+  })  : isActive = amiibo != null && amiibo.owned,
+        super(key: key);
 
   final Amiibo? amiibo;
   final bool isActive;
@@ -234,7 +223,9 @@ class OwnedButton extends StatelessWidget {
   Widget build(BuildContext context) {
     final S translate = S.of(context);
     return IconButton(
-      icon: isActive ? const Icon(iconOwned) : const Icon(Icons.radio_button_unchecked),
+      icon: isActive
+          ? const Icon(iconOwned)
+          : const Icon(Icons.radio_button_unchecked),
       color: colorOwned,
       iconSize: 30.0,
       tooltip: translate.ownTooltip,
@@ -267,9 +258,9 @@ class _AmiiboDetailInfo extends ConsumerWidget {
         if (amiibo == null) return const SizedBox();
         return Column(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          crossAxisAlignment: CrossAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          mainAxisSize: MainAxisSize.max,
           children: <Widget>[
-            TextCardDetail(text: translate.character(amiibo.character)),
             if (amiibo.character != amiibo.name)
               TextCardDetail(text: translate.name(amiibo.name)),
             TextCardDetail(text: translate.serie(amiibo.amiiboSeries)),
@@ -305,9 +296,9 @@ class _AmiiboInfo extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, ScopedReader watch) {
-    final index = watch(indexAmiiboProvider);
+    final id = watch(keyAmiiboProvider);
     final S translate = S.of(context);
-    return watch(detailAmiiboProvider(index)).maybeWhen(
+    return watch(detailAmiiboProvider(id)).maybeWhen(
       data: (amiibo) {
         if (amiibo == null) return const SizedBox();
         List<InlineSpan> span = <InlineSpan>[
@@ -346,7 +337,7 @@ class _AmiiboInfo extends ConsumerWidget {
           softWrap: false,
           style: Theme.of(context)
               .textTheme
-              .bodyText2!
+              .bodyText1!
               .copyWith(fontWeight: FontWeight.bold),
         );
       },

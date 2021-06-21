@@ -21,9 +21,9 @@ final statHomeProvider = Provider.autoDispose<AsyncValue<Stat>>(
     name: 'Home Stats');
 
 final detailAmiiboProvider =
-    StreamProvider.autoDispose.family<Amiibo?, int>((ref, key) {
+    StreamProvider.autoDispose.family<Amiibo?, int>((ref, key) async* {
   final service = ref.watch(serviceProvider.notifier);
-  final streamController = StreamController<int>()..sink.add(key);
+  final streamController = StreamController<int>();
 
   void listen() {
     streamController.sink.add(key);
@@ -36,8 +36,9 @@ final detailAmiiboProvider =
     streamController.close();
   });
 
-  return streamController.stream.asyncMap(service.fetchAmiiboDBByKey);
-});
+  yield await service.fetchAmiiboDBByKey(key);
+  yield* streamController.stream.asyncMap(service.fetchAmiiboDBByKey);
+}, name: 'Single Amiibo Details Provider');
 
 final amiiboHomeListProvider =
     StreamProvider.autoDispose<List<Amiibo>>((ref) async* {
