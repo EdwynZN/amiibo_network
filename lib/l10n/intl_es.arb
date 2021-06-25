@@ -75,5 +75,8 @@
   "actionText": "Compartir",
   "donate": "Donaciones",
   "lockTooltip": "{choice, select, true {Bloqueado} false {Desbloqueado} other {Desconocido}}",
-  "statTooltip": "{choice, select, true {Porcentaje} false {Fracción} other {Unknown}}"
+  "statTooltip": "{choice, select, true {Porcentaje} false {Fracción} other {Unknown}}",
+  "switch_platform": "Switch",
+  "wiiu_platform": "WIiU",
+  "console_3DS_platform": "3DS"
 }
