@@ -9,7 +9,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 final _nameAmiiboProvider = Provider.autoDispose
   .family<AsyncValue<String?>, int>((ref, key) => 
-  ref.watch(detailAmiiboProvider(key)).whenData((cb) => cb?.character)
+  ref.watch(detailAmiiboProvider(key)).whenData((cb) => cb?.name)
 );
 
 class DetailPage extends ConsumerWidget {

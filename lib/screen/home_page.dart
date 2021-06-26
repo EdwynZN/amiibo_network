@@ -6,6 +6,7 @@ import 'package:amiibo_network/riverpod/lock_provider.dart';
 import 'package:amiibo_network/riverpod/query_provider.dart';
 import 'package:amiibo_network/riverpod/select_provider.dart';
 import 'package:amiibo_network/utils/routes_constants.dart';
+import 'package:amiibo_network/widget/loading_grid_shimmer.dart';
 import 'package:amiibo_network/widget/lock_icon.dart';
 import 'package:amiibo_network/widget/selected_chip.dart';
 import 'package:amiibo_network/widget/selected_widget.dart';
@@ -306,6 +307,43 @@ class _AmiiboListWidget extends ConsumerWidget {
           ),
         );
       },
+      loading: () => HookBuilder(
+        builder: (context) {
+          final controller = useAnimationController(
+            duration: const Duration(seconds: 1),
+            animationBehavior: AnimationBehavior.preserve,
+          );
+          useMemoized(() => controller.repeat());
+          late final SliverGridDelegate grid;
+          final bool bigGrid = MediaQuery.of(context).size.width >= 600;
+          if (bigGrid)
+            grid = SliverGridDelegateWithMaxCrossAxisExtent(
+              maxCrossAxisExtent: 192,
+              mainAxisSpacing: 8.0,
+            );
+          else
+            grid = SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: 3,
+              mainAxisSpacing: 8.0,
+            );
+          return SliverIgnorePointer(
+            ignoring: ignore,
+            sliver: SliverGrid(
+              gridDelegate: grid,
+              delegate: SliverChildBuilderDelegate(
+                (BuildContext _, int index) {
+                  return AnimatedSwitcher(
+                    duration: const Duration(milliseconds: 500),
+                    child: ShimmerCard(
+                      listenable: controller,
+                    ),
+                  );
+                },
+              ),
+            ),
+          );
+        },
+      ),
       orElse: () => const SliverToBoxAdapter(),
     );
   }

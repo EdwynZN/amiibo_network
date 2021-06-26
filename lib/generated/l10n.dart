@@ -851,6 +851,36 @@ class S {
       args: [choice],
     );
   }
+
+  /// `Switch`
+  String get switch_platform {
+    return Intl.message(
+      'Switch',
+      name: 'switch_platform',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `WIiU`
+  String get wiiu_platform {
+    return Intl.message(
+      'WIiU',
+      name: 'wiiu_platform',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `3DS`
+  String get console_3DS_platform {
+    return Intl.message(
+      '3DS',
+      name: 'console_3DS_platform',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {

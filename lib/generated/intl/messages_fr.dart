@@ -94,6 +94,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "character": m1,
         "collectionReset":
             MessageLookupByLibrary.simpleMessage("réinitialiser la collection"),
+        "console_3DS_platform": MessageLookupByLibrary.simpleMessage("3DS"),
         "couldNotLaunchUrl": m2,
         "createdOn": MessageLookupByLibrary.simpleMessage("Créé le"),
         "credits": MessageLookupByLibrary.simpleMessage("Crédits"),
@@ -168,10 +169,12 @@ class MessageLookup extends MessageLookupByLibrary {
         "successImport":
             MessageLookupByLibrary.simpleMessage("Collection mise à jour"),
         "sure": MessageLookupByLibrary.simpleMessage("Bien-sûr"),
+        "switch_platform": MessageLookupByLibrary.simpleMessage("Switch"),
         "themeMode": m9,
         "type": m10,
         "types": m11,
         "upToolTip": MessageLookupByLibrary.simpleMessage("Vers le haut"),
+        "wiiu_platform": MessageLookupByLibrary.simpleMessage("WIiU"),
         "wishTooltip": MessageLookupByLibrary.simpleMessage("Souhait"),
         "wished": MessageLookupByLibrary.simpleMessage("Souhaité")
       };

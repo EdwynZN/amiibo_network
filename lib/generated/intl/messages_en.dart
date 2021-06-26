@@ -98,6 +98,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "character": m1,
         "collectionReset":
             MessageLookupByLibrary.simpleMessage("Collection reset"),
+        "console_3DS_platform": MessageLookupByLibrary.simpleMessage("3DS"),
         "couldNotLaunchUrl": m2,
         "createdOn": MessageLookupByLibrary.simpleMessage("Created on"),
         "credits": MessageLookupByLibrary.simpleMessage("Credits"),
@@ -172,10 +173,12 @@ class MessageLookup extends MessageLookupByLibrary {
         "successImport":
             MessageLookupByLibrary.simpleMessage("Amiibo List updated"),
         "sure": MessageLookupByLibrary.simpleMessage("Sure"),
+        "switch_platform": MessageLookupByLibrary.simpleMessage("Switch"),
         "themeMode": m9,
         "type": m10,
         "types": m11,
         "upToolTip": MessageLookupByLibrary.simpleMessage("Up"),
+        "wiiu_platform": MessageLookupByLibrary.simpleMessage("WIiU"),
         "wishTooltip": MessageLookupByLibrary.simpleMessage("Wish"),
         "wished": MessageLookupByLibrary.simpleMessage("Wished")
       };

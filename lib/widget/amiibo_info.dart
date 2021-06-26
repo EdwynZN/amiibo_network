@@ -20,7 +20,7 @@ class AmiiboDetailInfo extends ConsumerWidget {
           mainAxisSize: MainAxisSize.max,
           children: <Widget>[
             if (amiibo.character != amiibo.name)
-              TextCardDetail(text: translate.name(amiibo.name)),
+              TextCardDetail(text: translate.character(amiibo.character)),
             TextCardDetail(text: translate.serie(amiibo.amiiboSeries)),
             if (amiibo.amiiboSeries != amiibo.gameSeries)
               TextCardDetail(text: translate.game(amiibo.gameSeries)),
