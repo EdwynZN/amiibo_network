@@ -87,7 +87,6 @@ class _PlatformGameList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final S translate = S.of(context);
     final theme = Theme.of(context);
     final showUsage =
         Localizations.localeOf(context).languageCode.contains('en');
@@ -101,30 +100,17 @@ class _PlatformGameList extends StatelessWidget {
             thickness: 1.0,
           );
         final int itemIndex = index ~/ 2;
-        if (!showUsage || games[itemIndex].usage == null)
+        if (!showUsage || games[itemIndex].usage == null 
+          || games[itemIndex].usage!.isEmpty)
           return ListTile(
             minVerticalPadding: kMaterialListPadding.vertical,
             title: Text(games[itemIndex].name),
           );
         final bool unique = games[itemIndex].usage!.length == 1;
-        final Widget subtitle = Text.rich(
-          TextSpan(
-            text: games[itemIndex].usage!.first.uses,
-            children: unique ? null : [
-                const TextSpan(text: ' '),
-                TextSpan(
-                text: translate.amiibo_usage_count(games[itemIndex].usage!.length - 1),
-                style: theme.primaryTextTheme.subtitle2?.copyWith(
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ],
-          ),
-          style: theme.primaryTextTheme.subtitle2,
-          overflow: TextOverflow.ellipsis,
-          maxLines: 2,
-        );
+        final String text = games[itemIndex].usage!.first.uses;
+        late final Widget subtitle;
         if (unique) {
+          subtitle = _Subtitle(subtitle: text);
           return ListTile(
             minVerticalPadding: kMaterialListPadding.vertical,
             title: Text(games[itemIndex].name),
@@ -132,6 +118,10 @@ class _PlatformGameList extends StatelessWidget {
             isThreeLine: true,
           );
         }
+        subtitle = _Subtitle(
+          subtitle: text,
+          count: games[itemIndex].usage!.length - 1,
+        );
         return Theme(
           data: theme.copyWith(
             dividerColor: Colors.transparent,
@@ -165,6 +155,42 @@ class _PlatformGameList extends StatelessWidget {
           delegate: delegate,
         ),
       ],
+    );
+  }
+}
+
+class _Subtitle extends StatelessWidget {
+  const _Subtitle({
+    Key? key,
+    required this.subtitle,
+    this.count,
+  }) : super(key: key);
+
+  final String subtitle;
+  final int? count;
+
+  @override
+  Widget build(BuildContext context) {
+    final S translate = S.of(context);
+    final theme = Theme.of(context);
+    return Text.rich(
+      TextSpan(
+        text: subtitle,
+        children: count == null
+            ? null
+            : [
+                const TextSpan(text: ' '),
+                TextSpan(
+                  text: translate.amiibo_usage_count(count!),
+                  style: theme.primaryTextTheme.subtitle2?.copyWith(
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ],
+      ),
+      style: theme.primaryTextTheme.subtitle2,
+      overflow: TextOverflow.ellipsis,
+      maxLines: 2,
     );
   }
 }

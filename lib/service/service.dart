@@ -27,7 +27,7 @@ class Service {
     String? where = builder.where.toString();
     List<dynamic>? args = builder.where.args;
     if (where.isEmpty || args.isEmpty) where = args = null;
-    return dao.fetchByColumn(where, args, builder.order, builder.sortBy);
+    return dao.fetchByColumn(where, args, builder.orderBy);
   }
 
   Future<String> jsonFileDB() async {

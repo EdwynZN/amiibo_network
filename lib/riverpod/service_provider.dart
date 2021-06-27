@@ -41,7 +41,11 @@ class ServiceNotifier extends ChangeNotifier implements Service {
     String? where = builder.where.toString();
     List<dynamic>? args = builder.where.args;
     if (where.isEmpty || args.isEmpty) where = args = null;
-    return dao.fetchByColumn(where, args, builder.orderBy, builder.sortBy);
+    final String _order = builder.orderBy ?? 'na';
+    final StringBuffer order = StringBuffer('$_order IS NULL');
+    order.write(', $_order');
+    if (builder.sortBy != null) order.write(' ${builder.sortBy}');
+    return dao.fetchByColumn(where, args, order.toString());
   }
 
   @override
