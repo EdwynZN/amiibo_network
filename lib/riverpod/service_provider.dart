@@ -41,7 +41,7 @@ class ServiceNotifier extends ChangeNotifier implements Service {
     String? where = builder.where.toString();
     List<dynamic>? args = builder.where.args;
     if (where.isEmpty || args.isEmpty) where = args = null;
-    return dao.fetchByColumn(where, args, builder.order);
+    return dao.fetchByColumn(where, args, builder.orderBy, builder.sortBy);
   }
 
   @override

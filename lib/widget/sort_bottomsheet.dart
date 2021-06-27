@@ -138,98 +138,101 @@ class _BottomSheetSort extends StatelessWidget {
                 Consumer(
                   builder: (context, watch, _) {
                     final order = watch(orderCategoryProvider);
-                    return SliverList(
-                      delegate: SliverChildListDelegate([
-                        RadioListTile<OrderBy>(
-                          value: OrderBy.Name,
-                          groupValue: order,
-                          onChanged:
-                              context.read(queryProvider.notifier).changeOrder,
-                          title: Text(translate.sortName),
-                          selected: order == OrderBy.Name,
-                        ),
-                        RadioListTile<OrderBy>(
-                          value: OrderBy.Owned,
-                          groupValue: order,
-                          onChanged:
-                              context.read(queryProvider.notifier).changeOrder,
-                          title: Text(translate.owned),
-                          selected: order == OrderBy.Owned,
-                        ),
-                        RadioListTile<OrderBy>(
-                          value: OrderBy.Wishlist,
-                          groupValue: order,
-                          onChanged:
-                              context.read(queryProvider.notifier).changeOrder,
-                          title: Text(translate.wished),
-                          selected: order == OrderBy.Wishlist,
-                        ),
-                        RadioListTile<OrderBy>(
-                          value: OrderBy.NA,
-                          groupValue: order,
-                          onChanged:
-                              context.read(queryProvider.notifier).changeOrder,
-                          title: Text(translate.na),
-                          selected:order == OrderBy.NA,
-                          secondary: Image.asset(
-                            'assets/images/na.png',
-                            height: 16,
-                            width: 25,
-                            fit: BoxFit.fill,
-                            semanticLabel: translate.na,
+                    return ListTileTheme.merge(
+                      contentPadding: const EdgeInsets.symmetric(horizontal: 16.0),
+                      child: SliverList(
+                        delegate: SliverChildListDelegate([
+                          RadioListTile<OrderBy>(
+                            value: OrderBy.Name,
+                            groupValue: order,
+                            onChanged:
+                                context.read(queryProvider.notifier).changeOrder,
+                            title: Text(translate.sortName),
+                            selected: order == OrderBy.Name,
                           ),
-                        ),
-                        RadioListTile<OrderBy>(
-                          value: OrderBy.EU,
-                          groupValue: order,
-                          onChanged:
-                              context.read(queryProvider.notifier).changeOrder,
-                          title: Text(translate.eu),
-                          selected:order == OrderBy.EU,
-                          secondary: Image.asset(
-                            'assets/images/eu.png',
-                            height: 16,
-                            width: 25,
-                            fit: BoxFit.fill,
-                            semanticLabel: translate.eu,
+                          RadioListTile<OrderBy>(
+                            value: OrderBy.Owned,
+                            groupValue: order,
+                            onChanged:
+                                context.read(queryProvider.notifier).changeOrder,
+                            title: Text(translate.owned),
+                            selected: order == OrderBy.Owned,
                           ),
-                        ),
-                        RadioListTile<OrderBy>(
-                          value: OrderBy.JP,
-                          groupValue: order,
-                          onChanged:
-                              context.read(queryProvider.notifier).changeOrder,
-                          title: Text(translate.jp),
-                          selected:order == OrderBy.JP,
-                          secondary: DecoratedBox(
-                            decoration:
-                                BoxDecoration(border: Border.all(width: 0.75)),
-                            position: DecorationPosition.foreground,
-                            child: Image.asset(
-                              'assets/images/jp.png',
+                          RadioListTile<OrderBy>(
+                            value: OrderBy.Wishlist,
+                            groupValue: order,
+                            onChanged:
+                                context.read(queryProvider.notifier).changeOrder,
+                            title: Text(translate.wished),
+                            selected: order == OrderBy.Wishlist,
+                          ),
+                          RadioListTile<OrderBy>(
+                            value: OrderBy.NA,
+                            groupValue: order,
+                            onChanged:
+                                context.read(queryProvider.notifier).changeOrder,
+                            title: Text(translate.na),
+                            selected:order == OrderBy.NA,
+                            secondary: Image.asset(
+                              'assets/images/na.png',
                               height: 16,
                               width: 25,
                               fit: BoxFit.fill,
-                              semanticLabel: translate.jp,
+                              semanticLabel: translate.na,
                             ),
                           ),
-                        ),
-                        RadioListTile<OrderBy>(
-                          value: OrderBy.AU,
-                          groupValue: order,
-                          onChanged:
-                              context.read(queryProvider.notifier).changeOrder,
-                          title: Text(translate.au),
-                          selected:order == OrderBy.AU,
-                          secondary: Image.asset(
-                            'assets/images/au.png',
-                            height: 16,
-                            width: 25,
-                            fit: BoxFit.fill,
-                            semanticLabel: translate.au,
+                          RadioListTile<OrderBy>(
+                            value: OrderBy.EU,
+                            groupValue: order,
+                            onChanged:
+                                context.read(queryProvider.notifier).changeOrder,
+                            title: Text(translate.eu),
+                            selected:order == OrderBy.EU,
+                            secondary: Image.asset(
+                              'assets/images/eu.png',
+                              height: 16,
+                              width: 25,
+                              fit: BoxFit.fill,
+                              semanticLabel: translate.eu,
+                            ),
                           ),
-                        ),
-                      ]),
+                          RadioListTile<OrderBy>(
+                            value: OrderBy.JP,
+                            groupValue: order,
+                            onChanged:
+                                context.read(queryProvider.notifier).changeOrder,
+                            title: Text(translate.jp),
+                            selected:order == OrderBy.JP,
+                            secondary: DecoratedBox(
+                              decoration:
+                                  BoxDecoration(border: Border.all(width: 0.75)),
+                              position: DecorationPosition.foreground,
+                              child: Image.asset(
+                                'assets/images/jp.png',
+                                height: 16,
+                                width: 25,
+                                fit: BoxFit.fill,
+                                semanticLabel: translate.jp,
+                              ),
+                            ),
+                          ),
+                          RadioListTile<OrderBy>(
+                            value: OrderBy.AU,
+                            groupValue: order,
+                            onChanged:
+                                context.read(queryProvider.notifier).changeOrder,
+                            title: Text(translate.au),
+                            selected:order == OrderBy.AU,
+                            secondary: Image.asset(
+                              'assets/images/au.png',
+                              height: 16,
+                              width: 25,
+                              fit: BoxFit.fill,
+                              semanticLabel: translate.au,
+                            ),
+                          ),
+                        ]),
+                      ),
                     );
                   },
                 ),

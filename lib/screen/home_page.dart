@@ -127,7 +127,7 @@ class HomeState extends State<Home> with SingleTickerProviderStateMixin {
   }
 
   Future<void> _search() async {
-    Search? value = await Navigator.pushNamed<Search>(context, searchRoute);
+    Search? value = await Navigator.pushNamed<Search?>(context, searchRoute);
     if (value?.search?.trim().isNotEmpty ?? false) {
       final query = context.read(queryProvider.notifier);
       query.updateOption(value!);

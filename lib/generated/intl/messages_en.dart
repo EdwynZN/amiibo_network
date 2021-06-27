@@ -19,7 +19,10 @@ typedef String MessageIfAbsent(String messageStr, List<dynamic> args);
 class MessageLookup extends MessageLookupByLibrary {
   String get localeName => 'en';
 
-  static String m0(choice) => "${Intl.select(choice, {
+  static String m0(count) =>
+      "${Intl.plural(count, one: '+ 1 more', few: '+ ${count} more', other: '+ many more')}";
+
+  static String m1(choice) => "${Intl.select(choice, {
             'All': 'All',
             'Owned': 'Owned',
             'Wishlist': 'Wishlist',
@@ -32,29 +35,29 @@ class MessageLookup extends MessageLookupByLibrary {
             'other': '${choice}',
           })}";
 
-  static String m1(character) => "Character: ${character}";
+  static String m2(character) => "Character: ${character}";
 
-  static String m2(url) => "Could not launch ${url}";
+  static String m3(url) => "Could not launch ${url}";
 
-  static String m3(game) => "Game: ${game}";
+  static String m4(game) => "Game: ${game}";
 
-  static String m4(choice) => "${Intl.select(choice, {
+  static String m5(choice) => "${Intl.select(choice, {
             'true': 'Locked',
             'false': 'Unlocked',
             'other': 'Unknown',
           })}";
 
-  static String m5(name) => "Name: ${name}";
+  static String m6(name) => "Name: ${name}";
 
-  static String m6(serie) => "Serie: ${serie}";
+  static String m7(serie) => "Serie: ${serie}";
 
-  static String m7(choice) => "${Intl.select(choice, {
+  static String m8(choice) => "${Intl.select(choice, {
             'true': 'Percentage',
             'false': 'Fraction',
             'other': 'Unknown',
           })}";
 
-  static String m8(choice) => "${Intl.select(choice, {
+  static String m9(choice) => "${Intl.select(choice, {
             'granted': 'Storage permission granted',
             'denied': 'Storage permission denied',
             'permanentlyDenied': 'Storage permission denied',
@@ -62,16 +65,16 @@ class MessageLookup extends MessageLookupByLibrary {
             'other': 'Unknown permission access',
           })}";
 
-  static String m9(choice) => "${Intl.select(choice, {
+  static String m10(choice) => "${Intl.select(choice, {
             'system': 'Auto',
             'light': 'Light',
             'dark': 'Dark',
             'other': 'Auto',
           })}";
 
-  static String m10(type) => "Type: ${type}";
+  static String m11(type) => "Type: ${type}";
 
-  static String m11(choice) => "${Intl.select(choice, {
+  static String m12(choice) => "${Intl.select(choice, {
             'Figure': 'Type: Figure',
             'Card': 'Type: Card',
             'Yarn': 'Type: Yarn',
@@ -83,6 +86,7 @@ class MessageLookup extends MessageLookupByLibrary {
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
         "actionText": MessageLookupByLibrary.simpleMessage("Share"),
         "all": MessageLookupByLibrary.simpleMessage("All"),
+        "amiibo_usage_count": m0,
         "appearance": MessageLookupByLibrary.simpleMessage("Appearance"),
         "appearanceSubtitle":
             MessageLookupByLibrary.simpleMessage("More personalization"),
@@ -91,15 +95,15 @@ class MessageLookup extends MessageLookupByLibrary {
         "auto": MessageLookupByLibrary.simpleMessage("Auto"),
         "cancel": MessageLookupByLibrary.simpleMessage("Wait no!"),
         "cards": MessageLookupByLibrary.simpleMessage("Cards"),
-        "category": m0,
+        "category": m1,
         "changelog": MessageLookupByLibrary.simpleMessage("Changelog"),
         "changelogSubtitle":
             MessageLookupByLibrary.simpleMessage("What\'s new"),
-        "character": m1,
+        "character": m2,
         "collectionReset":
             MessageLookupByLibrary.simpleMessage("Collection reset"),
         "console_3DS_platform": MessageLookupByLibrary.simpleMessage("3DS"),
-        "couldNotLaunchUrl": m2,
+        "couldNotLaunchUrl": m3,
         "createdOn": MessageLookupByLibrary.simpleMessage("Created on"),
         "credits": MessageLookupByLibrary.simpleMessage("Credits"),
         "creditsSubtitle":
@@ -116,17 +120,17 @@ class MessageLookup extends MessageLookupByLibrary {
         "eu": MessageLookupByLibrary.simpleMessage("Europe"),
         "export": MessageLookupByLibrary.simpleMessage("Export"),
         "figures": MessageLookupByLibrary.simpleMessage("Figures"),
-        "game": m3,
+        "game": m4,
         "import": MessageLookupByLibrary.simpleMessage("Import"),
         "jp": MessageLookupByLibrary.simpleMessage("Japan"),
         "light": MessageLookupByLibrary.simpleMessage("Light"),
         "lightTheme": MessageLookupByLibrary.simpleMessage("Light Theme"),
-        "lockTooltip": m4,
+        "lockTooltip": m5,
         "markdownError": MessageLookupByLibrary.simpleMessage(
             "There was an error loading the file"),
         "mode": MessageLookupByLibrary.simpleMessage("Theme Mode"),
         "na": MessageLookupByLibrary.simpleMessage("North America"),
-        "name": m5,
+        "name": m6,
         "notificationTitle":
             MessageLookupByLibrary.simpleMessage("Export complete"),
         "openAppSettings": MessageLookupByLibrary.simpleMessage("Change"),
@@ -156,7 +160,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "saveStatsTooltip": MessageLookupByLibrary.simpleMessage("Save Stats"),
         "savingCollectionMessage": MessageLookupByLibrary.simpleMessage(
             "Saving your file. This could take a while depending on your device"),
-        "serie": m6,
+        "serie": m7,
         "settings": MessageLookupByLibrary.simpleMessage("Settings"),
         "showPercentage":
             MessageLookupByLibrary.simpleMessage("Show percentage"),
@@ -167,16 +171,16 @@ class MessageLookup extends MessageLookupByLibrary {
         "splashMessage":
             MessageLookupByLibrary.simpleMessage("Just a second . . ."),
         "splashWelcome": MessageLookupByLibrary.simpleMessage("WELCOME"),
-        "statTooltip": m7,
+        "statTooltip": m8,
         "stats": MessageLookupByLibrary.simpleMessage("Stats"),
-        "storagePermission": m8,
+        "storagePermission": m9,
         "successImport":
             MessageLookupByLibrary.simpleMessage("Amiibo List updated"),
         "sure": MessageLookupByLibrary.simpleMessage("Sure"),
         "switch_platform": MessageLookupByLibrary.simpleMessage("Switch"),
-        "themeMode": m9,
-        "type": m10,
-        "types": m11,
+        "themeMode": m10,
+        "type": m11,
+        "types": m12,
         "upToolTip": MessageLookupByLibrary.simpleMessage("Up"),
         "wiiu_platform": MessageLookupByLibrary.simpleMessage("WIiU"),
         "wishTooltip": MessageLookupByLibrary.simpleMessage("Wish"),

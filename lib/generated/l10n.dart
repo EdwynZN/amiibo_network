@@ -881,6 +881,19 @@ class S {
       args: [],
     );
   }
+
+  /// `{count, plural, one{+ 1 more} few{+ {count} more} other{+ many more}}`
+  String amiibo_usage_count(num count) {
+    return Intl.plural(
+      count,
+      one: '+ 1 more',
+      few: '+ $count more',
+      other: '+ many more',
+      name: 'amiibo_usage_count',
+      desc: '',
+      args: [count],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {

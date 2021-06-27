@@ -78,5 +78,6 @@
   "statTooltip": "{choice, select, true {Pourcentage} false {Fraction} other {inconnue}}",
   "switch_platform": "Switch",
   "wiiu_platform": "WIiU",
-  "console_3DS_platform": "3DS"
+  "console_3DS_platform": "3DS",
+  "amiibo_usage_count": "{count, plural, one{+ 1 de plus} few{+ {count} de plus} other{beaucoup plus}}"
 }

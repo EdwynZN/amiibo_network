@@ -19,7 +19,10 @@ typedef String MessageIfAbsent(String messageStr, List<dynamic> args);
 class MessageLookup extends MessageLookupByLibrary {
   String get localeName => 'es';
 
-  static String m0(choice) => "${Intl.select(choice, {
+  static String m0(count) =>
+      "${Intl.plural(count, one: '+ 1 más', few: '+ ${count} más', other: '+ muchos más')}";
+
+  static String m1(choice) => "${Intl.select(choice, {
             'All': 'Todos',
             'Owned': 'Adquiridos',
             'Wishlist': 'Lista de deseos',
@@ -32,29 +35,29 @@ class MessageLookup extends MessageLookupByLibrary {
             'other': '${choice}',
           })}";
 
-  static String m1(character) => "Personaje: ${character}";
+  static String m2(character) => "Personaje: ${character}";
 
-  static String m2(url) => "No se pudo ejecutar ${url}";
+  static String m3(url) => "No se pudo ejecutar ${url}";
 
-  static String m3(game) => "Juego: ${game}";
+  static String m4(game) => "Juego: ${game}";
 
-  static String m4(choice) => "${Intl.select(choice, {
+  static String m5(choice) => "${Intl.select(choice, {
             'true': 'Bloqueado',
             'false': 'Desbloqueado',
             'other': 'Desconocido',
           })}";
 
-  static String m5(name) => "Nombre: ${name}";
+  static String m6(name) => "Nombre: ${name}";
 
-  static String m6(serie) => "Serie: ${serie}";
+  static String m7(serie) => "Serie: ${serie}";
 
-  static String m7(choice) => "${Intl.select(choice, {
+  static String m8(choice) => "${Intl.select(choice, {
             'true': 'Porcentaje',
             'false': 'Fracción',
             'other': 'Unknown',
           })}";
 
-  static String m8(choice) => "${Intl.select(choice, {
+  static String m9(choice) => "${Intl.select(choice, {
             'granted': 'Almacenamiento concedido',
             'denied': 'Almacenamiento denegado',
             'permanentlyDenied': 'Almacenamiento denegado',
@@ -62,16 +65,16 @@ class MessageLookup extends MessageLookupByLibrary {
             'other': 'Permiso de almacenamiento en estado desconocido',
           })}";
 
-  static String m9(choice) => "${Intl.select(choice, {
+  static String m10(choice) => "${Intl.select(choice, {
             'system': 'Autom.',
             'light': 'Claro',
             'dark': 'Oscuro',
             'other': 'Autom.',
           })}";
 
-  static String m10(type) => "Tipo: ${type}";
+  static String m11(type) => "Tipo: ${type}";
 
-  static String m11(choice) => "${Intl.select(choice, {
+  static String m12(choice) => "${Intl.select(choice, {
             'Figure': 'Tipo: Figura',
             'Card': 'Tipo: Tarjeta',
             'Yarn': 'Tipo: Lana',
@@ -83,6 +86,7 @@ class MessageLookup extends MessageLookupByLibrary {
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
         "actionText": MessageLookupByLibrary.simpleMessage("Compartir"),
         "all": MessageLookupByLibrary.simpleMessage("Todos"),
+        "amiibo_usage_count": m0,
         "appearance": MessageLookupByLibrary.simpleMessage("Apariencia"),
         "appearanceSubtitle":
             MessageLookupByLibrary.simpleMessage("Más personalización"),
@@ -91,14 +95,14 @@ class MessageLookup extends MessageLookupByLibrary {
         "auto": MessageLookupByLibrary.simpleMessage("Automático"),
         "cancel": MessageLookupByLibrary.simpleMessage("¡Espera no!"),
         "cards": MessageLookupByLibrary.simpleMessage("Tarjetas"),
-        "category": m0,
+        "category": m1,
         "changelog": MessageLookupByLibrary.simpleMessage("Cambios"),
         "changelogSubtitle": MessageLookupByLibrary.simpleMessage("Novedades"),
-        "character": m1,
+        "character": m2,
         "collectionReset":
             MessageLookupByLibrary.simpleMessage("Colleccción borrada"),
         "console_3DS_platform": MessageLookupByLibrary.simpleMessage("3DS"),
-        "couldNotLaunchUrl": m2,
+        "couldNotLaunchUrl": m3,
         "createdOn": MessageLookupByLibrary.simpleMessage("Creado el"),
         "credits": MessageLookupByLibrary.simpleMessage("Créditos"),
         "creditsSubtitle": MessageLookupByLibrary.simpleMessage(
@@ -115,17 +119,17 @@ class MessageLookup extends MessageLookupByLibrary {
         "eu": MessageLookupByLibrary.simpleMessage("Europa"),
         "export": MessageLookupByLibrary.simpleMessage("Exportar"),
         "figures": MessageLookupByLibrary.simpleMessage("Figuras"),
-        "game": m3,
+        "game": m4,
         "import": MessageLookupByLibrary.simpleMessage("Importar"),
         "jp": MessageLookupByLibrary.simpleMessage("Japón"),
         "light": MessageLookupByLibrary.simpleMessage("Claro"),
         "lightTheme": MessageLookupByLibrary.simpleMessage("Tema Claro"),
-        "lockTooltip": m4,
+        "lockTooltip": m5,
         "markdownError": MessageLookupByLibrary.simpleMessage(
             "Hubo un error al cargar el archivo"),
         "mode": MessageLookupByLibrary.simpleMessage("Modo"),
         "na": MessageLookupByLibrary.simpleMessage("Norteamérica"),
-        "name": m5,
+        "name": m6,
         "notificationTitle":
             MessageLookupByLibrary.simpleMessage("Archivo generado"),
         "openAppSettings": MessageLookupByLibrary.simpleMessage("Cambiar"),
@@ -157,7 +161,7 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Guardar Estadísticas"),
         "savingCollectionMessage": MessageLookupByLibrary.simpleMessage(
             "Guardando tu colección, esto podría demorar dependiendo de tu dispositivo"),
-        "serie": m6,
+        "serie": m7,
         "settings": MessageLookupByLibrary.simpleMessage("Opciones"),
         "showPercentage":
             MessageLookupByLibrary.simpleMessage("Mostrar porcentaje"),
@@ -168,16 +172,16 @@ class MessageLookup extends MessageLookupByLibrary {
         "splashMessage":
             MessageLookupByLibrary.simpleMessage("Espere un momento..."),
         "splashWelcome": MessageLookupByLibrary.simpleMessage("Bienvenido"),
-        "statTooltip": m7,
+        "statTooltip": m8,
         "stats": MessageLookupByLibrary.simpleMessage("Estadísticas"),
-        "storagePermission": m8,
+        "storagePermission": m9,
         "successImport":
             MessageLookupByLibrary.simpleMessage("Colección actualizada"),
         "sure": MessageLookupByLibrary.simpleMessage("Seguro"),
         "switch_platform": MessageLookupByLibrary.simpleMessage("Switch"),
-        "themeMode": m9,
-        "type": m10,
-        "types": m11,
+        "themeMode": m10,
+        "type": m11,
+        "types": m12,
         "upToolTip": MessageLookupByLibrary.simpleMessage("Arriba"),
         "wiiu_platform": MessageLookupByLibrary.simpleMessage("WIiU"),
         "wishTooltip": MessageLookupByLibrary.simpleMessage("Desear"),

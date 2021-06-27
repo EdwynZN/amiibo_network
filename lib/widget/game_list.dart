@@ -87,40 +87,69 @@ class _PlatformGameList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final S translate = S.of(context);
     final theme = Theme.of(context);
+    final showUsage =
+        Localizations.localeOf(context).languageCode.contains('en');
     final delegate = SliverChildBuilderDelegate(
       (context, index) {
-        Widget? subtitle;
-        final bool unique =
-            Localizations.localeOf(context).languageCode.contains('en') &&
-                (games[index].usage == null || games[index].usage!.length == 1);
+        if (index.isOdd)
+          return const Divider(
+            height: 0.0,
+            indent: 16.0,
+            endIndent: 16.0,
+            thickness: 1.0,
+          );
+        final int itemIndex = index ~/ 2;
+        if (!showUsage || games[itemIndex].usage == null)
+          return ListTile(
+            minVerticalPadding: kMaterialListPadding.vertical,
+            title: Text(games[itemIndex].name),
+          );
+        final bool unique = games[itemIndex].usage!.length == 1;
+        final Widget subtitle = Text.rich(
+          TextSpan(
+            text: games[itemIndex].usage!.first.uses,
+            children: unique ? null : [
+                const TextSpan(text: ' '),
+                TextSpan(
+                text: translate.amiibo_usage_count(games[itemIndex].usage!.length - 1),
+                style: theme.primaryTextTheme.subtitle2?.copyWith(
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ],
+          ),
+          style: theme.primaryTextTheme.subtitle2,
+          overflow: TextOverflow.ellipsis,
+          maxLines: 2,
+        );
         if (unique) {
-          subtitle = Text(
-            games[index].usage!.first.uses,
-            style: theme.primaryTextTheme.subtitle2,
-            maxLines: 2,
+          return ListTile(
+            minVerticalPadding: kMaterialListPadding.vertical,
+            title: Text(games[itemIndex].name),
+            subtitle: subtitle,
+            isThreeLine: true,
           );
         }
-        return DecoratedBox(
-          decoration: BoxDecoration(
-            border: index == 0
-                ? Border()
-                : Border(
-                    top: BorderSide(
-                      color: theme.dividerColor,
-                    ),
-                  ),
+        return Theme(
+          data: theme.copyWith(
+            dividerColor: Colors.transparent,
           ),
-          child: ListTile(
-            contentPadding: EdgeInsets.zero,
-            minVerticalPadding: kMaterialListPadding.vertical,
-            title: Text(games[index].name),
+          child: ExpansionTile(
+            title: Text(games[itemIndex].name),
             subtitle: subtitle,
-            isThreeLine: unique,
+            children: [
+              for (AmiiboUsage usage in games[itemIndex].usage!.sublist(1))
+                ListTile(
+                  dense: true,
+                  title: Text(usage.uses, style: theme.textTheme.subtitle2),
+                ),
+            ],
           ),
         );
       },
-      childCount: games.length,
+      childCount: math.max(0, games.length * 2 - 1),
     );
     return MultiSliver(
       pushPinnedChildren: true,
@@ -132,12 +161,9 @@ class _PlatformGameList extends StatelessWidget {
             asset: asset,
           ),
         ),
-        SliverPadding(
-          padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 4.0),
-          sliver: SliverList(
-            delegate: delegate,
-          ),
-        )
+        SliverList(
+          delegate: delegate,
+        ),
       ],
     );
   }
