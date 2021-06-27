@@ -48,16 +48,16 @@ class GameListWidget extends ConsumerWidget {
           if (e.type == DioErrorType.response && e.response != null)
             switch (e.response!.statusCode) {
               case 404:
-                child = Text('No games for this amiibo yet');
+                child = Text(translate.no_games_found);
                 break;
               default:
-                child = Text(e.response!.statusMessage ?? '');
+                child = Text(e.response!.statusMessage ?? translate.no_games_found);
                 break;
             }
           else
             child = Text(e.message);
         } else if (e is ArgumentError) {
-          child = Text('Invalid amiibo data');
+          child = Text(translate.invalid_amiibo);
         } else
           child = Text(e.toString());
         return SliverToBoxAdapter(

@@ -894,6 +894,26 @@ class S {
       args: [count],
     );
   }
+
+  /// `Invalid amiibo data`
+  String get invalid_amiibo {
+    return Intl.message(
+      'Invalid amiibo data',
+      name: 'invalid_amiibo',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `No games found for this amiibo yet`
+  String get no_games_found {
+    return Intl.message(
+      'No games found for this amiibo yet',
+      name: 'no_games_found',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {

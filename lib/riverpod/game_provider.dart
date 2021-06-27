@@ -33,7 +33,7 @@ final gameProvider =
   final token = CancelToken();
 
   ref.onDispose(token.cancel);
-  late final result;
+  late final Response<Map<String, dynamic>> result;
 
   if (amiibo.id != null)
     result = await dio.get<Map<String, dynamic>>(

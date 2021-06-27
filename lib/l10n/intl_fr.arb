@@ -79,5 +79,7 @@
   "switch_platform": "Switch",
   "wiiu_platform": "WIiU",
   "console_3DS_platform": "3DS",
-  "amiibo_usage_count": "{count, plural, one{+ 1 de plus} few{+ {count} de plus} other{beaucoup plus}}"
+  "amiibo_usage_count": "{count, plural, one{+ 1 de plus} few{+ {count} de plus} other{beaucoup plus}}",
+  "invalid_amiibo": "informations invalides",
+  "no_games_found": "Aucun jeu trouvé pour cette amiibo pour le moment"
 }

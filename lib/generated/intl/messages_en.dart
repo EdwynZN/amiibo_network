@@ -122,6 +122,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "figures": MessageLookupByLibrary.simpleMessage("Figures"),
         "game": m4,
         "import": MessageLookupByLibrary.simpleMessage("Import"),
+        "invalid_amiibo":
+            MessageLookupByLibrary.simpleMessage("Invalid amiibo data"),
         "jp": MessageLookupByLibrary.simpleMessage("Japan"),
         "light": MessageLookupByLibrary.simpleMessage("Light"),
         "lightTheme": MessageLookupByLibrary.simpleMessage("Light Theme"),
@@ -131,6 +133,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "mode": MessageLookupByLibrary.simpleMessage("Theme Mode"),
         "na": MessageLookupByLibrary.simpleMessage("North America"),
         "name": m6,
+        "no_games_found": MessageLookupByLibrary.simpleMessage(
+            "No games found for this amiibo yet"),
         "notificationTitle":
             MessageLookupByLibrary.simpleMessage("Export complete"),
         "openAppSettings": MessageLookupByLibrary.simpleMessage("Change"),
