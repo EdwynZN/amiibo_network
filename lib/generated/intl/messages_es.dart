@@ -20,7 +20,7 @@ class MessageLookup extends MessageLookupByLibrary {
   String get localeName => 'es';
 
   static String m0(count) =>
-      "${Intl.plural(count, one: '+ 1 más', few: '+ ${count} más', other: '+ muchos más')}";
+      "${Intl.plural(count, one: '+ 1 más', two: '+ 2 más', few: '+ ${count} más', other: '+ muchos más')}";
 
   static String m1(choice) => "${Intl.select(choice, {
             'All': 'Todos',

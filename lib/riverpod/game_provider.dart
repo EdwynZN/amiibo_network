@@ -11,6 +11,7 @@ final _dioProvider = Provider<Dio>((_) {
   final dio = Dio(
     BaseOptions(
       baseUrl: apiUrl,
+      connectTimeout: 5000,
     ),
   );
 
@@ -35,19 +36,24 @@ final gameProvider =
   ref.onDispose(token.cancel);
   late final Response<Map<String, dynamic>> result;
 
-  if (amiibo.id != null)
+  if (amiibo.id != null) {
+    final String head = amiibo.id!.substring(0, 8);
+    final String tail = amiibo.id!.substring(8);
+
     result = await dio.get<Map<String, dynamic>>(
-      'amiibo/?tail=${amiibo.id!.substring(8)}&showusage',
+      'amiibo/?head=$head&tail=$tail&showusage',
       cancelToken: token,
     );
-  else 
+  } else
     result = await dio.get<Map<String, dynamic>>(
       'amiibo/?character=${amiibo.character}&showusage',
       cancelToken: token,
     );
 
   if (result.data == null) throw ArgumentError();
-  final single = result.data!['amiibo'].first as Map<String, dynamic>;
+  final data = result.data!['amiibo'];
+  if (data is! List<dynamic> || data.length > 1) throw ArgumentError();
+  final single = data.first as Map<String, dynamic>;
   final NintendoPlatform platform = NintendoPlatform.fromJson(single);
   ref.maintainState = true;
   return platform;

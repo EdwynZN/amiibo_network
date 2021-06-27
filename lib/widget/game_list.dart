@@ -1,5 +1,8 @@
+import 'dart:io';
+
 import 'package:amiibo_network/generated/l10n.dart';
 import 'package:amiibo_network/model/game.dart';
+import 'package:amiibo_network/resources/resources.dart';
 import 'package:amiibo_network/riverpod/amiibo_provider.dart';
 import 'package:amiibo_network/riverpod/game_provider.dart';
 import 'package:dio/dio.dart';
@@ -23,20 +26,20 @@ class GameListWidget extends ConsumerWidget {
               _PlatformGameList(
                 games: platforms.games3DS!,
                 title: translate.console_3DS_platform,
-                asset: 'ds',
+                asset: NetworkIcons.dsPlatform,
               ),
             if (platforms.gamesWiiU != null && platforms.gamesWiiU!.isNotEmpty)
               _PlatformGameList(
                 games: platforms.gamesWiiU!,
                 title: translate.wiiu_platform,
-                asset: 'wiiu',
+                asset: NetworkIcons.wiiUPlatform,
               ),
             if (platforms.gamesSwitch != null &&
                 platforms.gamesSwitch!.isNotEmpty)
               _PlatformGameList(
                 games: platforms.gamesSwitch!,
                 title: translate.switch_platform,
-                asset: 'switch',
+                asset: NetworkIcons.switchPlatform,
               ),
           ],
         );
@@ -54,10 +57,14 @@ class GameListWidget extends ConsumerWidget {
                 child = Text(e.response!.statusMessage ?? translate.no_games_found);
                 break;
             }
-          else
+          else if (e.error is SocketException && e.error.osError != null) {
+            child = Text(e.error.osError!.message);
+          } else
             child = Text(e.message);
         } else if (e is ArgumentError) {
-          child = Text(translate.invalid_amiibo);
+          child = Text(translate.no_games_found);
+        } else if (e is SocketException) {
+          child = Text(e.osError?.message ?? e.message);
         } else
           child = Text(e.toString());
         return SliverToBoxAdapter(
@@ -107,7 +114,7 @@ class _PlatformGameList extends StatelessWidget {
             title: Text(games[itemIndex].name),
           );
         final bool unique = games[itemIndex].usage!.length == 1;
-        final String text = games[itemIndex].usage!.first.uses;
+        final String text = games[itemIndex].usage!.first.use;
         late final Widget subtitle;
         if (unique) {
           subtitle = _Subtitle(subtitle: text);
@@ -133,7 +140,7 @@ class _PlatformGameList extends StatelessWidget {
               for (AmiiboUsage usage in games[itemIndex].usage!.sublist(1))
                 ListTile(
                   dense: true,
-                  title: Text(usage.uses, style: theme.textTheme.subtitle2),
+                  title: Text(usage.use, style: theme.textTheme.subtitle2),
                 ),
             ],
           ),
@@ -226,8 +233,7 @@ class _SliverAnimatedPersistentHeader extends SliverPersistentHeaderDelegate {
               ? appBarTheme.color ?? theme.iconTheme.color
               : theme.iconTheme.color,
           child: ListTile(
-            leading: Image.asset(
-              'assets/images/$asset.png',
+            leading: Image.asset(asset,
               cacheHeight: 24,
               cacheWidth: 24,
               height: 24,

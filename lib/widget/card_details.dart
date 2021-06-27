@@ -15,7 +15,7 @@ class RegionDetail extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.center,
       children: <Widget>[
         Image.asset(
-          'assets/images/$asset.png',
+          asset,
           height: 16,
           width: 25,
           fit: BoxFit.fill,

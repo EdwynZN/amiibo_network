@@ -1,4 +1,5 @@
 import 'package:amiibo_network/repository/theme_repository.dart';
+import 'package:amiibo_network/resources/resources.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:amiibo_network/riverpod/query_provider.dart';
 import 'package:flutter/material.dart';
@@ -270,7 +271,7 @@ class _HeaderDrawer extends StatelessWidget {
       decoration: BoxDecoration(color: theme.backgroundColor),
       padding: EdgeInsets.zero,
       child: Image.asset(
-        'assets/images/icon_app.png',
+        NetworkIcons.iconApp,
         fit: BoxFit.fitHeight,
         color: theme.primaryColorBrightness == Brightness.dark
             ? Colors.white54

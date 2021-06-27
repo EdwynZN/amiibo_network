@@ -9818,9 +9818,9 @@
     {
       "key":756,
       "id":"350A000004111802",
-      "amiiboSeries":"Monster Hunter",
+      "amiiboSeries":"Monster Hunter Rise",
       "character":"Magnamalo",
-      "gameSeries":"Monster Hunter Rise",
+      "gameSeries":"Monster Hunter",
       "name":"Magnamalo",
       "au":null,
       "eu":"20210326",
@@ -9831,9 +9831,9 @@
     {
       "key":757,
       "id":"35080000040F1802",
-      "amiiboSeries":"Monster Hunter",
+      "amiiboSeries":"Monster Hunter Rise",
       "character":"Palamute",
-      "gameSeries":"Monster Hunter Rise",
+      "gameSeries":"Monster Hunter",
       "name":"Palamute",
       "au":null,
       "eu":"20210326",
@@ -9844,9 +9844,9 @@
     {
       "key":758,
       "id":"3509000004101802",
-      "amiiboSeries":"Monster Hunter",
+      "amiiboSeries":"Monster Hunter Rise",
       "character":"Palico",
-      "gameSeries":"Monster Hunter Rise",
+      "gameSeries":"Monster Hunter",
       "name":"Palico",
       "au":null,
       "eu":"20210326",
@@ -9974,9 +9974,9 @@
     {
       "key":768,
       "id":null,
-      "amiiboSeries":"Monster Hunter",
+      "amiiboSeries":"Monster Hunter Stories",
       "character":"Tsukino",
-      "gameSeries":"Monster Hunter Stories",
+      "gameSeries":"Monster Hunter",
       "name":"Tsukino",
       "au":null,
       "eu":"202107",
@@ -9987,9 +9987,9 @@
     {
       "key":769,
       "id":null,
-      "amiiboSeries":"Monster Hunter",
+      "amiiboSeries":"Monster Hunter Stories",
       "character":"Razewing Ratha",
-      "gameSeries":"Monster Hunter Stories",
+      "gameSeries":"Monster Hunter",
       "name":"Razewing Ratha",
       "au":null,
       "eu":"202107",
@@ -10000,9 +10000,9 @@
     {
       "key":770,
       "id":null,
-      "amiiboSeries":"Monster Hunter",
+      "amiiboSeries":"Monster Hunter Stories",
       "character":"Ena",
-      "gameSeries":"Monster Hunter Stories",
+      "gameSeries":"Monster Hunter",
       "name":"Ena",
       "au":null,
       "eu":"202107",
@@ -10050,5 +10050,5 @@
       "type":"Figure"
     } 
   ],
-  "lastUpdated": "2021-06-19T21:12:28.239"
+  "lastUpdated": "2021-06-25T21:12:28.239"
 }

@@ -1,4 +1,5 @@
 import 'package:amiibo_network/generated/l10n.dart';
+import 'package:amiibo_network/resources/resources.dart';
 import 'package:amiibo_network/riverpod/amiibo_provider.dart';
 import 'package:amiibo_network/widget/card_details.dart';
 import 'package:flutter/material.dart';
@@ -27,10 +28,10 @@ class AmiiboDetailInfo extends ConsumerWidget {
             TextCardDetail(
               text: translate.types(amiibo.type!),
             ),
-            if (amiibo.au != null) RegionDetail(amiibo.au, 'au', translate.au),
-            if (amiibo.eu != null) RegionDetail(amiibo.eu, 'eu', translate.eu),
-            if (amiibo.na != null) RegionDetail(amiibo.na, 'na', translate.na),
-            if (amiibo.jp != null) RegionDetail(amiibo.jp, 'jp', translate.jp),
+            if (amiibo.au != null) RegionDetail(amiibo.au, NetworkIcons.au, translate.au),
+            if (amiibo.eu != null) RegionDetail(amiibo.eu, NetworkIcons.eu, translate.eu),
+            if (amiibo.na != null) RegionDetail(amiibo.na, NetworkIcons.na, translate.na),
+            if (amiibo.jp != null) RegionDetail(amiibo.jp, NetworkIcons.jp, translate.jp),
           ],
         );
       },

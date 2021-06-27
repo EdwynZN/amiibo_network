@@ -31,7 +31,7 @@ class Game with _$Game {
 @freezed
 class AmiiboUsage with _$AmiiboUsage {
   const factory AmiiboUsage({
-    @JsonKey(name: 'Usage', required: true, disallowNullValue: true) required String uses,
+    @JsonKey(name: 'Usage', required: true, disallowNullValue: true) required String use,
     @JsonKey(name: 'write') bool? write,
   }) = _AmiiboUsage;
 	

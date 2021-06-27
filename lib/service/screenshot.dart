@@ -1,6 +1,7 @@
 import 'dart:typed_data';
 import 'package:amiibo_network/model/stat.dart';
 import 'package:amiibo_network/repository/theme_repository.dart';
+import 'package:amiibo_network/resources/resources.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'dart:ui' as ui;
@@ -439,7 +440,7 @@ class Screenshot {
       ..layout(minWidth: maxX - 125 - margin)
       ..paint(_canvas!, Offset(125, maxY - margin - 30));
 
-    final _ima = await rootBundle.load('assets/images/icon_app.png');
+    final _ima = await rootBundle.load(NetworkIcons.iconApp);
     final ui.Image? appIcon = await ui
         .instantiateImageCodec(_ima.buffer.asUint8List(),
             targetWidth: iconSize.toInt(), targetHeight: iconSize.toInt())

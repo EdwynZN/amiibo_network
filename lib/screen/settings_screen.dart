@@ -1,3 +1,4 @@
+import 'package:amiibo_network/resources/resources.dart';
 import 'package:amiibo_network/riverpod/query_provider.dart';
 import 'package:amiibo_network/riverpod/service_provider.dart';
 import 'package:amiibo_network/riverpod/theme_provider.dart';
@@ -96,7 +97,7 @@ class SettingsPage extends StatelessWidget {
                     child: SizedBox(
                       height: 0,
                       child: Image.asset(
-                        'assets/images/icon_app.png',
+                        NetworkIcons.iconApp,
                         fit: BoxFit.scaleDown,
                         color: Theme.of(context).primaryColorBrightness ==
                                 Brightness.dark
@@ -134,7 +135,7 @@ class _SupportButtons extends StatelessWidget {
             child: ElevatedButton.icon(
                 onPressed: LaunchReview.launch,
                 icon: Image.asset(
-                  'assets/images/icon_app.png',
+                  NetworkIcons.iconApp,
                   height: 30,
                   width: 30,
                   fit: BoxFit.fill,
@@ -158,7 +159,7 @@ class _SupportButtons extends StatelessWidget {
             child: ElevatedButton.icon(
                 onPressed: () => _launchURL(kofi, context),
                 icon: Image.asset(
-                  'assets/images/ko-fi_icon.png',
+                  NetworkIcons.koFiIcon,
                   height: 30,
                   width: 30,
                   fit: BoxFit.fill,

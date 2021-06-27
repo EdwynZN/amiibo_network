@@ -882,11 +882,12 @@ class S {
     );
   }
 
-  /// `{count, plural, one{+ 1 more} few{+ {count} more} other{+ many more}}`
+  /// `{count, plural, one{+ 1 more} two{+ 2 more} few{+ {count} more} other{+ many more}}`
   String amiibo_usage_count(num count) {
     return Intl.plural(
       count,
       one: '+ 1 more',
+      two: '+ 2 more',
       few: '+ $count more',
       other: '+ many more',
       name: 'amiibo_usage_count',

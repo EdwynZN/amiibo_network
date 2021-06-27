@@ -1,5 +1,6 @@
 import 'package:amiibo_network/enum/sort_enum.dart';
 import 'package:amiibo_network/generated/l10n.dart';
+import 'package:amiibo_network/resources/resources.dart';
 import 'package:amiibo_network/riverpod/query_provider.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -174,7 +175,7 @@ class _BottomSheetSort extends StatelessWidget {
                             title: Text(translate.na),
                             selected:order == OrderBy.NA,
                             secondary: Image.asset(
-                              'assets/images/na.png',
+                              NetworkIcons.na,
                               height: 16,
                               width: 25,
                               fit: BoxFit.fill,
@@ -189,7 +190,7 @@ class _BottomSheetSort extends StatelessWidget {
                             title: Text(translate.eu),
                             selected:order == OrderBy.EU,
                             secondary: Image.asset(
-                              'assets/images/eu.png',
+                              NetworkIcons.eu,
                               height: 16,
                               width: 25,
                               fit: BoxFit.fill,
@@ -208,7 +209,7 @@ class _BottomSheetSort extends StatelessWidget {
                                   BoxDecoration(border: Border.all(width: 0.75)),
                               position: DecorationPosition.foreground,
                               child: Image.asset(
-                                'assets/images/jp.png',
+                                NetworkIcons.jp,
                                 height: 16,
                                 width: 25,
                                 fit: BoxFit.fill,
@@ -224,7 +225,7 @@ class _BottomSheetSort extends StatelessWidget {
                             title: Text(translate.au),
                             selected:order == OrderBy.AU,
                             secondary: Image.asset(
-                              'assets/images/au.png',
+                              NetworkIcons.au,
                               height: 16,
                               width: 25,
                               fit: BoxFit.fill,

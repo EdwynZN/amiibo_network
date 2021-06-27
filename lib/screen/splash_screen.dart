@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:amiibo_network/resources/resources.dart';
 import 'package:flutter/material.dart';
 import 'package:amiibo_network/widget/switch_joycon.dart';
 import 'package:flutter/services.dart';
@@ -83,8 +84,7 @@ class SplashScreenState extends State<SplashScreen>
                               _text = snapshot.data!
                                   ? translate.splashWelcome
                                   : translate.splashError;
-                              _child = Image.asset(
-                                'assets/images/icon_app.png',
+                              _child = Image.asset(NetworkIcons.iconApp,
                                 fit: BoxFit.scaleDown,
                                 color: Theme.of(context)
                                             .primaryColorBrightness ==
