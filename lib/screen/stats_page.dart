@@ -102,18 +102,24 @@ class _StatsPageState extends State<StatsPage> {
                 NavigationRail(
                   destinations: <NavigationRailDestination>[
                     NavigationRailDestination(
-                        icon: const Icon(Icons.all_inclusive),
-                        label: Text(translate!.all)),
+                      icon: const Icon(Icons.all_inclusive),
+                      label: Text(translate!.all),
+                    ),
                     NavigationRailDestination(
-                        icon: const Icon(Icons.edit),
-                        label:
-                            Text(translate!.category(AmiiboCategory.Custom))),
+                      icon: const Icon(Icons.edit_outlined),
+                      selectedIcon: const Icon(Icons.edit),
+                      label: Text(translate!.category(AmiiboCategory.Custom)),
+                    ),
                     NavigationRailDestination(
-                        icon: const Icon(Icons.toys),
-                        label: Text(translate!.figures)),
+                      icon: const Icon(Icons.sports_esports_outlined),
+                      selectedIcon: const Icon(Icons.sports_esports),
+                      label: Text(translate!.figures),
+                    ),
                     NavigationRailDestination(
-                        icon: const Icon(Icons.view_carousel),
-                        label: Text(translate!.cards))
+                      icon: const Icon(Icons.view_carousel_outlined),
+                      selectedIcon: const Icon(Icons.view_carousel),
+                      label: Text(translate!.cards),
+                    )
                   ],
                   selectedIndex: category.index,
                   trailing: Padding(
