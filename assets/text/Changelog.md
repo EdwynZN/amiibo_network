@@ -1,4 +1,5 @@
 ## Version 1.4.0
+- Added Super Smash Bros. serie Min-Min
 - Added Metroid Dread series Samus and E.M.M.I.
 - Added amiibo Zelda and Loftwing
 - Added amiibo bands of Super Nintendo World

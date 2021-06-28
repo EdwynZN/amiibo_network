@@ -10048,7 +10048,20 @@
       "jp":"20211008",
       "na":"20211008",
       "type":"Figure"
-    } 
+    }, 
+    {
+      "key":774,
+      "id":null,
+      "amiiboSeries":"Super Smash Bros.",
+      "character":"Min-Min",
+      "gameSeries":"ARMS",
+      "name":"Min-Min",
+      "au":"2022",
+      "eu":"2022",
+      "jp":"2022",
+      "na":"2022",
+      "type":"Figure"
+    }
   ],
-  "lastUpdated": "2021-06-25T21:12:28.239"
+  "lastUpdated": "2021-06-25T26:12:28.239"
 }

@@ -1,4 +1,5 @@
 ## Version 1.4.0
+- Se agrego el amiibo Min-Min de la serie Super Smash Bros.
 - Se agregaron las figuras de Metroid Dread (Samus y E.M.M.I.)
 - Se agrego el amiibo Zelda y Loftwing
 - Se agregaron las pulseras de Super Nintendo World
