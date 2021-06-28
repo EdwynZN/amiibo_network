@@ -35,6 +35,10 @@ dependencies:
   json_serializable: ^4.1.0
   dio: ^4.0.0
   sliver_tools: ^0.2.5
+  hive_flutter: ^1.1.0
+  stash_dio: ^3.0.2
+  stash_hive: ^3.0.1
+  stash: ^3.0.1
 
 dev_dependencies:
   flutter_test:

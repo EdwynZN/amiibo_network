@@ -906,6 +906,16 @@ class S {
     );
   }
 
+  /// `Check your network`
+  String get socket_exception {
+    return Intl.message(
+      'Check your network',
+      name: 'socket_exception',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `No games found for this amiibo yet`
   String get no_games_found {
     return Intl.message(

@@ -4,10 +4,17 @@ import 'package:amiibo_network/riverpod/amiibo_provider.dart';
 import 'package:dio/dio.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:riverpod/riverpod.dart';
+import 'package:stash/stash_api.dart';
+import 'package:stash_dio/stash_dio.dart';
 
 const apiUrl = 'https://www.amiiboapi.com/api/';
 
-final _dioProvider = Provider<Dio>((_) {
+final cacheProvider = Provider<Cache>((_) => throw UnimplementedError());
+
+final _dioProvider = Provider<Dio>((ref) {
+  final hiveCache = ref.watch(cacheProvider);
+  final stashOptions = newCacheInterceptor('amiibo', hiveCache);
+
   final dio = Dio(
     BaseOptions(
       baseUrl: apiUrl,
@@ -15,7 +22,7 @@ final _dioProvider = Provider<Dio>((_) {
     ),
   );
 
-  return dio;
+  return dio..interceptors.add(stashOptions);
 });
 
 final _characterProvider = StreamProvider.autoDispose.family<Amiibo?, int>(
@@ -29,7 +36,7 @@ final _characterProvider = StreamProvider.autoDispose.family<Amiibo?, int>(
 final gameProvider =
     FutureProvider.autoDispose.family<NintendoPlatform, int>((ref, key) async {
   final amiibo = await ref.watch(_characterProvider(key).last);
-  if (amiibo == null) throw ArgumentError();
+  if (amiibo == null) return NintendoPlatform();
   final dio = ref.watch(_dioProvider);
   final token = CancelToken();
 
@@ -39,7 +46,6 @@ final gameProvider =
   if (amiibo.id != null) {
     final String head = amiibo.id!.substring(0, 8);
     final String tail = amiibo.id!.substring(8);
-
     result = await dio.get<Map<String, dynamic>>(
       'amiibo/?head=$head&tail=$tail&showusage',
       cancelToken: token,

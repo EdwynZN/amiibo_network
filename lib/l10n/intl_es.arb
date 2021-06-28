@@ -81,5 +81,6 @@
   "console_3DS_platform": "3DS",
   "amiibo_usage_count": "{count, plural, one{+ 1 más} two{+ 2 más} few{+ {count} más} other{+ muchos más}}",
   "invalid_amiibo": "Información no válida",
+  "socket_exception": "Revisa tu conexión",
   "no_games_found": "No existe una lista de juegos para este amiibo aún"
 }

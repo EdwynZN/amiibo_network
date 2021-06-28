@@ -169,6 +169,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "settings": MessageLookupByLibrary.simpleMessage("Opciones"),
         "showPercentage":
             MessageLookupByLibrary.simpleMessage("Mostrar porcentaje"),
+        "socket_exception":
+            MessageLookupByLibrary.simpleMessage("Revisa tu conexión"),
         "sort": MessageLookupByLibrary.simpleMessage("Ordenar por"),
         "sortName": MessageLookupByLibrary.simpleMessage("Nombre"),
         "splashError":

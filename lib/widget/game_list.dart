@@ -1,5 +1,4 @@
 import 'dart:io';
-
 import 'package:amiibo_network/generated/l10n.dart';
 import 'package:amiibo_network/model/game.dart';
 import 'package:amiibo_network/resources/resources.dart';
@@ -58,13 +57,19 @@ class GameListWidget extends ConsumerWidget {
                 break;
             }
           else if (e.error is SocketException && e.error.osError != null) {
-            child = Text(e.error.osError!.message);
+            child = TextButton(
+              onPressed: () => context.refresh(gameProvider(id)),
+              child: Text(translate.socket_exception),
+            );
           } else
             child = Text(e.message);
         } else if (e is ArgumentError) {
           child = Text(translate.no_games_found);
         } else if (e is SocketException) {
-          child = Text(e.osError?.message ?? e.message);
+          child = TextButton(
+            onPressed: () => context.refresh(gameProvider(id)),
+            child: Text(translate.socket_exception),
+          );
         } else
           child = Text(e.toString());
         return SliverToBoxAdapter(
