@@ -22,7 +22,7 @@ String get dateTaken {
 /// Ask for write permission in Android 9 and below
 /// If not grqanted and permanently denied shows a snackbar to open settings of the app
 /// to unlock it
-Future<bool> permissionGranted(ScaffoldMessengerState scaffoldState) async{
+Future<bool> permissionGranted(ScaffoldMessengerState? scaffoldState) async{
   S translate = S.current;
   if(InfoPackage.androidVersionCode == AndroidCode.Unknown) return false;
   else if(InfoPackage.version < AndroidCode.Q.version && InfoPackage.version > AndroidCode.Lollipop_MR1.version){
@@ -49,16 +49,16 @@ Future<File> createFile([String name = 'MyAmiiboNetwork', String type = 'json'])
   Directory dir;
   StorageDirectory storage = StorageDirectory.documents;
   if(type == 'png') storage = StorageDirectory.pictures;
-  if(Platform.isAndroid) dir = (await getExternalStorageDirectories(type: storage)).first;
+  if(Platform.isAndroid) dir = (await getExternalStorageDirectories(type: storage))!.first;
   else dir = await getApplicationDocumentsDirectory();
   String path = '${dir.path}/${name}_${DateTime.now().toString().substring(0,10)}.$type';
   final File file = File(path);
   return file;
 }
 
-Map<String,dynamic> readFile(String path) {
+Map<String,dynamic>? readFile(String? path) {
   try{
-    final file = File(path);
+    final file = File(path!);
     String data = file.readAsStringSync();
     final Map<String, dynamic> jResult = jsonDecode(data);
     if(!jResult.containsKey('amiibo')) return null;
@@ -70,7 +70,12 @@ Map<String,dynamic> readFile(String path) {
 }
 
 void writeFile(Map<String,dynamic> arg) =>
-  arg['file'].writeAsStringSync(jsonEncode(arg['amiibos']));
+  arg['file'].writeAsStringSync(
+    jsonEncode(<String, dynamic>{
+        'amiibo' : arg['amiibos'],
+      },
+    ),
+  );
 
 void writeCollectionFile(Map<String, dynamic> arg) =>
   arg['file'].writeAsBytesSync(arg['buffer'], flush: true);

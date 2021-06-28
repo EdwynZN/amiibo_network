@@ -8,8 +8,8 @@ enum _Format{
 }
 
 class FormatDate {
-  DateTime _dateTime;
-  _Format _format;
+  late final DateTime? _dateTime;
+  late final _Format _format;
 
   FormatDate(String dateString){
     switch(dateString.length){
@@ -35,14 +35,14 @@ class FormatDate {
   String localizedDate(BuildContext context){
     switch(_format){
       case _Format.FullDate:
-        String formatDate = MaterialLocalizations.of(context).formatFullDate(_dateTime);
+        String formatDate = MaterialLocalizations.of(context).formatFullDate(_dateTime!);
         formatDate = formatDate.substring(formatDate.indexOf(' ')+1);
         return formatDate;
       case _Format.MonthYear:
-        return MaterialLocalizations.of(context).formatMonthYear(_dateTime);
+        return MaterialLocalizations.of(context).formatMonthYear(_dateTime!);
       case _Format.Year:
       default:
-        return MaterialLocalizations.of(context).formatYear(_dateTime);
+        return MaterialLocalizations.of(context).formatYear(_dateTime!);
     }
   }
 

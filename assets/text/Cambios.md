@@ -1,3 +1,12 @@
+## Version 1.4.0
+- Se agrego el amiibo Min-Min de la serie Super Smash Bros.
+- Se agregaron las figuras de Metroid Dread (Samus y E.M.M.I.)
+- Se agrego el amiibo Zelda y Loftwing
+- Se agregaron las pulseras de Super Nintendo World
+- Se agregaron las figuras de Tsukino, Razewing Ratha y Ena de la serie Monster Hunter Stories
+- Ahora se muestra una lista de juegos que puede usar cada amiibo en detalles
+- El botón para cambiar las estadisticas ahora aparece a un lado del botón para ordenar en la pantalla principal
+
 ## Version 1.3.4
 - Se agregaron las figuras de Banjo & Kazooie, Terry y Byleth de la serie Super Smash Bros.
 - Se agregaron las figuras de Magnamalo, Palamute y Palico de la serie Monster Hunter Rise
@@ -70,7 +79,7 @@
 - Despliega la lista de categorías de acuerdo a si son figuras o tarjetas
 - Guardar una imagen de la colección desde opciones
 - Se agregó Golden Shovel Knight
-- Estadísticas fijadas en la aprte superior de la pantalla
+- Estadísticas fijadas en la parte superior de la pantalla
 
 ## Versión 1.1.2
 - Estadísticas generales

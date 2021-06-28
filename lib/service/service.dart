@@ -1,52 +1,60 @@
 import 'package:amiibo_network/dao/SQLite/amiibo_sqlite.dart';
-import '../model/amiibo_local_db.dart';
-import '../model/query_builder.dart';
+import 'package:amiibo_network/model/search_result.dart';
 import 'dart:convert';
+import 'package:amiibo_network/model/amiibo.dart';
+import 'package:amiibo_network/model/stat.dart';
 
-class Service{
+class Service {
   final AmiiboSQLite dao = AmiiboSQLite();
 
-  Future<AmiiboLocalDB> fetchAllAmiiboDB([String orderBy]) => dao.fetchAll(orderBy);
-
-  Future<List<Map<String,dynamic>>> fetchSum({Expression expression,
-    bool group = false}) {
-    String where = expression.toString();
-    List<dynamic> args = expression.args;
-    if(where.isEmpty || args.isEmpty) where = args = null;
-    return dao.fetchSum(where, args, group);
+  Future<Amiibo?> fetchOne(int key) {
+    return dao.fetchByKey(key);
   }
 
-  Future<AmiiboLocalDB> fetchByCategory({Expression expression, String orderBy}) {
-    String where = expression.toString();
-    List<dynamic> args = expression.args;
-    if(where.isEmpty || args.isEmpty) where = args = null;
-    return dao.fetchByColumn(where, args, orderBy);
+  Future<List<Amiibo>> fetchAllAmiiboDB([String? orderBy]) =>
+      dao.fetchAll(orderBy);
+
+  Future<List<Stat>> fetchStats(
+      {required Expression expression, bool group = false}) async {
+    String? where = expression.toString();
+    List<dynamic>? args = expression.args;
+    if (where.isEmpty || args.isEmpty) where = args = null;
+    final result = await dao.fetchSum(where, args, group);
+    return result.map<Stat>((e) => Stat.fromJson(e)).toList();
+  }
+
+  Future<List<Amiibo>> fetchByCategory(QueryBuilder builder) {
+    String? where = builder.where.toString();
+    List<dynamic>? args = builder.where.args;
+    if (where.isEmpty || args.isEmpty) where = args = null;
+    return dao.fetchByColumn(where, args, builder.orderBy);
   }
 
   Future<String> jsonFileDB() async {
-    final AmiiboLocalDB amiibos = await dao.fetchAll();
+    final List<Amiibo> amiibos = await dao.fetchAll();
     return jsonEncode(amiibos);
   }
 
-  Future<AmiiboDB> fetchAmiiboDBByKey(String key) => dao.fetchByKey(key);
+  Future<Amiibo?> fetchAmiiboDBByKey(int key) => dao.fetchByKey(key);
 
-  Future<void> update(AmiiboLocalDB amiibos) => dao.insertImport(amiibos);
+  Future<void> update(List<Amiibo> amiibos) => dao.insertImport(amiibos);
 
-  Future<List<String>> fetchDistinct({List<String> column, Expression expression, String orderBy}) {
-    String where = expression.toString();
-    List<dynamic> args = expression.args;
-    if(where.isEmpty || args.isEmpty) where = args = null;
+  Future<List<String>> fetchDistinct(
+      {List<String>? column, required Expression expression, String? orderBy}) {
+    String? where = expression.toString();
+    List<Object>? args = expression.args;
+    if (where.isEmpty || args.isEmpty) where = args = null;
     return dao.fetchDistinct('amiibo', column, where, args, orderBy);
   }
 
   Future<List<String>> searchDB(Expression expression, String column) {
-    String where = expression.toString();
-    List<dynamic> args = expression.args;
-    if(where.isEmpty || args.isEmpty) where = args = null;
+    String? where = expression.toString();
+    List<dynamic>? args = expression.args;
+    if (where.isEmpty || args.isEmpty) where = args = null;
     return dao.fetchLimit(where, args, 10, column);
   }
 
-  Future<void> resetCollection() async{
-    await dao.updateAll('amiibo', {'wishlist' : 0, 'owned' : 0});
+  Future<void> resetCollection() async {
+    await dao.updateAll('amiibo', {'wishlist': 0, 'owned': 0});
   }
 }

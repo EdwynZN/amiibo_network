@@ -1,20 +1,45 @@
+import 'dart:async';
+import 'package:amiibo_network/model/stat.dart';
+import 'package:amiibo_network/riverpod/query_provider.dart';
+import 'package:amiibo_network/riverpod/service_provider.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
-import 'package:provider/provider.dart';
-import 'package:amiibo_network/provider/query_provider.dart';
-import 'package:amiibo_network/provider/theme_provider.dart';
 import 'package:amiibo_network/service/screenshot.dart';
-import 'package:amiibo_network/service/service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:amiibo_network/service/storage.dart';
 import 'package:amiibo_network/generated/l10n.dart';
-import 'package:amiibo_network/widget/stat_widget.dart';
+import 'package:amiibo_network/widget/single_stat.dart';
 import 'package:amiibo_network/service/notification_service.dart';
-import '../model/query_builder.dart';
-import '../utils/amiibo_category.dart';
+import 'package:amiibo_network/model/search_result.dart';
+import 'package:amiibo_network/enum/amiibo_category_enum.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-class StatsPage extends StatefulWidget{
+final _statsProvider =
+    StreamProvider.autoDispose.family<List<Stat>, Expression>((ref, exp) {
+  final service = ref.watch(serviceProvider.notifier);
+  final streamController = StreamController<Expression>()..sink.add(exp);
+
+  void listener() => streamController.sink.add(exp);
+
+  service.addListener(listener);
+
+  ref.onDispose(() {
+    service.removeListener(listener);
+    streamController.close();
+  });
+
+  return streamController.stream.asyncMap(
+    (cb) async => <Stat>[
+      ...await service.fetchStats(expression: cb),
+      ...await service.fetchStats(group: true, expression: cb)
+    ],
+  );
+});
+
+class StatsPage extends StatefulHookWidget {
+  const StatsPage({Key? key}) : super(key: key);
 
   @override
   _StatsPageState createState() => _StatsPageState();
@@ -23,29 +48,33 @@ class StatsPage extends StatefulWidget{
 class _StatsPageState extends State<StatsPage> {
   AmiiboCategory category = AmiiboCategory.All;
   Expression expression = And();
-  QueryProvider _queryProvider;
+  S? translate;
+  late Size size;
 
   @override
   void didChangeDependencies() {
-    _queryProvider = context.read<QueryProvider>();
+    translate = S.of(context);
+    size = MediaQuery.of(context).size;
     super.didChangeDependencies();
   }
 
-  void _updateCategory(AmiiboCategory newCategory){
-    if(newCategory == category) return;
+  void _updateCategory(AmiiboCategory newCategory) {
+    if (newCategory == category) return;
     setState(() {
       category = newCategory;
-      switch(category){
+      switch (category) {
         case AmiiboCategory.All:
           expression = And();
           break;
         case AmiiboCategory.Custom:
-          expression =
-            Bracket(InCond.inn('type', ['Figure', 'Yarn']) & InCond.inn('amiiboSeries', _queryProvider.customFigures))
-            | Bracket(Cond.eq('type', 'Card') & InCond.inn('amiiboSeries', _queryProvider.customCards));
+          final query = context.read(queryProvider.notifier);
+          expression = Bracket(InCond.inn('type', figureType) &
+                  InCond.inn('amiiboSeries', query.customFigures)) |
+              Bracket(Cond.eq('type', 'Card') &
+                  InCond.inn('amiiboSeries', query.customCards));
           break;
         case AmiiboCategory.Figures:
-          expression = InCond.inn('type', ['Figure', 'Yarn']);
+          expression = InCond.inn('type', figureType);
           break;
         case AmiiboCategory.Cards:
           expression = Cond.eq('type', 'Card');
@@ -56,14 +85,15 @@ class _StatsPageState extends State<StatsPage> {
     });
   }
 
-  bool get _canSave => AmiiboCategory.Custom != category ||
-    (_queryProvider.customFigures.isNotEmpty || _queryProvider.customCards.isNotEmpty);
-
   @override
   Widget build(BuildContext context) {
-    final S translate = S.of(context);
-    final Size size = MediaQuery.of(context).size;
-    if(size.longestSide >= 800)
+    final _canSave = useProvider(
+      querySearchProvider.select((value) =>
+          AmiiboCategory.Custom != category ||
+          value.customFigures!.isNotEmpty ||
+          value.customCards!.isNotEmpty),
+    );
+    if (size.longestSide >= 800)
       return SafeArea(
         child: Scaffold(
           body: Scrollbar(
@@ -72,20 +102,23 @@ class _StatsPageState extends State<StatsPage> {
                 NavigationRail(
                   destinations: <NavigationRailDestination>[
                     NavigationRailDestination(
-                        icon: const Icon(Icons.all_inclusive),
-                        label: Text(translate.all)
+                      icon: const Icon(Icons.all_inclusive),
+                      label: Text(translate!.all),
                     ),
                     NavigationRailDestination(
-                        icon: const Icon(Icons.edit),
-                        label: Text(translate.category(AmiiboCategory.Custom))
+                      icon: const Icon(Icons.edit_outlined),
+                      selectedIcon: const Icon(Icons.edit),
+                      label: Text(translate!.category(AmiiboCategory.Custom)),
                     ),
                     NavigationRailDestination(
-                        icon: const Icon(Icons.toys),
-                        label: Text(translate.figures)
+                      icon: const Icon(Icons.sports_esports_outlined),
+                      selectedIcon: const Icon(Icons.sports_esports),
+                      label: Text(translate!.figures),
                     ),
                     NavigationRailDestination(
-                        icon: const Icon(Icons.view_carousel),
-                        label: Text(translate.cards)
+                      icon: const Icon(Icons.view_carousel_outlined),
+                      selectedIcon: const Icon(Icons.view_carousel),
+                      label: Text(translate!.cards),
                     )
                   ],
                   selectedIndex: category.index,
@@ -93,7 +126,7 @@ class _StatsPageState extends State<StatsPage> {
                     padding: const EdgeInsets.symmetric(vertical: 8.0),
                     child: AnimatedSwitcher(
                       duration: const Duration(milliseconds: 300),
-                      transitionBuilder: (child, animation){
+                      transitionBuilder: (child, animation) {
                         return ScaleTransition(
                           scale: animation,
                           child: SizeTransition(
@@ -102,23 +135,23 @@ class _StatsPageState extends State<StatsPage> {
                           ),
                         );
                       },
-                      child: _canSave ? _FAB(category, expression) : const SizedBox(),
+                      child: _canSave
+                          ? _FAB(category, expression)
+                          : const SizedBox(),
                     ),
                   ),
                   onDestinationSelected: (selected) =>
-                    _updateCategory(AmiiboCategory.values[selected]),
+                      _updateCategory(AmiiboCategory.values[selected]),
                 ),
-                Expanded(
-                  child: _BodyStats(expression)
-                )
+                Expanded(child: _BodyStats(expression))
               ],
-            )
+            ),
           ),
-        )
+        ),
       );
     return SafeArea(
       child: Scaffold(
-        body: _BodyStats(expression, true),
+        body: _BodyStats.expanded(expression),
         floatingActionButton: _canSave ? _FAB(category, expression) : null,
         floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,
         extendBody: true,
@@ -126,127 +159,131 @@ class _StatsPageState extends State<StatsPage> {
           shape: CircularNotchedRectangle(),
           child: AnimatedContainer(
             duration: const Duration(milliseconds: 300),
-            padding: _canSave ? const EdgeInsetsDirectional.only(end: 64) : EdgeInsets.zero,
+            padding: _canSave
+                ? const EdgeInsetsDirectional.only(end: 64)
+                : EdgeInsets.zero,
             child: BottomNavigationBar(
               backgroundColor: Colors.transparent,
               elevation: 0.0,
               items: [
                 BottomNavigationBarItem(
-                    icon: const Icon(Icons.all_inclusive_outlined),
-                    activeIcon: const Icon(Icons.all_inclusive_sharp),
-                    label: translate.all
+                  icon: const Icon(Icons.all_inclusive_outlined),
+                  activeIcon: const Icon(Icons.all_inclusive_sharp),
+                  label: translate!.all,
                 ),
                 BottomNavigationBarItem(
-                  icon: const Icon(Icons.edit),
-                  label: translate.category(AmiiboCategory.Custom),
+                  icon: const Icon(Icons.edit_outlined),
+                  activeIcon: const Icon(Icons.edit),
+                  label: translate!.category(AmiiboCategory.Custom),
                 ),
                 BottomNavigationBarItem(
-                  icon: const Icon(Icons.toys),
-                  label: translate.figures,
+                  icon: const Icon(Icons.sports_esports_outlined),
+                  activeIcon: const Icon(Icons.sports_esports),
+                  label: translate!.figures,
                 ),
                 BottomNavigationBarItem(
-                    icon: const Icon(Icons.view_carousel),
-                    label: translate.cards
+                  icon: const Icon(Icons.view_carousel_outlined),
+                  activeIcon: const Icon(Icons.view_carousel),
+                  label: translate!.cards,
                 )
               ],
               currentIndex: category.index,
-              onTap: (selected) => _updateCategory(AmiiboCategory.values[selected]),
+              onTap: (selected) =>
+                  _updateCategory(AmiiboCategory.values[selected]),
             ),
           ),
-        )
-      )
+        ),
+      ),
     );
   }
 }
 
-class _BodyStats extends StatelessWidget {
-  final _service = Service();
+AsyncValue<List<Stat>> _usePreviousStat(Expression expression) {
+  final snapshot = useProvider(_statsProvider(expression));
+  final previous = usePrevious(snapshot);
+  if (previous is AsyncData<List<Stat>> && snapshot is! AsyncData<List<Stat>>)
+    return previous;
+  return snapshot;
+}
+
+class _BodyStats extends HookWidget {
   final Expression expression;
   final bool expanded;
 
-  _BodyStats(this.expression, [this.expanded = false]);
-
-  Future<List<Map<String, dynamic>>> get _stats async{
-    return <Map<String, dynamic>>[
-      ... await _service.fetchSum( expression: expression),
-      ... await _service.fetchSum(group: true, expression: expression)
-    ];
-  }
+  _BodyStats(this.expression) : expanded = false;
+  _BodyStats.expanded(this.expression) : expanded = true;
 
   @override
   Widget build(BuildContext context) {
     final S translate = S.of(context);
-    return FutureBuilder<List<Map<String, dynamic>>>(
-      future: _stats,
-      builder: (context, snapshot){
-        if(snapshot.hasData){
-          final Map<String, dynamic> generalStats = snapshot.data.first;
-          final List<Map<String, dynamic>> stats = snapshot.data.sublist(1);
-          if(generalStats.isNotEmpty && stats.isNotEmpty)
-            return Scrollbar(
-                child: CustomScrollView(
-                  slivers: <Widget>[
-                    if(stats.length > 1)
-                      SliverToBoxAdapter(
-                          key: Key('Amiibo Network'),
-                          child: SingleStat(
-                            title: 'Amiibo Network',
-                            owned: generalStats['Owned'],
-                            total: generalStats['Total'],
-                            wished: generalStats['Wished'],
-                          )
-                      ),
-                    if(MediaQuery.of(context).size.width <= 600)
-                      SliverList(
-                        delegate: SliverChildBuilderDelegate((BuildContext context, int index) =>
-                            SingleStat(
-                              key: ValueKey(index),
-                              title: stats[index]['amiiboSeries'],
-                              owned: stats[index]['Owned'],
-                              total: stats[index]['Total'],
-                              wished: stats[index]['Wished'],
-                            ),
-                          semanticIndexOffset: 1,
-                          childCount: stats.length,
-                        ),
-                      ),
-                    if(MediaQuery.of(context).size.width > 600)
-                      SliverGrid(
-                          gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
-                            maxCrossAxisExtent: 230,
-                            childAspectRatio: 1.22,
-                            mainAxisSpacing: 8.0,
-                          ),
-                          delegate: SliverChildBuilderDelegate((BuildContext context, int index) =>
-                              SingleStat(
-                                key: ValueKey(index),
-                                title: stats[index]['amiiboSeries'],
-                                owned: stats[index]['Owned'],
-                                total: stats[index]['Total'],
-                                wished: stats[index]['Wished'],
-                              ),
-                            semanticIndexOffset: 1,
-                            childCount: stats.length,
-                          )
-                      ),
-                    if(expanded) const SliverToBoxAdapter(child: const SizedBox(height: 84))
-                  ],
-                )
-            );
-          return DefaultTextStyle(
+    final snapshot = _usePreviousStat(expression);
+    if (snapshot is AsyncData<List<Stat>>) {
+      if (snapshot.value.length <= 1)
+        return Center(
+          child: Text(
+            translate.emptyPage,
             style: Theme.of(context).textTheme.headline4,
-            child: Center(
-              child: Text(translate.emptyPage,),
-            )
-          );
-        }
-        return const SizedBox();
-      },
-    );
+          ),
+        );
+
+      final Stat generalStats = snapshot.value.first;
+      final List<Stat> stats = snapshot.value.sublist(1);
+      return Scrollbar(
+        child: CustomScrollView(
+          slivers: <Widget>[
+            if (stats.length > 1)
+              SliverToBoxAdapter(
+                key: Key('Amiibo Network'),
+                child: SingleStat(
+                  title: generalStats.name,
+                  owned: generalStats.owned,
+                  total: generalStats.total,
+                  wished: generalStats.wished,
+                ),
+              ),
+            if (MediaQuery.of(context).size.width <= 600)
+              SliverList(
+                delegate: SliverChildBuilderDelegate(
+                  (BuildContext context, int index) => SingleStat(
+                    key: ValueKey(index),
+                    title: stats[index].name,
+                    owned: stats[index].owned,
+                    total: stats[index].total,
+                    wished: stats[index].wished,
+                  ),
+                  semanticIndexOffset: 1,
+                  childCount: stats.length,
+                ),
+              ),
+            if (MediaQuery.of(context).size.width > 600)
+              SliverGrid(
+                gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
+                  maxCrossAxisExtent: 230,
+                  mainAxisSpacing: 8.0,
+                  mainAxisExtent: 140,
+                ),
+                delegate: SliverChildBuilderDelegate(
+                  (BuildContext context, int index) => SingleStat(
+                    key: ValueKey(index),
+                    title: stats[index].name,
+                    owned: stats[index].owned,
+                    total: stats[index].total,
+                    wished: stats[index].wished,
+                  ),
+                  semanticIndexOffset: 1,
+                  childCount: stats.length,
+                ),
+              ),
+            if (expanded) const SliverToBoxAdapter(child: SizedBox(height: 96))
+          ],
+        ),
+      );
+    }
+    return const SizedBox();
   }
 }
 
-class _FAB extends StatelessWidget{
+class _FAB extends StatelessWidget {
   final Screenshot _screenshot = Screenshot();
   final AmiiboCategory _category;
   final Expression _expression;
@@ -262,19 +299,20 @@ class _FAB extends StatelessWidget{
       tooltip: translate.saveStatsTooltip,
       heroTag: 'MenuFAB',
       onPressed: () async {
-        final ScaffoldMessengerState scaffoldState = ScaffoldMessenger.of(context);
-        if(!(await permissionGranted(scaffoldState))) return;
+        final ScaffoldMessengerState scaffoldState =
+            ScaffoldMessenger.of(context);
+        if (!(await permissionGranted(scaffoldState))) return;
         String message = translate.savingCollectionMessage;
-        if(_screenshot.isRecording) message = translate.recordMessage;
-        scaffoldState?.hideCurrentSnackBar();
-        scaffoldState?.showSnackBar(SnackBar(content: Text(message)));
-        if(!_screenshot.isRecording){
+        if (_screenshot.isRecording) message = translate.recordMessage;
+        scaffoldState.hideCurrentSnackBar();
+        scaffoldState.showSnackBar(SnackBar(content: Text(message)));
+        if (!_screenshot.isRecording) {
           _screenshot.update(context);
           final buffer = await _screenshot.saveStats(_expression);
-          if(buffer != null) {
+          if (buffer != null) {
             String name;
             int id;
-            switch(_category){
+            switch (_category) {
               case AmiiboCategory.Cards:
                 name = 'MyCardStats';
                 id = 2;
@@ -297,67 +335,13 @@ class _FAB extends StatelessWidget{
               'title': translate.notificationTitle,
               'actionTitle': translate.actionText,
               'id': id,
-              'buffer' : buffer,
+              'buffer': buffer,
               'name': '${name}_$dateTaken'
             };
             await NotificationService.saveImage(notificationArgs);
           }
         }
       },
-    );
-  }
-}
-
-class SingleStat extends StatelessWidget{
-  final String title;
-  final int owned;
-  final int wished;
-  final int total;
-  final WrapAlignment wrapAlignment;
-
-  const SingleStat({Key key, this.title, this.owned, this.wished, this.total,
-    this.wrapAlignment = WrapAlignment.spaceAround}): super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    final S translate = S.of(context);
-    return Card(
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-        child: Wrap(
-          alignment: wrapAlignment,
-          children: <Widget>[
-            SizedBox(
-              height: 21.24,
-              width: double.infinity,
-              child: FittedBox(
-                alignment: Alignment.center,
-                child: Text(title, softWrap: false, textAlign: TextAlign.center,
-                  overflow: TextOverflow.fade, style: Theme.of(context).textTheme.headline4,),
-              ),
-            ),
-            const Divider(height: 12),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-              child: StatWidget(
-                num: owned.toDouble(),
-                den: total.toDouble(),
-                text: translate.owned,
-                icon: Icon(iconOwnedDark, color: Colors.green[800])
-              )
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-              child: StatWidget(
-                num: wished.toDouble(),
-                den: total.toDouble(),
-                text: translate.wished,
-                icon: Icon(Icons.whatshot, color: Colors.amber[800]),
-              )
-            ),
-          ],
-        ),
-      )
     );
   }
 }

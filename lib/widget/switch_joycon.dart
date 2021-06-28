@@ -6,14 +6,14 @@ class SwitchJoycon extends CustomPainter{
   final bool isLeft;
   final double side;
 
-  SwitchJoycon({Color color, @required this.isLeft}) :
+  SwitchJoycon({Color? color, required this.isLeft}) :
     side = isLeft ? -1 : 1,
     buttonPaint = Paint()
       ..color = const Color(0xFF414548)
       ..style = PaintingStyle.fill,
     joyconPaint = Paint()
       ..color = color ?? (isLeft == true ?
-      const Color.fromRGBO(0, 195, 227, 1) : Colors.red[300])
+      const Color.fromRGBO(0, 195, 227, 1) : Colors.red[300]!)
       ..style = PaintingStyle.fill;
 
   @override

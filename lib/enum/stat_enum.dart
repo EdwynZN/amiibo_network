@@ -1,0 +1,1 @@
+enum StatMode{Percentage, Ratio}

@@ -75,7 +75,7 @@ void _onUpgrade(Database db, int oldVersion, int newVersion) async{
 class ConnectionFactory {
   static const String _databaseName = "Amiibo.db";
   static const int _databaseVersion = 3;
-  Database _database;
+  Database? _database;
 
   ConnectionFactory._();
   static final ConnectionFactory _instance = ConnectionFactory._();
@@ -86,7 +86,7 @@ class ConnectionFactory {
   }
 
   Future<void> close() async {
-    if(_database.isOpen) await _database.close();
+    if(_database!.isOpen) await _database!.close();
   }
 
   _initDB() async {

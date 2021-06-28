@@ -1,3 +1,12 @@
+## Version 1.4.0
+- Added Super Smash Bros. serie Min-Min
+- Added Metroid Dread series Samus and E.M.M.I.
+- Added amiibo Zelda and Loftwing
+- Added amiibo bands of Super Nintendo World
+- Added Monster Hunter Stories series Tsukino, Razewing Ratha and Ena
+- Amiibo details screen updated to show a list of compatible games
+- Stat buttons moved from drawer to home screen
+
 ## Version 1.3.4
 - Added Super Smash Bros. series Banjo & Kazooie, Terry and Byleth
 - Added Monster Hunter Rise series Magnamalo, Palamute and Palico

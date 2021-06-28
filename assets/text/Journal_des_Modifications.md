@@ -1,3 +1,12 @@
+## Version 1.4.0
+- Ajout de Min-Min de la série Super Smash Bros.
+- Ajout des figurines Samus and E.M.M.I. de la série Metroid Dread
+- Ajout Zelda and Loftwing
+- Ajout les braceletes de le parc d'attractions Super Nintendo World
+- Ajout des figurines Tsukino, Razewing Ratha et Ena de la série Monster Hunter Stories 
+- Jeux compatibles en détails de chaque amiibo
+- option pour afficher le pourcentage de collecte sur l'écran principal
+
 ## Version 1.3.4
 - Ajout des figurines Banjo & Kazooie, Terry et Byleth de la série Super Smash Bros.
 - Ajout des figurines Magnamallo, Palamute et Palico de la série Monster Hunter Rise

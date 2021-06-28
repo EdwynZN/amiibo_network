@@ -1,22 +1,19 @@
-import 'package:amiibo_network/provider/query_provider.dart';
+import 'package:amiibo_network/riverpod/query_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:amiibo_network/generated/l10n.dart';
-import 'package:provider/provider.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 class CustomQueryWidget extends StatelessWidget{
   final String title;
-  final Future<List<String>> figureSeriesList;
-  final Future<List<String>> cardSeriesList;
-  final List<String> figures;
-  final List<String> cards;
+  final List<String>? figures;
+  final List<String>? cards;
 
   CustomQueryWidget(
-      this.title,
-      {this.cardSeriesList,
-        this.figureSeriesList,
-        @required this.figures,
-        @required this.cards
-      });
+    this.title,{
+    required this.figures,
+    required this.cards
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -29,51 +26,49 @@ class CustomQueryWidget extends StatelessWidget{
       content: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisSize: MainAxisSize.min,
           children: <Widget>[
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 16),
               child: Text(translate.figures),
             ),
-            FutureProvider<List<String>>.value(
-              initialData: null,
-              value: figureSeriesList,
-              child: Consumer<List<String>>(
-                child: const SizedBox(),
-                builder: (context, snapshot, child){
-                  if(snapshot != null)
+            HookBuilder(
+              builder: (context) {
+                return useProvider(figuresProvider).maybeWhen(
+                  data: (data) {
                     return ConstrainedBox(
                       constraints: const BoxConstraints(maxWidth: 416),
                       child: SelectedWrap(
-                        series: snapshot,
+                        series: data,
                         mySeries: figures,
                       ),
                     );
-                  return child;
-                },
-              ),
+                  },
+                  orElse: () => const SizedBox()
+                );
+              },
             ),
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 16),
               child: Text(translate.cards),
             ),
-            FutureProvider<List<String>>.value(
-              initialData: null,
-              value: cardSeriesList,
-              child: Consumer<List<String>>(
-                child: const SizedBox(),
-                builder: (context, snapshot, child){
-                  if(snapshot != null)
+            HookBuilder(
+              builder: (context) {
+                return useProvider(
+                  cardsProvider,
+                ).maybeWhen(
+                  data: (data) {
                     return ConstrainedBox(
-                        constraints: const BoxConstraints(maxWidth: 416),
-                        child: SelectedWrap(
-                          series: snapshot,
-                          mySeries: cards,
-                        )
+                      constraints: const BoxConstraints(maxWidth: 416),
+                      child: SelectedWrap(
+                        series: data,
+                        mySeries: cards,
+                      ),
                     );
-
-                  return child;
-                },
-              ),
+                  },
+                  orElse: () => const SizedBox()
+                );
+              },
             ),
           ],
         ),
@@ -93,8 +88,8 @@ class CustomQueryWidget extends StatelessWidget{
 }
 
 class SelectedWrap extends StatefulWidget {
-  final List<String> series;
-  final List<String> mySeries;
+  final List<String>? series;
+  final List<String>? mySeries;
 
   SelectedWrap({this.series, this.mySeries});
 
@@ -103,8 +98,7 @@ class SelectedWrap extends StatefulWidget {
 }
 
 class _SelectedWrapState extends State<SelectedWrap> {
-  //final Function deepEq = const DeepCollectionEquality.unordered().equals;
-  S translate;
+  late S translate;
 
   @override
   void didChangeDependencies() {
@@ -118,23 +112,24 @@ class _SelectedWrapState extends State<SelectedWrap> {
       spacing: 8.0,
       children: <Widget>[
         ChoiceChip(
+          padding: const EdgeInsets.symmetric(vertical: 4.0, horizontal: 12.0),
           label: Text(translate.all),
           tooltip: translate.all,
           onSelected: (isSelected) => setState((){
-            widget.mySeries.clear();
-            if(isSelected) widget.mySeries.addAll(widget.series);
+            widget.mySeries!.clear();
+            if(isSelected) widget.mySeries!.addAll(widget.series!);
           }),
-          selected: QueryProvider.checkEquality(widget.mySeries, widget.series)
+          selected: QueryBuilderProvider.checkEquality(widget.mySeries, widget.series)!
         ),
-        for(String series in widget.series)
+        for(String series in widget.series!)
           ChoiceChip(
             label: Text(series),
             tooltip: series,
             onSelected: (isSelected) => setState((){
-              final bool removed = widget.mySeries.remove(series);
-              if(!removed && isSelected) widget.mySeries.add(series);
+              final bool removed = widget.mySeries!.remove(series);
+              if(!removed && isSelected) widget.mySeries!.add(series);
             }),
-            selected: widget.mySeries.contains(series)
+            selected: widget.mySeries!.contains(series)
           ),
       ],
     );

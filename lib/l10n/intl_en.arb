@@ -9,7 +9,7 @@
   "owned": "Owned",
   "wished": "Wished",
   "stats": "Stats",
-  "types": "{choice, select, Figure {Type: Figure} Card {Type: Card} Yarn {Type: Yarn} other {Type: Other}}",
+  "types": "{choice, select, Figure {Type: Figure} Card {Type: Card} Yarn {Type: Yarn} Band {Type: Band} other {Type: Other}}",
   "figures": "Figures",
   "cards": "Cards",
   "name": "Name: {name}",
@@ -74,5 +74,13 @@
   "notificationTitle": "Export complete",
   "actionText": "Share",
   "donate": "Donate",
-  "lockTooltip": "{choice, select, true {Locked} false {Unlocked} other {Unknown}}"
+  "lockTooltip": "{choice, select, true {Locked} false {Unlocked} other {Unknown}}",
+  "statTooltip": "{choice, select, true {Percentage} false {Fraction} other {Unknown}}",
+  "switch_platform": "Switch",
+  "wiiu_platform": "WIiU",
+  "console_3DS_platform": "3DS",
+  "amiibo_usage_count": "{count, plural, one{+ 1 more} two{+ 2 more} few{+ {count} more} other{+ many more}}",
+  "invalid_amiibo": "Invalid amiibo data",
+  "socket_exception": "Check your network",
+  "no_games_found": "No games found for this amiibo yet"
 }

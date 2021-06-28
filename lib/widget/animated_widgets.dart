@@ -5,7 +5,7 @@ class ImplicitIcon extends ImplicitlyAnimatedWidget{
   final double targetValue;
 
   ImplicitIcon({
-    Key key,
+    Key? key,
     this.icon = AnimatedIcons.menu_close,
     bool forward = false,
     Duration duration = const Duration(milliseconds: 250),
@@ -17,18 +17,18 @@ class ImplicitIcon extends ImplicitlyAnimatedWidget{
 }
 
 class _ImplicitIconState extends ImplicitlyAnimatedWidgetState<ImplicitIcon> {
-  Tween<double> _progress;
+  Tween<double>? _progress;
 
   @override
-  void forEachTween(TweenVisitor visitor){
-    _progress = visitor(_progress, widget.targetValue, (value) => Tween<double>(begin: value));
+  void forEachTween(TweenVisitor<dynamic> visitor){
+    _progress = visitor(_progress, widget.targetValue, (value) => Tween<double>(begin: value as double?)) as Tween<double>?;
   }
 
   @override
   Widget build(BuildContext context){
     return AnimatedIcon(
       icon: widget.icon,
-      progress: _progress.animate(animation),
+      progress: _progress?.animate(animation) ?? AlwaysStoppedAnimation(0),
     );
   }
 }
@@ -38,8 +38,8 @@ class FadeSwitchAnimation extends StatefulWidget{
   final Duration duration;
 
   FadeSwitchAnimation({
-    Key key,
-    @required this.child,
+    Key? key,
+    required this.child,
     this.duration = const Duration(milliseconds: 750)
   }) : super(key :key);
 
@@ -49,7 +49,7 @@ class FadeSwitchAnimation extends StatefulWidget{
 
 class _FadeSwitchAnimationState extends State<FadeSwitchAnimation>
     with SingleTickerProviderStateMixin{
-  AnimationController _controller;
+  AnimationController? _controller;
   final Tween<double> _opacity = Tween<double>(begin: 0, end: 1);
 
   @override
@@ -66,7 +66,7 @@ class _FadeSwitchAnimationState extends State<FadeSwitchAnimation>
   void didUpdateWidget(FadeSwitchAnimation oldWidget) {
     super.didUpdateWidget(oldWidget);
     if(widget.child.key != oldWidget.child.key){
-      _controller.forward(from: 0);
+      _controller!.forward(from: 0);
     }
   }
 
@@ -79,7 +79,7 @@ class _FadeSwitchAnimationState extends State<FadeSwitchAnimation>
   @override
   Widget build(BuildContext context) {
     return FadeTransition(
-      opacity: _opacity.animate(_controller),
+      opacity: _opacity.animate(_controller!),
       child: widget.child,
     );
   }

@@ -1,98 +1,94 @@
+import 'package:amiibo_network/riverpod/game_provider.dart';
 import 'package:amiibo_network/service/info_package.dart';
 import 'package:amiibo_network/service/update_service.dart';
 import 'package:flutter/material.dart';
 import 'package:amiibo_network/screen/home_page.dart';
 import 'package:amiibo_network/screen/splash_screen.dart';
 import 'package:amiibo_network/widget/route_transitions.dart';
-import 'package:amiibo_network/provider/theme_provider.dart';
-import 'package:amiibo_network/provider/stat_provider.dart';
-import 'package:amiibo_network/provider/lock_provider.dart';
-import 'package:amiibo_network/provider/search_provider.dart';
-import 'package:amiibo_network/provider/query_provider.dart';
 import 'package:flutter/services.dart';
-import 'package:provider/provider.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:amiibo_network/generated/l10n.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 //import 'package:flutter/gestures.dart';
+import 'package:amiibo_network/riverpod/repository_provider.dart';
+import 'package:amiibo_network/riverpod/theme_provider.dart';
+import 'package:hive_flutter/hive_flutter.dart';
+import 'package:stash/stash_api.dart';
+import 'package:stash_hive/stash_hive.dart';
+import 'package:stash_dio/src/dio/cache_value.dart';
 
 Future<void> main() async {
   //debugPrintGestureArenaDiagnostics = true;
   WidgetsFlutterBinding.ensureInitialized();
+  final cacheDir = await getTemporaryDirectory();
+  await Hive.initFlutter();
   final UpdateService updateService = UpdateService();
   await updateService.initDB();
   await InfoPackage.versionCode();
   final bool splash = await updateService.compareLastUpdate;
   final SharedPreferences preferences = await SharedPreferences.getInstance();
-  final Map<String,int> savedTheme = await getTheme;
+  await updateOldTheme();
   runApp(
-    AmiiboNetwork(
-      firstPage: splash ? Home() : SplashScreen(),
-      preferences: preferences,
-      theme: savedTheme,
-    )
+    ProviderScope(
+      overrides: [
+        cacheProvider.overrideWithValue(
+          newHiveCache(
+            cacheDir.path,
+            cacheName: 'HiveCache',
+            fromEncodable: (cb) => CacheValue.fromJson(cb),
+            maxEntries: 200,
+            expiryPolicy: AccessedExpiryPolicy(const Duration(days: 7)),
+          ),
+        ),
+        preferencesProvider.overrideWithValue(preferences),
+      ],
+      child: AmiiboNetwork(
+        firstPage: splash ? const Home() : const SplashScreen(),
+      ),
+    ),
   );
 }
 
-class AmiiboNetwork extends StatelessWidget {
-  final SharedPreferences preferences;
-  final Widget firstPage;
-  final Map<String,dynamic> theme;
-  AmiiboNetwork({this.firstPage, this.theme, this.preferences});
+class AmiiboNetwork extends ConsumerWidget {
+  final Widget? firstPage;
+  const AmiiboNetwork({this.firstPage});
 
   @override
-  Widget build(BuildContext context) {
-    return MultiProvider(
-      providers: [
-        ChangeNotifierProvider<QueryProvider>(
-          create: (_) => QueryProvider.fromSharedPreferences(preferences),
-        ),
-        ChangeNotifierProvider<LockProvider>(
-          create: (context) => LockProvider.fromSharedPreferences(preferences)
-        ),
-        ChangeNotifierProvider<StatProvider>(
-          create: (context) => StatProvider.fromSharedPreferences(preferences)
-        ),
-        Provider<SearchProvider>(
-          create: (_) => SearchProvider(),
-          dispose: (_, search) => search.dispose(),
-        ),
-        ChangeNotifierProvider<ThemeProvider>(
-          create: (context) => ThemeProvider(
-              theme['Theme'], theme['Light'], theme['Dark']
-          ),
-          builder: (context, child) {
-            final ThemeProvider themeMode = context.watch<ThemeProvider>();
-            return MaterialApp(
-                localizationsDelegates: [S.delegate,
-                  GlobalMaterialLocalizations.delegate,
-                  GlobalWidgetsLocalizations.delegate,
-                  GlobalCupertinoLocalizations.delegate,
-                ],
-                supportedLocales: S.delegate.supportedLocales,
-                debugShowCheckedModeBanner: false,
-                theme: themeMode.theme.light,
-                darkTheme: themeMode.theme.dark,
-                onGenerateRoute: Routes.getRoute,
-                themeMode: themeMode.preferredTheme,
-                home: Builder(
-                    builder: (BuildContext context){
-                      return AnnotatedRegion<SystemUiOverlayStyle>(
-                        value: SystemUiOverlayStyle(
-                          statusBarIconBrightness: Theme.of(context).brightness == Brightness.light ? Brightness.dark : Brightness.light,
-                          systemNavigationBarIconBrightness: Theme.of(context).brightness == Brightness.light ? Brightness.dark : Brightness.light,
-                          statusBarColor: Theme.of(context).appBarTheme.color,
-                          systemNavigationBarColor: Theme.of(context).appBarTheme.color
-                        ),
-                        child: child,
-                      );
-                    }
-                )
-            );
-          },
-        ),
+  Widget build(BuildContext context, ScopedReader watch) {
+    final ThemeProvider themeMode = watch(themeProvider);
+    return MaterialApp(
+      localizationsDelegates: [
+        S.delegate,
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
       ],
-      child: firstPage,
+      supportedLocales: S.delegate.supportedLocales,
+      debugShowCheckedModeBanner: false,
+      theme: themeMode.theme.light,
+      darkTheme: themeMode.theme.dark,
+      onGenerateRoute: Routes.getRoute,
+      themeMode: themeMode.preferredTheme,
+      home: Builder(
+        builder: (BuildContext context) {
+          return AnnotatedRegion<SystemUiOverlayStyle>(
+            value: SystemUiOverlayStyle(
+                statusBarIconBrightness:
+                    Theme.of(context).brightness == Brightness.light
+                        ? Brightness.dark
+                        : Brightness.light,
+                systemNavigationBarIconBrightness:
+                    Theme.of(context).brightness == Brightness.light
+                        ? Brightness.dark
+                        : Brightness.light,
+                statusBarColor: Theme.of(context).appBarTheme.color,
+                systemNavigationBarColor: Theme.of(context).appBarTheme.color),
+            child: firstPage!,
+          );
+        },
+      ),
     );
   }
 }
