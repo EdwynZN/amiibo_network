@@ -53,7 +53,8 @@ class GameListWidget extends ConsumerWidget {
                 child = Text(translate.no_games_found);
                 break;
               default:
-                child = Text(e.response!.statusMessage ?? translate.no_games_found);
+                child =
+                    Text(e.response!.statusMessage ?? translate.no_games_found);
                 break;
             }
           else if (e.error is SocketException && e.error.osError != null) {
@@ -112,8 +113,9 @@ class _PlatformGameList extends StatelessWidget {
             thickness: 1.0,
           );
         final int itemIndex = index ~/ 2;
-        if (!showUsage || games[itemIndex].usage == null 
-          || games[itemIndex].usage!.isEmpty)
+        if (!showUsage ||
+            games[itemIndex].usage == null ||
+            games[itemIndex].usage!.isEmpty)
           return ListTile(
             minVerticalPadding: kMaterialListPadding.vertical,
             title: Text(games[itemIndex].name),
@@ -238,7 +240,8 @@ class _SliverAnimatedPersistentHeader extends SliverPersistentHeaderDelegate {
               ? appBarTheme.color ?? theme.iconTheme.color
               : theme.iconTheme.color,
           child: ListTile(
-            leading: Image.asset(asset,
+            leading: Image.asset(
+              asset,
               cacheHeight: 24,
               cacheWidth: 24,
               height: 24,

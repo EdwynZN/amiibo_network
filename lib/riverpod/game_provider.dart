@@ -35,7 +35,7 @@ final _characterProvider = StreamProvider.autoDispose.family<Amiibo?, int>(
 final gameProvider =
     FutureProvider.autoDispose.family<NintendoPlatform, int>((ref, key) async {
   final amiibo = await ref.watch(_characterProvider(key).last);
-  if (amiibo == null) return NintendoPlatform();
+  if (amiibo == null) return const NintendoPlatform();
   final dio = ref.watch(_dioProvider);
   final token = CancelToken();
 

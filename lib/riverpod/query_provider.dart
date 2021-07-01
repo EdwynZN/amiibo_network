@@ -175,6 +175,21 @@ class QueryBuilderProvider extends StateNotifier<QueryBuilder> {
     }
   }
 
+  Future<void> changeSortAndOrder(OrderBy? orderBy, SortBy? sortBy) async {
+    QueryBuilder _state = state.copyWith();
+    if (orderBy != null && orderBy != _orderBy) {
+      await _read(preferencesProvider).setInt(orderPreference, orderBy.index);
+      _orderBy = orderBy;
+      _state = _state.copyWith(orderBy: describeEnum(orderBy));
+    }
+    if (sortBy != null && sortBy != _sortBy) {
+      await _read(preferencesProvider).setInt(sortPreference, sortBy.index);
+      _sortBy = sortBy;
+      _state = _state.copyWith(sortBy: describeEnum(sortBy));
+    }
+    if (_state != state) state = _state;
+  }
+
   Future<void> changeOrder(OrderBy? mode) async {
     if (mode != null && mode != _orderBy) {
       await _read(preferencesProvider).setInt(orderPreference, mode.index);

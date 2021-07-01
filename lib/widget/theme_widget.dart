@@ -50,7 +50,7 @@ class ThemeButton extends HookWidget {
                 translate.mode,
                 style: Theme.of(context).textTheme.headline4,
               ),
-              ThemeButton()
+              const ThemeButton(),
             ],
           ),
           titlePadding: const EdgeInsets.all(16),
@@ -178,8 +178,12 @@ class ThemeButton extends HookWidget {
           color: Colors.orangeAccent,
         );
       case ThemeMode.dark:
-        return const Icon(Icons.brightness_3,
-            key: Key('Dark'), color: Colors.amber);
+        return const Icon(
+          Icons.brightness_3,
+          key: Key('Dark'), 
+          color: Colors.amber,
+        );
+      case ThemeMode.system:
       default:
         return const Icon(
           Icons.brightness_auto,
@@ -204,16 +208,17 @@ class ThemeButton extends HookWidget {
         switchOutCurve: Curves.easeOutBack,
         transitionBuilder: (child, animation) {
           return RotationTransition(
-              turns: animation,
-              child: FadeTransition(
-                opacity: animation,
-                child: child,
-              ));
+            turns: animation,
+            child: FadeTransition(
+              opacity: animation,
+              child: child,
+            ),
+          );
         },
         child: _selectWidget(theme),
       ),
       onLongPress: openDialog ? () => dialog(context) : null,
-      onTap: () => context.read(themeProvider).toggleThemeMode(),
+      onTap: () async => context.read(themeProvider).toggleThemeMode(),
     );
   }
 }

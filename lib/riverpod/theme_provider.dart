@@ -87,13 +87,17 @@ class ThemeProvider extends ChangeNotifier {
     switch (_preferredTheme) {
       case ThemeMode.system:
         await themeDB(ThemeMode.light);
+        _preferredTheme = ThemeMode.light;
         break;
       case ThemeMode.light:
         await themeDB(ThemeMode.dark);
+        _preferredTheme = ThemeMode.dark;
         break;
       default:
         await themeDB(ThemeMode.system);
+        _preferredTheme = ThemeMode.system;
         break;
     }
+    notifyListeners();
   }
 }

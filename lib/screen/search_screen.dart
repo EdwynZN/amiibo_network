@@ -13,7 +13,7 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 
 class SearchScreen extends StatefulHookWidget {
   const SearchScreen({Key? key}) : super(key: key);
-  
+
   @override
   State<StatefulWidget> createState() => SearchScreenState();
 }
@@ -107,7 +107,7 @@ class SearchScreenState extends State<SearchScreen> {
                 },
               ),
             ),
-            SliverPersistentHeader(
+            const SliverPersistentHeader(
               delegate: _SliverPersistentHeader(),
               pinned: true,
             ),
@@ -125,7 +125,7 @@ class SearchScreenState extends State<SearchScreen> {
   }
 }
 
-String _useDecouncedSearch(TextEditingController textEditingController) {
+String _useDebouncedSearch(TextEditingController textEditingController) {
   final search = useState(textEditingController.text);
   useEffect(() {
     Timer? timer;
@@ -156,8 +156,8 @@ class _Suggestions extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
-    final search = _useDecouncedSearch(textEditingController!);
-    final suggestions = useProvider(searchProvider!(search));
+    final search = _useDebouncedSearch(textEditingController!);
+    final suggestions = useProvider(searchProvider(search));
     return SliverList(
       delegate: SliverChildBuilderDelegate(
         (BuildContext context, int index) {
@@ -191,6 +191,8 @@ class _Suggestions extends HookWidget {
 }
 
 class _SliverPersistentHeader extends SliverPersistentHeaderDelegate {
+  const _SliverPersistentHeader();
+
   @override
   Widget build(
       BuildContext context, double shrinkOffset, bool overlapsContent) {
@@ -236,8 +238,9 @@ class CategoryControl extends StatefulHookWidget {
 }
 
 class CategoryControlState extends State<CategoryControl> {
+  static const double _iconSize = 20.0;
   Color? _accentColor, _accentTextThemeColor;
-  S? translate;
+  late S translate;
 
   @override
   void didChangeDependencies() {
@@ -276,11 +279,11 @@ class CategoryControlState extends State<CategoryControl> {
             onPressed: () => _selectCategory(AmiiboCategory.Name),
             icon: const Icon(
               Icons.group,
-              size: 20,
+              size: _iconSize,
             ),
             label: Flexible(
                 child: FittedBox(
-              child: Text(translate!.category(AmiiboCategory.Name)),
+              child: Text(translate.category(AmiiboCategory.Name)),
             )),
           ),
         ),
@@ -294,12 +297,13 @@ class CategoryControlState extends State<CategoryControl> {
             onPressed: () => _selectCategory(AmiiboCategory.Game),
             icon: const Icon(
               Icons.games,
-              size: 20,
+              size: _iconSize,
             ),
             label: Flexible(
-                child: FittedBox(
-              child: Text(translate!.category(AmiiboCategory.Game)),
-            )),
+              child: FittedBox(
+                child: Text(translate.category(AmiiboCategory.Game)),
+              ),
+            ),
           ),
         ),
         Expanded(
@@ -318,11 +322,11 @@ class CategoryControlState extends State<CategoryControl> {
             onPressed: () => _selectCategory(AmiiboCategory.AmiiboSeries),
             icon: const Icon(
               Icons.nfc,
-              size: 20,
+              size: _iconSize,
             ),
             label: Flexible(
                 child: FittedBox(
-              child: Text(translate!.category(AmiiboCategory.AmiiboSeries)),
+              child: Text(translate.category(AmiiboCategory.AmiiboSeries)),
             )),
           ),
         ),

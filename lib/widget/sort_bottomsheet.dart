@@ -2,11 +2,13 @@ import 'package:amiibo_network/enum/sort_enum.dart';
 import 'package:amiibo_network/generated/l10n.dart';
 import 'package:amiibo_network/resources/resources.dart';
 import 'package:amiibo_network/riverpod/query_provider.dart';
+import 'package:amiibo_network/widget/implicit_sort_direction_widget.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter/rendering.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 
 class SortCollection extends StatelessWidget {
   const SortCollection({Key? key}) : super(key: key);
@@ -34,12 +36,9 @@ class _BottomSheetSort extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final ThemeData theme = Theme.of(context);
-    final _accentColor = theme.accentColor;
-    final _accentTextThemeColor = theme.accentTextTheme.headline6!.color;
-    final S? translate = S.of(context);
+    final S translate = S.of(context);
     final Size size = MediaQuery.of(context).size;
-    final double height = (460.0 / size.height).clamp(0.25, 0.66);
+    final double height = (460.0 / size.height).clamp(0.25, 0.5);
     EdgeInsetsGeometry padding = EdgeInsets.zero;
     if (size.longestSide >= 800)
       padding = EdgeInsets.symmetric(
@@ -52,196 +51,160 @@ class _BottomSheetSort extends StatelessWidget {
         expand: false,
         initialChildSize: height,
         builder: (context, scrollController) {
+          final ThemeData theme = Theme.of(context);
           return Material(
-            color: Theme.of(context).backgroundColor,
-            shape: Theme.of(context).bottomSheetTheme.shape,
-            child: CustomScrollView(
-              controller: scrollController,
-              slivers: <Widget>[
-                SliverPersistentHeader(
-                  pinned: true,
-                  delegate: _BottomSheetHeader(
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: <Widget>[
-                        Text(translate!.sort,
-                            style: Theme.of(context).textTheme.headline6),
-                        TextButton(
-                          style: TextButton.styleFrom(
-                              tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                              visualDensity: VisualDensity(vertical: -0.5)),
-                          onPressed: () => Navigator.pop(context),
-                          child: Text(translate.done),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-                SliverPadding(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
-                  sliver: SliverToBoxAdapter(
-                    child: SizedBox(
-                      height: 36,
-                      child: Consumer(
-                        builder: (context, watch, _) {
-                          final sortBy = watch(sortByProvider);
-                          return Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            mainAxisSize: MainAxisSize.max,
-                            children: <Widget>[
-                              Expanded(
-                                child: OutlinedButton.icon(
-                                  style: sortBy == SortBy.ASC
-                                      ? OutlinedButton.styleFrom(
-                                          primary: _accentTextThemeColor,
-                                          backgroundColor: _accentColor)
-                                      : null,
-                                  onPressed: () => context
-                                      .read(queryProvider.notifier)
-                                      .changeSort(SortBy.ASC),
-                                  icon: const Icon(
-                                    Icons.arrow_downward,
-                                    size: 20,
-                                  ),
-                                  label: Flexible(
-                                      child: FittedBox(
-                                    child: Text(translate.asc),
-                                  )),
-                                ),
-                              ),
-                              Expanded(
-                                child: OutlinedButton.icon(
-                                  key: Key('DESC'),
-                                  style: sortBy == SortBy.DESC
-                                      ? OutlinedButton.styleFrom(
-                                          primary: _accentTextThemeColor,
-                                          backgroundColor: _accentColor)
-                                      : null,
-                                  onPressed: () => context
-                                      .read(queryProvider.notifier)
-                                      .changeSort(SortBy.DESC),
-                                  icon:
-                                      const Icon(Icons.arrow_upward, size: 20),
-                                  label: Flexible(
-                                      child: FittedBox(
-                                    child: Text(translate.desc),
-                                  )),
-                                ),
-                              ),
-                            ],
-                          );
-                        },
+            color: theme.backgroundColor,
+            shape: theme.bottomSheetTheme.shape,
+            child: ListTileTheme.merge(
+              selectedColor: theme.textButtonTheme.style?.foregroundColor?.resolve({MaterialState.selected}),
+              child: CustomScrollView(
+                controller: scrollController,
+                slivers: <Widget>[
+                  SliverPersistentHeader(
+                    pinned: true,
+                    delegate: _BottomSheetHeader(
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: <Widget>[
+                          Text(translate.sort,
+                              style: Theme.of(context).textTheme.headline6),
+                          TextButton(
+                            style: TextButton.styleFrom(
+                                tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                                visualDensity: VisualDensity(vertical: -0.5)),
+                            onPressed: () => Navigator.pop(context),
+                            child: Text(translate.done),
+                          ),
+                        ],
                       ),
                     ),
                   ),
-                ),
-                Consumer(
-                  builder: (context, watch, _) {
-                    final order = watch(orderCategoryProvider);
-                    return ListTileTheme.merge(
-                      contentPadding: const EdgeInsets.symmetric(horizontal: 16.0),
-                      child: SliverList(
-                        delegate: SliverChildListDelegate([
-                          RadioListTile<OrderBy>(
-                            value: OrderBy.Name,
-                            groupValue: order,
-                            onChanged:
-                                context.read(queryProvider.notifier).changeOrder,
-                            title: Text(translate.sortName),
-                            selected: order == OrderBy.Name,
-                          ),
-                          RadioListTile<OrderBy>(
-                            value: OrderBy.Owned,
-                            groupValue: order,
-                            onChanged:
-                                context.read(queryProvider.notifier).changeOrder,
-                            title: Text(translate.owned),
-                            selected: order == OrderBy.Owned,
-                          ),
-                          RadioListTile<OrderBy>(
-                            value: OrderBy.Wishlist,
-                            groupValue: order,
-                            onChanged:
-                                context.read(queryProvider.notifier).changeOrder,
-                            title: Text(translate.wished),
-                            selected: order == OrderBy.Wishlist,
-                          ),
-                          RadioListTile<OrderBy>(
-                            value: OrderBy.NA,
-                            groupValue: order,
-                            onChanged:
-                                context.read(queryProvider.notifier).changeOrder,
-                            title: Text(translate.na),
-                            selected:order == OrderBy.NA,
-                            secondary: Image.asset(
-                              NetworkIcons.na,
-                              height: 16,
-                              width: 25,
-                              fit: BoxFit.fill,
-                              semanticLabel: translate.na,
+                  HookBuilder(
+                    builder: (context) {
+                      final order = useProvider(orderCategoryProvider);
+                      return ListTileTheme.merge(
+                        contentPadding:
+                            const EdgeInsets.symmetric(horizontal: 16.0),
+                        child: SliverList(
+                          delegate: SliverChildListDelegate([
+                            _SortListTile(
+                              groupValue: order,
+                              value: OrderBy.Name,
+                              title: Text(translate.sortName),
                             ),
-                          ),
-                          RadioListTile<OrderBy>(
-                            value: OrderBy.EU,
-                            groupValue: order,
-                            onChanged:
-                                context.read(queryProvider.notifier).changeOrder,
-                            title: Text(translate.eu),
-                            selected:order == OrderBy.EU,
-                            secondary: Image.asset(
-                              NetworkIcons.eu,
-                              height: 16,
-                              width: 25,
-                              fit: BoxFit.fill,
-                              semanticLabel: translate.eu,
+                            _SortListTile(
+                              groupValue: order,
+                              value: OrderBy.Owned,
+                              title: Text(translate.owned),
                             ),
-                          ),
-                          RadioListTile<OrderBy>(
-                            value: OrderBy.JP,
-                            groupValue: order,
-                            onChanged:
-                                context.read(queryProvider.notifier).changeOrder,
-                            title: Text(translate.jp),
-                            selected:order == OrderBy.JP,
-                            secondary: DecoratedBox(
-                              decoration:
-                                  BoxDecoration(border: Border.all(width: 0.75)),
-                              position: DecorationPosition.foreground,
-                              child: Image.asset(
-                                NetworkIcons.jp,
+                            _SortListTile(
+                              groupValue: order,
+                              value: OrderBy.Wishlist,
+                              title: Text(translate.wished),
+                            ),
+                            _SortListTile(
+                              groupValue: order,
+                              value: OrderBy.NA,
+                              title: Text(translate.na),
+                              trailing: Image.asset(
+                                NetworkIcons.na,
                                 height: 16,
                                 width: 25,
                                 fit: BoxFit.fill,
-                                semanticLabel: translate.jp,
+                                semanticLabel: translate.na,
                               ),
                             ),
-                          ),
-                          RadioListTile<OrderBy>(
-                            value: OrderBy.AU,
-                            groupValue: order,
-                            onChanged:
-                                context.read(queryProvider.notifier).changeOrder,
-                            title: Text(translate.au),
-                            selected:order == OrderBy.AU,
-                            secondary: Image.asset(
-                              NetworkIcons.au,
-                              height: 16,
-                              width: 25,
-                              fit: BoxFit.fill,
-                              semanticLabel: translate.au,
+                            _SortListTile(
+                              groupValue: order,
+                              value: OrderBy.EU,
+                              title: Text(translate.eu),
+                              trailing: Image.asset(
+                                NetworkIcons.eu,
+                                height: 16,
+                                width: 25,
+                                fit: BoxFit.fill,
+                                semanticLabel: translate.eu,
+                              ),
                             ),
-                          ),
-                        ]),
-                      ),
-                    );
-                  },
-                ),
-              ],
+                            _SortListTile(
+                              groupValue: order,
+                              value: OrderBy.JP,
+                              title: Text(translate.jp),
+                              trailing: DecoratedBox(
+                                decoration: BoxDecoration(
+                                    border: Border.all(width: 0.75)),
+                                position: DecorationPosition.foreground,
+                                child: Image.asset(
+                                  NetworkIcons.jp,
+                                  height: 16,
+                                  width: 25,
+                                  fit: BoxFit.fill,
+                                  semanticLabel: translate.jp,
+                                ),
+                              ),
+                            ),
+                            _SortListTile(
+                              groupValue: order,
+                              value: OrderBy.AU,
+                              title: Text(translate.au),
+                              trailing: Image.asset(
+                                NetworkIcons.au,
+                                height: 16,
+                                width: 25,
+                                fit: BoxFit.fill,
+                                semanticLabel: translate.au,
+                              ),
+                            ),
+                          ]),
+                        ),
+                      );
+                    },
+                  ),
+                ],
+              ),
             ),
           );
         },
       ),
+    );
+  }
+}
+
+class _SortListTile extends HookWidget {
+  final Widget? title;
+  final Widget? trailing;
+  final OrderBy value;
+  final OrderBy? groupValue;
+
+  const _SortListTile({
+    Key? key,
+    this.title,
+    this.trailing,
+    required this.value,
+    required this.groupValue,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    final sortP = useProvider(sortByProvider);
+    final bool isSelected =
+        useMemoized(() => value == groupValue, [value, groupValue]);
+    return ListTile(
+      leading: AnimatedSwitcher(
+        duration: kRadialReactionDuration,
+        child: isSelected
+          ? ImplicitDirectionIconButton(direction: sortP)
+          : const SizedBox(width: 24.0),
+      ),
+      title: title,
+      selected: isSelected,
+      onTap: () {
+        final queryNotifier = context.read(queryProvider.notifier);
+        final SortBy sort =
+            sortP == SortBy.ASC && isSelected ? SortBy.DESC : SortBy.ASC;
+        queryNotifier.changeSortAndOrder(value, sort);
+      },
+      trailing: trailing,
     );
   }
 }
@@ -266,7 +229,7 @@ class _BottomSheetHeader extends SliverPersistentHeaderDelegate {
               padding: const EdgeInsets.only(top: 6, left: 24, right: 16),
               child: child,
             ),
-            const Divider()
+            const Divider(),
           ],
         ),
       ),

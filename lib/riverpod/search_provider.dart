@@ -56,7 +56,7 @@ extension _StringParsing on AmiiboCategory {
 final categorySearchProvider =
     StateProvider<AmiiboCategory>((_) => AmiiboCategory.Name);
 
-final AutoDisposeFutureProviderFamily<List<String>, String>? searchProvider =
+final searchProvider =
     FutureProvider.autoDispose.family<List<String>, String>((ref, search) {
   final service = ref.watch(serviceProvider.notifier);
   final category = ref.watch(categorySearchProvider).state;
