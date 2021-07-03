@@ -37,15 +37,11 @@ class ServiceNotifier extends ChangeNotifier implements Service {
   }
 
   @override
-  Future<List<Amiibo>> fetchByCategory(QueryBuilder builder) {
+  Future<List<Amiibo>> fetchByCategory(QueryBuilder builder, [String? orderBy]) {
     String? where = builder.where.toString();
     List<dynamic>? args = builder.where.args;
     if (where.isEmpty || args.isEmpty) where = args = null;
-    final String _order = builder.orderBy ?? 'na';
-    final StringBuffer order = StringBuffer('$_order IS NULL');
-    order.write(', $_order');
-    if (builder.sortBy != null) order.write(' ${builder.sortBy}');
-    return dao.fetchByColumn(where, args, order.toString());
+    return dao.fetchByColumn(where, args, orderBy);
   }
 
   @override

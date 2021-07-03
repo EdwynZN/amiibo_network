@@ -14,7 +14,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:amiibo_network/model/amiibo.dart';
 
 const String _order = 'CASE WHEN type = "Figure" THEN 1 '
-    'WHEN type = "Yarn" OR type = "Band" THEN 2 ELSE 3 END, amiiboSeries DESC, na DESC';
+    'WHEN type = "Yarn" OR type = "Band" THEN 2 ELSE 3 END, amiiboSeries, key';
 
 class Screenshot {
   late ThemeData theme;
@@ -71,8 +71,8 @@ class Screenshot {
   }
 
   Future<Uint8List?> saveCollection(Expression expression) async {
-    final QueryBuilder query = QueryBuilder(where: expression, orderBy: _order);
-    List<Amiibo> amiibos = await _service.fetchByCategory(query);
+    final QueryBuilder query = QueryBuilder(where: expression);
+    List<Amiibo> amiibos = await _service.fetchByCategory(query, _order);
     Stat _listStat =
         List<Stat>.from(await _service.fetchStats(expression: expression))
             .first;

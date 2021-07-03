@@ -9,15 +9,13 @@ import 'package:amiibo_network/riverpod/repository_provider.dart';
 import 'package:collection/collection.dart';
 import 'package:amiibo_network/model/search_result.dart';
 
-final orderCategoryProvider = Provider.autoDispose<OrderBy>((ref) {
-  ref.watch(queryProvider);
-  return ref.watch(queryProvider.notifier).orderBy;
-});
+final orderCategoryProvider = Provider.autoDispose<OrderBy>((ref) 
+  => ref.watch(queryProvider).orderBy
+);
 
-final sortByProvider = Provider.autoDispose<SortBy>((ref) {
-  ref.watch(queryProvider);
-  return ref.watch(queryProvider.notifier).sortBy;
-});
+final sortByProvider = Provider.autoDispose<SortBy>((ref)
+  => ref.watch(queryProvider).sortBy
+);
 
 final querySearchProvider = Provider.autoDispose<Search>((ref) {
   ref.watch(queryProvider);
@@ -87,18 +85,16 @@ class QueryBuilderProvider extends StateNotifier<QueryBuilder> {
       deepEq(eq1, eq2);
   final Reader _read;
   Search _query;
-  OrderBy _orderBy;
-  SortBy _sortBy;
-  QueryBuilderProvider(this._read, this._query, this._orderBy, this._sortBy)
-      : super(QueryBuilder(
+  QueryBuilderProvider(this._read, this._query, OrderBy _orderBy, SortBy _sortBy)
+    : super(
+        QueryBuilder(
           where: And(),
-          sortBy: describeEnum(_sortBy),
-          orderBy: describeEnum(_orderBy),
-        )) {}
+          sortBy: _sortBy,
+          orderBy: _orderBy,
+        ),
+      );
 
   Search get search => _query;
-  OrderBy get orderBy => _orderBy;
-  SortBy get sortBy => _sortBy;
   QueryBuilder get query => state;
 
   List<String> get customFigures => List<String>.of(_query.customFigures!);
@@ -177,32 +173,28 @@ class QueryBuilderProvider extends StateNotifier<QueryBuilder> {
 
   Future<void> changeSortAndOrder(OrderBy? orderBy, SortBy? sortBy) async {
     QueryBuilder _state = state.copyWith();
-    if (orderBy != null && orderBy != _orderBy) {
+    if (orderBy != null && orderBy != state.orderBy) {
       await _read(preferencesProvider).setInt(orderPreference, orderBy.index);
-      _orderBy = orderBy;
-      _state = _state.copyWith(orderBy: describeEnum(orderBy));
+      _state = _state.copyWith(orderBy: orderBy);
     }
-    if (sortBy != null && sortBy != _sortBy) {
+    if (sortBy != null && sortBy != state.sortBy) {
       await _read(preferencesProvider).setInt(sortPreference, sortBy.index);
-      _sortBy = sortBy;
-      _state = _state.copyWith(sortBy: describeEnum(sortBy));
+      _state = _state.copyWith(sortBy: sortBy);
     }
     if (_state != state) state = _state;
   }
 
   Future<void> changeOrder(OrderBy? mode) async {
-    if (mode != null && mode != _orderBy) {
+    if (mode != null && mode != state.orderBy) {
       await _read(preferencesProvider).setInt(orderPreference, mode.index);
-      _orderBy = mode;
-      state = state.copyWith(orderBy: describeEnum(mode));
+      state = state.copyWith(orderBy: mode);
     }
   }
 
   Future<void> changeSort(SortBy? mode) async {
-    if (mode != null && mode != _sortBy) {
+    if (mode != null && mode != state.sortBy) {
       await _read(preferencesProvider).setInt(sortPreference, mode.index);
-      _sortBy = mode;
-      state = state.copyWith(sortBy: describeEnum(mode));
+      state = state.copyWith(sortBy: mode);
     }
   }
 }

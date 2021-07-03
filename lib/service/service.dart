@@ -23,11 +23,11 @@ class Service {
     return result.map<Stat>((e) => Stat.fromJson(e)).toList();
   }
 
-  Future<List<Amiibo>> fetchByCategory(QueryBuilder builder) {
+  Future<List<Amiibo>> fetchByCategory(QueryBuilder builder, [String? orderBy]) {
     String? where = builder.where.toString();
     List<dynamic>? args = builder.where.args;
     if (where.isEmpty || args.isEmpty) where = args = null;
-    return dao.fetchByColumn(where, args, builder.orderBy);
+    return dao.fetchByColumn(where, args, orderBy);
   }
 
   Future<String> jsonFileDB() async {

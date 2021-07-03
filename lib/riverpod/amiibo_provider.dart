@@ -59,6 +59,6 @@ final amiiboHomeListProvider =
     streamController.close();
   });
 
-  yield await service.fetchByCategory(queryBuilder.query);
-  yield* streamController.stream.asyncMap(service.fetchByCategory);
+  yield await service.fetchByCategory(queryBuilder.query, queryBuilder.query.order);
+  yield* streamController.stream.asyncMap((cb) => service.fetchByCategory(cb, cb.order));
 });
