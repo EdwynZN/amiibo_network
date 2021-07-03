@@ -58,83 +58,83 @@ class _CollectionDrawerState extends State<CollectionDrawer> {
           child: Column(
         mainAxisAlignment: MainAxisAlignment.end,
         children: <Widget>[
-          Expanded(
-            child: CustomScrollView(
-              slivers: <Widget>[
-                const SliverToBoxAdapter(
-                  child: _HeaderDrawer(),
-                ),
-                Consumer(
-                  builder: (context, watch, child) {
-                    final query = watch(querySearchProvider);
-                    final String? _selected = query.search;
-                    final AmiiboCategory _category = query.category;
-                    return SliverList(
-                      delegate: SliverChildListDelegate([
-                        ListTile(
-                          onTap: () =>
-                              _onTapTile(AmiiboCategory.Custom, 'Custom'),
-                          onLongPress: () async {
-                            final filter = context.read(queryProvider.notifier);
-                            final List<String>? figures = filter.customFigures;
-                            final List<String>? cards = filter.customCards;
-                            bool save = await showDialog<bool>(
-                              context: context,
-                              builder: (BuildContext context) =>
-                                CustomQueryWidget(
-                                  translate.category(AmiiboCategory.Custom),
-                                  figures: figures,
-                                  cards: cards,
-                                ),
-                              ) ?? false;
-                            if (save)
-                              await context
-                                  .read(queryProvider.notifier)
-                                  .updateCustom(figures, cards);
-                          },
-                          leading: const Icon(Icons.create),
-                          title: Text(translate.category(AmiiboCategory.Custom)),
-                          selected: _category == AmiiboCategory.Custom,
-                        ),
-                        ListTile(
-                          onTap: () => _onTapTile(AmiiboCategory.All, 'All'),
-                          leading: const Icon(Icons.all_inclusive),
-                          title: Text(translate.category(AmiiboCategory.All)),
-                          selected: _category == AmiiboCategory.All,
-                        ),
-                        ListTile(
-                          onTap: () =>
-                              _onTapTile(AmiiboCategory.Owned, 'Owned'),
-                          leading: const Icon(iconOwned),
-                          title: Text(translate.category(AmiiboCategory.Owned)),
-                          selected: _category == AmiiboCategory.Owned,
-                        ),
-                        ListTile(
-                          onTap: () =>
-                              _onTapTile(AmiiboCategory.Wishlist, 'Wishlist'),
-                          leading: const Icon(iconWished),
-                          title:
-                              Text(translate.category(AmiiboCategory.Wishlist)),
-                          selected: _category == AmiiboCategory.Wishlist,
-                        ),
-                        ListTile(
-                          onTap: () {
-                            Navigator.of(context)
-                            ..pop()..pushNamed(statsRoute);
-                          },
-                          leading: const Icon(Icons.timeline),
-                          title: Text(translate.stats),
-                          selected: _selected == 'Stats',
-                        ),
-                        HookBuilder(builder: (context) {
-                          final snapshot = useProvider(
-                            figuresProvider,
-                          );
-                          return Theme(
-                            data: theme.copyWith(
-                              dividerColor: Colors.transparent,
-                            ),
-                            child: ExpansionTile(
+          Theme(
+            data: theme.copyWith(
+              dividerColor: Colors.transparent,
+            ),
+            child: Expanded(
+              child: CustomScrollView(
+                slivers: <Widget>[
+                  const SliverToBoxAdapter(
+                    child: _HeaderDrawer(),
+                  ),
+                  Consumer(
+                    builder: (context, watch, child) {
+                      final query = watch(querySearchProvider);
+                      final String? _selected = query.search;
+                      final AmiiboCategory _category = query.category;
+                      return SliverList(
+                        delegate: SliverChildListDelegate([
+                          ListTile(
+                            onTap: () {
+                              Navigator.of(context)
+                              ..pop()..pushNamed(statsRoute);
+                            },
+                            leading: const Icon(Icons.timeline),
+                            title: Text(translate.stats),
+                            selected: _selected == 'Stats',
+                          ),
+                          ListTile(
+                            onTap: () => _onTapTile(AmiiboCategory.All, 'All'),
+                            leading: const Icon(Icons.all_inclusive),
+                            title: Text(translate.category(AmiiboCategory.All)),
+                            selected: _category == AmiiboCategory.All,
+                          ),
+                          ListTile(
+                            onTap: () =>
+                                _onTapTile(AmiiboCategory.Owned, 'Owned'),
+                            leading: const Icon(iconOwned),
+                            title: Text(translate.category(AmiiboCategory.Owned)),
+                            selected: _category == AmiiboCategory.Owned,
+                          ),
+                          ListTile(
+                            onTap: () =>
+                                _onTapTile(AmiiboCategory.Wishlist, 'Wishlist'),
+                            leading: const Icon(iconWished),
+                            title:
+                                Text(translate.category(AmiiboCategory.Wishlist)),
+                            selected: _category == AmiiboCategory.Wishlist,
+                          ),
+                          ListTile(
+                            onTap: () =>
+                                _onTapTile(AmiiboCategory.Custom, 'Custom'),
+                            onLongPress: () async {
+                              final filter = context.read(queryProvider.notifier);
+                              final List<String>? figures = filter.customFigures;
+                              final List<String>? cards = filter.customCards;
+                              bool save = await showDialog<bool>(
+                                context: context,
+                                builder: (BuildContext context) =>
+                                  CustomQueryWidget(
+                                    translate.category(AmiiboCategory.Custom),
+                                    figures: figures,
+                                    cards: cards,
+                                  ),
+                                ) ?? false;
+                              if (save)
+                                await context
+                                    .read(queryProvider.notifier)
+                                    .updateCustom(figures, cards);
+                            },
+                            leading: const Icon(Icons.create),
+                            title: Text(translate.category(AmiiboCategory.Custom)),
+                            selected: _category == AmiiboCategory.Custom,
+                          ),
+                          HookBuilder(builder: (context) {
+                            final snapshot = useProvider(
+                              figuresProvider,
+                            );
+                            return ExpansionTile(
                               leading: const Icon(Icons.sports_esports),
                               title: Text(translate.figures),
                               initiallyExpanded: _figureExpand,
@@ -180,16 +180,11 @@ class _CollectionDrawerState extends State<CollectionDrawer> {
                                           _selected == series,
                                     ),
                               ],
-                            ),
-                          );
-                        }),
-                        HookBuilder(builder: (context) {
-                          final snapshot = useProvider(cardsProvider);
-                          return Theme(
-                            data: theme.copyWith(
-                              dividerColor: Colors.transparent,
-                            ),
-                            child: ExpansionTile(
+                            );
+                          }),
+                          HookBuilder(builder: (context) {
+                            final snapshot = useProvider(cardsProvider);
+                            return ExpansionTile(
                               leading: const Icon(Icons.view_carousel),
                               title: Text(translate.cards),
                               initiallyExpanded: _cardExpand,
@@ -235,14 +230,14 @@ class _CollectionDrawerState extends State<CollectionDrawer> {
                                           _selected == series,
                                     ),
                               ],
-                            ),
-                          );
-                        }),
-                      ]),
-                    );
-                  },
-                )
-              ],
+                            );
+                          }),
+                        ]),
+                      );
+                    },
+                  )
+                ],
+              ),
             ),
           ),
           const Divider(height: 1.0),
@@ -270,6 +265,7 @@ class _HeaderDrawer extends StatelessWidget {
     return DrawerHeader(
       decoration: BoxDecoration(color: theme.backgroundColor),
       padding: EdgeInsets.zero,
+      margin: EdgeInsets.only(bottom: 2.0),
       child: Image.asset(
         NetworkIcons.iconApp,
         fit: BoxFit.fitHeight,

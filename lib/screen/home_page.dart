@@ -130,8 +130,10 @@ class HomeState extends State<Home> with SingleTickerProviderStateMixin {
     Search? value = await Navigator.pushNamed<Search?>(context, searchRoute);
     if (value?.search?.trim().isNotEmpty ?? false) {
       final query = context.read(queryProvider.notifier);
-      query.updateOption(value!);
-      _restartAnimation();
+      WidgetsBinding.instance!.addPostFrameCallback((_) {
+        query.updateOption(value!);
+        _restartAnimation();
+      });
     }
   }
 
