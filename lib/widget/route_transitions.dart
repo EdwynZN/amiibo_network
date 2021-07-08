@@ -25,12 +25,6 @@ class Routes{
           ), 
           settings: settings,
         );
-        return VerticalSlideRoute(builder: (_) => ProviderScope(
-          overrides: [
-            keyAmiiboProvider.overrideWithValue((settings.arguments as int?) ?? 0)
-          ],
-          child: const DetailPage(),
-        ), settings: settings);
       case homeRoute:
         return FadeRoute(builder: (_) => const Home());
       case settingsRoute:

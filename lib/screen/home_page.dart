@@ -1,5 +1,6 @@
 import 'package:amiibo_network/enum/amiibo_category_enum.dart';
 import 'package:amiibo_network/enum/selected_enum.dart';
+import 'package:amiibo_network/model/amiibo.dart';
 import 'package:amiibo_network/repository/theme_repository.dart';
 import 'package:amiibo_network/riverpod/amiibo_provider.dart';
 import 'package:amiibo_network/riverpod/lock_provider.dart';
@@ -222,20 +223,37 @@ class HomeState extends State<Home> with SingleTickerProviderStateMixin {
   }
 }
 
-class _AmiiboListWidget extends ConsumerWidget {
+class _AmiiboListWidget extends HookWidget {
   const _AmiiboListWidget({Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context, ScopedReader watch) {
-    final ignore = watch(lockProvider).lock;
-    return watch(amiiboHomeListProvider).maybeWhen(
-      data: (data) {
-        if (data.isEmpty) {
+  Widget build(BuildContext context) {
+    final ignore = useProvider(lockProvider).lock;
+    final amiiboList = useProvider(amiiboHomeListProvider);
+    final isCustom = useProvider(queryProvider.notifier
+        .select((cb) => cb.search.category == AmiiboCategory.Custom));
+    final controller = useAnimationController(
+      duration: const Duration(seconds: 1),
+      animationBehavior: AnimationBehavior.preserve,
+    );
+    useMemoized(() {
+      if (amiiboList is AsyncLoading<List<Amiibo>>)
+        controller.repeat();
+      else
+        controller.forward();
+    }, [amiiboList]);
+    return amiiboList.maybeWhen(
+      error: (_, __) => const SliverToBoxAdapter(),
+      orElse: () {
+        late final List<Amiibo>? data;
+        if (amiiboList is AsyncData<List<Amiibo>>)
+          data = amiiboList.value;
+        else
+          data = null;
+        if (data != null && data.isEmpty) {
           late final Widget child;
           final theme = Theme.of(context);
           final S translate = S.of(context);
-          final isCustom = watch(queryProvider.notifier).search.category ==
-              AmiiboCategory.Custom;
           if (!isCustom)
             child = Text(
               translate.emptyPage,
@@ -268,7 +286,6 @@ class _AmiiboListWidget extends ConsumerWidget {
               icon: const Icon(Icons.create),
               label: Text(translate.emptyPage),
             );
-
           return SliverFillRemaining(
             hasScrollBody: false,
             child: Center(child: child),
@@ -292,61 +309,29 @@ class _AmiiboListWidget extends ConsumerWidget {
             gridDelegate: grid,
             delegate: SliverChildBuilderDelegate(
               (BuildContext _, int index) {
-                return AnimatedSwitcher(
-                  duration: const Duration(milliseconds: 500),
-                  child: ProviderScope(
+                late final Widget child;
+                if (data != null) {
+                  child = ProviderScope(
                     key: ValueKey<int?>(data[index].key),
                     overrides: [
                       indexAmiiboProvider.overrideWithValue(index),
                       keyAmiiboProvider.overrideWithValue(data[index].key),
                     ],
                     child: const AnimatedSelection(),
-                  ),
+                  );
+                } else {
+                  child = ShimmerCard(listenable: controller);
+                }
+                return AnimatedSwitcher(
+                  duration: const Duration(seconds: 1),
+                  child: child,
                 );
               },
-              childCount: data.length,
+              childCount: data != null ? data.length : null,
             ),
           ),
         );
       },
-      loading: () => HookBuilder(
-        builder: (context) {
-          final controller = useAnimationController(
-            duration: const Duration(seconds: 1),
-            animationBehavior: AnimationBehavior.preserve,
-          );
-          useMemoized(() => controller.repeat());
-          late final SliverGridDelegate grid;
-          final bool bigGrid = MediaQuery.of(context).size.width >= 600;
-          if (bigGrid)
-            grid = SliverGridDelegateWithMaxCrossAxisExtent(
-              maxCrossAxisExtent: 192,
-              mainAxisSpacing: 8.0,
-            );
-          else
-            grid = SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 3,
-              mainAxisSpacing: 8.0,
-            );
-          return SliverIgnorePointer(
-            ignoring: ignore,
-            sliver: SliverGrid(
-              gridDelegate: grid,
-              delegate: SliverChildBuilderDelegate(
-                (BuildContext _, int index) {
-                  return AnimatedSwitcher(
-                    duration: const Duration(milliseconds: 500),
-                    child: ShimmerCard(
-                      listenable: controller,
-                    ),
-                  );
-                },
-              ),
-            ),
-          );
-        },
-      ),
-      orElse: () => const SliverToBoxAdapter(),
     );
   }
 }
