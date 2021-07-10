@@ -52,8 +52,8 @@ Future<void> main() async {
 }
 
 class AmiiboNetwork extends ConsumerWidget {
-  final Widget? firstPage;
-  const AmiiboNetwork({this.firstPage});
+  final Widget firstPage;
+  const AmiiboNetwork({Key? key, required this.firstPage}) : super(key: key);
 
   @override
   Widget build(BuildContext context, ScopedReader watch) {
@@ -71,24 +71,20 @@ class AmiiboNetwork extends ConsumerWidget {
       darkTheme: themeMode.theme.dark,
       onGenerateRoute: Routes.getRoute,
       themeMode: themeMode.preferredTheme,
-      home: Builder(
-        builder: (BuildContext context) {
-          return AnnotatedRegion<SystemUiOverlayStyle>(
-            value: SystemUiOverlayStyle(
-                statusBarIconBrightness:
-                    Theme.of(context).brightness == Brightness.light
-                        ? Brightness.dark
-                        : Brightness.light,
-                systemNavigationBarIconBrightness:
-                    Theme.of(context).brightness == Brightness.light
-                        ? Brightness.dark
-                        : Brightness.light,
-                statusBarColor: Theme.of(context).appBarTheme.color,
-                systemNavigationBarColor: Theme.of(context).appBarTheme.color),
-            child: firstPage!,
-          );
-        },
-      ),
+      builder: (context, child) {
+        final theme = Theme.of(context);
+        final Brightness brightness = theme == Brightness.light ? Brightness.dark : Brightness.light;
+        return AnnotatedRegion<SystemUiOverlayStyle>(
+          value: SystemUiOverlayStyle(
+            statusBarIconBrightness: brightness,
+            systemNavigationBarIconBrightness: brightness,
+            statusBarColor: theme.appBarTheme.color,
+            systemNavigationBarColor: theme.appBarTheme.color,
+          ),
+          child: child!,
+        );
+      },
+      home: firstPage,
     );
   }
 }
