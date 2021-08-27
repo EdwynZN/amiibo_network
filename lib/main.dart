@@ -35,7 +35,7 @@ Future<void> main() async {
       overrides: [
         cacheProvider.overrideWithValue(
           newHiveCache(
-            cacheDir.path,
+            path: cacheDir.path,
             cacheName: 'HiveCache',
             fromEncodable: (cb) => CacheValue.fromJson(cb),
             maxEntries: 200,

@@ -23,15 +23,15 @@ dependencies:
     sdk: flutter
   hooks_riverpod: ^0.14.0+1
   sqflite: ^2.0.0+3
-  file_picker: ^3.0.0
-  permission_handler: ^6.1.1
+  file_picker: ^4.0.0
+  permission_handler: ^8.1.4+2
   launch_review: ^3.0.1
   url_launcher: ^6.0.2 
   shared_preferences: ^2.0.5
   flutter_markdown: ^0.6.1
   path_provider: ^2.0.1
   equatable: ^2.0.0
-  freezed_annotation: ^0.14.1
+  freezed_annotation: ^0.14.2
   json_serializable: ^4.1.0
   dio: ^4.0.0
   sliver_tools: ^0.2.5
