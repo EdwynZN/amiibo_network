@@ -3052,7 +3052,7 @@
       "au":null,
       "eu":"20161125",
       "jp":"20161103",
-      "na":null,
+      "na":"20160326",
       "type":"Card"
     },
     {
@@ -3455,7 +3455,7 @@
       "au":null,
       "eu":"20161125",
       "jp":"20161103",
-      "na":null,
+      "na":"20160326",
       "type":"Card"
     },
     {
@@ -4040,7 +4040,7 @@
       "au":null,
       "eu":"20161125",
       "jp":"20161103",
-      "na":null,
+      "na":"20160326",
       "type":"Card"
     },
     {
@@ -4495,7 +4495,7 @@
       "au":null,
       "eu":"20161125",
       "jp":"20161103",
-      "na":null,
+      "na":"20160326",
       "type":"Card"
     },
     {
@@ -6406,7 +6406,7 @@
       "au":null,
       "eu":"20161125",
       "jp":"20161103",
-      "na":null,
+      "na":"20160326",
       "type":"Card"
     },
     {
@@ -6653,7 +6653,7 @@
       "au":null,
       "eu":"20161125",
       "jp":"20161103",
-      "na":null,
+      "na":"20160326",
       "type":"Card"
     },
     {
@@ -9973,7 +9973,7 @@
     },
     {
       "key":768,
-      "id":null,
+      "id":"35070000040E0F02",
       "amiiboSeries":"Monster Hunter Stories",
       "character":"Tsukino",
       "gameSeries":"Monster Hunter",
@@ -9986,7 +9986,7 @@
     },
     {
       "key":769,
-      "id":null,
+      "id":"35050000040C0F02",
       "amiiboSeries":"Monster Hunter Stories",
       "character":"Razewing Ratha",
       "gameSeries":"Monster Hunter",
@@ -9999,7 +9999,7 @@
     },
     {
       "key":770,
-      "id":null,
+      "id":"35060000040D0F02",
       "amiiboSeries":"Monster Hunter Stories",
       "character":"Ena",
       "gameSeries":"Monster Hunter",
@@ -10012,7 +10012,7 @@
     },
     {
       "key":771,
-      "id":null,
+      "id":"0101030004140902",
       "amiiboSeries":"The Legend of Zelda",
       "character":"Zelda & Loftwing",
       "gameSeries":"The Legend of Zelda",
@@ -10061,7 +10061,98 @@
       "jp":"2022",
       "na":"2022",
       "type":"Figure"
+    },
+    {
+      "key":775,
+      "id":"3840000104241902",
+      "amiiboSeries":"Yu-Gi-Oh!",
+      "character":"Yuga Ohdo",
+      "gameSeries":"Yu-Gi-Oh! Rush Duel: Saikyou Battle Royale!!",
+      "name":"Yuga Ohdo",
+      "au":null,
+      "eu":null,
+      "jp":"20210812",
+      "na":null,
+      "type":"Card"
+    },
+    {
+      "key":776,
+      "id":"3841000104251902",
+      "amiiboSeries":"Yu-Gi-Oh!",
+      "character":"Tatsuhisa “Luke” Kamijō",
+      "gameSeries":"Yu-Gi-Oh! Rush Duel: Saikyou Battle Royale!!",
+      "name":"Tatsuhisa “Luke” Kamijō",
+      "au":null,
+      "eu":null,
+      "jp":"20210812",
+      "na":null,
+      "type":"Card"
+    },
+    {
+      "key":777,
+      "id":"3842000104261902",
+      "amiiboSeries":"Yu-Gi-Oh!",
+      "character":"Gakuto Sōgetsu",
+      "gameSeries":"Yu-Gi-Oh! Rush Duel: Saikyou Battle Royale!!",
+      "name":"Gakuto Sōgetsu",
+      "au":null,
+      "eu":null,
+      "jp":"20210812",
+      "na":null,
+      "type":"Card"
+    },
+    {
+      "key":778,
+      "id":"3840000104271902",
+      "amiiboSeries":"Yu-Gi-Oh!",
+      "character":"Romin Kirishima",
+      "gameSeries":"Yu-Gi-Oh! Rush Duel: Saikyou Battle Royale!!",
+      "name":"Romin Kirishima",
+      "au":null,
+      "eu":null,
+      "jp":"20210812",
+      "na":null,
+      "type":"Card"
+    },
+    {
+      "key":779,
+      "id":"3840000104281902",
+      "amiiboSeries":"Yu-Gi-Oh!",
+      "character":"Roa Kirishima",
+      "gameSeries":"Yu-Gi-Oh! Rush Duel: Saikyou Battle Royale!!",
+      "name":"Roa Kirishima",
+      "au":null,
+      "eu":null,
+      "jp":"20210812",
+      "na":null,
+      "type":"Card"
+    },
+    {
+      "key":780,
+      "id":"3840000104291902",
+      "amiiboSeries":"Yu-Gi-Oh!",
+      "character":"Nail Saionji",
+      "gameSeries":"Yu-Gi-Oh! Rush Duel: Saikyou Battle Royale!!",
+      "name":"Nail Saionji",
+      "au":null,
+      "eu":null,
+      "jp":"20210812",
+      "na":null,
+      "type":"Card"
+    },
+    {
+      "key":781,
+      "id":"38400001042a1902",
+      "amiiboSeries":"Yu-Gi-Oh!",
+      "character":"Asana Mutsuba",
+      "gameSeries":"Yu-Gi-Oh! Rush Duel: Saikyou Battle Royale!!",
+      "name":"Asana Mutsuba",
+      "au":null,
+      "eu":null,
+      "jp":"20210812",
+      "na":null,
+      "type":"Card"
     }
   ],
-  "lastUpdated": "2021-06-25T26:12:28.239"
+  "lastUpdated": "2021-08-27T20:18:00.475"
 }
