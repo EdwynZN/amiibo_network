@@ -1,3 +1,6 @@
+## Version 1.4.1
+- Ajout des cartes de la série YuGiOh!
+
 ## Version 1.4.0
 - Ajout de Min-Min de la série Super Smash Bros.
 - Ajout des figurines Samus and E.M.M.I. de la série Metroid Dread
