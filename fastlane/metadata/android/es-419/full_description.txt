@@ -1,0 +1,24 @@
+Aplicación para seguir tu colección personal de amiibos, crear una lista de deseos, buscar por nombre y categoría todos los tipos de amiibo, guardar tu colección o estadísticas como imagen para poder mostrar siempre tu colección de amiibos.
+
+Características:
+● Estadísticas en la parte superior de la pantalla para nunca perderla de vista
+● Va tus estadísticas en el formato que prefieras, ya sea porcentaje o fracción
+● Toca sobre un amiibo para añadirlo a tu colección, otra vez para agregarlo a tu lista de deseos y de nuevo para eliminarlo de tu colección
+● Presiona dos veces para ver información del amiibo, fecha de lanzamiento, nombre, juego o para agregarlo directamente a tu colección o lista de deseos
+● Mantén presionado para entrar al modo de selección múltiple donde podrás agregar a otros amiibos con un solo toque y agregarlo a tu colección o eliminarlos de ella
+● Botón de bloqueo para evitar modificar los amiibos en tu lista de deseos u obtenidos
+● Menú lateral para escoger entre todos, personal, colección, lista de deseos, estadísticas o por categoría dividido en figuras y cartas 
+● Mantén presionado la opción personal en el menú lateral para seleccionar solo las series que deseas ver en esa categoría
+● Estadísticas personalizadas dividida en todos, personal, figuras y cartas. Guarda tus estadísticas en cualquier momento como imagen en tus archivos de descarga con el botón de guardado
+● Barra de búsqueda mejorada para buscar por nombre, juego o serie
+● Ordena los amiibos de acuerdo a tus preferencias, ya sea fecha de lanzamiento por región, nombre, colección o lista de deseos
+● Selección de tema automatice (disponible para dispositivos con Android 9 o 10) o modo manual (temas claros u oscuros)
+● Múltiples temas claros y oscuros para seleccionar desde el menú lateral.  Presiona el botón de tema para cambiar entre el modo claro, oscuro o automático o manten presionado el botón para visualizar los diferentes temas o desde el menú de opciones y en apariencia
+● Guarda tu colección como una imagen, borra tu colección y lista de deseos o importa/exporta la información de tu colección (útil cuando se va a cambiar de dispositivo) desde el menú de opciones
+
+DESCARGO DE RESPONSABILIDADES
+Amiibo Network es una aplicación no oficial para coleccionistas y su uso es exclusivamente educacional y de entretenimiento.
+
+Amiibo Network no esta afiliado a Nintendo, amiibo es una marca registrada de Nintendo.Todos los nombres e información son marcas registradas de sus respectivos dueños.
+
+Las capturas de pantalla fueron creadas con 'Repix' en https://repix.app

@@ -40,6 +40,7 @@
 **/android/local.properties
 **/android/key.properties
 **/android/*.jks
+**/android/*.json
 **/android/*.pepk
 **/android/**/GeneratedPluginRegistrant.java
 
@@ -75,6 +76,19 @@
 !**/ios/**/default.pbxuser
 !**/ios/**/default.perspectivev3
 !/packages/flutter_tools/test/data/dart_dependencies_test/**/.packages
+
+#fastlane
+fastlane/report.xml
+fastlane/*.html
+
+# deliver temporary files
+**/fastlane/Preview.html
+
+# snapshot generated screenshots
+**/fastlane/**/screenshots
+
+# scan temporary files
+**/fastlane/test_output
 
 # Assets
 # assets/**/*.png

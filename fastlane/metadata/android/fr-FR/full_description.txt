@@ -1,0 +1,26 @@
+Une application de collection Amiibo avec une liste de souhaits et une collection personnelle, un mode capture d'écran pour enregistrer votre collection et vos statistiques, afin que vous puissiez toujours montrer votre incroyable collection Amiibo! 
+
+Caractéristiques: 
+● Collection propriétaire et liste de souhaits en haut de l'écran pour toujours vérifier vos statistiques 
+● Voir vos statistiques comme vous le souhaitez, bouton de changement de pourcentage ou de ratio dans le tiroir 
+● Appuyez une fois sur un amiibo pour l'ajouter à votre collection, à nouveau selon votre souhait  liste, et le dernier à le supprimer.  
+● Appuyez deux fois pour voir le détail de n'importe quel amiibo, date de sortie, nom de personnage, jeu ou ajoutez-le directement à n'importe quelle liste que vous voulez à partir de là 
+● Appuyez longuement pour commencer à sélectionner plusieurs amiibos et l'ajouter ou le supprimer de la liste de votre choix à la fois  
+● Bouton de verrouillage pour éviter les tapotements indésirables 
+● Tiroir de la liste des catégories à afficher par Tous, Personnalisé, Possédé, Souhait, Statistiques ou par série amiibo divisé par chiffres et cartes 
+● Appuyez longuement sur la vignette Personnalisée dans le tiroir de navigation pour ouvrir et sélectionner uniquement  la série souhaitée que vous souhaitez collecter 
+● Statistiques personnelles divisées par Tout, Personnalisé, chiffres et cartes.  Prenez une capture d'écran de votre statistique à tout moment et enregistrez-la pour plus tard sous forme d'image dans votre dossier de téléchargement 
+● Barre de recherche améliorée, vous pouvez donc rechercher par nom, jeu ou série d'amiibo 
+● Classez la liste en fonction de ce que vous pensez être le plus important,  la date de sortie de l'une des 4 régions, que vous possédez, souhaitez ou nommez 
+● Thème du mode automatique (uniquement pour certains appareils Android 9 et Android 10) ou sélectionnez manuellement votre mode préféré, clair ou sombre 
+● Plusieurs thèmes clairs et sombres à sélectionner  le tiroir ou les paramètres.  Appuyez sur l'icône du thème dans le tiroir pour basculer entre le mode clair, sombre ou automatique ou appuyez simplement longuement sur l'icône du thème pour visualiser tous les thèmes et sélectionnez votre thème préféré ou accédez aux paramètres et sélectionnez l'apparence 
+● Enregistrez votre collection en tant qu'image, réinitialisez votre  collecter ou importer / exporter vos données de collecte (utile lors du changement d'appareil) tout à partir des paramètres 
+
+AVIS DE NON-RESPONSABILITÉ 
+Amiibo Network est une application non officielle pour les collectionneurs et les fans d'amiibo et est destinée à être utilisée à des fins d'information et d'éducation uniquement.  
+
+Amiibo Network n'est en aucun cas affilié à Nintendo.  amiibo est une marque déposée de Nintendo.  Tous les éléments, noms et autres aspects sont des marques déposées et appartiennent à leurs propriétaires respectifs.  
+
+Nos images d'aperçu ont été créées à l'aide de 'Repix' sur https://repix.app
+
+Traduction du texte français par Michael Put (De Liège Belgique)

@@ -1,0 +1,7 @@
+Version 1.4.0
+- Se agregaron las figuras de Metroid Dread (Samus y E.M.M.I.) y Min-Min de la serie Super Smash Bros.
+- Se agrego el amiibo Zelda y Loftwing
+- Se agregaron las pulseras de Super Nintendo World
+- Se agregaron las figuras de Tsukino, Razewing Ratha y Ena de la serie Monster Hunter Stories
+- Ahora se muestra una lista de juegos que puede usar cada amiibo en detalles
+- El botón para cambiar las estadisticas ahora aparece a un lado del botón para ordenar en la pantalla principal
