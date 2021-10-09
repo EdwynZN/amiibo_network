@@ -133,49 +133,47 @@ class _SupportButtons extends StatelessWidget {
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
             child: ElevatedButton.icon(
-                onPressed: LaunchReview.launch,
-                icon: Image.asset(
-                  NetworkIcons.iconApp,
-                  height: 30,
-                  width: 30,
-                  fit: BoxFit.fill,
-                  color: Theme.of(context).primaryColorBrightness ==
-                          Brightness.dark
-                      ? Colors.white54
-                      : null,
+              onPressed: LaunchReview.launch,
+              icon: Image.asset(
+                NetworkIcons.iconApp,
+                height: 30,
+                width: 30,
+                fit: BoxFit.fill,
+                color: Theme.of(context).primaryColorBrightness ==
+                  Brightness.dark ? Colors.white54 : null,
+              ),
+              label: FittedBox(
+                child: Text(
+                  translate.rate,
+                  overflow: TextOverflow.fade,
                 ),
-                label: Flexible(
-                    child: FittedBox(
-                  child: Text(
-                    translate.rate,
-                    overflow: TextOverflow.fade,
-                  ),
-                ))),
+              ),
+            ),
           ),
         ),
         Expanded(
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
             child: ElevatedButton.icon(
-                onPressed: () => _launchURL(kofi, context),
-                icon: Image.asset(
-                  NetworkIcons.koFiIcon,
-                  height: 30,
-                  width: 30,
-                  fit: BoxFit.fill,
-                  colorBlendMode: BlendMode.srcATop,
-                  color: Theme.of(context).primaryColorBrightness ==
-                          Brightness.dark
-                      ? Colors.black38
-                      : null,
+              onPressed: () => _launchURL(kofi, context),
+              icon: Image.asset(
+                NetworkIcons.koFiIcon,
+                height: 30,
+                width: 30,
+                fit: BoxFit.fill,
+                colorBlendMode: BlendMode.srcATop,
+                color: Theme.of(context).primaryColorBrightness ==
+                        Brightness.dark
+                    ? Colors.black38
+                    : null,
+              ),
+              label: FittedBox(
+                child: Text(
+                  translate.donate,
+                  overflow: TextOverflow.fade,
                 ),
-                label: Flexible(
-                    child: FittedBox(
-                  child: Text(
-                    translate.donate,
-                    overflow: TextOverflow.fade,
-                  ),
-                ))),
+              ),
+            ),
           ),
         ),
       ],
@@ -208,19 +206,20 @@ class _ProjectButtons extends StatelessWidget {
       children: <Widget>[
         for (int index = 0; index < icons.length; index++)
           Expanded(
-              child: Padding(
+            child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
             child: ElevatedButton.icon(
-                onPressed: () => _launchURL(urls[index], context),
-                icon: Icon(icons[index]),
-                label: Flexible(
-                    child: FittedBox(
-                  child: Text(
-                    titles[index],
-                    overflow: TextOverflow.fade,
-                  ),
-                ))),
-          )),
+              onPressed: () => _launchURL(urls[index], context),
+              icon: Icon(icons[index]),
+              label: FittedBox(
+                child: Text(
+                  titles[index],
+                  overflow: TextOverflow.fade,
+                ),
+              ),
+            ),
+          ),
+        ),
       ],
     );
   }

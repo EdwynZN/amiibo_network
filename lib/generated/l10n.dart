@@ -925,6 +925,16 @@ class S {
       args: [],
     );
   }
+
+  /// `No Date`
+  String get no_date {
+    return Intl.message(
+      'No Date',
+      name: 'no_date',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {

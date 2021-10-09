@@ -6,8 +6,8 @@ class RegionDetail extends StatelessWidget {
   final String description;
   final FormatDate formatDate;
 
-  RegionDetail(dateString, this.asset, this.description)
-      : formatDate = FormatDate(dateString);
+  RegionDetail(String dateString, this.asset, this.description)
+    : formatDate = dateString.isEmpty ? FormatDate.NoDateAvailable() : FormatDate(dateString);
 
   @override
   Widget build(BuildContext context) {

@@ -82,5 +82,6 @@
   "amiibo_usage_count": "{count, plural, one{+ 1 more} two{+ 2 more} few{+ {count} more} other{+ many more}}",
   "invalid_amiibo": "Invalid amiibo data",
   "socket_exception": "Check your network",
-  "no_games_found": "No games found for this amiibo yet"
+  "no_games_found": "No games found for this amiibo yet",
+  "no_date": "No Date"
 }

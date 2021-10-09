@@ -281,10 +281,9 @@ class CategoryControlState extends State<CategoryControl> {
               Icons.group,
               size: _iconSize,
             ),
-            label: Flexible(
-                child: FittedBox(
+            label: FittedBox(
               child: Text(translate.category(AmiiboCategory.Name)),
-            )),
+            ),
           ),
         ),
         Expanded(
@@ -299,10 +298,8 @@ class CategoryControlState extends State<CategoryControl> {
               Icons.games,
               size: _iconSize,
             ),
-            label: Flexible(
-              child: FittedBox(
-                child: Text(translate.category(AmiiboCategory.Game)),
-              ),
+            label:FittedBox(
+              child: Text(translate.category(AmiiboCategory.Game)),
             ),
           ),
         ),
@@ -324,10 +321,9 @@ class CategoryControlState extends State<CategoryControl> {
               Icons.nfc,
               size: _iconSize,
             ),
-            label: Flexible(
-                child: FittedBox(
+            label: FittedBox(
               child: Text(translate.category(AmiiboCategory.AmiiboSeries)),
-            )),
+            ),
           ),
         ),
       ],

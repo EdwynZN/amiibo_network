@@ -100,19 +100,19 @@ class _AmiiboInfo extends ConsumerWidget {
           TextSpan(text: translate.types(amiibo.type!)),
           if (amiibo.au != null)
             WidgetSpan(
-              child: RegionDetail(amiibo.au, 'au', translate.au),
+              child: RegionDetail(amiibo.au!, 'au', translate.au),
             ),
           if (amiibo.eu != null)
             WidgetSpan(
-              child: RegionDetail(amiibo.eu, 'eu', translate.eu),
+              child: RegionDetail(amiibo.eu!, 'eu', translate.eu),
             ),
           if (amiibo.na != null)
             WidgetSpan(
-              child: RegionDetail(amiibo.na, 'na', translate.na),
+              child: RegionDetail(amiibo.na!, 'na', translate.na),
             ),
           if (amiibo.jp != null)
             WidgetSpan(
-              child: RegionDetail(amiibo.jp, 'jp', translate.jp),
+              child: RegionDetail(amiibo.jp!, 'jp', translate.jp),
             ),
         ];
         for (int i = 1; i < span.length; i = i + 2) {

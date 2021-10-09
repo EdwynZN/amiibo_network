@@ -133,6 +133,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "mode": MessageLookupByLibrary.simpleMessage("Theme Mode"),
         "na": MessageLookupByLibrary.simpleMessage("North America"),
         "name": m6,
+        "no_date": MessageLookupByLibrary.simpleMessage("No Date"),
         "no_games_found": MessageLookupByLibrary.simpleMessage(
             "No games found for this amiibo yet"),
         "notificationTitle":

@@ -1,18 +1,19 @@
+import 'package:amiibo_network/generated/l10n.dart';
 import 'package:flutter/material.dart';
 
-enum _Format{
-  FullDate,
-  MonthYear,
-  Year,
-  NoDate
-}
+enum _Format { FullDate, MonthYear, Year, NoDate }
 
 class FormatDate {
   late final DateTime? _dateTime;
-  late final _Format _format;
+  late _Format _format;
 
-  FormatDate(String dateString){
-    switch(dateString.length){
+  FormatDate._(
+    this._dateTime,
+    this._format
+  );
+
+  FormatDate(String dateString) {
+    switch (dateString.length) {
       case 8:
         _dateTime = DateTime.tryParse(dateString);
         _format = _Format.FullDate;
@@ -25,18 +26,28 @@ class FormatDate {
         _dateTime = DateTime.tryParse('${dateString}0101');
         _format = _Format.Year;
         break;
+      default:
+        _dateTime = null;
+        _format = _Format.NoDate;
+        break;
     }
-    if(_dateTime == null){
-      _dateTime = DateTime.now();
+    if (_dateTime == null && _format != _Format.NoDate) {
       _format = _Format.NoDate;
     }
   }
 
-  String localizedDate(BuildContext context){
-    switch(_format){
+  factory FormatDate.NoDateAvailable() => FormatDate._(null, _Format.NoDate);
+
+  String localizedDate(BuildContext context) {
+    if (_dateTime == null) {
+      final S translate = S.of(context);
+      return translate.no_date;
+    }
+    switch (_format) {
       case _Format.FullDate:
-        String formatDate = MaterialLocalizations.of(context).formatFullDate(_dateTime!);
-        formatDate = formatDate.substring(formatDate.indexOf(' ')+1);
+        String formatDate =
+            MaterialLocalizations.of(context).formatFullDate(_dateTime!);
+        formatDate = formatDate.substring(formatDate.indexOf(' ') + 1);
         return formatDate;
       case _Format.MonthYear:
         return MaterialLocalizations.of(context).formatMonthYear(_dateTime!);
@@ -45,5 +56,4 @@ class FormatDate {
         return MaterialLocalizations.of(context).formatYear(_dateTime!);
     }
   }
-
 }
