@@ -10025,7 +10025,7 @@
     },
     {
       "key":772,
-      "id":null,
+      "id":"05C0000004121302",
       "amiiboSeries":"Metroid",
       "character":"Samus",
       "gameSeries":"Metroid",
@@ -10038,7 +10038,7 @@
     },
     {
       "key":773,
-      "id":null,
+      "id":"05C4000004131302",
       "amiiboSeries":"Metroid",
       "character":"E.M.M.I",
       "gameSeries":"Metroid",
@@ -10152,7 +10152,85 @@
       "jp":"20210812",
       "na":null,
       "type":"Card"
+    },
+    {
+      "key":782,
+      "id":null,
+      "amiiboSeries":"Super Smash Bros.",
+      "character":"Steve",
+      "gameSeries":"Minecraft",
+      "name":"Steve",
+      "au":"2022",
+      "eu":"2022",
+      "jp":"2022",
+      "na":"2022",
+      "type":"Figure"
+    },
+    {
+      "key":783,
+      "id":null,
+      "amiiboSeries":"Super Smash Bros.",
+      "character":"Alex",
+      "gameSeries":"Minecraft",
+      "name":"Alex",
+      "au":"2022",
+      "eu":"2022",
+      "jp":"2022",
+      "na":"2022",
+      "type":"Figure"
+    },
+    {
+      "key":784,
+      "id":null,
+      "amiiboSeries":"Super Smash Bros.",
+      "character":"Sephiroth",
+      "gameSeries":"Final Fantasy",
+      "name":"Sephiroth",
+      "au":"",
+      "eu":"",
+      "jp":"",
+      "na":"",
+      "type":"Figure"
+    },
+    {
+      "key":785,
+      "id":null,
+      "amiiboSeries":"Super Smash Bros.",
+      "character":"Pyra",
+      "gameSeries":"Xenoblade",
+      "name":"Pyra",
+      "au":"",
+      "eu":"",
+      "jp":"",
+      "na":"",
+      "type":"Figure"
+    },
+    {
+      "key":786,
+      "id":null,
+      "amiiboSeries":"Super Smash Bros.",
+      "character":"Mythra",
+      "gameSeries":"Xenoblade",
+      "name":"Mythra",
+      "au":"",
+      "eu":"",
+      "jp":"",
+      "na":"",
+      "type":"Figure"
+    },
+    {
+      "key":787,
+      "id":null,
+      "amiiboSeries":"Super Smash Bros.",
+      "character":"Kazuya",
+      "gameSeries":"Tekken",
+      "name":"Kazuya Mishima",
+      "au":"",
+      "eu":"",
+      "jp":"",
+      "na":"",
+      "type":"Figure"
     }
   ],
-  "lastUpdated": "2021-08-27T20:18:00.475"
+  "lastUpdated": "2021-10-08T20:18:00.475"
 }
