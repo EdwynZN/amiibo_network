@@ -72,7 +72,7 @@ class _SliverFloatingBarState extends State<SliverFloatingBar>
         trailing: widget.trailing,
         onTap: widget.onTap,
         elevation: widget.elevation,
-        backgroundColor: widget.backgroundColor ?? Theme.of(context).appBarTheme.color
+        backgroundColor: widget.backgroundColor ?? Theme.of(context).appBarTheme.backgroundColor
       )
     );
   }

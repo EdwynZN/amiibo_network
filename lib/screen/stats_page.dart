@@ -156,7 +156,7 @@ class _StatsPageState extends State<StatsPage> {
         floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,
         extendBody: true,
         bottomNavigationBar: BottomAppBar(
-          shape: CircularNotchedRectangle(),
+          shape: const CircularNotchedRectangle(),
           child: AnimatedContainer(
             duration: const Duration(milliseconds: 300),
             padding: _canSave
@@ -274,7 +274,7 @@ class _BodyStats extends HookWidget {
                   childCount: stats.length,
                 ),
               ),
-            if (expanded) const SliverToBoxAdapter(child: SizedBox(height: 96))
+            if (expanded) const SliverToBoxAdapter(child: SizedBox(height: 48))
           ],
         ),
       );

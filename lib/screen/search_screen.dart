@@ -246,8 +246,8 @@ class CategoryControlState extends State<CategoryControl> {
   void didChangeDependencies() {
     translate = S.of(context);
     final ThemeData theme = Theme.of(context);
-    _accentColor = theme.accentColor;
-    _accentTextThemeColor = theme.accentTextTheme.headline6!.color;
+    _accentColor = theme.colorScheme.secondary;
+    _accentTextThemeColor = theme.colorScheme.onSecondary;
     super.didChangeDependencies();
   }
 

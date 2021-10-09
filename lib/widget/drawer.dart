@@ -145,9 +145,9 @@ class _CollectionDrawerState extends State<CollectionDrawer> {
                                 ListTile(
                                   leading: CircleAvatar(
                                     backgroundColor:
-                                        theme.accentColor,
+                                        theme.colorScheme.secondary,
                                     foregroundColor:
-                                        theme.accentIconTheme.color,
+                                        theme.colorScheme.onSecondary,
                                     radius: 12,
                                     child: const Icon(
                                       Icons.all_inclusive,
@@ -165,10 +165,9 @@ class _CollectionDrawerState extends State<CollectionDrawer> {
                                     ListTile(
                                       leading: CircleAvatar(
                                         backgroundColor:
-                                            theme.accentColor,
-                                        foregroundColor: theme
-                                            .accentIconTheme
-                                            .color,
+                                          theme.colorScheme.secondary,
+                                        foregroundColor:
+                                          theme.colorScheme.onSecondary,
                                         radius: 12,
                                         child: Text(series[0]),
                                       ),
@@ -195,9 +194,9 @@ class _CollectionDrawerState extends State<CollectionDrawer> {
                                 ListTile(
                                   leading: CircleAvatar(
                                     backgroundColor:
-                                        theme.accentColor,
+                                      theme.colorScheme.secondary,
                                     foregroundColor:
-                                        theme.accentIconTheme.color,
+                                      theme.colorScheme.onSecondary,
                                     radius: 12,
                                     child: const Icon(
                                       Icons.all_inclusive,
@@ -215,10 +214,9 @@ class _CollectionDrawerState extends State<CollectionDrawer> {
                                     ListTile(
                                       leading: CircleAvatar(
                                         backgroundColor:
-                                            theme.accentColor,
-                                        foregroundColor: theme
-                                            .accentIconTheme
-                                            .color,
+                                          theme.colorScheme.secondary,
+                                        foregroundColor:
+                                          theme.colorScheme.onSecondary,
                                         radius: 12,
                                         child: Text(series[0]),
                                       ),

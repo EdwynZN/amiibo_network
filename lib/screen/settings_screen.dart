@@ -457,7 +457,7 @@ class _DropMenu extends ConsumerWidget {
           Padding(
             padding: const EdgeInsets.only(left: 8),
             child: Text(translate.themeMode(themeMode.preferredTheme!),
-                style: themeStyle.textTheme!.subtitle2),
+                style: themeStyle.toolbarTextStyle),
           )
         ],
       ),
@@ -556,7 +556,7 @@ class _BottomBarState extends State<BottomBar> {
                     minimumSize: Size.fromHeight(48),
                     shape: BeveledRectangleBorder(),
                     primary: Theme.of(context).textTheme.headline6!.color,
-                    backgroundColor: Theme.of(context).buttonColor),
+                    backgroundColor: Theme.of(context).cardColor),
                 onPressed: () async => await _writePermission(),
                 icon: const Icon(Icons.file_upload),
                 label: Text(translate.export)),
@@ -568,7 +568,7 @@ class _BottomBarState extends State<BottomBar> {
                   minimumSize: Size.fromHeight(48),
                   shape: BeveledRectangleBorder(),
                   primary: Theme.of(context).textTheme.headline6!.color,
-                  backgroundColor: Theme.of(context).buttonColor),
+                  backgroundColor: Theme.of(context).cardColor),
               onPressed: () async => await _openFileExplorer(),
               icon: const Icon(Icons.file_download),
               label: Text(translate.import),

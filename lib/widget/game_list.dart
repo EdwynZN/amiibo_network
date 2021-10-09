@@ -237,7 +237,7 @@ class _SliverAnimatedPersistentHeader extends SliverPersistentHeaderDelegate {
           textColor:
               isPinned ? appBarTheme.iconTheme?.color : theme.iconTheme.color,
           iconColor: isPinned
-              ? appBarTheme.color ?? theme.iconTheme.color
+              ? appBarTheme.backgroundColor ?? theme.iconTheme.color
               : theme.iconTheme.color,
           child: ListTile(
             leading: Image.asset(

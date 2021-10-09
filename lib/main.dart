@@ -72,15 +72,9 @@ class AmiiboNetwork extends ConsumerWidget {
       onGenerateRoute: Routes.getRoute,
       themeMode: themeMode.preferredTheme,
       builder: (context, child) {
-        final theme = Theme.of(context);
-        final Brightness brightness = theme == Brightness.light ? Brightness.dark : Brightness.light;
+        final theme = AppBarTheme.of(context);
         return AnnotatedRegion<SystemUiOverlayStyle>(
-          value: SystemUiOverlayStyle(
-            statusBarIconBrightness: brightness,
-            systemNavigationBarIconBrightness: brightness,
-            statusBarColor: theme.appBarTheme.color,
-            systemNavigationBarColor: theme.appBarTheme.color,
-          ),
+          value: theme.systemOverlayStyle ?? SystemUiOverlayStyle.dark,
           child: child!,
         );
       },

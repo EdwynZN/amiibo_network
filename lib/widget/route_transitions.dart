@@ -43,15 +43,7 @@ CupertinoPageRoute cupertinoRoute({Widget? child, RouteSettings? settings, bool 
   return CupertinoPageRoute(
     settings: settings,
     fullscreenDialog: fullscreenDialog,
-    builder: (ctx) => AnnotatedRegion<SystemUiOverlayStyle>(
-      value: SystemUiOverlayStyle(
-        statusBarIconBrightness: Theme.of(ctx).brightness == Brightness.light ? Brightness.dark : Brightness.light,
-        systemNavigationBarIconBrightness: Theme.of(ctx).brightness == Brightness.light ? Brightness.dark : Brightness.light,
-        statusBarColor: Theme.of(ctx).appBarTheme.color,
-        systemNavigationBarColor: Theme.of(ctx).appBarTheme.color,
-      ),
-      child: child!
-    )
+    builder: (ctx) => child!
   );
 }
 
@@ -60,12 +52,7 @@ MaterialPageRoute materialRoute({Widget? child, RouteSettings? settings, bool fu
     settings: settings,
     fullscreenDialog: fullscreenDialog,
     builder: (ctx) => AnnotatedRegion<SystemUiOverlayStyle>(
-      value: SystemUiOverlayStyle(
-        statusBarIconBrightness: Theme.of(ctx).brightness == Brightness.light ? Brightness.dark : Brightness.light,
-        systemNavigationBarIconBrightness: Theme.of(ctx).brightness == Brightness.light ? Brightness.dark : Brightness.light,
-        statusBarColor: Theme.of(ctx).appBarTheme.color,
-        systemNavigationBarColor: Theme.of(ctx).appBarTheme.color,
-      ),
+      value: AppBarTheme.of(ctx).systemOverlayStyle ?? SystemUiOverlayStyle(),
       child: child!,
     )
   );
@@ -78,15 +65,7 @@ class FadeRoute<T> extends MaterialPageRoute<T> {
   @override
   Widget buildTransitions(BuildContext context, Animation<double> animation,
       Animation<double> secondaryAnimation, Widget child) {
-    return AnnotatedRegion<SystemUiOverlayStyle>(
-      value: SystemUiOverlayStyle(
-        statusBarIconBrightness: Theme.of(context).brightness == Brightness.light ? Brightness.dark : Brightness.light,
-        systemNavigationBarIconBrightness: Theme.of(context).brightness == Brightness.light ? Brightness.dark : Brightness.light,
-        statusBarColor: Theme.of(context).appBarTheme.color,
-        systemNavigationBarColor: Theme.of(context).appBarTheme.color,
-      ),
-      child: FadeTransition(opacity: animation, child: child),
-    );
+    return FadeTransition(opacity: animation, child: child);
   }
 }
 
@@ -124,21 +103,13 @@ class VerticalSlideRoute<T> extends PageRoute<T> {
   Widget buildTransitions(BuildContext context, Animation<double> animation,
       Animation<double> secondaryAnimation, Widget child) {
     final double maxHeight = MediaQuery.of(context).size.height;
-    return AnnotatedRegion<SystemUiOverlayStyle>(
-      value: SystemUiOverlayStyle(
-        statusBarIconBrightness: Theme.of(context).brightness == Brightness.light ? Brightness.dark : Brightness.light,
-        systemNavigationBarIconBrightness: Theme.of(context).brightness == Brightness.light ? Brightness.dark : Brightness.light,
-        statusBarColor: Theme.of(context).appBarTheme.color,
-        systemNavigationBarColor: Theme.of(context).appBarTheme.color,
-      ),
-      child: SlideTransition(
-        position: Tween<Offset>(begin: const Offset(0, 1), end: Offset.zero)
-            .animate(animation),
-        child: GestureDetector(
-          child: child,
-          onVerticalDragUpdate: (DragUpdateDetails details) => _handleDragUpdate(details, maxHeight),
-          onVerticalDragEnd: (DragEndDetails details) => _handleDragEnd(details, maxHeight),
-        )
+    return SlideTransition(
+      position: Tween<Offset>(begin: const Offset(0, 1), end: Offset.zero)
+          .animate(animation),
+      child: GestureDetector(
+        child: child,
+        onVerticalDragUpdate: (DragUpdateDetails details) => _handleDragUpdate(details, maxHeight),
+        onVerticalDragEnd: (DragEndDetails details) => _handleDragEnd(details, maxHeight),
       )
     );
   }
@@ -190,19 +161,13 @@ class SlideRoute<T> extends MaterialPageRoute<T> {
   Widget buildTransitions(BuildContext context, Animation<double> animation,
       Animation<double> secondaryAnimation, Widget child) {
     final double maxWidth = MediaQuery.of(context).size.width;
-    return AnnotatedRegion<SystemUiOverlayStyle>(
-      value: SystemUiOverlayStyle(
-        statusBarColor: Theme.of(context).appBarTheme.color,
-        systemNavigationBarColor: Theme.of(context).appBarTheme.color,
-      ),
-      child: SlideTransition(
-        position: Tween<Offset>(begin: const Offset(1, 0), end: Offset.zero)
-          .animate(animation),
-        child: GestureDetector(
-          child: child,
-          onHorizontalDragUpdate: (DragUpdateDetails details) => _handleDragUpdate(details, maxWidth),
-          onHorizontalDragEnd: (DragEndDetails details) => _handleDragEnd(details, maxWidth),
-        )
+    return SlideTransition(
+      position: Tween<Offset>(begin: const Offset(1, 0), end: Offset.zero)
+        .animate(animation),
+      child: GestureDetector(
+        child: child,
+        onHorizontalDragUpdate: (DragUpdateDetails details) => _handleDragUpdate(details, maxWidth),
+        onHorizontalDragEnd: (DragEndDetails details) => _handleDragEnd(details, maxWidth),
       )
     );
   }
