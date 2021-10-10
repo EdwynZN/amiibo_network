@@ -185,6 +185,11 @@ class _Theme implements AmiiboTheme {
       primaryTextTheme: _brightnessPrimaryColor == Brightness.dark
           ? __lightAccentTextTheme
           : __darkAccentTextTheme,
+      progressIndicatorTheme: ProgressIndicatorThemeData(
+        color: accentColor,
+        linearTrackColor: color.shade100,
+        circularTrackColor: color.shade100,
+      ),
       bottomAppBarTheme: BottomAppBarTheme(
           shape: CircularNotchedRectangle(),
           color: color,
@@ -390,6 +395,11 @@ class _Theme implements AmiiboTheme {
             brightness: Brightness.dark,
           ),
           textTheme: __lightAccentTextTheme,
+          progressIndicatorTheme: ProgressIndicatorThemeData(
+            color: Colors.blueGrey.shade700,
+            linearTrackColor: Colors.blueGrey,
+            circularTrackColor: Colors.blueGrey,
+          ),
           primaryTextTheme: __lightAccentTextTheme,
           bottomAppBarTheme: BottomAppBarTheme(
             shape: CircularNotchedRectangle(),
@@ -540,7 +550,7 @@ class _Theme implements AmiiboTheme {
               statusBarIconBrightness: Brightness.light,
               systemNavigationBarIconBrightness: Brightness.dark,
               statusBarColor: Colors.grey.shade900,
-              systemNavigationBarColor: Colors.blueGrey.shade900,
+              systemNavigationBarColor: Colors.grey.shade900,
             ),
             foregroundColor: Colors.blueGrey,
             titleTextStyle: __lightAccentTextTheme.headline6,
@@ -590,6 +600,11 @@ class _Theme implements AmiiboTheme {
           ),
           textTheme: __lightAccentTextTheme,
           primaryTextTheme: __lightAccentTextTheme,
+          progressIndicatorTheme: ProgressIndicatorThemeData(
+            color: Colors.grey.shade700,
+            linearTrackColor: Colors.grey,
+            circularTrackColor: Colors.grey,
+          ),
           bottomAppBarTheme: BottomAppBarTheme(
               shape: CircularNotchedRectangle(),
               color: Colors.grey[900],
@@ -798,6 +813,11 @@ class _Theme implements AmiiboTheme {
                 color: Colors.white70,
                 fontSize: 16,
                 fontWeight: FontWeight.w400),
+          ),
+          progressIndicatorTheme: ProgressIndicatorThemeData(
+            color: _darkAccentColor,
+            linearTrackColor: _darkAccentColor.shade100,
+            circularTrackColor: _darkAccentColor.shade100,
           ),
           primaryTextTheme: __lightAccentTextTheme,
           bottomAppBarTheme: BottomAppBarTheme(

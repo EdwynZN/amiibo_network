@@ -74,7 +74,7 @@ class AmiiboNetwork extends ConsumerWidget {
       builder: (context, child) {
         final theme = AppBarTheme.of(context);
         return AnnotatedRegion<SystemUiOverlayStyle>(
-          value: theme.systemOverlayStyle ?? SystemUiOverlayStyle.dark,
+          value: theme.systemOverlayStyle!,
           child: child!,
         );
       },

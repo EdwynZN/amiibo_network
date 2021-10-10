@@ -10186,10 +10186,10 @@
       "character":"Sephiroth",
       "gameSeries":"Final Fantasy",
       "name":"Sephiroth",
-      "au":"",
-      "eu":"",
-      "jp":"",
-      "na":"",
+      "au":"soon",
+      "eu":"soon",
+      "jp":"soon",
+      "na":"soon",
       "type":"Figure"
     },
     {
@@ -10199,10 +10199,10 @@
       "character":"Pyra",
       "gameSeries":"Xenoblade",
       "name":"Pyra",
-      "au":"",
-      "eu":"",
-      "jp":"",
-      "na":"",
+      "au":"soon",
+      "eu":"soon",
+      "jp":"soon",
+      "na":"soon",
       "type":"Figure"
     },
     {
@@ -10212,10 +10212,10 @@
       "character":"Mythra",
       "gameSeries":"Xenoblade",
       "name":"Mythra",
-      "au":"",
-      "eu":"",
-      "jp":"",
-      "na":"",
+      "au":"soon",
+      "eu":"soon",
+      "jp":"soon",
+      "na":"soon",
       "type":"Figure"
     },
     {
@@ -10225,12 +10225,12 @@
       "character":"Kazuya",
       "gameSeries":"Tekken",
       "name":"Kazuya Mishima",
-      "au":"",
-      "eu":"",
-      "jp":"",
-      "na":"",
+      "au":"soon",
+      "eu":"soon",
+      "jp":"soon",
+      "na":"soon",
       "type":"Figure"
     }
   ],
-  "lastUpdated": "2021-10-08T20:18:00.475"
+  "lastUpdated": "2021-10-09T20:18:00.475"
 }
