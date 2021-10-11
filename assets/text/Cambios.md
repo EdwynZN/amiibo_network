@@ -1,6 +1,8 @@
+## Version 1.4.1b
+- Se agregaron los amiibos de Steve, Alex, Sephiroth, Pyra, Mythra y Kazuya
+
 ## Version 1.4.1
 - Se agregaron las tarjetas de YuGiOh!
-
 ## Version 1.4.0
 - Se agrego el amiibo Min-Min de la serie Super Smash Bros.
 - Se agregaron las figuras de Metroid Dread (Samus y E.M.M.I.)

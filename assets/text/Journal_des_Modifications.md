@@ -1,3 +1,6 @@
+## Version 1.4.1b
+- Ajout des figurines Steve, Alex, Sephiroth, Pyra, Mythra et Kazuya  de la série Super Smash Bros.
+
 ## Version 1.4.1
 - Ajout des cartes de la série YuGiOh!
 

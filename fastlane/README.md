@@ -21,9 +21,9 @@ or alternatively using `brew install fastlane`
 fastlane android build
 ```
 Build AppBundle
-### android beta
+### android internal
 ```
-fastlane android beta
+fastlane android internal
 ```
 Deploy Beta to Google Play Store
 
