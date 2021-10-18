@@ -1,5 +1,6 @@
 ## Version 1.4.1b
 - Added Super Smash Bros. series Steve, Alex, Sephiroth, Pyra, Mythra and Kazuya
+- Added Animal Crossing Series 5 Cards
 
 ## Version 1.4.1
 - Added YuGiOh! Cards

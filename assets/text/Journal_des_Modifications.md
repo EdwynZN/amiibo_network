@@ -1,5 +1,6 @@
 ## Version 1.4.1b
 - Ajout des figurines Steve, Alex, Sephiroth, Pyra, Mythra et Kazuya  de la série Super Smash Bros.
+- Ajout des des cartes de la série 5 Animal Crossing
 
 ## Version 1.4.1
 - Ajout des cartes de la série YuGiOh!
