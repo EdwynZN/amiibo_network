@@ -1,6 +1,6 @@
 import 'package:flutter/services.dart';
 
-enum AndroidCode{
+enum AndroidCode {
   Unknown,
   JellyBean,
   JellyBean_MR1,
@@ -16,31 +16,37 @@ enum AndroidCode{
   O_MR1,
   P,
   Q,
-  R
+  R,
+  S,
 }
 
-extension AndroidCodeShortcuts on AndroidCode{
+extension AndroidCodeShortcuts on AndroidCode {
   int get version => this.index + 15;
 }
 
-class InfoPackage{
-  static const _channel = const MethodChannel("com.dartz.amiibo_network/info_package");
-  static int get version => _version ?? -1; //returns android version code
+class InfoPackage {
+  static const _channel =
+      const MethodChannel("com.dartz.amiibo_network/info_package");
+  static int get version => _version ?? 0; //returns android version code
   static int? _version;
-  static AndroidCode? get androidVersionCode => _androidVersion;
-  static AndroidCode? _androidVersion;
+  static AndroidCode get androidVersionCode {
+    if (version < 0 || version >= AndroidCode.values.length) {
+      return AndroidCode.Unknown;
+    }
+    return AndroidCode.values[version];
+  }
 
-  static Future<int?> versionCode() async {
+  static Future<int> versionCode() async {
     //TODO IOS Platform Channel
     try {
       _version = await _channel.invokeMethod('version');
-      _androidVersion = AndroidCode.values[_version!-15];
-      return _version;
+      if (_version != null) {
+        _version = _version! - 15;
+      }
+      return version;
     } on PlatformException catch (e) {
-      print(e);
       _version = 0;
-      _androidVersion = AndroidCode.values[_version!];
-      return _version;
+      return version;
     }
   }
 }
