@@ -7,8 +7,8 @@ class StatButton extends ConsumerWidget {
   const StatButton({Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context, ScopedReader watch) {
-    final statMode = watch(statProvider);
+  Widget build(BuildContext context, WidgetRef ref) {
+    final statMode = ref.watch(statProvider);
     final isPercentage = statMode.isPercentage;
     return IconButton(
       icon: isPercentage ? const Icon(Icons.pie_chart_rounded) 

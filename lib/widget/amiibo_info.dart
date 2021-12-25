@@ -9,10 +9,10 @@ class AmiiboDetailInfo extends ConsumerWidget {
   const AmiiboDetailInfo({Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context, ScopedReader watch) {
-    final key = watch(keyAmiiboProvider);
+  Widget build(BuildContext context, WidgetRef ref) {
+    final key = ref.watch(keyAmiiboProvider);
     final S translate = S.of(context);
-    return watch(detailAmiiboProvider(key)).when(
+    return ref.watch(detailAmiiboProvider(key)).when(
       data: (amiibo) {
         if (amiibo == null) return const SizedBox();
         return Column(
@@ -37,7 +37,7 @@ class AmiiboDetailInfo extends ConsumerWidget {
       },
       error: (_, __) => Center(
         child: TextButton(
-          onPressed: () => context.refresh(detailAmiiboProvider(key)),
+          onPressed: () => ref.refresh(detailAmiiboProvider(key)),
           child: Text(translate.splashError),
         ),
       ),

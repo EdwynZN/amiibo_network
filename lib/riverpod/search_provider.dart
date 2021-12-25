@@ -59,7 +59,7 @@ final categorySearchProvider =
 final searchProvider =
     FutureProvider.autoDispose.family<List<String>, String>((ref, search) {
   final service = ref.watch(serviceProvider.notifier);
-  final category = ref.watch(categorySearchProvider).state;
+  final category = ref.watch(categorySearchProvider.state).state;
   final exp = category.whereExpression(search)!;
 
   return service.searchDB(exp, category.name);

@@ -2,9 +2,8 @@ import 'package:amiibo_network/riverpod/theme_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:amiibo_network/generated/l10n.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:flutter_hooks/flutter_hooks.dart';
 
-class ThemeButton extends HookWidget {
+class ThemeButton extends HookConsumerWidget {
   final bool openDialog;
 
   static const double _circleSize = 55.0; // diameter of the CircleAvatar
@@ -65,8 +64,8 @@ class ThemeButton extends HookWidget {
               child: ConstrainedBox(
                 constraints: _constraint,
                 child: Consumer(
-                  builder: (context, watch, child) {
-                    final theme = watch(themeProvider);
+                  builder: (context, ref, child) {
+                    final theme = ref.watch(themeProvider);
                     return Wrap(
                       runSpacing: 10.0,
                       spacing: spacing,
@@ -103,8 +102,8 @@ class ThemeButton extends HookWidget {
             Padding(
               padding: const EdgeInsets.fromLTRB(0, 16, 0, 0),
               child: Consumer(
-                builder: (context, watch, child) {
-                  final theme = watch(themeProvider);
+                builder: (context, ref, child) {
+                  final theme = ref.watch(themeProvider);
                   return Wrap(
                     spacing: spacing,
                     runSpacing: 10.0,
@@ -193,9 +192,9 @@ class ThemeButton extends HookWidget {
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final ThemeMode? theme =
-        useProvider(themeProvider.select((value) => value.preferredTheme));
+        ref.watch(themeProvider.select<ThemeMode?>((value) => value.preferredTheme));
     return InkResponse(
       radius: 18,
       splashFactory: InkRipple.splashFactory,
@@ -218,7 +217,7 @@ class ThemeButton extends HookWidget {
         child: _selectWidget(theme),
       ),
       onLongPress: openDialog ? () => dialog(context) : null,
-      onTap: () async => context.read(themeProvider).toggleThemeMode(),
+      onTap: () async => ref.read(themeProvider).toggleThemeMode(),
     );
   }
 }

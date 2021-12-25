@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'dart:math' as math;
-import 'package:flutter/widgets.dart';
 
 class SliverFloatingBar extends StatefulWidget{
   final bool pinned;

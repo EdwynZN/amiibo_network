@@ -7,7 +7,6 @@ import 'package:flutter/services.dart';
 import 'dart:ui' as ui;
 import 'package:amiibo_network/service/service.dart';
 import 'package:amiibo_network/riverpod/stat_provider.dart' as stat;
-import 'package:flutter/rendering.dart';
 import 'package:amiibo_network/generated/l10n.dart';
 import 'package:amiibo_network/model/search_result.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -60,10 +59,10 @@ class Screenshot {
     _canvas = Canvas(_recorder!, rect);
   }
 
-  void update(BuildContext context) {
+  void update(WidgetRef ref, BuildContext context) {
     this
       ..theme = Theme.of(context)
-      ..statProvider = context.read(stat.statProvider)
+      ..statProvider = ref.read(stat.statProvider)
       ..owned = _translate!.owned
       ..wished = _translate!.wished
       ..createdOn = _translate!.createdOn

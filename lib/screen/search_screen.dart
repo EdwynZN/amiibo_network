@@ -11,14 +11,14 @@ import 'package:amiibo_network/generated/l10n.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 
-class SearchScreen extends StatefulHookWidget {
+class SearchScreen extends StatefulHookConsumerWidget {
   const SearchScreen({Key? key}) : super(key: key);
 
   @override
-  State<StatefulWidget> createState() => SearchScreenState();
+  _SearchScreenState createState() => _SearchScreenState();
 }
 
-class SearchScreenState extends State<SearchScreen> {
+class _SearchScreenState extends ConsumerState<SearchScreen> {
   static final RegExp _regAllowList = RegExp(r'^[A-Za-zÀ-ÿ0-9 .\-\&]*$');
   late S translate;
 
@@ -31,8 +31,8 @@ class SearchScreenState extends State<SearchScreen> {
   @override
   Widget build(BuildContext context) {
     final _textController = useTextEditingController();
-    final amiiboCategory = useProvider(querySearchProvider
-        .select((value) => value.search ?? describeEnum(value.category)));
+    final amiiboCategory = ref.watch(querySearchProvider
+        .select<String>((value) => value.search ?? describeEnum(value.category)));
     return SafeArea(
       child: Scaffold(
         body: CustomScrollView(
@@ -71,7 +71,7 @@ class SearchScreenState extends State<SearchScreen> {
                 onSubmitted: (text) => Navigator.of(context).pop(
                   Search(
                     search: text,
-                    category: context.read(categorySearchProvider).state,
+                    category: ref.read(categorySearchProvider.state).state,
                   ),
                 ),
                 style: Theme.of(context).textTheme.headline4,
@@ -147,7 +147,7 @@ String _useDebouncedSearch(TextEditingController textEditingController) {
   return search.value;
 }
 
-class _Suggestions extends HookWidget {
+class _Suggestions extends HookConsumerWidget {
   final TextEditingController? textEditingController;
   const _Suggestions({
     Key? key,
@@ -155,9 +155,9 @@ class _Suggestions extends HookWidget {
   }) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final search = _useDebouncedSearch(textEditingController!);
-    final suggestions = useProvider(searchProvider(search));
+    final suggestions = ref.watch(searchProvider(search));
     return SliverList(
       delegate: SliverChildBuilderDelegate(
         (BuildContext context, int index) {
@@ -173,7 +173,7 @@ class _Suggestions extends HookWidget {
                     onTap: () => Navigator.of(context).pop(
                       Search(
                         search: data[index],
-                        category: context.read(categorySearchProvider).state,
+                        category: ref.read(categorySearchProvider.state).state,
                       ),
                     ),
                     title: Text('${data[index]}'),
@@ -184,7 +184,7 @@ class _Suggestions extends HookWidget {
             orElse: () => const SizedBox.shrink(),
           );
         },
-        childCount: suggestions.data?.value.length ?? 10,
+        childCount: suggestions.asData?.value.length ?? 10,
       ),
     );
   }
@@ -230,14 +230,14 @@ class _SliverPersistentHeader extends SliverPersistentHeaderDelegate {
       maxExtent != oldDelegate.maxExtent || minExtent != oldDelegate.minExtent;
 }
 
-class CategoryControl extends StatefulHookWidget {
+class CategoryControl extends StatefulHookConsumerWidget {
   const CategoryControl({Key? key}) : super(key: key);
 
   @override
-  State<StatefulWidget> createState() => CategoryControlState();
+  _CategoryControlState createState() => _CategoryControlState();
 }
 
-class CategoryControlState extends State<CategoryControl> {
+class _CategoryControlState extends ConsumerState<CategoryControl> {
   static const double _iconSize = 20.0;
   Color? _accentColor, _accentTextThemeColor;
   late S translate;
@@ -251,15 +251,15 @@ class CategoryControlState extends State<CategoryControl> {
     super.didChangeDependencies();
   }
 
-  void _selectCategory(AmiiboCategory category) {
-    final _search = context.read(categorySearchProvider);
+  void _selectCategory(WidgetRef ref, AmiiboCategory category) {
+    final _search = ref.read(categorySearchProvider.state);
     if (_search.state == category) return;
     _search.state = category;
   }
 
   @override
   Widget build(BuildContext context) {
-    final _search = useProvider(categorySearchProvider).state;
+    final _search = ref.watch(categorySearchProvider.state).state;
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       mainAxisSize: MainAxisSize.max,
@@ -276,7 +276,7 @@ class CategoryControlState extends State<CategoryControl> {
                 ),
                 backgroundColor:
                     _search == AmiiboCategory.Name ? _accentColor : null),
-            onPressed: () => _selectCategory(AmiiboCategory.Name),
+            onPressed: () => _selectCategory(ref, AmiiboCategory.Name),
             icon: const Icon(
               Icons.group,
               size: _iconSize,
@@ -293,7 +293,7 @@ class CategoryControlState extends State<CategoryControl> {
                     primary: _accentTextThemeColor,
                     backgroundColor: _accentColor)
                 : null,
-            onPressed: () => _selectCategory(AmiiboCategory.Game),
+            onPressed: () => _selectCategory(ref, AmiiboCategory.Game),
             icon: const Icon(
               Icons.games,
               size: _iconSize,
@@ -316,7 +316,7 @@ class CategoryControlState extends State<CategoryControl> {
                 backgroundColor: _search == AmiiboCategory.AmiiboSeries
                     ? _accentColor
                     : null),
-            onPressed: () => _selectCategory(AmiiboCategory.AmiiboSeries),
+            onPressed: () => _selectCategory(ref, AmiiboCategory.AmiiboSeries),
             icon: const Icon(
               Icons.nfc,
               size: _iconSize,

@@ -2,7 +2,6 @@ import 'dart:async';
 import 'package:amiibo_network/resources/resources.dart';
 import 'package:flutter/material.dart';
 import 'package:amiibo_network/widget/switch_joycon.dart';
-import 'package:flutter/services.dart';
 import 'package:amiibo_network/service/update_service.dart';
 import 'package:amiibo_network/generated/l10n.dart';
 

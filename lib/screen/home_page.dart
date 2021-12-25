@@ -15,7 +15,6 @@ import 'package:amiibo_network/widget/sort_bottomsheet.dart';
 import 'package:amiibo_network/widget/stat_icon.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:amiibo_network/data/database.dart';
 import 'package:flutter/rendering.dart';
 import 'package:amiibo_network/widget/drawer.dart';
@@ -38,14 +37,14 @@ final AutoDisposeProvider<String>? _titleProvider =
   return query.search ?? describeEnum(query.category);
 });
 
-class Home extends StatefulWidget {
+class Home extends ConsumerStatefulWidget {
   const Home({Key? key}) : super(key: key);
 
   @override
-  State<StatefulWidget> createState() => HomeState();
+  ConsumerState<ConsumerStatefulWidget> createState() => HomeState();
 }
 
-class HomeState extends State<Home> with SingleTickerProviderStateMixin {
+class HomeState extends ConsumerState<Home> with SingleTickerProviderStateMixin {
   ScrollController? _controller;
   AnimationController? _animationController;
   late S translate;
@@ -63,10 +62,10 @@ class HomeState extends State<Home> with SingleTickerProviderStateMixin {
   void _restartAnimation() {
     _controller!.jumpTo(0);
     _animationController!.forward();
-    context.read(selectProvider).clearSelected();
+    ref.read(selectProvider).clearSelected();
   }
 
-  void _cancelSelection() => context.read(selectProvider).clearSelected();
+  void _cancelSelection() => ref.read(selectProvider).clearSelected();
 
   @override
   void initState() {
@@ -130,7 +129,7 @@ class HomeState extends State<Home> with SingleTickerProviderStateMixin {
   Future<void> _search() async {
     Search? value = await Navigator.pushNamed<Search?>(context, searchRoute);
     if (value?.search?.trim().isNotEmpty ?? false) {
-      final query = context.read(queryProvider.notifier);
+      final query = ref.read(queryProvider.notifier);
       WidgetsBinding.instance!.addPostFrameCallback((_) {
         query.updateOption(value!);
         _restartAnimation();
@@ -139,7 +138,7 @@ class HomeState extends State<Home> with SingleTickerProviderStateMixin {
   }
 
   Future<bool> _exitApp() async {
-    final selected = context.read(selectProvider);
+    final selected = ref.read(selectProvider);
     if (selected.multipleSelected) {
       selected.clearSelected();
       return false;
@@ -154,10 +153,10 @@ class HomeState extends State<Home> with SingleTickerProviderStateMixin {
     return WillPopScope(
       onWillPop: _exitApp,
       child: SafeArea(
-        child: HookBuilder(
-          builder: (_) {
-            final _multipleSelection = useProvider(
-                selectProvider.select((value) => value.multipleSelected));
+        child: HookConsumer(
+          builder: (_, ref, child) {
+            final _multipleSelection = ref.watch(
+                selectProvider.select<bool>((value) => value.multipleSelected));
             return Scaffold(
               resizeToAvoidBottomInset: false,
               drawer: _multipleSelection
@@ -223,15 +222,15 @@ class HomeState extends State<Home> with SingleTickerProviderStateMixin {
   }
 }
 
-class _AmiiboListWidget extends HookWidget {
+class _AmiiboListWidget extends HookConsumerWidget {
   const _AmiiboListWidget({Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
-    final ignore = useProvider(lockProvider).lock;
-    final amiiboList = useProvider(amiiboHomeListProvider);
-    final isCustom = useProvider(queryProvider.notifier
-        .select((cb) => cb.search.category == AmiiboCategory.Custom));
+  Widget build(BuildContext context, WidgetRef ref) {
+    final ignore = ref.watch(lockProvider).lock;
+    final amiiboList = ref.watch(amiiboHomeListProvider);
+    final isCustom = ref.watch(queryProvider.notifier
+        .select<bool>((cb) => cb.search.category == AmiiboCategory.Custom));
     final controller = useAnimationController(
       duration: const Duration(seconds: 1),
       animationBehavior: AnimationBehavior.preserve,
@@ -266,7 +265,7 @@ class _AmiiboListWidget extends HookWidget {
                 textStyle: MaterialStateProperty.all(theme.textTheme.headline4),
               ),
               onPressed: () async {
-                final filter = context.read(queryProvider.notifier);
+                final filter = ref.read(queryProvider.notifier);
                 final List<String>? figures = filter.customFigures;
                 final List<String>? cards = filter.customCards;
                 bool save = await showDialog<bool>(
@@ -279,8 +278,7 @@ class _AmiiboListWidget extends HookWidget {
                     ) ??
                     false;
                 if (save)
-                  await context
-                      .read(queryProvider.notifier)
+                  await ref.read(queryProvider.notifier)
                       .updateCustom(figures, cards);
               },
               icon: const Icon(Icons.create),
@@ -357,11 +355,11 @@ class _TitleAppBar extends ConsumerWidget {
   const _TitleAppBar({Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context, ScopedReader watch) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final MaterialLocalizations localizations =
         MaterialLocalizations.of(context);
     final S translate = S.of(context);
-    final title = watch(_titleProvider!);
+    final title = ref.watch(_titleProvider!);
     return Tooltip(
       message: num.tryParse(title) == null
           ? localizations.searchFieldLabel
@@ -371,11 +369,11 @@ class _TitleAppBar extends ConsumerWidget {
   }
 }
 
-class _SelectedOptions extends StatelessWidget {
+class _SelectedOptions extends ConsumerWidget {
   const _SelectedOptions({Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final S translate = S.of(context);
     return Row(
       mainAxisSize: MainAxisSize.min,
@@ -384,19 +382,19 @@ class _SelectedOptions extends StatelessWidget {
         IconButton(
           icon: const Icon(Icons.remove),
           onPressed: () =>
-              context.read(selectProvider).updateAmiibos(SelectedType.Clear),
+              ref.read(selectProvider).updateAmiibos(SelectedType.Clear),
           tooltip: translate.removeTooltip,
         ),
         IconButton(
           icon: const Icon(iconOwned),
           onPressed: () =>
-              context.read(selectProvider).updateAmiibos(SelectedType.Owned),
+              ref.read(selectProvider).updateAmiibos(SelectedType.Owned),
           tooltip: translate.ownTooltip,
         ),
         IconButton(
           icon: const Icon(iconWished),
           onPressed: () =>
-              context.read(selectProvider).updateAmiibos(SelectedType.Wished),
+              ref.read(selectProvider).updateAmiibos(SelectedType.Wished),
           tooltip: translate.wishTooltip,
         ),
       ],

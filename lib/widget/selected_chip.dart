@@ -1,7 +1,6 @@
 import 'package:amiibo_network/riverpod/query_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:amiibo_network/generated/l10n.dart';
-import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 class CustomQueryWidget extends StatelessWidget{
@@ -32,9 +31,9 @@ class CustomQueryWidget extends StatelessWidget{
               padding: const EdgeInsets.symmetric(vertical: 16),
               child: Text(translate.figures),
             ),
-            HookBuilder(
-              builder: (context) {
-                return useProvider(figuresProvider).maybeWhen(
+            HookConsumer(
+              builder: (context, ref, child) {
+                return ref.watch(figuresProvider).maybeWhen(
                   data: (data) {
                     return ConstrainedBox(
                       constraints: const BoxConstraints(maxWidth: 416),
@@ -52,9 +51,9 @@ class CustomQueryWidget extends StatelessWidget{
               padding: const EdgeInsets.symmetric(vertical: 16),
               child: Text(translate.cards),
             ),
-            HookBuilder(
-              builder: (context) {
-                return useProvider(
+            HookConsumer(
+              builder: (context, ref, child) {
+                return ref.watch(
                   cardsProvider,
                 ).maybeWhen(
                   data: (data) {

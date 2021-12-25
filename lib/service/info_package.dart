@@ -44,7 +44,7 @@ class InfoPackage {
         _version = _version! - 15;
       }
       return version;
-    } on PlatformException catch (e) {
+    } on PlatformException catch (_) {
       _version = 0;
       return version;
     }

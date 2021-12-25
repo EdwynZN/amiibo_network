@@ -3,33 +3,32 @@ import 'package:amiibo_network/riverpod/select_provider.dart';
 import 'package:amiibo_network/riverpod/service_provider.dart';
 import 'package:amiibo_network/utils/routes_constants.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:amiibo_network/widget/amiibo_grid.dart';
 import 'package:amiibo_network/model/selection.dart';
 
-class AnimatedSelection extends StatefulHookWidget {
+class AnimatedSelection extends StatefulHookConsumerWidget {
   const AnimatedSelection({Key? key}) : super(key: key);
 
   @override
   _AnimatedSelectionState createState() => _AnimatedSelectionState();
 }
 
-class _AnimatedSelectionState extends State<AnimatedSelection> {
+class _AnimatedSelectionState extends ConsumerState<AnimatedSelection> {
   void _onDoubleTap(int key) =>
       Navigator.pushNamed(context, detailsRoute, arguments: key);
 
-  void _onTap(int key) {
-    context.read(serviceProvider.notifier).shift(key);
+  void _onTap(WidgetRef ref, int key) {
+    ref.read(serviceProvider.notifier).shift(key);
   }
 
-  void _onLongPress(int key) => context.read(selectProvider).onLongPress(key);
+  void _onLongPress(WidgetRef ref, int key) => ref.read(selectProvider).onLongPress(key);
 
   @override
   Widget build(BuildContext context) {
-    final key = useProvider(keyAmiiboProvider);
-    final select = useProvider(
-      selectProvider.select(
+    final key = ref.watch(keyAmiiboProvider);
+    final select = ref.watch(
+      selectProvider.select<Selection>(
         (cb) => Selection(
           activated: cb.multipleSelected,
           selected: cb.isSelected(key),
@@ -38,8 +37,8 @@ class _AnimatedSelectionState extends State<AnimatedSelection> {
     );
     return GestureDetector(
       onDoubleTap: select.activated ? null : () => _onDoubleTap(key),
-      onTap: select.activated ? () => _onLongPress(key) : () => _onTap(key),
-      onLongPress: () => _onLongPress(key),
+      onTap: select.activated ? () => _onLongPress(ref, key) : () => _onTap(ref, key),
+      onLongPress: () => _onLongPress(ref, key),
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 200),
         curve: Curves.linearToEaseOut,

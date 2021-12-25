@@ -11,20 +11,20 @@ class Buttons extends ConsumerWidget {
   const Buttons({Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context, ScopedReader watch) {
-    final key = watch(keyAmiiboProvider);
-    final asyncAmiibo = watch(detailAmiiboProvider(key));
+  Widget build(BuildContext context, WidgetRef ref) {
+    final key = ref.watch(keyAmiiboProvider);
+    final asyncAmiibo = ref.watch(detailAmiiboProvider(key));
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: <Widget>[
         Expanded(
           child: FittedBox(
-            child: OwnedButton(amiibo: asyncAmiibo.data?.value),
+            child: OwnedButton(amiibo: asyncAmiibo.asData?.value),
           ),
         ),
         Expanded(
           child: FittedBox(
-            child: WishedButton(amiibo: asyncAmiibo.data?.value),
+            child: WishedButton(amiibo: asyncAmiibo.asData?.value),
           ),
         ),
       ],
@@ -32,7 +32,7 @@ class Buttons extends ConsumerWidget {
   }
 }
 
-class WishedButton extends StatelessWidget {
+class WishedButton extends ConsumerWidget {
   WishedButton({
     Key? key,
     required this.amiibo,
@@ -43,7 +43,7 @@ class WishedButton extends StatelessWidget {
   final bool isActive;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final S translate = S.of(context);
     return IconButton(
       icon: isActive
@@ -56,7 +56,7 @@ class WishedButton extends StatelessWidget {
       onPressed: () {
         if (amiibo == null) return;
         final bool newValue = !isActive;
-        context.read(serviceProvider.notifier).update(
+        ref.read(serviceProvider.notifier).update(
           [
             amiibo!.copyWith(
               owned: newValue ? false : amiibo!.owned,
@@ -69,7 +69,7 @@ class WishedButton extends StatelessWidget {
   }
 }
 
-class OwnedButton extends StatelessWidget {
+class OwnedButton extends ConsumerWidget {
   OwnedButton({
     Key? key,
     required this.amiibo,
@@ -80,7 +80,7 @@ class OwnedButton extends StatelessWidget {
   final bool isActive;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final S translate = S.of(context);
     return IconButton(
       icon: isActive
@@ -93,7 +93,7 @@ class OwnedButton extends StatelessWidget {
       onPressed: () {
         if (amiibo == null) return;
         final bool newValue = !isActive;
-        context.read(serviceProvider.notifier).update(
+        ref.read(serviceProvider.notifier).update(
           [
             amiibo!.copyWith(
               owned: newValue,
