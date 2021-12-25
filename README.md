@@ -23,7 +23,7 @@ Features:
 - Personal stats split by All, Custom, figures and cards. Take a screenshot of your stat at any time and save it for later as a picture in your download folder
 - Search bar improved, so you can search by name, game or amiibo series
 - Order the list based on what you think it's more important, the release date of any of the 4 regions, your owned, wished or name
-- Auto mode theme (only for some Android 9 and Android 10 devices) or manually select your preferred mode, light or dark
+- Auto mode theme (only for some Android 9 and up) or manually select your preferred mode, light or dark
 - Multiple light and dark themes to select from the drawer or settings. Tap the theme icon in the drawer to change between light, dark or auto mode or just long press the theme icon to visualize all the themes and select your preferred one or go to settings and select appearance
 - Save your collection as a picture in your download folder, reset your collection or import/export your collection data (useful when changing device) all from settings
 
