@@ -35,7 +35,7 @@ Future<void> main() async {
       overrides: [
         cacheProvider.overrideWithValue(
           newHiveCache(
-            cacheDir.path,
+            path: cacheDir.path,
             cacheName: 'HiveCache',
             fromEncodable: (cb) => CacheValue.fromJson(cb),
             maxEntries: 200,
@@ -56,8 +56,8 @@ class AmiiboNetwork extends ConsumerWidget {
   const AmiiboNetwork({Key? key, required this.firstPage}) : super(key: key);
 
   @override
-  Widget build(BuildContext context, ScopedReader watch) {
-    final ThemeProvider themeMode = watch(themeProvider);
+  Widget build(BuildContext context, WidgetRef ref) {
+    final ThemeProvider themeMode = ref.watch(themeProvider);
     return MaterialApp(
       localizationsDelegates: [
         S.delegate,

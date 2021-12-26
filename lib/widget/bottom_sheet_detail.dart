@@ -8,8 +8,8 @@ class BottomSheetDetail extends ConsumerWidget {
   const BottomSheetDetail({ Key? key }) : super(key: key);
 
   @override
-  Widget build(BuildContext context, ScopedReader watch) {
-    final key = watch(keyAmiiboProvider);
+  Widget build(BuildContext context, WidgetRef ref) {
+    final key = ref.watch(keyAmiiboProvider);
     final Size size = MediaQuery.of(context).size;
     EdgeInsetsGeometry padding = EdgeInsets.zero;
     int flex = 4;

@@ -14,10 +14,10 @@ class GameListWidget extends ConsumerWidget {
   const GameListWidget({Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context, ScopedReader watch) {
-    final id = watch(keyAmiiboProvider);
+  Widget build(BuildContext context, WidgetRef ref) {
+    final id = ref.watch(keyAmiiboProvider);
     final S translate = S.of(context);
-    return watch(gameProvider(id)).when(
+    return ref.watch(gameProvider(id)).when(
       data: (platforms) {
         return MultiSliver(
           children: [
@@ -59,7 +59,7 @@ class GameListWidget extends ConsumerWidget {
             }
           else if (e.error is SocketException && e.error.osError != null) {
             child = TextButton(
-              onPressed: () => context.refresh(gameProvider(id)),
+              onPressed: () => ref.refresh(gameProvider(id).future),
               child: Text(translate.socket_exception),
             );
           } else
@@ -68,7 +68,7 @@ class GameListWidget extends ConsumerWidget {
           child = Text(translate.no_games_found);
         } else if (e is SocketException) {
           child = TextButton(
-            onPressed: () => context.refresh(gameProvider(id)),
+            onPressed: () => ref.refresh(gameProvider(id).future),
             child: Text(translate.socket_exception),
           );
         } else

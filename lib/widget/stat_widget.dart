@@ -33,8 +33,8 @@ class StatWidget extends StatelessWidget {
         child: FittedBox(
         fit: BoxFit.scaleDown,
         child: Consumer(
-          builder: (ctx, watch, _) {
-            final stats = watch(statProvider);
+          builder: (ctx, ref, _) {
+            final stats = ref.watch(statProvider);
             final String myStat = stats.statLabel(numerator, den);
             final bool fontFeatureStyle =
                 !stats.isPercentage && isFontFeatureEnable;

@@ -2,11 +2,8 @@ import 'dart:async';
 import 'package:amiibo_network/model/stat.dart';
 import 'package:amiibo_network/riverpod/query_provider.dart';
 import 'package:amiibo_network/riverpod/service_provider.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/foundation.dart';
 import 'package:amiibo_network/service/screenshot.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:amiibo_network/service/storage.dart';
 import 'package:amiibo_network/generated/l10n.dart';
 import 'package:amiibo_network/widget/single_stat.dart';
@@ -38,14 +35,14 @@ final _statsProvider =
   );
 });
 
-class StatsPage extends StatefulHookWidget {
+class StatsPage extends StatefulHookConsumerWidget {
   const StatsPage({Key? key}) : super(key: key);
 
   @override
   _StatsPageState createState() => _StatsPageState();
 }
 
-class _StatsPageState extends State<StatsPage> {
+class _StatsPageState extends ConsumerState<StatsPage> {
   AmiiboCategory category = AmiiboCategory.All;
   Expression expression = And();
   S? translate;
@@ -58,7 +55,7 @@ class _StatsPageState extends State<StatsPage> {
     super.didChangeDependencies();
   }
 
-  void _updateCategory(AmiiboCategory newCategory) {
+  void _updateCategory(WidgetRef ref, AmiiboCategory newCategory) {
     if (newCategory == category) return;
     setState(() {
       category = newCategory;
@@ -67,7 +64,7 @@ class _StatsPageState extends State<StatsPage> {
           expression = And();
           break;
         case AmiiboCategory.Custom:
-          final query = context.read(queryProvider.notifier);
+          final query = ref.read(queryProvider.notifier);
           expression = Bracket(InCond.inn('type', figureType) &
                   InCond.inn('amiiboSeries', query.customFigures)) |
               Bracket(Cond.eq('type', 'Card') &
@@ -87,8 +84,8 @@ class _StatsPageState extends State<StatsPage> {
 
   @override
   Widget build(BuildContext context) {
-    final _canSave = useProvider(
-      querySearchProvider.select((value) =>
+    final _canSave = ref.watch(
+      querySearchProvider.select<bool>((value) =>
           AmiiboCategory.Custom != category ||
           value.customFigures!.isNotEmpty ||
           value.customCards!.isNotEmpty),
@@ -141,7 +138,7 @@ class _StatsPageState extends State<StatsPage> {
                     ),
                   ),
                   onDestinationSelected: (selected) =>
-                      _updateCategory(AmiiboCategory.values[selected]),
+                      _updateCategory(ref, AmiiboCategory.values[selected]),
                 ),
                 Expanded(child: _BodyStats(expression))
               ],
@@ -189,7 +186,7 @@ class _StatsPageState extends State<StatsPage> {
               ],
               currentIndex: category.index,
               onTap: (selected) =>
-                  _updateCategory(AmiiboCategory.values[selected]),
+                  _updateCategory(ref, AmiiboCategory.values[selected]),
             ),
           ),
         ),
@@ -198,15 +195,15 @@ class _StatsPageState extends State<StatsPage> {
   }
 }
 
-AsyncValue<List<Stat>> _usePreviousStat(Expression expression) {
-  final snapshot = useProvider(_statsProvider(expression));
+AsyncValue<List<Stat>> _usePreviousStat(WidgetRef ref, Expression expression) {
+  final snapshot = ref.watch(_statsProvider(expression));
   final previous = usePrevious(snapshot);
   if (previous is AsyncData<List<Stat>> && snapshot is! AsyncData<List<Stat>>)
     return previous;
   return snapshot;
 }
 
-class _BodyStats extends HookWidget {
+class _BodyStats extends HookConsumerWidget {
   final Expression expression;
   final bool expanded;
 
@@ -214,9 +211,9 @@ class _BodyStats extends HookWidget {
   _BodyStats.expanded(this.expression) : expanded = true;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final S translate = S.of(context);
-    final snapshot = _usePreviousStat(expression);
+    final snapshot = _usePreviousStat(ref, expression);
     if (snapshot is AsyncData<List<Stat>>) {
       if (snapshot.value.length <= 1)
         return Center(
@@ -283,7 +280,7 @@ class _BodyStats extends HookWidget {
   }
 }
 
-class _FAB extends StatelessWidget {
+class _FAB extends ConsumerWidget {
   final Screenshot _screenshot = Screenshot();
   final AmiiboCategory _category;
   final Expression _expression;
@@ -291,7 +288,7 @@ class _FAB extends StatelessWidget {
   _FAB(this._category, this._expression);
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final S translate = S.of(context);
     return FloatingActionButton(
       elevation: 0.0,
@@ -307,7 +304,7 @@ class _FAB extends StatelessWidget {
         scaffoldState.hideCurrentSnackBar();
         scaffoldState.showSnackBar(SnackBar(content: Text(message)));
         if (!_screenshot.isRecording) {
-          _screenshot.update(context);
+          _screenshot.update(ref, context);
           final buffer = await _screenshot.saveStats(_expression);
           if (buffer != null) {
             String name;

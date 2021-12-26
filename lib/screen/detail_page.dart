@@ -16,12 +16,12 @@ class DetailPage extends ConsumerWidget {
   const DetailPage({Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context, ScopedReader watch) {
-    final key = watch(keyAmiiboProvider);
+  Widget build(BuildContext context, WidgetRef ref) {
+    final key = ref.watch(keyAmiiboProvider);
     return Scaffold(
       appBar: AppBar(
         title: Consumer(
-          builder: (context, watch, _) => watch(_nameAmiiboProvider(key))
+          builder: (context, ref, _) => ref.watch(_nameAmiiboProvider(key))
           .maybeWhen(
             data: (name) => name != null ? Text(name) : const SizedBox(),
             orElse: () => const SizedBox(),
@@ -87,10 +87,10 @@ class _AmiiboInfo extends ConsumerWidget {
   const _AmiiboInfo({Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context, ScopedReader watch) {
-    final id = watch(keyAmiiboProvider);
+  Widget build(BuildContext context, WidgetRef ref) {
+    final id = ref.watch(keyAmiiboProvider);
     final S translate = S.of(context);
-    return watch(detailAmiiboProvider(id)).maybeWhen(
+    return ref.watch(detailAmiiboProvider(id)).maybeWhen(
       data: (amiibo) {
         if (amiibo == null) return const SizedBox();
         List<InlineSpan> span = <InlineSpan>[

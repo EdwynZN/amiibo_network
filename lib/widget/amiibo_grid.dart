@@ -14,9 +14,9 @@ class AmiiboGrid extends ConsumerWidget {
   const AmiiboGrid({Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context, ScopedReader watch) {
-    final index = watch(indexAmiiboProvider);
-    return watch(_singleAmiibo(index)).when(
+  Widget build(BuildContext context, WidgetRef ref) {
+    final index = ref.watch(indexAmiiboProvider);
+    return ref.watch(_singleAmiibo(index)).when(
       loading: () => const Card(
         child: Center(
           child: CircularProgressIndicator(),

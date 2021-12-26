@@ -7,8 +7,8 @@ class LockButton extends ConsumerWidget {
   const LockButton({Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context, ScopedReader watch) {
-    final lockValue = watch(lockProvider);
+  Widget build(BuildContext context, WidgetRef ref) {
+    final lockValue = ref.watch(lockProvider);
     final lock = lockValue.lock;
     return IconButton(
       icon: lock ? const Icon(Icons.lock) : const Icon(Icons.lock_open),

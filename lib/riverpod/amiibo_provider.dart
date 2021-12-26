@@ -6,10 +6,10 @@ import 'package:riverpod/riverpod.dart';
 import 'package:amiibo_network/riverpod/query_provider.dart';
 import 'package:amiibo_network/model/amiibo.dart';
 
-final keyAmiiboProvider = ScopedProvider<int>(null);
+final keyAmiiboProvider = Provider<int>((_) => throw UnimplementedError());
 
 final indexAmiiboProvider =
-    ScopedProvider<int>((_) => throw UnsupportedError('No amiibo id selected'));
+    Provider<int>((_) => throw UnsupportedError('No amiibo id selected'));
 
 final statHomeProvider = Provider.autoDispose<AsyncValue<Stat>>(
     (ref) => ref.watch(amiiboHomeListProvider).whenData((value) {

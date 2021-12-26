@@ -1,4 +1,5 @@
 ## Version 1.4.1b
+- Ajout des figurines Palico X, Palamute X et Melzeno
 - Ajout des figurines Steve, Alex, Sephiroth, Pyra, Mythra et Kazuya  de la série Super Smash Bros.
 - Ajout des des cartes de la série 5 Animal Crossing
 

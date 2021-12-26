@@ -225,14 +225,14 @@ class _ProjectButtons extends StatelessWidget {
   }
 }
 
-class _SaveCollection extends StatefulWidget {
+class _SaveCollection extends ConsumerStatefulWidget {
   _SaveCollection({Key? key}) : super(key: key);
 
   @override
   __SaveCollectionState createState() => __SaveCollectionState();
 }
 
-class __SaveCollectionState extends State<_SaveCollection> {
+class __SaveCollectionState extends ConsumerState<_SaveCollection> {
   static final Screenshot _screenshot = Screenshot();
   late S translate;
   ScaffoldMessengerState? scaffoldState;
@@ -245,7 +245,7 @@ class __SaveCollectionState extends State<_SaveCollection> {
   }
 
   Future<void> _saveCollection(
-      AmiiboCategory category, List<String>? figures, cards) async {
+      WidgetRef ref, AmiiboCategory category, List<String>? figures, cards) async {
     final String message = _screenshot.isRecording
         ? translate.recordMessage
         : translate.savingCollectionMessage;
@@ -281,7 +281,7 @@ class __SaveCollectionState extends State<_SaveCollection> {
           expression = And();
           break;
       }
-      _screenshot.update(context);
+      _screenshot.update(ref, context);
       final buffer = await _screenshot.saveCollection(expression);
       if (buffer != null) {
         final Map<String, dynamic> notificationArgs = <String, dynamic>{
@@ -304,7 +304,7 @@ class __SaveCollectionState extends State<_SaveCollection> {
       icon: const Icon(Icons.save),
       onTap: () async {
         if (!(await permissionGranted(scaffoldState))) return;
-        final filter = context.read(queryProvider.notifier);
+        final filter = ref.read(queryProvider.notifier);
         final List<String>? figures = filter.customFigures;
         final List<String>? cards = filter.customCards;
         bool save = await showDialog<bool>(
@@ -320,8 +320,8 @@ class __SaveCollectionState extends State<_SaveCollection> {
           bool? equalFigures = false;
           bool? equalCards = false;
           AmiiboCategory category = AmiiboCategory.All;
-          final listOfFigures = await context.read(figuresProvider.future);
-          final listOfCards = await context.read(cardsProvider.future);
+          final listOfFigures = await ref.read(figuresProvider.future);
+          final listOfCards = await ref.read(cardsProvider.future);
           if (figures.isNotEmpty)
             equalFigures =
                 QueryBuilderProvider.checkEquality(figures, listOfFigures);
@@ -333,14 +333,14 @@ class __SaveCollectionState extends State<_SaveCollection> {
             category = AmiiboCategory.Cards;
           else if (!equalCards || !equalFigures)
             category = AmiiboCategory.Custom;
-          await _saveCollection(category, figures, cards);
+          await _saveCollection(ref, category, figures, cards);
         }
       },
     );
   }
 }
 
-class _ResetCollection extends StatelessWidget {
+class _ResetCollection extends ConsumerWidget {
   _ResetCollection({Key? key}) : super(key: key);
 
   Future<bool?> _dialog(BuildContext context) async {
@@ -375,7 +375,7 @@ class _ResetCollection extends StatelessWidget {
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final S translate = S.of(context);
     return _CardSettings(
       title: translate.reset,
@@ -387,7 +387,7 @@ class _ResetCollection extends StatelessWidget {
           final ScaffoldMessengerState? scaffoldState =
               ScaffoldMessenger.maybeOf(context)!;
           try {
-            await context.read(serviceProvider.notifier).resetCollection();
+            await ref.read(serviceProvider.notifier).resetCollection();
             _message(scaffoldState, translate.collectionReset);
           } catch (e) {
             _message(scaffoldState, translate.splashError);
@@ -402,8 +402,8 @@ class _DropMenu extends ConsumerWidget {
   _DropMenu({Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context, ScopedReader watch) {
-    final themeMode = watch(themeProvider);
+  Widget build(BuildContext context, WidgetRef ref) {
+    final themeMode = ref.watch(themeProvider);
     final S translate = S.of(context);
     final themeStyle = Theme.of(context).appBarTheme;
     return DropdownButton<ThemeMode>(
@@ -465,14 +465,14 @@ class _DropMenu extends ConsumerWidget {
   }
 }
 
-class BottomBar extends StatefulWidget {
+class BottomBar extends ConsumerStatefulWidget {
   BottomBar({Key? key}) : super(key: key);
 
   @override
   _BottomBarState createState() => _BottomBarState();
 }
 
-class _BottomBarState extends State<BottomBar> {
+class _BottomBarState extends ConsumerState<BottomBar> {
   late S translate;
   ScaffoldMessengerState? scaffoldState;
 
@@ -492,9 +492,9 @@ class _BottomBarState extends State<BottomBar> {
     ));
   }
 
-  Future<void> _openFileExplorer() async {
+  Future<void> _openFileExplorer(WidgetRef ref) async {
     try {
-      final service = context.read(serviceProvider.notifier);
+      final service = ref.read(serviceProvider.notifier);
       final file = await FilePicker.platform.pickFiles(
         type: FileType.any,
         //allowedExtensions: ['json'],
@@ -521,9 +521,9 @@ class _BottomBarState extends State<BottomBar> {
     }
   }
 
-  Future<void> _writePermission() async {
+  Future<void> _writePermission(WidgetRef ref) async {
     try {
-      final _service = context.read(serviceProvider.notifier);
+      final _service = ref.read(serviceProvider.notifier);
       openSnackBar(translate.savingCollectionMessage);
       final Map<String, dynamic> args = Map<String, dynamic>();
       args['amiibos'] = await _service.fetchAllAmiiboDB();
@@ -557,7 +557,7 @@ class _BottomBarState extends State<BottomBar> {
                     shape: BeveledRectangleBorder(),
                     primary: Theme.of(context).textTheme.headline6!.color,
                     backgroundColor: Theme.of(context).cardColor),
-                onPressed: () async => await _writePermission(),
+                onPressed: () async => await _writePermission(ref),
                 icon: const Icon(Icons.file_upload),
                 label: Text(translate.export)),
           ),
@@ -569,7 +569,7 @@ class _BottomBarState extends State<BottomBar> {
                   shape: BeveledRectangleBorder(),
                   primary: Theme.of(context).textTheme.headline6!.color,
                   backgroundColor: Theme.of(context).cardColor),
-              onPressed: () async => await _openFileExplorer(),
+              onPressed: () async => await _openFileExplorer(ref),
               icon: const Icon(Icons.file_download),
               label: Text(translate.import),
             ),

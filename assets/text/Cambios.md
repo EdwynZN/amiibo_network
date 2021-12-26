@@ -1,4 +1,5 @@
 ## Version 1.4.1b
+- Se agregaron los amiibos de Palico X, Palamute X y Melzeno
 - Se agregaron los amiibos de Steve, Alex, Sephiroth, Pyra, Mythra y Kazuya
 - se agregaron las tarjetas de la serie 5 de Animal Crossing
 

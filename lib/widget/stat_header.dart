@@ -2,8 +2,6 @@ import 'package:amiibo_network/model/stat.dart';
 import 'package:amiibo_network/repository/theme_repository.dart';
 import 'package:amiibo_network/riverpod/amiibo_provider.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
-import 'package:flutter/rendering.dart';
 import 'dart:math' as math;
 import 'package:amiibo_network/generated/l10n.dart';
 import 'package:amiibo_network/widget/stat_widget.dart';
@@ -37,8 +35,8 @@ class SliverStatsHeader extends SliverPersistentHeaderDelegate {
       height: math.max(minExtent, maxExtent - shrinkOffset),
       child: Consumer(
         child: const SizedBox(),
-        builder: (context, watch, child) {
-          return watch(statHomeProvider).maybeWhen(
+        builder: (context, ref, child) {
+          return ref.watch(statHomeProvider).maybeWhen(
             data: (statList) {
               if (statList == const Stat()) return child!;
               final double total = statList.total.toDouble();

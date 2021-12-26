@@ -9,7 +9,7 @@ bool intToBool(int? value) => value == 1;
 List<Amiibo> entityFromMap(Map<String, dynamic>? amiibo) => List<Amiibo>.from(amiibo!["amiibo"].map((x) => Amiibo.fromJson(x)));
 
 @freezed
-abstract class Amiibo with _$Amiibo {
+class Amiibo with _$Amiibo {
   const factory Amiibo({
     required int key,
     String? id,

@@ -18,7 +18,7 @@ class Query with _$Query {
     List<String>? customCards,
   }) = Search;
 
-  @With(_OrderBy)
+  @With<_OrderBy>()
   factory Query.builder({
     required Expression where,
     @Default(OrderBy.NA) OrderBy orderBy,
