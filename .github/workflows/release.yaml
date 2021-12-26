@@ -1,0 +1,88 @@
+name: Android CI Release
+
+on:
+  push:
+    branches:
+      - master
+  tags:        
+      - v*
+
+env:
+  java_version: '11.0.8+10'
+  flutter_version: '2.8.0'
+  
+jobs:
+  android-internal:
+    name: Google Play internal
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+
+      - name: Setup Java
+        uses: actions/setup-java@v2
+        with:
+          distribution: 'adopt-hotspot'
+          java-version: ${{ env.java_version }}
+          cache: 'gradle'
+
+      - name: Cache Flutter dependencies
+        uses: actions/cache@v2
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+            ~/.android/build-cache
+            /opt/hostedtoolcache/flutter
+          key: ${{ runner.OS }}-flutter-install-cache-${{ env.flutter_version }}
+
+      - uses: subosito/flutter-action@v1.5.3
+        with:
+          channel: stable
+          flutter-version: ${{ env.flutter_version }}
+          
+      - name: Flutter pub dependencies
+        run: flutter pub get
+        
+      - name: Flutter add intl and run build_runner
+        run: | 
+          flutter pub add intl_utils
+          flutter pub run intl_utils:generate
+          flutter pub run build_runner build
+
+      - name: Configure Keystore
+        env:
+          PRIVATE_KEY: ${{ secrets.PRIVATE_KEY }}
+          KEYSTORE_KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
+          KEYSTORE_KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
+          KEYSTORE_STORE_PASSWORD: ${{ secrets.STORE_PASSWORD }}
+        run: |
+          echo "$PRIVATE_KEY" > android/AN_key.jks.b64
+          base64 -d -i android/AN_key.jks.b64 > android/AN_key.jks
+          echo "storeFile=./AN_key.jks" >> android/key.properties
+          echo "keyAlias=$KEYSTORE_KEY_ALIAS" >> android/key.properties
+          echo "storePassword=$KEYSTORE_STORE_PASSWORD" >> android/key.properties
+          echo "keyPassword=$KEYSTORE_KEY_PASSWORD" >> android/key.properties
+
+      - name: Create Google Play Config file
+        env:
+          PLAY_STORE_KEY: ${{ secrets.PLAY_STORE_KEY }}
+        run : |
+          echo "$PLAY_STORE_KEY" > api-play-store-key.json.b64
+          base64 -d -i api-play-store-key.json.b64 > api-play-store-key.json
+
+      - name: Build and upload to google play
+        run: |
+          flutter build apk --no-pub --release
+          bundle exec fastlane android internal
+      
+      - name: Create Github Release
+        uses: "marvinpinto/action-automatic-releases@latest"
+        with:
+          repo_token: "${{ secrets.GITHUB_TOKEN }}"
+          draft: true
+          prerelease: true
+          files: build/app/outputs/flutter-apk/app-release.apk
