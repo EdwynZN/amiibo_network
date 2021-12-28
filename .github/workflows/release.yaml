@@ -22,6 +22,13 @@ jobs:
         uses: actions/checkout@v2
         with:
           fetch-depth: 0
+      
+      - name: Read YAML Data
+        uses: KJ002/read-yaml@1.5
+        id: pubspec
+        with:
+          file: 'pubspec.yaml'
+          key-path: '["version"]'
 
       - name: Setup ruby
         uses: ruby/setup-ruby@v1
@@ -79,15 +86,16 @@ jobs:
         id: createServiceAccount
         run: echo '${{ secrets.PLAY_STORE_KEY }}' > android/api-play-store-key.json
 
-      - name: Build and upload to google play
+      - name: Build #and upload to google play
         run: |
           flutter build apk --no-pub --release
-          bundle exec fastlane android internal
+      #     bundle exec fastlane android internal
       
       - name: Create Github Release
         uses: "marvinpinto/action-automatic-releases@latest"
         with:
           repo_token: "${{ secrets.GITHUB_TOKEN }}"
+          automatic_release_tag: "${{ steps.pubspec.outputs.data }}"
           draft: true
           prerelease: true
           files: build/app/outputs/flutter-apk/app-release.apk
