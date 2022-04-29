@@ -89,7 +89,8 @@ jobs:
       - name: Build #and upload to google play
         run: |
           flutter build apk --no-pub --release
-      #     bundle exec fastlane android internal
+          flutter build appbundle --no-pub
+          bundle exec fastlane android internal
       
       - name: Create Github Release
         uses: "marvinpinto/action-automatic-releases@latest"

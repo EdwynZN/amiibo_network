@@ -22,7 +22,7 @@ platform :android do
     sh("cd .. && flutter build appbundle --release")
   end
   
-  desc "Deploy Beta to Google Play Store"
+  desc "Deploy internal to Google Play Store"
   lane :internal do
     sh("cd .. && flutter build appbundle --release")
     upload_to_play_store(
