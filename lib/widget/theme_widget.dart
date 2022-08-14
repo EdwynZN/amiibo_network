@@ -38,6 +38,7 @@ class ThemeButton extends HookConsumerWidget {
   static Future<void> dialog(BuildContext context) async {
     return showDialog(
       context: context,
+      barrierColor: Colors.black12,
       builder: (BuildContext context) {
         final double spacing = _spacing(MediaQuery.of(context).size.width);
         final S translate = S.of(context);
@@ -168,7 +169,7 @@ class ThemeButton extends HookConsumerWidget {
     );
   }
 
-  Widget _selectWidget(ThemeMode? value) {
+  Widget _selectWidget(ThemeMode? value, Color? color) {
     switch (value) {
       case ThemeMode.light:
         return const Icon(
@@ -184,9 +185,10 @@ class ThemeButton extends HookConsumerWidget {
         );
       case ThemeMode.system:
       default:
-        return const Icon(
+        return Icon(
           Icons.brightness_auto,
           key: Key('Auto'),
+          color: color,
         );
     }
   }
@@ -214,7 +216,7 @@ class ThemeButton extends HookConsumerWidget {
             ),
           );
         },
-        child: _selectWidget(theme),
+        child: _selectWidget(theme, Theme.of(context).colorScheme.onBackground),
       ),
       onLongPress: openDialog ? () => dialog(context) : null,
       onTap: () async => ref.read(themeProvider).toggleThemeMode(),

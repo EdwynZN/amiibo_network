@@ -74,7 +74,7 @@ class HomeState extends ConsumerState<Home> with SingleTickerProviderStateMixin 
     _animationController = AnimationController(
         duration: const Duration(milliseconds: 300), vsync: this)
       ..value = 1.0;
-    WidgetsBinding.instance!.addPostFrameCallback((_) => _showWhatsNew());
+    WidgetsBinding.instance.addPostFrameCallback((_) => _showWhatsNew());
   }
 
   @override
@@ -130,7 +130,7 @@ class HomeState extends ConsumerState<Home> with SingleTickerProviderStateMixin 
     Search? value = await Navigator.pushNamed<Search?>(context, searchRoute);
     if (value?.search?.trim().isNotEmpty ?? false) {
       final query = ref.read(queryProvider.notifier);
-      WidgetsBinding.instance!.addPostFrameCallback((_) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
         query.updateOption(value!);
         _restartAnimation();
       });

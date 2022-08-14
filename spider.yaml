@@ -19,7 +19,7 @@ groups:
   - path: assets/images
     class_name: NetworkIcons
     file_name: assets_icons
-    types: [ .png, .jpg, .jpeg ]
+    types: [ .png, .jpg, .jpeg, .webp ]
 #  - path: assets/vectors
 #    class_name: Svgs
 #    package: res

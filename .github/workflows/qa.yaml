@@ -8,7 +8,7 @@ on:
 env:
   java_version: '11.0.8+10'
   ruby_version: '2.7.2'
-  flutter_version: '2.8.0'
+  flutter_version: '3.0.5'
   
 jobs:
   android-QA:
@@ -72,10 +72,6 @@ jobs:
           echo "keyAlias=$KEYSTORE_KEY_ALIAS" >> android/key.properties
           echo "storePassword=$KEYSTORE_STORE_PASSWORD" >> android/key.properties
           echo "keyPassword=$KEYSTORE_KEY_PASSWORD" >> android/key.properties
-
-      - name: Create Google Play Config file
-        id: createServiceAccount
-        run: echo '${{ secrets.PLAY_STORE_KEY }}' > android/api-play-store-key.json
 
       - name: Build release version for testing purpose
         run: flutter build apk --split-per-abi --no-pub --verbose --release

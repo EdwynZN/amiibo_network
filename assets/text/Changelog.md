@@ -1,3 +1,8 @@
+## Version 1.5.0
+- Date updated for 2022 amiibos
+- Added Splatoon series Octoling, Inkling and Smallfry
+- Optimization of resources and size of App
+
 ## Version 1.4.1b
 - Added Palico X, Palamute X and Melzeno
 - Added Super Smash Bros. series Steve, Alex, Sephiroth, Pyra, Mythra and Kazuya
@@ -5,6 +10,7 @@
 
 ## Version 1.4.1
 - Added YuGiOh! Cards
+
 ## Version 1.4.0
 - Added Super Smash Bros. serie Min-Min
 - Added Metroid Dread series Samus and E.M.M.I.

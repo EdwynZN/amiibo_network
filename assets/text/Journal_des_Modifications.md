@@ -1,6 +1,10 @@
+## Version 1.5.0
+- Ajout des figurines series Octoling, Inkling and Smallfry de la série Splatoon
+- Correction des erreurs
+
 ## Version 1.4.1b
 - Ajout des figurines Palico X, Palamute X et Melzeno
-- Ajout des figurines Steve, Alex, Sephiroth, Pyra, Mythra et Kazuya  de la série Super Smash Bros.
+- Ajout des figurines Steve, Alex, Sephiroth, Pyra, Mythra et Kazuya de la série Super Smash Bros.
 - Ajout des des cartes de la série 5 Animal Crossing
 
 ## Version 1.4.1
