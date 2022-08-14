@@ -12,7 +12,7 @@ final cacheProvider = Provider<Cache>((_) => throw UnimplementedError());
 
 final _dioProvider = Provider<Dio>((ref) {
   final hiveCache = ref.watch(cacheProvider);
-  final stashOptions = newCacheInterceptor('amiibo', hiveCache);
+  final stashOptions = hiveCache.interceptor('amiibo');
 
   final dio = Dio(
     BaseOptions(

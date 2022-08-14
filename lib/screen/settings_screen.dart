@@ -4,6 +4,7 @@ import 'package:amiibo_network/riverpod/service_provider.dart';
 import 'package:amiibo_network/riverpod/theme_provider.dart';
 import 'package:amiibo_network/service/screenshot.dart';
 import 'package:amiibo_network/enum/amiibo_category_enum.dart';
+import 'package:amiibo_network/utils/format_color_on_theme.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -28,93 +29,97 @@ class SettingsPage extends StatelessWidget {
   Widget build(BuildContext context) {
     final S translate = S.of(context);
     return SafeArea(
-        child: Scaffold(
-            appBar: AppBar(
-              actions: <Widget>[
-                Align(
-                  alignment: Alignment.center,
-                  child: Padding(
-                    padding: EdgeInsets.only(right: 8),
-                    child: _DropMenu(key: Key('theme')),
+      child: Scaffold(
+        appBar: AppBar(
+          actions: <Widget>[
+            Align(
+              alignment: Alignment.center,
+              child: Padding(
+                padding: EdgeInsets.only(right: 8),
+                child: _DropMenu(key: Key('theme')),
+              ),
+            )
+          ],
+          title: Text(translate.settings),
+        ),
+        body: Scrollbar(
+          child: CustomScrollView(
+            slivers: <Widget>[
+              SliverList(
+                delegate: SliverChildListDelegate.fixed([
+                  _ResetCollection(),
+                  _SaveCollection(),
+                  _CardSettings(
+                      title: translate.appearance,
+                      subtitle: translate.appearanceSubtitle,
+                      icon: const Icon(Icons.color_lens),
+                      onTap: () => ThemeButton.dialog(context)),
+                  _CardSettings(
+                    title: translate.changelog,
+                    subtitle: translate.changelogSubtitle,
+                    icon: const Icon(Icons.build),
+                    onTap: () {
+                      showDialog(
+                          context: context,
+                          builder: (context) => MarkdownReader(
+                              file: translate.changelog.replaceAll(' ', '_'),
+                              title: translate.changelogSubtitle));
+                    },
                   ),
-                )
-              ],
-              title: Text(translate.settings),
-            ),
-            body: Scrollbar(
-                child: CustomScrollView(
-              slivers: <Widget>[
-                SliverList(
-                  delegate: SliverChildListDelegate.fixed([
-                    _ResetCollection(),
-                    _SaveCollection(),
-                    _CardSettings(
-                        title: translate.appearance,
-                        subtitle: translate.appearanceSubtitle,
-                        icon: const Icon(Icons.color_lens),
-                        onTap: () => ThemeButton.dialog(context)),
-                    _CardSettings(
-                      title: translate.changelog,
-                      subtitle: translate.changelogSubtitle,
-                      icon: const Icon(Icons.build),
-                      onTap: () {
-                        showDialog(
-                            context: context,
-                            builder: (context) => MarkdownReader(
-                                file: translate.changelog.replaceAll(' ', '_'),
-                                title: translate.changelogSubtitle));
-                      },
+                  _CardSettings(
+                      title: translate.credits,
+                      subtitle: translate.creditsSubtitle,
+                      icon: const Icon(Icons.theaters),
+                      onTap: () => showDialog(
+                          context: context,
+                          builder: (context) => MarkdownReader(
+                              file: 'Credits',
+                              title: translate.creditsSubtitle))),
+                  _CardSettings(
+                      title: translate.privacyPolicy,
+                      subtitle: translate.privacySubtitle,
+                      icon: const Icon(Icons.help),
+                      onTap: () => showDialog(
+                          context: context,
+                          builder: (context) => MarkdownReader(
+                              file:
+                                  translate.privacyPolicy.replaceAll(' ', '_'),
+                              title: translate.privacySubtitle))),
+                  _ProjectButtons(
+                    icons: const <IconData>[Icons.code, Icons.bug_report],
+                    titles: <String>['Github', translate.reportBug],
+                    urls: const <String>[github, reportIssue],
+                  ),
+                  _SupportButtons()
+                ]),
+              ),
+              SliverFillRemaining(
+                  hasScrollBody: false,
+                  child: SizedBox(
+                    height: 0,
+                    child: Image.asset(
+                      NetworkIcons.iconApp,
+                      fit: BoxFit.scaleDown,
+                      color: Theme.of(context).colorScheme.brightness ==
+                              Brightness.dark
+                          ? Colors.white54
+                          : null,
                     ),
-                    _CardSettings(
-                        title: translate.credits,
-                        subtitle: translate.creditsSubtitle,
-                        icon: const Icon(Icons.theaters),
-                        onTap: () => showDialog(
-                            context: context,
-                            builder: (context) => MarkdownReader(
-                                file: 'Credits',
-                                title: translate.creditsSubtitle))),
-                    _CardSettings(
-                        title: translate.privacyPolicy,
-                        subtitle: translate.privacySubtitle,
-                        icon: const Icon(Icons.help),
-                        onTap: () => showDialog(
-                            context: context,
-                            builder: (context) => MarkdownReader(
-                                file: translate.privacyPolicy
-                                    .replaceAll(' ', '_'),
-                                title: translate.privacySubtitle))),
-                    _ProjectButtons(
-                      icons: const <IconData>[Icons.code, Icons.bug_report],
-                      titles: <String>['Github', translate.reportBug],
-                      urls: const <String>[github, reportIssue],
-                    ),
-                    _SupportButtons()
-                  ]),
-                ),
-                SliverFillRemaining(
-                    hasScrollBody: false,
-                    child: SizedBox(
-                      height: 0,
-                      child: Image.asset(
-                        NetworkIcons.iconApp,
-                        fit: BoxFit.scaleDown,
-                        color: Theme.of(context).primaryColorBrightness ==
-                                Brightness.dark
-                            ? Colors.white54
-                            : null,
-                      ),
-                    ))
-              ],
-            )),
-            bottomNavigationBar: BottomBar()));
+                  ))
+            ],
+          ),
+        ),
+        bottomNavigationBar: const BottomBar(),
+      ),
+    );
   }
 }
 
-class _SupportButtons extends StatelessWidget {
+class _SupportButtons extends ConsumerWidget {
   Future<void> _launchURL(String url, BuildContext context) async {
-    if (await canLaunch(url)) {
-      await launch(url);
+    final uri = Uri.parse(url);
+    if (await canLaunchUrl(uri)) {
+      await launchUrl(uri);
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text(S.of(context).couldNotLaunchUrl(url))));
@@ -124,8 +129,11 @@ class _SupportButtons extends StatelessWidget {
   _SupportButtons({Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final S translate = S.of(context);
+    final mediaBrightness = MediaQuery.of(context).platformBrightness;
+    final themeMode = ref.watch(themeProvider.select((t) => t.preferredTheme));
+    final color = colorOnThemeMode(themeMode, mediaBrightness);
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: <Widget>[
@@ -139,8 +147,7 @@ class _SupportButtons extends StatelessWidget {
                 height: 30,
                 width: 30,
                 fit: BoxFit.fill,
-                color: Theme.of(context).primaryColorBrightness ==
-                  Brightness.dark ? Colors.white54 : null,
+                color: color,
               ),
               label: FittedBox(
                 child: Text(
@@ -162,10 +169,7 @@ class _SupportButtons extends StatelessWidget {
                 width: 30,
                 fit: BoxFit.fill,
                 colorBlendMode: BlendMode.srcATop,
-                color: Theme.of(context).primaryColorBrightness ==
-                        Brightness.dark
-                    ? Colors.black38
-                    : null,
+                color: color,
               ),
               label: FittedBox(
                 child: Text(
@@ -191,8 +195,9 @@ class _ProjectButtons extends StatelessWidget {
       : assert(icons.length == titles.length && icons.length == urls.length);
 
   Future<void> _launchURL(String url, BuildContext context) async {
-    if (await canLaunch(url)) {
-      await launch(url);
+    final uri = Uri.parse(url);
+    if (await canLaunchUrl(uri)) {
+      await launchUrl(uri);
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text(S.of(context).couldNotLaunchUrl(url))));
@@ -207,19 +212,19 @@ class _ProjectButtons extends StatelessWidget {
         for (int index = 0; index < icons.length; index++)
           Expanded(
             child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-            child: ElevatedButton.icon(
-              onPressed: () => _launchURL(urls[index], context),
-              icon: Icon(icons[index]),
-              label: FittedBox(
-                child: Text(
-                  titles[index],
-                  overflow: TextOverflow.fade,
+              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+              child: ElevatedButton.icon(
+                onPressed: () => _launchURL(urls[index], context),
+                icon: Icon(icons[index]),
+                label: FittedBox(
+                  child: Text(
+                    titles[index],
+                    overflow: TextOverflow.fade,
+                  ),
                 ),
               ),
             ),
           ),
-        ),
       ],
     );
   }
@@ -244,8 +249,8 @@ class __SaveCollectionState extends ConsumerState<_SaveCollection> {
     scaffoldState = ScaffoldMessenger.maybeOf(context);
   }
 
-  Future<void> _saveCollection(
-      WidgetRef ref, AmiiboCategory category, List<String>? figures, cards) async {
+  Future<void> _saveCollection(WidgetRef ref, AmiiboCategory category,
+      List<String>? figures, cards) async {
     final String message = _screenshot.isRecording
         ? translate.recordMessage
         : translate.savingCollectionMessage;
@@ -456,8 +461,10 @@ class _DropMenu extends ConsumerWidget {
           const Icon(Icons.color_lens),
           Padding(
             padding: const EdgeInsets.only(left: 8),
-            child: Text(translate.themeMode(themeMode.preferredTheme!),
-                style: themeStyle.toolbarTextStyle),
+            child: Text(
+              translate.themeMode(themeMode.preferredTheme),
+              style: themeStyle.toolbarTextStyle,
+            ),
           )
         ],
       ),
@@ -466,7 +473,7 @@ class _DropMenu extends ConsumerWidget {
 }
 
 class BottomBar extends ConsumerStatefulWidget {
-  BottomBar({Key? key}) : super(key: key);
+  const BottomBar({Key? key}) : super(key: key);
 
   @override
   _BottomBarState createState() => _BottomBarState();

@@ -27,7 +27,7 @@
     <application
         android:allowBackup="true"
         android:fullBackupContent="@xml/my_backup_rules"
-        android:name="io.flutter.app.FlutterApplication"
+        android:name="${applicationName}"
         android:label="Amiibo Network"
         android:icon="@mipmap/ic_launcher">
         <provider
@@ -52,14 +52,14 @@
                 android:name="io.flutter.embedding.android.NormalTheme"
                 android:resource="@style/LaunchTheme"
                 />
-            <meta-data
-                android:name="flutterEmbedding"
-                android:value="2" />
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
-                <category android:name="android.intent.category.LAUNCHER"/>
-            </intent-filter>
-        </activity>
+                <intent-filter>
+                    <action android:name="android.intent.action.MAIN"/>
+                    <category android:name="android.intent.category.LAUNCHER"/>
+                </intent-filter>
+            </activity>
+        <meta-data
+            android:name="flutterEmbedding"
+            android:value="2" />
     </application>
 
     <queries>

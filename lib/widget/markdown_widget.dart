@@ -7,15 +7,19 @@ import 'package:flutter/services.dart';
 class MarkdownReader extends StatelessWidget {
   final String? title;
   final String file;
-  const MarkdownReader({Key? key, this.title, required this.file}): super(key: key);
+  const MarkdownReader({Key? key, this.title, required this.file})
+      : super(key: key);
 
-  Future<String> get _localFile => rootBundle.loadString('assets/text/$file.md');
+  Future<String> get _localFile =>
+      rootBundle.loadString('assets/text/$file.md');
 
   _launchURL(String url, BuildContext ctx) async {
-    if (await canLaunch(url)) {
-      await launch(url);
+    final uri = Uri.parse(url);
+    if (await canLaunchUrl(uri)) {
+      await launchUrl(uri);
     } else {
-      ScaffoldMessenger.maybeOf(ctx)?.showSnackBar(SnackBar(content: Text('Could not launch $url')));
+      ScaffoldMessenger.maybeOf(ctx)
+          ?.showSnackBar(SnackBar(content: Text('Could not launch $url')));
     }
   }
 
@@ -31,26 +35,28 @@ class MarkdownReader extends StatelessWidget {
           padding: const EdgeInsets.symmetric(horizontal: 12),
           child: FutureBuilder(
             future: _localFile,
-            builder: (BuildContext context, AsyncSnapshot<String> snapshot){
-              if(snapshot.hasError)
+            builder:
+                (BuildContext context, AsyncSnapshot<String> snapshot) {
+              if (snapshot.hasError)
                 return Center(child: Text(translate!.markdownError));
-              if(snapshot.hasData)
+              if (snapshot.hasData)
                 return MarkdownBody(
-                  listItemCrossAxisAlignment: MarkdownListItemCrossAxisAlignment.start,
+                  listItemCrossAxisAlignment:
+                      MarkdownListItemCrossAxisAlignment.start,
                   data: snapshot.data!,
                   styleSheetTheme: MarkdownStyleSheetBaseTheme.platform,
                   onTapLink: (url, _, __) => _launchURL(url, context),
                 );
               return const SizedBox.shrink();
-            }
-          )
-        )
+            },
+          ),
+        ),
       ),
       actions: <Widget>[
         TextButton(
           child: Text(MaterialLocalizations.of(context).okButtonLabel),
-          onPressed: () async => Navigator.of(context).maybePop(),
-        )
+          onPressed: Navigator.of(context).maybePop,
+        ),
       ],
     );
   }

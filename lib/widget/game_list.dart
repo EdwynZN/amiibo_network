@@ -216,6 +216,7 @@ class _SliverAnimatedPersistentHeader extends SliverPersistentHeaderDelegate {
   final String asset;
 
   const _SliverAnimatedPersistentHeader({
+    // ignore: unused_element
     this.vsync,
     required this.title,
     required this.asset,

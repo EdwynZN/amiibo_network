@@ -1,7 +1,7 @@
 package com.dartz.amiibo_network;
-import android.os.Build;
 import java.io.IOException;
 import java.util.Map;
+import android.os.Build;
 import androidx.annotation.NonNull;
 import io.flutter.embedding.android.FlutterActivity;
 import io.flutter.embedding.engine.FlutterEngine;

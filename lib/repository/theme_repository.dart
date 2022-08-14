@@ -109,8 +109,7 @@ class _Theme implements AmiiboTheme {
     final Brightness _brightnessAccentTextTheme =
         ThemeData.estimateBrightnessForColor(accentColor[700]!);
     _lightTheme = ThemeData(
-      splashFactory: InkRipple.splashFactory,
-      primaryColorBrightness: _brightnessPrimaryColor,
+      splashFactory: InkSparkle.constantTurbulenceSeedSplashFactory,
       primaryColorLight: accentColor[100],
       primaryColorDark: accentColor[600],
       primaryIconTheme: const IconThemeData(color: Colors.black),
@@ -125,8 +124,13 @@ class _Theme implements AmiiboTheme {
         backgroundColor: color,
         systemOverlayStyle: SystemUiOverlayStyle(
           statusBarBrightness: _brightnessColor,
-          statusBarIconBrightness: _brightnessColor == Brightness.light ? Brightness.dark : Brightness.light,
-          systemNavigationBarIconBrightness: _brightnessColor == Brightness.light ? Brightness.dark : Brightness.light,
+          statusBarIconBrightness: _brightnessColor == Brightness.light
+              ? Brightness.dark
+              : Brightness.light,
+          systemNavigationBarIconBrightness:
+              _brightnessColor == Brightness.light
+                  ? Brightness.dark
+                  : Brightness.light,
           statusBarColor: color,
           systemNavigationBarColor: color,
         ),
@@ -134,9 +138,12 @@ class _Theme implements AmiiboTheme {
             ? __darkAccentTextTheme.headline6!
             : __lightAccentTextTheme.headline6!.apply(color: Colors.white),
         foregroundColor: color,
-        toolbarTextStyle: _brightnessColor == Brightness.light ? __darkAccentTextTheme.bodyText2 : __lightAccentTextTheme.bodyText2,
+        toolbarTextStyle: _brightnessColor == Brightness.light
+            ? __darkAccentTextTheme.bodyText2
+            : __lightAccentTextTheme.bodyText2,
         iconTheme: IconThemeData(
-          color: _brightnessColor == Brightness.dark ? Colors.white : Colors.black,
+          color:
+              _brightnessColor == Brightness.dark ? Colors.white : Colors.black,
         ),
       ),
       unselectedWidgetColor: Colors.black87,
@@ -144,6 +151,7 @@ class _Theme implements AmiiboTheme {
       scaffoldBackgroundColor: color[50],
       iconTheme: const IconThemeData(color: Colors.black),
       floatingActionButtonTheme: FloatingActionButtonThemeData(
+        shape: const CircleBorder(),
         foregroundColor: _brightnessAccentColor == Brightness.dark
             ? Colors.white
             : Colors.black,
@@ -158,10 +166,13 @@ class _Theme implements AmiiboTheme {
       selectedRowColor: color[200],
       cardColor: color[100],
       cardTheme: CardTheme(
-        color: color[100],
+        color: color.shade100,
         margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-        shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(8.0))),
-        elevation: 8,
+        shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.all(Radius.circular(8.0)),
+        ),
+        elevation: 8.0,
+        surfaceTintColor: color.shade100,
       ),
       colorScheme: ColorScheme.light(
         background: Colors.white,
@@ -171,14 +182,15 @@ class _Theme implements AmiiboTheme {
         primary: color,
         onPrimary: Colors.white,
         onSecondary: _brightnessAccentTextTheme == Brightness.dark
-                ? Colors.white70
-                : Colors.black,
+            ? Colors.white70
+            : Colors.black,
         secondary: accentColor.shade700,
         surface: Colors.white,
         onSurface: Colors.black,
-        primaryVariant: color.shade700,
-        secondaryVariant: accentColor.shade700,
+        primaryContainer: color.shade700,
+        secondaryContainer: accentColor.shade700,
         brightness: _brightnessColor,
+        surfaceTint: color.shade100,
       ),
       textTheme: __darkAccentTextTheme,
       primaryTextTheme: _brightnessPrimaryColor == Brightness.dark
@@ -317,6 +329,7 @@ class _Theme implements AmiiboTheme {
       ),
       toggleableActiveColor: accentColor[700],
       indicatorColor: color[100],
+      useMaterial3: true,
     );
   }
 
@@ -329,7 +342,7 @@ class _Theme implements AmiiboTheme {
     switch (dark) {
       case 0:
         _darkTheme = ThemeData(
-          splashFactory: InkRipple.splashFactory,
+          splashFactory: InkSparkle.constantTurbulenceSeedSplashFactory,
           primaryColorLight: Colors.blueGrey[800],
           primaryColorDark: Colors.blueGrey[900],
           textSelectionTheme: TextSelectionThemeData(
@@ -359,6 +372,7 @@ class _Theme implements AmiiboTheme {
           primaryIconTheme: const IconThemeData(color: Colors.white70),
           iconTheme: const IconThemeData(color: Colors.white70),
           floatingActionButtonTheme: FloatingActionButtonThemeData(
+            shape: const CircleBorder(),
             foregroundColor: _accentColor,
             backgroundColor: _darkAccentColor,
           ),
@@ -383,14 +397,13 @@ class _Theme implements AmiiboTheme {
             onError: Colors.white,
             primary: Colors.blueGrey,
             onPrimary: Colors.white,
-            onSecondary: _brightness == Brightness.dark
-                ? Colors.white70
-                : Colors.black,
+            onSecondary:
+                _brightness == Brightness.dark ? Colors.white70 : Colors.black,
             secondary: _darkAccentColor.shade100,
             surface: Colors.white,
             onSurface: Colors.black,
-            primaryVariant: Colors.blueGrey.shade700,
-            secondaryVariant: _darkAccentColor.shade700,
+            primaryContainer: Colors.blueGrey.shade700,
+            secondaryContainer: _darkAccentColor.shade700,
             brightness: Brightness.dark,
           ),
           textTheme: __lightAccentTextTheme,
@@ -468,8 +481,7 @@ class _Theme implements AmiiboTheme {
               shape: MaterialStateProperty.all<OutlinedBorder>(
                   RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(8))),
-              elevation:
-                  MaterialStateProperty.resolveWith<double>((states) {
+              elevation: MaterialStateProperty.resolveWith<double>((states) {
                 if (states.contains(MaterialState.pressed)) return 0.0;
                 return 8.0;
               }),
@@ -485,23 +497,25 @@ class _Theme implements AmiiboTheme {
             ),
           ),
           buttonTheme: ButtonThemeData(
-            textTheme: ButtonTextTheme.normal,
-            shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(8)),
-            layoutBehavior: ButtonBarLayoutBehavior.constrained,
-            buttonColor: Colors.grey[900],
-            materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-            height: 48),
+              textTheme: ButtonTextTheme.normal,
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8)),
+              layoutBehavior: ButtonBarLayoutBehavior.constrained,
+              buttonColor: Colors.grey[900],
+              materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+              height: 48),
           bottomSheetTheme: BottomSheetThemeData(
             elevation: 0.0,
             backgroundColor: Colors.transparent,
             shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.vertical(top: Radius.circular(8),
+              borderRadius: BorderRadius.vertical(
+                top: Radius.circular(8),
               ),
             ),
           ),
           chipTheme: ChipThemeData(
-            checkmarkColor: _brightness == Brightness.dark ? Colors.white : Colors.black,
+            checkmarkColor:
+                _brightness == Brightness.dark ? Colors.white : Colors.black,
             backgroundColor: Colors.white12,
             deleteIconColor: Colors.white70,
             disabledColor: Colors.white.withAlpha(0x0C),
@@ -513,8 +527,8 @@ class _Theme implements AmiiboTheme {
             secondaryLabelStyle: _brightness == Brightness.dark
                 ? __lightAccentTextTheme.bodyText2!
                 : __darkAccentTextTheme.bodyText2!,
-            shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(8)),
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
             brightness: _brightness,
           ),
           navigationRailTheme: NavigationRailThemeData(
@@ -529,11 +543,12 @@ class _Theme implements AmiiboTheme {
               unselectedLabelTextStyle: __lightAccentTextTheme.bodyText2),
           toggleableActiveColor: _darkAccentColor,
           indicatorColor: Colors.blueGrey[700],
+          useMaterial3: true,
         );
         break;
       case 1:
         _darkTheme = ThemeData(
-          splashFactory: InkRipple.splashFactory,
+          splashFactory: InkSparkle.constantTurbulenceSeedSplashFactory,
           primaryColorLight: Colors.grey[850],
           primaryColorDark: Colors.grey[900],
           textSelectionTheme: TextSelectionThemeData(
@@ -563,6 +578,7 @@ class _Theme implements AmiiboTheme {
           primaryIconTheme: const IconThemeData(color: Colors.white70),
           iconTheme: const IconThemeData(color: Colors.white70),
           floatingActionButtonTheme: FloatingActionButtonThemeData(
+            shape: const CircleBorder(),
             foregroundColor: _accentColor,
             backgroundColor: _darkAccentColor,
           ),
@@ -587,14 +603,13 @@ class _Theme implements AmiiboTheme {
             onError: Colors.white,
             primary: Colors.blueGrey,
             onPrimary: Colors.white,
-            onSecondary: _brightness == Brightness.dark
-                ? Colors.white70
-                : Colors.black,
+            onSecondary:
+                _brightness == Brightness.dark ? Colors.white70 : Colors.black,
             secondary: _darkAccentColor.shade100,
             surface: Colors.white,
             onSurface: Colors.black,
-            primaryVariant: Colors.grey.shade700,
-            secondaryVariant: _darkAccentColor.shade700,
+            primaryContainer: Colors.grey.shade700,
+            secondaryContainer: _darkAccentColor.shade700,
             brightness: Brightness.dark,
           ),
           textTheme: __lightAccentTextTheme,
@@ -728,12 +743,13 @@ class _Theme implements AmiiboTheme {
               unselectedLabelTextStyle: __lightAccentTextTheme.bodyText2),
           toggleableActiveColor: _darkAccentColor,
           indicatorColor: Colors.grey[700],
+          useMaterial3: true,
         );
         break;
       case 2:
       default:
         _darkTheme = ThemeData(
-          splashFactory: InkRipple.splashFactory,
+          splashFactory: InkSparkle.constantTurbulenceSeedSplashFactory,
           primaryColorLight: Colors.transparent,
           primaryColorDark: _darkAccentColor,
           textSelectionTheme: TextSelectionThemeData(
@@ -763,6 +779,7 @@ class _Theme implements AmiiboTheme {
           primaryIconTheme: const IconThemeData(color: Colors.white70),
           iconTheme: const IconThemeData(color: Colors.white70),
           floatingActionButtonTheme: FloatingActionButtonThemeData(
+            shape: const CircleBorder(),
             foregroundColor: _accentColor,
             backgroundColor: _darkAccentColor,
           ),
@@ -783,12 +800,11 @@ class _Theme implements AmiiboTheme {
           ),
           colorScheme: ColorScheme.dark(
             primary: Colors.blueGrey,
-            primaryVariant: Colors.blueGrey.shade700,
-            onSecondary: _brightness == Brightness.dark
-                ? Colors.white70
-                : Colors.black,
+            primaryContainer: Colors.blueGrey.shade700,
+            onSecondary:
+                _brightness == Brightness.dark ? Colors.white70 : Colors.black,
             secondary: _darkAccentColor.shade200,
-            secondaryVariant: _darkAccentColor.shade700,
+            secondaryContainer: _darkAccentColor.shade700,
           ),
           textTheme: const TextTheme(
             headline6: TextStyle(
@@ -946,6 +962,7 @@ class _Theme implements AmiiboTheme {
               unselectedLabelTextStyle: __lightAccentTextTheme.bodyText2),
           toggleableActiveColor: _darkAccentColor,
           indicatorColor: _darkAccentColor.withOpacity(0.75),
+          useMaterial3: true,
         );
         break;
     }

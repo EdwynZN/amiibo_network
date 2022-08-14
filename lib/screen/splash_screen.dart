@@ -1,20 +1,25 @@
 import 'dart:async';
 import 'package:amiibo_network/resources/resources.dart';
+import 'package:amiibo_network/riverpod/theme_provider.dart';
+import 'package:amiibo_network/utils/format_color_on_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:amiibo_network/widget/switch_joycon.dart';
 import 'package:amiibo_network/service/update_service.dart';
 import 'package:amiibo_network/generated/l10n.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-class SplashScreen extends StatefulWidget {
+class SplashScreen extends ConsumerStatefulWidget {
   const SplashScreen({Key? key}) : super(key: key);
 
   @override
-  State<StatefulWidget> createState() => SplashScreenState();
+  ConsumerState<SplashScreen> createState() => SplashScreenState();
 }
 
-class SplashScreenState extends State<SplashScreen>
+class SplashScreenState extends ConsumerState<SplashScreen>
     with SingleTickerProviderStateMixin {
+  late Color? color;
   late AnimationController _animationController;
+  late final ThemeMode themeMode;
 
   Future<bool> get updateDB async {
     final UpdateService updateService = UpdateService();
@@ -28,11 +33,19 @@ class SplashScreenState extends State<SplashScreen>
   @override
   void initState() {
     super.initState();
+    themeMode = ref.read(themeProvider).preferredTheme;
     _animationController = AnimationController(
         duration: Duration(seconds: 3),
         vsync: this,
         animationBehavior: AnimationBehavior.preserve)
       ..repeat();
+  }
+
+  @override
+  void didChangeDependencies() {
+    final mediaBrightness = MediaQuery.of(context).platformBrightness;
+    color = colorOnThemeMode(themeMode, mediaBrightness);
+    super.didChangeDependencies();
   }
 
   @override
@@ -50,23 +63,23 @@ class SplashScreenState extends State<SplashScreen>
         type: MaterialType.canvas,
         child: Center(
           child: ConstrainedBox(
-            constraints: BoxConstraints.loose(Size(
-              _size.width, _size.height / 2 - mediaQuery.padding.top)),
+            constraints: BoxConstraints.loose(
+                Size(_size.width, _size.height / 2 - mediaQuery.padding.top)),
             child: AspectRatio(
               aspectRatio: 25 / 10,
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Expanded(child: _SwitchIcon(
+                  Expanded(
+                      child: _SwitchIcon(
                     controller: _animationController.view,
                   )),
                   Container(
                     padding: const EdgeInsets.all(5),
                     decoration: BoxDecoration(
                         color: Colors.black,
-                        border: Border.all(
-                            color: Colors.white, width: 0.1)),
+                        border: Border.all(color: Colors.white, width: 0.1)),
                     child: AspectRatio(
                       aspectRatio: 1.7,
                       child: FutureBuilder<bool>(
@@ -74,22 +87,18 @@ class SplashScreenState extends State<SplashScreen>
                           builder: (ctx, snapshot) {
                             final S translate = S.of(ctx);
                             int key = 0;
-                            Widget _child =
-                                const CircularProgressIndicator(
-                                    backgroundColor: Colors.black);
+                            Widget _child = const CircularProgressIndicator(
+                                backgroundColor: Colors.black);
                             String _text = translate.splashMessage;
                             if (snapshot.hasData) {
                               key = 1;
                               _text = snapshot.data!
                                   ? translate.splashWelcome
                                   : translate.splashError;
-                              _child = Image.asset(NetworkIcons.iconApp,
+                              _child = Image.asset(
+                                NetworkIcons.iconApp,
                                 fit: BoxFit.scaleDown,
-                                color: Theme.of(context)
-                                            .primaryColorBrightness ==
-                                        Brightness.dark
-                                    ? Colors.white54
-                                    : null,
+                                color: color,
                               );
                               _animationController
                                   .forward()
@@ -108,10 +117,10 @@ class SplashScreenState extends State<SplashScreen>
                           }),
                     ),
                   ),
-                  Expanded(child: _SwitchIcon(
-                    controller: _animationController.view,
-                    isLeft: false
-                  )),
+                  Expanded(
+                      child: _SwitchIcon(
+                          controller: _animationController.view,
+                          isLeft: false)),
                 ],
               ),
             ),
@@ -134,22 +143,25 @@ class _SwitchIcon extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final SwitchAnimation animation =
-        SwitchAnimation(controller: controller as AnimationController, delay: isLeft ? 0.1 : 0.6);
+    final SwitchAnimation animation = SwitchAnimation(
+        controller: controller as AnimationController,
+        delay: isLeft ? 0.1 : 0.6);
     return AnimatedBuilder(
-        animation: controller,
-        child: CustomPaint(
-            child: Container(),
-            painter: SwitchJoycon(
-                isLeft: isLeft,
-                color:
-                    Theme.of(context).primaryColorBrightness == Brightness.light
-                        ? null
-                        : Colors.grey[850])),
-        builder: (_, child) {
-          return FractionalTranslation(
-              translation: animation.translation.value, child: child);
-        });
+      animation: controller,
+      child: CustomPaint(
+        child: Container(),
+        painter: SwitchJoycon(
+          isLeft: isLeft,
+          color: Theme.of(context).colorScheme.brightness == Brightness.light
+              ? null
+              : Colors.grey[850],
+        ),
+      ),
+      builder: (_, child) {
+        return FractionalTranslation(
+            translation: animation.translation.value, child: child);
+      },
+    );
   }
 }
 

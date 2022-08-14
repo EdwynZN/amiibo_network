@@ -2,6 +2,8 @@ import 'dart:typed_data';
 import 'package:amiibo_network/model/stat.dart';
 import 'package:amiibo_network/repository/theme_repository.dart';
 import 'package:amiibo_network/resources/resources.dart';
+import 'package:amiibo_network/riverpod/theme_provider.dart';
+import 'package:amiibo_network/utils/format_color_on_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'dart:ui' as ui;
@@ -19,6 +21,7 @@ class Screenshot {
   late ThemeData theme;
   late stat.StatProvider statProvider;
   late MaterialLocalizations materialLocalizations;
+  Color? color;
   String? owned;
   String? wished;
   String? createdOn;
@@ -60,7 +63,10 @@ class Screenshot {
   }
 
   void update(WidgetRef ref, BuildContext context) {
+    final mediaBrightness = MediaQuery.of(context).platformBrightness;
+    final themeMode = ref.read(themeProvider).preferredTheme;
     this
+      ..color = colorOnThemeMode(themeMode, mediaBrightness)
       ..theme = Theme.of(context)
       ..statProvider = ref.read(stat.statProvider)
       ..owned = _translate!.owned
@@ -448,8 +454,8 @@ class Screenshot {
         // ignore: invalid_return_type_for_catch_error
         .catchError((e) => null);
 
-    if (theme.primaryColorBrightness == Brightness.dark)
-      paint.colorFilter = ColorFilter.mode(Colors.white54, BlendMode.srcIn);
+    if (color != null)
+      paint.colorFilter = ColorFilter.mode(color!, BlendMode.srcIn);
 
     if (appIcon != null)
       _canvas!.drawImage(appIcon,

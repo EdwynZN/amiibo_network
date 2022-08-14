@@ -83,7 +83,7 @@ class AmiiboGrid extends ConsumerWidget {
                     alignment: Alignment.center,
                     padding: EdgeInsets.symmetric(horizontal: 5),
                     child: Text(
-                      '${amiibo.name}',
+                      amiibo.name,
                       softWrap: false,
                       overflow: TextOverflow.fade,
                       style: Theme.of(context).primaryTextTheme.headline2,

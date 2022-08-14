@@ -34,7 +34,7 @@ final themeProvider = ChangeNotifierProvider<ThemeProvider>((ref) {
 });
 
 class ThemeProvider extends ChangeNotifier {
-  ThemeMode? _preferredTheme;
+  ThemeMode _preferredTheme;
   int _lightColor;
   int _darkColor;
   final AmiiboTheme theme;
@@ -45,7 +45,7 @@ class ThemeProvider extends ChangeNotifier {
       : _preferredTheme = ThemeMode.values[themeMode],
         theme = AmiiboTheme(light: _lightColor, dark: _darkColor);
 
-  ThemeMode? get preferredTheme => _preferredTheme;
+  ThemeMode get preferredTheme => _preferredTheme;
 
   int get lightOption => _lightColor;
   int get darkOption => _darkColor;

@@ -18,6 +18,7 @@ enum AndroidCode {
   Q,
   R,
   S,
+  T,
 }
 
 extension AndroidCodeShortcuts on AndroidCode {

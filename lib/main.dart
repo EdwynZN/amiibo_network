@@ -30,18 +30,17 @@ Future<void> main() async {
   final bool splash = await updateService.compareLastUpdate;
   final SharedPreferences preferences = await SharedPreferences.getInstance();
   await updateOldTheme();
+  final store = await newHiveDefaultCacheStore(path: cacheDir.path);
+  final cache = await store.cache(
+    name: 'HiveCache',
+    fromEncodable: (cb) => CacheValue.fromJson(cb),
+    maxEntries: 200,
+    expiryPolicy: AccessedExpiryPolicy(const Duration(days: 7)),
+  );
   runApp(
     ProviderScope(
       overrides: [
-        cacheProvider.overrideWithValue(
-          newHiveCache(
-            path: cacheDir.path,
-            cacheName: 'HiveCache',
-            fromEncodable: (cb) => CacheValue.fromJson(cb),
-            maxEntries: 200,
-            expiryPolicy: AccessedExpiryPolicy(const Duration(days: 7)),
-          ),
-        ),
+        cacheProvider.overrideWithValue(cache),
         preferencesProvider.overrideWithValue(preferences),
       ],
       child: AmiiboNetwork(

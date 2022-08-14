@@ -73,6 +73,7 @@ class _Radial extends StatelessWidget {
   _Radial({
     required this.label,
     required this.icon,
+    // ignore: unused_element
     this.mainAxisAlignment = MainAxisAlignment.center,
   });
 
