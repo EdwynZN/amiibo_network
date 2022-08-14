@@ -454,6 +454,7 @@ class _DropMenu extends ConsumerWidget {
       onChanged: themeMode.themeDB,
       //underline: const SizedBox.shrink(),
       iconEnabledColor: themeStyle.iconTheme!.color,
+      elevation: 4,
       hint: Row(
         mainAxisSize: MainAxisSize.max,
         mainAxisAlignment: MainAxisAlignment.end,

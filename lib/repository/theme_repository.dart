@@ -121,6 +121,7 @@ class _Theme implements AmiiboTheme {
       brightness: _brightnessColor,
       appBarTheme: AppBarTheme(
         elevation: 0.0,
+        surfaceTintColor: color,
         backgroundColor: color,
         systemOverlayStyle: SystemUiOverlayStyle(
           statusBarBrightness: _brightnessColor,
@@ -232,6 +233,7 @@ class _Theme implements AmiiboTheme {
             side: BorderSide(color: accentColor)),
         behavior: SnackBarBehavior.floating,
       ),
+      splashColor: color.withOpacity(0.24),
       outlinedButtonTheme: OutlinedButtonThemeData(
           style: ButtonStyle(
         mouseCursor: MaterialStateProperty.all<MouseCursor>(
@@ -352,6 +354,7 @@ class _Theme implements AmiiboTheme {
           ),
           appBarTheme: AppBarTheme(
             elevation: 0.0,
+            surfaceTintColor: Colors.blueGrey.shade900,
             backgroundColor: Colors.blueGrey.shade900,
             systemOverlayStyle: SystemUiOverlayStyle(
               statusBarBrightness: Brightness.dark,
@@ -360,6 +363,7 @@ class _Theme implements AmiiboTheme {
               statusBarColor: Colors.blueGrey.shade900,
               systemNavigationBarColor: Colors.blueGrey.shade900,
             ),
+            scrolledUnderElevation: 0.0,
             foregroundColor: Colors.blueGrey,
             titleTextStyle: __lightAccentTextTheme.headline6,
             toolbarTextStyle: __lightAccentTextTheme.bodyText2,
@@ -384,6 +388,7 @@ class _Theme implements AmiiboTheme {
           selectedRowColor: Colors.blueGrey[700],
           cardColor: Colors.blueGrey[800],
           cardTheme: CardTheme(
+            surfaceTintColor: _darkAccentColor.shade100,
             color: Colors.blueGrey[800],
             margin: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
             shape:
@@ -558,6 +563,7 @@ class _Theme implements AmiiboTheme {
           ),
           appBarTheme: AppBarTheme(
             elevation: 0.0,
+            surfaceTintColor: Colors.grey.shade900,
             backgroundColor: Colors.grey.shade900,
             systemOverlayStyle: SystemUiOverlayStyle(
               statusBarBrightness: Brightness.dark,
@@ -590,6 +596,7 @@ class _Theme implements AmiiboTheme {
           selectedRowColor: Colors.grey[800],
           cardColor: Colors.grey[850],
           cardTheme: CardTheme(
+            surfaceTintColor: Colors.grey[850],
             color: Colors.grey[850],
             margin: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
             shape:
@@ -759,6 +766,7 @@ class _Theme implements AmiiboTheme {
           ),
           appBarTheme: AppBarTheme(
             elevation: 0.0,
+            surfaceTintColor: Colors.black,
             backgroundColor: Colors.black,
             systemOverlayStyle: SystemUiOverlayStyle(
               statusBarBrightness: Brightness.dark,
@@ -791,12 +799,13 @@ class _Theme implements AmiiboTheme {
           selectedRowColor: Colors.grey[900],
           cardColor: Colors.black,
           cardTheme: CardTheme(
+            surfaceTintColor: Colors.black,
             color: Colors.transparent,
             margin: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
             shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(8),
                 side: BorderSide(color: Colors.grey[900]!, width: 2)),
-            elevation: 0,
+            elevation: 0.0,
           ),
           colorScheme: ColorScheme.dark(
             primary: Colors.blueGrey,

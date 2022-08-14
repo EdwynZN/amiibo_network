@@ -1,4 +1,3 @@
-
 import 'package:amiibo_network/generated/l10n.dart';
 import 'package:amiibo_network/model/amiibo.dart';
 import 'package:amiibo_network/repository/theme_repository.dart';
@@ -45,14 +44,17 @@ class WishedButton extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final S translate = S.of(context);
+    final color = colorWished.withOpacity(0.24);
     return IconButton(
       icon: isActive
           ? const Icon(iconWished)
           : const Icon(Icons.check_box_outline_blank),
       color: colorWished,
       iconSize: 30.0,
+      splashRadius: 24.0,
       tooltip: translate.wishTooltip,
-      splashColor: Colors.amberAccent[100],
+      splashColor: color,
+      highlightColor: color,
       onPressed: () {
         if (amiibo == null) return;
         final bool newValue = !isActive;
@@ -82,14 +84,17 @@ class OwnedButton extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final S translate = S.of(context);
+    final color = colorOwned.withOpacity(0.24);
     return IconButton(
       icon: isActive
           ? const Icon(iconOwned)
           : const Icon(Icons.radio_button_unchecked),
       color: colorOwned,
       iconSize: 30.0,
+      splashRadius: 24.0,
       tooltip: translate.ownTooltip,
-      splashColor: colorOwned[100],
+      splashColor: color,
+      highlightColor: color,
       onPressed: () {
         if (amiibo == null) return;
         final bool newValue = !isActive;

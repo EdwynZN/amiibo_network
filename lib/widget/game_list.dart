@@ -50,11 +50,13 @@ class GameListWidget extends ConsumerWidget {
           if (e.type == DioErrorType.response && e.response != null)
             switch (e.response!.statusCode) {
               case 404:
-                child = Text(translate.no_games_found);
+                child = Text(translate.no_games_found, textAlign: TextAlign.center);
                 break;
               default:
-                child =
-                    Text(e.response!.statusMessage ?? translate.no_games_found);
+                child = Text(
+                  e.response!.statusMessage ?? translate.no_games_found,
+                  textAlign: TextAlign.center,
+                );
                 break;
             }
           else if (e.error is SocketException && e.error.osError != null) {
@@ -65,7 +67,7 @@ class GameListWidget extends ConsumerWidget {
           } else
             child = Text(e.message);
         } else if (e is ArgumentError) {
-          child = Text(translate.no_games_found);
+          child = Text(translate.no_games_found, textAlign: TextAlign.center);
         } else if (e is SocketException) {
           child = TextButton(
             onPressed: () => ref.refresh(gameProvider(id).future),
@@ -73,11 +75,14 @@ class GameListWidget extends ConsumerWidget {
           );
         } else
           child = Text(e.toString());
-        return SliverToBoxAdapter(
-          child: Center(
-            child: DefaultTextStyle.merge(
-              style: Theme.of(context).textTheme.headline4,
-              child: child,
+        return SliverPadding(
+          padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 8.0),
+          sliver: SliverToBoxAdapter(
+            child: Center(
+              child: DefaultTextStyle.merge(
+                style: Theme.of(context).textTheme.headline4,
+                child: child,
+              ),
             ),
           ),
         );
