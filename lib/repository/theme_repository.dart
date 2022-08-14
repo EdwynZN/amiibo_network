@@ -388,7 +388,7 @@ class _Theme implements AmiiboTheme {
           selectedRowColor: Colors.blueGrey[700],
           cardColor: Colors.blueGrey[800],
           cardTheme: CardTheme(
-            surfaceTintColor: _darkAccentColor.shade100,
+            surfaceTintColor: Colors.blueGrey.shade800,
             color: Colors.blueGrey[800],
             margin: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
             shape:

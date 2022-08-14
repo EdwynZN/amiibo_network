@@ -73,10 +73,6 @@ jobs:
           echo "storePassword=$KEYSTORE_STORE_PASSWORD" >> android/key.properties
           echo "keyPassword=$KEYSTORE_KEY_PASSWORD" >> android/key.properties
 
-      - name: Create Google Play Config file
-        id: createServiceAccount
-        run: echo '${{ secrets.PLAY_STORE_KEY }}' > android/api-play-store-key.json
-
       - name: Build release version for testing purpose
         run: flutter build apk --split-per-abi --no-pub --verbose --release
       
