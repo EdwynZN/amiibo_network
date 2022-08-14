@@ -10893,7 +10893,46 @@
       "jp":"20220630",
       "na":"soon",
       "type":"Figure"
+    },
+    {
+      "key":839,
+      "id":null,
+      "amiiboSeries":"Splatoon",
+      "character":"Inkling",
+      "gameSeries":"Splatoon",
+      "name":"Inkling (Yellow)",
+      "au":"2022",
+      "eu":"2022",
+      "jp":"2022",
+      "na":"2022",
+      "type":"Figure"
+    },
+    {
+      "key":840,
+      "id":null,
+      "amiiboSeries":"Splatoon",
+      "character":"Octoling",
+      "gameSeries":"Splatoon",
+      "name":"Octoling (Blue)",
+      "au":"2022",
+      "eu":"2022",
+      "jp":"2022",
+      "na":"2022",
+      "type":"Figure"
+    },
+    {
+      "key":841,
+      "id":null,
+      "amiiboSeries":"Splatoon",
+      "character":"Smallfry",
+      "gameSeries":"Splatoon",
+      "name":"Smallfry",
+      "au":"2022",
+      "eu":"2022",
+      "jp":"2022",
+      "na":"2022",
+      "type":"Figure"
     }
   ],
-  "lastUpdated": "2022-08-12T18:35:00.000"
+  "lastUpdated": "2022-08-12T20:20:00.000"
 }
