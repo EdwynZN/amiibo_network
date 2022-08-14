@@ -103,7 +103,7 @@ class Screenshot {
     await _paintBanner(Size(maxX, maxY), _listStat);
 
     for (Amiibo amiibo in amiibos) {
-      final String strImage = 'assets/collection/icon_${amiibo.key}.png';
+      final String strImage = 'assets/collection/icon_${amiibo.key}.webp';
       final Offset _offset = Offset(xOffset, yOffset);
       final RRect cardPath = RRect.fromRectAndRadius(
           Rect.fromPoints(

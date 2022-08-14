@@ -49,7 +49,7 @@ class DetailPage extends ConsumerWidget {
                               transitionOnUserGestures: true,
                               tag: key,
                               child: Image.asset(
-                                'assets/collection/icon_$key.png',
+                                'assets/collection/icon_$key.webp',
                                 fit: BoxFit.scaleDown,
                               ),
                             ),

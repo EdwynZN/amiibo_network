@@ -40,7 +40,7 @@ class ShimmerCard extends HookWidget {
             child: Padding(
               padding: const EdgeInsets.all(4.0),
               child: Image.asset(
-                'assets/collection/icon_${id+1}.png',
+                'assets/collection/icon_${id+1}.webp',
                 fit: BoxFit.contain,
               ),
             ),

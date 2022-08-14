@@ -64,7 +64,7 @@ class AmiiboGrid extends ConsumerWidget {
                           transitionOnUserGestures: true,
                           tag: amiibo.key,
                           child: Image.asset(
-                            'assets/collection/icon_${amiibo.key}.png',
+                            'assets/collection/icon_${amiibo.key}.webp',
                             fit: BoxFit.contain,
                           ),
                         ),
