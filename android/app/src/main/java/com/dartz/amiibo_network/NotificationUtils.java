@@ -92,8 +92,10 @@ public class NotificationUtils extends ContextWrapper {
             this.grantUriPermission(packageName, uri, Intent.FLAG_GRANT_WRITE_URI_PERMISSION | Intent.FLAG_GRANT_READ_URI_PERMISSION);
         }
 
-        PendingIntent pShareIntent = PendingIntent.getActivity(this, id,
-            chooser, PendingIntent.FLAG_UPDATE_CURRENT);
+        final int flag =  Build.VERSION.SDK_INT >= Build.VERSION_CODES.M
+            ? PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE
+            : PendingIntent.FLAG_UPDATE_CURRENT;
+        PendingIntent pShareIntent = PendingIntent.getActivity(this, id, chooser, flag);
 
         notificationBuilder//.setContentIntent(pIntent)
             .addAction(android.R.drawable.ic_menu_share, actionTitle, pShareIntent);
@@ -122,8 +124,10 @@ public class NotificationUtils extends ContextWrapper {
         intent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION | Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
         intent.setDataAndType(uri, "image/png");
 
-        PendingIntent pContentIntent = PendingIntent.getActivity(this, id,
-            intent, PendingIntent.FLAG_UPDATE_CURRENT);
+        final int flag =  Build.VERSION.SDK_INT >= Build.VERSION_CODES.M
+            ? PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE
+            : PendingIntent.FLAG_UPDATE_CURRENT;
+        PendingIntent pContentIntent = PendingIntent.getActivity(this, id, intent, flag);
 
         sendIntent.setType("image/png");
         Intent chooser = Intent.createChooser(sendIntent, contentText);
@@ -135,8 +139,7 @@ public class NotificationUtils extends ContextWrapper {
             this.grantUriPermission(packageName, uri, Intent.FLAG_GRANT_WRITE_URI_PERMISSION | Intent.FLAG_GRANT_READ_URI_PERMISSION);
         }
 
-        PendingIntent pShareIntent = PendingIntent.getActivity(this, id,
-            chooser, PendingIntent.FLAG_UPDATE_CURRENT);
+        PendingIntent pShareIntent = PendingIntent.getActivity(this, id, chooser, flag);
 
 
         return notificationBuilder
