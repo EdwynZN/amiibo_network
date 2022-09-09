@@ -39,6 +39,7 @@ mixin _OrderBy {
       case OrderBy.JP:
       case OrderBy.AU:
       case OrderBy.EU:
+      case OrderBy.CollectionNumber:
         orderBuffer.write('$order IS NULL, $order $sort');
         break;
       case OrderBy.Owned:
