@@ -560,23 +560,26 @@ class _BottomBarState extends ConsumerState<BottomBar> {
         children: <Widget>[
           Expanded(
             child: TextButton.icon(
-                style: TextButton.styleFrom(
-                    minimumSize: Size.fromHeight(48),
-                    shape: BeveledRectangleBorder(),
-                    primary: Theme.of(context).textTheme.headline6!.color,
-                    backgroundColor: Theme.of(context).cardColor),
-                onPressed: () async => await _writePermission(ref),
-                icon: const Icon(Icons.file_upload),
-                label: Text(translate.export)),
+              style: TextButton.styleFrom(
+                minimumSize: Size.fromHeight(48),
+                shape: BeveledRectangleBorder(),
+                foregroundColor: Theme.of(context).textTheme.headline6!.color,
+                backgroundColor: Theme.of(context).cardColor,
+              ),
+              onPressed: () async => await _writePermission(ref),
+              icon: const Icon(Icons.file_upload),
+              label: Text(translate.export),
+            ),
           ),
           const Padding(padding: const EdgeInsets.symmetric(horizontal: 0.5)),
           Expanded(
             child: TextButton.icon(
               style: TextButton.styleFrom(
-                  minimumSize: Size.fromHeight(48),
-                  shape: BeveledRectangleBorder(),
-                  primary: Theme.of(context).textTheme.headline6!.color,
-                  backgroundColor: Theme.of(context).cardColor),
+                minimumSize: Size.fromHeight(48),
+                shape: BeveledRectangleBorder(),
+                foregroundColor: Theme.of(context).textTheme.headline6!.color,
+                backgroundColor: Theme.of(context).cardColor,
+              ),
               onPressed: () async => await _openFileExplorer(ref),
               icon: const Icon(Icons.file_download),
               label: Text(translate.import),

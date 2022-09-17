@@ -83,6 +83,7 @@ class DetailPage extends ConsumerWidget {
   }
 }
 
+// ignore: unused_element
 class _AmiiboInfo extends ConsumerWidget {
   const _AmiiboInfo({Key? key}) : super(key: key);
 

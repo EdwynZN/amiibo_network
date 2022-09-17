@@ -267,7 +267,7 @@ class _CategoryControlState extends ConsumerState<CategoryControl> {
         Expanded(
           child: OutlinedButton.icon(
             style: OutlinedButton.styleFrom(
-                primary: _search == AmiiboCategory.Name
+                foregroundColor: _search == AmiiboCategory.Name
                     ? _accentTextThemeColor
                     : null,
                 shape: RoundedRectangleBorder(
@@ -289,10 +289,11 @@ class _CategoryControlState extends ConsumerState<CategoryControl> {
         Expanded(
           child: OutlinedButton.icon(
             style: _search == AmiiboCategory.Game
-                ? OutlinedButton.styleFrom(
-                    primary: _accentTextThemeColor,
-                    backgroundColor: _accentColor)
-                : null,
+              ? OutlinedButton.styleFrom(
+                foregroundColor: _accentTextThemeColor,
+                backgroundColor: _accentColor,
+              )
+              : null,
             onPressed: () => _selectCategory(ref, AmiiboCategory.Game),
             icon: const Icon(
               Icons.games,
@@ -306,16 +307,16 @@ class _CategoryControlState extends ConsumerState<CategoryControl> {
         Expanded(
           child: OutlinedButton.icon(
             style: OutlinedButton.styleFrom(
-                primary: _search == AmiiboCategory.AmiiboSeries
-                    ? _accentTextThemeColor
-                    : null,
-                shape: RoundedRectangleBorder(
-                  borderRadius:
-                      const BorderRadius.horizontal(right: Radius.circular(8)),
-                ),
-                backgroundColor: _search == AmiiboCategory.AmiiboSeries
-                    ? _accentColor
-                    : null),
+              foregroundColor: _search == AmiiboCategory.AmiiboSeries
+                ? _accentTextThemeColor
+                : null,
+              shape: RoundedRectangleBorder(
+                borderRadius: const BorderRadius.horizontal(right: Radius.circular(8)),
+              ),
+              backgroundColor: _search == AmiiboCategory.AmiiboSeries
+                ? _accentColor
+                : null,
+            ),
             onPressed: () => _selectCategory(ref, AmiiboCategory.AmiiboSeries),
             icon: const Icon(
               Icons.nfc,
