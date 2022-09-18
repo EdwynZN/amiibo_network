@@ -346,7 +346,7 @@ class __SaveCollectionState extends ConsumerState<_SaveCollection> {
 }
 
 class _ResetCollection extends ConsumerWidget {
-  _ResetCollection({Key? key}) : super(key: key);
+  const _ResetCollection({Key? key}) : super(key: key);
 
   Future<bool?> _dialog(BuildContext context) async {
     final S translate = S.of(context);

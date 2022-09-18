@@ -138,13 +138,15 @@ class _Theme implements AmiiboTheme {
         titleTextStyle: _brightnessColor == Brightness.light
             ? __darkAccentTextTheme.headline6!
             : __lightAccentTextTheme.headline6!.apply(color: Colors.white),
-        foregroundColor: color,
+        foregroundColor:
+            _brightnessColor == Brightness.light ? Colors.black : Colors.white,
         toolbarTextStyle: _brightnessColor == Brightness.light
             ? __darkAccentTextTheme.bodyText2
             : __lightAccentTextTheme.bodyText2,
         iconTheme: IconThemeData(
-          color:
-              _brightnessColor == Brightness.dark ? Colors.white : Colors.black,
+          color: _brightnessColor == Brightness.light
+              ? Colors.black
+              : Colors.white,
         ),
       ),
       unselectedWidgetColor: Colors.black87,
@@ -223,6 +225,10 @@ class _Theme implements AmiiboTheme {
         titleTextStyle: __darkAccentTextTheme.headline6,
         contentTextStyle: __darkAccentTextTheme.subtitle1,
         backgroundColor: color[50],
+        actionsPadding: const EdgeInsets.symmetric(
+          horizontal: 16.0,
+          vertical: 4.0,
+        ),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
       ),
       snackBarTheme: SnackBarThemeData(
@@ -433,10 +439,15 @@ class _Theme implements AmiiboTheme {
             showUnselectedLabels: true,
           ),
           dialogTheme: DialogTheme(
-            titleTextStyle: TextStyle(
-                color: Colors.white70,
-                fontSize: 18,
-                fontWeight: FontWeight.w600),
+            titleTextStyle: const TextStyle(
+              color: Colors.white70,
+              fontSize: 18,
+              fontWeight: FontWeight.w600,
+            ),
+            actionsPadding: const EdgeInsets.symmetric(
+              horizontal: 16.0,
+              vertical: 4.0,
+            ),
             backgroundColor: Colors.blueGrey[900],
             shape:
                 RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
@@ -640,10 +651,15 @@ class _Theme implements AmiiboTheme {
             showUnselectedLabels: true,
           ),
           dialogTheme: DialogTheme(
-            titleTextStyle: TextStyle(
-                color: Colors.white70,
-                fontSize: 18,
-                fontWeight: FontWeight.w600),
+            titleTextStyle: const TextStyle(
+              color: Colors.white70,
+              fontSize: 18,
+              fontWeight: FontWeight.w600,
+            ),
+            actionsPadding: const EdgeInsets.symmetric(
+              horizontal: 16.0,
+              vertical: 4.0,
+            ),
             backgroundColor: Colors.grey[900],
             shape:
                 RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
@@ -859,9 +875,14 @@ class _Theme implements AmiiboTheme {
           ),
           dialogTheme: DialogTheme(
             titleTextStyle: TextStyle(
-                color: Colors.white70,
-                fontSize: 18,
-                fontWeight: FontWeight.w600),
+              color: Colors.white70,
+              fontSize: 18,
+              fontWeight: FontWeight.w600,
+            ),
+            actionsPadding: const EdgeInsets.symmetric(
+              horizontal: 16.0,
+              vertical: 4.0,
+            ),
             backgroundColor: Colors.grey[900],
             shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(8),

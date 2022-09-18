@@ -85,6 +85,10 @@ class _CollectionDrawerState extends ConsumerState<CollectionDrawer> {
                             title: Text(translate.stats),
                             selected: _selected == 'Stats',
                           ),
+                          Divider(
+                            color: theme.dividerColor,
+                            height: 1.0,
+                          ),
                           ListTile(
                             onTap: () =>
                                 _onTapTile(ref, AmiiboCategory.All, 'All'),

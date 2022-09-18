@@ -6,6 +6,7 @@ import 'package:amiibo_network/widget/implicit_sort_direction_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:sliver_tools/sliver_tools.dart';
 
 class SortCollection extends StatelessWidget {
   const SortCollection({Key? key}) : super(key: key);
@@ -39,11 +40,12 @@ class _BottomSheetSort extends StatelessWidget {
     EdgeInsetsGeometry padding = EdgeInsets.zero;
     if (size.longestSide >= 800)
       padding = EdgeInsets.symmetric(
-          horizontal: (size.width / 2 - 210).clamp(0.0, double.infinity));
+        horizontal: (size.width / 2 - 210).clamp(0.0, double.infinity),
+    );
     return Padding(
       padding: padding,
       child: DraggableScrollableSheet(
-        key: Key('Draggable'),
+        key: const Key('Draggable'),
         maxChildSize: height,
         expand: false,
         initialChildSize: height,
@@ -57,23 +59,30 @@ class _BottomSheetSort extends StatelessWidget {
               child: CustomScrollView(
                 controller: scrollController,
                 slivers: <Widget>[
-                  SliverPersistentHeader(
-                    pinned: true,
-                    delegate: _BottomSheetHeader(
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: <Widget>[
-                          Text(translate.sort,
-                              style: Theme.of(context).textTheme.headline6),
-                          TextButton(
-                            style: TextButton.styleFrom(
-                                tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                                visualDensity: VisualDensity(vertical: -0.5)),
-                            onPressed: () => Navigator.pop(context),
-                            child: Text(translate.done),
+                  SliverPinnedHeader(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        Padding(
+                          padding: const EdgeInsets.only(top: 6, left: 24, right: 16),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: <Widget>[
+                              Text(translate.sort,
+                                  style: Theme.of(context).textTheme.headline6),
+                              TextButton(
+                                style: TextButton.styleFrom(
+                                    tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                                    visualDensity: VisualDensity(vertical: -0.5)),
+                                onPressed: () => Navigator.pop(context),
+                                child: Text(translate.done),
+                              ),
+                            ],
                           ),
-                        ],
-                      ),
+                        ),
+                        const Divider(),
+                      ],
                     ),
                   ),
                   HookConsumer(
@@ -204,41 +213,4 @@ class _SortListTile extends HookConsumerWidget {
       trailing: trailing,
     );
   }
-}
-
-class _BottomSheetHeader extends SliverPersistentHeaderDelegate {
-  final Widget child;
-  const _BottomSheetHeader({required this.child});
-
-  @override
-  Widget build(
-      BuildContext context, double shrinkOffset, bool overlapsContent) {
-    return SizedBox(
-      height: kToolbarHeight,
-      child: Material(
-        color: Theme.of(context).backgroundColor,
-        shape: Theme.of(context).bottomSheetTheme.shape,
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.end,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            Padding(
-              padding: const EdgeInsets.only(top: 6, left: 24, right: 16),
-              child: child,
-            ),
-            const Divider(),
-          ],
-        ),
-      ),
-    );
-  }
-
-  @override
-  double get maxExtent => kToolbarHeight;
-
-  @override
-  double get minExtent => kToolbarHeight;
-
-  @override
-  bool shouldRebuild(SliverPersistentHeaderDelegate oldDelegate) => true;
 }
