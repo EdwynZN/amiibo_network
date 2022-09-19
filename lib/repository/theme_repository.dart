@@ -151,6 +151,7 @@ class _Theme implements AmiiboTheme {
       ),
       unselectedWidgetColor: Colors.black87,
       dividerColor: color,
+      disabledColor: Colors.black26,
       scaffoldBackgroundColor: color[50],
       iconTheme: const IconThemeData(color: Colors.black),
       floatingActionButtonTheme: FloatingActionButtonThemeData(

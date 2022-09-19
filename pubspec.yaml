@@ -21,6 +21,8 @@ dependencies:
     sdk: flutter
   flutter_localizations:
     sdk: flutter
+  gap: ^2.0.0
+  go_router: ^4.5.0
   hooks_riverpod: ^1.0.4
   sqflite: ^2.0.3+1
   file_picker: ^5.1.0

@@ -19,18 +19,15 @@ class SliverStatsHeader extends SliverPersistentHeaderDelegate {
       padding: const EdgeInsets.symmetric(horizontal: 12),
       decoration: BoxDecoration(
         gradient: LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-            stops: [
-              0.35,
-              0.65,
-              0.9
-            ],
-            colors: [
-              _color,
-              _color.withOpacity(0.75),
-              _color.withOpacity(0.0),
-            ]),
+          begin: Alignment.topCenter,
+          end: Alignment.bottomCenter,
+          stops: [0.35, 0.65, 0.9],
+          colors: [
+            _color,
+            _color.withOpacity(0.75),
+            _color.withOpacity(0.0),
+          ],
+        ),
       ),
       height: math.max(minExtent, maxExtent - shrinkOffset),
       child: Consumer(
@@ -67,7 +64,8 @@ class SliverStatsHeader extends SliverPersistentHeaderDelegate {
             },
             orElse: (() => child!),
           );
-        }),
+        },
+      ),
     );
   }
 

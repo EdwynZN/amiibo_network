@@ -14,19 +14,19 @@ class SliverFloatingBar extends StatefulWidget {
   final VoidCallback? onTap;
   final Color? backgroundColor;
 
-  const SliverFloatingBar(
-      {Key? key,
-      this.pinned = false,
-      this.floating = false,
-      this.snap = false,
-      this.forward = false,
-      this.elevation = 0.0,
-      this.title,
-      this.leading,
-      this.trailing,
-      this.onTap,
-      this.backgroundColor})
-      : super(key: key);
+  const SliverFloatingBar({
+    Key? key,
+    this.pinned = false,
+    this.floating = false,
+    this.snap = false,
+    this.forward = false,
+    this.elevation = 0.0,
+    this.title,
+    this.leading,
+    this.trailing,
+    this.onTap,
+    this.backgroundColor,
+  })  : super(key: key);
 
   @override
   State<StatefulWidget> createState() => _SliverFloatingBarState();
@@ -61,19 +61,21 @@ class _SliverFloatingBarState extends State<SliverFloatingBar>
   @override
   Widget build(BuildContext context) {
     return SliverPersistentHeader(
-        floating: widget.floating,
-        pinned: widget.pinned,
-        delegate: _SliverFloatingPersistentHeader(
-            vsync: this,
-            snap: widget.forward,
-            snapConfiguration: _snapConfiguration,
-            leading: widget.leading,
-            title: widget.title,
-            trailing: widget.trailing,
-            onTap: widget.onTap,
-            elevation: widget.elevation,
-            backgroundColor: widget.backgroundColor ??
-                Theme.of(context).appBarTheme.backgroundColor));
+      floating: widget.floating,
+      pinned: widget.pinned,
+      delegate: _SliverFloatingPersistentHeader(
+        vsync: this,
+        snap: widget.forward,
+        snapConfiguration: _snapConfiguration,
+        leading: widget.leading,
+        title: widget.title,
+        trailing: widget.trailing,
+        onTap: widget.onTap,
+        elevation: widget.elevation,
+        backgroundColor: widget.backgroundColor ??
+            Theme.of(context).appBarTheme.backgroundColor,
+      ),
+    );
   }
 }
 
@@ -88,17 +90,17 @@ class _SliverFloatingPersistentHeader extends SliverPersistentHeaderDelegate {
   final VoidCallback? onTap;
   final Color? backgroundColor;
 
-  const _SliverFloatingPersistentHeader(
-      {required this.elevation,
-      this.vsync,
-      this.snap = false,
-      this.snapConfiguration,
-      this.trailing,
-      this.leading,
-      this.title,
-      this.onTap,
-      this.backgroundColor})
-      : _maxExtent = kToolbarHeight,
+  const _SliverFloatingPersistentHeader({
+    required this.elevation,
+    this.vsync,
+    this.snap = false,
+    this.snapConfiguration,
+    this.trailing,
+    this.leading,
+    this.title,
+    this.onTap,
+    this.backgroundColor,
+  }) :  _maxExtent = kToolbarHeight,
         _minExtent = kToolbarHeight,
         super();
 
@@ -182,10 +184,10 @@ class _SliverFloatingPersistentHeader extends SliverPersistentHeaderDelegate {
 }
 
 class _FloatingBar extends StatefulWidget {
-  final Widget? child;
+  final Widget child;
   final bool? snap;
 
-  _FloatingBar({Key? key, this.child, this.snap}) : super(key: key);
+  _FloatingBar({Key? key, required this.child, this.snap}) : super(key: key);
 
   @override
   State<StatefulWidget> createState() => _FloatingBarState();
@@ -235,5 +237,5 @@ class _FloatingBarState extends State<_FloatingBar> {
   }
 
   @override
-  Widget build(BuildContext context) => widget.child!;
+  Widget build(BuildContext context) => widget.child;
 }
