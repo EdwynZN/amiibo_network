@@ -5,12 +5,11 @@ import 'package:amiibo_network/repository/theme_repository.dart';
 import 'package:amiibo_network/riverpod/amiibo_provider.dart';
 import 'package:amiibo_network/riverpod/lock_provider.dart';
 import 'package:amiibo_network/riverpod/query_provider.dart';
+import 'package:amiibo_network/riverpod/screenshot_service.dart';
 import 'package:amiibo_network/riverpod/select_provider.dart';
-import 'package:amiibo_network/screen/stats_page.dart';
-import 'package:amiibo_network/service/notification_service.dart';
-import 'package:amiibo_network/service/screenshot.dart';
 import 'package:amiibo_network/service/storage.dart';
 import 'package:amiibo_network/utils/routes_constants.dart';
+import 'package:amiibo_network/widget/list_stats.dart';
 import 'package:amiibo_network/widget/loading_grid_shimmer.dart';
 import 'package:amiibo_network/widget/lock_icon.dart';
 import 'package:amiibo_network/widget/selected_chip.dart';
@@ -165,99 +164,84 @@ class HomeScreenState extends ConsumerState<HomeScreen>
               FloatingActionButtonLocation.centerDocked,
           resizeToAvoidBottomInset: false,
           drawer: CollectionDrawer(restart: _restartAnimation),
-          body: index == 0
-              ? HookConsumer(builder: (context, ref, child) {
-                  final _multipleSelection = ref.watch(
-                    selectProvider
-                        .select<bool>((value) => value.multipleSelected),
-                  );
-                  return Scrollbar(
-                    controller: _controller,
-                    interactive: true,
-                    child: CustomScrollView(
-                      controller: _controller,
-                      slivers: <Widget>[
-                        SliverFloatingBar(
-                          floating: true,
-                          forward: _multipleSelection,
-                          snap: true,
-                          leading: Builder(
-                            builder: (context) {
-                              return IconButton(
-                                icon: Hero(
-                                  tag: 'MenuButton',
-                                  child: ImplicitIcon(
-                                    key: Key('Menu'),
-                                    forward: _multipleSelection,
-                                  ),
-                                ),
-                                tooltip: _multipleSelection
-                                    ? localizations.cancelButtonLabel
-                                    : localizations.openAppDrawerTooltip,
-                                onPressed: _multipleSelection
-                                    ? _cancelSelection
-                                    : () => Scaffold.of(context).openDrawer(),
-                              );
-                            },
-                          ),
-                          title: const _TitleAppBar(),
-                          onTap: _multipleSelection ? null : _search,
-                          trailing: AnimatedSwitcher(
-                            duration: const Duration(milliseconds: 250),
-                            layoutBuilder: _defaultLayoutBuilder,
-                            child: _multipleSelection
+          body: HookConsumer(
+            builder: (context, ref, child) {
+              final _multipleSelection = ref.watch(
+                selectProvider.select<bool>((value) => value.multipleSelected),
+              );
+              final expression =
+                  ref.watch(queryProvider.select<Expression>((cb) => cb.where));
+              return Scrollbar(
+                controller: _controller,
+                interactive: true,
+                child: CustomScrollView(
+                  controller: _controller,
+                  slivers: <Widget>[
+                    SliverFloatingBar(
+                      floating: true,
+                      forward: _multipleSelection,
+                      snap: true,
+                      leading: Builder(
+                        builder: (context) {
+                          return IconButton(
+                            icon: Hero(
+                              tag: 'MenuButton',
+                              child: ImplicitIcon(
+                                key: Key('Menu'),
+                                forward: _multipleSelection,
+                              ),
+                            ),
+                            tooltip: _multipleSelection
+                                ? localizations.cancelButtonLabel
+                                : localizations.openAppDrawerTooltip,
+                            onPressed: _multipleSelection
+                                ? _cancelSelection
+                                : () => Scaffold.of(context).openDrawer(),
+                          );
+                        },
+                      ),
+                      title: const _TitleAppBar(),
+                      onTap: _multipleSelection ? null : _search,
+                      trailing: AnimatedSwitcher(
+                        duration: const Duration(milliseconds: 250),
+                        layoutBuilder: _defaultLayoutBuilder,
+                        child: index != 0
+                            ? const SizedBox()
+                            : _multipleSelection
                                 ? const _SelectedOptions()
                                 : const _DefaultOptions(),
-                          ),
-                        ),
-                        const SliverPersistentHeader(
-                          delegate: SliverStatsHeader(),
-                          pinned: true,
-                        ),
-                        const SliverPadding(
-                          padding: EdgeInsets.symmetric(horizontal: 4),
-                          sliver: _AmiiboListWidget(),
-                        ),
-                        const SliverPadding(
-                          padding: EdgeInsets.symmetric(vertical: 48.0),
-                        ),
-                      ],
+                      ),
                     ),
-                  );
-                })
-              : Consumer(
-                  builder: (context, ref, child) {
-                    final expression = ref.watch(
-                        queryProvider.select<Expression>((cb) => cb.where));
-                    return BodyStats.expanded(expression);
-                  },
+                    const SliverPersistentHeader(
+                      delegate: SliverStatsHeader(),
+                      pinned: true,
+                    ),
+                    index == 0
+                        ? const SliverPadding(
+                            padding: EdgeInsets.symmetric(horizontal: 4),
+                            sliver: _AmiiboListWidget(),
+                          )
+                        : HomeBodyStats(expression),
+                    const SliverPadding(
+                      padding: EdgeInsets.symmetric(vertical: 48.0),
+                    ),
+                  ],
                 ),
-          floatingActionButton: _FAB(),
-          bottomNavigationBar: BottomAppBar(
-            shape: const CircularNotchedRectangle(),
-            child: BottomNavigationBar(
-              showSelectedLabels: false,
-              showUnselectedLabels: false,
-              backgroundColor: Colors.transparent,
-              elevation: 0.0,
-              iconSize: 24.0,
-              selectedLabelStyle: const TextStyle(fontSize: 2.0),
-              unselectedLabelStyle: const TextStyle(fontSize: 2.0),
-              items: [
-                BottomNavigationBarItem(
-                  icon: const ImageIcon(AssetImage(_amiiboIcon)),
-                  activeIcon: const ImageIcon(AssetImage(_amiiboIcon)),
-                  label: 'Amiibos',
-                ),
-                BottomNavigationBarItem(
-                  icon: const Icon(Icons.timeline),
-                  activeIcon: const Icon(Icons.timeline),
-                  label: translate.stats,
-                ),
-              ],
-              currentIndex: index,
-              onTap: (selected) => setState(() => index = selected),
-            ),
+              );
+            },
+          ),
+          floatingActionButton: _FAB(
+            animationController: _animationController,
+            index: index,
+          ),
+          bottomNavigationBar: _BottomBar(
+            animationController: _animationController,
+            index: index,
+            onTap: (selected) => setState(() {
+              index = selected;
+              _controller.jumpTo(0);
+              ref.read(selectProvider.notifier).clearSelected();
+            }),
           ),
         ),
       ),
@@ -446,91 +430,115 @@ class _SelectedOptions extends ConsumerWidget {
 }
 
 class _FAB extends ConsumerWidget {
-  final Screenshot _screenshot = Screenshot();
+  final bool isAmiibo;
+  final Animation<double> scale;
+  final Animation<Offset> slide;
 
-  // ignore: unused_element
-  _FAB({super.key});
+  _FAB({
+    // ignore: unused_element
+    super.key,
+    required AnimationController animationController,
+    required int index,
+  })  : scale = Tween<double>(begin: 0.25, end: 1.0).animate(CurvedAnimation(
+          parent: animationController,
+          curve: Interval(0.25, 1.0, curve: Curves.decelerate),
+        )),
+        slide = Tween<Offset>(begin: const Offset(0.0, 2.0), end: Offset.zero)
+            .animate(CurvedAnimation(
+          parent: animationController,
+          curve: Interval(0.0, 1),
+        )),
+        isAmiibo = index == 0;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final S translate = S.of(context);
-    return FloatingActionButton(
-      elevation: 0.0,
-      child: const Icon(Icons.save),
-      tooltip: translate.saveStatsTooltip,
-      heroTag: 'MenuFAB',
-      onPressed: () async {
-        final quotation = ref.read(queryProvider.notifier);
-        final category = quotation.search.category;
-        final _expression = quotation.state.where;
-        final ScaffoldMessengerState scaffoldState =
-            ScaffoldMessenger.of(context);
-        if (!(await permissionGranted(scaffoldState))) return;
-        String message = translate.savingCollectionMessage;
-        if (_screenshot.isRecording) message = translate.recordMessage;
-        scaffoldState.hideCurrentSnackBar();
-        scaffoldState.showSnackBar(SnackBar(content: Text(message)));
-        if (!_screenshot.isRecording) {
-          _screenshot.update(ref, context);
-          final buffer = await _screenshot.saveStats(_expression);
-          if (buffer != null) {
-            String name;
-            int id;
-            switch (category) {
-              case AmiiboCategory.Cards:
-                name = 'MyCardStats';
-                id = 2;
-                break;
-              case AmiiboCategory.Figures:
-                name = 'MyFigureStats';
-                id = 3;
-                break;
-              case AmiiboCategory.Custom:
-                name = 'MyCustomStats';
-                id = 7;
-                break;
-              case AmiiboCategory.All:
-              default:
-                name = 'MyAmiiboStats';
-                id = 1;
-                break;
+    final isLoading =
+        ref.watch(screenshotProvider.select((value) => value is AsyncLoading));
+    return SlideTransition(
+      position: slide,
+      child: ScaleTransition(
+        scale: scale,
+        child: FloatingActionButton(
+          elevation: 0.0,
+          child: isLoading
+              ? ConstrainedBox(
+                  constraints: BoxConstraints.loose(const Size.square(24.0)),
+                  child: CircularProgressIndicator(
+                    strokeWidth: 2.5,
+                    color: Theme.of(context).floatingActionButtonTheme.foregroundColor,
+                  ),
+                )
+              : const Icon(Icons.save),
+          tooltip:
+              isAmiibo ? translate.saveCollection : translate.saveStatsTooltip,
+          heroTag: 'MenuFAB',
+          onPressed: () async {
+            final _screenshotProvider = ref.watch(screenshotProvider.notifier);
+            final scaffoldState = ScaffoldMessenger.of(context);
+            if (!(await permissionGranted(scaffoldState))) return;
+            String message = translate.savingCollectionMessage;
+            final isLoading = _screenshotProvider.isLoading;
+            if (isLoading) message = translate.recordMessage;
+            scaffoldState.hideCurrentSnackBar();
+            scaffoldState.showSnackBar(SnackBar(content: Text(message)));
+            if (isAmiibo) {
+              await _screenshotProvider.saveAmiibos(context);
+            } else {
+              await _screenshotProvider.saveStats(context);
             }
-            final Map<String, dynamic> notificationArgs = <String, dynamic>{
-              'title': translate.notificationTitle,
-              'actionTitle': translate.actionText,
-              'id': id,
-              'buffer': buffer,
-              'name': '${name}_$dateTaken'
-            };
-            await NotificationService.saveImage(notificationArgs);
-          }
-        }
-      },
+          },
+        ),
+      ),
     );
   }
 }
 
-class FAB extends StatelessWidget {
-  final Animation<double> scale;
-  final AnimationController controller;
-  final VoidCallback goTop;
+class _BottomBar extends StatelessWidget {
+  final Animation<Offset> slide;
+  final ValueChanged<int> onTap;
+  final int index;
 
-  FAB(this.controller, this.goTop)
-      : scale = Tween<double>(begin: 0.0, end: 1.0).animate(CurvedAnimation(
-          parent: controller,
-          curve: const Interval(0.0, 1, curve: Curves.decelerate),
+  _BottomBar({
+    super.key,
+    required AnimationController animationController,
+    required this.onTap,
+    required this.index,
+  }) : slide = Tween<Offset>(begin: const Offset(0.0, 1.0), end: Offset.zero)
+            .animate(CurvedAnimation(
+          parent: animationController,
+          curve: Interval(0.0, 1),
         ));
 
   @override
   Widget build(BuildContext context) {
-    return ScaleTransition(
-      scale: scale,
-      child: FloatingActionButton(
-        elevation: 2.0,
-        tooltip: S.of(context).upToolTip,
-        heroTag: 'MenuFAB',
-        onPressed: goTop,
-        child: const Icon(Icons.keyboard_arrow_up, size: 36),
+    return SlideTransition(
+      position: slide,
+      child: BottomAppBar(
+        shape: const CircularNotchedRectangle(),
+        child: BottomNavigationBar(
+          showSelectedLabels: false,
+          showUnselectedLabels: false,
+          backgroundColor: Colors.transparent,
+          elevation: 0.0,
+          iconSize: 24.0,
+          selectedLabelStyle: const TextStyle(fontSize: 2.0),
+          unselectedLabelStyle: const TextStyle(fontSize: 2.0),
+          items: [
+            BottomNavigationBarItem(
+              icon: const ImageIcon(AssetImage(_amiiboIcon)),
+              activeIcon: const ImageIcon(AssetImage(_amiiboIcon)),
+              label: 'Amiibos',
+            ),
+            BottomNavigationBarItem(
+              icon: const Icon(Icons.timeline),
+              activeIcon: const Icon(Icons.timeline),
+              label: S.of(context).stats,
+            ),
+          ],
+          currentIndex: index,
+          onTap: onTap,
+        ),
       ),
     );
   }

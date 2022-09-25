@@ -34,7 +34,7 @@ Future<void> main() async {
   final store = await newHiveDefaultCacheStore(path: cacheDir.path);
   final cache = await store.cache(
     name: 'HiveCache',
-    fromEncodable: (cb) => CacheValue.fromJson(cb),
+    fromEncodable: CacheValue.fromJson,
     maxEntries: 200,
     expiryPolicy: AccessedExpiryPolicy(const Duration(days: 7)),
   );

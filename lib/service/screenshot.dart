@@ -1,6 +1,7 @@
 import 'package:amiibo_network/model/stat.dart';
 import 'package:amiibo_network/repository/theme_repository.dart';
 import 'package:amiibo_network/resources/resources.dart';
+import 'package:amiibo_network/riverpod/stat_provider.dart';
 import 'package:amiibo_network/riverpod/theme_provider.dart';
 import 'package:amiibo_network/utils/format_color_on_theme.dart';
 import 'package:flutter/material.dart';
@@ -59,6 +60,21 @@ class Screenshot {
     assert(!isRecording);
     _recorder = ui.PictureRecorder();
     _canvas = Canvas(_recorder!, rect);
+  }
+
+  void customData(
+    ThemeMode themeMode,
+    BuildContext context,
+    StatProvider statProvider) {
+    final mediaBrightness = MediaQuery.of(context).platformBrightness;
+    this
+      ..color = colorOnThemeMode(themeMode, mediaBrightness)
+      ..theme = Theme.of(context)
+      ..statProvider = statProvider
+      ..owned = _translate!.owned
+      ..wished = _translate!.wished
+      ..createdOn = _translate!.createdOn
+      ..materialLocalizations = MaterialLocalizations.of(context);
   }
 
   void update(WidgetRef ref, BuildContext context) {
