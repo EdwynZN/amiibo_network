@@ -22,94 +22,108 @@ import 'package:amiibo_network/model/search_result.dart';
 import 'package:amiibo_network/widget/selected_chip.dart';
 import 'package:amiibo_network/model/amiibo.dart';
 
-class SettingsPage extends StatelessWidget {
+class SettingsPage extends ConsumerWidget {
   const SettingsPage({Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final S translate = S.of(context);
-    return SafeArea(
-      child: Scaffold(
-        appBar: AppBar(
-          actions: <Widget>[
-            Align(
-              alignment: Alignment.center,
-              child: Padding(
-                padding: EdgeInsets.only(right: 8),
-                child: _DropMenu(key: Key('theme')),
-              ),
-            )
-          ],
-          title: Text(translate.settings),
-        ),
-        body: Scrollbar(
-          child: CustomScrollView(
-            slivers: <Widget>[
-              SliverList(
-                delegate: SliverChildListDelegate.fixed([
-                  _ResetCollection(),
-                  _SaveCollection(),
-                  _CardSettings(
+    final theme = Theme.of(context);
+    final mediaBrightness = MediaQuery.of(context).platformBrightness;
+    final themeMode = ref.watch(themeProvider.select((t) => t.preferredTheme));
+    final color = colorOnThemeMode(themeMode, mediaBrightness);
+    return ListTileTheme.merge(
+      iconColor: theme.iconTheme.color,
+      textColor: theme.textTheme.bodyText2!.color,
+      child: SafeArea(
+        child: Scaffold(
+          appBar: AppBar(
+            actions: <Widget>[
+              Align(
+                alignment: Alignment.center,
+                child: Padding(
+                  padding: EdgeInsets.only(right: 8),
+                  child: _DropMenu(key: Key('theme')),
+                ),
+              )
+            ],
+            title: Text(translate.settings),
+          ),
+          body: Scrollbar(
+            child: CustomScrollView(
+              slivers: <Widget>[
+                SliverList(
+                  delegate: SliverChildListDelegate.fixed([
+                    _ResetCollection(),
+                    _SaveCollection(),
+                    _CardSettings(
                       title: translate.appearance,
                       subtitle: translate.appearanceSubtitle,
                       icon: const Icon(Icons.color_lens),
-                      onTap: () => ThemeButton.dialog(context)),
-                  _CardSettings(
-                    title: translate.changelog,
-                    subtitle: translate.changelogSubtitle,
-                    icon: const Icon(Icons.build),
-                    onTap: () {
-                      showDialog(
+                      onTap: () => ThemeButton.dialog(context),
+                    ),
+                    _CardSettings(
+                      title: translate.changelog,
+                      subtitle: translate.changelogSubtitle,
+                      icon: const Icon(Icons.build),
+                      onTap: () {
+                        showDialog(
                           context: context,
                           builder: (context) => MarkdownReader(
-                              file: translate.changelog.replaceAll(' ', '_'),
-                              title: translate.changelogSubtitle));
-                    },
-                  ),
-                  _CardSettings(
+                            file: translate.changelog.replaceAll(' ', '_'),
+                            title: translate.changelogSubtitle,
+                          ),
+                        );
+                      },
+                    ),
+                    _CardSettings(
                       title: translate.credits,
                       subtitle: translate.creditsSubtitle,
                       icon: const Icon(Icons.theaters),
                       onTap: () => showDialog(
-                          context: context,
-                          builder: (context) => MarkdownReader(
-                              file: 'Credits',
-                              title: translate.creditsSubtitle))),
-                  _CardSettings(
+                        context: context,
+                        builder: (context) => MarkdownReader(
+                          file: 'Credits',
+                          title: translate.creditsSubtitle,
+                        ),
+                      ),
+                    ),
+                    _CardSettings(
                       title: translate.privacyPolicy,
                       subtitle: translate.privacySubtitle,
                       icon: const Icon(Icons.help),
                       onTap: () => showDialog(
-                          context: context,
-                          builder: (context) => MarkdownReader(
-                              file:
-                                  translate.privacyPolicy.replaceAll(' ', '_'),
-                              title: translate.privacySubtitle))),
-                  _ProjectButtons(
-                    icons: const <IconData>[Icons.code, Icons.bug_report],
-                    titles: <String>['Github', translate.reportBug],
-                    urls: const <String>[github, reportIssue],
-                  ),
-                  _SupportButtons()
-                ]),
-              ),
-              SliverFillRemaining(
+                        context: context,
+                        builder: (context) => MarkdownReader(
+                          file: translate.privacyPolicy.replaceAll(' ', '_'),
+                          title: translate.privacySubtitle,
+                        ),
+                      ),
+                    ),
+                    _ProjectButtons(
+                      icons: const <IconData>[Icons.code, Icons.bug_report],
+                      titles: <String>['Github', translate.reportBug],
+                      urls: const <String>[github, reportIssue],
+                    ),
+                    _SupportButtons()
+                  ]),
+                ),
+                SliverFillRemaining(
                   hasScrollBody: false,
                   child: SizedBox(
                     height: 0,
                     child: Image.asset(
                       NetworkIcons.iconApp,
                       fit: BoxFit.scaleDown,
-                      color: Theme.of(context).colorScheme.brightness ==
-                              Brightness.dark
-                          ? Colors.white54
-                          : null,
+                      color: color,
                     ),
-                  ))
-            ],
+                  ),
+                )
+              ],
+            ),
           ),
+          bottomNavigationBar: const BottomBar(),
         ),
-        bottomNavigationBar: const BottomBar(),
       ),
     );
   }
@@ -597,35 +611,40 @@ class _CardSettings extends StatelessWidget {
   final Widget? icon;
   final VoidCallback? onTap;
 
-  _CardSettings({Key? key, this.title, this.subtitle, this.icon, this.onTap})
-      : super(key: key);
+  // ignore: unused_element
+  _CardSettings({super.key, this.title, this.subtitle, this.icon, this.onTap});
 
   @override
   Widget build(BuildContext context) {
     return Card(
-        child: ListTileTheme(
-      iconColor: Theme.of(context).iconTheme.color,
-      textColor: Theme.of(context).textTheme.bodyText2!.color,
+      elevation: 6.0,
+      margin: const EdgeInsets.symmetric(vertical: 6.0, horizontal: 8.0),
       child: Material(
         color: Colors.transparent,
         shape: Theme.of(context).cardTheme.shape,
         clipBehavior: Clip.hardEdge,
         child: ListTile(
-            title: Text(title!),
-            subtitle: subtitle == null
-                ? null
-                : Text(subtitle!,
-                    softWrap: false, overflow: TextOverflow.ellipsis),
-            onTap: onTap,
-            leading: Container(
-              padding: EdgeInsets.only(right: 16, top: 8, bottom: 8),
-              decoration: BoxDecoration(
-                  border: Border(
-                      right: BorderSide(
-                          width: 1, color: Theme.of(context).dividerColor))),
-              child: icon,
-            )),
+          minVerticalPadding: 0.0,
+          visualDensity: const VisualDensity(vertical: -2.5),
+          title: Text(title!),
+          subtitle: subtitle == null
+              ? null
+              : Text(subtitle!, softWrap: false, overflow: TextOverflow.ellipsis),
+          onTap: onTap,
+          leading: Container(
+            padding: const EdgeInsets.only(right: 16.0, top: 8.0, bottom: 8.0),
+            decoration: BoxDecoration(
+              border: Border(
+                right: BorderSide(
+                  width: 1.0,
+                  color: Theme.of(context).dividerColor,
+                ),
+              ),
+            ),
+            child: icon,
+          ),
+        ),
       ),
-    ));
+    );
   }
 }

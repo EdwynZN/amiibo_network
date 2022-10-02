@@ -500,6 +500,7 @@ class _BottomBar extends StatelessWidget {
   final int index;
 
   _BottomBar({
+    // ignore: unused_element
     super.key,
     required AnimationController animationController,
     required this.onTap,
