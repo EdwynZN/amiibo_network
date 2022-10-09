@@ -8,7 +8,9 @@ import 'package:amiibo_network/widget/amiibo_grid.dart';
 import 'package:amiibo_network/model/selection.dart';
 
 class AnimatedSelection extends StatefulHookConsumerWidget {
-  const AnimatedSelection({Key? key}) : super(key: key);
+  final bool ignore;
+
+  const AnimatedSelection({Key? key, this.ignore = false}) : super(key: key);
 
   @override
   _AnimatedSelectionState createState() => _AnimatedSelectionState();
@@ -17,11 +19,11 @@ class AnimatedSelection extends StatefulHookConsumerWidget {
 class _AnimatedSelectionState extends ConsumerState<AnimatedSelection> {
   void _onDoubleTap(int key) => context.push('/amiibo/$key');
 
-  void _onTap(WidgetRef ref, int key) {
+  void _onTap(int key) {
     ref.read(serviceProvider.notifier).shift(key);
   }
 
-  void _onLongPress(WidgetRef ref, int key) => ref.read(selectProvider).onLongPress(key);
+  void _onLongPress(int key) => ref.read(selectProvider).onLongPress(key);
 
   @override
   Widget build(BuildContext context) {
@@ -36,8 +38,16 @@ class _AnimatedSelectionState extends ConsumerState<AnimatedSelection> {
     );
     return GestureDetector(
       onDoubleTap: select.activated ? null : () => _onDoubleTap(key),
-      onTap: select.activated ? () => _onLongPress(ref, key) : () => _onTap(ref, key),
-      onLongPress: () => _onLongPress(ref, key),
+      onTap: () {
+        if (widget.ignore) {
+          _onDoubleTap(key);
+        } else if (select.activated) {
+          _onLongPress(key);
+        } else {
+          _onTap(key);
+        }
+      },
+      onLongPress: widget.ignore ? null : () => _onLongPress(key),
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 200),
         curve: Curves.linearToEaseOut,

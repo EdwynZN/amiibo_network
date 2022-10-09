@@ -1,4 +1,5 @@
 import 'package:amiibo_network/riverpod/amiibo_provider.dart';
+import 'package:amiibo_network/riverpod/lock_provider.dart';
 import 'package:amiibo_network/widget/amiibo_button_toggle.dart';
 import 'package:amiibo_network/widget/amiibo_info.dart';
 import 'package:amiibo_network/widget/card_details.dart';
@@ -57,7 +58,10 @@ class DetailPage extends ConsumerWidget {
                           flex: 7,
                         ),
                         Expanded(
-                          child: const Buttons(),
+                          child: IgnorePointer(
+                            ignoring: ref.watch(lockProvider).lock,
+                            child: const Buttons(),
+                          ),
                           flex: 2,
                         ),
                       ],

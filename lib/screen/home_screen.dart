@@ -333,32 +333,29 @@ class _AmiiboListWidget extends HookConsumerWidget {
             crossAxisCount: 3,
             mainAxisSpacing: 8.0,
           );
-        return SliverIgnorePointer(
-          ignoring: ignore,
-          sliver: SliverGrid(
-            gridDelegate: grid,
-            delegate: SliverChildBuilderDelegate(
-              (BuildContext _, int index) {
-                late final Widget child;
-                if (data != null) {
-                  child = ProviderScope(
-                    key: ValueKey<int?>(data[index].key),
-                    overrides: [
-                      indexAmiiboProvider.overrideWithValue(index),
-                      keyAmiiboProvider.overrideWithValue(data[index].key),
-                    ],
-                    child: const AnimatedSelection(),
-                  );
-                } else {
-                  child = ShimmerCard(listenable: controller);
-                }
-                return AnimatedSwitcher(
-                  duration: const Duration(seconds: 1),
-                  child: child,
+        return SliverGrid(
+          gridDelegate: grid,
+          delegate: SliverChildBuilderDelegate(
+            (BuildContext _, int index) {
+              late final Widget child;
+              if (data != null) {
+                child = ProviderScope(
+                  key: ValueKey<int?>(data[index].key),
+                  overrides: [
+                    indexAmiiboProvider.overrideWithValue(index),
+                    keyAmiiboProvider.overrideWithValue(data[index].key),
+                  ],
+                  child: AnimatedSelection(ignore: ignore),
                 );
-              },
-              childCount: data != null ? data.length : null,
-            ),
+              } else {
+                child = ShimmerCard(listenable: controller);
+              }
+              return AnimatedSwitcher(
+                duration: const Duration(seconds: 1),
+                child: child,
+              );
+            },
+            childCount: data != null ? data.length : null,
           ),
         );
       },
