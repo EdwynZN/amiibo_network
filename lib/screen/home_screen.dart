@@ -9,7 +9,6 @@ import 'package:amiibo_network/riverpod/screenshot_service.dart';
 import 'package:amiibo_network/riverpod/select_provider.dart';
 import 'package:amiibo_network/screen/search_screen.dart';
 import 'package:amiibo_network/service/storage.dart';
-import 'package:amiibo_network/utils/routes_constants.dart';
 import 'package:amiibo_network/widget/list_stats.dart';
 import 'package:amiibo_network/widget/loading_grid_shimmer.dart';
 import 'package:amiibo_network/widget/lock_icon.dart';
@@ -119,9 +118,10 @@ class HomeScreenState extends ConsumerState<HomeScreen>
 
   Future<void> _showWhatsNew() async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
-    final int version = preferences.getInt(sharedVersion) ?? 0;
+    final int? version = preferences.getInt(sharedVersion);
     if (version != versionApp) {
       await preferences.setInt(sharedVersion, versionApp);
+      if (version != null)
       showDialog(
         context: context,
         builder: (context) => MarkdownReader(

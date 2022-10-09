@@ -30,14 +30,22 @@ GoRouter createRouter({
           GoRoute(
             name: 'home',
             path: 'home',
-            builder: (context, state) => const HomeScreen(),
+            pageBuilder: (context, state) {
+              return CustomTransitionPage(
+                child: const HomeScreen(),
+                transitionsBuilder: (_, animation, secondaryAnimation, child) {
+                  return FadeTransition(opacity: animation, child: child);
+                },
+              );
+            },
           ),
           GoRoute(
             name: 'amiibo_details',
             path: 'amiibo/:id',
             builder: (context, state) => ProviderScope(
               overrides: [
-                keyAmiiboProvider.overrideWithValue(int.parse(state.params['id']!))
+                keyAmiiboProvider
+                    .overrideWithValue(int.parse(state.params['id']!))
               ],
               child: const DetailPage(),
             ),
