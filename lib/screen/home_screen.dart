@@ -7,11 +7,13 @@ import 'package:amiibo_network/riverpod/lock_provider.dart';
 import 'package:amiibo_network/riverpod/query_provider.dart';
 import 'package:amiibo_network/riverpod/screenshot_service.dart';
 import 'package:amiibo_network/riverpod/select_provider.dart';
+import 'package:amiibo_network/screen/search_screen.dart';
 import 'package:amiibo_network/service/storage.dart';
 import 'package:amiibo_network/utils/routes_constants.dart';
 import 'package:amiibo_network/widget/list_stats.dart';
 import 'package:amiibo_network/widget/loading_grid_shimmer.dart';
 import 'package:amiibo_network/widget/lock_icon.dart';
+import 'package:amiibo_network/widget/route_transitions.dart';
 import 'package:amiibo_network/widget/selected_chip.dart';
 import 'package:amiibo_network/widget/selected_widget.dart';
 import 'package:amiibo_network/widget/sort_bottomsheet.dart';
@@ -100,8 +102,7 @@ class HomeScreenState extends ConsumerState<HomeScreen>
   }
 
   void _scrollListener() {
-    if ((_controller.hasClients) &&
-        !_animationController.isAnimating &&
+    if (_controller.hasClients && !_animationController.isAnimating &&
         _controller.offset > 56.0) {
       switch (_controller.position.userScrollDirection) {
         case ScrollDirection.forward:
@@ -132,7 +133,10 @@ class HomeScreenState extends ConsumerState<HomeScreen>
   }
 
   Future<void> _search() async {
-    Search? value = await Navigator.pushNamed<Search?>(context, searchRoute);
+    Search? value = await Navigator.push<Search?>(
+      context, 
+      FadeRoute<Search>(builder: (_) => const SearchScreen()),
+    );
     if (value?.search?.trim().isNotEmpty ?? false) {
       final query = ref.read(queryProvider.notifier);
       WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -466,7 +470,9 @@ class _FAB extends ConsumerWidget {
                   constraints: BoxConstraints.loose(const Size.square(24.0)),
                   child: CircularProgressIndicator(
                     strokeWidth: 2.5,
-                    color: Theme.of(context).floatingActionButtonTheme.foregroundColor,
+                    color: Theme.of(context)
+                        .floatingActionButtonTheme
+                        .foregroundColor,
                   ),
                 )
               : const Icon(Icons.save),
@@ -477,11 +483,14 @@ class _FAB extends ConsumerWidget {
             final _screenshotProvider = ref.watch(screenshotProvider.notifier);
             final scaffoldState = ScaffoldMessenger.of(context);
             if (!(await permissionGranted(scaffoldState))) return;
-            String message = translate.savingCollectionMessage;
             final isLoading = _screenshotProvider.isLoading;
-            if (isLoading) message = translate.recordMessage;
-            scaffoldState.hideCurrentSnackBar();
-            scaffoldState.showSnackBar(SnackBar(content: Text(message)));
+            final message = isLoading
+                ? translate.recordMessage
+                : translate.savingCollectionMessage;
+            scaffoldState
+              ..hideCurrentSnackBar()
+              ..showSnackBar(SnackBar(content: Text(message)));
+            if (isLoading) return;
             if (isAmiibo) {
               await _screenshotProvider.saveAmiibos(context);
             } else {

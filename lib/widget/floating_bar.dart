@@ -142,7 +142,7 @@ class _SliverFloatingPersistentHeader extends SliverPersistentHeaderDelegate {
                 child: ListTile(
                   leading: leading ??
                       (useCloseButton ? CloseButton() : BackButton()),
-                  title: DefaultTextStyle(
+                  title: title == null ? null : DefaultTextStyle(
                     textAlign: TextAlign.left,
                     style: Theme.of(context).textTheme.headline4!,
                     softWrap: false,

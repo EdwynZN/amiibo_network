@@ -11,34 +11,28 @@ import 'package:amiibo_network/generated/l10n.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 
-class SearchScreen extends StatefulHookConsumerWidget {
+class SearchScreen extends HookConsumerWidget {
+  static final RegExp _regAllowList = RegExp(r'^[A-Za-zÀ-ÿ0-9 .\-\&]*$');
+
   const SearchScreen({Key? key}) : super(key: key);
 
   @override
-  _SearchScreenState createState() => _SearchScreenState();
-}
-
-class _SearchScreenState extends ConsumerState<SearchScreen> {
-  static final RegExp _regAllowList = RegExp(r'^[A-Za-zÀ-ÿ0-9 .\-\&]*$');
-  late S translate;
-
-  @override
-  didChangeDependencies() {
-    super.didChangeDependencies();
-    translate = S.of(context);
-  }
-
-  @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final theme = Theme.of(context);
+    final style = theme.textTheme.headline4;
+    final translate = S.of(context);
     final _textController = useTextEditingController();
-    final amiiboCategory = ref.watch(querySearchProvider
-        .select<String>((value) => value.search ?? describeEnum(value.category)));
+    final amiiboCategory = ref.watch(
+      querySearchProvider.select<String>(
+        (value) => value.search ?? describeEnum(value.category),
+      ),
+    );
     return SafeArea(
       child: Scaffold(
         body: CustomScrollView(
           slivers: <Widget>[
             SliverFloatingBar(
-              backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+              backgroundColor: theme.scaffoldBackgroundColor,
               pinned: true,
               leading: IconButton(
                 icon: Hero(
@@ -74,18 +68,14 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
                     category: ref.read(categorySearchProvider.state).state,
                   ),
                 ),
-                style: Theme.of(context).textTheme.headline4,
+                style: style,
                 autocorrect: false,
                 decoration: InputDecoration(
                   isDense: true,
                   hintText: translate.category(amiiboCategory),
-                  hintStyle: Theme.of(context).textTheme.headline4!.copyWith(
-                        color: Theme.of(context)
-                            .textTheme
-                            .headline4!
-                            .color!
-                            .withOpacity(0.5),
-                      ),
+                  hintStyle: style?.copyWith(
+                    color: style.color?.withOpacity(0.5),
+                  ),
                   border: InputBorder.none,
                 ),
               ),
@@ -100,7 +90,7 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
                         : IconButton(
                             highlightColor: Colors.transparent,
                             icon: const Icon(Icons.close),
-                            onPressed: () => _textController.clear(),
+                            onPressed: _textController.clear,
                             tooltip: 'Clear',
                           ),
                   );
@@ -112,11 +102,11 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
               pinned: true,
             ),
             SliverPadding(
-              padding:
-                  const EdgeInsets.symmetric(horizontal: 12, vertical: 6.0),
-              sliver: _Suggestions(
-                textEditingController: _textController,
+              padding: const EdgeInsets.symmetric(
+                horizontal: 12,
+                vertical: 6.0,
               ),
+              sliver: _Suggestions(textEditingController: _textController),
             ),
           ],
         ),
@@ -148,15 +138,16 @@ String _useDebouncedSearch(TextEditingController textEditingController) {
 }
 
 class _Suggestions extends HookConsumerWidget {
-  final TextEditingController? textEditingController;
+  final TextEditingController textEditingController;
+
   const _Suggestions({
     Key? key,
-    this.textEditingController,
+    required this.textEditingController,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final search = _useDebouncedSearch(textEditingController!);
+    final search = _useDebouncedSearch(textEditingController);
     final suggestions = ref.watch(searchProvider(search));
     return SliverList(
       delegate: SliverChildBuilderDelegate(
@@ -200,18 +191,15 @@ class _SliverPersistentHeader extends SliverPersistentHeaderDelegate {
     return Container(
       decoration: BoxDecoration(
         gradient: LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-            stops: [
-              0.3,
-              0.6,
-              0.9
-            ],
-            colors: [
-              _color,
-              _color.withOpacity(0.85),
-              _color.withOpacity(0.2),
-            ]),
+          begin: Alignment.topCenter,
+          end: Alignment.bottomCenter,
+          stops: const [0.3, 0.6, 0.9],
+          colors: [
+            _color,
+            _color.withOpacity(0.85),
+            _color.withOpacity(0.2),
+          ],
+        ),
       ),
       padding: const EdgeInsets.symmetric(horizontal: 12),
       height: maxExtent,
@@ -289,17 +277,17 @@ class _CategoryControlState extends ConsumerState<CategoryControl> {
         Expanded(
           child: OutlinedButton.icon(
             style: _search == AmiiboCategory.Game
-              ? OutlinedButton.styleFrom(
-                foregroundColor: _accentTextThemeColor,
-                backgroundColor: _accentColor,
-              )
-              : null,
+                ? OutlinedButton.styleFrom(
+                    foregroundColor: _accentTextThemeColor,
+                    backgroundColor: _accentColor,
+                  )
+                : null,
             onPressed: () => _selectCategory(ref, AmiiboCategory.Game),
             icon: const Icon(
               Icons.games,
               size: _iconSize,
             ),
-            label:FittedBox(
+            label: FittedBox(
               child: Text(translate.category(AmiiboCategory.Game)),
             ),
           ),
@@ -308,14 +296,14 @@ class _CategoryControlState extends ConsumerState<CategoryControl> {
           child: OutlinedButton.icon(
             style: OutlinedButton.styleFrom(
               foregroundColor: _search == AmiiboCategory.AmiiboSeries
-                ? _accentTextThemeColor
-                : null,
+                  ? _accentTextThemeColor
+                  : null,
               shape: RoundedRectangleBorder(
-                borderRadius: const BorderRadius.horizontal(right: Radius.circular(8)),
+                borderRadius:
+                    const BorderRadius.horizontal(right: Radius.circular(8)),
               ),
-              backgroundColor: _search == AmiiboCategory.AmiiboSeries
-                ? _accentColor
-                : null,
+              backgroundColor:
+                  _search == AmiiboCategory.AmiiboSeries ? _accentColor : null,
             ),
             onPressed: () => _selectCategory(ref, AmiiboCategory.AmiiboSeries),
             icon: const Icon(

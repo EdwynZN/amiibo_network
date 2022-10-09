@@ -29,12 +29,12 @@ GoRouter createRouter({
         routes: [
           GoRoute(
             name: 'home',
-            path: '/home',
+            path: 'home',
             builder: (context, state) => const HomeScreen(),
           ),
           GoRoute(
             name: 'amiibo_details',
-            path: '/amiibo/:id',
+            path: 'amiibo/:id',
             builder: (context, state) => ProviderScope(
               overrides: [
                 keyAmiiboProvider.overrideWithValue(int.parse(state.params['id']!))
@@ -44,12 +44,12 @@ GoRouter createRouter({
           ),
           GoRoute(
             name: 'stats',
-            path: '/stats',
+            path: 'stats',
             builder: (context, state) => const StatsPage(),
           ),
           GoRoute(
             name: 'settings',
-            path: '/settings',
+            path: 'settings',
             builder: (context, state) => const SettingsPage(),
           ),
         ],

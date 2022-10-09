@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:amiibo_network/widget/switch_joycon.dart';
 import 'package:amiibo_network/service/update_service.dart';
 import 'package:amiibo_network/generated/l10n.dart';
+import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 class SplashScreen extends ConsumerStatefulWidget {
@@ -64,7 +65,8 @@ class SplashScreenState extends ConsumerState<SplashScreen>
         child: Center(
           child: ConstrainedBox(
             constraints: BoxConstraints.loose(
-                Size(_size.width, _size.height / 2 - mediaQuery.padding.top)),
+              Size(_size.width, _size.height / 2 - mediaQuery.padding.top),
+            ),
             child: AspectRatio(
               aspectRatio: 25 / 10,
               child: Row(
@@ -72,55 +74,59 @@ class SplashScreenState extends ConsumerState<SplashScreen>
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   Expanded(
-                      child: _SwitchIcon(
-                    controller: _animationController.view,
-                  )),
+                    child: _SwitchIcon(controller: _animationController.view),
+                  ),
                   Container(
                     padding: const EdgeInsets.all(5),
                     decoration: BoxDecoration(
-                        color: Colors.black,
-                        border: Border.all(color: Colors.white, width: 0.1)),
+                      color: Colors.black,
+                      border: Border.all(color: Colors.white, width: 0.1),
+                    ),
                     child: AspectRatio(
                       aspectRatio: 1.7,
                       child: FutureBuilder<bool>(
-                          future: updateDB,
-                          builder: (ctx, snapshot) {
-                            final S translate = S.of(ctx);
-                            int key = 0;
-                            Widget _child = const CircularProgressIndicator(
-                                backgroundColor: Colors.black);
-                            String _text = translate.splashMessage;
-                            if (snapshot.hasData) {
-                              key = 1;
-                              _text = snapshot.data!
-                                  ? translate.splashWelcome
-                                  : translate.splashError;
-                              _child = Image.asset(
-                                NetworkIcons.iconApp,
-                                fit: BoxFit.scaleDown,
-                                color: color,
-                              );
-                              _animationController
-                                  .forward()
-                                  .whenCompleteOrCancel(() =>
-                                      Navigator.pushReplacementNamed(
-                                          context, '/home'));
-                            }
-                            return AnimatedSwitcher(
-                                duration: const Duration(seconds: 3),
-                                switchOutCurve: Curves.easeOutBack,
-                                switchInCurve: Curves.easeInExpo,
-                                child: ScreenAnimation(
-                                    key: ValueKey<int>(key),
-                                    child: _child,
-                                    text: _text));
-                          }),
+                        future: updateDB,
+                        builder: (ctx, snapshot) {
+                          final S translate = S.of(ctx);
+                          int key = 0;
+                          Widget _child = const CircularProgressIndicator(
+                              backgroundColor: Colors.black);
+                          String _text = translate.splashMessage;
+                          if (snapshot.hasData) {
+                            key = 1;
+                            _text = snapshot.data!
+                                ? translate.splashWelcome
+                                : translate.splashError;
+                            _child = Image.asset(
+                              NetworkIcons.iconApp,
+                              fit: BoxFit.scaleDown,
+                              color: color,
+                            );
+                            _animationController.forward().whenCompleteOrCancel(
+                              () => context.replaceNamed('home'),
+                            );
+                          }
+                          return AnimatedSwitcher(
+                            duration: const Duration(seconds: 3),
+                            switchOutCurve: Curves.easeOutBack,
+                            switchInCurve: Curves.easeInExpo,
+                            child: ScreenAnimation(
+                              key: ValueKey<int>(key),
+                              child: _child,
+                              text: _text,
+                            ),
+                          );
+                        },
+                      ),
                     ),
                   ),
                   Expanded(
-                      child: _SwitchIcon(
-                          controller: _animationController.view,
-                          isLeft: false)),
+                    child: _SwitchIcon(
+                      controller: _animationController.view,
+                      isLeft: false,
+                      color: color,
+                    ),
+                  ),
                 ],
               ),
             ),
@@ -133,33 +139,36 @@ class SplashScreenState extends ConsumerState<SplashScreen>
 
 class _SwitchIcon extends StatelessWidget {
   final bool isLeft;
+  final Color? color;
   final Animation<double> controller;
 
   const _SwitchIcon({
     Key? key,
-    this.isLeft = true,
     required this.controller,
+    this.isLeft = true,
+    this.color,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     final SwitchAnimation animation = SwitchAnimation(
-        controller: controller as AnimationController,
-        delay: isLeft ? 0.1 : 0.6);
+      controller: controller as AnimationController,
+      delay: isLeft ? 0.1 : 0.6,
+    );
     return AnimatedBuilder(
       animation: controller,
       child: CustomPaint(
         child: Container(),
         painter: SwitchJoycon(
           isLeft: isLeft,
-          color: Theme.of(context).colorScheme.brightness == Brightness.light
-              ? null
-              : Colors.grey[850],
+          color: color,
         ),
       ),
       builder: (_, child) {
         return FractionalTranslation(
-            translation: animation.translation.value, child: child);
+          translation: animation.translation.value,
+          child: child,
+        );
       },
     );
   }
@@ -180,11 +189,12 @@ class ScreenAnimation extends StatelessWidget {
       verticalDirection: VerticalDirection.up,
       children: <Widget>[
         Expanded(
-            child: FittedBox(
-          alignment: Alignment.center,
-          fit: BoxFit.scaleDown,
-          child: Text(text!, style: TextStyle(color: Colors.white)),
-        )),
+          child: FittedBox(
+            alignment: Alignment.center,
+            fit: BoxFit.scaleDown,
+            child: Text(text!, style: TextStyle(color: Colors.white)),
+          ),
+        ),
         Expanded(flex: 3, child: Center(child: child)),
       ],
     );

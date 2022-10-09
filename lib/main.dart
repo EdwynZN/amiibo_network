@@ -1,4 +1,5 @@
 import 'package:amiibo_network/riverpod/game_provider.dart';
+import 'package:amiibo_network/riverpod/router_provider.dart';
 import 'package:amiibo_network/screen/home_screen.dart';
 import 'package:amiibo_network/service/info_package.dart';
 import 'package:amiibo_network/service/update_service.dart';
@@ -58,7 +59,8 @@ class AmiiboNetwork extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final ThemeProvider themeMode = ref.watch(themeProvider);
-    return MaterialApp(
+    final router = ref.watch(routerProvider);
+    return MaterialApp.router(
       localizationsDelegates: [
         S.delegate,
         GlobalMaterialLocalizations.delegate,
@@ -69,8 +71,10 @@ class AmiiboNetwork extends ConsumerWidget {
       debugShowCheckedModeBanner: false,
       theme: themeMode.theme.light,
       darkTheme: themeMode.theme.dark,
-      onGenerateRoute: Routes.getRoute,
       themeMode: themeMode.preferredTheme,
+      routerDelegate: router.routerDelegate,
+      routeInformationParser: router.routeInformationParser,
+      routeInformationProvider: router.routeInformationProvider,
       builder: (context, child) {
         final theme = AppBarTheme.of(context);
         return AnnotatedRegion<SystemUiOverlayStyle>(
@@ -78,7 +82,6 @@ class AmiiboNetwork extends ConsumerWidget {
           child: child!,
         );
       },
-      home: firstPage,
     );
   }
 }

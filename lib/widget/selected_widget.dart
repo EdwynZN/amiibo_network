@@ -1,8 +1,8 @@
 import 'package:amiibo_network/riverpod/amiibo_provider.dart';
 import 'package:amiibo_network/riverpod/select_provider.dart';
 import 'package:amiibo_network/riverpod/service_provider.dart';
-import 'package:amiibo_network/utils/routes_constants.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:amiibo_network/widget/amiibo_grid.dart';
 import 'package:amiibo_network/model/selection.dart';
@@ -15,8 +15,7 @@ class AnimatedSelection extends StatefulHookConsumerWidget {
 }
 
 class _AnimatedSelectionState extends ConsumerState<AnimatedSelection> {
-  void _onDoubleTap(int key) =>
-      Navigator.pushNamed(context, detailsRoute, arguments: key);
+  void _onDoubleTap(int key) => context.push('/amiibo/$key');
 
   void _onTap(WidgetRef ref, int key) {
     ref.read(serviceProvider.notifier).shift(key);
