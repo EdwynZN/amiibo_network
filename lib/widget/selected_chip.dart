@@ -110,7 +110,8 @@ class _SelectedWrapState extends State<SelectedWrap> {
     return Wrap(
       spacing: 8.0,
       children: <Widget>[
-        ChoiceChip(
+        FilterChip(
+          showCheckmark: false,
           padding: const EdgeInsets.symmetric(vertical: 4.0, horizontal: 12.0),
           label: Text(translate.all),
           tooltip: translate.all,
@@ -121,7 +122,8 @@ class _SelectedWrapState extends State<SelectedWrap> {
           selected: QueryBuilderProvider.checkEquality(widget.mySeries, widget.series)!
         ),
         for(String series in widget.series!)
-          ChoiceChip(
+          FilterChip(
+            showCheckmark: false,
             label: Text(series),
             tooltip: series,
             onSelected: (isSelected) => setState((){
