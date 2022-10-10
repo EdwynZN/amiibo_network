@@ -24,6 +24,7 @@
   "eu": "Europe",
   "na": "North America",
   "jp": "Japan",
+  "cardNumber": "Card number",
   "settings": "Settings",
   "sort": "Sort By",
   "done": "Done",

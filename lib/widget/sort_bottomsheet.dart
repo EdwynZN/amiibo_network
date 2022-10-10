@@ -1,3 +1,4 @@
+import 'package:amiibo_network/enum/amiibo_category_enum.dart';
 import 'package:amiibo_network/enum/sort_enum.dart';
 import 'package:amiibo_network/generated/l10n.dart';
 import 'package:amiibo_network/resources/resources.dart';
@@ -6,7 +7,6 @@ import 'package:amiibo_network/widget/implicit_sort_direction_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:sliver_tools/sliver_tools.dart';
 
 class SortCollection extends StatelessWidget {
@@ -117,6 +117,15 @@ class _BottomSheetSort extends StatelessWidget {
                     sliver: HookConsumer(
                       builder: (context, ref, child) {
                         final order = ref.watch(orderCategoryProvider);
+                        final canUseCardNumber =
+                            ref.watch(queryProvider.notifier.select((value) {
+                          final category = value.search.category;
+                          const Set<AmiiboCategory> figures = {
+                            AmiiboCategory.FigureSeries,
+                            AmiiboCategory.Figures,
+                          };
+                          return !figures.contains(category);
+                        }));
                         return SliverList(
                           delegate: SliverChildListDelegate([
                             _SortListTile(
@@ -136,6 +145,14 @@ class _BottomSheetSort extends StatelessWidget {
                               value: OrderBy.Wishlist,
                               title: Text(translate.wished),
                             ),
+                            if (canUseCardNumber) ...[
+                              const Gap(4.0),
+                              _SortListTile(
+                                groupValue: order,
+                                value: OrderBy.CardNumber,
+                                title: Text(translate.cardNumber),
+                              ),
+                            ],
                             const Gap(4.0),
                             _SortListTile(
                               groupValue: order,
@@ -208,7 +225,7 @@ class _BottomSheetSort extends StatelessWidget {
   }
 }
 
-class _SortListTile extends HookConsumerWidget {
+class _SortListTile extends ConsumerWidget {
   final Widget? title;
   final Widget? trailing;
   final OrderBy value;
@@ -225,8 +242,7 @@ class _SortListTile extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final sortP = ref.watch(sortByProvider);
-    final bool isSelected =
-        useMemoized(() => value == groupValue, [value, groupValue]);
+    final bool isSelected = value == groupValue;
     return ListTile(
       leading: AnimatedSwitcher(
         duration: kRadialReactionDuration,
