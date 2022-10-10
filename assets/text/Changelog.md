@@ -1,3 +1,8 @@
+## Version 2.0.0
+- **New** stats and amiibos cards UI
+- Order by card number added
+- Optimization of resources and size of App
+
 ## Version 1.5.0
 - Date updated for 2022 amiibos
 - Added Splatoon series Octoling, Inkling and Smallfry

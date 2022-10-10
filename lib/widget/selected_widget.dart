@@ -37,7 +37,7 @@ class _AnimatedSelectionState extends ConsumerState<AnimatedSelection> {
       ),
     );
     return GestureDetector(
-      onDoubleTap: select.activated ? null : () => _onDoubleTap(key),
+      onDoubleTap: select.activated || widget.ignore ? null : () => _onDoubleTap(key),
       onTap: () {
         if (widget.ignore) {
           _onDoubleTap(key);

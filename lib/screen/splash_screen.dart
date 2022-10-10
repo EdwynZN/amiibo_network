@@ -74,7 +74,10 @@ class SplashScreenState extends ConsumerState<SplashScreen>
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   Expanded(
-                    child: _SwitchIcon(controller: _animationController.view),
+                    child: _SwitchIcon(
+                      controller: _animationController.view,
+                      color: color,
+                    ),
                   ),
                   Container(
                     padding: const EdgeInsets.all(5),
