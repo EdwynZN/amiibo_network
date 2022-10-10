@@ -108,48 +108,6 @@ class _CollectionDrawerState extends ConsumerState<CollectionDrawer> {
                                 height: 8.0,
                               ),
                               ListTile(
-                                onTap: () =>
-                                    _onTapTile(ref, AmiiboCategory.All, 'All'),
-                                leading: const Icon(Icons.all_inclusive),
-                                title: Text(
-                                  translate.category(AmiiboCategory.All),
-                                  style: isAll
-                                      ? const TextStyle(
-                                          fontWeight: FontWeight.bold)
-                                      : null,
-                                ),
-                                selected: isAll,
-                              ),
-                              const Gap(4.0),
-                              ListTile(
-                                onTap: () => _onTapTile(
-                                    ref, AmiiboCategory.Owned, 'Owned'),
-                                leading: const Icon(iconOwned),
-                                title: Text(
-                                  translate.category(AmiiboCategory.Owned),
-                                  style: isOwned
-                                      ? const TextStyle(
-                                          fontWeight: FontWeight.bold)
-                                      : null,
-                                ),
-                                selected: isOwned,
-                              ),
-                              const Gap(4.0),
-                              ListTile(
-                                onTap: () => _onTapTile(
-                                    ref, AmiiboCategory.Wishlist, 'Wishlist'),
-                                leading: const Icon(iconWished),
-                                title: Text(
-                                  translate.category(AmiiboCategory.Wishlist),
-                                  style: isWishlist
-                                      ? const TextStyle(
-                                          fontWeight: FontWeight.bold)
-                                      : null,
-                                ),
-                                selected: isWishlist,
-                              ),
-                              const Gap(4.0),
-                              ListTile(
                                 onTap: () => _onTapTile(
                                     ref, AmiiboCategory.Custom, 'Custom'),
                                 onLongPress: () async {
@@ -184,6 +142,48 @@ class _CollectionDrawerState extends ConsumerState<CollectionDrawer> {
                                       : null,
                                 ),
                                 selected: isCustom,
+                              ),
+                              const Gap(4.0),
+                              ListTile(
+                                onTap: () => _onTapTile(
+                                    ref, AmiiboCategory.Owned, 'Owned'),
+                                leading: const Icon(iconOwned),
+                                title: Text(
+                                  translate.category(AmiiboCategory.Owned),
+                                  style: isOwned
+                                      ? const TextStyle(
+                                          fontWeight: FontWeight.bold)
+                                      : null,
+                                ),
+                                selected: isOwned,
+                              ),
+                              const Gap(4.0),
+                              ListTile(
+                                onTap: () => _onTapTile(
+                                    ref, AmiiboCategory.Wishlist, 'Wishlist'),
+                                leading: const Icon(iconWished),
+                                title: Text(
+                                  translate.category(AmiiboCategory.Wishlist),
+                                  style: isWishlist
+                                      ? const TextStyle(
+                                          fontWeight: FontWeight.bold)
+                                      : null,
+                                ),
+                                selected: isWishlist,
+                              ),
+                              const Gap(4.0),
+                              ListTile(
+                                onTap: () =>
+                                    _onTapTile(ref, AmiiboCategory.All, 'All'),
+                                leading: const Icon(Icons.all_inclusive),
+                                title: Text(
+                                  translate.category(AmiiboCategory.All),
+                                  style: isAll
+                                      ? const TextStyle(
+                                          fontWeight: FontWeight.bold)
+                                      : null,
+                                ),
+                                selected: isAll,
                               ),
                               const Gap(4.0),
                               HookConsumer(

@@ -9,13 +9,11 @@ import 'package:amiibo_network/riverpod/repository_provider.dart';
 import 'package:collection/collection.dart';
 import 'package:amiibo_network/model/search_result.dart';
 
-final orderCategoryProvider = Provider.autoDispose<OrderBy>((ref) 
-  => ref.watch(queryProvider).orderBy
-);
+final orderCategoryProvider =
+    Provider.autoDispose<OrderBy>((ref) => ref.watch(queryProvider).orderBy);
 
-final sortByProvider = Provider.autoDispose<SortBy>((ref)
-  => ref.watch(queryProvider).sortBy
-);
+final sortByProvider =
+    Provider.autoDispose<SortBy>((ref) => ref.watch(queryProvider).sortBy);
 
 final querySearchProvider = Provider.autoDispose<Search>((ref) {
   ref.watch(queryProvider);
@@ -83,16 +81,23 @@ class QueryBuilderProvider extends StateNotifier<QueryBuilder> {
       const DeepCollectionEquality.unordered().equals;
   static bool? checkEquality(List<String>? eq1, List<String>? eq2) =>
       deepEq(eq1, eq2);
+
+  static const Set<AmiiboCategory> figuresCategories = {
+    AmiiboCategory.FigureSeries,
+    AmiiboCategory.Figures,
+  };
+
   final Reader _read;
   Search _query;
-  QueryBuilderProvider(this._read, this._query, OrderBy _orderBy, SortBy _sortBy)
-    : super(
-        QueryBuilder(
-          where: And(),
-          sortBy: _sortBy,
-          orderBy: _orderBy,
-        ),
-      );
+  QueryBuilderProvider(
+      this._read, this._query, OrderBy _orderBy, SortBy _sortBy)
+      : super(
+          QueryBuilder(
+            where: And(),
+            sortBy: _sortBy,
+            orderBy: _orderBy,
+          ),
+        );
 
   Search get search => _query;
   QueryBuilder get query => state;
@@ -141,12 +146,14 @@ class QueryBuilderProvider extends StateNotifier<QueryBuilder> {
       default:
         where = And();
     }
-    if (where != state.where) state = state.copyWith(where: where);
-  }
+    final OrderBy orderBy = figuresCategories.contains(_query.category) &&
+            state.orderBy == OrderBy.CardNumber
+        ? OrderBy.NA
+        : state.orderBy;
 
-  void updateSearch(Search search) {
-    if (_query == search) return;
-    _query = search;
+    if (where != state.where || orderBy != state.orderBy) {
+      state = state.copyWith(where: where, orderBy: orderBy);
+    }
   }
 
   void updateOption(Search result) {
@@ -182,19 +189,5 @@ class QueryBuilderProvider extends StateNotifier<QueryBuilder> {
       _state = _state.copyWith(sortBy: sortBy);
     }
     if (_state != state) state = _state;
-  }
-
-  Future<void> changeOrder(OrderBy? mode) async {
-    if (mode != null && mode != state.orderBy) {
-      await _read(preferencesProvider).setInt(orderPreference, mode.index);
-      state = state.copyWith(orderBy: mode);
-    }
-  }
-
-  Future<void> changeSort(SortBy? mode) async {
-    if (mode != null && mode != state.sortBy) {
-      await _read(preferencesProvider).setInt(sortPreference, mode.index);
-      state = state.copyWith(sortBy: mode);
-    }
   }
 }
