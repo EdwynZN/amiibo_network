@@ -24,43 +24,41 @@ GoRouter createRouter({
     routes: [
       GoRoute(
         name: 'splash',
-        path: '/',
+        path: '/splash',
         builder: (_, __) => const SplashScreen(),
-        routes: [
-          GoRoute(
-            name: 'home',
-            path: 'home',
-            pageBuilder: (context, state) {
-              return CustomTransitionPage(
-                child: const HomeScreen(),
-                transitionsBuilder: (_, animation, secondaryAnimation, child) {
-                  return FadeTransition(opacity: animation, child: child);
-                },
-              );
+      ),
+      GoRoute(
+        name: 'home',
+        path: '/home',
+        pageBuilder: (context, state) {
+          return CustomTransitionPage(
+            child: const HomeScreen(),
+            transitionsBuilder: (_, animation, secondaryAnimation, child) {
+              return FadeTransition(opacity: animation, child: child);
             },
-          ),
-          GoRoute(
-            name: 'amiibo_details',
-            path: 'amiibo/:id',
-            builder: (context, state) => ProviderScope(
-              overrides: [
-                keyAmiiboProvider
-                    .overrideWithValue(int.parse(state.params['id']!))
-              ],
-              child: const DetailPage(),
-            ),
-          ),
-          GoRoute(
-            name: 'stats',
-            path: 'stats',
-            builder: (context, state) => const StatsPage(),
-          ),
-          GoRoute(
-            name: 'settings',
-            path: 'settings',
-            builder: (context, state) => const SettingsPage(),
-          ),
-        ],
+          );
+        },
+      ),
+      GoRoute(
+        name: 'amiibo_details',
+        path: '/amiibo/:id',
+        builder: (context, state) => ProviderScope(
+          overrides: [
+            keyAmiiboProvider
+                .overrideWithValue(int.parse(state.params['id']!))
+          ],
+          child: const DetailPage(),
+        ),
+      ),
+      GoRoute(
+        name: 'stats',
+        path: '/stats',
+        builder: (context, state) => const StatsPage(),
+      ),
+      GoRoute(
+        name: 'settings',
+        path: '/settings',
+        builder: (context, state) => const SettingsPage(),
       ),
     ],
   );
