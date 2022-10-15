@@ -18,76 +18,82 @@ class GameListWidget extends ConsumerWidget {
     final id = ref.watch(keyAmiiboProvider);
     final S translate = S.of(context);
     return ref.watch(gameProvider(id)).when(
-      data: (platforms) {
-        return MultiSliver(
-          children: [
-            if (platforms.games3DS != null && platforms.games3DS!.isNotEmpty)
-              _PlatformGameList(
-                games: platforms.games3DS!,
-                title: translate.console_3DS_platform,
-                asset: NetworkIcons.dsPlatform,
-              ),
-            if (platforms.gamesWiiU != null && platforms.gamesWiiU!.isNotEmpty)
-              _PlatformGameList(
-                games: platforms.gamesWiiU!,
-                title: translate.wiiu_platform,
-                asset: NetworkIcons.wiiUPlatform,
-              ),
-            if (platforms.gamesSwitch != null &&
-                platforms.gamesSwitch!.isNotEmpty)
-              _PlatformGameList(
-                games: platforms.gamesSwitch!,
-                title: translate.switch_platform,
-                asset: NetworkIcons.switchPlatform,
-              ),
-          ],
-        );
-      },
-      loading: () => const SliverToBoxAdapter(child: LinearProgressIndicator()),
-      error: (e, _) {
-        late final Widget child;
-        if (e is DioError) {
-          if (e.type == DioErrorType.response && e.response != null)
-            switch (e.response!.statusCode) {
-              case 404:
-                child = Text(translate.no_games_found, textAlign: TextAlign.center);
-                break;
-              default:
-                child = Text(
-                  e.response!.statusMessage ?? translate.no_games_found,
-                  textAlign: TextAlign.center,
-                );
-                break;
-            }
-          else if (e.error is SocketException && e.error.osError != null) {
-            child = TextButton(
-              onPressed: () => ref.refresh(gameProvider(id).future),
-              child: Text(translate.socket_exception),
+          data: (platforms) {
+            return MultiSliver(
+              children: [
+                if (platforms.games3DS != null &&
+                    platforms.games3DS!.isNotEmpty)
+                  _PlatformGameList(
+                    games: platforms.games3DS!,
+                    title: translate.console_3DS_platform,
+                    asset: NetworkIcons.dsPlatform,
+                  ),
+                if (platforms.gamesWiiU != null &&
+                    platforms.gamesWiiU!.isNotEmpty)
+                  _PlatformGameList(
+                    games: platforms.gamesWiiU!,
+                    title: translate.wiiu_platform,
+                    asset: NetworkIcons.wiiUPlatform,
+                  ),
+                if (platforms.gamesSwitch != null &&
+                    platforms.gamesSwitch!.isNotEmpty)
+                  _PlatformGameList(
+                    games: platforms.gamesSwitch!,
+                    title: translate.switch_platform,
+                    asset: NetworkIcons.switchPlatform,
+                  ),
+              ],
             );
-          } else
-            child = Text(e.message);
-        } else if (e is ArgumentError) {
-          child = Text(translate.no_games_found, textAlign: TextAlign.center);
-        } else if (e is SocketException) {
-          child = TextButton(
-            onPressed: () => ref.refresh(gameProvider(id).future),
-            child: Text(translate.socket_exception),
-          );
-        } else
-          child = Text(e.toString());
-        return SliverPadding(
-          padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 8.0),
-          sliver: SliverToBoxAdapter(
-            child: Center(
-              child: DefaultTextStyle.merge(
-                style: Theme.of(context).textTheme.headline4,
-                child: child,
+          },
+          loading: () =>
+              const SliverToBoxAdapter(child: LinearProgressIndicator()),
+          error: (e, _) {
+            late final Widget child;
+            if (e is DioError) {
+              if (e.type == DioErrorType.response && e.response != null)
+                switch (e.response!.statusCode) {
+                  case 404:
+                    child = Text(translate.no_games_found,
+                        textAlign: TextAlign.center);
+                    break;
+                  default:
+                    child = Text(
+                      e.response!.statusMessage ?? translate.no_games_found,
+                      textAlign: TextAlign.center,
+                    );
+                    break;
+                }
+              else if (e.error is SocketException && e.error.osError != null) {
+                child = TextButton(
+                  onPressed: () => ref.refresh(gameProvider(id).future),
+                  child: Text(translate.socket_exception),
+                );
+              } else
+                child = Text(e.message);
+            } else if (e is ArgumentError) {
+              child =
+                  Text(translate.no_games_found, textAlign: TextAlign.center);
+            } else if (e is SocketException) {
+              child = TextButton(
+                onPressed: () => ref.refresh(gameProvider(id).future),
+                child: Text(translate.socket_exception),
+              );
+            } else
+              child = Text(e.toString());
+            return SliverPadding(
+              padding:
+                  const EdgeInsets.symmetric(horizontal: 24.0, vertical: 8.0),
+              sliver: SliverToBoxAdapter(
+                child: Center(
+                  child: DefaultTextStyle.merge(
+                    style: Theme.of(context).textTheme.headline4,
+                    child: child,
+                  ),
+                ),
               ),
-            ),
-          ),
+            );
+          },
         );
-      },
-    );
   }
 }
 
@@ -118,38 +124,37 @@ class _PlatformGameList extends StatelessWidget {
             thickness: 1.0,
           );
         final int itemIndex = index ~/ 2;
-        if (!showUsage ||
-            games[itemIndex].usage == null ||
-            games[itemIndex].usage!.isEmpty)
+        final game = games[itemIndex];
+        if (!showUsage || game.usage == null || game.usage!.isEmpty)
           return ListTile(
             minVerticalPadding: kMaterialListPadding.vertical,
-            title: Text(games[itemIndex].name),
+            title: Text(game.name),
           );
-        final bool unique = games[itemIndex].usage!.length == 1;
-        final String text = games[itemIndex].usage!.first.use;
+        final bool unique = game.usage!.length == 1;
+        final String text = game.usage!.first.use;
         late final Widget subtitle;
         if (unique) {
           subtitle = _Subtitle(subtitle: text);
           return ListTile(
             minVerticalPadding: kMaterialListPadding.vertical,
-            title: Text(games[itemIndex].name),
+            title: Text(game.name),
             subtitle: subtitle,
             isThreeLine: true,
           );
         }
         subtitle = _Subtitle(
           subtitle: text,
-          count: games[itemIndex].usage!.length - 1,
+          count: game.usage!.length - 1,
         );
         return Theme(
           data: theme.copyWith(
             dividerColor: Colors.transparent,
           ),
           child: ExpansionTile(
-            title: Text(games[itemIndex].name),
+            title: Text(game.name),
             subtitle: subtitle,
             children: [
-              for (AmiiboUsage usage in games[itemIndex].usage!.sublist(1))
+              for (AmiiboUsage usage in game.usage!.sublist(1))
                 ListTile(
                   dense: true,
                   title: Text(usage.use, style: theme.textTheme.subtitle2),
