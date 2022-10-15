@@ -33,7 +33,7 @@ class ServiceNotifier extends ChangeNotifier implements Service {
     List<dynamic>? args = expression.args;
     if (where.isEmpty || args.isEmpty) where = args = null;
     final result = await dao.fetchSum(where, args, group);
-    return result.map<Stat>((e) => Stat.fromJson(e)).toList();
+    return result.map<Stat>(Stat.fromJson).toList();
   }
 
   @override

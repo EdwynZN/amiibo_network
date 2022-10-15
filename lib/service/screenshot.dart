@@ -63,9 +63,7 @@ class Screenshot {
   }
 
   void customData(
-    ThemeMode themeMode,
-    BuildContext context,
-    StatProvider statProvider) {
+      ThemeMode themeMode, BuildContext context, StatProvider statProvider) {
     final mediaBrightness = MediaQuery.of(context).platformBrightness;
     this
       ..color = colorOnThemeMode(themeMode, mediaBrightness)
@@ -170,10 +168,11 @@ class Screenshot {
   }
 
   Future<Uint8List?> saveStats(Expression expression) async {
+    final series = await _service.fetchDistinct(expression: expression);
+    final exp = InCond.inn('amiiboSeries', series.toSet().toList());
     final List<Stat> stats =
-        await _service.fetchStats(group: true, expression: expression);
-    final List<Stat> general =
-        await _service.fetchStats(expression: expression);
+        await _service.fetchStats(group: true, expression: exp);
+    final List<Stat> general = await _service.fetchStats(expression: exp);
 
     if (isRecording || stats.isEmpty || general.isEmpty) return null;
 
@@ -403,49 +402,53 @@ class Screenshot {
     /// Activate fontFeature only if StatMode is Ratio and isFontFeatureEnable is true for this device
 
     final TextSpan aNetwork = TextSpan(
-        style: TextStyle(color: textColor, fontSize: 50),
-        text: 'Amiibo Network',
-        children: <InlineSpan>[
-          TextSpan(
-              style: TextStyle(color: textColor, fontSize: 15, wordSpacing: 35),
-              text: '\u00A9 '),
-          TextSpan(
-              style: TextStyle(
-                color: Colors.black,
-                fontSize: fontFeatureStyle ? 35 : 30,
-                fontWeight: FontWeight.w300,
-                background: ownedCardPaint,
-                fontFeatures: [
-                  if (fontFeatureStyle) ui.FontFeature.enable('frac'),
-                  if (!fontFeatureStyle) ui.FontFeature.tabularFigures()
-                ],
-              ),
-              text:
-                  ' ${statProvider.statLabel(stats.owned.toDouble(), stats.total.toDouble())} '),
-          TextSpan(
-              style: TextStyle(color: textColor, fontSize: 35),
-              text: ' $owned'),
-          TextSpan(
-              style:
-                  TextStyle(color: Colors.black, fontSize: 35, wordSpacing: 35),
-              text: ' '),
-          TextSpan(
-              style: TextStyle(
-                color: Colors.black,
-                fontSize: fontFeatureStyle ? 35 : 30,
-                fontWeight: FontWeight.w300,
-                background: wishedCardPaint,
-                fontFeatures: [
-                  if (fontFeatureStyle) ui.FontFeature.enable('frac'),
-                  if (!fontFeatureStyle) ui.FontFeature.tabularFigures()
-                ],
-              ),
-              text:
-                  ' ${statProvider.statLabel(stats.wished.toDouble(), stats.total.toDouble())} '),
-          TextSpan(
-              style: TextStyle(color: textColor, fontSize: 35),
-              text: ' $wished'),
-        ]);
+      style: TextStyle(color: textColor, fontSize: 50),
+      text: 'Amiibo Network',
+      children: <InlineSpan>[
+        TextSpan(
+          style: TextStyle(color: textColor, fontSize: 15, wordSpacing: 35),
+          text: '\u00A9 ',
+        ),
+        const TextSpan(text: '   ', style: TextStyle(letterSpacing: 8.0)),
+        TextSpan(
+          style: TextStyle(
+            color: Colors.black,
+            fontSize: fontFeatureStyle ? 35 : 30,
+            fontWeight: FontWeight.w300,
+            background: ownedCardPaint,
+            fontFeatures: [
+              if (fontFeatureStyle) ui.FontFeature.enable('frac'),
+              if (!fontFeatureStyle) ui.FontFeature.tabularFigures()
+            ],
+          ),
+          text:
+              ' ${statProvider.statLabel(stats.owned.toDouble(), stats.total.toDouble())} ',
+        ),
+        TextSpan(
+          style: TextStyle(color: textColor, fontSize: 35),
+          text: ' $owned',
+        ),
+        const TextSpan(text: '   ', style: TextStyle(letterSpacing: 2.0)),
+        TextSpan(
+          style: TextStyle(
+            color: Colors.black,
+            fontSize: fontFeatureStyle ? 35 : 30,
+            fontWeight: FontWeight.w300,
+            background: wishedCardPaint,
+            fontFeatures: [
+              if (fontFeatureStyle) ui.FontFeature.enable('frac'),
+              if (!fontFeatureStyle) ui.FontFeature.tabularFigures()
+            ],
+          ),
+          text:
+              ' ${statProvider.statLabel(stats.wished.toDouble(), stats.total.toDouble())} ',
+        ),
+        TextSpan(
+          style: TextStyle(color: textColor, fontSize: 35),
+          text: ' $wished',
+        ),
+      ],
+    );
     TextPainter(text: aNetwork, textDirection: TextDirection.ltr)
       ..layout(minWidth: maxX - 125 - margin)
       ..paint(_canvas!, Offset(125, maxY - margin - 75));

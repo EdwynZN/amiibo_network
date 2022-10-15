@@ -64,8 +64,8 @@ final queryProvider = StateNotifierProvider<QueryBuilderProvider, QueryBuilder>(
     final sortBy = SortBy.values[sort];
     final search = Search(
       category: _customCards.isEmpty && _customFigures.isEmpty
-        ? AmiiboCategory.All
-        : AmiiboCategory.Custom,
+          ? AmiiboCategory.All
+          : AmiiboCategory.Custom,
       customCards: _customCards,
       customFigures: _customFigures,
     );
@@ -98,16 +98,16 @@ class QueryBuilderProvider extends StateNotifier<QueryBuilder> {
     OrderBy _orderBy,
     SortBy _sortBy,
   ) : super(
-        QueryBuilder(
-          where: And(),
-          sortBy: _sortBy,
-          orderBy: _orderBy,
-        ),
-      ) {
-        if (_query.category != AmiiboCategory.All) {
-          _updateExpression();
-        }
-      }
+          QueryBuilder(
+            where: And(),
+            sortBy: _sortBy,
+            orderBy: _orderBy,
+          ),
+        ) {
+    if (_query.category != AmiiboCategory.All) {
+      _updateExpression();
+    }
+  }
 
   Search get search => _query;
   QueryBuilder get query => state;

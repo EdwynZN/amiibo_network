@@ -101,7 +101,8 @@ class HomeScreenState extends ConsumerState<HomeScreen>
   }
 
   void _scrollListener() {
-    if (_controller.hasClients && !_animationController.isAnimating &&
+    if (_controller.hasClients &&
+        !_animationController.isAnimating &&
         _controller.offset > 56.0) {
       switch (_controller.position.userScrollDirection) {
         case ScrollDirection.forward:
@@ -122,19 +123,19 @@ class HomeScreenState extends ConsumerState<HomeScreen>
     if (version != versionApp) {
       await preferences.setInt(sharedVersion, versionApp);
       if (version != null)
-      showDialog(
-        context: context,
-        builder: (context) => MarkdownReader(
-          file: translate.changelog.replaceAll(' ', '_'),
-          title: translate.changelogSubtitle,
-        ),
-      );
+        showDialog(
+          context: context,
+          builder: (context) => MarkdownReader(
+            file: translate.changelog.replaceAll(' ', '_'),
+            title: translate.changelogSubtitle,
+          ),
+        );
     }
   }
 
   Future<void> _search() async {
     Search? value = await Navigator.push<Search?>(
-      context, 
+      context,
       FadeRoute<Search>(builder: (_) => const SearchScreen()),
     );
     if (value?.search?.trim().isNotEmpty ?? false) {
@@ -159,13 +160,11 @@ class HomeScreenState extends ConsumerState<HomeScreen>
 
   @override
   Widget build(BuildContext context) {
+    final isAmiiboList = index == 0;
     return WillPopScope(
       onWillPop: _exitApp,
       child: SafeArea(
         child: Scaffold(
-          extendBody: true,
-          floatingActionButtonLocation:
-              FloatingActionButtonLocation.centerDocked,
           resizeToAvoidBottomInset: false,
           drawer: CollectionDrawer(restart: _restartAnimation),
           body: HookConsumer(
@@ -173,8 +172,6 @@ class HomeScreenState extends ConsumerState<HomeScreen>
               final _multipleSelection = ref.watch(
                 selectProvider.select<bool>((value) => value.multipleSelected),
               );
-              final expression =
-                  ref.watch(queryProvider.select<Expression>((cb) => cb.where));
               return Scrollbar(
                 controller: _controller,
                 interactive: true,
@@ -209,23 +206,23 @@ class HomeScreenState extends ConsumerState<HomeScreen>
                       trailing: AnimatedSwitcher(
                         duration: const Duration(milliseconds: 250),
                         layoutBuilder: _defaultLayoutBuilder,
-                        child: index != 0
+                        child: !isAmiiboList
                             ? const SizedBox()
                             : _multipleSelection
                                 ? const _SelectedOptions()
                                 : const _DefaultOptions(),
                       ),
                     ),
-                    const SliverPersistentHeader(
-                      delegate: SliverStatsHeader(),
+                    SliverPersistentHeader(
+                      delegate: SliverStatsHeader(hideOptional: isAmiiboList),
                       pinned: true,
                     ),
-                    index == 0
+                    isAmiiboList
                         ? const SliverPadding(
                             padding: EdgeInsets.symmetric(horizontal: 4),
                             sliver: _AmiiboListWidget(),
                           )
-                        : HomeBodyStats(expression),
+                        : const HomeBodyStats(),
                     const SliverPadding(
                       padding: EdgeInsets.symmetric(vertical: 48.0),
                     ),
@@ -234,6 +231,9 @@ class HomeScreenState extends ConsumerState<HomeScreen>
               );
             },
           ),
+          extendBody: true,
+          floatingActionButtonLocation:
+              FloatingActionButtonLocation.centerDocked,
           floatingActionButton: _FAB(
             animationController: _animationController,
             index: index,

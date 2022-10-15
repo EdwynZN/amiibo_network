@@ -1,38 +1,32 @@
-import 'dart:async';
-
 import 'package:amiibo_network/generated/l10n.dart';
 import 'package:amiibo_network/model/search_result.dart';
 import 'package:amiibo_network/model/stat.dart';
+import 'package:amiibo_network/riverpod/amiibo_provider.dart';
 import 'package:amiibo_network/riverpod/service_provider.dart';
 import 'package:amiibo_network/widget/single_stat.dart';
 import 'package:flutter/material.dart';
-import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:sliver_tools/sliver_tools.dart';
 
-final _statsProvider =
-    StreamProvider.autoDispose.family<List<Stat>, Expression>((ref, exp) {
+final _statsProvider = StreamProvider.autoDispose<List<Stat>>((ref) {
   final service = ref.watch(serviceProvider.notifier);
-  final streamController = StreamController<Expression>()..sink.add(exp);
+  final listStream = ref.watch(amiiboHomeListProvider.stream);
 
-  void listener() => streamController.sink.add(exp);
-
-  service.addListener(listener);
-
-  ref.onDispose(() {
-    service.removeListener(listener);
-    streamController.close();
-  });
-
-  return streamController.stream.asyncMap(
-    (cb) async => <Stat>[
-      ...await service.fetchStats(expression: cb),
-      ...await service.fetchStats(group: true, expression: cb)
-    ],
+  return listStream.asyncMap(
+    (cb) async {
+      final series = cb.map((e) => e.amiiboSeries).toSet().toList();
+      final exp = InCond.inn('amiiboSeries', series);
+      return <Stat>[
+        ...await service.fetchStats(expression: exp),
+        ...await service.fetchStats(group: true, expression: exp),
+      ];
+    },
   );
 });
 
-AsyncValue<List<Stat>> _usePreviousStat(WidgetRef ref, Expression expression) {
-  final snapshot = ref.watch(_statsProvider(expression));
+AsyncValue<List<Stat>> _usePreviousStat(WidgetRef ref) {
+  final snapshot = ref.watch(_statsProvider);
   final previous = usePrevious(snapshot);
   if (previous is AsyncData<List<Stat>> && snapshot is! AsyncData<List<Stat>>)
     return previous;
@@ -40,17 +34,14 @@ AsyncValue<List<Stat>> _usePreviousStat(WidgetRef ref, Expression expression) {
 }
 
 class HomeBodyStats extends HookConsumerWidget {
-  final Expression expression;
-
-  HomeBodyStats(this.expression, {super.key});
+  const HomeBodyStats({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final S translate = S.of(context);
-    final snapshot = _usePreviousStat(ref, expression);
+    final snapshot = _usePreviousStat(ref);
     if (snapshot is AsyncData<List<Stat>>) {
-      final List<Stat> stats = snapshot.value.sublist(1);
-      if (stats.length < 1)
+      if (snapshot.value.length <= 1)
         return SliverToBoxAdapter(
           child: Center(
             child: Text(
@@ -59,38 +50,54 @@ class HomeBodyStats extends HookConsumerWidget {
             ),
           ),
         );
-      return (MediaQuery.of(context).size.width <= 600)
-          ? SliverList(
-              delegate: SliverChildBuilderDelegate(
-                (BuildContext context, int index) => SingleStat(
-                  key: ValueKey(index),
-                  title: stats[index].name,
-                  owned: stats[index].owned,
-                  total: stats[index].total,
-                  wished: stats[index].wished,
+      final Stat generalStats = snapshot.value.first;
+      final List<Stat> stats = snapshot.value.sublist(1);
+      return MultiSliver(
+        children: [
+          if (stats.length > 1)
+            SliverToBoxAdapter(
+              key: Key('Amiibo Network'),
+              child: SingleStat(
+                title: generalStats.name,
+                owned: generalStats.owned,
+                total: generalStats.total,
+                wished: generalStats.wished,
+              ),
+            ),
+          (MediaQuery.of(context).size.width <= 600)
+            ? SliverList(
+                delegate: SliverChildBuilderDelegate(
+                  (BuildContext context, int index) => SingleStat(
+                    key: ValueKey(index),
+                    title: stats[index].name,
+                    owned: stats[index].owned,
+                    total: stats[index].total,
+                    wished: stats[index].wished,
+                  ),
+                  semanticIndexOffset: 1,
+                  childCount: stats.length,
                 ),
-                semanticIndexOffset: 1,
-                childCount: stats.length,
-              ),
-            )
-          : SliverGrid(
-              gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
-                maxCrossAxisExtent: 230,
-                mainAxisSpacing: 8.0,
-                mainAxisExtent: 140,
-              ),
-              delegate: SliverChildBuilderDelegate(
-                (BuildContext context, int index) => SingleStat(
-                  key: ValueKey(index),
-                  title: stats[index].name,
-                  owned: stats[index].owned,
-                  total: stats[index].total,
-                  wished: stats[index].wished,
+              )
+            : SliverGrid(
+                gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
+                  maxCrossAxisExtent: 230,
+                  mainAxisSpacing: 8.0,
+                  mainAxisExtent: 140,
                 ),
-                semanticIndexOffset: 1,
-                childCount: stats.length,
-              ),
-            );
+                delegate: SliverChildBuilderDelegate(
+                  (BuildContext context, int index) => SingleStat(
+                    key: ValueKey(index),
+                    title: stats[index].name,
+                    owned: stats[index].owned,
+                    total: stats[index].total,
+                    wished: stats[index].wished,
+                  ),
+                  semanticIndexOffset: 1,
+                  childCount: stats.length,
+                ),
+              )
+        ],
+      );
     }
     return const SliverToBoxAdapter();
   }
