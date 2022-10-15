@@ -11419,10 +11419,10 @@
       "character": "Inkling",
       "gameSeries": "Splatoon",
       "name": "Inkling (Yellow)",
-      "au": "2022",
-      "eu": "2022",
-      "jp": "2022",
-      "na": "2022",
+      "au": "20221111",
+      "eu": "20221111",
+      "jp": "20221111",
+      "na": "20221111",
       "type": "Figure"
     },
     {
@@ -11432,10 +11432,10 @@
       "character": "Octoling",
       "gameSeries": "Splatoon",
       "name": "Octoling (Blue)",
-      "au": "2022",
-      "eu": "2022",
-      "jp": "2022",
-      "na": "2022",
+      "au": "20221111",
+      "eu": "20221111",
+      "jp": "20221111",
+      "na": "20221111",
       "type": "Figure"
     },
     {
@@ -11445,12 +11445,12 @@
       "character": "Smallfry",
       "gameSeries": "Splatoon",
       "name": "Smallfry",
-      "au": "2022",
-      "eu": "2022",
-      "jp": "2022",
-      "na": "2022",
+      "au": "20221111",
+      "eu": "20221111",
+      "jp": "20221111",
+      "na": "20221111",
       "type": "Figure"
     }
   ],
-  "lastUpdated": "2022-10-08T12:23:00.000"
+  "lastUpdated": "2022-15-08T12:23:00.000"
 }
