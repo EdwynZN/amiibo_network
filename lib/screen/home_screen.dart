@@ -9,6 +9,7 @@ import 'package:amiibo_network/riverpod/screenshot_service.dart';
 import 'package:amiibo_network/riverpod/select_provider.dart';
 import 'package:amiibo_network/screen/search_screen.dart';
 import 'package:amiibo_network/service/storage.dart';
+import 'package:amiibo_network/widget/dash_menu/dash_menu.dart';
 import 'package:amiibo_network/widget/list_stats.dart';
 import 'package:amiibo_network/widget/loading_grid_shimmer.dart';
 import 'package:amiibo_network/widget/lock_icon.dart';
@@ -148,6 +149,13 @@ class HomeScreenState extends ConsumerState<HomeScreen>
   }
 
   Future<bool> _exitApp() async {
+    final route = ModalRoute.of(context);
+
+    /// If the route is current and it has local history then let it handle it by itself
+    if (route != null && route.isCurrent && route.willHandlePopInternally) {
+      return SynchronousFuture(true);
+    }
+
     final selected = ref.read(selectProvider);
     if (selected.multipleSelected) {
       selected.clearSelected();
@@ -161,91 +169,95 @@ class HomeScreenState extends ConsumerState<HomeScreen>
   @override
   Widget build(BuildContext context) {
     final isAmiiboList = index == 0;
-    return WillPopScope(
-      onWillPop: _exitApp,
-      child: SafeArea(
-        child: Scaffold(
-          resizeToAvoidBottomInset: false,
-          drawer: CollectionDrawer(restart: _restartAnimation),
-          body: HookConsumer(
-            builder: (context, ref, child) {
-              final _multipleSelection = ref.watch(
-                selectProvider.select<bool>((value) => value.multipleSelected),
-              );
-              return Scrollbar(
-                controller: _controller,
-                interactive: true,
-                child: CustomScrollView(
+    return SafeArea(
+      child: DashMenu(
+        leftDrawer: CollectionDrawer(restart: _restartAnimation),
+        body: WillPopScope(
+          onWillPop: _exitApp,
+          child: Scaffold(
+            resizeToAvoidBottomInset: false,
+            //drawer: CollectionDrawer(restart: _restartAnimation),
+            body: HookConsumer(
+              builder: (context, ref, child) {
+                final _multipleSelection = ref.watch(
+                  selectProvider
+                      .select<bool>((value) => value.multipleSelected),
+                );
+                return Scrollbar(
                   controller: _controller,
-                  slivers: <Widget>[
-                    SliverFloatingBar(
-                      floating: true,
-                      forward: _multipleSelection,
-                      snap: true,
-                      leading: Builder(
-                        builder: (context) {
-                          return IconButton(
-                            icon: Hero(
-                              tag: 'MenuButton',
-                              child: ImplicitIcon(
-                                key: Key('Menu'),
-                                forward: _multipleSelection,
+                  interactive: true,
+                  child: CustomScrollView(
+                    controller: _controller,
+                    slivers: <Widget>[
+                      SliverFloatingBar(
+                        floating: true,
+                        forward: _multipleSelection,
+                        snap: true,
+                        leading: Builder(
+                          builder: (context) {
+                            return IconButton(
+                              icon: Hero(
+                                tag: 'MenuButton',
+                                child: ImplicitIcon(
+                                  key: Key('Menu'),
+                                  forward: _multipleSelection,
+                                ),
                               ),
-                            ),
-                            tooltip: _multipleSelection
-                                ? localizations.cancelButtonLabel
-                                : localizations.openAppDrawerTooltip,
-                            onPressed: _multipleSelection
-                                ? _cancelSelection
-                                : () => Scaffold.of(context).openDrawer(),
-                          );
-                        },
+                              tooltip: _multipleSelection
+                                  ? localizations.cancelButtonLabel
+                                  : localizations.openAppDrawerTooltip,
+                              onPressed: _multipleSelection
+                                  ? _cancelSelection
+                                  : DashMenu.of(context).openDrawer,
+                            );
+                          },
+                        ),
+                        title: const _TitleAppBar(),
+                        onTap: _multipleSelection ? null : _search,
+                        trailing: AnimatedSwitcher(
+                          duration: const Duration(milliseconds: 250),
+                          layoutBuilder: _defaultLayoutBuilder,
+                          child: !isAmiiboList
+                              ? const SizedBox()
+                              : _multipleSelection
+                                  ? const _SelectedOptions()
+                                  : const _DefaultOptions(),
+                        ),
                       ),
-                      title: const _TitleAppBar(),
-                      onTap: _multipleSelection ? null : _search,
-                      trailing: AnimatedSwitcher(
-                        duration: const Duration(milliseconds: 250),
-                        layoutBuilder: _defaultLayoutBuilder,
-                        child: !isAmiiboList
-                            ? const SizedBox()
-                            : _multipleSelection
-                                ? const _SelectedOptions()
-                                : const _DefaultOptions(),
+                      SliverPersistentHeader(
+                        delegate: SliverStatsHeader(hideOptional: isAmiiboList),
+                        pinned: true,
                       ),
-                    ),
-                    SliverPersistentHeader(
-                      delegate: SliverStatsHeader(hideOptional: isAmiiboList),
-                      pinned: true,
-                    ),
-                    isAmiiboList
-                        ? const SliverPadding(
-                            padding: EdgeInsets.symmetric(horizontal: 4),
-                            sliver: _AmiiboListWidget(),
-                          )
-                        : const HomeBodyStats(),
-                    const SliverPadding(
-                      padding: EdgeInsets.symmetric(vertical: 48.0),
-                    ),
-                  ],
-                ),
-              );
-            },
-          ),
-          extendBody: true,
-          floatingActionButtonLocation:
-              FloatingActionButtonLocation.centerDocked,
-          floatingActionButton: _FAB(
-            animationController: _animationController,
-            index: index,
-          ),
-          bottomNavigationBar: _BottomBar(
-            animationController: _animationController,
-            index: index,
-            onTap: (selected) => setState(() {
-              index = selected;
-              _controller.jumpTo(0);
-              ref.read(selectProvider.notifier).clearSelected();
-            }),
+                      isAmiiboList
+                          ? const SliverPadding(
+                              padding: EdgeInsets.symmetric(horizontal: 4),
+                              sliver: _AmiiboListWidget(),
+                            )
+                          : const HomeBodyStats(),
+                      const SliverPadding(
+                        padding: EdgeInsets.symmetric(vertical: 48.0),
+                      ),
+                    ],
+                  ),
+                );
+              },
+            ),
+            extendBody: true,
+            floatingActionButtonLocation:
+                FloatingActionButtonLocation.centerDocked,
+            floatingActionButton: _FAB(
+              animationController: _animationController,
+              index: index,
+            ),
+            bottomNavigationBar: _BottomBar(
+              animationController: _animationController,
+              index: index,
+              onTap: (selected) => setState(() {
+                index = selected;
+                _controller.jumpTo(0);
+                ref.read(selectProvider.notifier).clearSelected();
+              }),
+            ),
           ),
         ),
       ),

@@ -365,7 +365,7 @@ class _HeaderDrawer extends ConsumerWidget {
         decoration: BoxDecoration(
           color: theme.backgroundColor,
           borderRadius: const BorderRadius.only(
-            topLeft: Radius.circular(32.0),
+            topLeft: Radius.circular(56.0),
           ),
         ),
         padding: EdgeInsets.zero,
