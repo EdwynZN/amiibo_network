@@ -99,7 +99,7 @@ void _onUpgrade(Database db, int oldVersion, int newVersion) async {
       await tx.execute('''INSERT INTO
           amiibo(key, id, amiiboSeries, character, gameSeries, character,
             name, au, eu, jp, na, type, wishlist, owned)
-          SELECT id, amiiboSeries, character, gameSeries, character, 
+          SELECT key, id, amiiboSeries, character, gameSeries, character, 
             name, au, eu, jp, na, type, wishlist, owned
           FROM _amiibo_old ORDER BY id;
         ''');

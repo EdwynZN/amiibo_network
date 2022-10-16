@@ -24,7 +24,7 @@ jobs:
           fetch-depth: 0
       
       - name: Read YAML Data
-        uses: KJ002/read-yaml@1.5
+        uses: KJ002/read-yaml@1.6
         id: pubspec
         with:
           file: 'pubspec.yaml'

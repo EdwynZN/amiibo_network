@@ -133,7 +133,7 @@ class _SupportButtons extends ConsumerWidget {
   Future<void> _launchURL(String url, BuildContext context) async {
     final uri = Uri.parse(url);
     if (await canLaunchUrl(uri)) {
-      await launchUrl(uri);
+      await launchUrl(uri, mode: LaunchMode.externalApplication);
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text(S.of(context).couldNotLaunchUrl(url))));
@@ -211,7 +211,7 @@ class _ProjectButtons extends StatelessWidget {
   Future<void> _launchURL(String url, BuildContext context) async {
     final uri = Uri.parse(url);
     if (await canLaunchUrl(uri)) {
-      await launchUrl(uri);
+      await launchUrl(uri, mode: LaunchMode.externalApplication);
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text(S.of(context).couldNotLaunchUrl(url))));
