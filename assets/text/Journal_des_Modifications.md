@@ -1,3 +1,8 @@
+## Version 2.0.0
+- **Nouvelle** UI
+- Trier par card nombre
+- Correction des erreurs
+
 ## Version 1.5.0
 - Ajout des figurines series Octoling, Inkling and Smallfry de la série Splatoon
 - Correction des erreurs

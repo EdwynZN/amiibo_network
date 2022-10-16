@@ -86,7 +86,7 @@ class AmiiboSQLite implements Dao<Amiibo?, int> {
     final batch = _db.batch();
     for (Amiibo? query in list) {
       batch.execute('''INSERT OR REPLACE INTO amiibo
-      VALUES(?,?,?,?,?,?,?,?,?,?,?,
+      VALUES(?,?,?,?,?,?,?,?,?,?,?,?,
       (SELECT wishlist FROM amiibo WHERE key = ?),
       (SELECT owned FROM amiibo WHERE key = ?)
       );
@@ -102,8 +102,9 @@ class AmiiboSQLite implements Dao<Amiibo?, int> {
         query.jp,
         query.na,
         query.type,
+        query.cardNumber,
         query.key,
-        query.key
+        query.key,
       ]);
     }
     await batch.commit(noResult: true, continueOnError: true);

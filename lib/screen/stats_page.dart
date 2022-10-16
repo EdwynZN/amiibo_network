@@ -55,7 +55,7 @@ class _StatsPageState extends ConsumerState<StatsPage> {
     super.didChangeDependencies();
   }
 
-  void _updateCategory(WidgetRef ref, AmiiboCategory newCategory) {
+  void _updateCategory(AmiiboCategory newCategory) {
     if (newCategory == category) return;
     setState(() {
       category = newCategory;
@@ -138,9 +138,9 @@ class _StatsPageState extends ConsumerState<StatsPage> {
                     ),
                   ),
                   onDestinationSelected: (selected) =>
-                      _updateCategory(ref, AmiiboCategory.values[selected]),
+                      _updateCategory( AmiiboCategory.values[selected]),
                 ),
-                Expanded(child: _BodyStats(expression))
+                Expanded(child: BodyStats(expression))
               ],
             ),
           ),
@@ -148,7 +148,7 @@ class _StatsPageState extends ConsumerState<StatsPage> {
       );
     return SafeArea(
       child: Scaffold(
-        body: _BodyStats.expanded(expression),
+        body: BodyStats.expanded(expression),
         floatingActionButton: _canSave ? _FAB(category, expression) : null,
         floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,
         extendBody: true,
@@ -186,7 +186,7 @@ class _StatsPageState extends ConsumerState<StatsPage> {
               ],
               currentIndex: category.index,
               onTap: (selected) =>
-                  _updateCategory(ref, AmiiboCategory.values[selected]),
+                  _updateCategory(AmiiboCategory.values[selected]),
             ),
           ),
         ),
@@ -203,12 +203,12 @@ AsyncValue<List<Stat>> _usePreviousStat(WidgetRef ref, Expression expression) {
   return snapshot;
 }
 
-class _BodyStats extends HookConsumerWidget {
+class BodyStats extends HookConsumerWidget {
   final Expression expression;
   final bool expanded;
 
-  _BodyStats(this.expression) : expanded = false;
-  _BodyStats.expanded(this.expression) : expanded = true;
+  BodyStats(this.expression) : expanded = false;
+  BodyStats.expanded(this.expression) : expanded = true;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -271,7 +271,7 @@ class _BodyStats extends HookConsumerWidget {
                   childCount: stats.length,
                 ),
               ),
-            if (expanded) const SliverToBoxAdapter(child: SizedBox(height: 48))
+            if (expanded) const SliverToBoxAdapter(child: SizedBox(height: 92.0))
           ],
         ),
       );

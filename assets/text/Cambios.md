@@ -1,3 +1,8 @@
+## Version 2.0.0
+- **Nueva** interfaz de amiibos y estadísticas
+- Se agregó el orden de tarjetas númerico
+- Optimización de recursos de la App
+
 ## Version 1.5.0
 - Actualización de fechas de amiibos 2022
 - Se agregaron los amiibos de la serie Splatoon 3 (Octoling, Inkling y Smallfry)

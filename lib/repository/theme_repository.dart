@@ -138,17 +138,20 @@ class _Theme implements AmiiboTheme {
         titleTextStyle: _brightnessColor == Brightness.light
             ? __darkAccentTextTheme.headline6!
             : __lightAccentTextTheme.headline6!.apply(color: Colors.white),
-        foregroundColor: color,
+        foregroundColor:
+            _brightnessColor == Brightness.light ? Colors.black : Colors.white,
         toolbarTextStyle: _brightnessColor == Brightness.light
             ? __darkAccentTextTheme.bodyText2
             : __lightAccentTextTheme.bodyText2,
         iconTheme: IconThemeData(
-          color:
-              _brightnessColor == Brightness.dark ? Colors.white : Colors.black,
+          color: _brightnessColor == Brightness.light
+              ? Colors.black
+              : Colors.white,
         ),
       ),
       unselectedWidgetColor: Colors.black87,
       dividerColor: color,
+      disabledColor: Colors.black26,
       scaffoldBackgroundColor: color[50],
       iconTheme: const IconThemeData(color: Colors.black),
       floatingActionButtonTheme: FloatingActionButtonThemeData(
@@ -223,6 +226,10 @@ class _Theme implements AmiiboTheme {
         titleTextStyle: __darkAccentTextTheme.headline6,
         contentTextStyle: __darkAccentTextTheme.subtitle1,
         backgroundColor: color[50],
+        actionsPadding: const EdgeInsets.symmetric(
+          horizontal: 16.0,
+          vertical: 4.0,
+        ),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
       ),
       snackBarTheme: SnackBarThemeData(
@@ -301,19 +308,23 @@ class _Theme implements AmiiboTheme {
         ),
       ),
       chipTheme: ChipThemeData(
-        checkmarkColor:
-            _brightnessColor == Brightness.dark ? Colors.white : Colors.black,
+        checkmarkColor: _brightnessPrimaryColor == Brightness.light
+            ? Colors.white
+            : Colors.black,
         backgroundColor: Colors.black12,
         deleteIconColor: Colors.black87,
         disabledColor: Colors.black.withAlpha(0x0c),
-        selectedColor: Colors.black26,
-        secondarySelectedColor: color[100]!,
+        selectedColor: color.shade100,
+        secondarySelectedColor: color.shade100,
         labelPadding: const EdgeInsets.symmetric(horizontal: 4.0),
         padding: const EdgeInsets.all(4.0),
         labelStyle: __darkAccentTextTheme.bodyText2!,
         secondaryLabelStyle: __darkAccentTextTheme.bodyText2!.apply(
-            color: _brightnessColor == Brightness.light ? null : color[500]),
+          color:
+              _brightnessPrimaryColor == Brightness.light ? null : color[500],
+        ),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+        side: BorderSide.none,
         brightness: _brightnessColor,
       ),
       navigationRailTheme: NavigationRailThemeData(
@@ -433,10 +444,15 @@ class _Theme implements AmiiboTheme {
             showUnselectedLabels: true,
           ),
           dialogTheme: DialogTheme(
-            titleTextStyle: TextStyle(
-                color: Colors.white70,
-                fontSize: 18,
-                fontWeight: FontWeight.w600),
+            titleTextStyle: const TextStyle(
+              color: Colors.white70,
+              fontSize: 18,
+              fontWeight: FontWeight.w600,
+            ),
+            actionsPadding: const EdgeInsets.symmetric(
+              horizontal: 16.0,
+              vertical: 4.0,
+            ),
             backgroundColor: Colors.blueGrey[900],
             shape:
                 RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
@@ -534,18 +550,20 @@ class _Theme implements AmiiboTheme {
                 : __darkAccentTextTheme.bodyText2!,
             shape:
                 RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+            side: _SelectedBorder(_darkAccentColor.withOpacity(0.54)),
             brightness: _brightness,
           ),
           navigationRailTheme: NavigationRailThemeData(
-              labelType: NavigationRailLabelType.selected,
-              backgroundColor: Colors.blueGrey[800],
-              elevation: 8.0,
-              groupAlignment: 1.0,
-              selectedIconTheme: IconThemeData(color: _darkAccentColor),
-              selectedLabelTextStyle: __lightAccentTextTheme.bodyText2!
-                  .apply(color: _darkAccentColor),
-              unselectedIconTheme: const IconThemeData(color: Colors.white70),
-              unselectedLabelTextStyle: __lightAccentTextTheme.bodyText2),
+            labelType: NavigationRailLabelType.selected,
+            backgroundColor: Colors.blueGrey[800],
+            elevation: 8.0,
+            groupAlignment: 1.0,
+            selectedIconTheme: IconThemeData(color: _darkAccentColor),
+            selectedLabelTextStyle: __lightAccentTextTheme.bodyText2!
+                .apply(color: _darkAccentColor),
+            unselectedIconTheme: const IconThemeData(color: Colors.white70),
+            unselectedLabelTextStyle: __lightAccentTextTheme.bodyText2,
+          ),
           toggleableActiveColor: _darkAccentColor,
           indicatorColor: Colors.blueGrey[700],
           useMaterial3: true,
@@ -640,10 +658,15 @@ class _Theme implements AmiiboTheme {
             showUnselectedLabels: true,
           ),
           dialogTheme: DialogTheme(
-            titleTextStyle: TextStyle(
-                color: Colors.white70,
-                fontSize: 18,
-                fontWeight: FontWeight.w600),
+            titleTextStyle: const TextStyle(
+              color: Colors.white70,
+              fontSize: 18,
+              fontWeight: FontWeight.w600,
+            ),
+            actionsPadding: const EdgeInsets.symmetric(
+              horizontal: 16.0,
+              vertical: 4.0,
+            ),
             backgroundColor: Colors.grey[900],
             shape:
                 RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
@@ -722,32 +745,35 @@ class _Theme implements AmiiboTheme {
                 borderRadius: BorderRadius.vertical(top: Radius.circular(8))),
           ),
           chipTheme: ChipThemeData(
-              checkmarkColor:
-                  _brightness == Brightness.dark ? Colors.white : Colors.black,
-              backgroundColor: Colors.white12,
-              deleteIconColor: Colors.white70,
-              disabledColor: Colors.white.withAlpha(0x0C),
-              selectedColor: Colors.white24,
-              secondarySelectedColor: _darkAccentColor.withAlpha(0xFC),
-              labelPadding: const EdgeInsets.symmetric(horizontal: 4.0),
-              padding: const EdgeInsets.all(4.0),
-              labelStyle: __lightAccentTextTheme.bodyText2!,
-              secondaryLabelStyle: _brightness == Brightness.dark
-                  ? __lightAccentTextTheme.bodyText2!
-                  : __darkAccentTextTheme.bodyText2!,
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(8)),
-              brightness: _brightness),
+            checkmarkColor:
+                _brightness == Brightness.dark ? Colors.white : Colors.black,
+            backgroundColor: Colors.white12,
+            deleteIconColor: Colors.white70,
+            disabledColor: Colors.white.withAlpha(0x0C),
+            selectedColor: Colors.white24,
+            secondarySelectedColor: _darkAccentColor.withAlpha(0xFC),
+            labelPadding: const EdgeInsets.symmetric(horizontal: 4.0),
+            padding: const EdgeInsets.all(4.0),
+            labelStyle: __lightAccentTextTheme.bodyText2!,
+            secondaryLabelStyle: _brightness == Brightness.dark
+                ? __lightAccentTextTheme.bodyText2!
+                : __darkAccentTextTheme.bodyText2!,
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(8)),
+            side: _SelectedBorder(_darkAccentColor.withOpacity(0.54)),
+            brightness: _brightness,
+          ),
           navigationRailTheme: NavigationRailThemeData(
-              labelType: NavigationRailLabelType.selected,
-              backgroundColor: Colors.grey[850],
-              elevation: 8.0,
-              groupAlignment: 1.0,
-              selectedIconTheme: IconThemeData(color: _darkAccentColor),
-              unselectedIconTheme: const IconThemeData(color: Colors.white70),
-              selectedLabelTextStyle: __lightAccentTextTheme.bodyText2!
-                  .apply(color: _darkAccentColor),
-              unselectedLabelTextStyle: __lightAccentTextTheme.bodyText2),
+            labelType: NavigationRailLabelType.selected,
+            backgroundColor: Colors.grey[850],
+            elevation: 8.0,
+            groupAlignment: 1.0,
+            selectedIconTheme: IconThemeData(color: _darkAccentColor),
+            unselectedIconTheme: const IconThemeData(color: Colors.white70),
+            selectedLabelTextStyle: __lightAccentTextTheme.bodyText2!
+                .apply(color: _darkAccentColor),
+            unselectedLabelTextStyle: __lightAccentTextTheme.bodyText2,
+          ),
           toggleableActiveColor: _darkAccentColor,
           indicatorColor: Colors.grey[700],
           useMaterial3: true,
@@ -859,9 +885,14 @@ class _Theme implements AmiiboTheme {
           ),
           dialogTheme: DialogTheme(
             titleTextStyle: TextStyle(
-                color: Colors.white70,
-                fontSize: 18,
-                fontWeight: FontWeight.w600),
+              color: Colors.white70,
+              fontSize: 18,
+              fontWeight: FontWeight.w600,
+            ),
+            actionsPadding: const EdgeInsets.symmetric(
+              horizontal: 16.0,
+              vertical: 4.0,
+            ),
             backgroundColor: Colors.grey[900],
             shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(8),
@@ -944,31 +975,34 @@ class _Theme implements AmiiboTheme {
                 borderRadius: BorderRadius.vertical(top: Radius.circular(8))),
           ),
           chipTheme: ChipThemeData(
-              checkmarkColor:
-                  _brightness == Brightness.dark ? Colors.white : Colors.black,
-              backgroundColor: Colors.white12,
-              deleteIconColor: Colors.white70,
-              disabledColor: Colors.white.withAlpha(0x0C),
-              selectedColor: Colors.white24,
-              secondarySelectedColor: _darkAccentColor.withAlpha(0xFC),
-              labelPadding: const EdgeInsets.symmetric(horizontal: 4.0),
-              padding: const EdgeInsets.all(4.0),
-              labelStyle: __lightAccentTextTheme.bodyText2!,
-              secondaryLabelStyle: _brightness == Brightness.dark
-                  ? __lightAccentTextTheme.bodyText2!
-                  : __darkAccentTextTheme.bodyText2!,
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(8)),
-              brightness: _brightness),
+            checkmarkColor:
+                _brightness == Brightness.dark ? Colors.white : Colors.black,
+            backgroundColor: Colors.white12,
+            deleteIconColor: Colors.white70,
+            disabledColor: Colors.white.withAlpha(0x0C),
+            selectedColor: Colors.white24,
+            secondarySelectedColor: _darkAccentColor.withAlpha(0xFC),
+            labelPadding: const EdgeInsets.symmetric(horizontal: 4.0),
+            padding: const EdgeInsets.all(4.0),
+            labelStyle: __lightAccentTextTheme.bodyText2!,
+            secondaryLabelStyle: _brightness == Brightness.dark
+                ? __lightAccentTextTheme.bodyText2!
+                : __darkAccentTextTheme.bodyText2!,
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(8)),
+            side: _SelectedBorder(_darkAccentColor.withOpacity(0.54)),
+            brightness: _brightness,
+          ),
           navigationRailTheme: NavigationRailThemeData(
-              labelType: NavigationRailLabelType.selected,
-              backgroundColor: Colors.transparent,
-              groupAlignment: 1.0,
-              selectedIconTheme: IconThemeData(color: _darkAccentColor),
-              selectedLabelTextStyle: __lightAccentTextTheme.bodyText2!
-                  .apply(color: _darkAccentColor),
-              unselectedIconTheme: const IconThemeData(color: Colors.white70),
-              unselectedLabelTextStyle: __lightAccentTextTheme.bodyText2),
+            labelType: NavigationRailLabelType.selected,
+            backgroundColor: Colors.transparent,
+            groupAlignment: 1.0,
+            selectedIconTheme: IconThemeData(color: _darkAccentColor),
+            selectedLabelTextStyle: __lightAccentTextTheme.bodyText2!
+                .apply(color: _darkAccentColor),
+            unselectedIconTheme: const IconThemeData(color: Colors.white70),
+            unselectedLabelTextStyle: __lightAccentTextTheme.bodyText2,
+          ),
           toggleableActiveColor: _darkAccentColor,
           indicatorColor: _darkAccentColor.withOpacity(0.75),
           useMaterial3: true,
@@ -979,4 +1013,21 @@ class _Theme implements AmiiboTheme {
 
   ThemeData? get light => _lightTheme;
   ThemeData? get dark => _darkTheme;
+}
+
+class _SelectedBorder extends BorderSide implements MaterialStateBorderSide {
+  final Color? selectedColor;
+
+  const _SelectedBorder(this.selectedColor);
+
+  @override
+  BorderSide? resolve(Set<MaterialState> states) {
+    if (states.contains(MaterialState.disabled)) {
+      return const BorderSide(color: Colors.white12);
+    }
+    if (selectedColor != null && states.contains(MaterialState.selected)) {
+      return BorderSide(color: selectedColor!);
+    }
+    return const BorderSide(color: Colors.white54);
+  }
 }

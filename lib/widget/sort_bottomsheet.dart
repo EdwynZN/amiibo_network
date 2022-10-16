@@ -1,11 +1,13 @@
+import 'package:amiibo_network/enum/amiibo_category_enum.dart';
 import 'package:amiibo_network/enum/sort_enum.dart';
 import 'package:amiibo_network/generated/l10n.dart';
 import 'package:amiibo_network/resources/resources.dart';
 import 'package:amiibo_network/riverpod/query_provider.dart';
 import 'package:amiibo_network/widget/implicit_sort_direction_widget.dart';
 import 'package:flutter/material.dart';
+import 'package:gap/gap.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:sliver_tools/sliver_tools.dart';
 
 class SortCollection extends StatelessWidget {
   const SortCollection({Key? key}) : super(key: key);
@@ -35,70 +37,123 @@ class _BottomSheetSort extends StatelessWidget {
   Widget build(BuildContext context) {
     final S translate = S.of(context);
     final Size size = MediaQuery.of(context).size;
-    final double height = (460.0 / size.height).clamp(0.25, 0.5);
+    final double height = (460.0 / size.height).clamp(0.25, 0.50);
     EdgeInsetsGeometry padding = EdgeInsets.zero;
     if (size.longestSide >= 800)
       padding = EdgeInsets.symmetric(
-          horizontal: (size.width / 2 - 210).clamp(0.0, double.infinity));
+        horizontal: (size.width / 2 - 210).clamp(0.0, double.infinity),
+      );
     return Padding(
       padding: padding,
       child: DraggableScrollableSheet(
-        key: Key('Draggable'),
+        key: const Key('Draggable'),
         maxChildSize: height,
         expand: false,
         initialChildSize: height,
         builder: (context, scrollController) {
           final ThemeData theme = Theme.of(context);
           return Material(
-            color: theme.backgroundColor,
+            color: theme.colorScheme.background,
             shape: theme.bottomSheetTheme.shape,
+            clipBehavior: Clip.antiAlias,
             child: ListTileTheme.merge(
-              selectedColor: theme.textButtonTheme.style?.foregroundColor?.resolve({MaterialState.selected}),
+              selectedTileColor: theme.selectedRowColor.withOpacity(0.16),
+              contentPadding: const EdgeInsets.only(left: 8.0, right: 16.0),
+              dense: true,
+              style: ListTileStyle.list,
+              shape: const RoundedRectangleBorder(
+                borderRadius: BorderRadius.horizontal(
+                  left: Radius.circular(32.0),
+                ),
+              ),
+              selectedColor: theme.textButtonTheme.style?.foregroundColor
+                  ?.resolve({MaterialState.selected}),
               child: CustomScrollView(
                 controller: scrollController,
                 slivers: <Widget>[
-                  SliverPersistentHeader(
-                    pinned: true,
-                    delegate: _BottomSheetHeader(
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  SliverPinnedHeader(
+                    child: Container(
+                      color: theme.colorScheme.background,
+                      padding: const EdgeInsets.only(bottom: 4.0),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: <Widget>[
-                          Text(translate.sort,
-                              style: Theme.of(context).textTheme.headline6),
-                          TextButton(
-                            style: TextButton.styleFrom(
-                                tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                                visualDensity: VisualDensity(vertical: -0.5)),
-                            onPressed: () => Navigator.pop(context),
-                            child: Text(translate.done),
+                          Padding(
+                            padding: const EdgeInsets.only(
+                                top: 6, left: 24, right: 16),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: <Widget>[
+                                Text(
+                                  translate.sort,
+                                  style: Theme.of(context).textTheme.headline6,
+                                ),
+                                TextButton(
+                                  style: TextButton.styleFrom(
+                                    tapTargetSize:
+                                        MaterialTapTargetSize.shrinkWrap,
+                                    visualDensity:
+                                        VisualDensity(vertical: -0.5),
+                                  ),
+                                  onPressed: () => Navigator.pop(context),
+                                  child: Text(translate.done),
+                                ),
+                              ],
+                            ),
+                          ),
+                          const Gap(8.0),
+                          const Divider(
+                            height: 0.0,
+                            indent: 16.0,
+                            endIndent: 16.0,
                           ),
                         ],
                       ),
                     ),
                   ),
-                  HookConsumer(
-                    builder: (context, ref, child) {
-                      final order = ref.watch(orderCategoryProvider);
-                      return ListTileTheme.merge(
-                        contentPadding:
-                            const EdgeInsets.symmetric(horizontal: 16.0),
-                        child: SliverList(
+                  SliverPadding(
+                    padding: const EdgeInsets.only(left: 16.0),
+                    sliver: HookConsumer(
+                      builder: (context, ref, child) {
+                        final order = ref.watch(orderCategoryProvider);
+                        final canUseCardNumber =
+                            ref.watch(queryProvider.notifier.select((value) {
+                          final category = value.search.category;
+                          const Set<AmiiboCategory> figures = {
+                            AmiiboCategory.FigureSeries,
+                            AmiiboCategory.Figures,
+                          };
+                          return !figures.contains(category);
+                        }));
+                        return SliverList(
                           delegate: SliverChildListDelegate([
                             _SortListTile(
                               groupValue: order,
                               value: OrderBy.Name,
                               title: Text(translate.sortName),
                             ),
+                            const Gap(4.0),
                             _SortListTile(
                               groupValue: order,
                               value: OrderBy.Owned,
                               title: Text(translate.owned),
                             ),
+                            const Gap(4.0),
                             _SortListTile(
                               groupValue: order,
                               value: OrderBy.Wishlist,
                               title: Text(translate.wished),
                             ),
+                            if (canUseCardNumber) ...[
+                              const Gap(4.0),
+                              _SortListTile(
+                                groupValue: order,
+                                value: OrderBy.CardNumber,
+                                title: Text(translate.cardNumber),
+                              ),
+                            ],
+                            const Gap(4.0),
                             _SortListTile(
                               groupValue: order,
                               value: OrderBy.NA,
@@ -111,6 +166,7 @@ class _BottomSheetSort extends StatelessWidget {
                                 semanticLabel: translate.na,
                               ),
                             ),
+                            const Gap(4.0),
                             _SortListTile(
                               groupValue: order,
                               value: OrderBy.EU,
@@ -123,6 +179,7 @@ class _BottomSheetSort extends StatelessWidget {
                                 semanticLabel: translate.eu,
                               ),
                             ),
+                            const Gap(4.0),
                             _SortListTile(
                               groupValue: order,
                               value: OrderBy.JP,
@@ -140,6 +197,7 @@ class _BottomSheetSort extends StatelessWidget {
                                 ),
                               ),
                             ),
+                            const Gap(4.0),
                             _SortListTile(
                               groupValue: order,
                               value: OrderBy.AU,
@@ -153,9 +211,9 @@ class _BottomSheetSort extends StatelessWidget {
                               ),
                             ),
                           ]),
-                        ),
-                      );
-                    },
+                        );
+                      },
+                    ),
                   ),
                 ],
               ),
@@ -167,7 +225,7 @@ class _BottomSheetSort extends StatelessWidget {
   }
 }
 
-class _SortListTile extends HookConsumerWidget {
+class _SortListTile extends ConsumerWidget {
   final Widget? title;
   final Widget? trailing;
   final OrderBy value;
@@ -184,14 +242,13 @@ class _SortListTile extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final sortP = ref.watch(sortByProvider);
-    final bool isSelected =
-        useMemoized(() => value == groupValue, [value, groupValue]);
+    final bool isSelected = value == groupValue;
     return ListTile(
       leading: AnimatedSwitcher(
         duration: kRadialReactionDuration,
         child: isSelected
-          ? ImplicitDirectionIconButton(direction: sortP)
-          : const SizedBox(width: 24.0),
+            ? ImplicitDirectionIconButton(direction: sortP)
+            : const SizedBox(width: 24.0),
       ),
       title: title,
       selected: isSelected,
@@ -204,41 +261,4 @@ class _SortListTile extends HookConsumerWidget {
       trailing: trailing,
     );
   }
-}
-
-class _BottomSheetHeader extends SliverPersistentHeaderDelegate {
-  final Widget child;
-  const _BottomSheetHeader({required this.child});
-
-  @override
-  Widget build(
-      BuildContext context, double shrinkOffset, bool overlapsContent) {
-    return SizedBox(
-      height: kToolbarHeight,
-      child: Material(
-        color: Theme.of(context).backgroundColor,
-        shape: Theme.of(context).bottomSheetTheme.shape,
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.end,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            Padding(
-              padding: const EdgeInsets.only(top: 6, left: 24, right: 16),
-              child: child,
-            ),
-            const Divider(),
-          ],
-        ),
-      ),
-    );
-  }
-
-  @override
-  double get maxExtent => kToolbarHeight;
-
-  @override
-  double get minExtent => kToolbarHeight;
-
-  @override
-  bool shouldRebuild(SliverPersistentHeaderDelegate oldDelegate) => true;
 }

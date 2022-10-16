@@ -11,7 +11,7 @@ description: An Amiibo collection app designed to allow you to keep track of whi
 # In iOS, build-name is used as CFBundleShortVersionString while build-number used as CFBundleVersion.
 # Read more about iOS versioning at
 # https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
-version: 1.5.0+51
+version: 2.0.0+52
 
 environment:
   sdk: '>=2.17.0 <3.0.0'
@@ -21,32 +21,34 @@ dependencies:
     sdk: flutter
   flutter_localizations:
     sdk: flutter
+  gap: ^2.0.0
+  go_router: ^4.5.0
   hooks_riverpod: ^1.0.4
   sqflite: ^2.0.3+1
-  file_picker: ^5.0.1
+  file_picker: ^5.1.0
   permission_handler: ^10.0.0
   launch_review: ^3.0.1
   url_launcher: ^6.1.5
   shared_preferences: ^2.0.15
-  flutter_markdown: ^0.6.10+3
+  flutter_markdown: ^0.6.12
   path_provider: ^2.0.11
-  equatable: ^2.0.0
+  equatable: ^2.0.5
   freezed_annotation: ^2.1.0
   json_annotation: ^4.6.0
   dio: ^4.0.6
-  sliver_tools: ^0.2.7
+  sliver_tools: ^0.2.8
   hive_flutter: ^1.1.0
-  stash_dio: ^4.3.2
-  stash_hive: ^4.3.2
-  stash: ^4.3.2
+  stash_dio: ^4.3.4
+  stash_hive: ^4.3.4
+  stash: ^4.3.4
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
   test: any
-  build_runner: ^2.2.0
+  build_runner: ^2.2.1
   freezed: ^2.1.0+1
-  json_serializable: ^6.3.1
+  json_serializable: ^6.3.2
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec

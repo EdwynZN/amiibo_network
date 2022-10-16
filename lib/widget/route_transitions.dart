@@ -1,8 +1,8 @@
 import 'package:amiibo_network/model/search_result.dart';
 import 'package:amiibo_network/riverpod/amiibo_provider.dart';
+import 'package:amiibo_network/screen/home_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:amiibo_network/screen/home_page.dart';
 import 'package:amiibo_network/screen/detail_page.dart';
 import 'package:amiibo_network/screen/settings_screen.dart';
 import 'package:amiibo_network/screen/search_screen.dart';
@@ -26,7 +26,7 @@ class Routes{
           settings: settings,
         );
       case homeRoute:
-        return FadeRoute(builder: (_) => const Home());
+        return FadeRoute(builder: (_) => const HomeScreen());
       case settingsRoute:
         return cupertinoRoute(child: const SettingsPage(), settings: settings);
       case searchRoute:

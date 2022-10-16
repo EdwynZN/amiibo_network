@@ -27,9 +27,7 @@ class ShimmerCard extends HookWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final Color color = theme.scaffoldBackgroundColor == Colors.black
-        ? Colors.white24
-        : Colors.black54;
+    final Color color = theme.colorScheme.primaryContainer;
     final int id = useMemoized(() => random.nextInt(70));
     final Widget child = Column(
       mainAxisAlignment: MainAxisAlignment.end,
@@ -71,7 +69,7 @@ class ShimmerCard extends HookWidget {
             shaderCallback: (bounds) => LinearGradient(
               colors: [
                 color,
-                theme.primaryColorDark,
+                theme.cardColor,
                 color,
               ],
               stops: [

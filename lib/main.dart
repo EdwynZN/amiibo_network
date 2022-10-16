@@ -1,10 +1,8 @@
 import 'package:amiibo_network/riverpod/game_provider.dart';
+import 'package:amiibo_network/riverpod/router_provider.dart';
 import 'package:amiibo_network/service/info_package.dart';
 import 'package:amiibo_network/service/update_service.dart';
 import 'package:flutter/material.dart';
-import 'package:amiibo_network/screen/home_page.dart';
-import 'package:amiibo_network/screen/splash_screen.dart';
-import 'package:amiibo_network/widget/route_transitions.dart';
 import 'package:flutter/services.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
@@ -27,13 +25,13 @@ Future<void> main() async {
   final UpdateService updateService = UpdateService();
   await updateService.initDB();
   await InfoPackage.versionCode();
-  final bool splash = await updateService.compareLastUpdate;
+  final bool notUpdateRequired = await updateService.compareLastUpdate;
   final SharedPreferences preferences = await SharedPreferences.getInstance();
   await updateOldTheme();
   final store = await newHiveDefaultCacheStore(path: cacheDir.path);
   final cache = await store.cache(
     name: 'HiveCache',
-    fromEncodable: (cb) => CacheValue.fromJson(cb),
+    fromEncodable: CacheValue.fromJson,
     maxEntries: 200,
     expiryPolicy: AccessedExpiryPolicy(const Duration(days: 7)),
   );
@@ -42,22 +40,21 @@ Future<void> main() async {
       overrides: [
         cacheProvider.overrideWithValue(cache),
         preferencesProvider.overrideWithValue(preferences),
+        if (notUpdateRequired) initialScreen.overrideWithValue('/home'),
       ],
-      child: AmiiboNetwork(
-        firstPage: splash ? const Home() : const SplashScreen(),
-      ),
+      child: const AmiiboNetwork(),
     ),
   );
 }
 
 class AmiiboNetwork extends ConsumerWidget {
-  final Widget firstPage;
-  const AmiiboNetwork({Key? key, required this.firstPage}) : super(key: key);
+  const AmiiboNetwork({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final ThemeProvider themeMode = ref.watch(themeProvider);
-    return MaterialApp(
+    final router = ref.watch(routerProvider);
+    return MaterialApp.router(
       localizationsDelegates: [
         S.delegate,
         GlobalMaterialLocalizations.delegate,
@@ -68,8 +65,10 @@ class AmiiboNetwork extends ConsumerWidget {
       debugShowCheckedModeBanner: false,
       theme: themeMode.theme.light,
       darkTheme: themeMode.theme.dark,
-      onGenerateRoute: Routes.getRoute,
       themeMode: themeMode.preferredTheme,
+      routerDelegate: router.routerDelegate,
+      routeInformationParser: router.routeInformationParser,
+      routeInformationProvider: router.routeInformationProvider,
       builder: (context, child) {
         final theme = AppBarTheme.of(context);
         return AnnotatedRegion<SystemUiOverlayStyle>(
@@ -77,7 +76,6 @@ class AmiiboNetwork extends ConsumerWidget {
           child: child!,
         );
       },
-      home: firstPage,
     );
   }
 }
