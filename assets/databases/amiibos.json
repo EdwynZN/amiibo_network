@@ -10625,7 +10625,7 @@
     },
     {
       "key": 782,
-      "id": null,
+      "id": "3DC0000004220002",
       "amiiboSeries": "Super Smash Bros.",
       "character": "Steve",
       "gameSeries": "Minecraft",
@@ -10638,7 +10638,7 @@
     },
     {
       "key": 783,
-      "id": null,
+      "id": "3DC1000004230002",
       "amiiboSeries": "Super Smash Bros.",
       "character": "Alex",
       "gameSeries": "Minecraft",
@@ -11452,5 +11452,5 @@
       "type": "Figure"
     }
   ],
-  "lastUpdated": "2022-04-12T11:23:00.000"
+  "lastUpdated": "2022-04-12T15:07:00.000"
 }
