@@ -12,12 +12,10 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 GoRouter createRouter({
   String initial = '/',
   bool routerNeglect = true,
-  UrlPathStrategy? urlPathStrategy = UrlPathStrategy.path,
   bool debugLogDiagnostics = kDebugMode,
 }) {
   return GoRouter(
     debugLogDiagnostics: debugLogDiagnostics,
-    urlPathStrategy: urlPathStrategy,
     errorBuilder: (_, __) => const Material(),
     routerNeglect: routerNeglect,
     initialLocation: initial,
