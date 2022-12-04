@@ -61,6 +61,6 @@ final gameProvider =
   if (data is! List<dynamic>) throw ArgumentError();
   final single = data.first as Map<String, dynamic>;
   final NintendoPlatform platform = NintendoPlatform.fromJson(single);
-  ref.maintainState = true;
+  ref.keepAlive();
   return platform;
 }, name: 'Games Provider');
