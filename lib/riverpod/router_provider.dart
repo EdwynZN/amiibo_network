@@ -11,7 +11,6 @@ final routerProvider = Provider<GoRouter>((ref) {
     debugLogDiagnostics: kDebugMode,
     initial: initial,
     routerNeglect: true,
-    urlPathStrategy: UrlPathStrategy.path,
   );
   return router;
 }, name: 'GoRouter');

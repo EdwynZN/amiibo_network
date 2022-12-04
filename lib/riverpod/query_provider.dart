@@ -29,7 +29,7 @@ final figuresProvider = FutureProvider.autoDispose<List<String>>((ref) async {
     orderBy: 'amiiboSeries',
   );
 
-  ref.maintainState = true;
+  ref.keepAlive();
 
   return list;
 });
@@ -43,7 +43,7 @@ final cardsProvider = FutureProvider.autoDispose<List<String>>((ref) async {
     orderBy: 'amiiboSeries',
   );
 
-  ref.maintainState = true;
+  ref.keepAlive();
 
   return list;
 });
@@ -70,7 +70,7 @@ final queryProvider = StateNotifierProvider<QueryBuilderProvider, QueryBuilder>(
       customFigures: _customFigures,
     );
     return QueryBuilderProvider(
-      ref.read,
+      ref,
       search,
       orderBy,
       sortBy,
@@ -89,11 +89,11 @@ class QueryBuilderProvider extends StateNotifier<QueryBuilder> {
     AmiiboCategory.Figures,
   };
 
-  final Reader _read;
+  final Ref ref;
   Search _query;
 
   QueryBuilderProvider(
-    this._read,
+    this.ref,
     this._query,
     OrderBy _orderBy,
     SortBy _sortBy,
@@ -180,7 +180,7 @@ class QueryBuilderProvider extends StateNotifier<QueryBuilder> {
     final bool equal = checkEquality(figures, _query.customFigures)! &&
         checkEquality(cards, _query.customCards)!;
     if (!equal) {
-      final preferences = _read(preferencesProvider);
+      final preferences = ref.read(preferencesProvider);
       await preferences.setStringList(sharedCustomCards, cards!);
       await preferences.setStringList(sharedCustomFigures, figures!);
       _query = _query.copyWith(customCards: cards, customFigures: figures);
@@ -191,11 +191,11 @@ class QueryBuilderProvider extends StateNotifier<QueryBuilder> {
   Future<void> changeSortAndOrder(OrderBy? orderBy, SortBy? sortBy) async {
     QueryBuilder _state = state.copyWith();
     if (orderBy != null && orderBy != state.orderBy) {
-      await _read(preferencesProvider).setInt(orderPreference, orderBy.index);
+      await ref.read(preferencesProvider).setInt(orderPreference, orderBy.index);
       _state = _state.copyWith(orderBy: orderBy);
     }
     if (sortBy != null && sortBy != state.sortBy) {
-      await _read(preferencesProvider).setInt(sortPreference, sortBy.index);
+      await ref.read(preferencesProvider).setInt(sortPreference, sortBy.index);
       _state = _state.copyWith(sortBy: sortBy);
     }
     if (_state != state) state = _state;

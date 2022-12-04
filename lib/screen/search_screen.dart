@@ -65,7 +65,7 @@ class SearchScreen extends HookConsumerWidget {
                 onSubmitted: (text) => Navigator.of(context).pop(
                   Search(
                     search: text,
-                    category: ref.read(categorySearchProvider.state).state,
+                    category: ref.read(categorySearchProvider.notifier).state,
                   ),
                 ),
                 style: style,
@@ -164,7 +164,7 @@ class _Suggestions extends HookConsumerWidget {
                     onTap: () => Navigator.of(context).pop(
                       Search(
                         search: data[index],
-                        category: ref.read(categorySearchProvider.state).state,
+                        category: ref.read(categorySearchProvider.notifier).state,
                       ),
                     ),
                     title: Text('${data[index]}'),
@@ -240,14 +240,14 @@ class _CategoryControlState extends ConsumerState<CategoryControl> {
   }
 
   void _selectCategory(WidgetRef ref, AmiiboCategory category) {
-    final _search = ref.read(categorySearchProvider.state);
+    final _search = ref.read(categorySearchProvider.notifier);
     if (_search.state == category) return;
     _search.state = category;
   }
 
   @override
   Widget build(BuildContext context) {
-    final _search = ref.watch(categorySearchProvider.state).state;
+    final _search = ref.watch(categorySearchProvider.notifier).state;
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       mainAxisSize: MainAxisSize.max,

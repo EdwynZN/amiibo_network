@@ -44,6 +44,7 @@
 **/android/*.json
 **/android/*.pepk
 **/android/**/GeneratedPluginRegistrant.java
+**/android/*.hprof
 
 # iOS/XCode related
 **/ios/**/*.mode1v3

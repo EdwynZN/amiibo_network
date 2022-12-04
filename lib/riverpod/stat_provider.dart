@@ -8,15 +8,15 @@ import 'package:amiibo_network/riverpod/repository_provider.dart';
 
 bool get isFontFeatureEnable => InfoPackage.version >= AndroidCode.Lollipop.version; //Font feature is supported in Android 5 and above
 
-final statProvider = ChangeNotifierProvider<StatProvider>((ref) => StatProvider(ref.read));
+final statProvider = ChangeNotifierProvider<StatProvider>((ref) => StatProvider(ref));
 
 class StatProvider extends ValueNotifier<StatMode> {
   static final RegExp _regPercent =
       RegExp(r"^(\d+(?:\.\d*?[1-9](?=0|\b))?)\.?0*$");
-  final Reader _read;
+  final Ref ref;
 
-  StatProvider(this._read)
-      : super((_read(preferencesProvider).getBool(sharedStatMode) ?? false)
+  StatProvider(this.ref)
+      : super((ref.read(preferencesProvider).getBool(sharedStatMode) ?? false)
             ? StatMode.Percentage
             : StatMode.Ratio);
 
@@ -24,7 +24,7 @@ class StatProvider extends ValueNotifier<StatMode> {
 
   Future<void> toggleStat(bool? newValue) async {
     if (newValue != isPercentage) {
-      final SharedPreferences preferences = _read(preferencesProvider);
+      final SharedPreferences preferences = ref.read(preferencesProvider);
       await preferences.setBool(sharedStatMode, newValue!);
       value = isPercentage ? StatMode.Ratio : StatMode.Percentage;
     }

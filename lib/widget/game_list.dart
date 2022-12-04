@@ -18,82 +18,83 @@ class GameListWidget extends ConsumerWidget {
     final id = ref.watch(keyAmiiboProvider);
     final S translate = S.of(context);
     return ref.watch(gameProvider(id)).when(
-          data: (platforms) {
-            return MultiSliver(
-              children: [
-                if (platforms.games3DS != null &&
-                    platforms.games3DS!.isNotEmpty)
-                  _PlatformGameList(
-                    games: platforms.games3DS!,
-                    title: translate.console_3DS_platform,
-                    asset: NetworkIcons.dsPlatform,
-                  ),
-                if (platforms.gamesWiiU != null &&
-                    platforms.gamesWiiU!.isNotEmpty)
-                  _PlatformGameList(
-                    games: platforms.gamesWiiU!,
-                    title: translate.wiiu_platform,
-                    asset: NetworkIcons.wiiUPlatform,
-                  ),
-                if (platforms.gamesSwitch != null &&
-                    platforms.gamesSwitch!.isNotEmpty)
-                  _PlatformGameList(
-                    games: platforms.gamesSwitch!,
-                    title: translate.switch_platform,
-                    asset: NetworkIcons.switchPlatform,
-                  ),
-              ],
-            );
-          },
-          loading: () =>
-              const SliverToBoxAdapter(child: LinearProgressIndicator()),
-          error: (e, _) {
-            late final Widget child;
-            if (e is DioError) {
-              if (e.type == DioErrorType.response && e.response != null)
-                switch (e.response!.statusCode) {
-                  case 404:
-                    child = Text(translate.no_games_found,
-                        textAlign: TextAlign.center);
-                    break;
-                  default:
-                    child = Text(
-                      e.response!.statusMessage ?? translate.no_games_found,
-                      textAlign: TextAlign.center,
-                    );
-                    break;
-                }
-              else if (e.error is SocketException && e.error.osError != null) {
-                child = TextButton(
-                  onPressed: () => ref.refresh(gameProvider(id).future),
-                  child: Text(translate.socket_exception),
-                );
-              } else
-                child = Text(e.message);
-            } else if (e is ArgumentError) {
-              child =
-                  Text(translate.no_games_found, textAlign: TextAlign.center);
-            } else if (e is SocketException) {
-              child = TextButton(
-                onPressed: () => ref.refresh(gameProvider(id).future),
-                child: Text(translate.socket_exception),
-              );
-            } else
-              child = Text(e.toString());
-            return SliverPadding(
-              padding:
-                  const EdgeInsets.symmetric(horizontal: 24.0, vertical: 8.0),
-              sliver: SliverToBoxAdapter(
-                child: Center(
-                  child: DefaultTextStyle.merge(
-                    style: Theme.of(context).textTheme.headline4,
-                    child: child,
-                  ),
-                ),
+      skipLoadingOnRefresh: false,
+      data: (platforms) {
+        return MultiSliver(
+          children: [
+            if (platforms.games3DS != null &&
+                platforms.games3DS!.isNotEmpty)
+              _PlatformGameList(
+                games: platforms.games3DS!,
+                title: translate.console_3DS_platform,
+                asset: NetworkIcons.dsPlatform,
               ),
-            );
-          },
+            if (platforms.gamesWiiU != null &&
+                platforms.gamesWiiU!.isNotEmpty)
+              _PlatformGameList(
+                games: platforms.gamesWiiU!,
+                title: translate.wiiu_platform,
+                asset: NetworkIcons.wiiUPlatform,
+              ),
+            if (platforms.gamesSwitch != null &&
+                platforms.gamesSwitch!.isNotEmpty)
+              _PlatformGameList(
+                games: platforms.gamesSwitch!,
+                title: translate.switch_platform,
+                asset: NetworkIcons.switchPlatform,
+              ),
+          ],
         );
+      },
+      loading: () =>
+          const SliverToBoxAdapter(child: LinearProgressIndicator()),
+      error: (e, _) {
+        late final Widget child;
+        if (e is DioError) {
+          if (e.type == DioErrorType.response && e.response != null)
+            switch (e.response!.statusCode) {
+              case 404:
+                child = Text(translate.no_games_found,
+                    textAlign: TextAlign.center);
+                break;
+              default:
+                child = Text(
+                  e.response!.statusMessage ?? translate.no_games_found,
+                  textAlign: TextAlign.center,
+                );
+                break;
+            }
+          else if (e.error is SocketException && e.error.osError != null) {
+            child = TextButton(
+              onPressed: () => ref.invalidate(gameProvider(id)),
+              child: Text(translate.socket_exception),
+            );
+          } else
+            child = Text(e.message);
+        } else if (e is ArgumentError) {
+          child =
+              Text(translate.no_games_found, textAlign: TextAlign.center);
+        } else if (e is SocketException) {
+          child = TextButton(
+            onPressed: () => ref.invalidate(gameProvider(id)),
+            child: Text(translate.socket_exception),
+          );
+        } else
+          child = Text(e.toString());
+        return SliverPadding(
+          padding:
+              const EdgeInsets.symmetric(horizontal: 24.0, vertical: 8.0),
+          sliver: SliverToBoxAdapter(
+            child: Center(
+              child: DefaultTextStyle.merge(
+                style: Theme.of(context).textTheme.headline4,
+                child: child,
+              ),
+            ),
+          ),
+        );
+      },
+    );
   }
 }
 

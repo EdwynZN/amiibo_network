@@ -13,6 +13,7 @@ class AmiiboDetailInfo extends ConsumerWidget {
     final key = ref.watch(keyAmiiboProvider);
     final S translate = S.of(context);
     return ref.watch(detailAmiiboProvider(key)).when(
+      skipLoadingOnRefresh: false,
       data: (amiibo) {
         if (amiibo == null) return const SizedBox();
         return Column(
@@ -37,15 +38,16 @@ class AmiiboDetailInfo extends ConsumerWidget {
       },
       error: (_, __) => Center(
         child: TextButton(
-          onPressed: () => ref.refresh(detailAmiiboProvider(key)),
+          onPressed: () => ref.invalidate(detailAmiiboProvider(key)),
           child: Text(translate.splashError),
         ),
       ),
       loading: () => const Center(
-          child: Padding(
-        padding: EdgeInsets.all(8.0),
-        child: CircularProgressIndicator(),
-      )),
+        child: Padding(
+          padding: EdgeInsets.all(8.0),
+          child: CircularProgressIndicator(),
+        ),
+      ),
     );
   }
 }
