@@ -55,15 +55,12 @@ class _CollectionDrawerState extends ConsumerState<CollectionDrawer> {
     return ListTileTheme.merge(
       iconColor: theme.iconTheme.color,
       textColor: theme.textTheme.bodyText2!.color,
-      selectedTileColor: theme.selectedRowColor.withOpacity(0.16),
       style: ListTileStyle.drawer,
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.all(Radius.circular(8.0)),
       ),
       dense: true,
-      selectedColor: theme.toggleableActiveColor,
       child: Drawer(
-        backgroundColor: theme.colorScheme.background,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.end,
           children: <Widget>[
@@ -203,6 +200,8 @@ class _CollectionDrawerState extends ConsumerState<CollectionDrawer> {
                                       onExpansionChanged: figureExpand,
                                       iconColor: theme.iconTheme.color,
                                       textColor: theme.iconTheme.color,
+                                      collapsedBackgroundColor: Colors.transparent,
+                                      backgroundColor: Colors.transparent,
                                       children: <Widget>[
                                         _AmiiboTile(
                                           name: translate.category(AmiiboCategory.Figures),
@@ -358,23 +357,16 @@ class _HeaderDrawer extends ConsumerWidget {
     final themeMode = ref.watch(themeProvider.select((t) => t.preferredTheme));
     final color = colorOnThemeMode(themeMode, mediaBrightness);
     final theme = Theme.of(context);
-    return ColoredBox(
-      color: theme.appBarTheme.systemOverlayStyle!.statusBarColor ??
-          theme.primaryColor,
-      child: DrawerHeader(
-        decoration: BoxDecoration(
-          color: theme.backgroundColor,
-          borderRadius: const BorderRadius.only(
-            topLeft: Radius.circular(56.0),
-          ),
-        ),
-        padding: EdgeInsets.zero,
-        margin: EdgeInsets.zero,
-        child: Image.asset(
-          NetworkIcons.iconApp,
-          fit: BoxFit.fitHeight,
-          color: color,
-        ),
+    return DrawerHeader(
+      decoration: BoxDecoration(
+        color: theme.drawerTheme.backgroundColor ?? theme.backgroundColor,
+      ),
+      padding: EdgeInsets.zero,
+      margin: EdgeInsets.zero,
+      child: Image.asset(
+        NetworkIcons.iconApp,
+        fit: BoxFit.fitHeight,
+        color: color,
       ),
     );
   }

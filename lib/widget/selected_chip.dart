@@ -109,6 +109,7 @@ class _SelectedWrapState extends State<SelectedWrap> {
   Widget build(BuildContext context) {
     return Wrap(
       spacing: 8.0,
+      runSpacing: 4.0,
       children: <Widget>[
         FilterChip(
           showCheckmark: false,
