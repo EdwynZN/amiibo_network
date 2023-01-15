@@ -212,6 +212,7 @@ class _Theme implements AmiiboTheme {
           statusBarIconBrightness: inverseBrightness,
           systemNavigationBarIconBrightness: inverseBrightness,
           systemNavigationBarColor: scheme.secondaryContainer,
+          statusBarColor: scheme.secondaryContainer,
         ),
         backgroundColor: scheme.background,
         titleTextStyle: _textTheme.titleMedium,
@@ -299,12 +300,14 @@ class _Theme implements AmiiboTheme {
         pressElevation: 4.0,
         checkmarkColor: scheme.onPrimary,
         backgroundColor: scheme.background,
-        deleteIconColor: Colors.white70,
+        deleteIconColor: scheme.tertiary,
         disabledColor: Colors.white.withAlpha(0x0C),
-        selectedColor: scheme.primary,
+        selectedColor: scheme.primaryContainer,
         secondarySelectedColor: scheme.secondaryContainer,
         labelPadding: const EdgeInsets.symmetric(horizontal: 4.0),
         padding: const EdgeInsets.all(4.0),
+        shadowColor: Colors.black12,
+        selectedShadowColor: Colors.black12,
         labelStyle: _textTheme.bodySmall!.copyWith(color: scheme.onBackground),
         secondaryLabelStyle:
             _textTheme.bodySmall!.copyWith(color: scheme.onBackground),
@@ -334,7 +337,9 @@ class _Theme implements AmiiboTheme {
         space: 8.0,
         thickness: 1.0,
       ),
-      drawerTheme: DrawerThemeData(backgroundColor: scheme.background),
+      drawerTheme: DrawerThemeData(
+        backgroundColor: scheme.surface,
+      ),
       elevatedButtonTheme: ElevatedButtonThemeData(
         style: ButtonStyle(
           mouseCursor: MaterialStateProperty.all<MouseCursor>(
@@ -381,8 +386,9 @@ class _Theme implements AmiiboTheme {
       /// Deprecated in the future
       indicatorColor: scheme.primaryContainer,
       listTileTheme: ListTileThemeData(
-        iconColor: scheme.onPrimaryContainer,
-        selectedTileColor: scheme.primaryContainer,
+        iconColor: scheme.onBackground,
+        selectedTileColor: scheme.secondaryContainer,
+        selectedColor: scheme.onSecondaryContainer,
       ),
       navigationBarTheme: NavigationBarThemeData(
         backgroundColor: scheme.background,
@@ -490,7 +496,7 @@ class _Theme implements AmiiboTheme {
       toggleableActiveColor: scheme.secondaryContainer,
       tooltipTheme: TooltipThemeData(
         decoration: BoxDecoration(
-          color: scheme.tertiary,
+          color: scheme.tertiaryContainer,
           borderRadius: BorderRadius.all(Radius.circular(8.0)),
         ),
         textStyle: _textTheme.caption,
