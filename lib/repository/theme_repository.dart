@@ -44,91 +44,76 @@ class _Theme implements AmiiboTheme {
   late MaterialAccentColor _darkAccentColor;
   static const TextTheme _textTheme = TextTheme(
     titleLarge: TextStyle(
-      color: Colors.black,
       fontSize: 18,
       fontWeight: FontWeight.w500,
       letterSpacing: 0.15,
     ),
     titleMedium: TextStyle(
-      color: Colors.black,
       fontSize: 16,
       fontWeight: FontWeight.normal,
       letterSpacing: 0.15,
     ),
     titleSmall: TextStyle(
-      color: Colors.black,
       fontSize: 14,
       fontWeight: FontWeight.w500,
       letterSpacing: 0.1,
     ),
     bodyLarge: TextStyle(
-      color: Colors.black,
       fontSize: 16,
       fontWeight: FontWeight.normal,
       letterSpacing: 0.5,
     ),
     bodyMedium: TextStyle(
-      color: Colors.black,
       fontSize: 14,
       fontWeight: FontWeight.normal,
       letterSpacing: 0.25,
     ),
     bodySmall: TextStyle(
-      color: Colors.black,
       fontSize: 12,
       fontWeight: FontWeight.normal,
       letterSpacing: 0.4,
     ),
     labelLarge: TextStyle(
-      color: Colors.black,
       fontSize: 14,
       fontWeight: FontWeight.w500,
       letterSpacing: 1.25,
     ),
     labelMedium: TextStyle(
-      color: Colors.black,
       fontSize: 12,
       fontWeight: FontWeight.w500,
       letterSpacing: 1.25,
     ),
     labelSmall: TextStyle(
-      color: Colors.black,
       fontSize: 10,
       fontWeight: FontWeight.normal,
       letterSpacing: 1.5,
     ),
     displayLarge: TextStyle(
-      color: Colors.black,
       fontSize: 20,
       fontWeight: FontWeight.w300,
       letterSpacing: -1.5,
     ),
     displayMedium: TextStyle(
-      color: Colors.black,
       fontSize: 18,
       fontWeight: FontWeight.w300,
       letterSpacing: -0.5,
     ),
     displaySmall: TextStyle(
-      color: Colors.black,
       fontSize: 16,
       fontWeight: FontWeight.normal,
       letterSpacing: 0.0,
     ),
     headlineLarge: TextStyle(
-      color: Colors.black,
       fontSize: 15,
       fontWeight: FontWeight.normal,
       letterSpacing: 0.0,
     ),
     headlineMedium: TextStyle(
-      color: Colors.black,
       fontSize: 18,
       fontWeight: FontWeight.normal,
       letterSpacing: 0.25,
     ),
     headlineSmall: TextStyle(
-      color: Colors.black,
       fontSize: 16,
       fontWeight: FontWeight.normal,
       letterSpacing: 0.0,
@@ -215,9 +200,11 @@ class _Theme implements AmiiboTheme {
           statusBarColor: scheme.secondaryContainer,
         ),
         backgroundColor: scheme.background,
-        titleTextStyle: _textTheme.titleMedium,
-        foregroundColor: scheme.secondary,
-        toolbarTextStyle: _textTheme.bodyMedium,
+        titleTextStyle: _textTheme.titleMedium
+          ?.copyWith(color: scheme.onBackground),
+        toolbarTextStyle: _textTheme.bodyMedium
+          ?.copyWith(color: scheme.onBackground),
+        foregroundColor: scheme.onBackground,
         iconTheme: IconThemeData(color: scheme.onBackground),
       ),
       backgroundColor: scheme.background,
