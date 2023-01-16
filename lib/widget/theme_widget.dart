@@ -1,3 +1,4 @@
+import 'package:amiibo_network/resources/theme_material3_schemes.dart';
 import 'package:amiibo_network/riverpod/theme_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:amiibo_network/generated/l10n.dart';
