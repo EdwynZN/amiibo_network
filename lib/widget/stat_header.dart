@@ -17,7 +17,7 @@ class SliverStatsHeader extends SliverPersistentHeaderDelegate {
   @override
   Widget build(
       BuildContext context, double shrinkOffset, bool overlapsContent) {
-    final Color _color = AppBarTheme.of(context).backgroundColor!;
+    final Color _color = Theme.of(context).cardTheme.color ?? Colors.white;
     final S translate = S.of(context);
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 12),
