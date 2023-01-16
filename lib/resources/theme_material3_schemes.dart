@@ -1341,7 +1341,7 @@ class ThemeSchemes {
     orange,
     deepOrange,
     brown,
-    blueGrey,
+    //blueGrey,
   ];
 }
 

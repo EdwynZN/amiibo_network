@@ -1,3 +1,4 @@
+import 'package:amiibo_network/resources/theme_material3_schemes.dart';
 import 'package:amiibo_network/riverpod/theme_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:amiibo_network/generated/l10n.dart';
@@ -71,24 +72,25 @@ class ThemeButton extends HookConsumerWidget {
                       runSpacing: 10.0,
                       spacing: spacing,
                       children: <Widget>[
-                        for (MaterialColor color in Colors.primaries)
+                        for (Material3Schemes color in ThemeSchemes.styles)
                           GestureDetector(
                             onTap: () => theme
-                                .lightTheme(Colors.primaries.indexOf(color)),
+                                .lightTheme(ThemeSchemes.styles.indexOf(color)),
                             child: CircleAvatar(
-                                backgroundColor: color,
-                                radius: _circleSize / 2,
-                                child: AnimatedSwitcher(
-                                  duration: const Duration(milliseconds: 250),
-                                  child: theme.lightOption ==
-                                          Colors.primaries.indexOf(color)
-                                      ? const Icon(
-                                          Icons.radio_button_unchecked,
-                                          size: _circleSize * 0.9,
-                                          color: Colors.white70,
-                                        )
-                                      : const SizedBox(),
-                                )),
+                              backgroundColor: color.light.primary,
+                              radius: _circleSize / 2,
+                              child: AnimatedSwitcher(
+                                duration: const Duration(milliseconds: 250),
+                                child: theme.lightOption ==
+                                        ThemeSchemes.styles.indexOf(color)
+                                    ? const Icon(
+                                        Icons.radio_button_unchecked,
+                                        size: _circleSize * 0.9,
+                                        color: Colors.white70,
+                                      )
+                                    : const SizedBox(),
+                              ),
+                            ),
                           ),
                       ],
                     );

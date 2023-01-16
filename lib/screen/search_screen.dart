@@ -234,8 +234,8 @@ class _CategoryControlState extends ConsumerState<CategoryControl> {
   void didChangeDependencies() {
     translate = S.of(context);
     final ThemeData theme = Theme.of(context);
-    _accentColor = theme.colorScheme.secondary;
-    _accentTextThemeColor = theme.colorScheme.onSecondary;
+    _accentColor = theme.colorScheme.secondaryContainer;
+    _accentTextThemeColor = theme.colorScheme.onSecondaryContainer;
     super.didChangeDependencies();
   }
 
@@ -247,7 +247,7 @@ class _CategoryControlState extends ConsumerState<CategoryControl> {
 
   @override
   Widget build(BuildContext context) {
-    final _search = ref.watch(categorySearchProvider.notifier).state;
+    final _search = ref.watch(categorySearchProvider);
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       mainAxisSize: MainAxisSize.max,
@@ -255,15 +255,16 @@ class _CategoryControlState extends ConsumerState<CategoryControl> {
         Expanded(
           child: OutlinedButton.icon(
             style: OutlinedButton.styleFrom(
-                foregroundColor: _search == AmiiboCategory.Name
-                    ? _accentTextThemeColor
-                    : null,
-                shape: RoundedRectangleBorder(
-                  borderRadius:
-                      const BorderRadius.horizontal(left: Radius.circular(8)),
-                ),
-                backgroundColor:
-                    _search == AmiiboCategory.Name ? _accentColor : null),
+              foregroundColor: _search == AmiiboCategory.Name
+                  ? _accentTextThemeColor
+                  : null,
+              shape: RoundedRectangleBorder(
+                borderRadius:
+                    const BorderRadius.horizontal(left: Radius.circular(16.0)),
+              ),
+              backgroundColor:
+                  _search == AmiiboCategory.Name ? _accentColor : null,
+            ),
             onPressed: () => _selectCategory(ref, AmiiboCategory.Name),
             icon: const Icon(
               Icons.group,
@@ -300,7 +301,7 @@ class _CategoryControlState extends ConsumerState<CategoryControl> {
                   : null,
               shape: RoundedRectangleBorder(
                 borderRadius:
-                    const BorderRadius.horizontal(right: Radius.circular(8)),
+                    const BorderRadius.horizontal(right: Radius.circular(16.0)),
               ),
               backgroundColor:
                   _search == AmiiboCategory.AmiiboSeries ? _accentColor : null,
