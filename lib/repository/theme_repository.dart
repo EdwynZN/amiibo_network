@@ -331,8 +331,8 @@ class _Theme implements AmiiboTheme {
       dividerColor: scheme.outline,
       dividerTheme: DividerThemeData(
         color: scheme.outline,
-        space: 8.0,
-        thickness: 1.0,
+        space: 16.0,
+        thickness: 0.75,
       ),
       drawerTheme: DrawerThemeData(
         backgroundColor: scheme.surface,
@@ -453,7 +453,7 @@ class _Theme implements AmiiboTheme {
 
       /// Deprecated in the future
       selectedRowColor: scheme.primary.withOpacity(0.24),
-      shadowColor: null, //Default color
+      shadowColor: scheme.surfaceVariant, //Default color
       sliderTheme: const SliderThemeData(),
       snackBarTheme: SnackBarThemeData(
         backgroundColor: scheme.tertiaryContainer,
@@ -511,10 +511,11 @@ class _Theme implements AmiiboTheme {
     MaterialAccentColor accentColor = Colors.accents[light.clamp(0, 15)];
     _darkAccentColor = accentColor;
     _lightTheme = _themeFromScheme(lightScheme);
-    //_darkTheme = _themeFromScheme(darkScheme, swatch);
+    _darkTheme = _themeFromScheme(darkScheme);
   }
 
   set setDark(int? dark) {
+    return;
     dark ??= 2;
     final Brightness _brightness =
         ThemeData.estimateBrightnessForColor(_darkAccentColor);

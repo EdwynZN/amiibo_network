@@ -42,6 +42,7 @@ class AmiiboGrid extends ConsumerWidget {
         return Stack(
           children: <Widget>[
             Card(
+              borderOnForeground: true,
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.end,
                 textBaseline: TextBaseline.alphabetic,
@@ -71,22 +72,27 @@ class AmiiboGrid extends ConsumerWidget {
                       ),
                     ),
                   ),
-                  Container(
-                    decoration: ShapeDecoration(
-                      color: Theme.of(context).primaryColorLight,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.vertical(
-                          bottom: Radius.circular(8),
-                        ),
+                  Card(
+                    borderOnForeground: true,
+                    surfaceTintColor: theme.colorScheme.primaryContainer,
+                    margin: const EdgeInsets.only(top: 4.0),
+                    elevation: 6.0,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.vertical(
+                        bottom: Radius.circular(8),
                       ),
                     ),
-                    alignment: Alignment.center,
-                    padding: EdgeInsets.symmetric(horizontal: 5),
-                    child: Text(
-                      amiibo.name,
-                      softWrap: false,
-                      overflow: TextOverflow.fade,
-                      style: Theme.of(context).primaryTextTheme.headline2,
+                    child: Container(
+                      alignment: Alignment.center,
+                      padding: const EdgeInsets.symmetric(horizontal: 5.0),
+                      child: Text(
+                        amiibo.name,
+                        softWrap: false,
+                        overflow: TextOverflow.fade,
+                        style: theme.primaryTextTheme.bodySmall?.copyWith(
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
                     ),
                   ),
                 ],

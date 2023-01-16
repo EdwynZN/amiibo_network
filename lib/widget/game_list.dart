@@ -18,83 +18,83 @@ class GameListWidget extends ConsumerWidget {
     final id = ref.watch(keyAmiiboProvider);
     final S translate = S.of(context);
     return ref.watch(gameProvider(id)).when(
-      skipLoadingOnRefresh: false,
-      data: (platforms) {
-        return MultiSliver(
-          children: [
-            if (platforms.games3DS != null &&
-                platforms.games3DS!.isNotEmpty)
-              _PlatformGameList(
-                games: platforms.games3DS!,
-                title: translate.console_3DS_platform,
-                asset: NetworkIcons.dsPlatform,
-              ),
-            if (platforms.gamesWiiU != null &&
-                platforms.gamesWiiU!.isNotEmpty)
-              _PlatformGameList(
-                games: platforms.gamesWiiU!,
-                title: translate.wiiu_platform,
-                asset: NetworkIcons.wiiUPlatform,
-              ),
-            if (platforms.gamesSwitch != null &&
-                platforms.gamesSwitch!.isNotEmpty)
-              _PlatformGameList(
-                games: platforms.gamesSwitch!,
-                title: translate.switch_platform,
-                asset: NetworkIcons.switchPlatform,
-              ),
-          ],
-        );
-      },
-      loading: () =>
-          const SliverToBoxAdapter(child: LinearProgressIndicator()),
-      error: (e, _) {
-        late final Widget child;
-        if (e is DioError) {
-          if (e.type == DioErrorType.response && e.response != null)
-            switch (e.response!.statusCode) {
-              case 404:
-                child = Text(translate.no_games_found,
-                    textAlign: TextAlign.center);
-                break;
-              default:
-                child = Text(
-                  e.response!.statusMessage ?? translate.no_games_found,
-                  textAlign: TextAlign.center,
-                );
-                break;
-            }
-          else if (e.error is SocketException && e.error.osError != null) {
-            child = TextButton(
-              onPressed: () => ref.invalidate(gameProvider(id)),
-              child: Text(translate.socket_exception),
+          skipLoadingOnRefresh: false,
+          data: (platforms) {
+            return MultiSliver(
+              children: [
+                if (platforms.games3DS != null &&
+                    platforms.games3DS!.isNotEmpty)
+                  _PlatformGameList(
+                    games: platforms.games3DS!,
+                    title: translate.console_3DS_platform,
+                    asset: NetworkIcons.dsPlatform,
+                  ),
+                if (platforms.gamesWiiU != null &&
+                    platforms.gamesWiiU!.isNotEmpty)
+                  _PlatformGameList(
+                    games: platforms.gamesWiiU!,
+                    title: translate.wiiu_platform,
+                    asset: NetworkIcons.wiiUPlatform,
+                  ),
+                if (platforms.gamesSwitch != null &&
+                    platforms.gamesSwitch!.isNotEmpty)
+                  _PlatformGameList(
+                    games: platforms.gamesSwitch!,
+                    title: translate.switch_platform,
+                    asset: NetworkIcons.switchPlatform,
+                  ),
+              ],
             );
-          } else
-            child = Text(e.message);
-        } else if (e is ArgumentError) {
-          child =
-              Text(translate.no_games_found, textAlign: TextAlign.center);
-        } else if (e is SocketException) {
-          child = TextButton(
-            onPressed: () => ref.invalidate(gameProvider(id)),
-            child: Text(translate.socket_exception),
-          );
-        } else
-          child = Text(e.toString());
-        return SliverPadding(
-          padding:
-              const EdgeInsets.symmetric(horizontal: 24.0, vertical: 8.0),
-          sliver: SliverToBoxAdapter(
-            child: Center(
-              child: DefaultTextStyle.merge(
-                style: Theme.of(context).textTheme.headline4,
-                child: child,
+          },
+          loading: () =>
+              const SliverToBoxAdapter(child: LinearProgressIndicator()),
+          error: (e, _) {
+            late final Widget child;
+            if (e is DioError) {
+              if (e.type == DioErrorType.response && e.response != null)
+                switch (e.response!.statusCode) {
+                  case 404:
+                    child = Text(translate.no_games_found,
+                        textAlign: TextAlign.center);
+                    break;
+                  default:
+                    child = Text(
+                      e.response!.statusMessage ?? translate.no_games_found,
+                      textAlign: TextAlign.center,
+                    );
+                    break;
+                }
+              else if (e.error is SocketException && e.error.osError != null) {
+                child = TextButton(
+                  onPressed: () => ref.invalidate(gameProvider(id)),
+                  child: Text(translate.socket_exception),
+                );
+              } else
+                child = Text(e.message);
+            } else if (e is ArgumentError) {
+              child =
+                  Text(translate.no_games_found, textAlign: TextAlign.center);
+            } else if (e is SocketException) {
+              child = TextButton(
+                onPressed: () => ref.invalidate(gameProvider(id)),
+                child: Text(translate.socket_exception),
+              );
+            } else
+              child = Text(e.toString());
+            return SliverPadding(
+              padding:
+                  const EdgeInsets.symmetric(horizontal: 24.0, vertical: 8.0),
+              sliver: SliverToBoxAdapter(
+                child: Center(
+                  child: DefaultTextStyle.merge(
+                    style: Theme.of(context).textTheme.headline4,
+                    child: child,
+                  ),
+                ),
               ),
-            ),
-          ),
+            );
+          },
         );
-      },
-    );
   }
 }
 
@@ -241,6 +241,19 @@ class _SliverAnimatedPersistentHeader extends SliverPersistentHeaderDelegate {
     final theme = Theme.of(context);
     final appBarTheme = AppBarTheme.of(context);
     final bool isPinned = shrinkOffset > maxExtent - minExtent;
+    final Color color;
+    final double elevation;
+    if (isPinned) {
+      elevation = 4.0;
+      color = ElevationOverlay.applySurfaceTint(
+        AppBarTheme.of(context).backgroundColor ?? theme.primaryColor,
+        AppBarTheme.of(context).surfaceTintColor,
+        elevation,
+      );
+    } else {
+      elevation = 0.0;
+      color = theme.cardColor;
+    }
     return SizedBox(
       height: math.max(minExtent, maxExtent - shrinkOffset),
       child: AnimatedPhysicalModel(
@@ -270,11 +283,9 @@ class _SliverAnimatedPersistentHeader extends SliverPersistentHeaderDelegate {
         ),
         shape: BoxShape.rectangle,
         animateShadowColor: false,
-        elevation: isPinned ? 8.0 : 0.0,
-        color: isPinned
-            ? AppBarTheme.of(context).backgroundColor ?? theme.primaryColor
-            : theme.cardColor,
-        shadowColor: theme.shadowColor,
+        elevation: elevation,
+        color: color,
+        shadowColor: theme.colorScheme.shadow.withOpacity(0.36),
       ),
     );
   }

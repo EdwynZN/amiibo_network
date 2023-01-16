@@ -248,6 +248,8 @@ class _CollectionDrawerState extends ConsumerState<CollectionDrawer> {
                                       onExpansionChanged: cardExpand,
                                       iconColor: theme.iconTheme.color,
                                       textColor: theme.iconTheme.color,
+                                      collapsedBackgroundColor: Colors.transparent,
+                                      backgroundColor: Colors.transparent,
                                       children: <Widget>[
                                         _AmiiboTile(
                                           name: translate.category(AmiiboCategory.Cards),

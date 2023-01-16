@@ -122,8 +122,7 @@ class _SliverFloatingPersistentHeader extends SliverPersistentHeaderDelegate {
         snap: snap,
         child: Material(
           color: backgroundColor,
-          surfaceTintColor: backgroundColor,
-          type: MaterialType.canvas,
+          type: MaterialType.card,
           elevation: elevation,
           child: Padding(
             padding: const EdgeInsets.fromLTRB(12, 8, 12, 0),

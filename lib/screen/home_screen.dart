@@ -190,6 +190,7 @@ class HomeScreenState extends ConsumerState<HomeScreen>
                     controller: _controller,
                     slivers: <Widget>[
                       SliverFloatingBar(
+                        backgroundColor: Theme.of(context).cardColor,
                         floating: true,
                         forward: _multipleSelection,
                         snap: true,
