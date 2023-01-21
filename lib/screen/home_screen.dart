@@ -172,7 +172,7 @@ class HomeScreenState extends ConsumerState<HomeScreen>
     final isAmiiboList = index == 0;
     return AnnotatedRegion<SystemUiOverlayStyle>(
       value: AppBarTheme.of(context).systemOverlayStyle!.copyWith(
-        statusBarColor: Theme.of(context).canvasColor,
+        statusBarColor: Theme.of(context).cardColor,
       ),
       child: DashMenu(
         leftDrawer: CollectionDrawer(restart: _restartAnimation),
@@ -182,6 +182,7 @@ class HomeScreenState extends ConsumerState<HomeScreen>
             resizeToAvoidBottomInset: false,
             //drawer: CollectionDrawer(restart: _restartAnimation),
             body: SafeArea(
+              bottom: false,
               child: HookConsumer(
                 builder: (context, ref, child) {
                   final _multipleSelection = ref.watch(
@@ -231,7 +232,8 @@ class HomeScreenState extends ConsumerState<HomeScreen>
                           ),
                         ),
                         SliverPersistentHeader(
-                          delegate: SliverStatsHeader(hideOptional: isAmiiboList),
+                          delegate:
+                              SliverStatsHeader(hideOptional: isAmiiboList),
                           pinned: true,
                         ),
                         isAmiiboList
@@ -538,27 +540,48 @@ class _BottomBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return SlideTransition(
       position: slide,
       child: BottomAppBar(
         shape: const CircularNotchedRectangle(),
         child: BottomNavigationBar(
-          showSelectedLabels: false,
+          showSelectedLabels: true,
           showUnselectedLabels: false,
           backgroundColor: Colors.transparent,
           elevation: 0.0,
-          iconSize: 24.0,
-          selectedLabelStyle: const TextStyle(fontSize: 2.0),
-          unselectedLabelStyle: const TextStyle(fontSize: 2.0),
+          iconSize: 20.0,
+          selectedLabelStyle: const TextStyle(fontSize: 12.0),
+          unselectedLabelStyle: const TextStyle(fontSize: 12.0),
           items: [
             BottomNavigationBarItem(
               icon: const ImageIcon(AssetImage(_amiiboIcon)),
-              activeIcon: const ImageIcon(AssetImage(_amiiboIcon)),
+              activeIcon: Container(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 16.0,
+                  vertical: 4.0,
+                ),
+                decoration: ShapeDecoration(
+                  shape: const StadiumBorder(),
+                  color: theme.colorScheme.secondaryContainer,
+                ),
+                child: const ImageIcon(AssetImage(_amiiboIcon)),
+              ),
               label: 'Amiibos',
             ),
             BottomNavigationBarItem(
               icon: const Icon(Icons.timeline),
-              activeIcon: const Icon(Icons.timeline),
+              activeIcon: Container(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 16.0,
+                  vertical: 4.0,
+                ),
+                decoration: ShapeDecoration(
+                  shape: const StadiumBorder(),
+                  color: theme.colorScheme.secondaryContainer,
+                ),
+                child: const Icon(Icons.timeline),
+              ),
               label: S.of(context).stats,
             ),
           ],
