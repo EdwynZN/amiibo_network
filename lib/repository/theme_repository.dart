@@ -192,18 +192,20 @@ class _Theme implements AmiiboTheme {
       appBarTheme: AppBarTheme(
         elevation: 2.0,
         surfaceTintColor: scheme.surfaceTint,
+        scrolledUnderElevation: 8.0,
         systemOverlayStyle: SystemUiOverlayStyle(
           statusBarBrightness: scheme.brightness,
           statusBarIconBrightness: inverseBrightness,
           systemNavigationBarIconBrightness: inverseBrightness,
           systemNavigationBarColor: scheme.secondaryContainer,
-          statusBarColor: scheme.secondaryContainer,
+          systemStatusBarContrastEnforced: false,
+          statusBarColor: Colors.transparent,
         ),
         backgroundColor: scheme.background,
-        titleTextStyle: _textTheme.titleMedium
-          ?.copyWith(color: scheme.onBackground),
-        toolbarTextStyle: _textTheme.bodyMedium
-          ?.copyWith(color: scheme.onBackground),
+        titleTextStyle:
+            _textTheme.titleMedium?.copyWith(color: scheme.onBackground),
+        toolbarTextStyle:
+            _textTheme.bodyMedium?.copyWith(color: scheme.onBackground),
         foregroundColor: scheme.onBackground,
         iconTheme: IconThemeData(color: scheme.onBackground),
       ),
@@ -278,7 +280,7 @@ class _Theme implements AmiiboTheme {
           if (states.contains(MaterialState.disabled)) return null;
           if (states.contains(MaterialState.focused) ||
               states.contains(MaterialState.pressed)) return scheme.secondary;
-          return scheme.primary;
+          return scheme.tertiaryContainer;
         }),
       ),
       chipTheme: ChipThemeData(
@@ -294,23 +296,27 @@ class _Theme implements AmiiboTheme {
         labelPadding: const EdgeInsets.symmetric(horizontal: 4.0),
         padding: const EdgeInsets.all(4.0),
         shadowColor: Colors.black12,
-        selectedShadowColor: Colors.black12,
+        selectedShadowColor: Colors.black38,
         labelStyle: _textTheme.bodySmall!.copyWith(color: scheme.onBackground),
         secondaryLabelStyle:
             _textTheme.bodySmall!.copyWith(color: scheme.onBackground),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-        side: _SelectedBorder(scheme.primaryContainer),
+        side: _SelectedBorder(null, scheme.outline),
         brightness: scheme.brightness,
       ),
       colorScheme: scheme,
       dataTableTheme: const DataTableThemeData(),
 
       /// Deprecated in the future
-      dialogBackgroundColor: scheme.secondaryContainer,
+      dialogBackgroundColor: scheme.surface,
       dialogTheme: DialogTheme(
-        titleTextStyle: _textTheme.titleLarge,
-        contentTextStyle: _textTheme.titleMedium,
-        backgroundColor: scheme.secondaryContainer,
+        titleTextStyle: _textTheme.titleLarge!.copyWith(
+          color: scheme.onSurface
+        ),
+        contentTextStyle: _textTheme.titleMedium!.copyWith(
+          color: scheme.onSurface
+        ),
+        backgroundColor: scheme.surface,
         actionsPadding: const EdgeInsets.symmetric(
           horizontal: 16.0,
           vertical: 4.0,
@@ -443,7 +449,7 @@ class _Theme implements AmiiboTheme {
 
       /// Deprecated in the future
       selectedRowColor: scheme.primary.withOpacity(0.24),
-      shadowColor: scheme.surfaceVariant, //Default color
+      shadowColor: scheme.shadow, //Default color
       sliderTheme: const SliderThemeData(),
       snackBarTheme: SnackBarThemeData(
         backgroundColor: scheme.tertiaryContainer,
@@ -456,8 +462,21 @@ class _Theme implements AmiiboTheme {
         ),
         behavior: SnackBarBehavior.floating,
       ),
-      splashColor: scheme.primaryContainer.withOpacity(0.24),
-      switchTheme: const SwitchThemeData(),
+      splashColor: scheme.tertiaryContainer.withOpacity(0.24),
+      switchTheme: SwitchThemeData(
+        thumbColor: MaterialStateProperty.resolveWith<Color?>((states) {
+          if (states.contains(MaterialState.disabled)) return null;
+          if (states.contains(MaterialState.focused) ||
+              states.contains(MaterialState.pressed)) return scheme.tertiaryContainer;
+          return scheme.tertiary;
+        }),
+        trackColor: MaterialStateProperty.resolveWith<Color?>((states) {
+          if (states.contains(MaterialState.disabled)) return null;
+          if (states.contains(MaterialState.focused) ||
+              states.contains(MaterialState.pressed)) return scheme.tertiaryContainer;
+          return scheme.tertiary;
+        }),
+      ),
       tabBarTheme: const TabBarTheme(),
       textButtonTheme: TextButtonThemeData(
         style: ButtonStyle(
@@ -709,7 +728,7 @@ class _Theme implements AmiiboTheme {
                 : __darkAccentTextTheme.bodyText2!,
             shape:
                 RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-            side: _SelectedBorder(_darkAccentColor.withOpacity(0.54)),
+            side: _SelectedBorder(_darkAccentColor.withOpacity(0.54), Colors.amber),
             brightness: _brightness,
           ),
           navigationRailTheme: NavigationRailThemeData(
@@ -919,7 +938,7 @@ class _Theme implements AmiiboTheme {
                 : __darkAccentTextTheme.bodyText2!,
             shape:
                 RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-            side: _SelectedBorder(_darkAccentColor.withOpacity(0.54)),
+            side: _SelectedBorder(_darkAccentColor.withOpacity(0.54), Colors.black),
             brightness: _brightness,
           ),
           navigationRailTheme: NavigationRailThemeData(
@@ -1149,7 +1168,7 @@ class _Theme implements AmiiboTheme {
                 : __darkAccentTextTheme.bodyText2!,
             shape:
                 RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-            side: _SelectedBorder(_darkAccentColor.withOpacity(0.54)),
+            side: _SelectedBorder(_darkAccentColor.withOpacity(0.54), Colors.black),
             brightness: _brightness,
           ),
           navigationRailTheme: NavigationRailThemeData(
