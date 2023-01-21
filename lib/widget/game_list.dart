@@ -244,7 +244,7 @@ class _SliverAnimatedPersistentHeader extends SliverPersistentHeaderDelegate {
     final Color color;
     final double elevation;
     if (isPinned) {
-      elevation = 4.0;
+      elevation = AppBarTheme.of(context).scrolledUnderElevation ?? 4.0;
       color = ElevationOverlay.applySurfaceTint(
         AppBarTheme.of(context).backgroundColor ?? theme.primaryColor,
         AppBarTheme.of(context).surfaceTintColor,
@@ -285,7 +285,7 @@ class _SliverAnimatedPersistentHeader extends SliverPersistentHeaderDelegate {
         animateShadowColor: false,
         elevation: elevation,
         color: color,
-        shadowColor: theme.colorScheme.shadow.withOpacity(0.36),
+        shadowColor: theme.colorScheme.shadow.withOpacity(0.12),
       ),
     );
   }

@@ -24,6 +24,7 @@ import 'package:flutter/rendering.dart';
 import 'package:amiibo_network/widget/drawer.dart';
 import 'package:amiibo_network/widget/animated_widgets.dart';
 import 'package:amiibo_network/widget/floating_bar.dart';
+import 'package:flutter/services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:amiibo_network/generated/l10n.dart';
 import 'package:amiibo_network/utils/preferences_constants.dart';
@@ -169,7 +170,10 @@ class HomeScreenState extends ConsumerState<HomeScreen>
   @override
   Widget build(BuildContext context) {
     final isAmiiboList = index == 0;
-    return SafeArea(
+    return AnnotatedRegion<SystemUiOverlayStyle>(
+      value: AppBarTheme.of(context).systemOverlayStyle!.copyWith(
+        statusBarColor: Theme.of(context).canvasColor,
+      ),
       child: DashMenu(
         leftDrawer: CollectionDrawer(restart: _restartAnimation),
         body: WillPopScope(
@@ -177,71 +181,73 @@ class HomeScreenState extends ConsumerState<HomeScreen>
           child: Scaffold(
             resizeToAvoidBottomInset: false,
             //drawer: CollectionDrawer(restart: _restartAnimation),
-            body: HookConsumer(
-              builder: (context, ref, child) {
-                final _multipleSelection = ref.watch(
-                  selectProvider
-                      .select<bool>((value) => value.multipleSelected),
-                );
-                return Scrollbar(
-                  controller: _controller,
-                  interactive: true,
-                  child: CustomScrollView(
+            body: SafeArea(
+              child: HookConsumer(
+                builder: (context, ref, child) {
+                  final _multipleSelection = ref.watch(
+                    selectProvider
+                        .select<bool>((value) => value.multipleSelected),
+                  );
+                  return Scrollbar(
                     controller: _controller,
-                    slivers: <Widget>[
-                      SliverFloatingBar(
-                        backgroundColor: Theme.of(context).cardColor,
-                        floating: true,
-                        forward: _multipleSelection,
-                        snap: true,
-                        leading: Builder(
-                          builder: (context) {
-                            return IconButton(
-                              icon: Hero(
-                                tag: 'MenuButton',
-                                child: ImplicitIcon(
-                                  key: Key('Menu'),
-                                  forward: _multipleSelection,
+                    interactive: true,
+                    child: CustomScrollView(
+                      controller: _controller,
+                      slivers: <Widget>[
+                        SliverFloatingBar(
+                          backgroundColor: Theme.of(context).cardColor,
+                          floating: true,
+                          forward: _multipleSelection,
+                          snap: true,
+                          leading: Builder(
+                            builder: (context) {
+                              return IconButton(
+                                icon: Hero(
+                                  tag: 'MenuButton',
+                                  child: ImplicitIcon(
+                                    key: Key('Menu'),
+                                    forward: _multipleSelection,
+                                  ),
                                 ),
-                              ),
-                              tooltip: _multipleSelection
-                                  ? localizations.cancelButtonLabel
-                                  : localizations.openAppDrawerTooltip,
-                              onPressed: _multipleSelection
-                                  ? _cancelSelection
-                                  : DashMenu.of(context).openDrawer,
-                            );
-                          },
+                                tooltip: _multipleSelection
+                                    ? localizations.cancelButtonLabel
+                                    : localizations.openAppDrawerTooltip,
+                                onPressed: _multipleSelection
+                                    ? _cancelSelection
+                                    : DashMenu.of(context).openDrawer,
+                              );
+                            },
+                          ),
+                          title: const _TitleAppBar(),
+                          onTap: _multipleSelection ? null : _search,
+                          trailing: AnimatedSwitcher(
+                            duration: const Duration(milliseconds: 250),
+                            layoutBuilder: _defaultLayoutBuilder,
+                            child: !isAmiiboList
+                                ? const SizedBox()
+                                : _multipleSelection
+                                    ? const _SelectedOptions()
+                                    : const _DefaultOptions(),
+                          ),
                         ),
-                        title: const _TitleAppBar(),
-                        onTap: _multipleSelection ? null : _search,
-                        trailing: AnimatedSwitcher(
-                          duration: const Duration(milliseconds: 250),
-                          layoutBuilder: _defaultLayoutBuilder,
-                          child: !isAmiiboList
-                              ? const SizedBox()
-                              : _multipleSelection
-                                  ? const _SelectedOptions()
-                                  : const _DefaultOptions(),
+                        SliverPersistentHeader(
+                          delegate: SliverStatsHeader(hideOptional: isAmiiboList),
+                          pinned: true,
                         ),
-                      ),
-                      SliverPersistentHeader(
-                        delegate: SliverStatsHeader(hideOptional: isAmiiboList),
-                        pinned: true,
-                      ),
-                      isAmiiboList
-                          ? const SliverPadding(
-                              padding: EdgeInsets.symmetric(horizontal: 4),
-                              sliver: _AmiiboListWidget(),
-                            )
-                          : const HomeBodyStats(),
-                      const SliverPadding(
-                        padding: EdgeInsets.symmetric(vertical: 48.0),
-                      ),
-                    ],
-                  ),
-                );
-              },
+                        isAmiiboList
+                            ? const SliverPadding(
+                                padding: EdgeInsets.symmetric(horizontal: 4),
+                                sliver: _AmiiboListWidget(),
+                              )
+                            : const HomeBodyStats(),
+                        const SliverPadding(
+                          padding: EdgeInsets.symmetric(vertical: 48.0),
+                        ),
+                      ],
+                    ),
+                  );
+                },
+              ),
             ),
             extendBody: true,
             floatingActionButtonLocation:

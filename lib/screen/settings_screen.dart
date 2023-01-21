@@ -36,6 +36,7 @@ class SettingsPage extends ConsumerWidget {
       iconColor: theme.iconTheme.color,
       textColor: theme.textTheme.bodyText2!.color,
       child: SafeArea(
+        top: false,
         child: Scaffold(
           appBar: AppBar(
             actions: <Widget>[
@@ -468,6 +469,7 @@ class _DropMenu extends ConsumerWidget {
       onChanged: themeMode.themeDB,
       //underline: const SizedBox.shrink(),
       iconEnabledColor: themeStyle.iconTheme!.color,
+      dropdownColor: Theme.of(context).colorScheme.surface,
       elevation: 4,
       hint: Row(
         mainAxisSize: MainAxisSize.max,
