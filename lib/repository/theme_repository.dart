@@ -197,7 +197,7 @@ class _Theme implements AmiiboTheme {
           statusBarBrightness: scheme.brightness,
           statusBarIconBrightness: inverseBrightness,
           systemNavigationBarIconBrightness: inverseBrightness,
-          systemNavigationBarColor: scheme.secondaryContainer,
+          systemNavigationBarColor: scheme.surface,
           systemStatusBarContrastEnforced: false,
           statusBarColor: Colors.transparent,
         ),
@@ -217,9 +217,9 @@ class _Theme implements AmiiboTheme {
       ),
 
       /// Deprecated in the future
-      bottomAppBarColor: scheme.secondaryContainer,
+      bottomAppBarColor: scheme.surface,
       bottomAppBarTheme: BottomAppBarTheme(
-        color: scheme.secondaryContainer,
+        color: scheme.surface,
         elevation: 0.0,
       ),
       bottomSheetTheme: BottomSheetThemeData(
@@ -331,7 +331,11 @@ class _Theme implements AmiiboTheme {
         thickness: 0.75,
       ),
       drawerTheme: DrawerThemeData(
-        backgroundColor: scheme.surface,
+        backgroundColor: ElevationOverlay.applySurfaceTint(
+          scheme.surface,
+          Colors.grey.shade200,
+          6.0,
+        ),
       ),
       elevatedButtonTheme: ElevatedButtonThemeData(
         style: ButtonStyle(
@@ -343,12 +347,12 @@ class _Theme implements AmiiboTheme {
               RoundedRectangleBorder(borderRadius: BorderRadius.circular(8))),
           elevation: MaterialStateProperty.resolveWith<double>((states) {
             if (states.contains(MaterialState.pressed)) return 0.0;
-            return 8.0;
+            return 4.0;
           }),
           backgroundColor:
-              MaterialStateProperty.all<Color?>(scheme.primaryContainer),
+              MaterialStateProperty.all<Color?>(scheme.secondaryContainer),
           foregroundColor: MaterialStateProperty.all<Color?>(
-            scheme.onPrimaryContainer,
+            scheme.onSecondaryContainer,
           ),
           textStyle: MaterialStateProperty.all<TextStyle?>(
             _textTheme.bodyText1,
@@ -366,8 +370,8 @@ class _Theme implements AmiiboTheme {
       ),
       floatingActionButtonTheme: FloatingActionButtonThemeData(
         shape: const CircleBorder(),
-        foregroundColor: scheme.onSecondaryContainer,
-        backgroundColor: scheme.secondaryContainer,
+        foregroundColor: scheme.onTertiaryContainer,
+        backgroundColor: scheme.tertiaryContainer,
       ),
       focusColor: scheme.inversePrimary,
       fontFamily: null,
@@ -467,14 +471,14 @@ class _Theme implements AmiiboTheme {
         thumbColor: MaterialStateProperty.resolveWith<Color?>((states) {
           if (states.contains(MaterialState.disabled)) return null;
           if (states.contains(MaterialState.focused) ||
-              states.contains(MaterialState.pressed)) return scheme.tertiaryContainer;
-          return scheme.tertiary;
+              states.contains(MaterialState.pressed)) return scheme.primary;
+          return scheme.primaryContainer;
         }),
         trackColor: MaterialStateProperty.resolveWith<Color?>((states) {
           if (states.contains(MaterialState.disabled)) return null;
           if (states.contains(MaterialState.focused) ||
-              states.contains(MaterialState.pressed)) return scheme.tertiaryContainer;
-          return scheme.tertiary;
+              states.contains(MaterialState.pressed)) return scheme.primary;
+          return scheme.primaryContainer;
         }),
       ),
       tabBarTheme: const TabBarTheme(),
