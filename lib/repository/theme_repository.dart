@@ -283,8 +283,8 @@ class _Theme implements AmiiboTheme {
       ),
       chipTheme: ChipThemeData(
         surfaceTintColor: scheme.surfaceTint,
-        elevation: 0.0,
-        pressElevation: 4.0,
+        elevation: 4.0,
+        pressElevation: 6.0,
         checkmarkColor: scheme.onPrimary,
         backgroundColor: scheme.background,
         deleteIconColor: scheme.tertiary,
@@ -299,7 +299,7 @@ class _Theme implements AmiiboTheme {
         secondaryLabelStyle:
             _textTheme.bodySmall!.copyWith(color: scheme.onBackground),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-        side: _SelectedBorder(null, scheme.outline),
+        side: _SelectedBorder(scheme.primary, scheme.primary),
         brightness: scheme.brightness,
       ),
       colorScheme: scheme,
@@ -308,6 +308,7 @@ class _Theme implements AmiiboTheme {
       /// Deprecated in the future
       dialogBackgroundColor: scheme.surface,
       dialogTheme: DialogTheme(
+        elevation: 0.0,
         titleTextStyle:
             _textTheme.titleLarge!.copyWith(color: scheme.onSurface),
         contentTextStyle:
