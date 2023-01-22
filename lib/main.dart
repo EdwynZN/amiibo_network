@@ -3,6 +3,7 @@ import 'package:amiibo_network/riverpod/router_provider.dart';
 import 'package:amiibo_network/service/info_package.dart';
 import 'package:amiibo_network/service/update_service.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:amiibo_network/generated/l10n.dart';
@@ -68,6 +69,19 @@ class AmiiboNetwork extends ConsumerWidget {
       routerDelegate: router.routerDelegate,
       routeInformationParser: router.routeInformationParser,
       routeInformationProvider: router.routeInformationProvider,
+      builder: (context, child) {
+        final theme = AppBarTheme.of(context).systemOverlayStyle;
+        return AnnotatedRegion<SystemUiOverlayStyle>(
+          value: SystemUiOverlayStyle(
+            systemNavigationBarColor: theme?.systemNavigationBarColor,
+            systemNavigationBarContrastEnforced: theme?.systemNavigationBarContrastEnforced,
+            systemNavigationBarDividerColor: theme?.systemNavigationBarDividerColor,
+            systemNavigationBarIconBrightness: theme?.systemNavigationBarIconBrightness,
+            systemStatusBarContrastEnforced: theme?.systemStatusBarContrastEnforced,
+          ),
+          child: child!,
+        );
+      },
     );
   }
 }

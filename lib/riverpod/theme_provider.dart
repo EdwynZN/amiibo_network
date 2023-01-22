@@ -1,3 +1,4 @@
+import 'package:amiibo_network/resources/theme_material3_schemes.dart';
 import 'package:amiibo_network/utils/preferences_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -50,8 +51,18 @@ class ThemeProvider extends ChangeNotifier {
   int get lightOption => _lightColor;
   int get darkOption => _darkColor;
 
+  int get _themesLength => ThemeSchemes.styles.length;
+
+  final List<Color> lightColors = ThemeSchemes.styles.map((e) => e.light.primaryContainer).toList();
+
+  final List<Color> darkColors = const [
+    Colors.blueGrey,
+    Colors.grey,
+    Colors.black,
+  ];
+
   lightTheme(int light) async {
-    light = light.clamp(0, 17);
+    light = light.clamp(0, _themesLength);
     if (light != _lightColor) {
       _lightColor = light;
       await _preferences.setInt(sharedLightTheme, light);
@@ -63,7 +74,7 @@ class ThemeProvider extends ChangeNotifier {
   }
 
   darkTheme(int dark) async {
-    dark = dark.clamp(0, 17);
+    dark = dark.clamp(0, _themesLength);
     if (dark != _darkColor) {
       final SharedPreferences preferences =
           await SharedPreferences.getInstance();
