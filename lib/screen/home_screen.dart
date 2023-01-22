@@ -24,7 +24,6 @@ import 'package:flutter/rendering.dart';
 import 'package:amiibo_network/widget/drawer.dart';
 import 'package:amiibo_network/widget/animated_widgets.dart';
 import 'package:amiibo_network/widget/floating_bar.dart';
-import 'package:flutter/services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:amiibo_network/generated/l10n.dart';
 import 'package:amiibo_network/utils/preferences_constants.dart';
@@ -170,103 +169,94 @@ class HomeScreenState extends ConsumerState<HomeScreen>
   @override
   Widget build(BuildContext context) {
     final isAmiiboList = index == 0;
-    return AnnotatedRegion<SystemUiOverlayStyle>(
-      value: AppBarTheme.of(context).systemOverlayStyle!.copyWith(
-        statusBarColor: Theme.of(context).cardColor,
-      ),
-      child: DashMenu(
-        leftDrawer: CollectionDrawer(restart: _restartAnimation),
-        body: WillPopScope(
-          onWillPop: _exitApp,
-          child: Scaffold(
-            resizeToAvoidBottomInset: false,
-            //drawer: CollectionDrawer(restart: _restartAnimation),
-            body: SafeArea(
-              bottom: false,
-              child: HookConsumer(
-                builder: (context, ref, child) {
-                  final _multipleSelection = ref.watch(
-                    selectProvider
-                        .select<bool>((value) => value.multipleSelected),
-                  );
-                  return Scrollbar(
-                    controller: _controller,
-                    interactive: true,
-                    child: CustomScrollView(
-                      controller: _controller,
-                      slivers: <Widget>[
-                        SliverFloatingBar(
-                          backgroundColor: Theme.of(context).cardColor,
-                          floating: true,
-                          forward: _multipleSelection,
-                          snap: true,
-                          leading: Builder(
-                            builder: (context) {
-                              return IconButton(
-                                icon: Hero(
-                                  tag: 'MenuButton',
-                                  child: ImplicitIcon(
-                                    key: Key('Menu'),
-                                    forward: _multipleSelection,
-                                  ),
-                                ),
-                                tooltip: _multipleSelection
-                                    ? localizations.cancelButtonLabel
-                                    : localizations.openAppDrawerTooltip,
-                                onPressed: _multipleSelection
-                                    ? _cancelSelection
-                                    : DashMenu.of(context).openDrawer,
-                              );
-                            },
-                          ),
-                          title: const _TitleAppBar(),
-                          onTap: _multipleSelection ? null : _search,
-                          trailing: AnimatedSwitcher(
-                            duration: const Duration(milliseconds: 250),
-                            layoutBuilder: _defaultLayoutBuilder,
-                            child: !isAmiiboList
-                                ? const SizedBox()
-                                : _multipleSelection
-                                    ? const _SelectedOptions()
-                                    : const _DefaultOptions(),
-                          ),
-                        ),
-                        SliverPersistentHeader(
-                          delegate:
-                              SliverStatsHeader(hideOptional: isAmiiboList),
-                          pinned: true,
-                        ),
-                        isAmiiboList
-                            ? const SliverPadding(
-                                padding: EdgeInsets.symmetric(horizontal: 4),
-                                sliver: _AmiiboListWidget(),
-                              )
-                            : const HomeBodyStats(),
-                        const SliverPadding(
-                          padding: EdgeInsets.symmetric(vertical: 48.0),
-                        ),
-                      ],
+    return DashMenu(
+      leftDrawer: CollectionDrawer(restart: _restartAnimation),
+      body: WillPopScope(
+        onWillPop: _exitApp,
+        child: Scaffold(
+          resizeToAvoidBottomInset: false,
+          //drawer: CollectionDrawer(restart: _restartAnimation),
+          body: HookConsumer(
+            builder: (context, ref, child) {
+              final _multipleSelection = ref.watch(
+                selectProvider
+                    .select<bool>((value) => value.multipleSelected),
+              );
+              return Scrollbar(
+                controller: _controller,
+                interactive: true,
+                child: CustomScrollView(
+                  controller: _controller,
+                  slivers: <Widget>[
+                    SliverFloatingBar(
+                      floating: true,
+                      forward: _multipleSelection,
+                      snap: true,
+                      leading: Builder(
+                        builder: (context) {
+                          return IconButton(
+                            icon: Hero(
+                              tag: 'MenuButton',
+                              child: ImplicitIcon(
+                                key: Key('Menu'),
+                                forward: _multipleSelection,
+                              ),
+                            ),
+                            tooltip: _multipleSelection
+                                ? localizations.cancelButtonLabel
+                                : localizations.openAppDrawerTooltip,
+                            onPressed: _multipleSelection
+                                ? _cancelSelection
+                                : DashMenu.of(context).openDrawer,
+                          );
+                        },
+                      ),
+                      title: const _TitleAppBar(),
+                      onTap: _multipleSelection ? null : _search,
+                      trailing: AnimatedSwitcher(
+                        duration: const Duration(milliseconds: 250),
+                        layoutBuilder: _defaultLayoutBuilder,
+                        child: !isAmiiboList
+                            ? const SizedBox()
+                            : _multipleSelection
+                                ? const _SelectedOptions()
+                                : const _DefaultOptions(),
+                      ),
                     ),
-                  );
-                },
-              ),
-            ),
-            extendBody: true,
-            floatingActionButtonLocation:
-                FloatingActionButtonLocation.centerDocked,
-            floatingActionButton: _FAB(
-              animationController: _animationController,
-              index: index,
-            ),
-            bottomNavigationBar: _BottomBar(
-              animationController: _animationController,
-              index: index,
-              onTap: (selected) => setState(() {
-                index = selected;
-                _controller.jumpTo(0);
-                ref.read(selectProvider.notifier).clearSelected();
-              }),
-            ),
+                    SliverPersistentHeader(
+                      delegate:
+                          SliverStatsHeader(hideOptional: isAmiiboList),
+                      pinned: true,
+                    ),
+                    isAmiiboList
+                        ? const SliverPadding(
+                            padding: EdgeInsets.symmetric(horizontal: 4),
+                            sliver: _AmiiboListWidget(),
+                          )
+                        : const HomeBodyStats(),
+                    const SliverPadding(
+                      padding: EdgeInsets.symmetric(vertical: 48.0),
+                    ),
+                  ],
+                ),
+              );
+            },
+          ),
+          extendBody: true,
+          floatingActionButtonLocation:
+              FloatingActionButtonLocation.centerDocked,
+          floatingActionButton: _FAB(
+            animationController: _animationController,
+            index: index,
+          ),
+          bottomNavigationBar: _BottomBar(
+            animationController: _animationController,
+            index: index,
+            onTap: (selected) => setState(() {
+              index = selected;
+              _controller.jumpTo(0);
+              ref.read(selectProvider.notifier).clearSelected();
+            }),
           ),
         ),
       ),

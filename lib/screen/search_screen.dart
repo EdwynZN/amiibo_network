@@ -27,89 +27,87 @@ class SearchScreen extends HookConsumerWidget {
         (value) => value.search ?? describeEnum(value.category),
       ),
     );
-    return SafeArea(
-      child: Scaffold(
-        body: CustomScrollView(
-          slivers: <Widget>[
-            SliverFloatingBar(
-              backgroundColor: theme.scaffoldBackgroundColor,
-              pinned: true,
-              leading: IconButton(
-                icon: Hero(
-                  flightShuttleBuilder: (
-                    BuildContext flightContext,
-                    Animation<double> animation,
-                    HeroFlightDirection flightDirection,
-                    BuildContext fromHeroContext,
-                    BuildContext toHeroContext,
-                  ) {
-                    return AnimatedIcon(
-                      icon: AnimatedIcons.menu_arrow,
-                      progress: animation,
-                    );
-                  },
-                  tag: 'MenuButton',
-                  child: const BackButtonIcon(),
-                ),
-                tooltip: MaterialLocalizations.of(context).backButtonTooltip,
-                onPressed: Navigator.of(context).pop,
-              ),
-              title: TextField(
-                controller: _textController,
-                inputFormatters: [
-                  LengthLimitingTextInputFormatter(25),
-                  FilteringTextInputFormatter.allow(_regAllowList),
-                ],
-                textInputAction: TextInputAction.search,
-                autofocus: true,
-                onSubmitted: (text) => Navigator.of(context).pop(
-                  Search(
-                    search: text,
-                    category: ref.read(categorySearchProvider.notifier).state,
-                  ),
-                ),
-                style: style,
-                autocorrect: false,
-                decoration: InputDecoration(
-                  isDense: true,
-                  hintText: translate.category(amiiboCategory),
-                  hintStyle: style?.copyWith(
-                    color: style.color?.withOpacity(0.5),
-                  ),
-                  border: InputBorder.none,
-                ),
-              ),
-              trailing: ValueListenableBuilder<TextEditingValue>(
-                valueListenable: _textController,
-                child: const SizedBox(),
-                builder: (context, text, child) {
-                  return AnimatedSwitcher(
-                    duration: const Duration(milliseconds: 250),
-                    child: text.text.isEmpty
-                        ? child
-                        : IconButton(
-                            highlightColor: Colors.transparent,
-                            icon: const Icon(Icons.close),
-                            onPressed: _textController.clear,
-                            tooltip: 'Clear',
-                          ),
+    return Scaffold(
+      body: CustomScrollView(
+        slivers: <Widget>[
+          SliverFloatingBar(
+            backgroundColor: theme.scaffoldBackgroundColor,
+            pinned: true,
+            leading: IconButton(
+              icon: Hero(
+                flightShuttleBuilder: (
+                  BuildContext flightContext,
+                  Animation<double> animation,
+                  HeroFlightDirection flightDirection,
+                  BuildContext fromHeroContext,
+                  BuildContext toHeroContext,
+                ) {
+                  return AnimatedIcon(
+                    icon: AnimatedIcons.menu_arrow,
+                    progress: animation,
                   );
                 },
+                tag: 'MenuButton',
+                child: const BackButtonIcon(),
+              ),
+              tooltip: MaterialLocalizations.of(context).backButtonTooltip,
+              onPressed: Navigator.of(context).pop,
+            ),
+            title: TextField(
+              controller: _textController,
+              inputFormatters: [
+                LengthLimitingTextInputFormatter(25),
+                FilteringTextInputFormatter.allow(_regAllowList),
+              ],
+              textInputAction: TextInputAction.search,
+              autofocus: true,
+              onSubmitted: (text) => Navigator.of(context).pop(
+                Search(
+                  search: text,
+                  category: ref.read(categorySearchProvider.notifier).state,
+                ),
+              ),
+              style: style,
+              autocorrect: false,
+              decoration: InputDecoration(
+                isDense: true,
+                hintText: translate.category(amiiboCategory),
+                hintStyle: style?.copyWith(
+                  color: style.color?.withOpacity(0.5),
+                ),
+                border: InputBorder.none,
               ),
             ),
-            const SliverPersistentHeader(
-              delegate: _SliverPersistentHeader(),
-              pinned: true,
+            trailing: ValueListenableBuilder<TextEditingValue>(
+              valueListenable: _textController,
+              child: const SizedBox(),
+              builder: (context, text, child) {
+                return AnimatedSwitcher(
+                  duration: const Duration(milliseconds: 250),
+                  child: text.text.isEmpty
+                      ? child
+                      : IconButton(
+                          highlightColor: Colors.transparent,
+                          icon: const Icon(Icons.close),
+                          onPressed: _textController.clear,
+                          tooltip: 'Clear',
+                        ),
+                );
+              },
             ),
-            SliverPadding(
-              padding: const EdgeInsets.symmetric(
-                horizontal: 12,
-                vertical: 6.0,
-              ),
-              sliver: _Suggestions(textEditingController: _textController),
+          ),
+          const SliverPersistentHeader(
+            delegate: _SliverPersistentHeader(),
+            pinned: true,
+          ),
+          SliverPadding(
+            padding: const EdgeInsets.symmetric(
+              horizontal: 12,
+              vertical: 6.0,
             ),
-          ],
-        ),
+            sliver: _Suggestions(textEditingController: _textController),
+          ),
+        ],
       ),
     );
   }
