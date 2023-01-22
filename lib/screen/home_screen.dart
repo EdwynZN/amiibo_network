@@ -24,7 +24,6 @@ import 'package:flutter/rendering.dart';
 import 'package:amiibo_network/widget/drawer.dart';
 import 'package:amiibo_network/widget/animated_widgets.dart';
 import 'package:amiibo_network/widget/floating_bar.dart';
-import 'package:flutter/services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:amiibo_network/generated/l10n.dart';
 import 'package:amiibo_network/utils/preferences_constants.dart';
