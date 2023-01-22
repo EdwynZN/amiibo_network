@@ -38,11 +38,10 @@ abstract class AmiiboTheme {
   List<Color> get darkColors;
 }
 
-class _Theme implements AmiiboTheme {
+class AmiiboTheme3 implements AmiiboTheme {
   ThemeData? _lightTheme;
   ThemeData? _darkTheme;
   late ColorScheme _darkScheme;
-  late MaterialAccentColor _darkAccentColor;
   static const TextTheme _textTheme = TextTheme(
     titleLarge: TextStyle(
       fontSize: 18,
@@ -164,7 +163,7 @@ class _Theme implements AmiiboTheme {
         color: Colors.white70, fontSize: 18, fontWeight: FontWeight.w600),
   );
 
-  _Theme({int? light, int? dark}) {
+  AmiiboTheme3({int? light, int? dark}) {
     setLight = light;
     setDark = dark;
   }
@@ -582,13 +581,20 @@ class _Theme implements AmiiboTheme {
       surfaceVariant:
           bluGrey.surfaceVariant.harmonizeWith(_darkScheme.surfaceVariant),
     );
-     */_darkTheme = _themeFromScheme(_darkScheme);
-    return;
-    dark ??= 2;
+     */
     final Brightness _brightness =
-        ThemeData.estimateBrightnessForColor(_darkAccentColor);
+        ThemeData.estimateBrightnessForColor(_darkScheme.primary);
     final Color _accentColor =
         _brightness == Brightness.dark ? Colors.white : Colors.black;
+    final MaterialAccentColor _darkAccentColor = MaterialAccentColor(
+      _darkScheme.primary.value,
+      {
+        100: _darkScheme.inversePrimary,
+        200: _darkScheme.primaryContainer,
+        400: _darkScheme.primary,
+        700: _darkScheme.primaryContainer,
+      },
+    );
     switch (dark) {
       case 0:
         _darkTheme = ThemeData(
@@ -643,7 +649,7 @@ class _Theme implements AmiiboTheme {
                 RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
             elevation: 8,
           ),
-          colorScheme: ColorScheme.dark(
+          colorScheme: _darkScheme.copyWith(
             background: Colors.blueGrey.shade800,
             error: const Color.fromRGBO(207, 102, 121, 1),
             onBackground: Colors.white,
@@ -859,7 +865,7 @@ class _Theme implements AmiiboTheme {
                 RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
             elevation: 8,
           ),
-          colorScheme: ColorScheme.dark(
+          colorScheme: _darkScheme.copyWith(
             background: Colors.grey.shade800,
             error: const Color.fromRGBO(207, 102, 121, 1),
             onBackground: Colors.white,
@@ -1019,7 +1025,6 @@ class _Theme implements AmiiboTheme {
         );
         break;
       case 2:
-      default:
         _darkTheme = ThemeData(
           splashFactory: InkSparkle.constantTurbulenceSeedSplashFactory,
           primaryColorLight: Colors.transparent,
@@ -1072,7 +1077,7 @@ class _Theme implements AmiiboTheme {
                 side: BorderSide(color: Colors.grey[900]!, width: 2)),
             elevation: 0.0,
           ),
-          colorScheme: ColorScheme.dark(
+          colorScheme: _darkScheme.copyWith(
             primary: Colors.blueGrey,
             primaryContainer: Colors.blueGrey.shade700,
             onSecondary:
@@ -1247,6 +1252,10 @@ class _Theme implements AmiiboTheme {
           indicatorColor: _darkAccentColor.withOpacity(0.75),
           useMaterial3: true,
         );
+        break;
+      case 3:
+      default:
+        _darkTheme = _themeFromScheme(_darkScheme);
         break;
     }
   }
