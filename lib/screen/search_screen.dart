@@ -149,33 +149,54 @@ class _Suggestions extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final search = _useDebouncedSearch(textEditingController);
     final suggestions = ref.watch(searchProvider(search));
+    final List<String>? data = suggestions.maybeWhen(
+      skipLoadingOnReload: true,
+      skipLoadingOnRefresh: true,
+      data: (data) => data,
+      orElse: () => null,
+    );
+    final count = data?.length ?? 10;
     return SliverList(
       delegate: SliverChildBuilderDelegate(
         (BuildContext context, int index) {
-          return suggestions.maybeWhen(
-            data: (data) {
-              return AnimatedSwitcher(
-                duration: const Duration(milliseconds: 200),
-                child: Card(
-                  key: Key(data[index]),
-                  margin: EdgeInsets.zero,
-                  shape: const RoundedRectangleBorder(),
-                  child: ListTile(
-                    onTap: () => Navigator.of(context).pop(
-                      Search(
-                        search: data[index],
-                        category: ref.read(categorySearchProvider.notifier).state,
-                      ),
-                    ),
-                    title: Text('${data[index]}'),
+          if (data == null) {
+            return const SizedBox.shrink();
+          }
+          final RoundedRectangleBorder shape;
+          if (index == 0) {
+            shape = const RoundedRectangleBorder(
+              borderRadius: BorderRadius.vertical(
+                top: Radius.circular(12.0),
+              ),
+            );
+          } else if (index == count - 1) {
+            shape = const RoundedRectangleBorder(
+              borderRadius: BorderRadius.vertical(
+                bottom: Radius.circular(12.0),
+              ),
+            );
+          } else {
+            shape = const RoundedRectangleBorder();
+          }
+          return AnimatedSwitcher(
+            duration: const Duration(milliseconds: 200),
+            child: Card(
+              key: Key(data[index]),
+              margin: const EdgeInsets.only(bottom: 1.5),
+              shape: shape,
+              child: ListTile(
+                onTap: () => Navigator.of(context).pop(
+                  Search(
+                    search: data[index],
+                    category: ref.read(categorySearchProvider.notifier).state,
                   ),
                 ),
-              );
-            },
-            orElse: () => const SizedBox.shrink(),
+                title: Text('${data[index]}'),
+              ),
+            ),
           );
         },
-        childCount: suggestions.asData?.value.length ?? 10,
+        childCount: count,
       ),
     );
   }
@@ -255,9 +276,8 @@ class _CategoryControlState extends ConsumerState<CategoryControl> {
         Expanded(
           child: OutlinedButton.icon(
             style: OutlinedButton.styleFrom(
-              foregroundColor: _search == AmiiboCategory.Name
-                  ? _accentTextThemeColor
-                  : null,
+              foregroundColor:
+                  _search == AmiiboCategory.Name ? _accentTextThemeColor : null,
               shape: RoundedRectangleBorder(
                 borderRadius:
                     const BorderRadius.horizontal(left: Radius.circular(16.0)),
