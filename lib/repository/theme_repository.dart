@@ -41,6 +41,7 @@ abstract class AmiiboTheme {
 class _Theme implements AmiiboTheme {
   ThemeData? _lightTheme;
   ThemeData? _darkTheme;
+  late ColorScheme _darkScheme;
   late MaterialAccentColor _darkAccentColor;
   static const TextTheme _textTheme = TextTheme(
     titleLarge: TextStyle(
@@ -194,7 +195,7 @@ class _Theme implements AmiiboTheme {
         surfaceTintColor: scheme.surfaceTint,
         scrolledUnderElevation: 8.0,
         systemOverlayStyle: SystemUiOverlayStyle(
-          statusBarBrightness: scheme.brightness,
+          statusBarBrightness: inverseBrightness,
           statusBarIconBrightness: inverseBrightness,
           systemNavigationBarIconBrightness: inverseBrightness,
           systemNavigationBarColor: scheme.surface,
@@ -310,12 +311,10 @@ class _Theme implements AmiiboTheme {
       /// Deprecated in the future
       dialogBackgroundColor: scheme.surface,
       dialogTheme: DialogTheme(
-        titleTextStyle: _textTheme.titleLarge!.copyWith(
-          color: scheme.onSurface
-        ),
-        contentTextStyle: _textTheme.titleMedium!.copyWith(
-          color: scheme.onSurface
-        ),
+        titleTextStyle:
+            _textTheme.titleLarge!.copyWith(color: scheme.onSurface),
+        contentTextStyle:
+            _textTheme.titleMedium!.copyWith(color: scheme.onSurface),
         backgroundColor: scheme.surface,
         actionsPadding: const EdgeInsets.symmetric(
           horizontal: 16.0,
@@ -332,9 +331,9 @@ class _Theme implements AmiiboTheme {
       ),
       drawerTheme: DrawerThemeData(
         backgroundColor: ElevationOverlay.applySurfaceTint(
-          scheme.surface,
-          Colors.grey.shade200,
-          6.0,
+          scheme.background,
+          scheme.primary.withOpacity(0.12),
+          2.0,
         ),
       ),
       elevatedButtonTheme: ElevatedButtonThemeData(
@@ -520,14 +519,69 @@ class _Theme implements AmiiboTheme {
     light ??= 0;
     Material3Schemes mateialScheme = ThemeSchemes.styles[light.clamp(0, 17)];
     ColorScheme lightScheme = mateialScheme.light;
-    ColorScheme darkScheme = mateialScheme.dark;
-    MaterialAccentColor accentColor = Colors.accents[light.clamp(0, 15)];
-    _darkAccentColor = accentColor;
+    _darkScheme = mateialScheme.dark;
     _lightTheme = _themeFromScheme(lightScheme);
-    _darkTheme = _themeFromScheme(darkScheme);
   }
 
   set setDark(int? dark) {
+    /* var bluGrey = ThemeSchemes.blueGrey.dark;
+
+    bluGrey = ColorScheme.dark(
+      primary: Colors.black,
+      onPrimary: const Color(0xFFE1E2E4),
+      primaryContainer: const Color(0xFF191C1E),
+      onPrimaryContainer: const Color(0xFFE1E2E4),
+      shadow: Colors.white24,
+      surface: const Color(0xFF191C1E),
+      surfaceVariant: const Color(0xFF40484C),
+      background: Colors.black,
+      onBackground: const Color(0xFFE1E2E4),
+      secondary: const Color(0xFF4D616C),
+      onSecondary: const Color(0xFFFFFFFF),
+      secondaryContainer: Colors.black,
+      onSecondaryContainer: const Color(0xFFE1E2E4),
+    );
+
+    final style = bluGrey.copyWith(
+      /* primary: bluGrey.primary.harmonizeWith(_darkScheme.primary),
+      primaryContainer:
+          _darkScheme.primaryContainer.harmonizeWith(_darkScheme.primaryContainer),
+      onPrimary: bluGrey.onPrimary.harmonizeWith(_darkScheme.onPrimary),
+      onPrimaryContainer: bluGrey.onPrimaryContainer
+          .harmonizeWith(_darkScheme.onPrimaryContainer),
+      inversePrimary:
+          _darkScheme.inversePrimary.harmonizeWith(_darkScheme.inversePrimary),
+      background: bluGrey.background.harmonizeWith(_darkScheme.background), 
+      onBackground:
+          bluGrey.onBackground.harmonizeWith(_darkScheme.onBackground),*/
+      error: bluGrey.error.harmonizeWith(_darkScheme.error),
+      errorContainer:
+          _darkScheme.errorContainer.harmonizeWith(_darkScheme.errorContainer),
+      onError: bluGrey.onError.harmonizeWith(_darkScheme.onError),
+      onErrorContainer:
+          bluGrey.onErrorContainer.harmonizeWith(_darkScheme.onErrorContainer),
+      inverseSurface:
+          bluGrey.inverseSurface.harmonizeWith(_darkScheme.inverseSurface),
+      onInverseSurface:
+          bluGrey.onInverseSurface.harmonizeWith(_darkScheme.onInverseSurface),
+      /* secondary: _darkScheme.secondary,
+      secondaryContainer: _darkScheme.secondaryContainer,
+      onSecondary: _darkScheme.onSecondary,
+      onSecondaryContainer: _darkScheme.onSecondaryContainer, */
+      tertiary: _darkScheme.tertiary,
+      tertiaryContainer: _darkScheme.tertiaryContainer,
+      onTertiary: _darkScheme.onTertiary,
+      onTertiaryContainer: _darkScheme.onTertiaryContainer,
+      onSurface: bluGrey.onSurface.harmonizeWith(_darkScheme.onSurface),
+      onSurfaceVariant:
+          bluGrey.onSurfaceVariant.harmonizeWith(_darkScheme.onSurfaceVariant),
+      outline: bluGrey.outline.harmonizeWith(_darkScheme.outline),
+      surface: bluGrey.surface.harmonizeWith(_darkScheme.surface),
+      surfaceTint: bluGrey.surfaceTint.harmonizeWith(_darkScheme.surfaceTint),
+      surfaceVariant:
+          bluGrey.surfaceVariant.harmonizeWith(_darkScheme.surfaceVariant),
+    );
+     */_darkTheme = _themeFromScheme(_darkScheme);
     return;
     dark ??= 2;
     final Brightness _brightness =
@@ -732,7 +786,8 @@ class _Theme implements AmiiboTheme {
                 : __darkAccentTextTheme.bodyText2!,
             shape:
                 RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-            side: _SelectedBorder(_darkAccentColor.withOpacity(0.54), Colors.amber),
+            side: _SelectedBorder(
+                _darkAccentColor.withOpacity(0.54), Colors.amber),
             brightness: _brightness,
           ),
           navigationRailTheme: NavigationRailThemeData(
@@ -942,7 +997,8 @@ class _Theme implements AmiiboTheme {
                 : __darkAccentTextTheme.bodyText2!,
             shape:
                 RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-            side: _SelectedBorder(_darkAccentColor.withOpacity(0.54), Colors.black),
+            side: _SelectedBorder(
+                _darkAccentColor.withOpacity(0.54), Colors.black),
             brightness: _brightness,
           ),
           navigationRailTheme: NavigationRailThemeData(
@@ -1172,7 +1228,8 @@ class _Theme implements AmiiboTheme {
                 : __darkAccentTextTheme.bodyText2!,
             shape:
                 RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-            side: _SelectedBorder(_darkAccentColor.withOpacity(0.54), Colors.black),
+            side: _SelectedBorder(
+                _darkAccentColor.withOpacity(0.54), Colors.black),
             brightness: _brightness,
           ),
           navigationRailTheme: NavigationRailThemeData(
