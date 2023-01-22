@@ -205,8 +205,22 @@ class _SliverPersistentHeader extends SliverPersistentHeaderDelegate {
 
   @override
   Widget build(
-      BuildContext context, double shrinkOffset, bool overlapsContent) {
-    final Color _color = Theme.of(context).scaffoldBackgroundColor;
+    BuildContext context,
+    double shrinkOffset,
+    bool overlapsContent,
+  ) {
+    final appbarTheme = AppBarTheme.of(context);
+    final _elevation = appbarTheme.elevation ?? 0.0;
+    final firstColor = appbarTheme.backgroundColor ?? Colors.white;
+    final bool isScrolledUnder =
+        overlapsContent || shrinkOffset > maxExtent - minExtent;
+    final Color _color = ElevationOverlay.applySurfaceTint(
+      firstColor,
+      appbarTheme.surfaceTintColor,
+      isScrolledUnder ?
+        _elevation * 2.0 > 4.0 ? _elevation * 2.0 : 4.0
+        : _elevation,
+    );
     return Container(
       decoration: BoxDecoration(
         gradient: LinearGradient(

@@ -18,22 +18,23 @@ class StatWidget extends StatelessWidget {
     required this.den,
     required this.text,
     required this.icon,
-  }) : stat = den != 0 ? numerator / den : 0,
-      super(key: key);
+  })  : stat = den != 0 ? numerator / den : 0,
+        super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return _Radial(
       icon: _AnimatedRadial(
         key: Key(text),
+        brightness: theme.brightness,
         percentage: stat,
         child: icon,
       ),
       label: Flexible(
         child: FittedBox(
-        fit: BoxFit.scaleDown,
-        child: Consumer(
-          builder: (ctx, ref, _) {
+          fit: BoxFit.scaleDown,
+          child: Consumer(builder: (ctx, ref, _) {
             final stats = ref.watch(statProvider);
             final String myStat = stats.statLabel(numerator, den);
             final bool fontFeatureStyle =
@@ -43,7 +44,7 @@ class StatWidget extends StatelessWidget {
             return RichText(
               text: TextSpan(
                 text: myStat,
-                style: Theme.of(context).textTheme.subtitle1!.copyWith(
+                style: theme.textTheme.subtitle1!.copyWith(
                   fontSize: fontFeatureStyle ? 22 : null,
                   fontFeatures: [
                     if (fontFeatureStyle) ui.FontFeature.enable('frac'),
@@ -90,14 +91,16 @@ class _Radial extends StatelessWidget {
 class _AnimatedRadial extends ImplicitlyAnimatedWidget {
   final Widget? child;
   final double percentage;
+  final Brightness brightness;
 
-  _AnimatedRadial(
-      {Key? key,
-      required this.percentage,
-      Duration duration = const Duration(milliseconds: 300),
-      this.child,
-      Curve curve = Curves.linear})
-      : super(duration: duration, curve: curve, key: key);
+  _AnimatedRadial({
+    Key? key,
+    required this.percentage,
+    required this.brightness,
+    Duration duration = const Duration(milliseconds: 300),
+    this.child,
+    Curve curve = Curves.linear,
+  }) : super(duration: duration, curve: curve, key: key);
 
   @override
   ImplicitlyAnimatedWidgetState<ImplicitlyAnimatedWidget> createState() =>
@@ -113,7 +116,7 @@ class _AnimatedRadialState extends AnimatedWidgetBaseState<_AnimatedRadial> {
   @override
   void forEachTween(TweenVisitor<dynamic> visitor) {
     Color color = widget.percentage == 0.0
-        ? const Color(0xFF2B2922)
+        ? (widget.brightness == Brightness.light ? const Color(0xFF2B2922) : const Color(0xFFE7D9D9))
         : widget.percentage <= 0.25
             ? Colors.red.shade300
             : widget.percentage <= 0.50
@@ -124,8 +127,8 @@ class _AnimatedRadialState extends AnimatedWidgetBaseState<_AnimatedRadial> {
                         ? Colors.lightGreen.shade300
                         : Colors.green.shade800;
 
-    _color =
-        visitor(_color, color, (dynamic value) => ColorTween(begin: value)) as ColorTween?;
+    _color = visitor(_color, color, (dynamic value) => ColorTween(begin: value))
+        as ColorTween?;
     _percentage = visitor(_percentage, widget.percentage,
         (dynamic value) => Tween<double>(begin: value)) as Tween<double>?;
     _opacity = visitor(_opacity, widget.percentage == 1 ? 1.0 : 0.0,
@@ -141,6 +144,7 @@ class _AnimatedRadialState extends AnimatedWidgetBaseState<_AnimatedRadial> {
   Widget build(BuildContext context) {
     return CustomPaint(
       painter: RadialProgression(
+        emptyColor: widget.brightness == Brightness.light ? const Color(0xFF2B2922) : const Color(0xFFE7D9D9),
         percent: _percentage!.evaluate(animation),
         color: _color!.evaluate(animation)!,
       ),

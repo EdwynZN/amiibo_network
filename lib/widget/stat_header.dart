@@ -34,7 +34,7 @@ class SliverStatsHeader extends SliverPersistentHeaderDelegate {
     );
     final S translate = S.of(context);
     return Container(
-      padding: const EdgeInsets.fromLTRB(6.0, 6.0, 6.0, 0.0),
+      padding: const EdgeInsets.fromLTRB(6.0, 6.0, 6.0, 2.0),
       alignment: Alignment.bottomCenter,
       decoration: BoxDecoration(
         gradient: LinearGradient(
