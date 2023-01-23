@@ -106,7 +106,6 @@ class ThemeButton extends HookConsumerWidget {
               padding: const EdgeInsets.fromLTRB(0, 16, 0, 0),
               child: Consumer(
                 builder: (context, ref, child) {
-                  final theme = Theme.of(context);
                   final themeRef = ref.watch(themeProvider);
                   return Wrap(
                     spacing: spacing,
