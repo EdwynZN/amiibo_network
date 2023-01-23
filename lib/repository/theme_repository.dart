@@ -1430,6 +1430,8 @@ class AmiiboTheme3 implements AmiiboTheme {
         displayColor: scheme.primary,
       ),
       progressIndicatorTheme: ProgressIndicatorThemeData(
+        circularTrackColor: scheme.primaryContainer,
+        linearTrackColor: scheme.primaryContainer,
         color: scheme.primary,
         refreshBackgroundColor: scheme.background,
         linearMinHeight: 4.0,
