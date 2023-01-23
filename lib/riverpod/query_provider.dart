@@ -90,7 +90,7 @@ class QueryBuilderProvider extends StateNotifier<QueryBuilder> {
   };
 
   final Ref ref;
-  late final Search _initial;
+  late Search _preciousNotSearch;
   Search _query;
 
   QueryBuilderProvider(
@@ -105,7 +105,7 @@ class QueryBuilderProvider extends StateNotifier<QueryBuilder> {
             orderBy: _orderBy,
           ),
         ) {
-    _initial = _query;
+    _preciousNotSearch = _query;
     if (_query.category != AmiiboCategory.All) {
       _updateExpression();
     }
@@ -114,7 +114,15 @@ class QueryBuilderProvider extends StateNotifier<QueryBuilder> {
   Search get search => _query;
   QueryBuilder get query => state;
 
-  bool get isSearch => _query.search != null && _query.search!.isNotEmpty;
+  bool get isSearch {
+    final category = search.category;
+    if (category == AmiiboCategory.Game ||
+        category == AmiiboCategory.Name ||
+        category == AmiiboCategory.AmiiboSeries) {
+      return true;
+    }
+    return false;
+  }
 
   List<String> get customFigures => List<String>.of(_query.customFigures!);
   List<String> get customCards => List<String>.of(_query.customCards!);
@@ -171,8 +179,8 @@ class QueryBuilderProvider extends StateNotifier<QueryBuilder> {
   }
 
   void restart() {
-    if (_initial == _query) return;
-    _query = _initial;
+    if (_preciousNotSearch == _query) return;
+    _query = _preciousNotSearch;
     _updateExpression();
   }
 
@@ -183,6 +191,9 @@ class QueryBuilderProvider extends StateNotifier<QueryBuilder> {
       category: result.category,
       search: result.search,
     );
+    if (!isSearch) {
+      _preciousNotSearch = _query;
+    }
     _updateExpression();
   }
 
