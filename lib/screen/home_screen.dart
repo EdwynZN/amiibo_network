@@ -157,8 +157,12 @@ class HomeScreenState extends ConsumerState<HomeScreen>
     }
 
     final selected = ref.read(selectProvider);
+    final query = ref.read(queryProvider.notifier);
     if (selected.multipleSelected) {
       selected.clearSelected();
+      return false;
+    } else if (query.isSearch) {
+      query.restart();
       return false;
     } else {
       await ConnectionFactory().close();
@@ -179,8 +183,7 @@ class HomeScreenState extends ConsumerState<HomeScreen>
           body: HookConsumer(
             builder: (context, ref, child) {
               final _multipleSelection = ref.watch(
-                selectProvider
-                    .select<bool>((value) => value.multipleSelected),
+                selectProvider.select<bool>((value) => value.multipleSelected),
               );
               return Scrollbar(
                 controller: _controller,
@@ -224,8 +227,7 @@ class HomeScreenState extends ConsumerState<HomeScreen>
                       ),
                     ),
                     SliverPersistentHeader(
-                      delegate:
-                          SliverStatsHeader(hideOptional: isAmiiboList),
+                      delegate: SliverStatsHeader(hideOptional: isAmiiboList),
                       pinned: true,
                     ),
                     isAmiiboList

@@ -90,6 +90,7 @@ class QueryBuilderProvider extends StateNotifier<QueryBuilder> {
   };
 
   final Ref ref;
+  late final Search _initial;
   Search _query;
 
   QueryBuilderProvider(
@@ -104,6 +105,7 @@ class QueryBuilderProvider extends StateNotifier<QueryBuilder> {
             orderBy: _orderBy,
           ),
         ) {
+    _initial = _query;
     if (_query.category != AmiiboCategory.All) {
       _updateExpression();
     }
@@ -111,6 +113,8 @@ class QueryBuilderProvider extends StateNotifier<QueryBuilder> {
 
   Search get search => _query;
   QueryBuilder get query => state;
+
+  bool get isSearch => _query.search != null && _query.search!.isNotEmpty;
 
   List<String> get customFigures => List<String>.of(_query.customFigures!);
   List<String> get customCards => List<String>.of(_query.customCards!);
@@ -166,6 +170,12 @@ class QueryBuilderProvider extends StateNotifier<QueryBuilder> {
     }
   }
 
+  void restart() {
+    if (_initial == _query) return;
+    _query = _initial;
+    _updateExpression();
+  }
+
   void updateOption(Search result) {
     if (result.category == _query.category && result.search == _query.search)
       return;
@@ -191,7 +201,9 @@ class QueryBuilderProvider extends StateNotifier<QueryBuilder> {
   Future<void> changeSortAndOrder(OrderBy? orderBy, SortBy? sortBy) async {
     QueryBuilder _state = state.copyWith();
     if (orderBy != null && orderBy != state.orderBy) {
-      await ref.read(preferencesProvider).setInt(orderPreference, orderBy.index);
+      await ref
+          .read(preferencesProvider)
+          .setInt(orderPreference, orderBy.index);
       _state = _state.copyWith(orderBy: orderBy);
     }
     if (sortBy != null && sortBy != state.sortBy) {
