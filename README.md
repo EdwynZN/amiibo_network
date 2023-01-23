@@ -36,10 +36,10 @@ Amiibo Network is in no way affiliated with Nintendo. amiibo is a registered tra
 
 Light                      |             Dark
 :-------------------------:|:-------------------------:
-<img src="screenshots/Nexus5X_home.png" height="350"> <img src="screenshots/Nexus5X_Category.png" height="350"> | <img src="screenshots/Nexus5X_home_dark.png" height="350"> <img src="screenshots/Nexus5X_Category_dark.png" height="350">
-<img src="screenshots/Nexus5X_detail.png" height="350"> <img src="screenshots/Nexus5X_search.png" height="350"> | <img src="screenshots/Nexus5X_detail_dark.png" height="350"> <img src="screenshots/Nexus5X_search_dark.png" height="350">
-<img src="screenshots/Nexus5X_settings.png" height="350"> <img src="screenshots/Nexus5X_Stats.png" height="350"> | <img src="screenshots/Nexus5X_settings_dark.png" height="350"> <img src="screenshots/Nexus5X_Stats_dark.png" height="350">
-<img src="screenshots/Nexus5X_Themes.png" height="350"> | <img src="screenshots/Nexus5X_Themes_dark.png" height="350">
+<img src="screenshots/Pixel3A_home.png" height="350"> <img src="screenshots/Pixel3A_Category.png" height="350"> | <img src="screenshots/Pixel3A_home_dark.png" height="350"> <img src="screenshots/Pixel3A_Category_dark.png" height="350">
+<img src="screenshots/Pixel3A_detail.png" height="350"> <img src="screenshots/Pixel3A_search.png" height="350"> | <img src="screenshots/Pixel3A_detail_dark.png" height="350"> <img src="screenshots/Pixel3A_search_dark.png" height="350">
+<img src="screenshots/Pixel3A_settings.png" height="350"> <img src="screenshots/Pixel3A_Stats.png" height="350"> | <img src="screenshots/Pixel3A_settings_dark.png" height="350"> <img src="screenshots/Pixel3A_Stats_dark.png" height="350">
+<img src="screenshots/Pixel3A_Themes.png" height="350"> | <img src="screenshots/Pixel3A_Themes_dark.png" height="350">
 <img src="screenshots/MyFigureCollection.png" height="350"> | <img src="screenshots/MyFigureCollection_dark.png" height="350">
 <img src="screenshots/MyAmiiboStats.png" height="350"> | <img src="screenshots/MyAmiiboStats_dark.png" height="350">
 
