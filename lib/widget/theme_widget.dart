@@ -173,9 +173,8 @@ class ThemeButton extends HookConsumerWidget {
         themeProvider.select<ThemeMode?>((value) => value.preferredTheme));
     return InkResponse(
       radius: 18,
-      splashFactory: InkRipple.splashFactory,
+      splashFactory: InkSparkle.splashFactory,
       highlightColor: Colors.transparent,
-      splashColor: Theme.of(context).indicatorColor,
       child: AnimatedSwitcher(
         duration: const Duration(milliseconds: 800),
         reverseDuration: const Duration(milliseconds: 400),
