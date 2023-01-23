@@ -16,19 +16,34 @@ class SliverStatsHeader extends SliverPersistentHeaderDelegate {
 
   @override
   Widget build(
-      BuildContext context, double shrinkOffset, bool overlapsContent) {
-    final Color _color = AppBarTheme.of(context).backgroundColor!;
+    BuildContext context,
+    double shrinkOffset,
+    bool overlapsContent,
+  ) {
+    final appbarTheme = AppBarTheme.of(context);
+    final _elevation = appbarTheme.elevation ?? 0.0;
+    final firstColor = appbarTheme.backgroundColor ?? Colors.white;
+    final bool isScrolledUnder =
+        overlapsContent || shrinkOffset > maxExtent - minExtent;
+    final Color _color = ElevationOverlay.applySurfaceTint(
+      firstColor,
+      appbarTheme.surfaceTintColor,
+      isScrolledUnder ?
+        _elevation * 2.0 > 4.0 ? _elevation * 2.0 : 4.0
+        : _elevation,
+    );
     final S translate = S.of(context);
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 12),
+      padding: const EdgeInsets.fromLTRB(6.0, 6.0, 6.0, 2.0),
+      alignment: Alignment.bottomCenter,
       decoration: BoxDecoration(
         gradient: LinearGradient(
           begin: Alignment.topCenter,
           end: Alignment.bottomCenter,
-          stops: [0.35, 0.65, 0.9],
+          stops: [0.40, 0.75, 1.0],
           colors: [
             _color,
-            _color.withOpacity(0.75),
+            _color.withOpacity(0.5),
             _color.withOpacity(0.0),
           ],
         ),
@@ -90,10 +105,10 @@ class SliverStatsHeader extends SliverPersistentHeaderDelegate {
   }
 
   @override
-  double get maxExtent => kToolbarHeight;
+  double get maxExtent => kMinInteractiveDimension;
 
   @override
-  double get minExtent => kToolbarHeight;
+  double get minExtent => kMinInteractiveDimension;
 
   @override
   bool shouldRebuild(SliverPersistentHeaderDelegate oldDelegate) => true;

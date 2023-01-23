@@ -27,89 +27,87 @@ class SearchScreen extends HookConsumerWidget {
         (value) => value.search ?? describeEnum(value.category),
       ),
     );
-    return SafeArea(
-      child: Scaffold(
-        body: CustomScrollView(
-          slivers: <Widget>[
-            SliverFloatingBar(
-              backgroundColor: theme.scaffoldBackgroundColor,
-              pinned: true,
-              leading: IconButton(
-                icon: Hero(
-                  flightShuttleBuilder: (
-                    BuildContext flightContext,
-                    Animation<double> animation,
-                    HeroFlightDirection flightDirection,
-                    BuildContext fromHeroContext,
-                    BuildContext toHeroContext,
-                  ) {
-                    return AnimatedIcon(
-                      icon: AnimatedIcons.menu_arrow,
-                      progress: animation,
-                    );
-                  },
-                  tag: 'MenuButton',
-                  child: const BackButtonIcon(),
-                ),
-                tooltip: MaterialLocalizations.of(context).backButtonTooltip,
-                onPressed: Navigator.of(context).pop,
-              ),
-              title: TextField(
-                controller: _textController,
-                inputFormatters: [
-                  LengthLimitingTextInputFormatter(25),
-                  FilteringTextInputFormatter.allow(_regAllowList),
-                ],
-                textInputAction: TextInputAction.search,
-                autofocus: true,
-                onSubmitted: (text) => Navigator.of(context).pop(
-                  Search(
-                    search: text,
-                    category: ref.read(categorySearchProvider.notifier).state,
-                  ),
-                ),
-                style: style,
-                autocorrect: false,
-                decoration: InputDecoration(
-                  isDense: true,
-                  hintText: translate.category(amiiboCategory),
-                  hintStyle: style?.copyWith(
-                    color: style.color?.withOpacity(0.5),
-                  ),
-                  border: InputBorder.none,
-                ),
-              ),
-              trailing: ValueListenableBuilder<TextEditingValue>(
-                valueListenable: _textController,
-                child: const SizedBox(),
-                builder: (context, text, child) {
-                  return AnimatedSwitcher(
-                    duration: const Duration(milliseconds: 250),
-                    child: text.text.isEmpty
-                        ? child
-                        : IconButton(
-                            highlightColor: Colors.transparent,
-                            icon: const Icon(Icons.close),
-                            onPressed: _textController.clear,
-                            tooltip: 'Clear',
-                          ),
+    return Scaffold(
+      body: CustomScrollView(
+        slivers: <Widget>[
+          SliverFloatingBar(
+            backgroundColor: theme.scaffoldBackgroundColor,
+            pinned: true,
+            leading: IconButton(
+              icon: Hero(
+                flightShuttleBuilder: (
+                  BuildContext flightContext,
+                  Animation<double> animation,
+                  HeroFlightDirection flightDirection,
+                  BuildContext fromHeroContext,
+                  BuildContext toHeroContext,
+                ) {
+                  return AnimatedIcon(
+                    icon: AnimatedIcons.menu_arrow,
+                    progress: animation,
                   );
                 },
+                tag: 'MenuButton',
+                child: const BackButtonIcon(),
+              ),
+              tooltip: MaterialLocalizations.of(context).backButtonTooltip,
+              onPressed: Navigator.of(context).pop,
+            ),
+            title: TextField(
+              controller: _textController,
+              inputFormatters: [
+                LengthLimitingTextInputFormatter(25),
+                FilteringTextInputFormatter.allow(_regAllowList),
+              ],
+              textInputAction: TextInputAction.search,
+              autofocus: true,
+              onSubmitted: (text) => Navigator.of(context).pop(
+                Search(
+                  search: text,
+                  category: ref.read(categorySearchProvider.notifier).state,
+                ),
+              ),
+              style: style,
+              autocorrect: false,
+              decoration: InputDecoration(
+                isDense: true,
+                hintText: translate.category(amiiboCategory),
+                hintStyle: style?.copyWith(
+                  color: style.color?.withOpacity(0.5),
+                ),
+                border: InputBorder.none,
               ),
             ),
-            const SliverPersistentHeader(
-              delegate: _SliverPersistentHeader(),
-              pinned: true,
+            trailing: ValueListenableBuilder<TextEditingValue>(
+              valueListenable: _textController,
+              child: const SizedBox(),
+              builder: (context, text, child) {
+                return AnimatedSwitcher(
+                  duration: const Duration(milliseconds: 250),
+                  child: text.text.isEmpty
+                      ? child
+                      : IconButton(
+                          highlightColor: Colors.transparent,
+                          icon: const Icon(Icons.close),
+                          onPressed: _textController.clear,
+                          tooltip: 'Clear',
+                        ),
+                );
+              },
             ),
-            SliverPadding(
-              padding: const EdgeInsets.symmetric(
-                horizontal: 12,
-                vertical: 6.0,
-              ),
-              sliver: _Suggestions(textEditingController: _textController),
+          ),
+          const SliverPersistentHeader(
+            delegate: _SliverPersistentHeader(),
+            pinned: true,
+          ),
+          SliverPadding(
+            padding: const EdgeInsets.symmetric(
+              horizontal: 12,
+              vertical: 6.0,
             ),
-          ],
-        ),
+            sliver: _Suggestions(textEditingController: _textController),
+          ),
+        ],
       ),
     );
   }
@@ -149,33 +147,54 @@ class _Suggestions extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final search = _useDebouncedSearch(textEditingController);
     final suggestions = ref.watch(searchProvider(search));
+    final List<String>? data = suggestions.maybeWhen(
+      skipLoadingOnReload: true,
+      skipLoadingOnRefresh: true,
+      data: (data) => data,
+      orElse: () => null,
+    );
+    final count = data?.length ?? 10;
     return SliverList(
       delegate: SliverChildBuilderDelegate(
         (BuildContext context, int index) {
-          return suggestions.maybeWhen(
-            data: (data) {
-              return AnimatedSwitcher(
-                duration: const Duration(milliseconds: 200),
-                child: Card(
-                  key: Key(data[index]),
-                  margin: EdgeInsets.zero,
-                  shape: const RoundedRectangleBorder(),
-                  child: ListTile(
-                    onTap: () => Navigator.of(context).pop(
-                      Search(
-                        search: data[index],
-                        category: ref.read(categorySearchProvider.notifier).state,
-                      ),
-                    ),
-                    title: Text('${data[index]}'),
+          if (data == null) {
+            return const SizedBox.shrink();
+          }
+          final RoundedRectangleBorder shape;
+          if (index == 0) {
+            shape = const RoundedRectangleBorder(
+              borderRadius: BorderRadius.vertical(
+                top: Radius.circular(12.0),
+              ),
+            );
+          } else if (index == count - 1) {
+            shape = const RoundedRectangleBorder(
+              borderRadius: BorderRadius.vertical(
+                bottom: Radius.circular(12.0),
+              ),
+            );
+          } else {
+            shape = const RoundedRectangleBorder();
+          }
+          return AnimatedSwitcher(
+            duration: const Duration(milliseconds: 200),
+            child: Card(
+              key: Key(data[index]),
+              margin: const EdgeInsets.only(bottom: 1.5),
+              shape: shape,
+              child: ListTile(
+                onTap: () => Navigator.of(context).pop(
+                  Search(
+                    search: data[index],
+                    category: ref.read(categorySearchProvider.notifier).state,
                   ),
                 ),
-              );
-            },
-            orElse: () => const SizedBox.shrink(),
+                title: Text('${data[index]}'),
+              ),
+            ),
           );
         },
-        childCount: suggestions.asData?.value.length ?? 10,
+        childCount: count,
       ),
     );
   }
@@ -186,8 +205,22 @@ class _SliverPersistentHeader extends SliverPersistentHeaderDelegate {
 
   @override
   Widget build(
-      BuildContext context, double shrinkOffset, bool overlapsContent) {
-    final Color _color = Theme.of(context).scaffoldBackgroundColor;
+    BuildContext context,
+    double shrinkOffset,
+    bool overlapsContent,
+  ) {
+    final appbarTheme = AppBarTheme.of(context);
+    final _elevation = appbarTheme.elevation ?? 0.0;
+    final firstColor = appbarTheme.backgroundColor ?? Colors.white;
+    final bool isScrolledUnder =
+        overlapsContent || shrinkOffset > maxExtent - minExtent;
+    final Color _color = ElevationOverlay.applySurfaceTint(
+      firstColor,
+      appbarTheme.surfaceTintColor,
+      isScrolledUnder ?
+        _elevation * 2.0 > 4.0 ? _elevation * 2.0 : 4.0
+        : _elevation,
+    );
     return Container(
       decoration: BoxDecoration(
         gradient: LinearGradient(
@@ -234,8 +267,8 @@ class _CategoryControlState extends ConsumerState<CategoryControl> {
   void didChangeDependencies() {
     translate = S.of(context);
     final ThemeData theme = Theme.of(context);
-    _accentColor = theme.colorScheme.secondary;
-    _accentTextThemeColor = theme.colorScheme.onSecondary;
+    _accentColor = theme.colorScheme.secondaryContainer;
+    _accentTextThemeColor = theme.colorScheme.onSecondaryContainer;
     super.didChangeDependencies();
   }
 
@@ -247,7 +280,7 @@ class _CategoryControlState extends ConsumerState<CategoryControl> {
 
   @override
   Widget build(BuildContext context) {
-    final _search = ref.watch(categorySearchProvider.notifier).state;
+    final _search = ref.watch(categorySearchProvider);
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       mainAxisSize: MainAxisSize.max,
@@ -255,15 +288,15 @@ class _CategoryControlState extends ConsumerState<CategoryControl> {
         Expanded(
           child: OutlinedButton.icon(
             style: OutlinedButton.styleFrom(
-                foregroundColor: _search == AmiiboCategory.Name
-                    ? _accentTextThemeColor
-                    : null,
-                shape: RoundedRectangleBorder(
-                  borderRadius:
-                      const BorderRadius.horizontal(left: Radius.circular(8)),
-                ),
-                backgroundColor:
-                    _search == AmiiboCategory.Name ? _accentColor : null),
+              foregroundColor:
+                  _search == AmiiboCategory.Name ? _accentTextThemeColor : null,
+              shape: RoundedRectangleBorder(
+                borderRadius:
+                    const BorderRadius.horizontal(left: Radius.circular(16.0)),
+              ),
+              backgroundColor:
+                  _search == AmiiboCategory.Name ? _accentColor : null,
+            ),
             onPressed: () => _selectCategory(ref, AmiiboCategory.Name),
             icon: const Icon(
               Icons.group,
@@ -300,7 +333,7 @@ class _CategoryControlState extends ConsumerState<CategoryControl> {
                   : null,
               shape: RoundedRectangleBorder(
                 borderRadius:
-                    const BorderRadius.horizontal(right: Radius.circular(8)),
+                    const BorderRadius.horizontal(right: Radius.circular(16.0)),
               ),
               backgroundColor:
                   _search == AmiiboCategory.AmiiboSeries ? _accentColor : null,

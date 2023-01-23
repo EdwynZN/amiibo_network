@@ -63,16 +63,22 @@ class AmiiboNetwork extends ConsumerWidget {
       ],
       supportedLocales: S.delegate.supportedLocales,
       debugShowCheckedModeBanner: false,
-      theme: themeMode.theme.light,
-      darkTheme: themeMode.theme.dark,
+      theme: themeMode.light,
+      darkTheme: themeMode.dark,
       themeMode: themeMode.preferredTheme,
       routerDelegate: router.routerDelegate,
       routeInformationParser: router.routeInformationParser,
       routeInformationProvider: router.routeInformationProvider,
       builder: (context, child) {
-        final theme = AppBarTheme.of(context);
+        final theme = AppBarTheme.of(context).systemOverlayStyle;
         return AnnotatedRegion<SystemUiOverlayStyle>(
-          value: theme.systemOverlayStyle!,
+          value: SystemUiOverlayStyle(
+            systemNavigationBarColor: theme?.systemNavigationBarColor,
+            systemNavigationBarContrastEnforced: theme?.systemNavigationBarContrastEnforced,
+            systemNavigationBarDividerColor: theme?.systemNavigationBarDividerColor,
+            systemNavigationBarIconBrightness: theme?.systemNavigationBarIconBrightness,
+            systemStatusBarContrastEnforced: theme?.systemStatusBarContrastEnforced,
+          ),
           child: child!,
         );
       },

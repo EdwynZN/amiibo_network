@@ -35,95 +35,93 @@ class SettingsPage extends ConsumerWidget {
     return ListTileTheme.merge(
       iconColor: theme.iconTheme.color,
       textColor: theme.textTheme.bodyText2!.color,
-      child: SafeArea(
-        child: Scaffold(
-          appBar: AppBar(
-            actions: <Widget>[
-              Align(
-                alignment: Alignment.center,
-                child: Padding(
-                  padding: EdgeInsets.only(right: 8),
-                  child: _DropMenu(key: Key('theme')),
+      child: Scaffold(
+        appBar: AppBar(
+          actions: <Widget>[
+            Align(
+              alignment: Alignment.center,
+              child: Padding(
+                padding: EdgeInsets.only(right: 8),
+                child: _DropMenu(key: Key('theme')),
+              ),
+            )
+          ],
+          title: Text(translate.settings),
+        ),
+        body: Scrollbar(
+          child: CustomScrollView(
+            slivers: <Widget>[
+              SliverList(
+                delegate: SliverChildListDelegate.fixed([
+                  _ResetCollection(),
+                  _SaveCollection(),
+                  _CardSettings(
+                    title: translate.appearance,
+                    subtitle: translate.appearanceSubtitle,
+                    icon: const Icon(Icons.color_lens),
+                    onTap: () => ThemeButton.dialog(context),
+                  ),
+                  _CardSettings(
+                    title: translate.changelog,
+                    subtitle: translate.changelogSubtitle,
+                    icon: const Icon(Icons.build),
+                    onTap: () {
+                      showDialog(
+                        context: context,
+                        builder: (context) => MarkdownReader(
+                          file: translate.changelog.replaceAll(' ', '_'),
+                          title: translate.changelogSubtitle,
+                        ),
+                      );
+                    },
+                  ),
+                  _CardSettings(
+                    title: translate.credits,
+                    subtitle: translate.creditsSubtitle,
+                    icon: const Icon(Icons.theaters),
+                    onTap: () => showDialog(
+                      context: context,
+                      builder: (context) => MarkdownReader(
+                        file: 'Credits',
+                        title: translate.creditsSubtitle,
+                      ),
+                    ),
+                  ),
+                  _CardSettings(
+                    title: translate.privacyPolicy,
+                    subtitle: translate.privacySubtitle,
+                    icon: const Icon(Icons.help),
+                    onTap: () => showDialog(
+                      context: context,
+                      builder: (context) => MarkdownReader(
+                        file: translate.privacyPolicy.replaceAll(' ', '_'),
+                        title: translate.privacySubtitle,
+                      ),
+                    ),
+                  ),
+                  _ProjectButtons(
+                    icons: const <IconData>[Icons.code, Icons.bug_report],
+                    titles: <String>['Github', translate.reportBug],
+                    urls: const <String>[github, reportIssue],
+                  ),
+                  const _SupportButtons()
+                ]),
+              ),
+              SliverFillRemaining(
+                hasScrollBody: false,
+                child: SizedBox(
+                  height: 0,
+                  child: Image.asset(
+                    NetworkIcons.iconApp,
+                    fit: BoxFit.scaleDown,
+                    color: color,
+                  ),
                 ),
               )
             ],
-            title: Text(translate.settings),
           ),
-          body: Scrollbar(
-            child: CustomScrollView(
-              slivers: <Widget>[
-                SliverList(
-                  delegate: SliverChildListDelegate.fixed([
-                    _ResetCollection(),
-                    _SaveCollection(),
-                    _CardSettings(
-                      title: translate.appearance,
-                      subtitle: translate.appearanceSubtitle,
-                      icon: const Icon(Icons.color_lens),
-                      onTap: () => ThemeButton.dialog(context),
-                    ),
-                    _CardSettings(
-                      title: translate.changelog,
-                      subtitle: translate.changelogSubtitle,
-                      icon: const Icon(Icons.build),
-                      onTap: () {
-                        showDialog(
-                          context: context,
-                          builder: (context) => MarkdownReader(
-                            file: translate.changelog.replaceAll(' ', '_'),
-                            title: translate.changelogSubtitle,
-                          ),
-                        );
-                      },
-                    ),
-                    _CardSettings(
-                      title: translate.credits,
-                      subtitle: translate.creditsSubtitle,
-                      icon: const Icon(Icons.theaters),
-                      onTap: () => showDialog(
-                        context: context,
-                        builder: (context) => MarkdownReader(
-                          file: 'Credits',
-                          title: translate.creditsSubtitle,
-                        ),
-                      ),
-                    ),
-                    _CardSettings(
-                      title: translate.privacyPolicy,
-                      subtitle: translate.privacySubtitle,
-                      icon: const Icon(Icons.help),
-                      onTap: () => showDialog(
-                        context: context,
-                        builder: (context) => MarkdownReader(
-                          file: translate.privacyPolicy.replaceAll(' ', '_'),
-                          title: translate.privacySubtitle,
-                        ),
-                      ),
-                    ),
-                    _ProjectButtons(
-                      icons: const <IconData>[Icons.code, Icons.bug_report],
-                      titles: <String>['Github', translate.reportBug],
-                      urls: const <String>[github, reportIssue],
-                    ),
-                    _SupportButtons()
-                  ]),
-                ),
-                SliverFillRemaining(
-                  hasScrollBody: false,
-                  child: SizedBox(
-                    height: 0,
-                    child: Image.asset(
-                      NetworkIcons.iconApp,
-                      fit: BoxFit.scaleDown,
-                      color: color,
-                    ),
-                  ),
-                )
-              ],
-            ),
-          ),
-          bottomNavigationBar: const BottomBar(),
         ),
+        bottomNavigationBar: const BottomBar(),
       ),
     );
   }
@@ -140,7 +138,7 @@ class _SupportButtons extends ConsumerWidget {
     }
   }
 
-  _SupportButtons({Key? key}) : super(key: key);
+  const _SupportButtons({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -148,6 +146,11 @@ class _SupportButtons extends ConsumerWidget {
     final mediaBrightness = MediaQuery.of(context).platformBrightness;
     final themeMode = ref.watch(themeProvider.select((t) => t.preferredTheme));
     final color = colorOnThemeMode(themeMode, mediaBrightness);
+    final theme = Theme.of(context);
+    final style = ElevatedButton.styleFrom(
+      backgroundColor: theme.colorScheme.tertiaryContainer,
+      foregroundColor: theme.colorScheme.onTertiaryContainer,
+    );
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: <Widget>[
@@ -155,6 +158,7 @@ class _SupportButtons extends ConsumerWidget {
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
             child: ElevatedButton.icon(
+              style: style,
               onPressed: LaunchReview.launch,
               icon: Image.asset(
                 NetworkIcons.iconApp,
@@ -176,6 +180,7 @@ class _SupportButtons extends ConsumerWidget {
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
             child: ElevatedButton.icon(
+              style: style,
               onPressed: () => _launchURL(kofi, context),
               icon: Image.asset(
                 NetworkIcons.koFiIcon,
@@ -220,6 +225,11 @@ class _ProjectButtons extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final style = ElevatedButton.styleFrom(
+      backgroundColor: theme.colorScheme.tertiaryContainer,
+      foregroundColor: theme.colorScheme.onTertiaryContainer,
+    );
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: <Widget>[
@@ -228,6 +238,7 @@ class _ProjectButtons extends StatelessWidget {
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
               child: ElevatedButton.icon(
+                style: style,
                 onPressed: () => _launchURL(urls[index], context),
                 icon: Icon(icons[index]),
                 label: FittedBox(
@@ -468,6 +479,7 @@ class _DropMenu extends ConsumerWidget {
       onChanged: themeMode.themeDB,
       //underline: const SizedBox.shrink(),
       iconEnabledColor: themeStyle.iconTheme!.color,
+      dropdownColor: Theme.of(context).colorScheme.surface,
       elevation: 4,
       hint: Row(
         mainAxisSize: MainAxisSize.max,
@@ -567,69 +579,81 @@ class _BottomBarState extends ConsumerState<BottomBar> {
   @override
   Widget build(BuildContext context) {
     final S translate = S.of(context);
+    final theme = Theme.of(context);
+    final style = TextButton.styleFrom(
+      minimumSize: const Size.fromHeight(48),
+      shape: const BeveledRectangleBorder(),
+    );
     return BottomAppBar(
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: <Widget>[
-          Expanded(
-            child: TextButton.icon(
-              style: TextButton.styleFrom(
-                minimumSize: Size.fromHeight(48),
-                shape: BeveledRectangleBorder(),
-                foregroundColor: Theme.of(context).textTheme.headline6!.color,
-                backgroundColor: Theme.of(context).cardColor,
+      color: theme.colorScheme.tertiaryContainer,
+      elevation: 6.0,
+      child: ConstrainedBox(
+        constraints: BoxConstraints(maxHeight: 48.0),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            Expanded(
+              child: TextButton.icon(
+                style: style,
+                onPressed: () async => await _writePermission(ref),
+                icon: const Icon(Icons.file_upload),
+                label: Text(translate.export),
               ),
-              onPressed: () async => await _writePermission(ref),
-              icon: const Icon(Icons.file_upload),
-              label: Text(translate.export),
             ),
-          ),
-          const Padding(padding: const EdgeInsets.symmetric(horizontal: 0.5)),
-          Expanded(
-            child: TextButton.icon(
-              style: TextButton.styleFrom(
-                minimumSize: Size.fromHeight(48),
-                shape: BeveledRectangleBorder(),
-                foregroundColor: Theme.of(context).textTheme.headline6!.color,
-                backgroundColor: Theme.of(context).cardColor,
+            const VerticalDivider(
+              width: 1.0,
+              indent: 6.0,
+              endIndent: 6.0,
+            ),
+            Expanded(
+              child: TextButton.icon(
+                style: style,
+                onPressed: () async => await _openFileExplorer(ref),
+                icon: const Icon(Icons.file_download),
+                label: Text(translate.import),
               ),
-              onPressed: () async => await _openFileExplorer(ref),
-              icon: const Icon(Icons.file_download),
-              label: Text(translate.import),
-            ),
-          )
-        ],
+            )
+          ],
+        ),
       ),
     );
   }
 }
 
 class _CardSettings extends StatelessWidget {
-  final String? title;
+  final String title;
   final String? subtitle;
   final Widget? icon;
   final VoidCallback? onTap;
 
-  // ignore: unused_element
-  _CardSettings({super.key, this.title, this.subtitle, this.icon, this.onTap});
+  _CardSettings({
+    // ignore: unused_element
+    super.key,
+    required this.title,
+    this.subtitle,
+    this.icon,
+    this.onTap,
+  });
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return Card(
-      elevation: 6.0,
+      elevation: 4.0,
       margin: const EdgeInsets.symmetric(vertical: 6.0, horizontal: 8.0),
       child: Material(
         color: Colors.transparent,
-        shape: Theme.of(context).cardTheme.shape,
+        shape: theme.cardTheme.shape,
         clipBehavior: Clip.hardEdge,
         child: ListTile(
           minVerticalPadding: 0.0,
           visualDensity: const VisualDensity(vertical: -2.5),
-          title: Text(title!),
+          title: Text(title),
           subtitle: subtitle == null
               ? null
-              : Text(subtitle!, softWrap: false, overflow: TextOverflow.ellipsis),
+              : Text(subtitle!,
+                  softWrap: false, overflow: TextOverflow.ellipsis),
           onTap: onTap,
           leading: Container(
             padding: const EdgeInsets.only(right: 16.0, top: 8.0, bottom: 8.0),
@@ -637,7 +661,7 @@ class _CardSettings extends StatelessWidget {
               border: Border(
                 right: BorderSide(
                   width: 1.0,
-                  color: Theme.of(context).dividerColor,
+                  color: theme.dividerColor,
                 ),
               ),
             ),

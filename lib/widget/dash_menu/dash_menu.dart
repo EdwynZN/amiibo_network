@@ -261,7 +261,7 @@ class _DashMenuState extends State<DashMenu> with TickerProviderStateMixin {
       onHorizontalDragEnd: widget.enableGesture ? _handleDragEnd : null,
       onHorizontalDragCancel: _handleDragCancel,
       child: Material(
-        color: widget.backgroundColor ?? theme.primaryColor,
+        color: widget.backgroundColor ?? theme.backgroundColor,
         child: SafeArea(
           top: false,
           child: CustomMultiChildLayout(

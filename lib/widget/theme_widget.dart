@@ -42,13 +42,14 @@ class ThemeButton extends HookConsumerWidget {
       builder: (BuildContext context) {
         final double spacing = _spacing(MediaQuery.of(context).size.width);
         final S translate = S.of(context);
+        final theme = Theme.of(context);
         return SimpleDialog(
           title: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Widget>[
               Text(
                 translate.mode,
-                style: Theme.of(context).textTheme.headline4,
+                style: theme.textTheme.headline4,
               ),
               const ThemeButton(),
             ],
@@ -66,29 +67,30 @@ class ThemeButton extends HookConsumerWidget {
                 constraints: _constraint,
                 child: Consumer(
                   builder: (context, ref, child) {
-                    final theme = ref.watch(themeProvider);
+                    final themeRef = ref.watch(themeProvider);
                     return Wrap(
                       runSpacing: 10.0,
                       spacing: spacing,
                       children: <Widget>[
-                        for (MaterialColor color in Colors.primaries)
+                        for (Color color in themeRef.lightColors)
                           GestureDetector(
-                            onTap: () => theme
-                                .lightTheme(Colors.primaries.indexOf(color)),
+                            onTap: () => themeRef.lightTheme(
+                                themeRef.lightColors.indexOf(color)),
                             child: CircleAvatar(
-                                backgroundColor: color,
-                                radius: _circleSize / 2,
-                                child: AnimatedSwitcher(
-                                  duration: const Duration(milliseconds: 250),
-                                  child: theme.lightOption ==
-                                          Colors.primaries.indexOf(color)
-                                      ? const Icon(
-                                          Icons.radio_button_unchecked,
-                                          size: _circleSize * 0.9,
-                                          color: Colors.white70,
-                                        )
-                                      : const SizedBox(),
-                                )),
+                              backgroundColor: color,
+                              radius: _circleSize / 2,
+                              child: AnimatedSwitcher(
+                                duration: const Duration(milliseconds: 250),
+                                child: themeRef.lightOption ==
+                                        themeRef.lightColors.indexOf(color)
+                                    ? const Icon(
+                                        Icons.radio_button_unchecked,
+                                        size: _circleSize * 0.9,
+                                        color: Colors.white70,
+                                      )
+                                    : const SizedBox(),
+                              ),
+                            ),
                           ),
                       ],
                     );
@@ -98,66 +100,37 @@ class ThemeButton extends HookConsumerWidget {
             ),
             Text(
               translate.darkTheme,
-              style: Theme.of(context).textTheme.headline4,
+              style: theme.textTheme.headline4,
             ),
             Padding(
               padding: const EdgeInsets.fromLTRB(0, 16, 0, 0),
               child: Consumer(
                 builder: (context, ref, child) {
-                  final theme = ref.watch(themeProvider);
+                  final themeRef = ref.watch(themeProvider);
                   return Wrap(
                     spacing: spacing,
                     runSpacing: 10.0,
                     children: <Widget>[
-                      GestureDetector(
-                        onTap: () => theme.darkTheme(0),
-                        child: CircleAvatar(
-                            backgroundColor: Colors.blueGrey[800],
+                      for (Color color in themeRef.darkColors)
+                        GestureDetector(
+                          onTap: () => themeRef.darkTheme(
+                              themeRef.darkColors.indexOf(color)),
+                          child: CircleAvatar(
+                            backgroundColor: color,
                             radius: _circleSize / 2,
                             child: AnimatedSwitcher(
                               duration: const Duration(milliseconds: 250),
-                              child: theme.darkOption == 0
+                              child: themeRef.darkOption ==
+                                      themeRef.darkColors.indexOf(color)
                                   ? const Icon(
                                       Icons.radio_button_unchecked,
                                       size: _circleSize * 0.9,
                                       color: Colors.white70,
                                     )
                                   : const SizedBox(),
-                            )),
-                      ),
-                      GestureDetector(
-                        onTap: () => theme.darkTheme(1),
-                        child: CircleAvatar(
-                            backgroundColor: Colors.grey[800],
-                            radius: _circleSize / 2,
-                            child: AnimatedSwitcher(
-                              duration: const Duration(milliseconds: 250),
-                              child: theme.darkOption == 1
-                                  ? const Icon(
-                                      Icons.radio_button_unchecked,
-                                      size: _circleSize * 0.9,
-                                      color: Colors.white70,
-                                    )
-                                  : const SizedBox(),
-                            )),
-                      ),
-                      GestureDetector(
-                        onTap: () => theme.darkTheme(2),
-                        child: CircleAvatar(
-                          backgroundColor: Colors.black,
-                          radius: _circleSize / 2,
-                          child: AnimatedSwitcher(
-                            duration: const Duration(milliseconds: 250),
-                            child: theme.darkOption == 2
-                              ? const Icon(
-                                  Icons.radio_button_unchecked,
-                                  size: _circleSize * 0.9,
-                                  color: Colors.white70,
-                                )
-                              : const SizedBox(),
+                            ),
                           ),
                         ),
-                      ),
                     ],
                   );
                 },
@@ -180,7 +153,7 @@ class ThemeButton extends HookConsumerWidget {
       case ThemeMode.dark:
         return const Icon(
           Icons.brightness_3,
-          key: Key('Dark'), 
+          key: Key('Dark'),
           color: Colors.amber,
         );
       case ThemeMode.system:
@@ -195,13 +168,12 @@ class ThemeButton extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final ThemeMode? theme =
-        ref.watch(themeProvider.select<ThemeMode?>((value) => value.preferredTheme));
+    final ThemeMode? theme = ref.watch(
+        themeProvider.select<ThemeMode?>((value) => value.preferredTheme));
     return InkResponse(
       radius: 18,
-      splashFactory: InkRipple.splashFactory,
+      splashFactory: InkSparkle.splashFactory,
       highlightColor: Colors.transparent,
-      splashColor: Theme.of(context).indicatorColor,
       child: AnimatedSwitcher(
         duration: const Duration(milliseconds: 800),
         reverseDuration: const Duration(milliseconds: 400),
