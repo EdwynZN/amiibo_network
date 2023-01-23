@@ -38,7 +38,7 @@ abstract class AmiiboTheme {
   List<Color> get darkColors;
 }
 
-class AmiiboTheme3 implements AmiiboTheme {
+class _Theme implements AmiiboTheme {
   ThemeData? _lightTheme;
   ThemeData? _darkTheme;
   late ColorScheme _darkScheme;
@@ -163,7 +163,7 @@ class AmiiboTheme3 implements AmiiboTheme {
         color: Colors.white70, fontSize: 18, fontWeight: FontWeight.w600),
   );
 
-  AmiiboTheme3({int? light, int? dark}) {
+  _Theme({int? light, int? dark}) {
     setLight = light;
     setDark = dark;
   }
