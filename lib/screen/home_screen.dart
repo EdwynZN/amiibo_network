@@ -214,24 +214,9 @@ class HomeScreenState extends ConsumerState<HomeScreen>
                       floating: true,
                       forward: _multipleSelection,
                       snap: true,
-                      leading: Builder(
-                        builder: (context) {
-                          return IconButton(
-                            icon: Hero(
-                              tag: 'MenuButton',
-                              child: ImplicitIcon(
-                                key: Key('Menu'),
-                                forward: _multipleSelection,
-                              ),
-                            ),
-                            tooltip: _multipleSelection
-                                ? localizations.cancelButtonLabel
-                                : localizations.openAppDrawerTooltip,
-                            onPressed: _multipleSelection
-                                ? _cancelSelection
-                                : DashMenu.of(context).openDrawer,
-                          );
-                        },
+                      leading: _Leading(
+                        isClose: _multipleSelection,
+                        onClose: _cancelSelection,
                       ),
                       title: const _TitleAppBar(),
                       onTap: _multipleSelection ? null : _search,
@@ -395,6 +380,90 @@ class _AmiiboListWidget extends HookConsumerWidget {
   }
 }
 
+class _Leading extends HookConsumerWidget {
+  final bool isClose;
+  final VoidCallback onClose;
+
+  const _Leading({
+    // ignore: unused_element
+    super.key,
+    required this.isClose,
+    required this.onClose,
+  });
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final localizations = MaterialLocalizations.of(context);
+    final searchSelect = ref.watch(
+      querySearchProvider.select<bool>((search) {
+        final category = search.category;
+        if (category == AmiiboCategory.Game ||
+            category == AmiiboCategory.Name ||
+            category == AmiiboCategory.AmiiboSeries) {
+          return true;
+        }
+        return false;
+      }),
+    );
+    final isForward = searchSelect || isClose;
+    final effectiveSearch = searchSelect && !isClose;
+    final HeroFlightShuttleBuilder flightShuttleBuilder =
+        useCallback<HeroFlightShuttleBuilder>((
+      BuildContext flightContext,
+      Animation<double> animation,
+      HeroFlightDirection flightDirection,
+      BuildContext fromHeroContext,
+      BuildContext toHeroContext,
+    ) {
+      if (isForward) {
+        return AnimatedBuilder(
+          animation: animation,
+          child: flightDirection == HeroFlightDirection.push
+              ? const Icon(Icons.arrow_back)
+              : const Icon(Icons.close),
+          builder: (context, child) {
+            return Opacity(
+              opacity: flightDirection == HeroFlightDirection.push
+                ? animation.value
+                : 1 - animation.value,
+              child: child,
+            );
+          },
+        );
+      }
+
+      return AnimatedIcon(
+        icon: AnimatedIcons.menu_arrow,
+        progress: animation,
+      );
+    }, [isForward]);
+    final VoidCallback onPressed = useCallback(() {
+      if (effectiveSearch) {
+        ref.read(queryProvider.notifier).restart();
+      } else if (isClose) {
+        onClose();
+      } else {
+        DashMenu.of(context).openDrawer();
+      }
+    }, [effectiveSearch, isClose, onClose]);
+    final icon = ImplicitIcon(key: const Key('Menu'), forward: isForward);
+    return IconButton(
+      icon: Hero(
+        key: const Key('HeroMenu'),
+        flightShuttleBuilder: flightShuttleBuilder,
+        tag: 'MenuButton',
+        child: icon,
+      ),
+      tooltip: effectiveSearch
+          ? localizations.closeButtonTooltip
+          : isClose
+              ? localizations.cancelButtonLabel
+              : localizations.openAppDrawerTooltip,
+      onPressed: onPressed,
+    );
+  }
+}
+
 class _DefaultOptions extends StatelessWidget {
   const _DefaultOptions({Key? key}) : super(key: key);
 
@@ -476,9 +545,7 @@ class _TitleAppBar extends ConsumerWidget {
         break;
     }
     child = Text.rich(
-      categorySpan != null
-        ? TextSpan(children: [categorySpan, title])
-        : title,
+      categorySpan != null ? TextSpan(children: [categorySpan, title]) : title,
     );
     return Tooltip(
       message: message,

@@ -35,18 +35,6 @@ class SearchScreen extends HookConsumerWidget {
             pinned: true,
             leading: IconButton(
               icon: Hero(
-                flightShuttleBuilder: (
-                  BuildContext flightContext,
-                  Animation<double> animation,
-                  HeroFlightDirection flightDirection,
-                  BuildContext fromHeroContext,
-                  BuildContext toHeroContext,
-                ) {
-                  return AnimatedIcon(
-                    icon: AnimatedIcons.menu_arrow,
-                    progress: animation,
-                  );
-                },
                 tag: 'MenuButton',
                 child: const BackButtonIcon(),
               ),
