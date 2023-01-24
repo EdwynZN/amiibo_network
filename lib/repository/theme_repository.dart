@@ -38,88 +38,10 @@ abstract class AmiiboTheme {
   List<Color> get darkColors;
 }
 
-class AmiiboTheme3 implements AmiiboTheme {
+class _Theme implements AmiiboTheme {
   ThemeData? _lightTheme;
   ThemeData? _darkTheme;
-  late ColorScheme _darkScheme;
-  static const TextTheme _textTheme = TextTheme(
-    titleLarge: TextStyle(
-      fontSize: 18,
-      fontWeight: FontWeight.w500,
-      letterSpacing: 0.15,
-    ),
-    titleMedium: TextStyle(
-      fontSize: 16,
-      fontWeight: FontWeight.normal,
-      letterSpacing: 0.15,
-    ),
-    titleSmall: TextStyle(
-      fontSize: 14,
-      fontWeight: FontWeight.w500,
-      letterSpacing: 0.1,
-    ),
-    bodyLarge: TextStyle(
-      fontSize: 16,
-      fontWeight: FontWeight.normal,
-      letterSpacing: 0.5,
-    ),
-    bodyMedium: TextStyle(
-      fontSize: 14,
-      fontWeight: FontWeight.normal,
-      letterSpacing: 0.25,
-    ),
-    bodySmall: TextStyle(
-      fontSize: 12,
-      fontWeight: FontWeight.normal,
-      letterSpacing: 0.4,
-    ),
-    labelLarge: TextStyle(
-      fontSize: 14,
-      fontWeight: FontWeight.w500,
-      letterSpacing: 1.25,
-    ),
-    labelMedium: TextStyle(
-      fontSize: 12,
-      fontWeight: FontWeight.w500,
-      letterSpacing: 1.25,
-    ),
-    labelSmall: TextStyle(
-      fontSize: 10,
-      fontWeight: FontWeight.normal,
-      letterSpacing: 1.5,
-    ),
-    displayLarge: TextStyle(
-      fontSize: 20,
-      fontWeight: FontWeight.w300,
-      letterSpacing: -1.5,
-    ),
-    displayMedium: TextStyle(
-      fontSize: 18,
-      fontWeight: FontWeight.w300,
-      letterSpacing: -0.5,
-    ),
-    displaySmall: TextStyle(
-      fontSize: 16,
-      fontWeight: FontWeight.normal,
-      letterSpacing: 0.0,
-    ),
-    headlineLarge: TextStyle(
-      fontSize: 15,
-      fontWeight: FontWeight.normal,
-      letterSpacing: 0.0,
-    ),
-    headlineMedium: TextStyle(
-      fontSize: 18,
-      fontWeight: FontWeight.normal,
-      letterSpacing: 0.25,
-    ),
-    headlineSmall: TextStyle(
-      fontSize: 16,
-      fontWeight: FontWeight.normal,
-      letterSpacing: 0.0,
-    ),
-  );
-
+  late MaterialAccentColor _darkAccentColor;
   TextTheme __darkAccentTextTheme = const TextTheme(
     subtitle1: TextStyle(
         color: Colors.black87, fontSize: 16, fontWeight: FontWeight.w400),
@@ -163,438 +85,278 @@ class AmiiboTheme3 implements AmiiboTheme {
         color: Colors.white70, fontSize: 18, fontWeight: FontWeight.w600),
   );
 
-  AmiiboTheme3({int? light, int? dark}) {
+  _Theme({int? light, int? dark}) {
     setLight = light;
     setDark = dark;
   }
 
-  ThemeData _themeFromScheme(ColorScheme scheme) {
-    final overlay = scheme.primary.withOpacity(0.24);
-    final inverseBrightness = scheme.brightness == Brightness.light
-        ? Brightness.dark
-        : Brightness.light;
-    return ThemeData(
-      // GENERAL CONFIGURATION
-      applyElevationOverlayColor: true,
-      cupertinoOverrideTheme: const NoDefaultCupertinoThemeData(),
-      extensions: const [],
-      inputDecorationTheme: const InputDecorationTheme(),
-      materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-      pageTransitionsTheme: const PageTransitionsTheme(),
-      platform: null,
-      scrollbarTheme: ScrollbarThemeData(
-        thumbColor: MaterialStatePropertyAll(scheme.secondary),
-      ),
+  set setLight(int? light) {
+    light ??= 0;
+    MaterialColor color = Colors.primaries[light.clamp(0, 17)];
+    MaterialAccentColor accentColor = Colors.accents[light.clamp(0, 15)];
+    if (light >= 17)
+      accentColor = const MaterialAccentColor(
+        0xFF4D6773,
+        <int, Color>{
+          100: Color(0xFFA7C0CD),
+          200: Color(0xFF78909C),
+          400: Color(0xFF62727b),
+          700: Color(0xFF546E7A),
+        },
+      );
+    _darkAccentColor = accentColor;
+    final Brightness _brightnessColor =
+        ThemeData.estimateBrightnessForColor(color);
+    final Brightness _brightnessAccentColor =
+        ThemeData.estimateBrightnessForColor(accentColor);
+    final Brightness _brightnessPrimaryColor =
+        ThemeData.estimateBrightnessForColor(accentColor[100]!);
+    final Brightness _brightnessAccentTextTheme =
+        ThemeData.estimateBrightnessForColor(accentColor[700]!);
+    _lightTheme = ThemeData(
       splashFactory: InkSparkle.constantTurbulenceSeedSplashFactory,
-      useMaterial3: true,
-      visualDensity: const VisualDensity(),
-      // COLOR CONFIGURATION
+      primaryColorLight: accentColor[100],
+      primaryColorDark: accentColor[600],
+      primaryIconTheme: const IconThemeData(color: Colors.black),
+      textSelectionTheme: TextSelectionThemeData(
+        selectionHandleColor: color[300],
+        selectionColor: accentColor.withOpacity(0.5),
+        cursorColor: Colors.black12,
+      ),
+      brightness: _brightnessColor,
       appBarTheme: AppBarTheme(
-        elevation: 2.0,
-        surfaceTintColor: scheme.surfaceTint,
-        scrolledUnderElevation: 8.0,
+        elevation: 0.0,
+        surfaceTintColor: color,
+        backgroundColor: color,
         systemOverlayStyle: SystemUiOverlayStyle(
-          statusBarBrightness: inverseBrightness,
-          statusBarIconBrightness: inverseBrightness,
-          systemNavigationBarIconBrightness: inverseBrightness,
-          systemNavigationBarColor: scheme.surface,
-          systemStatusBarContrastEnforced: false,
-          statusBarColor: Colors.transparent,
+          statusBarBrightness: _brightnessColor,
+          statusBarIconBrightness: _brightnessColor == Brightness.light
+              ? Brightness.dark
+              : Brightness.light,
+          systemNavigationBarIconBrightness:
+              _brightnessColor == Brightness.light
+                  ? Brightness.dark
+                  : Brightness.light,
+          statusBarColor: color,
+          systemNavigationBarColor: color,
         ),
-        backgroundColor: scheme.background,
-        titleTextStyle:
-            _textTheme.titleMedium?.copyWith(color: scheme.onBackground),
-        toolbarTextStyle:
-            _textTheme.bodyMedium?.copyWith(color: scheme.onBackground),
-        foregroundColor: scheme.onBackground,
-        iconTheme: IconThemeData(color: scheme.onBackground),
-      ),
-      backgroundColor: scheme.background,
-      bannerTheme: MaterialBannerThemeData(
-        backgroundColor: scheme.tertiary,
-        contentTextStyle: _textTheme.titleMedium,
-        elevation: 4.0,
-      ),
-
-      /// Deprecated in the future
-      bottomAppBarColor: scheme.surface,
-      bottomAppBarTheme: BottomAppBarTheme(
-        color: scheme.surface,
-        elevation: 0.0,
-      ),
-      bottomSheetTheme: BottomSheetThemeData(
-        elevation: 0.0,
-        backgroundColor: scheme.background,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.vertical(top: Radius.circular(8)),
+        titleTextStyle: _brightnessColor == Brightness.light
+            ? __darkAccentTextTheme.headline6!
+            : __lightAccentTextTheme.headline6!.apply(color: Colors.white),
+        foregroundColor:
+            _brightnessColor == Brightness.light ? Colors.black : Colors.white,
+        toolbarTextStyle: _brightnessColor == Brightness.light
+            ? __darkAccentTextTheme.bodyText2
+            : __lightAccentTextTheme.bodyText2,
+        iconTheme: IconThemeData(
+          color: _brightnessColor == Brightness.light
+              ? Colors.black
+              : Colors.white,
         ),
-        modalBackgroundColor: scheme.primaryContainer,
-        modalElevation: 0.0,
       ),
-      bottomNavigationBarTheme: BottomNavigationBarThemeData(
-        backgroundColor: scheme.secondaryContainer,
-        elevation: 8.0,
-        type: BottomNavigationBarType.fixed,
-        selectedIconTheme: const IconThemeData(),
-        selectedItemColor: scheme.onSecondaryContainer,
-        selectedLabelStyle: _textTheme.titleSmall!.copyWith(
-          color: scheme.onSecondaryContainer,
-        ),
-        showSelectedLabels: true,
-        showUnselectedLabels: true,
-        unselectedIconTheme: const IconThemeData(),
-        unselectedItemColor: scheme.outline,
-        unselectedLabelStyle: _textTheme.titleSmall,
-        landscapeLayout: BottomNavigationBarLandscapeLayout.spread,
+      unselectedWidgetColor: Colors.black87,
+      dividerColor: color,
+      disabledColor: Colors.black26,
+      scaffoldBackgroundColor: color[50],
+      iconTheme: const IconThemeData(color: Colors.black),
+      floatingActionButtonTheme: FloatingActionButtonThemeData(
+        shape: const CircleBorder(),
+        foregroundColor: _brightnessAccentColor == Brightness.dark
+            ? Colors.white
+            : Colors.black,
+        backgroundColor: accentColor,
       ),
-
-      /// Deprecated in the future
-      brightness: scheme.brightness,
-      buttonBarTheme: const ButtonBarThemeData(),
-      buttonTheme: ButtonThemeData(
-        // Deprecated: Used in old RaisedButton/FlatButton
-        textTheme: ButtonTextTheme.normal,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-        layoutBehavior: ButtonBarLayoutBehavior.constrained,
-        materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-        height: 48,
-      ),
-      canvasColor: scheme.secondaryContainer,
-      cardColor: scheme.secondaryContainer,
+      errorColor: Colors.redAccent,
+      canvasColor: color[50],
+      primarySwatch: color,
+      primaryColor: color,
+      backgroundColor: color[100],
+      highlightColor: color[200],
+      selectedRowColor: color[200],
+      cardColor: color[100],
       cardTheme: CardTheme(
-        color: scheme.secondaryContainer,
-        margin: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
+        color: color.shade100,
+        margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
         shape: const RoundedRectangleBorder(
           borderRadius: BorderRadius.all(Radius.circular(8.0)),
         ),
-        elevation: 4.0,
-        shadowColor: scheme.surface.withOpacity(0.12),
-        surfaceTintColor: scheme.surfaceTint,
+        elevation: 8.0,
+        surfaceTintColor: color.shade100,
       ),
-      checkboxTheme: CheckboxThemeData(
-        checkColor: MaterialStateProperty.resolveWith<Color?>((states) {
-          if (states.contains(MaterialState.disabled)) return null;
-          return scheme.onPrimary;
-        }),
-        fillColor: MaterialStateProperty.resolveWith<Color?>((states) {
-          if (states.contains(MaterialState.disabled)) return null;
-          if (states.contains(MaterialState.focused) ||
-              states.contains(MaterialState.pressed)) return scheme.secondary;
-          return scheme.tertiaryContainer;
-        }),
+      colorScheme: ColorScheme.light(
+        background: Colors.white,
+        error: Colors.redAccent,
+        onBackground: Colors.black,
+        onError: Colors.white,
+        primary: color,
+        onPrimary: Colors.white,
+        onSecondary: _brightnessAccentTextTheme == Brightness.dark
+            ? Colors.white70
+            : Colors.black,
+        secondary: accentColor.shade700,
+        surface: Colors.white,
+        onSurface: Colors.black,
+        primaryContainer: color.shade700,
+        secondaryContainer: accentColor.shade700,
+        brightness: _brightnessColor,
+        surfaceTint: color.shade100,
       ),
-      chipTheme: ChipThemeData(
-        surfaceTintColor: scheme.surfaceTint,
-        elevation: 4.0,
-        pressElevation: 6.0,
-        checkmarkColor: scheme.onPrimary,
-        backgroundColor: scheme.background,
-        deleteIconColor: scheme.tertiary,
-        disabledColor: Colors.white.withAlpha(0x0C),
-        selectedColor: scheme.primaryContainer,
-        secondarySelectedColor: scheme.secondaryContainer,
-        labelPadding: const EdgeInsets.symmetric(horizontal: 4.0),
-        padding: const EdgeInsets.all(4.0),
-        shadowColor: Colors.black12,
-        selectedShadowColor: Colors.black38,
-        labelStyle: _textTheme.bodySmall!.copyWith(color: scheme.onBackground),
-        secondaryLabelStyle:
-            _textTheme.bodySmall!.copyWith(color: scheme.onBackground),
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-        side: _SelectedBorder(scheme.primary, scheme.primary),
-        brightness: scheme.brightness,
+      textTheme: __darkAccentTextTheme,
+      primaryTextTheme: _brightnessPrimaryColor == Brightness.dark
+          ? __lightAccentTextTheme
+          : __darkAccentTextTheme,
+      progressIndicatorTheme: ProgressIndicatorThemeData(
+        color: accentColor,
+        linearTrackColor: color.shade100,
+        circularTrackColor: color.shade100,
       ),
-      colorScheme: scheme,
-      dataTableTheme: const DataTableThemeData(),
-
-      /// Deprecated in the future
-      dialogBackgroundColor: scheme.surface,
-      dialogTheme: DialogTheme(
+      bottomAppBarTheme: BottomAppBarTheme(
+          shape: CircularNotchedRectangle(),
+          color: color,
+          // color: Colors.transparent,
+          elevation: 0.0),
+      bottomNavigationBarTheme: BottomNavigationBarThemeData(
+        type: BottomNavigationBarType.fixed,
+        backgroundColor: Colors.transparent,
         elevation: 0.0,
-        titleTextStyle:
-            _textTheme.titleLarge!.copyWith(color: scheme.onSurface),
-        contentTextStyle:
-            _textTheme.titleMedium!.copyWith(color: scheme.onSurface),
-        backgroundColor: scheme.surface,
+        selectedItemColor: _brightnessAccentColor == Brightness.dark
+            ? Colors.white
+            : Colors.black,
+        unselectedItemColor: _brightnessAccentColor == Brightness.dark
+            ? color[100]!.withOpacity(0.75)
+            : Colors.black38,
+        showUnselectedLabels: true,
+      ),
+      dialogTheme: DialogTheme(
+        titleTextStyle: __darkAccentTextTheme.headline6,
+        contentTextStyle: __darkAccentTextTheme.subtitle1,
+        backgroundColor: color[50],
         actionsPadding: const EdgeInsets.symmetric(
           horizontal: 16.0,
           vertical: 4.0,
         ),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
       ),
-      disabledColor: Colors.grey, // Defaults grey
-      dividerColor: scheme.outline,
-      dividerTheme: DividerThemeData(
-        color: scheme.outline,
-        space: 16.0,
-        thickness: 0.75,
+      snackBarTheme: SnackBarThemeData(
+        backgroundColor: color[100],
+        contentTextStyle: TextStyle(color: Colors.black),
+        shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(8),
+            side: BorderSide(color: accentColor)),
+        behavior: SnackBarBehavior.floating,
       ),
-      drawerTheme: DrawerThemeData(
-        backgroundColor: ElevationOverlay.applySurfaceTint(
-          scheme.background,
-          scheme.primary.withOpacity(0.12),
-          2.0,
-        ),
-      ),
+      splashColor: color.withOpacity(0.24),
+      outlinedButtonTheme: OutlinedButtonThemeData(
+          style: ButtonStyle(
+        mouseCursor: MaterialStateProperty.all<MouseCursor>(
+            MaterialStateMouseCursor.clickable),
+        //enableFeedback: false,
+        shape:
+            MaterialStateProperty.all<OutlinedBorder>(RoundedRectangleBorder()),
+        side: MaterialStateProperty.all<BorderSide>(BorderSide(
+          color: accentColor[700]!,
+          width: 1,
+        )),
+        backgroundColor: MaterialStateProperty.all<Color>(Colors.transparent),
+        foregroundColor: MaterialStateProperty.all<Color?>(
+            _brightnessAccentColor == Brightness.dark
+                ? accentColor[700]
+                : Colors.black),
+      )),
+      textButtonTheme: TextButtonThemeData(
+          style: ButtonStyle(
+        mouseCursor: MaterialStateProperty.all<MouseCursor>(
+            MaterialStateMouseCursor.clickable),
+        //enableFeedback: false,
+        shape: MaterialStateProperty.all<OutlinedBorder>(
+            RoundedRectangleBorder(borderRadius: BorderRadius.circular(8))),
+        backgroundColor: MaterialStateProperty.all<Color>(Colors.transparent),
+        foregroundColor: MaterialStateProperty.all<Color?>(
+            _brightnessAccentColor == Brightness.dark
+                ? accentColor[700]
+                : Colors.black),
+      )),
       elevatedButtonTheme: ElevatedButtonThemeData(
-        style: ButtonStyle(
-          mouseCursor: MaterialStateProperty.all<MouseCursor>(
-              MaterialStateMouseCursor.clickable),
-          //enableFeedback: false,
-          surfaceTintColor: MaterialStateProperty.all(scheme.surfaceTint),
-          shape: MaterialStateProperty.all<OutlinedBorder>(
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(8))),
-          elevation: MaterialStateProperty.resolveWith<double>((states) {
-            if (states.contains(MaterialState.pressed)) return 0.0;
-            return 4.0;
-          }),
-          backgroundColor:
-              MaterialStateProperty.all<Color?>(scheme.secondaryContainer),
-          foregroundColor: MaterialStateProperty.all<Color?>(
-            scheme.onSecondaryContainer,
-          ),
-          textStyle: MaterialStateProperty.all<TextStyle?>(
-            _textTheme.bodyText1,
-          ),
-          overlayColor: MaterialStateProperty.all<Color>(overlay),
-          visualDensity: const VisualDensity(vertical: 2.5),
+          style: ButtonStyle(
+              mouseCursor: MaterialStateProperty.all<MouseCursor>(
+                  MaterialStateMouseCursor.clickable),
+              //enableFeedback: false,
+              shape: MaterialStateProperty.all<OutlinedBorder>(
+                  RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8))),
+              elevation: MaterialStateProperty.resolveWith<double>((states) {
+                if (states.contains(MaterialState.pressed)) return 0.0;
+                return 8.0;
+              }),
+              backgroundColor: MaterialStateProperty.all<Color?>(color[100]),
+              foregroundColor: MaterialStateProperty.all<Color?>(
+                  __darkAccentTextTheme.headline1!.color),
+              textStyle: MaterialStateProperty.all<TextStyle?>(
+                  __darkAccentTextTheme.bodyText1),
+              overlayColor: MaterialStateProperty.all<Color>(
+                  _darkAccentColor.withOpacity(0.24)),
+              visualDensity: VisualDensity(vertical: 2.5))),
+      buttonTheme: ButtonThemeData(
+        textTheme: ButtonTextTheme.normal,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+        layoutBehavior: ButtonBarLayoutBehavior.constrained,
+        buttonColor: color[100],
+        materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+        height: 48,
+        highlightColor: color[200],
+      ),
+      bottomSheetTheme: BottomSheetThemeData(
+        elevation: 0.0,
+        backgroundColor: Colors.transparent,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.vertical(top: Radius.circular(8)),
         ),
       ),
-
-      /// Deprecated in the future
-      errorColor: scheme.error,
-      expansionTileTheme: ExpansionTileThemeData(
-        collapsedBackgroundColor: Colors.transparent,
-        backgroundColor: scheme.background,
-      ),
-      floatingActionButtonTheme: FloatingActionButtonThemeData(
-        shape: const CircleBorder(),
-        foregroundColor: scheme.onTertiaryContainer,
-        backgroundColor: scheme.tertiaryContainer,
-      ),
-      focusColor: scheme.inversePrimary,
-      fontFamily: null,
-      highlightColor: scheme.primaryContainer.withOpacity(0.38),
-      hintColor: Colors.black38,
-      hoverColor: scheme.primaryContainer,
-      iconTheme: IconThemeData(color: scheme.onBackground),
-
-      /// Deprecated in the future
-      indicatorColor: scheme.primaryContainer,
-      listTileTheme: ListTileThemeData(
-        iconColor: scheme.onBackground,
-        selectedTileColor: scheme.secondaryContainer,
-        selectedColor: scheme.onSecondaryContainer,
-      ),
-      navigationBarTheme: NavigationBarThemeData(
-        backgroundColor: scheme.background,
-        iconTheme: MaterialStateProperty.all(
-            IconThemeData(color: scheme.onBackground)),
-        indicatorColor: scheme.primaryContainer,
-        labelBehavior: NavigationDestinationLabelBehavior.alwaysShow,
-        labelTextStyle: MaterialStateProperty.all(_textTheme.labelLarge),
+      chipTheme: ChipThemeData(
+        checkmarkColor: _brightnessPrimaryColor == Brightness.light
+            ? Colors.white
+            : Colors.black,
+        backgroundColor: Colors.black12,
+        deleteIconColor: Colors.black87,
+        disabledColor: Colors.black.withAlpha(0x0c),
+        selectedColor: color.shade100,
+        secondarySelectedColor: color.shade100,
+        labelPadding: const EdgeInsets.symmetric(horizontal: 4.0),
+        padding: const EdgeInsets.all(4.0),
+        labelStyle: __darkAccentTextTheme.bodyText2!,
+        secondaryLabelStyle: __darkAccentTextTheme.bodyText2!.apply(
+          color:
+              _brightnessPrimaryColor == Brightness.light ? null : color[500],
+        ),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+        side: BorderSide.none,
+        brightness: _brightnessColor,
       ),
       navigationRailTheme: NavigationRailThemeData(
         labelType: NavigationRailLabelType.selected,
-        backgroundColor: scheme.primaryContainer,
+        backgroundColor: color[50],
         elevation: 8.0,
         groupAlignment: 1.0,
-        selectedIconTheme: IconThemeData(color: scheme.tertiary),
+        selectedIconTheme: IconThemeData(color: accentColor[700]),
         selectedLabelTextStyle: __lightAccentTextTheme.bodyText2!.apply(
-          color: scheme.onTertiary,
-        ),
+            color: _brightnessAccentTextTheme == Brightness.dark
+                ? accentColor[700]
+                : Colors.black),
         unselectedIconTheme: const IconThemeData(color: Colors.black),
         unselectedLabelTextStyle: __darkAccentTextTheme.bodyText2,
       ),
-      outlinedButtonTheme: OutlinedButtonThemeData(
-        style: ButtonStyle(
-          mouseCursor: MaterialStateProperty.all<MouseCursor>(
-            MaterialStateMouseCursor.clickable,
-          ),
-          //enableFeedback: false,
-          shape: MaterialStateProperty.all<OutlinedBorder>(
-            const RoundedRectangleBorder(),
-          ),
-          side: MaterialStateProperty.all<BorderSide>(BorderSide(
-            color: scheme.primary,
-            width: 1,
-          )),
-          backgroundColor: MaterialStateProperty.all<Color>(Colors.transparent),
-          foregroundColor: MaterialStateProperty.all<Color?>(scheme.primary),
-        ),
-      ),
-      popupMenuTheme: PopupMenuThemeData(
-        textStyle: _textTheme.bodyText1,
-        color: scheme.primaryContainer,
-        elevation: 8.0,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(4.0),
-          side: BorderSide(color: scheme.secondaryContainer),
-        ),
-      ),
-      primaryColor: scheme.primary,
-      primaryColorDark: scheme.secondary,
-      primaryColorLight: scheme.primaryContainer,
-      primaryIconTheme: IconThemeData(color: scheme.primary),
-      primaryTextTheme: _textTheme.apply(
-        bodyColor: scheme.primary,
-        displayColor: scheme.primary,
-      ),
-      progressIndicatorTheme: ProgressIndicatorThemeData(
-        color: scheme.primary,
-        refreshBackgroundColor: scheme.background,
-        linearMinHeight: 4.0,
-      ),
-
-      radioTheme: const RadioThemeData(),
-      scaffoldBackgroundColor: scheme.background,
-      secondaryHeaderColor: scheme.secondaryContainer,
-
-      /// Deprecated in the future
-      selectedRowColor: scheme.primary.withOpacity(0.24),
-      shadowColor: scheme.shadow, //Default color
-      sliderTheme: const SliderThemeData(),
-      snackBarTheme: SnackBarThemeData(
-        backgroundColor: scheme.tertiaryContainer,
-        contentTextStyle: TextStyle(color: scheme.onTertiaryContainer),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(8),
-          side: BorderSide(
-            color: scheme.tertiary,
-          ),
-        ),
-        behavior: SnackBarBehavior.floating,
-      ),
-      splashColor: scheme.tertiaryContainer.withOpacity(0.24),
-      switchTheme: SwitchThemeData(
-        thumbColor: MaterialStateProperty.resolveWith<Color?>((states) {
-          if (states.contains(MaterialState.disabled)) return null;
-          if (states.contains(MaterialState.focused) ||
-              states.contains(MaterialState.pressed)) return scheme.primary;
-          return scheme.primaryContainer;
-        }),
-        trackColor: MaterialStateProperty.resolveWith<Color?>((states) {
-          if (states.contains(MaterialState.disabled)) return null;
-          if (states.contains(MaterialState.focused) ||
-              states.contains(MaterialState.pressed)) return scheme.primary;
-          return scheme.primaryContainer;
-        }),
-      ),
-      tabBarTheme: const TabBarTheme(),
-      textButtonTheme: TextButtonThemeData(
-        style: ButtonStyle(
-          mouseCursor: MaterialStateProperty.all<MouseCursor>(
-              MaterialStateMouseCursor.clickable),
-          //enableFeedback: false,
-          shape: MaterialStateProperty.all<OutlinedBorder>(
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(8))),
-          backgroundColor: MaterialStateProperty.all<Color>(Colors.transparent),
-          foregroundColor:
-              MaterialStateProperty.all<Color>(scheme.onBackground),
-          overlayColor: MaterialStateProperty.all<Color>(overlay),
-        ),
-      ),
-      textSelectionTheme: TextSelectionThemeData(
-        selectionHandleColor: scheme.secondary,
-        selectionColor: scheme.secondaryContainer,
-        cursorColor: scheme.onSecondaryContainer,
-      ),
-      textTheme: _textTheme,
-      timePickerTheme: const TimePickerThemeData(),
-      toggleButtonsTheme: const ToggleButtonsThemeData(),
-      toggleableActiveColor: scheme.secondaryContainer,
-      tooltipTheme: TooltipThemeData(
-        decoration: BoxDecoration(
-          color: scheme.tertiaryContainer,
-          borderRadius: BorderRadius.all(Radius.circular(8.0)),
-        ),
-        textStyle: _textTheme.caption,
-      ),
-      typography: Typography.material2021(),
-      unselectedWidgetColor: scheme.onBackground,
+      toggleableActiveColor: accentColor[700],
+      indicatorColor: color[100],
+      useMaterial3: true,
     );
-  }
-
-  set setLight(int? light) {
-    light ??= 0;
-    Material3Schemes mateialScheme = ThemeSchemes.styles[light.clamp(0, 17)];
-    ColorScheme lightScheme = mateialScheme.light;
-    _darkScheme = mateialScheme.dark;
-    _lightTheme = _themeFromScheme(lightScheme);
   }
 
   set setDark(int? dark) {
-    /* var bluGrey = ThemeSchemes.blueGrey.dark;
-
-    bluGrey = ColorScheme.dark(
-      primary: Colors.black,
-      onPrimary: const Color(0xFFE1E2E4),
-      primaryContainer: const Color(0xFF191C1E),
-      onPrimaryContainer: const Color(0xFFE1E2E4),
-      shadow: Colors.white24,
-      surface: const Color(0xFF191C1E),
-      surfaceVariant: const Color(0xFF40484C),
-      background: Colors.black,
-      onBackground: const Color(0xFFE1E2E4),
-      secondary: const Color(0xFF4D616C),
-      onSecondary: const Color(0xFFFFFFFF),
-      secondaryContainer: Colors.black,
-      onSecondaryContainer: const Color(0xFFE1E2E4),
-    );
-
-    final style = bluGrey.copyWith(
-      /* primary: bluGrey.primary.harmonizeWith(_darkScheme.primary),
-      primaryContainer:
-          _darkScheme.primaryContainer.harmonizeWith(_darkScheme.primaryContainer),
-      onPrimary: bluGrey.onPrimary.harmonizeWith(_darkScheme.onPrimary),
-      onPrimaryContainer: bluGrey.onPrimaryContainer
-          .harmonizeWith(_darkScheme.onPrimaryContainer),
-      inversePrimary:
-          _darkScheme.inversePrimary.harmonizeWith(_darkScheme.inversePrimary),
-      background: bluGrey.background.harmonizeWith(_darkScheme.background), 
-      onBackground:
-          bluGrey.onBackground.harmonizeWith(_darkScheme.onBackground),*/
-      error: bluGrey.error.harmonizeWith(_darkScheme.error),
-      errorContainer:
-          _darkScheme.errorContainer.harmonizeWith(_darkScheme.errorContainer),
-      onError: bluGrey.onError.harmonizeWith(_darkScheme.onError),
-      onErrorContainer:
-          bluGrey.onErrorContainer.harmonizeWith(_darkScheme.onErrorContainer),
-      inverseSurface:
-          bluGrey.inverseSurface.harmonizeWith(_darkScheme.inverseSurface),
-      onInverseSurface:
-          bluGrey.onInverseSurface.harmonizeWith(_darkScheme.onInverseSurface),
-      /* secondary: _darkScheme.secondary,
-      secondaryContainer: _darkScheme.secondaryContainer,
-      onSecondary: _darkScheme.onSecondary,
-      onSecondaryContainer: _darkScheme.onSecondaryContainer, */
-      tertiary: _darkScheme.tertiary,
-      tertiaryContainer: _darkScheme.tertiaryContainer,
-      onTertiary: _darkScheme.onTertiary,
-      onTertiaryContainer: _darkScheme.onTertiaryContainer,
-      onSurface: bluGrey.onSurface.harmonizeWith(_darkScheme.onSurface),
-      onSurfaceVariant:
-          bluGrey.onSurfaceVariant.harmonizeWith(_darkScheme.onSurfaceVariant),
-      outline: bluGrey.outline.harmonizeWith(_darkScheme.outline),
-      surface: bluGrey.surface.harmonizeWith(_darkScheme.surface),
-      surfaceTint: bluGrey.surfaceTint.harmonizeWith(_darkScheme.surfaceTint),
-      surfaceVariant:
-          bluGrey.surfaceVariant.harmonizeWith(_darkScheme.surfaceVariant),
-    );
-     */
+    dark ??= 2;
     final Brightness _brightness =
-        ThemeData.estimateBrightnessForColor(_darkScheme.primary);
+        ThemeData.estimateBrightnessForColor(_darkAccentColor);
     final Color _accentColor =
         _brightness == Brightness.dark ? Colors.white : Colors.black;
-    final MaterialAccentColor _darkAccentColor = MaterialAccentColor(
-      _darkScheme.primary.value,
-      {
-        100: _darkScheme.inversePrimary,
-        200: _darkScheme.primaryContainer,
-        400: _darkScheme.primary,
-        700: _darkScheme.primaryContainer,
-      },
-    );
     switch (dark) {
       case 0:
         _darkTheme = ThemeData(
@@ -649,7 +411,7 @@ class AmiiboTheme3 implements AmiiboTheme {
                 RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
             elevation: 8,
           ),
-          colorScheme: _darkScheme.copyWith(
+          colorScheme: ColorScheme.dark(
             background: Colors.blueGrey.shade800,
             error: const Color.fromRGBO(207, 102, 121, 1),
             onBackground: Colors.white,
@@ -793,8 +555,7 @@ class AmiiboTheme3 implements AmiiboTheme {
                 : __darkAccentTextTheme.bodyText2!,
             shape:
                 RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-            side: _SelectedBorder(
-                _darkAccentColor.withOpacity(0.54), Colors.amber),
+            side: _SelectedBorder(_darkAccentColor.withOpacity(0.54)),
             brightness: _brightness,
           ),
           navigationRailTheme: NavigationRailThemeData(
@@ -865,7 +626,7 @@ class AmiiboTheme3 implements AmiiboTheme {
                 RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
             elevation: 8,
           ),
-          colorScheme: _darkScheme.copyWith(
+          colorScheme: ColorScheme.dark(
             background: Colors.grey.shade800,
             error: const Color.fromRGBO(207, 102, 121, 1),
             onBackground: Colors.white,
@@ -1004,8 +765,7 @@ class AmiiboTheme3 implements AmiiboTheme {
                 : __darkAccentTextTheme.bodyText2!,
             shape:
                 RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-            side: _SelectedBorder(
-                _darkAccentColor.withOpacity(0.54), Colors.black),
+            side: _SelectedBorder(_darkAccentColor.withOpacity(0.54)),
             brightness: _brightness,
           ),
           navigationRailTheme: NavigationRailThemeData(
@@ -1025,6 +785,7 @@ class AmiiboTheme3 implements AmiiboTheme {
         );
         break;
       case 2:
+      default:
         _darkTheme = ThemeData(
           splashFactory: InkSparkle.constantTurbulenceSeedSplashFactory,
           primaryColorLight: Colors.transparent,
@@ -1077,7 +838,7 @@ class AmiiboTheme3 implements AmiiboTheme {
                 side: BorderSide(color: Colors.grey[900]!, width: 2)),
             elevation: 0.0,
           ),
-          colorScheme: _darkScheme.copyWith(
+          colorScheme: ColorScheme.dark(
             primary: Colors.blueGrey,
             primaryContainer: Colors.blueGrey.shade700,
             onSecondary:
@@ -1234,8 +995,7 @@ class AmiiboTheme3 implements AmiiboTheme {
                 : __darkAccentTextTheme.bodyText2!,
             shape:
                 RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-            side: _SelectedBorder(
-                _darkAccentColor.withOpacity(0.54), Colors.black),
+            side: _SelectedBorder(_darkAccentColor.withOpacity(0.54)),
             brightness: _brightness,
           ),
           navigationRailTheme: NavigationRailThemeData(
@@ -1252,10 +1012,6 @@ class AmiiboTheme3 implements AmiiboTheme {
           indicatorColor: _darkAccentColor.withOpacity(0.75),
           useMaterial3: true,
         );
-        break;
-      case 3:
-      default:
-        _darkTheme = _themeFromScheme(_darkScheme);
         break;
     }
   }
