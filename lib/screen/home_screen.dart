@@ -1,6 +1,7 @@
 import 'package:amiibo_network/enum/amiibo_category_enum.dart';
 import 'package:amiibo_network/enum/selected_enum.dart';
 import 'package:amiibo_network/model/amiibo.dart';
+import 'package:amiibo_network/model/title_search.dart';
 import 'package:amiibo_network/repository/theme_repository.dart';
 import 'package:amiibo_network/riverpod/amiibo_provider.dart';
 import 'package:amiibo_network/riverpod/lock_provider.dart';
@@ -35,12 +36,30 @@ import 'package:amiibo_network/model/search_result.dart';
 
 const String _amiiboIcon = 'assets/collection/icon_2.webp';
 
-final AutoDisposeProvider<String>? _titleProvider =
-    Provider.autoDispose<String>((ref) {
+final AutoDisposeProvider<TitleSearch> _titleProvider =
+    Provider.autoDispose<TitleSearch>((ref) {
   final count = ref.watch(selectProvider);
-  if (count.multipleSelected) return count.length.toString();
-  final query = ref.watch(querySearchProvider);
-  return query.search ?? describeEnum(query.category);
+  if (count.multipleSelected) {
+    return TitleSearch(
+      title: count.length.toString(),
+      type: TitleType.count,
+    );
+  }
+  ref.watch(queryProvider);
+  final provider = ref.watch(queryProvider.notifier);
+  final query = provider.search;
+  if (provider.isSearch) {
+    return TitleSearch(
+      title: query.search!,
+      type: TitleType.search,
+      category: query.category,
+    );
+  }
+  return TitleSearch(
+    title: query.category.name,
+    type: TitleType.category,
+    category: query.category,
+  );
 });
 
 class HomeScreen extends ConsumerStatefulWidget {
@@ -157,8 +176,12 @@ class HomeScreenState extends ConsumerState<HomeScreen>
     }
 
     final selected = ref.read(selectProvider);
+    final query = ref.read(queryProvider.notifier);
     if (selected.multipleSelected) {
       selected.clearSelected();
+      return false;
+    } else if (query.isSearch) {
+      query.restart();
       return false;
     } else {
       await ConnectionFactory().close();
@@ -179,8 +202,7 @@ class HomeScreenState extends ConsumerState<HomeScreen>
           body: HookConsumer(
             builder: (context, ref, child) {
               final _multipleSelection = ref.watch(
-                selectProvider
-                    .select<bool>((value) => value.multipleSelected),
+                selectProvider.select<bool>((value) => value.multipleSelected),
               );
               return Scrollbar(
                 controller: _controller,
@@ -192,24 +214,9 @@ class HomeScreenState extends ConsumerState<HomeScreen>
                       floating: true,
                       forward: _multipleSelection,
                       snap: true,
-                      leading: Builder(
-                        builder: (context) {
-                          return IconButton(
-                            icon: Hero(
-                              tag: 'MenuButton',
-                              child: ImplicitIcon(
-                                key: Key('Menu'),
-                                forward: _multipleSelection,
-                              ),
-                            ),
-                            tooltip: _multipleSelection
-                                ? localizations.cancelButtonLabel
-                                : localizations.openAppDrawerTooltip,
-                            onPressed: _multipleSelection
-                                ? _cancelSelection
-                                : DashMenu.of(context).openDrawer,
-                          );
-                        },
+                      leading: _Leading(
+                        isClose: _multipleSelection,
+                        onClose: _cancelSelection,
                       ),
                       title: const _TitleAppBar(),
                       onTap: _multipleSelection ? null : _search,
@@ -224,8 +231,7 @@ class HomeScreenState extends ConsumerState<HomeScreen>
                       ),
                     ),
                     SliverPersistentHeader(
-                      delegate:
-                          SliverStatsHeader(hideOptional: isAmiiboList),
+                      delegate: SliverStatsHeader(hideOptional: isAmiiboList),
                       pinned: true,
                     ),
                     isAmiiboList
@@ -374,6 +380,90 @@ class _AmiiboListWidget extends HookConsumerWidget {
   }
 }
 
+class _Leading extends HookConsumerWidget {
+  final bool isClose;
+  final VoidCallback onClose;
+
+  const _Leading({
+    // ignore: unused_element
+    super.key,
+    required this.isClose,
+    required this.onClose,
+  });
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final localizations = MaterialLocalizations.of(context);
+    final searchSelect = ref.watch(
+      querySearchProvider.select<bool>((search) {
+        final category = search.category;
+        if (category == AmiiboCategory.Game ||
+            category == AmiiboCategory.Name ||
+            category == AmiiboCategory.AmiiboSeries) {
+          return true;
+        }
+        return false;
+      }),
+    );
+    final isForward = searchSelect || isClose;
+    final effectiveSearch = searchSelect && !isClose;
+    final HeroFlightShuttleBuilder flightShuttleBuilder =
+        useCallback<HeroFlightShuttleBuilder>((
+      BuildContext flightContext,
+      Animation<double> animation,
+      HeroFlightDirection flightDirection,
+      BuildContext fromHeroContext,
+      BuildContext toHeroContext,
+    ) {
+      if (isForward) {
+        return AnimatedBuilder(
+          animation: animation,
+          child: flightDirection == HeroFlightDirection.push
+              ? const Icon(Icons.arrow_back)
+              : const Icon(Icons.close),
+          builder: (context, child) {
+            return Opacity(
+              opacity: flightDirection == HeroFlightDirection.push
+                ? animation.value
+                : 1 - animation.value,
+              child: child,
+            );
+          },
+        );
+      }
+
+      return AnimatedIcon(
+        icon: AnimatedIcons.menu_arrow,
+        progress: animation,
+      );
+    }, [isForward]);
+    final VoidCallback onPressed = useCallback(() {
+      if (effectiveSearch) {
+        ref.read(queryProvider.notifier).restart();
+      } else if (isClose) {
+        onClose();
+      } else {
+        DashMenu.of(context).openDrawer();
+      }
+    }, [effectiveSearch, isClose, onClose]);
+    final icon = ImplicitIcon(key: const Key('Menu'), forward: isForward);
+    return IconButton(
+      icon: Hero(
+        key: const Key('HeroMenu'),
+        flightShuttleBuilder: flightShuttleBuilder,
+        tag: 'MenuButton',
+        child: icon,
+      ),
+      tooltip: effectiveSearch
+          ? localizations.closeButtonTooltip
+          : isClose
+              ? localizations.cancelButtonLabel
+              : localizations.openAppDrawerTooltip,
+      onPressed: onPressed,
+    );
+  }
+}
+
 class _DefaultOptions extends StatelessWidget {
   const _DefaultOptions({Key? key}) : super(key: key);
 
@@ -398,12 +488,68 @@ class _TitleAppBar extends ConsumerWidget {
     final MaterialLocalizations localizations =
         MaterialLocalizations.of(context);
     final S translate = S.of(context);
-    final title = ref.watch(_titleProvider!);
+    final searchTitle = ref.watch(_titleProvider);
+    final String message;
+    final Widget child;
+    final InlineSpan title = TextSpan(text: searchTitle.title);
+    InlineSpan? categorySpan;
+    if (searchTitle.category != null && searchTitle.type == TitleType.search) {
+      final theme = Theme.of(context);
+      final size = theme.appBarTheme.toolbarTextStyle?.fontSize;
+      final foreground = theme.colorScheme.onSecondaryContainer;
+      categorySpan = WidgetSpan(
+        alignment: PlaceholderAlignment.middle,
+        baseline: TextBaseline.ideographic,
+        child: Card(
+          elevation: 12.0,
+          margin: const EdgeInsets.only(right: 4.0),
+          shape: RoundedRectangleBorder(
+            borderRadius: const BorderRadius.all(Radius.circular(4.0)),
+            side: BorderSide(color: theme.primaryColor),
+          ),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(
+              vertical: 2.0,
+              horizontal: 4.0,
+            ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Icon(Icons.search, size: size, color: foreground),
+                const SizedBox(width: 2.0),
+                Text(
+                  translate.category(searchTitle.category!.name),
+                  style: TextStyle(
+                    fontSize: size,
+                    color: foreground,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      );
+    }
+    switch (searchTitle.type) {
+      case TitleType.count:
+        message = localizations
+            .selectedRowCountTitle(num.parse(searchTitle.title) as int);
+        break;
+      case TitleType.search:
+        message = localizations.searchFieldLabel;
+        break;
+      default:
+        message = searchTitle.category!.name;
+        break;
+    }
+    child = Text.rich(
+      categorySpan != null ? TextSpan(children: [categorySpan, title]) : title,
+    );
     return Tooltip(
-      message: num.tryParse(title) == null
-          ? localizations.searchFieldLabel
-          : localizations.selectedRowCountTitle(num.parse(title) as int),
-      child: Text(translate.category(title)),
+      message: message,
+      child: child,
     );
   }
 }

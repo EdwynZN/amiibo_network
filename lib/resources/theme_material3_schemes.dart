@@ -632,7 +632,6 @@ class ThemeSchemes {
       // scrim: Color(0xFF000000),
     ),
   );
-
   static const teal = Material3Schemes(
     light: ColorScheme(
       brightness: Brightness.light,
@@ -701,7 +700,6 @@ class ThemeSchemes {
       // scrim: Color(0xFF000000),
     ),
   );
-
   static const green = Material3Schemes(
     light: ColorScheme(
       brightness: Brightness.light,
@@ -770,7 +768,6 @@ class ThemeSchemes {
       // scrim: Color(0xFF000000),
     ),
   );
-
   static const lightGreen = Material3Schemes(
     light: ColorScheme(
       brightness: Brightness.light,
@@ -839,7 +836,6 @@ class ThemeSchemes {
       // scrim: Color(0xFF000000),
     ),
   );
-
   static const lime = Material3Schemes(
     light: ColorScheme(
       brightness: Brightness.light,

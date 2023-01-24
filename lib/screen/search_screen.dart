@@ -35,18 +35,6 @@ class SearchScreen extends HookConsumerWidget {
             pinned: true,
             leading: IconButton(
               icon: Hero(
-                flightShuttleBuilder: (
-                  BuildContext flightContext,
-                  Animation<double> animation,
-                  HeroFlightDirection flightDirection,
-                  BuildContext fromHeroContext,
-                  BuildContext toHeroContext,
-                ) {
-                  return AnimatedIcon(
-                    icon: AnimatedIcons.menu_arrow,
-                    progress: animation,
-                  );
-                },
                 tag: 'MenuButton',
                 child: const BackButtonIcon(),
               ),
@@ -148,8 +136,6 @@ class _Suggestions extends HookConsumerWidget {
     final search = _useDebouncedSearch(textEditingController);
     final suggestions = ref.watch(searchProvider(search));
     final List<String>? data = suggestions.maybeWhen(
-      skipLoadingOnReload: true,
-      skipLoadingOnRefresh: true,
       data: (data) => data,
       orElse: () => null,
     );
@@ -161,7 +147,11 @@ class _Suggestions extends HookConsumerWidget {
             return const SizedBox.shrink();
           }
           final RoundedRectangleBorder shape;
-          if (index == 0) {
+          if (count == 1) {
+            shape = const RoundedRectangleBorder(
+              borderRadius: BorderRadius.all(Radius.circular(12.0)),
+            );
+          } else if (index == 0) {
             shape = const RoundedRectangleBorder(
               borderRadius: BorderRadius.vertical(
                 top: Radius.circular(12.0),

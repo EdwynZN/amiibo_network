@@ -38,7 +38,7 @@ class _CollectionDrawerState extends ConsumerState<CollectionDrawer> {
   void figureExpand(bool x) => _figureExpand = x;
   void cardExpand(bool x) => _cardExpand = x;
 
-  _onTapTile(WidgetRef ref, AmiiboCategory category, String tile) {
+  _onTapTile(WidgetRef ref, AmiiboCategory category, String? tile) {
     final query = ref.read(querySearchProvider);
     if (query.search != tile || query.category != category) {
       ref

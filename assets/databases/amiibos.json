@@ -10651,15 +10651,15 @@
     },
     {
       "key": 784,
-      "id": null,
+      "id": "3601000004210002",
       "amiiboSeries": "Super Smash Bros.",
       "character": "Sephiroth",
       "gameSeries": "Final Fantasy",
       "name": "Sephiroth",
-      "au": "soon",
-      "eu": "soon",
-      "jp": "soon",
-      "na": "soon",
+      "au": "20230113",
+      "eu": "20230113",
+      "jp": "20230113",
+      "na": "20230113",
       "type": "Figure"
     },
     {
@@ -10690,15 +10690,15 @@
     },
     {
       "key": 787,
-      "id": null,
+      "id": "33C0000004200002",
       "amiiboSeries": "Super Smash Bros.",
       "character": "Kazuya",
       "gameSeries": "Tekken",
       "name": "Kazuya Mishima",
-      "au": "soon",
-      "eu": "soon",
-      "jp": "soon",
-      "na": "soon",
+      "au": "20230113",
+      "eu": "20230113",
+      "jp": "20230113",
+      "na": "20230113",
       "type": "Figure"
     },
     {
@@ -11396,7 +11396,7 @@
       "au": "20220812",
       "eu": "20220630",
       "jp": "20220630",
-      "na": "soon",
+      "na": "20220907",
       "type": "Figure"
     },
     {
@@ -11409,7 +11409,7 @@
       "au": "20220812",
       "eu": "20220630",
       "jp": "20220630",
-      "na": "soon",
+      "na": "20220907",
       "type": "Figure"
     },
     {
@@ -11452,5 +11452,5 @@
       "type": "Figure"
     }
   ],
-  "lastUpdated": "2022-04-12T15:07:00.000"
+  "lastUpdated": "2023-23-01T21:45:00.000"
 }

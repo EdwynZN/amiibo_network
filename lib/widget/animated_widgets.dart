@@ -25,7 +25,7 @@ class _ImplicitIconState extends ImplicitlyAnimatedWidgetState<ImplicitIcon> {
   }
 
   @override
-  Widget build(BuildContext context){
+  Widget build(BuildContext context) {
     return AnimatedIcon(
       icon: widget.icon,
       progress: _progress?.animate(animation) ?? AlwaysStoppedAnimation(0),

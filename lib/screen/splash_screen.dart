@@ -59,79 +59,77 @@ class SplashScreenState extends ConsumerState<SplashScreen>
   Widget build(BuildContext context) {
     final mediaQuery = MediaQuery.of(context);
     Size _size = mediaQuery.size;
-    return SafeArea(
-      child: Material(
-        type: MaterialType.canvas,
-        child: Center(
-          child: ConstrainedBox(
-            constraints: BoxConstraints.loose(
-              Size(_size.width, _size.height / 2 - mediaQuery.padding.top),
-            ),
-            child: AspectRatio(
-              aspectRatio: 25 / 10,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Expanded(
-                    child: _SwitchIcon(
-                      controller: _animationController.view,
-                      color: color,
-                    ),
+    return Material(
+      type: MaterialType.canvas,
+      child: Center(
+        child: ConstrainedBox(
+          constraints: BoxConstraints.loose(
+            Size(_size.width, _size.height / 2 - mediaQuery.padding.top),
+          ),
+          child: AspectRatio(
+            aspectRatio: 25 / 10,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Expanded(
+                  child: _SwitchIcon(
+                    controller: _animationController.view,
+                    color: color,
                   ),
-                  Container(
-                    padding: const EdgeInsets.all(5),
-                    decoration: BoxDecoration(
-                      color: Colors.black,
-                      border: Border.all(color: Colors.white, width: 0.1),
-                    ),
-                    child: AspectRatio(
-                      aspectRatio: 1.7,
-                      child: FutureBuilder<bool>(
-                        future: updateDB,
-                        builder: (ctx, snapshot) {
-                          final S translate = S.of(ctx);
-                          int key = 0;
-                          Widget _child = const CircularProgressIndicator(
-                              backgroundColor: Colors.black);
-                          String _text = translate.splashMessage;
-                          if (snapshot.hasData) {
-                            key = 1;
-                            _text = snapshot.data!
-                                ? translate.splashWelcome
-                                : translate.splashError;
-                            _child = Image.asset(
-                              NetworkIcons.iconApp,
-                              fit: BoxFit.scaleDown,
-                              color: color,
-                            );
-                            _animationController.forward().whenCompleteOrCancel(
-                              () => context.replaceNamed('home'),
-                            );
-                          }
-                          return AnimatedSwitcher(
-                            duration: const Duration(seconds: 3),
-                            switchOutCurve: Curves.easeOutBack,
-                            switchInCurve: Curves.easeInExpo,
-                            child: ScreenAnimation(
-                              key: ValueKey<int>(key),
-                              child: _child,
-                              text: _text,
-                            ),
+                ),
+                Container(
+                  padding: const EdgeInsets.all(5),
+                  decoration: BoxDecoration(
+                    color: Colors.black,
+                    border: Border.all(color: Colors.white, width: 0.1),
+                  ),
+                  child: AspectRatio(
+                    aspectRatio: 1.7,
+                    child: FutureBuilder<bool>(
+                      future: updateDB,
+                      builder: (ctx, snapshot) {
+                        final S translate = S.of(ctx);
+                        int key = 0;
+                        Widget _child = const CircularProgressIndicator(
+                            backgroundColor: Colors.black);
+                        String _text = translate.splashMessage;
+                        if (snapshot.hasData) {
+                          key = 1;
+                          _text = snapshot.data!
+                              ? translate.splashWelcome
+                              : translate.splashError;
+                          _child = Image.asset(
+                            NetworkIcons.iconApp,
+                            fit: BoxFit.scaleDown,
+                            color: color,
                           );
-                        },
-                      ),
+                          _animationController.forward().whenCompleteOrCancel(
+                            () => context.replaceNamed('home'),
+                          );
+                        }
+                        return AnimatedSwitcher(
+                          duration: const Duration(seconds: 3),
+                          switchOutCurve: Curves.easeOutBack,
+                          switchInCurve: Curves.easeInExpo,
+                          child: ScreenAnimation(
+                            key: ValueKey<int>(key),
+                            child: _child,
+                            text: _text,
+                          ),
+                        );
+                      },
                     ),
                   ),
-                  Expanded(
-                    child: _SwitchIcon(
-                      controller: _animationController.view,
-                      isLeft: false,
-                      color: color,
-                    ),
+                ),
+                Expanded(
+                  child: _SwitchIcon(
+                    controller: _animationController.view,
+                    isLeft: false,
+                    color: color,
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
           ),
         ),
