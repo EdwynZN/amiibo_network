@@ -1477,7 +1477,7 @@ class AmiiboTheme3 implements AmiiboTheme {
       bottomAppBarTheme: BottomAppBarTheme(
         color: scheme.surface,
         elevation: 0.0,
-        height: kToolbarHeight,
+        height: kBottomNavigationBarHeight,
         padding: EdgeInsets.zero,
       ),
       bottomSheetTheme: BottomSheetThemeData(
@@ -1592,6 +1592,7 @@ class AmiiboTheme3 implements AmiiboTheme {
         elevation: 4.0,
         shadowColor: scheme.shadow,
         backgroundColor: scheme.background,
+        shape: const RoundedRectangleBorder(),
       ),
       elevatedButtonTheme: ElevatedButtonThemeData(
         style: ButtonStyle(
@@ -1877,10 +1878,12 @@ class AmiiboTheme3 implements AmiiboTheme {
           ),
           primaryTextTheme: __lightAccentTextTheme,
           bottomAppBarTheme: BottomAppBarTheme(
-            shape: CircularNotchedRectangle(),
-            color: Colors.blueGrey[900],
+            shape: const CircularNotchedRectangle(),
+            color: Colors.blueGrey.shade900,
             // color: Colors.transparent,
             elevation: 0.0,
+            height: kBottomNavigationBarHeight,
+            padding: EdgeInsets.zero,
           ),
           bottomNavigationBarTheme: BottomNavigationBarThemeData(
             type: BottomNavigationBarType.fixed,
@@ -1903,6 +1906,18 @@ class AmiiboTheme3 implements AmiiboTheme {
             backgroundColor: Colors.blueGrey[900],
             shape:
                 RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+          ),
+          drawerTheme: DrawerThemeData(
+            elevation: 4.0,
+            shadowColor: _darkScheme.shadow,
+            backgroundColor: Colors.blueGrey.shade900,
+            surfaceTintColor: _darkScheme.surfaceTint,
+            shape: const RoundedRectangleBorder(),
+          ),
+          listTileTheme: ListTileThemeData(
+            iconColor: _darkScheme.onBackground,
+            selectedTileColor: _darkScheme.secondaryContainer,
+            selectedColor: _darkScheme.onSecondaryContainer,
           ),
           snackBarTheme: SnackBarThemeData(
             backgroundColor: Colors.blueGrey[800],
@@ -2012,6 +2027,20 @@ class AmiiboTheme3 implements AmiiboTheme {
             unselectedIconTheme: const IconThemeData(color: Colors.white70),
             unselectedLabelTextStyle: __lightAccentTextTheme.bodyMedium,
           ),
+          switchTheme: SwitchThemeData(
+            thumbColor: MaterialStateProperty.resolveWith<Color?>((states) {
+              if (states.contains(MaterialState.disabled)) return null;
+              if (states.contains(MaterialState.focused) ||
+                  states.contains(MaterialState.pressed)) return Colors.blueGrey.shade900;
+              return Colors.blueGrey.shade100;
+            }),
+            trackColor: MaterialStateProperty.resolveWith<Color?>((states) {
+              if (states.contains(MaterialState.disabled)) return null;
+              if (states.contains(MaterialState.focused) ||
+                  states.contains(MaterialState.pressed)) return Colors.blueGrey.shade100;
+              return _darkScheme.primaryContainer;
+            }),
+          ),
           indicatorColor: Colors.blueGrey[700],
           useMaterial3: true,
         );
@@ -2089,10 +2118,13 @@ class AmiiboTheme3 implements AmiiboTheme {
             circularTrackColor: Colors.grey,
           ),
           bottomAppBarTheme: BottomAppBarTheme(
-              shape: CircularNotchedRectangle(),
-              color: Colors.grey[900],
-              //color: Colors.transparent,
-              elevation: 0.0),
+            shape: CircularNotchedRectangle(),
+            color: Colors.grey[900],
+            //color: Colors.transparent,
+            elevation: 0.0,
+            height: kBottomNavigationBarHeight,
+            padding: EdgeInsets.zero,
+          ),
           bottomNavigationBarTheme: BottomNavigationBarThemeData(
             type: BottomNavigationBarType.fixed,
             backgroundColor: Colors.transparent,
@@ -2114,6 +2146,18 @@ class AmiiboTheme3 implements AmiiboTheme {
             backgroundColor: Colors.grey[900],
             shape:
                 RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+          ),
+          drawerTheme: DrawerThemeData(
+            elevation: 4.0,
+            shadowColor: _darkScheme.shadow,
+            backgroundColor: Colors.grey.shade900,
+            surfaceTintColor: _darkScheme.surfaceTint,
+            shape: const RoundedRectangleBorder(),
+          ),
+          listTileTheme: ListTileThemeData(
+            iconColor: _darkScheme.onBackground,
+            selectedTileColor: _darkScheme.secondaryContainer,
+            selectedColor: _darkScheme.onSecondaryContainer,
           ),
           snackBarTheme: SnackBarThemeData(
             backgroundColor: Colors.grey[800],
@@ -2219,6 +2263,20 @@ class AmiiboTheme3 implements AmiiboTheme {
                 .apply(color: _darkAccentColor),
             unselectedLabelTextStyle: __lightAccentTextTheme.bodyMedium,
           ),
+          switchTheme: SwitchThemeData(
+            thumbColor: MaterialStateProperty.resolveWith<Color?>((states) {
+              if (states.contains(MaterialState.disabled)) return null;
+              if (states.contains(MaterialState.focused) ||
+                  states.contains(MaterialState.pressed)) return _darkScheme.background;
+              return _darkScheme.onBackground;
+            }),
+            trackColor: MaterialStateProperty.resolveWith<Color?>((states) {
+              if (states.contains(MaterialState.disabled)) return null;
+              if (states.contains(MaterialState.focused) ||
+                  states.contains(MaterialState.pressed)) return _darkScheme.onPrimaryContainer;
+              return _darkScheme.primaryContainer;
+            }),
+          ),
           indicatorColor: Colors.grey[700],
           useMaterial3: true,
         );
@@ -2309,10 +2367,13 @@ class AmiiboTheme3 implements AmiiboTheme {
           ),
           primaryTextTheme: __lightAccentTextTheme,
           bottomAppBarTheme: BottomAppBarTheme(
-              shape: CircularNotchedRectangle(),
-              color: Colors.black,
-              // color: Colors.transparent,
-              elevation: 0.0),
+            shape: const CircularNotchedRectangle(),
+            color: Colors.black,
+            // color: Colors.transparent,
+            elevation: 0.0,
+            height: kBottomNavigationBarHeight,
+            padding: EdgeInsets.zero,
+          ),
           bottomNavigationBarTheme: BottomNavigationBarThemeData(
             type: BottomNavigationBarType.fixed,
             backgroundColor: Colors.transparent,
@@ -2335,6 +2396,18 @@ class AmiiboTheme3 implements AmiiboTheme {
             shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(8),
                 side: BorderSide(color: _darkAccentColor)),
+          ),
+          drawerTheme: DrawerThemeData(
+            elevation: 2.0,
+            shadowColor: _darkScheme.shadow,
+            surfaceTintColor: _darkScheme.surfaceTint,
+            backgroundColor: _darkScheme.background,
+            shape: const RoundedRectangleBorder(),
+          ),
+          listTileTheme: ListTileThemeData(
+            iconColor: _darkScheme.onBackground,
+            selectedTileColor: _darkScheme.secondaryContainer,
+            selectedColor: _darkScheme.onSecondaryContainer,
           ),
           snackBarTheme: SnackBarThemeData(
             backgroundColor: Colors.grey[900],
@@ -2441,6 +2514,20 @@ class AmiiboTheme3 implements AmiiboTheme {
                 .apply(color: _darkAccentColor),
             unselectedIconTheme: const IconThemeData(color: Colors.white70),
             unselectedLabelTextStyle: __lightAccentTextTheme.bodyMedium,
+          ),
+          switchTheme: SwitchThemeData(
+            thumbColor: MaterialStateProperty.resolveWith<Color?>((states) {
+              if (states.contains(MaterialState.disabled)) return null;
+              if (states.contains(MaterialState.focused) ||
+                  states.contains(MaterialState.pressed)) return _darkScheme.background;
+              return _darkScheme.onBackground;
+            }),
+            trackColor: MaterialStateProperty.resolveWith<Color?>((states) {
+              if (states.contains(MaterialState.disabled)) return null;
+              if (states.contains(MaterialState.focused) ||
+                  states.contains(MaterialState.pressed)) return _darkScheme.onPrimaryContainer;
+              return _darkScheme.primaryContainer;
+            }),
           ),
           indicatorColor: _darkAccentColor.withOpacity(0.75),
           useMaterial3: true,
