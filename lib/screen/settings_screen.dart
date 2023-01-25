@@ -435,7 +435,16 @@ class _DropMenu extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final themeMode = ref.watch(themeProvider);
     final S translate = S.of(context);
-    final themeStyle = Theme.of(context).appBarTheme;
+    final theme = Theme.of(context);
+    final themeStyle = theme.appBarTheme;
+    Color? color;
+    if (theme.dialogTheme.backgroundColor != null) {
+      color = ElevationOverlay.applySurfaceTint(
+        theme.dialogTheme.backgroundColor!,
+        theme.colorScheme.surfaceTint,
+        2.0,
+      );
+    }
     return DropdownButton<ThemeMode>(
       items: [
         DropdownMenuItem<ThemeMode>(
@@ -479,8 +488,8 @@ class _DropMenu extends ConsumerWidget {
       onChanged: themeMode.themeDB,
       //underline: const SizedBox.shrink(),
       iconEnabledColor: themeStyle.iconTheme!.color,
-      dropdownColor: Theme.of(context).colorScheme.surface,
-      elevation: 4,
+      dropdownColor: color,
+      elevation: 1,
       hint: Row(
         mainAxisSize: MainAxisSize.max,
         mainAxisAlignment: MainAxisAlignment.end,

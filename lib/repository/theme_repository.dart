@@ -1564,12 +1564,16 @@ class AmiiboTheme3 implements AmiiboTheme {
       ),
       colorScheme: scheme,
       dataTableTheme: const DataTableThemeData(),
-      dropdownMenuTheme: const DropdownMenuThemeData(),
+      dropdownMenuTheme: DropdownMenuThemeData(
+        menuStyle: MenuStyle(
+          backgroundColor: MaterialStatePropertyAll(_darkScheme.background),
+        )
+      ),
 
       /// Deprecated in the future
       dialogBackgroundColor: scheme.surface,
       dialogTheme: DialogTheme(
-        elevation: 0.0,
+        elevation: 2.0,
         titleTextStyle:
             _textTheme.titleLarge!.copyWith(color: scheme.onSurface),
         contentTextStyle:
@@ -1893,6 +1897,11 @@ class AmiiboTheme3 implements AmiiboTheme {
             unselectedItemColor: Colors.blueGrey[700],
             showUnselectedLabels: true,
           ),
+          dropdownMenuTheme: DropdownMenuThemeData(
+            menuStyle: MenuStyle(
+              backgroundColor: MaterialStatePropertyAll(_darkScheme.background),
+            )
+          ),
           dialogTheme: DialogTheme(
             titleTextStyle: const TextStyle(
               color: Colors.white70,
@@ -2132,6 +2141,11 @@ class AmiiboTheme3 implements AmiiboTheme {
             selectedItemColor: _darkAccentColor,
             unselectedItemColor: Colors.grey[700],
             showUnselectedLabels: true,
+          ),
+          dropdownMenuTheme: DropdownMenuThemeData(
+            menuStyle: MenuStyle(
+              backgroundColor: MaterialStatePropertyAll(_darkScheme.background),
+            )
           ),
           dialogTheme: DialogTheme(
             titleTextStyle: const TextStyle(
@@ -2381,6 +2395,11 @@ class AmiiboTheme3 implements AmiiboTheme {
             selectedItemColor: _darkAccentColor,
             unselectedItemColor: Colors.white70,
             showUnselectedLabels: true,
+          ),
+          dropdownMenuTheme: DropdownMenuThemeData(
+            menuStyle: MenuStyle(
+              backgroundColor: MaterialStatePropertyAll(_darkScheme.background),
+            )
           ),
           dialogTheme: DialogTheme(
             titleTextStyle: TextStyle(
