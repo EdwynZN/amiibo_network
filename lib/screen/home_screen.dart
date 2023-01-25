@@ -310,7 +310,8 @@ class _AmiiboListWidget extends HookConsumerWidget {
           else
             child = TextButton.icon(
               style: theme.textButtonTheme.style?.copyWith(
-                textStyle: MaterialStateProperty.all(theme.textTheme.headlineMedium),
+                textStyle:
+                    MaterialStateProperty.all(theme.textTheme.headlineMedium),
               ),
               onPressed: () async {
                 final filter = ref.read(queryProvider.notifier);
@@ -424,8 +425,8 @@ class _Leading extends HookConsumerWidget {
           builder: (context, child) {
             return Opacity(
               opacity: flightDirection == HeroFlightDirection.push
-                ? animation.value
-                : 1 - animation.value,
+                  ? animation.value
+                  : 1 - animation.value,
               child: child,
             );
           },
@@ -613,45 +614,44 @@ class _FAB extends ConsumerWidget {
     final S translate = S.of(context);
     final isLoading =
         ref.watch(screenshotProvider.select((value) => value is AsyncLoading));
+    final fab = FloatingActionButton(
+      elevation: 0.0,
+      child: isLoading
+          ? ConstrainedBox(
+              constraints: BoxConstraints.loose(const Size.square(24.0)),
+              child: CircularProgressIndicator(
+                strokeWidth: 2.5,
+                color:
+                    Theme.of(context).floatingActionButtonTheme.foregroundColor,
+              ),
+            )
+          : const Icon(Icons.save),
+      tooltip: isAmiibo ? translate.saveCollection : translate.saveStatsTooltip,
+      heroTag: 'MenuFAB',
+      onPressed: () async {
+        final _screenshotProvider = ref.watch(screenshotProvider.notifier);
+        final scaffoldState = ScaffoldMessenger.of(context);
+        if (!(await permissionGranted(scaffoldState))) return;
+        final isLoading = _screenshotProvider.isLoading;
+        final message = isLoading
+            ? translate.recordMessage
+            : translate.savingCollectionMessage;
+        scaffoldState
+          ..hideCurrentSnackBar()
+          ..showSnackBar(SnackBar(content: Text(message)));
+        if (isLoading) return;
+        if (isAmiibo) {
+          await _screenshotProvider.saveAmiibos(context);
+        } else {
+          await _screenshotProvider.saveStats(context);
+        }
+      },
+    );
     return SlideTransition(
       position: slide,
       child: ScaleTransition(
         scale: scale,
-        child: FloatingActionButton(
-          elevation: 0.0,
-          child: isLoading
-              ? ConstrainedBox(
-                  constraints: BoxConstraints.loose(const Size.square(24.0)),
-                  child: CircularProgressIndicator(
-                    strokeWidth: 2.5,
-                    color: Theme.of(context)
-                        .floatingActionButtonTheme
-                        .foregroundColor,
-                  ),
-                )
-              : const Icon(Icons.save),
-          tooltip:
-              isAmiibo ? translate.saveCollection : translate.saveStatsTooltip,
-          heroTag: 'MenuFAB',
-          onPressed: () async {
-            final _screenshotProvider = ref.watch(screenshotProvider.notifier);
-            final scaffoldState = ScaffoldMessenger.of(context);
-            if (!(await permissionGranted(scaffoldState))) return;
-            final isLoading = _screenshotProvider.isLoading;
-            final message = isLoading
-                ? translate.recordMessage
-                : translate.savingCollectionMessage;
-            scaffoldState
-              ..hideCurrentSnackBar()
-              ..showSnackBar(SnackBar(content: Text(message)));
-            if (isLoading) return;
-            if (isAmiibo) {
-              await _screenshotProvider.saveAmiibos(context);
-            } else {
-              await _screenshotProvider.saveStats(context);
-            }
-          },
-        ),
+        child: fab,
       ),
     );
   }
@@ -681,11 +681,15 @@ class _BottomBar extends StatelessWidget {
       position: slide,
       child: BottomAppBar(
         shape: const CircularNotchedRectangle(),
+        elevation: 0.0,
+        color: theme.appBarTheme.systemOverlayStyle?.systemNavigationBarColor,
+        clipBehavior: Clip.hardEdge,
         child: BottomNavigationBar(
           showSelectedLabels: true,
           showUnselectedLabels: false,
-          backgroundColor: Colors.transparent,
           elevation: 0.0,
+          backgroundColor:
+              theme.appBarTheme.systemOverlayStyle?.systemNavigationBarColor,
           iconSize: 20.0,
           selectedLabelStyle: const TextStyle(fontSize: 11.0),
           unselectedLabelStyle: const TextStyle(fontSize: 11.0),

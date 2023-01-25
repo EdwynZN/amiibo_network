@@ -1449,6 +1449,7 @@ class AmiiboTheme3 implements AmiiboTheme {
       // COLOR CONFIGURATION
       appBarTheme: AppBarTheme(
         elevation: 2.0,
+        shadowColor: scheme.shadow,
         surfaceTintColor: scheme.surfaceTint,
         scrolledUnderElevation: 8.0,
         systemOverlayStyle: SystemUiOverlayStyle(
@@ -1467,15 +1468,17 @@ class AmiiboTheme3 implements AmiiboTheme {
         foregroundColor: scheme.onBackground,
         iconTheme: IconThemeData(color: scheme.onBackground),
       ),
+      badgeTheme: const BadgeThemeData(),
       bannerTheme: MaterialBannerThemeData(
         backgroundColor: scheme.tertiary,
         contentTextStyle: _textTheme.titleMedium,
         elevation: 4.0,
       ),
-
       bottomAppBarTheme: BottomAppBarTheme(
         color: scheme.surface,
         elevation: 0.0,
+        height: kToolbarHeight,
+        padding: EdgeInsets.zero,
       ),
       bottomSheetTheme: BottomSheetThemeData(
         elevation: 0.0,
@@ -1561,6 +1564,7 @@ class AmiiboTheme3 implements AmiiboTheme {
       ),
       colorScheme: scheme,
       dataTableTheme: const DataTableThemeData(),
+      dropdownMenuTheme: const DropdownMenuThemeData(),
 
       /// Deprecated in the future
       dialogBackgroundColor: scheme.surface,
@@ -1585,11 +1589,9 @@ class AmiiboTheme3 implements AmiiboTheme {
         thickness: 0.75,
       ),
       drawerTheme: DrawerThemeData(
-        backgroundColor: ElevationOverlay.applySurfaceTint(
-          scheme.background,
-          scheme.primary.withOpacity(0.12),
-          2.0,
-        ),
+        elevation: 4.0,
+        shadowColor: scheme.shadow,
+        backgroundColor: scheme.background,
       ),
       elevatedButtonTheme: ElevatedButtonThemeData(
         style: ButtonStyle(
@@ -1620,6 +1622,7 @@ class AmiiboTheme3 implements AmiiboTheme {
         collapsedBackgroundColor: Colors.transparent,
         backgroundColor: scheme.background,
       ),
+      filledButtonTheme: const FilledButtonThemeData(),
       floatingActionButtonTheme: FloatingActionButtonThemeData(
         shape: const CircleBorder(),
         foregroundColor: scheme.onTertiaryContainer,
@@ -1639,6 +1642,9 @@ class AmiiboTheme3 implements AmiiboTheme {
         selectedTileColor: scheme.secondaryContainer,
         selectedColor: scheme.onSecondaryContainer,
       ),
+      menuBarTheme: const MenuBarThemeData(),
+      menuButtonTheme: const MenuButtonThemeData(),
+      menuTheme: const MenuThemeData(),
       navigationBarTheme: NavigationBarThemeData(
         backgroundColor: scheme.background,
         iconTheme: MaterialStateProperty.all(
@@ -1646,6 +1652,11 @@ class AmiiboTheme3 implements AmiiboTheme {
         indicatorColor: scheme.primaryContainer,
         labelBehavior: NavigationDestinationLabelBehavior.alwaysShow,
         labelTextStyle: MaterialStateProperty.all(_textTheme.labelLarge),
+      ),
+      navigationDrawerTheme: NavigationDrawerThemeData(
+        elevation: 4.0,
+        shadowColor: scheme.shadow,
+        backgroundColor: scheme.background,
       ),
       navigationRailTheme: NavigationRailThemeData(
         labelType: NavigationRailLabelType.selected,
@@ -1704,6 +1715,7 @@ class AmiiboTheme3 implements AmiiboTheme {
       radioTheme: const RadioThemeData(),
       scaffoldBackgroundColor: scheme.background,
       secondaryHeaderColor: scheme.secondaryContainer,
+      segmentedButtonTheme: const SegmentedButtonThemeData(),
 
       shadowColor: scheme.shadow, //Default color
       sliderTheme: const SliderThemeData(),
@@ -1723,8 +1735,8 @@ class AmiiboTheme3 implements AmiiboTheme {
         thumbColor: MaterialStateProperty.resolveWith<Color?>((states) {
           if (states.contains(MaterialState.disabled)) return null;
           if (states.contains(MaterialState.focused) ||
-              states.contains(MaterialState.pressed)) return scheme.primary;
-          return scheme.primaryContainer;
+              states.contains(MaterialState.pressed)) return scheme.primaryContainer;
+          return scheme.primary;
         }),
         trackColor: MaterialStateProperty.resolveWith<Color?>((states) {
           if (states.contains(MaterialState.disabled)) return null;
