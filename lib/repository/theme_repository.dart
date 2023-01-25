@@ -1515,64 +1515,6 @@ class AmiiboTheme3 implements AmiiboTheme {
   }
 
   set setDark(int? dark) {
-    /* var bluGrey = ThemeSchemes.blueGrey.dark;
-
-    bluGrey = ColorScheme.dark(
-      primary: Colors.black,
-      onPrimary: const Color(0xFFE1E2E4),
-      primaryContainer: const Color(0xFF191C1E),
-      onPrimaryContainer: const Color(0xFFE1E2E4),
-      shadow: Colors.white24,
-      surface: const Color(0xFF191C1E),
-      surfaceVariant: const Color(0xFF40484C),
-      background: Colors.black,
-      onBackground: const Color(0xFFE1E2E4),
-      secondary: const Color(0xFF4D616C),
-      onSecondary: const Color(0xFFFFFFFF),
-      secondaryContainer: Colors.black,
-      onSecondaryContainer: const Color(0xFFE1E2E4),
-    );
-
-    final style = bluGrey.copyWith(
-      /* primary: bluGrey.primary.harmonizeWith(_darkScheme.primary),
-      primaryContainer:
-          _darkScheme.primaryContainer.harmonizeWith(_darkScheme.primaryContainer),
-      onPrimary: bluGrey.onPrimary.harmonizeWith(_darkScheme.onPrimary),
-      onPrimaryContainer: bluGrey.onPrimaryContainer
-          .harmonizeWith(_darkScheme.onPrimaryContainer),
-      inversePrimary:
-          _darkScheme.inversePrimary.harmonizeWith(_darkScheme.inversePrimary),
-      background: bluGrey.background.harmonizeWith(_darkScheme.background), 
-      onBackground:
-          bluGrey.onBackground.harmonizeWith(_darkScheme.onBackground),*/
-      error: bluGrey.error.harmonizeWith(_darkScheme.error),
-      errorContainer:
-          _darkScheme.errorContainer.harmonizeWith(_darkScheme.errorContainer),
-      onError: bluGrey.onError.harmonizeWith(_darkScheme.onError),
-      onErrorContainer:
-          bluGrey.onErrorContainer.harmonizeWith(_darkScheme.onErrorContainer),
-      inverseSurface:
-          bluGrey.inverseSurface.harmonizeWith(_darkScheme.inverseSurface),
-      onInverseSurface:
-          bluGrey.onInverseSurface.harmonizeWith(_darkScheme.onInverseSurface),
-      /* secondary: _darkScheme.secondary,
-      secondaryContainer: _darkScheme.secondaryContainer,
-      onSecondary: _darkScheme.onSecondary,
-      onSecondaryContainer: _darkScheme.onSecondaryContainer, */
-      tertiary: _darkScheme.tertiary,
-      tertiaryContainer: _darkScheme.tertiaryContainer,
-      onTertiary: _darkScheme.onTertiary,
-      onTertiaryContainer: _darkScheme.onTertiaryContainer,
-      onSurface: bluGrey.onSurface.harmonizeWith(_darkScheme.onSurface),
-      onSurfaceVariant:
-          bluGrey.onSurfaceVariant.harmonizeWith(_darkScheme.onSurfaceVariant),
-      outline: bluGrey.outline.harmonizeWith(_darkScheme.outline),
-      surface: bluGrey.surface.harmonizeWith(_darkScheme.surface),
-      surfaceTint: bluGrey.surfaceTint.harmonizeWith(_darkScheme.surfaceTint),
-      surfaceVariant:
-          bluGrey.surfaceVariant.harmonizeWith(_darkScheme.surfaceVariant),
-    );
-     */
     final Brightness _brightness =
         ThemeData.estimateBrightnessForColor(_darkScheme.primary);
     final Color _accentColor =
@@ -1586,6 +1528,7 @@ class AmiiboTheme3 implements AmiiboTheme {
         700: _darkScheme.primaryContainer,
       },
     );
+
     switch (dark) {
       case 0:
         _darkTheme = ThemeData(
@@ -1847,9 +1790,9 @@ class AmiiboTheme3 implements AmiiboTheme {
           primaryColor: Colors.grey[900],
           backgroundColor: Colors.grey[850],
           selectedRowColor: Colors.grey[800],
-          cardColor: Colors.grey[850],
+          cardColor: _darkScheme.background,
           cardTheme: CardTheme(
-            surfaceTintColor: Colors.grey[850],
+            surfaceTintColor: _darkScheme.background,
             color: Colors.grey[850],
             margin: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
             shape:
@@ -2060,21 +2003,19 @@ class AmiiboTheme3 implements AmiiboTheme {
           selectedRowColor: Colors.grey[900],
           cardColor: Colors.black,
           cardTheme: CardTheme(
-            surfaceTintColor: Colors.black,
-            color: Colors.transparent,
-            margin: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+            surfaceTintColor: _darkScheme.background,
+            color: Colors.black,
+            margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
             shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(8),
-                side: BorderSide(color: Colors.grey[900]!, width: 2)),
+              borderRadius: BorderRadius.circular(8),
+                side: BorderSide(color: _darkScheme.secondaryContainer, width: 1.0,
+              ),
+            ),
             elevation: 0.0,
           ),
           colorScheme: _darkScheme.copyWith(
             primary: Colors.blueGrey,
             primaryContainer: Colors.blueGrey.shade700,
-            onSecondary:
-                _brightness == Brightness.dark ? Colors.white70 : Colors.black,
-            secondary: _darkAccentColor.shade200,
-            secondaryContainer: _darkAccentColor.shade700,
           ),
           textTheme: const TextTheme(
             headline6: TextStyle(
