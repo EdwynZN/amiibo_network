@@ -54,7 +54,7 @@ class _CollectionDrawerState extends ConsumerState<CollectionDrawer> {
     final S translate = S.of(context);
     return ListTileTheme.merge(
       iconColor: theme.iconTheme.color,
-      textColor: theme.textTheme.bodyText2!.color,
+      textColor: theme.textTheme.bodyMedium!.color,
       style: ListTileStyle.drawer,
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.all(Radius.circular(8.0)),
@@ -361,7 +361,7 @@ class _HeaderDrawer extends ConsumerWidget {
     final theme = Theme.of(context);
     return DrawerHeader(
       decoration: BoxDecoration(
-        color: theme.drawerTheme.backgroundColor ?? theme.backgroundColor,
+        color: theme.drawerTheme.backgroundColor ?? theme.colorScheme.background,
       ),
       padding: EdgeInsets.zero,
       margin: EdgeInsets.zero,

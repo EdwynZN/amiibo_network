@@ -42,9 +42,6 @@ dependencies:
   stash_hive: ^4.4.1
   stash: ^4.4.0
 
-dependency_overrides:
-  test_api: 0.4.16
-
 dev_dependencies:
   flutter_test:
     sdk: flutter

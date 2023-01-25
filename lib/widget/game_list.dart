@@ -87,7 +87,7 @@ class GameListWidget extends ConsumerWidget {
               sliver: SliverToBoxAdapter(
                 child: Center(
                   child: DefaultTextStyle.merge(
-                    style: Theme.of(context).textTheme.headline4,
+                    style: Theme.of(context).textTheme.headlineMedium,
                     child: child,
                   ),
                 ),
@@ -158,7 +158,7 @@ class _PlatformGameList extends StatelessWidget {
               for (AmiiboUsage usage in game.usage!.sublist(1))
                 ListTile(
                   dense: true,
-                  title: Text(usage.use, style: theme.textTheme.subtitle2),
+                  title: Text(usage.use, style: theme.textTheme.titleSmall),
                 ),
             ],
           ),
@@ -207,13 +207,13 @@ class _Subtitle extends StatelessWidget {
                 const TextSpan(text: ' '),
                 TextSpan(
                   text: translate.amiibo_usage_count(count!),
-                  style: theme.primaryTextTheme.subtitle2?.copyWith(
+                  style: theme.primaryTextTheme.titleSmall?.copyWith(
                     fontWeight: FontWeight.bold,
                   ),
                 ),
               ],
       ),
-      style: theme.primaryTextTheme.subtitle2,
+      style: theme.primaryTextTheme.titleSmall,
       overflow: TextOverflow.ellipsis,
       maxLines: 2,
     );

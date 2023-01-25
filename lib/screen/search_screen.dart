@@ -19,7 +19,7 @@ class SearchScreen extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
-    final style = theme.textTheme.headline4;
+    final style = theme.textTheme.headlineMedium;
     final translate = S.of(context);
     final _textController = useTextEditingController();
     final amiiboCategory = ref.watch(

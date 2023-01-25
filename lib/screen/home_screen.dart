@@ -305,12 +305,12 @@ class _AmiiboListWidget extends HookConsumerWidget {
             child = Text(
               translate.emptyPage,
               textAlign: TextAlign.center,
-              style: theme.textTheme.headline4!,
+              style: theme.textTheme.headlineMedium!,
             );
           else
             child = TextButton.icon(
               style: theme.textButtonTheme.style?.copyWith(
-                textStyle: MaterialStateProperty.all(theme.textTheme.headline4),
+                textStyle: MaterialStateProperty.all(theme.textTheme.headlineMedium),
               ),
               onPressed: () async {
                 final filter = ref.read(queryProvider.notifier);
@@ -687,8 +687,8 @@ class _BottomBar extends StatelessWidget {
           backgroundColor: Colors.transparent,
           elevation: 0.0,
           iconSize: 20.0,
-          selectedLabelStyle: const TextStyle(fontSize: 12.0),
-          unselectedLabelStyle: const TextStyle(fontSize: 12.0),
+          selectedLabelStyle: const TextStyle(fontSize: 11.0),
+          unselectedLabelStyle: const TextStyle(fontSize: 11.0),
           items: [
             BottomNavigationBarItem(
               icon: const ImageIcon(AssetImage(_amiiboIcon)),

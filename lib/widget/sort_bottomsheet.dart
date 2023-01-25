@@ -57,7 +57,7 @@ class _BottomSheetSort extends StatelessWidget {
             shape: theme.bottomSheetTheme.shape,
             clipBehavior: Clip.antiAlias,
             child: ListTileTheme.merge(
-              selectedTileColor: theme.selectedRowColor.withOpacity(0.16),
+              //selectedTileColor: theme.selectedRowColor.withOpacity(0.16),
               contentPadding: const EdgeInsets.only(left: 8.0, right: 16.0),
               dense: true,
               style: ListTileStyle.list,
@@ -87,7 +87,7 @@ class _BottomSheetSort extends StatelessWidget {
                               children: <Widget>[
                                 Text(
                                   translate.sort,
-                                  style: Theme.of(context).textTheme.headline6,
+                                  style: Theme.of(context).textTheme.titleLarge,
                                 ),
                                 TextButton(
                                   style: TextButton.styleFrom(

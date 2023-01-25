@@ -219,7 +219,7 @@ class Screenshot {
 
     final Paint paint = Paint()..color = theme.scaffoldBackgroundColor;
     final Paint cardColor = Paint()..color = theme.cardTheme.color!;
-    final Color? textColor = theme.textTheme.headline6!.color;
+    final Color? textColor = theme.textTheme.titleLarge!.color;
     final Paint divider = Paint()
       ..color = theme.dividerColor
       ..strokeWidth = 2;
@@ -388,7 +388,7 @@ class Screenshot {
   }
 
   Future<void> _paintBanner(Size size, Stat stats) async {
-    final Color? textColor = theme.textTheme.headline6!.color;
+    final Color? textColor = theme.textTheme.titleLarge!.color;
     final Paint paint = Paint();
     String date = materialLocalizations.formatFullDate(DateTime.now());
     date = date.substring(date.indexOf(' ') + 1);

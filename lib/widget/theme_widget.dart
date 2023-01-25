@@ -49,7 +49,7 @@ class ThemeButton extends HookConsumerWidget {
             children: <Widget>[
               Text(
                 translate.mode,
-                style: theme.textTheme.headline4,
+                style: theme.textTheme.headlineMedium,
               ),
               const ThemeButton(),
             ],
@@ -59,7 +59,7 @@ class ThemeButton extends HookConsumerWidget {
           children: <Widget>[
             Text(
               translate.lightTheme,
-              style: Theme.of(context).textTheme.headline4,
+              style: Theme.of(context).textTheme.headlineMedium,
             ),
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 16),
@@ -100,7 +100,7 @@ class ThemeButton extends HookConsumerWidget {
             ),
             Text(
               translate.darkTheme,
-              style: theme.textTheme.headline4,
+              style: theme.textTheme.headlineMedium,
             ),
             Padding(
               padding: const EdgeInsets.fromLTRB(0, 16, 0, 0),

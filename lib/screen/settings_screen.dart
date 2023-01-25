@@ -34,7 +34,7 @@ class SettingsPage extends ConsumerWidget {
     final color = colorOnThemeMode(themeMode, mediaBrightness);
     return ListTileTheme.merge(
       iconColor: theme.iconTheme.color,
-      textColor: theme.textTheme.bodyText2!.color,
+      textColor: theme.textTheme.bodyMedium!.color,
       child: Scaffold(
         appBar: AppBar(
           actions: <Widget>[
