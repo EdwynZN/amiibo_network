@@ -244,10 +244,10 @@ class _SliverAnimatedPersistentHeader extends SliverPersistentHeaderDelegate {
     final Color color;
     final double elevation;
     if (isPinned) {
-      elevation = AppBarTheme.of(context).scrolledUnderElevation ?? 4.0;
+      elevation = appBarTheme.scrolledUnderElevation ?? 8.0;
       color = ElevationOverlay.applySurfaceTint(
-        AppBarTheme.of(context).backgroundColor ?? theme.primaryColor,
-        AppBarTheme.of(context).surfaceTintColor,
+        appBarTheme.backgroundColor ?? theme.primaryColor,
+        appBarTheme.surfaceTintColor,
         elevation,
       );
     } else {
@@ -283,9 +283,9 @@ class _SliverAnimatedPersistentHeader extends SliverPersistentHeaderDelegate {
         ),
         shape: BoxShape.rectangle,
         animateShadowColor: false,
-        elevation: elevation,
+        elevation: 0,
         color: color,
-        shadowColor: theme.colorScheme.shadow.withOpacity(0.12),
+        shadowColor: theme.colorScheme.shadow,
       ),
     );
   }
