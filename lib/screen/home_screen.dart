@@ -56,7 +56,7 @@ final AutoDisposeProvider<TitleSearch> _titleProvider =
     );
   }
   return TitleSearch(
-    title: query.category.name,
+    title: query.search ?? query.category.name,
     type: TitleType.category,
     category: query.category,
   );
