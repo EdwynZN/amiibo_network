@@ -236,12 +236,15 @@ class HomeScreenState extends ConsumerState<HomeScreen>
                     ),
                     isAmiiboList
                         ? const SliverPadding(
-                            padding: EdgeInsets.symmetric(horizontal: 4),
+                            padding: EdgeInsets.symmetric(
+                              vertical: 12.0,
+                              horizontal: 4,
+                            ),
                             sliver: _AmiiboListWidget(),
                           )
                         : const HomeBodyStats(),
                     const SliverPadding(
-                      padding: EdgeInsets.symmetric(vertical: 48.0),
+                      padding: EdgeInsets.only(bottom: 96.0),
                     ),
                   ],
                 ),
