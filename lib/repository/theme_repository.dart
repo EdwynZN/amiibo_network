@@ -1,4 +1,5 @@
 import 'package:amiibo_network/resources/theme_material3_schemes.dart';
+import 'package:amiibo_network/utils/theme_extensions.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -1435,7 +1436,9 @@ class AmiiboTheme3 implements AmiiboTheme {
       // GENERAL CONFIGURATION
       applyElevationOverlayColor: true,
       cupertinoOverrideTheme: const NoDefaultCupertinoThemeData(),
-      extensions: const [],
+      extensions: [
+        PreferencesExtension.brigthness(scheme.brightness, scheme.primary),
+      ],
       inputDecorationTheme: const InputDecorationTheme(),
       materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
       pageTransitionsTheme: const PageTransitionsTheme(),

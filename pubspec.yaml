@@ -41,6 +41,7 @@ dependencies:
   stash_dio: ^4.5.0
   stash_hive: ^4.4.1
   stash: ^4.4.0
+  material_color_utilities: ^0.2.0
 
 dev_dependencies:
   flutter_test:
