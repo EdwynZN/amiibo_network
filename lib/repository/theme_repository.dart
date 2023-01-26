@@ -42,47 +42,190 @@ class _Theme implements AmiiboTheme {
   ThemeData? _lightTheme;
   ThemeData? _darkTheme;
   late MaterialAccentColor _darkAccentColor;
+ 
   TextTheme __darkAccentTextTheme = const TextTheme(
-    subtitle1: TextStyle(
-        color: Colors.black87, fontSize: 16, fontWeight: FontWeight.w400),
-    subtitle2: TextStyle(
-        color: Colors.black87, fontSize: 12, fontWeight: FontWeight.w400),
-    bodyText1: TextStyle(
-        color: Colors.black87, fontSize: 16, fontWeight: FontWeight.w400),
-    bodyText2: TextStyle(color: Colors.black87, fontSize: 14),
-    headline1: TextStyle(
-        color: Colors.black87, fontSize: 12, fontWeight: FontWeight.w400),
-    headline2: TextStyle(
-        color: Colors.black87, fontSize: 12, fontWeight: FontWeight.w600),
-    headline3: TextStyle(
-        color: Colors.black87, fontSize: 14, fontWeight: FontWeight.w400),
-    headline4: TextStyle(
-        color: Colors.black87, fontSize: 18, fontWeight: FontWeight.w600),
-    headline5: TextStyle(
-        color: Colors.black87, fontSize: 16, fontWeight: FontWeight.w400),
-    headline6: TextStyle(
-        color: Colors.black87, fontSize: 18, fontWeight: FontWeight.w600),
+    titleLarge: TextStyle(
+      fontSize: 18,
+      fontWeight: FontWeight.w500,
+      letterSpacing: 0.15,
+      color: Colors.black87,
+    ),
+    titleMedium: TextStyle(
+      fontSize: 16,
+      fontWeight: FontWeight.normal,
+      letterSpacing: 0.15,
+      color: Colors.black87,
+    ),
+    titleSmall: TextStyle(
+      fontSize: 14,
+      fontWeight: FontWeight.w500,
+      letterSpacing: 0.1,
+      color: Colors.black87,
+    ),
+    bodyLarge: TextStyle(
+      fontSize: 16,
+      fontWeight: FontWeight.normal,
+      letterSpacing: 0.5,
+      color: Colors.black87,
+    ),
+    bodyMedium: TextStyle(
+      fontSize: 14,
+      fontWeight: FontWeight.normal,
+      letterSpacing: 0.25,
+      color: Colors.black87,
+    ),
+    bodySmall: TextStyle(
+      fontSize: 12,
+      fontWeight: FontWeight.normal,
+      letterSpacing: 0.4,
+      color: Colors.black87,
+    ),
+    labelLarge: TextStyle(
+      fontSize: 14,
+      fontWeight: FontWeight.w500,
+      letterSpacing: 1.25,
+      color: Colors.black87,
+    ),
+    labelMedium: TextStyle(
+      fontSize: 12,
+      fontWeight: FontWeight.w500,
+      letterSpacing: 1.25,
+      color: Colors.black87,
+    ),
+    labelSmall: TextStyle(
+      fontSize: 10,
+      fontWeight: FontWeight.normal,
+      letterSpacing: 1.5,
+      color: Colors.black87,
+    ),
+    displayLarge: TextStyle(
+      fontSize: 20,
+      fontWeight: FontWeight.w300,
+      letterSpacing: -1.5,
+      color: Colors.black87,
+    ),
+    displayMedium: TextStyle(
+      fontSize: 18,
+      fontWeight: FontWeight.w300,
+      letterSpacing: -0.5,
+      color: Colors.black87,
+    ),
+    displaySmall: TextStyle(
+      fontSize: 16,
+      fontWeight: FontWeight.normal,
+      letterSpacing: 0.0,
+      color: Colors.black87,
+    ),
+    headlineLarge: TextStyle(
+      fontSize: 15,
+      fontWeight: FontWeight.normal,
+      letterSpacing: 0.0,
+      color: Colors.black87,
+    ),
+    headlineMedium: TextStyle(
+      fontSize: 18,
+      fontWeight: FontWeight.normal,
+      letterSpacing: 0.25,
+      color: Colors.black87,
+    ),
+    headlineSmall: TextStyle(
+      fontSize: 16,
+      fontWeight: FontWeight.normal,
+      letterSpacing: 0.0,
+      color: Colors.black87,
+    ),
   );
   TextTheme __lightAccentTextTheme = const TextTheme(
-    subtitle1: TextStyle(
-        color: Colors.white70, fontSize: 16, fontWeight: FontWeight.w400),
-    subtitle2: TextStyle(
-        color: Colors.white70, fontSize: 12, fontWeight: FontWeight.w400),
-    bodyText1: TextStyle(
-        color: Colors.white70, fontSize: 16, fontWeight: FontWeight.w400),
-    bodyText2: TextStyle(color: Colors.white70, fontSize: 14),
-    headline1: TextStyle(
-        color: Colors.white70, fontSize: 12, fontWeight: FontWeight.w400),
-    headline2: TextStyle(
-        color: Colors.white70, fontSize: 12, fontWeight: FontWeight.w600),
-    headline3: TextStyle(
-        color: Colors.white70, fontSize: 14, fontWeight: FontWeight.w400),
-    headline4: TextStyle(
-        color: Colors.white70, fontSize: 18, fontWeight: FontWeight.w600),
-    headline5: TextStyle(
-        color: Colors.white70, fontSize: 16, fontWeight: FontWeight.w400),
-    headline6: TextStyle(
-        color: Colors.white70, fontSize: 18, fontWeight: FontWeight.w600),
+    titleLarge: TextStyle(
+      fontSize: 18,
+      fontWeight: FontWeight.w500,
+      letterSpacing: 0.15,
+      color: Colors.white70,
+    ),
+    titleMedium: TextStyle(
+      fontSize: 16,
+      fontWeight: FontWeight.normal,
+      letterSpacing: 0.15,
+      color: Colors.white70,
+    ),
+    titleSmall: TextStyle(
+      fontSize: 14,
+      fontWeight: FontWeight.w500,
+      letterSpacing: 0.1,
+      color: Colors.white70,
+    ),
+    bodyLarge: TextStyle(
+      fontSize: 16,
+      fontWeight: FontWeight.normal,
+      letterSpacing: 0.5,
+      color: Colors.white70,
+    ),
+    bodyMedium: TextStyle(
+      fontSize: 14,
+      fontWeight: FontWeight.normal,
+      letterSpacing: 0.25,
+      color: Colors.white70,
+    ),
+    bodySmall: TextStyle(
+      fontSize: 12,
+      fontWeight: FontWeight.normal,
+      letterSpacing: 0.4,
+      color: Colors.white70,
+    ),
+    labelLarge: TextStyle(
+      fontSize: 14,
+      fontWeight: FontWeight.w500,
+      letterSpacing: 1.25,
+      color: Colors.white70,
+    ),
+    labelMedium: TextStyle(
+      fontSize: 12,
+      fontWeight: FontWeight.w500,
+      letterSpacing: 1.25,
+      color: Colors.white70,
+    ),
+    labelSmall: TextStyle(
+      fontSize: 10,
+      fontWeight: FontWeight.normal,
+      letterSpacing: 1.5,
+      color: Colors.white70,
+    ),
+    displayLarge: TextStyle(
+      fontSize: 20,
+      fontWeight: FontWeight.w300,
+      letterSpacing: -1.5,
+      color: Colors.white70,
+    ),
+    displayMedium: TextStyle(
+      fontSize: 18,
+      fontWeight: FontWeight.w300,
+      letterSpacing: -0.5,
+      color: Colors.white70,
+    ),
+    displaySmall: TextStyle(
+      fontSize: 16,
+      fontWeight: FontWeight.normal,
+      letterSpacing: 0.0,
+      color: Colors.white70,
+    ),
+    headlineLarge: TextStyle(
+      fontSize: 15,
+      fontWeight: FontWeight.normal,
+      letterSpacing: 0.0,
+      color: Colors.white70,
+    ),
+    headlineMedium: TextStyle(
+      fontSize: 18,
+      fontWeight: FontWeight.normal,
+      letterSpacing: 0.25,
+      color: Colors.white70,
+    ),
+    headlineSmall: TextStyle(
+      fontSize: 16,
+      fontWeight: FontWeight.normal,
+      letterSpacing: 0.0,
+      color: Colors.white70,
+    ),
   );
 
   _Theme({int? light, int? dark}) {
@@ -141,13 +284,13 @@ class _Theme implements AmiiboTheme {
           systemNavigationBarColor: color,
         ),
         titleTextStyle: _brightnessColor == Brightness.light
-            ? __darkAccentTextTheme.headline6!
-            : __lightAccentTextTheme.headline6!.apply(color: Colors.white),
+            ? __darkAccentTextTheme.titleLarge!
+            : __lightAccentTextTheme.titleLarge!.apply(color: Colors.white),
         foregroundColor:
             _brightnessColor == Brightness.light ? Colors.black : Colors.white,
         toolbarTextStyle: _brightnessColor == Brightness.light
-            ? __darkAccentTextTheme.bodyText2
-            : __lightAccentTextTheme.bodyText2,
+            ? __darkAccentTextTheme.bodyMedium
+            : __lightAccentTextTheme.bodyMedium,
         iconTheme: IconThemeData(
           color: _brightnessColor == Brightness.light
               ? Colors.black
@@ -166,13 +309,10 @@ class _Theme implements AmiiboTheme {
             : Colors.black,
         backgroundColor: accentColor,
       ),
-      errorColor: Colors.redAccent,
       canvasColor: color[50],
       primarySwatch: color,
       primaryColor: color,
-      backgroundColor: color[100],
       highlightColor: color[200],
-      selectedRowColor: color[200],
       cardColor: color[100],
       cardTheme: CardTheme(
         color: color.shade100,
@@ -228,8 +368,8 @@ class _Theme implements AmiiboTheme {
         showUnselectedLabels: true,
       ),
       dialogTheme: DialogTheme(
-        titleTextStyle: __darkAccentTextTheme.headline6,
-        contentTextStyle: __darkAccentTextTheme.subtitle1,
+        titleTextStyle: __darkAccentTextTheme.titleLarge,
+        contentTextStyle: __darkAccentTextTheme.titleMedium,
         backgroundColor: color[50],
         actionsPadding: const EdgeInsets.symmetric(
           horizontal: 16.0,
@@ -290,9 +430,9 @@ class _Theme implements AmiiboTheme {
               }),
               backgroundColor: MaterialStateProperty.all<Color?>(color[100]),
               foregroundColor: MaterialStateProperty.all<Color?>(
-                  __darkAccentTextTheme.headline1!.color),
+                  __darkAccentTextTheme.displayLarge!.color),
               textStyle: MaterialStateProperty.all<TextStyle?>(
-                  __darkAccentTextTheme.bodyText1),
+                  __darkAccentTextTheme.bodyLarge),
               overlayColor: MaterialStateProperty.all<Color>(
                   _darkAccentColor.withOpacity(0.24)),
               visualDensity: VisualDensity(vertical: 2.5))),
@@ -323,8 +463,8 @@ class _Theme implements AmiiboTheme {
         secondarySelectedColor: color.shade100,
         labelPadding: const EdgeInsets.symmetric(horizontal: 4.0),
         padding: const EdgeInsets.all(4.0),
-        labelStyle: __darkAccentTextTheme.bodyText2!,
-        secondaryLabelStyle: __darkAccentTextTheme.bodyText2!.apply(
+        labelStyle: __darkAccentTextTheme.bodyMedium!,
+        secondaryLabelStyle: __darkAccentTextTheme.bodyMedium!.apply(
           color:
               _brightnessPrimaryColor == Brightness.light ? null : color[500],
         ),
@@ -338,14 +478,13 @@ class _Theme implements AmiiboTheme {
         elevation: 8.0,
         groupAlignment: 1.0,
         selectedIconTheme: IconThemeData(color: accentColor[700]),
-        selectedLabelTextStyle: __lightAccentTextTheme.bodyText2!.apply(
+        selectedLabelTextStyle: __lightAccentTextTheme.bodyMedium!.apply(
             color: _brightnessAccentTextTheme == Brightness.dark
                 ? accentColor[700]
                 : Colors.black),
         unselectedIconTheme: const IconThemeData(color: Colors.black),
-        unselectedLabelTextStyle: __darkAccentTextTheme.bodyText2,
+        unselectedLabelTextStyle: __darkAccentTextTheme.bodyMedium,
       ),
-      toggleableActiveColor: accentColor[700],
       indicatorColor: color[100],
       useMaterial3: true,
     );
@@ -381,8 +520,8 @@ class _Theme implements AmiiboTheme {
             ),
             scrolledUnderElevation: 0.0,
             foregroundColor: Colors.blueGrey,
-            titleTextStyle: __lightAccentTextTheme.headline6,
-            toolbarTextStyle: __lightAccentTextTheme.bodyText2,
+            titleTextStyle: __lightAccentTextTheme.titleLarge,
+            toolbarTextStyle: __lightAccentTextTheme.bodyMedium,
             iconTheme: const IconThemeData(color: Colors.white70),
           ),
           brightness: Brightness.dark,
@@ -396,12 +535,9 @@ class _Theme implements AmiiboTheme {
             foregroundColor: _accentColor,
             backgroundColor: _darkAccentColor,
           ),
-          errorColor: const Color.fromRGBO(207, 102, 121, 1),
           canvasColor: Colors.blueGrey[900],
           primarySwatch: Colors.blueGrey,
           primaryColor: Colors.blueGrey[900],
-          backgroundColor: Colors.blueGrey[800],
-          selectedRowColor: Colors.blueGrey[700],
           cardColor: Colors.blueGrey[800],
           cardTheme: CardTheme(
             surfaceTintColor: Colors.blueGrey.shade800,
@@ -514,9 +650,9 @@ class _Theme implements AmiiboTheme {
               backgroundColor:
                   MaterialStateProperty.all<Color?>(Colors.blueGrey[800]),
               foregroundColor: MaterialStateProperty.all<Color?>(
-                  __lightAccentTextTheme.headline1!.color),
+                  __lightAccentTextTheme.displayLarge!.color),
               textStyle: MaterialStateProperty.all<TextStyle?>(
-                  __lightAccentTextTheme.bodyText1),
+                  __lightAccentTextTheme.bodyLarge),
               overlayColor: MaterialStateProperty.all<Color>(
                   _darkAccentColor.withOpacity(0.24)),
               visualDensity: VisualDensity(vertical: 2.5),
@@ -549,10 +685,10 @@ class _Theme implements AmiiboTheme {
             secondarySelectedColor: _darkAccentColor.withAlpha(0xFC),
             labelPadding: const EdgeInsets.symmetric(horizontal: 4.0),
             padding: const EdgeInsets.all(4.0),
-            labelStyle: __lightAccentTextTheme.bodyText2!,
+            labelStyle: __lightAccentTextTheme.bodyMedium!,
             secondaryLabelStyle: _brightness == Brightness.dark
-                ? __lightAccentTextTheme.bodyText2!
-                : __darkAccentTextTheme.bodyText2!,
+                ? __lightAccentTextTheme.bodyMedium!
+                : __darkAccentTextTheme.bodyMedium!,
             shape:
                 RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
             side: _SelectedBorder(_darkAccentColor.withOpacity(0.54)),
@@ -564,12 +700,11 @@ class _Theme implements AmiiboTheme {
             elevation: 8.0,
             groupAlignment: 1.0,
             selectedIconTheme: IconThemeData(color: _darkAccentColor),
-            selectedLabelTextStyle: __lightAccentTextTheme.bodyText2!
+            selectedLabelTextStyle: __lightAccentTextTheme.bodyMedium!
                 .apply(color: _darkAccentColor),
             unselectedIconTheme: const IconThemeData(color: Colors.white70),
-            unselectedLabelTextStyle: __lightAccentTextTheme.bodyText2,
+            unselectedLabelTextStyle: __lightAccentTextTheme.bodyMedium,
           ),
-          toggleableActiveColor: _darkAccentColor,
           indicatorColor: Colors.blueGrey[700],
           useMaterial3: true,
         );
@@ -596,8 +731,8 @@ class _Theme implements AmiiboTheme {
               systemNavigationBarColor: Colors.grey.shade900,
             ),
             foregroundColor: Colors.blueGrey,
-            titleTextStyle: __lightAccentTextTheme.headline6,
-            toolbarTextStyle: __lightAccentTextTheme.bodyText2,
+            titleTextStyle: __lightAccentTextTheme.titleLarge,
+            toolbarTextStyle: __lightAccentTextTheme.bodyMedium,
             iconTheme: const IconThemeData(color: Colors.white70),
           ),
           brightness: Brightness.dark,
@@ -611,12 +746,9 @@ class _Theme implements AmiiboTheme {
             foregroundColor: _accentColor,
             backgroundColor: _darkAccentColor,
           ),
-          errorColor: Color.fromRGBO(207, 102, 121, 1),
           canvasColor: Colors.grey[900],
           primarySwatch: Colors.grey,
           primaryColor: Colors.grey[900],
-          backgroundColor: Colors.grey[850],
-          selectedRowColor: Colors.grey[800],
           cardColor: Colors.grey[850],
           cardTheme: CardTheme(
             surfaceTintColor: Colors.grey[850],
@@ -729,9 +861,9 @@ class _Theme implements AmiiboTheme {
                   backgroundColor:
                       MaterialStateProperty.all<Color?>(Colors.grey[850]),
                   foregroundColor: MaterialStateProperty.all<Color?>(
-                      __lightAccentTextTheme.headline1!.color),
+                      __lightAccentTextTheme.displayLarge!.color),
                   textStyle: MaterialStateProperty.all<TextStyle?>(
-                      __lightAccentTextTheme.bodyText1),
+                      __lightAccentTextTheme.bodyLarge),
                   overlayColor: MaterialStateProperty.all<Color>(
                       _darkAccentColor.withOpacity(0.24)),
                   visualDensity: VisualDensity(vertical: 2.5))),
@@ -759,10 +891,10 @@ class _Theme implements AmiiboTheme {
             secondarySelectedColor: _darkAccentColor.withAlpha(0xFC),
             labelPadding: const EdgeInsets.symmetric(horizontal: 4.0),
             padding: const EdgeInsets.all(4.0),
-            labelStyle: __lightAccentTextTheme.bodyText2!,
+            labelStyle: __lightAccentTextTheme.bodyMedium!,
             secondaryLabelStyle: _brightness == Brightness.dark
-                ? __lightAccentTextTheme.bodyText2!
-                : __darkAccentTextTheme.bodyText2!,
+                ? __lightAccentTextTheme.bodyMedium!
+                : __darkAccentTextTheme.bodyMedium!,
             shape:
                 RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
             side: _SelectedBorder(_darkAccentColor.withOpacity(0.54)),
@@ -775,11 +907,10 @@ class _Theme implements AmiiboTheme {
             groupAlignment: 1.0,
             selectedIconTheme: IconThemeData(color: _darkAccentColor),
             unselectedIconTheme: const IconThemeData(color: Colors.white70),
-            selectedLabelTextStyle: __lightAccentTextTheme.bodyText2!
+            selectedLabelTextStyle: __lightAccentTextTheme.bodyMedium!
                 .apply(color: _darkAccentColor),
-            unselectedLabelTextStyle: __lightAccentTextTheme.bodyText2,
+            unselectedLabelTextStyle: __lightAccentTextTheme.bodyMedium,
           ),
-          toggleableActiveColor: _darkAccentColor,
           indicatorColor: Colors.grey[700],
           useMaterial3: true,
         );
@@ -807,8 +938,8 @@ class _Theme implements AmiiboTheme {
               systemNavigationBarColor: Colors.black,
             ),
             foregroundColor: Colors.blueGrey,
-            titleTextStyle: __lightAccentTextTheme.headline6,
-            toolbarTextStyle: __lightAccentTextTheme.bodyText2,
+            titleTextStyle: __lightAccentTextTheme.titleLarge,
+            toolbarTextStyle: __lightAccentTextTheme.bodyMedium,
             iconTheme: const IconThemeData(color: Colors.white70),
           ),
           brightness: Brightness.dark,
@@ -822,12 +953,9 @@ class _Theme implements AmiiboTheme {
             foregroundColor: _accentColor,
             backgroundColor: _darkAccentColor,
           ),
-          errorColor: Color.fromRGBO(207, 102, 121, 1),
           canvasColor: Colors.black,
           primarySwatch: Colors.blueGrey,
           primaryColor: Colors.grey[900],
-          backgroundColor: Colors.black,
-          selectedRowColor: Colors.grey[900],
           cardColor: Colors.black,
           cardTheme: CardTheme(
             surfaceTintColor: Colors.black,
@@ -847,24 +975,24 @@ class _Theme implements AmiiboTheme {
             secondaryContainer: _darkAccentColor.shade700,
           ),
           textTheme: const TextTheme(
-            headline6: TextStyle(
+            titleLarge: TextStyle(
                 color: Colors.white70,
                 fontSize: 18,
                 fontWeight: FontWeight.w400),
-            subtitle2: TextStyle(
+            titleSmall: TextStyle(
                 color: Colors.white70,
                 fontSize: 12,
                 fontWeight: FontWeight.w400),
-            bodyText2: TextStyle(color: Colors.white70),
-            bodyText1: TextStyle(
+            bodyMedium: TextStyle(color: Colors.white70),
+            bodySmall: TextStyle(
                 color: Colors.white70,
                 fontSize: 16,
                 fontWeight: FontWeight.w400),
-            headline4: TextStyle(
+            headlineMedium: TextStyle(
                 color: Colors.white70,
                 fontSize: 18,
                 fontWeight: FontWeight.w600),
-            subtitle1: TextStyle(
+            titleMedium: TextStyle(
                 color: Colors.white70,
                 fontSize: 16,
                 fontWeight: FontWeight.w400),
@@ -959,9 +1087,9 @@ class _Theme implements AmiiboTheme {
                   backgroundColor:
                       MaterialStateProperty.all<Color>(Colors.transparent),
                   foregroundColor: MaterialStateProperty.all<Color?>(
-                      __lightAccentTextTheme.headline1!.color),
+                      __lightAccentTextTheme.displayLarge!.color),
                   textStyle: MaterialStateProperty.all<TextStyle?>(
-                      __lightAccentTextTheme.bodyText1),
+                      __lightAccentTextTheme.bodyLarge),
                   overlayColor: MaterialStateProperty.all<Color>(
                       _darkAccentColor.withOpacity(0.24)),
                   visualDensity: VisualDensity(vertical: 2.5))),
@@ -989,10 +1117,10 @@ class _Theme implements AmiiboTheme {
             secondarySelectedColor: _darkAccentColor.withAlpha(0xFC),
             labelPadding: const EdgeInsets.symmetric(horizontal: 4.0),
             padding: const EdgeInsets.all(4.0),
-            labelStyle: __lightAccentTextTheme.bodyText2!,
+            labelStyle: __lightAccentTextTheme.bodyMedium!,
             secondaryLabelStyle: _brightness == Brightness.dark
-                ? __lightAccentTextTheme.bodyText2!
-                : __darkAccentTextTheme.bodyText2!,
+                ? __lightAccentTextTheme.bodyMedium!
+                : __darkAccentTextTheme.bodyMedium!,
             shape:
                 RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
             side: _SelectedBorder(_darkAccentColor.withOpacity(0.54)),
@@ -1003,12 +1131,11 @@ class _Theme implements AmiiboTheme {
             backgroundColor: Colors.transparent,
             groupAlignment: 1.0,
             selectedIconTheme: IconThemeData(color: _darkAccentColor),
-            selectedLabelTextStyle: __lightAccentTextTheme.bodyText2!
+            selectedLabelTextStyle: __lightAccentTextTheme.bodyMedium!
                 .apply(color: _darkAccentColor),
             unselectedIconTheme: const IconThemeData(color: Colors.white70),
-            unselectedLabelTextStyle: __lightAccentTextTheme.bodyText2,
+            unselectedLabelTextStyle: __lightAccentTextTheme.bodyMedium,
           ),
-          toggleableActiveColor: _darkAccentColor,
           indicatorColor: _darkAccentColor.withOpacity(0.75),
           useMaterial3: true,
         );
@@ -1110,46 +1237,188 @@ class AmiiboTheme3 implements AmiiboTheme {
   );
 
   TextTheme __darkAccentTextTheme = const TextTheme(
-    subtitle1: TextStyle(
-        color: Colors.black87, fontSize: 16, fontWeight: FontWeight.w400),
-    subtitle2: TextStyle(
-        color: Colors.black87, fontSize: 12, fontWeight: FontWeight.w400),
-    bodyText1: TextStyle(
-        color: Colors.black87, fontSize: 16, fontWeight: FontWeight.w400),
-    bodyText2: TextStyle(color: Colors.black87, fontSize: 14),
-    headline1: TextStyle(
-        color: Colors.black87, fontSize: 12, fontWeight: FontWeight.w400),
-    headline2: TextStyle(
-        color: Colors.black87, fontSize: 12, fontWeight: FontWeight.w600),
-    headline3: TextStyle(
-        color: Colors.black87, fontSize: 14, fontWeight: FontWeight.w400),
-    headline4: TextStyle(
-        color: Colors.black87, fontSize: 18, fontWeight: FontWeight.w600),
-    headline5: TextStyle(
-        color: Colors.black87, fontSize: 16, fontWeight: FontWeight.w400),
-    headline6: TextStyle(
-        color: Colors.black87, fontSize: 18, fontWeight: FontWeight.w600),
+    titleLarge: TextStyle(
+      fontSize: 18,
+      fontWeight: FontWeight.w500,
+      letterSpacing: 0.15,
+      color: Colors.black87,
+    ),
+    titleMedium: TextStyle(
+      fontSize: 16,
+      fontWeight: FontWeight.normal,
+      letterSpacing: 0.15,
+      color: Colors.black87,
+    ),
+    titleSmall: TextStyle(
+      fontSize: 14,
+      fontWeight: FontWeight.w500,
+      letterSpacing: 0.1,
+      color: Colors.black87,
+    ),
+    bodyLarge: TextStyle(
+      fontSize: 16,
+      fontWeight: FontWeight.normal,
+      letterSpacing: 0.5,
+      color: Colors.black87,
+    ),
+    bodyMedium: TextStyle(
+      fontSize: 14,
+      fontWeight: FontWeight.normal,
+      letterSpacing: 0.25,
+      color: Colors.black87,
+    ),
+    bodySmall: TextStyle(
+      fontSize: 12,
+      fontWeight: FontWeight.normal,
+      letterSpacing: 0.4,
+      color: Colors.black87,
+    ),
+    labelLarge: TextStyle(
+      fontSize: 14,
+      fontWeight: FontWeight.w500,
+      letterSpacing: 1.25,
+      color: Colors.black87,
+    ),
+    labelMedium: TextStyle(
+      fontSize: 12,
+      fontWeight: FontWeight.w500,
+      letterSpacing: 1.25,
+      color: Colors.black87,
+    ),
+    labelSmall: TextStyle(
+      fontSize: 10,
+      fontWeight: FontWeight.normal,
+      letterSpacing: 1.5,
+      color: Colors.black87,
+    ),
+    displayLarge: TextStyle(
+      fontSize: 20,
+      fontWeight: FontWeight.w300,
+      letterSpacing: -1.5,
+      color: Colors.black87,
+    ),
+    displayMedium: TextStyle(
+      fontSize: 18,
+      fontWeight: FontWeight.w300,
+      letterSpacing: -0.5,
+      color: Colors.black87,
+    ),
+    displaySmall: TextStyle(
+      fontSize: 16,
+      fontWeight: FontWeight.normal,
+      letterSpacing: 0.0,
+      color: Colors.black87,
+    ),
+    headlineLarge: TextStyle(
+      fontSize: 15,
+      fontWeight: FontWeight.normal,
+      letterSpacing: 0.0,
+      color: Colors.black87,
+    ),
+    headlineMedium: TextStyle(
+      fontSize: 18,
+      fontWeight: FontWeight.normal,
+      letterSpacing: 0.25,
+      color: Colors.black87,
+    ),
+    headlineSmall: TextStyle(
+      fontSize: 16,
+      fontWeight: FontWeight.normal,
+      letterSpacing: 0.0,
+      color: Colors.black87,
+    ),
   );
   TextTheme __lightAccentTextTheme = const TextTheme(
-    subtitle1: TextStyle(
-        color: Colors.white70, fontSize: 16, fontWeight: FontWeight.w400),
-    subtitle2: TextStyle(
-        color: Colors.white70, fontSize: 12, fontWeight: FontWeight.w400),
-    bodyText1: TextStyle(
-        color: Colors.white70, fontSize: 16, fontWeight: FontWeight.w400),
-    bodyText2: TextStyle(color: Colors.white70, fontSize: 14),
-    headline1: TextStyle(
-        color: Colors.white70, fontSize: 12, fontWeight: FontWeight.w400),
-    headline2: TextStyle(
-        color: Colors.white70, fontSize: 12, fontWeight: FontWeight.w600),
-    headline3: TextStyle(
-        color: Colors.white70, fontSize: 14, fontWeight: FontWeight.w400),
-    headline4: TextStyle(
-        color: Colors.white70, fontSize: 18, fontWeight: FontWeight.w600),
-    headline5: TextStyle(
-        color: Colors.white70, fontSize: 16, fontWeight: FontWeight.w400),
-    headline6: TextStyle(
-        color: Colors.white70, fontSize: 18, fontWeight: FontWeight.w600),
+    titleLarge: TextStyle(
+      fontSize: 18,
+      fontWeight: FontWeight.w500,
+      letterSpacing: 0.15,
+      color: Colors.white70,
+    ),
+    titleMedium: TextStyle(
+      fontSize: 16,
+      fontWeight: FontWeight.normal,
+      letterSpacing: 0.15,
+      color: Colors.white70,
+    ),
+    titleSmall: TextStyle(
+      fontSize: 14,
+      fontWeight: FontWeight.w500,
+      letterSpacing: 0.1,
+      color: Colors.white70,
+    ),
+    bodyLarge: TextStyle(
+      fontSize: 16,
+      fontWeight: FontWeight.normal,
+      letterSpacing: 0.5,
+      color: Colors.white70,
+    ),
+    bodyMedium: TextStyle(
+      fontSize: 14,
+      fontWeight: FontWeight.normal,
+      letterSpacing: 0.25,
+      color: Colors.white70,
+    ),
+    bodySmall: TextStyle(
+      fontSize: 12,
+      fontWeight: FontWeight.normal,
+      letterSpacing: 0.4,
+      color: Colors.white70,
+    ),
+    labelLarge: TextStyle(
+      fontSize: 14,
+      fontWeight: FontWeight.w500,
+      letterSpacing: 1.25,
+      color: Colors.white70,
+    ),
+    labelMedium: TextStyle(
+      fontSize: 12,
+      fontWeight: FontWeight.w500,
+      letterSpacing: 1.25,
+      color: Colors.white70,
+    ),
+    labelSmall: TextStyle(
+      fontSize: 10,
+      fontWeight: FontWeight.normal,
+      letterSpacing: 1.5,
+      color: Colors.white70,
+    ),
+    displayLarge: TextStyle(
+      fontSize: 20,
+      fontWeight: FontWeight.w300,
+      letterSpacing: -1.5,
+      color: Colors.white70,
+    ),
+    displayMedium: TextStyle(
+      fontSize: 18,
+      fontWeight: FontWeight.w300,
+      letterSpacing: -0.5,
+      color: Colors.white70,
+    ),
+    displaySmall: TextStyle(
+      fontSize: 16,
+      fontWeight: FontWeight.normal,
+      letterSpacing: 0.0,
+      color: Colors.white70,
+    ),
+    headlineLarge: TextStyle(
+      fontSize: 15,
+      fontWeight: FontWeight.normal,
+      letterSpacing: 0.0,
+      color: Colors.white70,
+    ),
+    headlineMedium: TextStyle(
+      fontSize: 18,
+      fontWeight: FontWeight.normal,
+      letterSpacing: 0.25,
+      color: Colors.white70,
+    ),
+    headlineSmall: TextStyle(
+      fontSize: 16,
+      fontWeight: FontWeight.normal,
+      letterSpacing: 0.0,
+      color: Colors.white70,
+    ),
   );
 
   AmiiboTheme3({int? light, int? dark}) {
@@ -1180,6 +1449,7 @@ class AmiiboTheme3 implements AmiiboTheme {
       // COLOR CONFIGURATION
       appBarTheme: AppBarTheme(
         elevation: 2.0,
+        shadowColor: scheme.shadow,
         surfaceTintColor: scheme.surfaceTint,
         scrolledUnderElevation: 8.0,
         systemOverlayStyle: SystemUiOverlayStyle(
@@ -1198,18 +1468,17 @@ class AmiiboTheme3 implements AmiiboTheme {
         foregroundColor: scheme.onBackground,
         iconTheme: IconThemeData(color: scheme.onBackground),
       ),
-      backgroundColor: scheme.background,
+      badgeTheme: const BadgeThemeData(),
       bannerTheme: MaterialBannerThemeData(
         backgroundColor: scheme.tertiary,
         contentTextStyle: _textTheme.titleMedium,
         elevation: 4.0,
       ),
-
-      /// Deprecated in the future
-      bottomAppBarColor: scheme.surface,
       bottomAppBarTheme: BottomAppBarTheme(
         color: scheme.surface,
         elevation: 0.0,
+        height: kBottomNavigationBarHeight,
+        padding: EdgeInsets.zero,
       ),
       bottomSheetTheme: BottomSheetThemeData(
         elevation: 0.0,
@@ -1295,11 +1564,16 @@ class AmiiboTheme3 implements AmiiboTheme {
       ),
       colorScheme: scheme,
       dataTableTheme: const DataTableThemeData(),
+      dropdownMenuTheme: DropdownMenuThemeData(
+        menuStyle: MenuStyle(
+          backgroundColor: MaterialStatePropertyAll(_darkScheme.background),
+        )
+      ),
 
       /// Deprecated in the future
       dialogBackgroundColor: scheme.surface,
       dialogTheme: DialogTheme(
-        elevation: 0.0,
+        elevation: 2.0,
         titleTextStyle:
             _textTheme.titleLarge!.copyWith(color: scheme.onSurface),
         contentTextStyle:
@@ -1319,11 +1593,10 @@ class AmiiboTheme3 implements AmiiboTheme {
         thickness: 0.75,
       ),
       drawerTheme: DrawerThemeData(
-        backgroundColor: ElevationOverlay.applySurfaceTint(
-          scheme.background,
-          scheme.primary.withOpacity(0.12),
-          2.0,
-        ),
+        elevation: 4.0,
+        shadowColor: scheme.shadow,
+        backgroundColor: scheme.background,
+        shape: const RoundedRectangleBorder(),
       ),
       elevatedButtonTheme: ElevatedButtonThemeData(
         style: ButtonStyle(
@@ -1343,19 +1616,18 @@ class AmiiboTheme3 implements AmiiboTheme {
             scheme.onSecondaryContainer,
           ),
           textStyle: MaterialStateProperty.all<TextStyle?>(
-            _textTheme.bodyText1,
+            _textTheme.bodyLarge,
           ),
           overlayColor: MaterialStateProperty.all<Color>(overlay),
           visualDensity: const VisualDensity(vertical: 2.5),
         ),
       ),
 
-      /// Deprecated in the future
-      errorColor: scheme.error,
       expansionTileTheme: ExpansionTileThemeData(
         collapsedBackgroundColor: Colors.transparent,
         backgroundColor: scheme.background,
       ),
+      filledButtonTheme: const FilledButtonThemeData(),
       floatingActionButtonTheme: FloatingActionButtonThemeData(
         shape: const CircleBorder(),
         foregroundColor: scheme.onTertiaryContainer,
@@ -1375,6 +1647,9 @@ class AmiiboTheme3 implements AmiiboTheme {
         selectedTileColor: scheme.secondaryContainer,
         selectedColor: scheme.onSecondaryContainer,
       ),
+      menuBarTheme: const MenuBarThemeData(),
+      menuButtonTheme: const MenuButtonThemeData(),
+      menuTheme: const MenuThemeData(),
       navigationBarTheme: NavigationBarThemeData(
         backgroundColor: scheme.background,
         iconTheme: MaterialStateProperty.all(
@@ -1383,17 +1658,22 @@ class AmiiboTheme3 implements AmiiboTheme {
         labelBehavior: NavigationDestinationLabelBehavior.alwaysShow,
         labelTextStyle: MaterialStateProperty.all(_textTheme.labelLarge),
       ),
+      navigationDrawerTheme: NavigationDrawerThemeData(
+        elevation: 4.0,
+        shadowColor: scheme.shadow,
+        backgroundColor: scheme.background,
+      ),
       navigationRailTheme: NavigationRailThemeData(
         labelType: NavigationRailLabelType.selected,
         backgroundColor: scheme.primaryContainer,
         elevation: 8.0,
         groupAlignment: 1.0,
         selectedIconTheme: IconThemeData(color: scheme.tertiary),
-        selectedLabelTextStyle: __lightAccentTextTheme.bodyText2!.apply(
+        selectedLabelTextStyle: __lightAccentTextTheme.bodyMedium!.apply(
           color: scheme.onTertiary,
         ),
         unselectedIconTheme: const IconThemeData(color: Colors.black),
-        unselectedLabelTextStyle: __darkAccentTextTheme.bodyText2,
+        unselectedLabelTextStyle: __darkAccentTextTheme.bodyMedium,
       ),
       outlinedButtonTheme: OutlinedButtonThemeData(
         style: ButtonStyle(
@@ -1413,7 +1693,7 @@ class AmiiboTheme3 implements AmiiboTheme {
         ),
       ),
       popupMenuTheme: PopupMenuThemeData(
-        textStyle: _textTheme.bodyText1,
+        textStyle: _textTheme.bodyLarge,
         color: scheme.primaryContainer,
         elevation: 8.0,
         shape: RoundedRectangleBorder(
@@ -1440,9 +1720,8 @@ class AmiiboTheme3 implements AmiiboTheme {
       radioTheme: const RadioThemeData(),
       scaffoldBackgroundColor: scheme.background,
       secondaryHeaderColor: scheme.secondaryContainer,
+      segmentedButtonTheme: const SegmentedButtonThemeData(),
 
-      /// Deprecated in the future
-      selectedRowColor: scheme.primary.withOpacity(0.24),
       shadowColor: scheme.shadow, //Default color
       sliderTheme: const SliderThemeData(),
       snackBarTheme: SnackBarThemeData(
@@ -1461,8 +1740,8 @@ class AmiiboTheme3 implements AmiiboTheme {
         thumbColor: MaterialStateProperty.resolveWith<Color?>((states) {
           if (states.contains(MaterialState.disabled)) return null;
           if (states.contains(MaterialState.focused) ||
-              states.contains(MaterialState.pressed)) return scheme.primary;
-          return scheme.primaryContainer;
+              states.contains(MaterialState.pressed)) return scheme.primaryContainer;
+          return scheme.primary;
         }),
         trackColor: MaterialStateProperty.resolveWith<Color?>((states) {
           if (states.contains(MaterialState.disabled)) return null;
@@ -1493,13 +1772,12 @@ class AmiiboTheme3 implements AmiiboTheme {
       textTheme: _textTheme,
       timePickerTheme: const TimePickerThemeData(),
       toggleButtonsTheme: const ToggleButtonsThemeData(),
-      toggleableActiveColor: scheme.secondaryContainer,
       tooltipTheme: TooltipThemeData(
         decoration: BoxDecoration(
           color: scheme.tertiaryContainer,
           borderRadius: BorderRadius.all(Radius.circular(8.0)),
         ),
-        textStyle: _textTheme.caption,
+        textStyle: _textTheme.bodySmall,
       ),
       typography: Typography.material2021(),
       unselectedWidgetColor: scheme.onBackground,
@@ -1515,64 +1793,6 @@ class AmiiboTheme3 implements AmiiboTheme {
   }
 
   set setDark(int? dark) {
-    /* var bluGrey = ThemeSchemes.blueGrey.dark;
-
-    bluGrey = ColorScheme.dark(
-      primary: Colors.black,
-      onPrimary: const Color(0xFFE1E2E4),
-      primaryContainer: const Color(0xFF191C1E),
-      onPrimaryContainer: const Color(0xFFE1E2E4),
-      shadow: Colors.white24,
-      surface: const Color(0xFF191C1E),
-      surfaceVariant: const Color(0xFF40484C),
-      background: Colors.black,
-      onBackground: const Color(0xFFE1E2E4),
-      secondary: const Color(0xFF4D616C),
-      onSecondary: const Color(0xFFFFFFFF),
-      secondaryContainer: Colors.black,
-      onSecondaryContainer: const Color(0xFFE1E2E4),
-    );
-
-    final style = bluGrey.copyWith(
-      /* primary: bluGrey.primary.harmonizeWith(_darkScheme.primary),
-      primaryContainer:
-          _darkScheme.primaryContainer.harmonizeWith(_darkScheme.primaryContainer),
-      onPrimary: bluGrey.onPrimary.harmonizeWith(_darkScheme.onPrimary),
-      onPrimaryContainer: bluGrey.onPrimaryContainer
-          .harmonizeWith(_darkScheme.onPrimaryContainer),
-      inversePrimary:
-          _darkScheme.inversePrimary.harmonizeWith(_darkScheme.inversePrimary),
-      background: bluGrey.background.harmonizeWith(_darkScheme.background), 
-      onBackground:
-          bluGrey.onBackground.harmonizeWith(_darkScheme.onBackground),*/
-      error: bluGrey.error.harmonizeWith(_darkScheme.error),
-      errorContainer:
-          _darkScheme.errorContainer.harmonizeWith(_darkScheme.errorContainer),
-      onError: bluGrey.onError.harmonizeWith(_darkScheme.onError),
-      onErrorContainer:
-          bluGrey.onErrorContainer.harmonizeWith(_darkScheme.onErrorContainer),
-      inverseSurface:
-          bluGrey.inverseSurface.harmonizeWith(_darkScheme.inverseSurface),
-      onInverseSurface:
-          bluGrey.onInverseSurface.harmonizeWith(_darkScheme.onInverseSurface),
-      /* secondary: _darkScheme.secondary,
-      secondaryContainer: _darkScheme.secondaryContainer,
-      onSecondary: _darkScheme.onSecondary,
-      onSecondaryContainer: _darkScheme.onSecondaryContainer, */
-      tertiary: _darkScheme.tertiary,
-      tertiaryContainer: _darkScheme.tertiaryContainer,
-      onTertiary: _darkScheme.onTertiary,
-      onTertiaryContainer: _darkScheme.onTertiaryContainer,
-      onSurface: bluGrey.onSurface.harmonizeWith(_darkScheme.onSurface),
-      onSurfaceVariant:
-          bluGrey.onSurfaceVariant.harmonizeWith(_darkScheme.onSurfaceVariant),
-      outline: bluGrey.outline.harmonizeWith(_darkScheme.outline),
-      surface: bluGrey.surface.harmonizeWith(_darkScheme.surface),
-      surfaceTint: bluGrey.surfaceTint.harmonizeWith(_darkScheme.surfaceTint),
-      surfaceVariant:
-          bluGrey.surfaceVariant.harmonizeWith(_darkScheme.surfaceVariant),
-    );
-     */
     final Brightness _brightness =
         ThemeData.estimateBrightnessForColor(_darkScheme.primary);
     final Color _accentColor =
@@ -1586,6 +1806,7 @@ class AmiiboTheme3 implements AmiiboTheme {
         700: _darkScheme.primaryContainer,
       },
     );
+
     switch (dark) {
       case 0:
         _darkTheme = ThemeData(
@@ -1610,8 +1831,8 @@ class AmiiboTheme3 implements AmiiboTheme {
             ),
             scrolledUnderElevation: 0.0,
             foregroundColor: Colors.blueGrey,
-            titleTextStyle: __lightAccentTextTheme.headline6,
-            toolbarTextStyle: __lightAccentTextTheme.bodyText2,
+            titleTextStyle: __lightAccentTextTheme.titleLarge,
+            toolbarTextStyle: __lightAccentTextTheme.bodyMedium,
             iconTheme: const IconThemeData(color: Colors.white70),
           ),
           brightness: Brightness.dark,
@@ -1625,12 +1846,9 @@ class AmiiboTheme3 implements AmiiboTheme {
             foregroundColor: _accentColor,
             backgroundColor: _darkAccentColor,
           ),
-          errorColor: const Color.fromRGBO(207, 102, 121, 1),
           canvasColor: Colors.blueGrey[900],
           primarySwatch: Colors.blueGrey,
           primaryColor: Colors.blueGrey[900],
-          backgroundColor: Colors.blueGrey[800],
-          selectedRowColor: Colors.blueGrey[700],
           cardColor: Colors.blueGrey[800],
           cardTheme: CardTheme(
             surfaceTintColor: Colors.blueGrey.shade800,
@@ -1664,10 +1882,12 @@ class AmiiboTheme3 implements AmiiboTheme {
           ),
           primaryTextTheme: __lightAccentTextTheme,
           bottomAppBarTheme: BottomAppBarTheme(
-            shape: CircularNotchedRectangle(),
-            color: Colors.blueGrey[900],
+            shape: const CircularNotchedRectangle(),
+            color: Colors.blueGrey.shade900,
             // color: Colors.transparent,
             elevation: 0.0,
+            height: kBottomNavigationBarHeight,
+            padding: EdgeInsets.zero,
           ),
           bottomNavigationBarTheme: BottomNavigationBarThemeData(
             type: BottomNavigationBarType.fixed,
@@ -1676,6 +1896,11 @@ class AmiiboTheme3 implements AmiiboTheme {
             selectedItemColor: _darkAccentColor,
             unselectedItemColor: Colors.blueGrey[700],
             showUnselectedLabels: true,
+          ),
+          dropdownMenuTheme: DropdownMenuThemeData(
+            menuStyle: MenuStyle(
+              backgroundColor: MaterialStatePropertyAll(_darkScheme.background),
+            )
           ),
           dialogTheme: DialogTheme(
             titleTextStyle: const TextStyle(
@@ -1690,6 +1915,18 @@ class AmiiboTheme3 implements AmiiboTheme {
             backgroundColor: Colors.blueGrey[900],
             shape:
                 RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+          ),
+          drawerTheme: DrawerThemeData(
+            elevation: 4.0,
+            shadowColor: _darkScheme.shadow,
+            backgroundColor: Colors.blueGrey.shade900,
+            surfaceTintColor: _darkScheme.surfaceTint,
+            shape: const RoundedRectangleBorder(),
+          ),
+          listTileTheme: ListTileThemeData(
+            iconColor: _darkScheme.onBackground,
+            selectedTileColor: _darkScheme.secondaryContainer,
+            selectedColor: _darkScheme.onSecondaryContainer,
           ),
           snackBarTheme: SnackBarThemeData(
             backgroundColor: Colors.blueGrey[800],
@@ -1743,9 +1980,9 @@ class AmiiboTheme3 implements AmiiboTheme {
               backgroundColor:
                   MaterialStateProperty.all<Color?>(Colors.blueGrey[800]),
               foregroundColor: MaterialStateProperty.all<Color?>(
-                  __lightAccentTextTheme.headline1!.color),
+                  __lightAccentTextTheme.displayLarge!.color),
               textStyle: MaterialStateProperty.all<TextStyle?>(
-                  __lightAccentTextTheme.bodyText1),
+                  __lightAccentTextTheme.bodyLarge),
               overlayColor: MaterialStateProperty.all<Color>(
                   _darkAccentColor.withOpacity(0.24)),
               visualDensity: VisualDensity(vertical: 2.5),
@@ -1778,10 +2015,10 @@ class AmiiboTheme3 implements AmiiboTheme {
             secondarySelectedColor: _darkAccentColor.withAlpha(0xFC),
             labelPadding: const EdgeInsets.symmetric(horizontal: 4.0),
             padding: const EdgeInsets.all(4.0),
-            labelStyle: __lightAccentTextTheme.bodyText2!,
+            labelStyle: __lightAccentTextTheme.bodyMedium!,
             secondaryLabelStyle: _brightness == Brightness.dark
-                ? __lightAccentTextTheme.bodyText2!
-                : __darkAccentTextTheme.bodyText2!,
+                ? __lightAccentTextTheme.bodyMedium!
+                : __darkAccentTextTheme.bodyMedium!,
             shape:
                 RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
             side: _SelectedBorder(
@@ -1794,12 +2031,25 @@ class AmiiboTheme3 implements AmiiboTheme {
             elevation: 8.0,
             groupAlignment: 1.0,
             selectedIconTheme: IconThemeData(color: _darkAccentColor),
-            selectedLabelTextStyle: __lightAccentTextTheme.bodyText2!
+            selectedLabelTextStyle: __lightAccentTextTheme.bodyMedium!
                 .apply(color: _darkAccentColor),
             unselectedIconTheme: const IconThemeData(color: Colors.white70),
-            unselectedLabelTextStyle: __lightAccentTextTheme.bodyText2,
+            unselectedLabelTextStyle: __lightAccentTextTheme.bodyMedium,
           ),
-          toggleableActiveColor: _darkAccentColor,
+          switchTheme: SwitchThemeData(
+            thumbColor: MaterialStateProperty.resolveWith<Color?>((states) {
+              if (states.contains(MaterialState.disabled)) return null;
+              if (states.contains(MaterialState.focused) ||
+                  states.contains(MaterialState.pressed)) return Colors.blueGrey.shade900;
+              return Colors.blueGrey.shade100;
+            }),
+            trackColor: MaterialStateProperty.resolveWith<Color?>((states) {
+              if (states.contains(MaterialState.disabled)) return null;
+              if (states.contains(MaterialState.focused) ||
+                  states.contains(MaterialState.pressed)) return Colors.blueGrey.shade100;
+              return _darkScheme.primaryContainer;
+            }),
+          ),
           indicatorColor: Colors.blueGrey[700],
           useMaterial3: true,
         );
@@ -1826,8 +2076,8 @@ class AmiiboTheme3 implements AmiiboTheme {
               systemNavigationBarColor: Colors.grey.shade900,
             ),
             foregroundColor: Colors.blueGrey,
-            titleTextStyle: __lightAccentTextTheme.headline6,
-            toolbarTextStyle: __lightAccentTextTheme.bodyText2,
+            titleTextStyle: __lightAccentTextTheme.titleLarge,
+            toolbarTextStyle: __lightAccentTextTheme.bodyMedium,
             iconTheme: const IconThemeData(color: Colors.white70),
           ),
           brightness: Brightness.dark,
@@ -1841,15 +2091,12 @@ class AmiiboTheme3 implements AmiiboTheme {
             foregroundColor: _accentColor,
             backgroundColor: _darkAccentColor,
           ),
-          errorColor: Color.fromRGBO(207, 102, 121, 1),
           canvasColor: Colors.grey[900],
           primarySwatch: Colors.grey,
           primaryColor: Colors.grey[900],
-          backgroundColor: Colors.grey[850],
-          selectedRowColor: Colors.grey[800],
-          cardColor: Colors.grey[850],
+          cardColor: _darkScheme.background,
           cardTheme: CardTheme(
-            surfaceTintColor: Colors.grey[850],
+            surfaceTintColor: _darkScheme.background,
             color: Colors.grey[850],
             margin: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
             shape:
@@ -1880,10 +2127,13 @@ class AmiiboTheme3 implements AmiiboTheme {
             circularTrackColor: Colors.grey,
           ),
           bottomAppBarTheme: BottomAppBarTheme(
-              shape: CircularNotchedRectangle(),
-              color: Colors.grey[900],
-              //color: Colors.transparent,
-              elevation: 0.0),
+            shape: CircularNotchedRectangle(),
+            color: Colors.grey[900],
+            //color: Colors.transparent,
+            elevation: 0.0,
+            height: kBottomNavigationBarHeight,
+            padding: EdgeInsets.zero,
+          ),
           bottomNavigationBarTheme: BottomNavigationBarThemeData(
             type: BottomNavigationBarType.fixed,
             backgroundColor: Colors.transparent,
@@ -1891,6 +2141,11 @@ class AmiiboTheme3 implements AmiiboTheme {
             selectedItemColor: _darkAccentColor,
             unselectedItemColor: Colors.grey[700],
             showUnselectedLabels: true,
+          ),
+          dropdownMenuTheme: DropdownMenuThemeData(
+            menuStyle: MenuStyle(
+              backgroundColor: MaterialStatePropertyAll(_darkScheme.background),
+            )
           ),
           dialogTheme: DialogTheme(
             titleTextStyle: const TextStyle(
@@ -1905,6 +2160,18 @@ class AmiiboTheme3 implements AmiiboTheme {
             backgroundColor: Colors.grey[900],
             shape:
                 RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+          ),
+          drawerTheme: DrawerThemeData(
+            elevation: 4.0,
+            shadowColor: _darkScheme.shadow,
+            backgroundColor: Colors.grey.shade900,
+            surfaceTintColor: _darkScheme.surfaceTint,
+            shape: const RoundedRectangleBorder(),
+          ),
+          listTileTheme: ListTileThemeData(
+            iconColor: _darkScheme.onBackground,
+            selectedTileColor: _darkScheme.secondaryContainer,
+            selectedColor: _darkScheme.onSecondaryContainer,
           ),
           snackBarTheme: SnackBarThemeData(
             backgroundColor: Colors.grey[800],
@@ -1959,9 +2226,9 @@ class AmiiboTheme3 implements AmiiboTheme {
                   backgroundColor:
                       MaterialStateProperty.all<Color?>(Colors.grey[850]),
                   foregroundColor: MaterialStateProperty.all<Color?>(
-                      __lightAccentTextTheme.headline1!.color),
+                      __lightAccentTextTheme.displayLarge!.color),
                   textStyle: MaterialStateProperty.all<TextStyle?>(
-                      __lightAccentTextTheme.bodyText1),
+                      __lightAccentTextTheme.bodyLarge),
                   overlayColor: MaterialStateProperty.all<Color>(
                       _darkAccentColor.withOpacity(0.24)),
                   visualDensity: VisualDensity(vertical: 2.5))),
@@ -1989,10 +2256,10 @@ class AmiiboTheme3 implements AmiiboTheme {
             secondarySelectedColor: _darkAccentColor.withAlpha(0xFC),
             labelPadding: const EdgeInsets.symmetric(horizontal: 4.0),
             padding: const EdgeInsets.all(4.0),
-            labelStyle: __lightAccentTextTheme.bodyText2!,
+            labelStyle: __lightAccentTextTheme.bodyMedium!,
             secondaryLabelStyle: _brightness == Brightness.dark
-                ? __lightAccentTextTheme.bodyText2!
-                : __darkAccentTextTheme.bodyText2!,
+                ? __lightAccentTextTheme.bodyMedium!
+                : __darkAccentTextTheme.bodyMedium!,
             shape:
                 RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
             side: _SelectedBorder(
@@ -2006,11 +2273,24 @@ class AmiiboTheme3 implements AmiiboTheme {
             groupAlignment: 1.0,
             selectedIconTheme: IconThemeData(color: _darkAccentColor),
             unselectedIconTheme: const IconThemeData(color: Colors.white70),
-            selectedLabelTextStyle: __lightAccentTextTheme.bodyText2!
+            selectedLabelTextStyle: __lightAccentTextTheme.bodyMedium!
                 .apply(color: _darkAccentColor),
-            unselectedLabelTextStyle: __lightAccentTextTheme.bodyText2,
+            unselectedLabelTextStyle: __lightAccentTextTheme.bodyMedium,
           ),
-          toggleableActiveColor: _darkAccentColor,
+          switchTheme: SwitchThemeData(
+            thumbColor: MaterialStateProperty.resolveWith<Color?>((states) {
+              if (states.contains(MaterialState.disabled)) return null;
+              if (states.contains(MaterialState.focused) ||
+                  states.contains(MaterialState.pressed)) return _darkScheme.background;
+              return _darkScheme.onBackground;
+            }),
+            trackColor: MaterialStateProperty.resolveWith<Color?>((states) {
+              if (states.contains(MaterialState.disabled)) return null;
+              if (states.contains(MaterialState.focused) ||
+                  states.contains(MaterialState.pressed)) return _darkScheme.onPrimaryContainer;
+              return _darkScheme.primaryContainer;
+            }),
+          ),
           indicatorColor: Colors.grey[700],
           useMaterial3: true,
         );
@@ -2037,8 +2317,8 @@ class AmiiboTheme3 implements AmiiboTheme {
               systemNavigationBarColor: Colors.black,
             ),
             foregroundColor: Colors.blueGrey,
-            titleTextStyle: __lightAccentTextTheme.headline6,
-            toolbarTextStyle: __lightAccentTextTheme.bodyText2,
+            titleTextStyle: __lightAccentTextTheme.titleLarge,
+            toolbarTextStyle: __lightAccentTextTheme.bodyMedium,
             iconTheme: const IconThemeData(color: Colors.white70),
           ),
           brightness: Brightness.dark,
@@ -2052,49 +2332,44 @@ class AmiiboTheme3 implements AmiiboTheme {
             foregroundColor: _accentColor,
             backgroundColor: _darkAccentColor,
           ),
-          errorColor: Color.fromRGBO(207, 102, 121, 1),
           canvasColor: Colors.black,
           primarySwatch: Colors.blueGrey,
           primaryColor: Colors.grey[900],
-          backgroundColor: Colors.black,
-          selectedRowColor: Colors.grey[900],
           cardColor: Colors.black,
           cardTheme: CardTheme(
-            surfaceTintColor: Colors.black,
-            color: Colors.transparent,
-            margin: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+            surfaceTintColor: _darkScheme.background,
+            color: Colors.black,
+            margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
             shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(8),
-                side: BorderSide(color: Colors.grey[900]!, width: 2)),
+              borderRadius: BorderRadius.circular(8),
+                side: BorderSide(color: _darkScheme.secondaryContainer, width: 1.0,
+              ),
+            ),
             elevation: 0.0,
           ),
           colorScheme: _darkScheme.copyWith(
             primary: Colors.blueGrey,
             primaryContainer: Colors.blueGrey.shade700,
-            onSecondary:
-                _brightness == Brightness.dark ? Colors.white70 : Colors.black,
-            secondary: _darkAccentColor.shade200,
-            secondaryContainer: _darkAccentColor.shade700,
           ),
           textTheme: const TextTheme(
-            headline6: TextStyle(
+            titleLarge: TextStyle(
                 color: Colors.white70,
                 fontSize: 18,
                 fontWeight: FontWeight.w400),
-            subtitle2: TextStyle(
+            titleSmall: TextStyle(
                 color: Colors.white70,
                 fontSize: 12,
                 fontWeight: FontWeight.w400),
-            bodyText2: TextStyle(color: Colors.white70),
-            bodyText1: TextStyle(
+            bodyMedium: TextStyle(color: Colors.white70),
+            bodyLarge: TextStyle(
                 color: Colors.white70,
                 fontSize: 16,
                 fontWeight: FontWeight.w400),
-            headline4: TextStyle(
+            headlineMedium: TextStyle(
                 color: Colors.white70,
                 fontSize: 18,
                 fontWeight: FontWeight.w600),
-            subtitle1: TextStyle(
+            titleMedium: TextStyle(
                 color: Colors.white70,
                 fontSize: 16,
                 fontWeight: FontWeight.w400),
@@ -2106,10 +2381,13 @@ class AmiiboTheme3 implements AmiiboTheme {
           ),
           primaryTextTheme: __lightAccentTextTheme,
           bottomAppBarTheme: BottomAppBarTheme(
-              shape: CircularNotchedRectangle(),
-              color: Colors.black,
-              // color: Colors.transparent,
-              elevation: 0.0),
+            shape: const CircularNotchedRectangle(),
+            color: Colors.black,
+            // color: Colors.transparent,
+            elevation: 0.0,
+            height: kBottomNavigationBarHeight,
+            padding: EdgeInsets.zero,
+          ),
           bottomNavigationBarTheme: BottomNavigationBarThemeData(
             type: BottomNavigationBarType.fixed,
             backgroundColor: Colors.transparent,
@@ -2117,6 +2395,11 @@ class AmiiboTheme3 implements AmiiboTheme {
             selectedItemColor: _darkAccentColor,
             unselectedItemColor: Colors.white70,
             showUnselectedLabels: true,
+          ),
+          dropdownMenuTheme: DropdownMenuThemeData(
+            menuStyle: MenuStyle(
+              backgroundColor: MaterialStatePropertyAll(_darkScheme.background),
+            )
           ),
           dialogTheme: DialogTheme(
             titleTextStyle: TextStyle(
@@ -2132,6 +2415,18 @@ class AmiiboTheme3 implements AmiiboTheme {
             shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(8),
                 side: BorderSide(color: _darkAccentColor)),
+          ),
+          drawerTheme: DrawerThemeData(
+            elevation: 2.0,
+            shadowColor: _darkScheme.shadow,
+            surfaceTintColor: _darkScheme.surfaceTint,
+            backgroundColor: _darkScheme.background,
+            shape: const RoundedRectangleBorder(),
+          ),
+          listTileTheme: ListTileThemeData(
+            iconColor: _darkScheme.onBackground,
+            selectedTileColor: _darkScheme.secondaryContainer,
+            selectedColor: _darkScheme.onSecondaryContainer,
           ),
           snackBarTheme: SnackBarThemeData(
             backgroundColor: Colors.grey[900],
@@ -2189,9 +2484,9 @@ class AmiiboTheme3 implements AmiiboTheme {
                   backgroundColor:
                       MaterialStateProperty.all<Color>(Colors.transparent),
                   foregroundColor: MaterialStateProperty.all<Color?>(
-                      __lightAccentTextTheme.headline1!.color),
+                      __lightAccentTextTheme.displayLarge!.color),
                   textStyle: MaterialStateProperty.all<TextStyle?>(
-                      __lightAccentTextTheme.bodyText1),
+                      __lightAccentTextTheme.bodyLarge),
                   overlayColor: MaterialStateProperty.all<Color>(
                       _darkAccentColor.withOpacity(0.24)),
                   visualDensity: VisualDensity(vertical: 2.5))),
@@ -2219,10 +2514,10 @@ class AmiiboTheme3 implements AmiiboTheme {
             secondarySelectedColor: _darkAccentColor.withAlpha(0xFC),
             labelPadding: const EdgeInsets.symmetric(horizontal: 4.0),
             padding: const EdgeInsets.all(4.0),
-            labelStyle: __lightAccentTextTheme.bodyText2!,
+            labelStyle: __lightAccentTextTheme.bodyMedium!,
             secondaryLabelStyle: _brightness == Brightness.dark
-                ? __lightAccentTextTheme.bodyText2!
-                : __darkAccentTextTheme.bodyText2!,
+                ? __lightAccentTextTheme.bodyMedium!
+                : __darkAccentTextTheme.bodyMedium!,
             shape:
                 RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
             side: _SelectedBorder(
@@ -2234,12 +2529,25 @@ class AmiiboTheme3 implements AmiiboTheme {
             backgroundColor: Colors.transparent,
             groupAlignment: 1.0,
             selectedIconTheme: IconThemeData(color: _darkAccentColor),
-            selectedLabelTextStyle: __lightAccentTextTheme.bodyText2!
+            selectedLabelTextStyle: __lightAccentTextTheme.bodyMedium!
                 .apply(color: _darkAccentColor),
             unselectedIconTheme: const IconThemeData(color: Colors.white70),
-            unselectedLabelTextStyle: __lightAccentTextTheme.bodyText2,
+            unselectedLabelTextStyle: __lightAccentTextTheme.bodyMedium,
           ),
-          toggleableActiveColor: _darkAccentColor,
+          switchTheme: SwitchThemeData(
+            thumbColor: MaterialStateProperty.resolveWith<Color?>((states) {
+              if (states.contains(MaterialState.disabled)) return null;
+              if (states.contains(MaterialState.focused) ||
+                  states.contains(MaterialState.pressed)) return _darkScheme.background;
+              return _darkScheme.onBackground;
+            }),
+            trackColor: MaterialStateProperty.resolveWith<Color?>((states) {
+              if (states.contains(MaterialState.disabled)) return null;
+              if (states.contains(MaterialState.focused) ||
+                  states.contains(MaterialState.pressed)) return _darkScheme.onPrimaryContainer;
+              return _darkScheme.primaryContainer;
+            }),
+          ),
           indicatorColor: _darkAccentColor.withOpacity(0.75),
           useMaterial3: true,
         );

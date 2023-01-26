@@ -32,7 +32,7 @@ class RegionDetail extends StatelessWidget {
                 maxLines: 1,
                 style: Theme.of(context)
                   .textTheme
-                  .bodyText2!
+                  .bodyMedium!
                   .copyWith(fontWeight: FontWeight.bold),
               ),
             ),
@@ -61,7 +61,7 @@ class TextCardDetail extends StatelessWidget {
       maxLines: 1,
       style: Theme.of(context)
         .textTheme
-        .bodyText2!
+        .bodyMedium!
         .copyWith(fontWeight: FontWeight.bold),
     );
   }

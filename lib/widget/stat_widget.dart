@@ -44,7 +44,7 @@ class StatWidget extends StatelessWidget {
             return RichText(
               text: TextSpan(
                 text: myStat,
-                style: theme.textTheme.subtitle1!.copyWith(
+                style: theme.textTheme.titleMedium!.copyWith(
                   fontSize: fontFeatureStyle ? 22 : null,
                   fontFeatures: [
                     if (fontFeatureStyle) ui.FontFeature.enable('frac'),
@@ -53,7 +53,7 @@ class StatWidget extends StatelessWidget {
                 ),
                 children: [
                   TextSpan(
-                    style: Theme.of(context).textTheme.subtitle1,
+                    style: Theme.of(context).textTheme.titleMedium,
                     text: ' $text',
                   )
                 ],

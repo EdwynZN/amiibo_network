@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:amiibo_network/enum/amiibo_category_enum.dart';
 import 'package:amiibo_network/model/stat.dart';
 import 'package:amiibo_network/repository/theme_repository.dart';
@@ -28,87 +30,98 @@ class SliverStatsHeader extends SliverPersistentHeaderDelegate {
     final Color _color = ElevationOverlay.applySurfaceTint(
       firstColor,
       appbarTheme.surfaceTintColor,
-      isScrolledUnder ?
-        _elevation * 2.0 > 4.0 ? _elevation * 2.0 : 4.0
-        : _elevation,
+      isScrolledUnder
+          ? _elevation * 2.0 > 4.0
+              ? _elevation * 2.0
+              : 4.0
+          : _elevation,
     );
     final S translate = S.of(context);
-    return Container(
-      padding: const EdgeInsets.fromLTRB(6.0, 6.0, 6.0, 2.0),
-      alignment: Alignment.bottomCenter,
-      decoration: BoxDecoration(
-        gradient: LinearGradient(
-          begin: Alignment.topCenter,
-          end: Alignment.bottomCenter,
-          stops: [0.40, 0.75, 1.0],
-          colors: [
-            _color,
-            _color.withOpacity(0.5),
-            _color.withOpacity(0.0),
-          ],
+    return ClipRect(
+      child: BackdropFilter(
+        filter: ImageFilter.blur(
+          sigmaX: 3.0,
+          sigmaY: 3.0,
+          tileMode: TileMode.decal,
         ),
-      ),
-      height: math.max(minExtent, maxExtent - shrinkOffset),
-      child: Consumer(
-        child: const SizedBox(),
-        builder: (context, ref, child) {
-          final category = ref.watch(
-            queryProvider.notifier.select((value) => value.search.category),
-          );
-          return ref.watch(statHomeProvider).maybeWhen(
-                data: (statList) {
-                  if (statList == const Stat()) return child!;
-                  final double total = statList.total.toDouble();
-                  final double owned = statList.owned.toDouble();
-                  final double wished = statList.wished.toDouble();
-                  if (total == 0 && owned == 0 && wished == 0) return child!;
-                  return Visibility(
-                    visible: hideOptional,
-                    child: Row(
-                      children: <Widget>[
-                        category == AmiiboCategory.Wishlist
-                            ? const Spacer()
-                            : Expanded(
-                                child: StatWidget(
-                                  numerator: owned,
-                                  den: total,
-                                  text: translate.owned,
-                                  icon: Icon(
-                                    iconOwnedDark,
-                                    color: Colors.green.shade800,
-                                  ),
-                                ),
-                              ),
-                        const SizedBox(width: 8.0),
-                        category == AmiiboCategory.Owned
-                            ? const Spacer()
-                            : Expanded(
-                                child: StatWidget(
-                                  numerator: wished,
-                                  den: total,
-                                  text: translate.wished,
-                                  icon: Icon(
-                                    Icons.whatshot,
-                                    color: Colors.amber.shade800,
-                                  ),
-                                ),
-                              ),
-                      ],
-                    ),
-                  );
-                },
-                orElse: () => child!,
+        child: Container(
+          height: math.max(minExtent, maxExtent - shrinkOffset),
+          padding: const EdgeInsets.fromLTRB(6.0, 6.0, 6.0, 2.0),
+          alignment: Alignment.bottomCenter,
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+              stops: [0.20, 0.40, 0.75],
+              colors: [
+                _color,
+                _color.withOpacity(0.75),
+                _color.withOpacity(0.10),
+              ],
+            ),
+          ),
+          child: Consumer(
+            child: const SizedBox(),
+            builder: (context, ref, child) {
+              final category = ref.watch(
+                queryProvider.notifier.select((value) => value.search.category),
               );
-        },
+              return ref.watch(statHomeProvider).maybeWhen(
+                    data: (statList) {
+                      if (statList == const Stat()) return child!;
+                      final double total = statList.total.toDouble();
+                      final double owned = statList.owned.toDouble();
+                      final double wished = statList.wished.toDouble();
+                      if (total == 0 && owned == 0 && wished == 0) return child!;
+                      return Visibility(
+                        visible: hideOptional,
+                        child: Row(
+                          children: <Widget>[
+                            category == AmiiboCategory.Wishlist
+                                ? const Spacer()
+                                : Expanded(
+                                    child: StatWidget(
+                                      numerator: owned,
+                                      den: total,
+                                      text: translate.owned,
+                                      icon: Icon(
+                                        iconOwnedDark,
+                                        color: Colors.green.shade800,
+                                      ),
+                                    ),
+                                  ),
+                            const SizedBox(width: 8.0),
+                            category == AmiiboCategory.Owned
+                                ? const Spacer()
+                                : Expanded(
+                                    child: StatWidget(
+                                      numerator: wished,
+                                      den: total,
+                                      text: translate.wished,
+                                      icon: Icon(
+                                        Icons.whatshot,
+                                        color: Colors.amber.shade800,
+                                      ),
+                                    ),
+                                  ),
+                          ],
+                        ),
+                      );
+                    },
+                    orElse: () => child!,
+                  );
+            },
+          ),
+        ),
       ),
     );
   }
 
   @override
-  double get maxExtent => kMinInteractiveDimension;
+  double get maxExtent => kToolbarHeight;
 
   @override
-  double get minExtent => kMinInteractiveDimension;
+  double get minExtent => kToolbarHeight;
 
   @override
   bool shouldRebuild(SliverPersistentHeaderDelegate oldDelegate) => true;

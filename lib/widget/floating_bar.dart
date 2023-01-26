@@ -320,7 +320,7 @@ class _AppBarState extends State<_AppBar> {
               contentPadding: EdgeInsets.zero,
               horizontalTitleGap: 0.0,
               iconColor: theme.iconTheme.color,
-              textColor: theme.textTheme.headline6!.color,
+              textColor: theme.textTheme.titleLarge!.color,
               dense: true,
               child: Material(
                 type: MaterialType.card,
@@ -372,7 +372,7 @@ class _FloatingBarState extends State<_FloatingBar> {
     super.didChangeDependencies();
     if (_position != null)
       _position!.isScrollingNotifier.removeListener(_isScrollingListener);
-    _position = Scrollable.of(context)?.position;
+    _position = Scrollable.maybeOf(context)?.position;
     if (_position != null)
       _position!.isScrollingNotifier.addListener(_isScrollingListener);
   }

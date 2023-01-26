@@ -134,7 +134,7 @@ class _AmiiboInfo extends ConsumerWidget {
               softWrap: false,
               style: Theme.of(context)
                   .textTheme
-                  .bodyText1!
+                  .bodyLarge!
                   .copyWith(fontWeight: FontWeight.bold),
             );
           },

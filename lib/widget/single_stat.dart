@@ -38,7 +38,7 @@ class SingleStat extends StatelessWidget {
                   softWrap: false,
                   textAlign: TextAlign.center,
                   overflow: TextOverflow.fade,
-                  style: Theme.of(context).textTheme.headline4,
+                  style: Theme.of(context).textTheme.headlineMedium,
                 ),
               ),
             ),

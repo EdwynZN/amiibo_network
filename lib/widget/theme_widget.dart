@@ -49,7 +49,7 @@ class ThemeButton extends HookConsumerWidget {
             children: <Widget>[
               Text(
                 translate.mode,
-                style: theme.textTheme.headline4,
+                style: theme.textTheme.headlineMedium,
               ),
               const ThemeButton(),
             ],
@@ -59,7 +59,7 @@ class ThemeButton extends HookConsumerWidget {
           children: <Widget>[
             Text(
               translate.lightTheme,
-              style: Theme.of(context).textTheme.headline4,
+              style: Theme.of(context).textTheme.headlineMedium,
             ),
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 16),
@@ -79,16 +79,23 @@ class ThemeButton extends HookConsumerWidget {
                             child: CircleAvatar(
                               backgroundColor: color,
                               radius: _circleSize / 2,
-                              child: AnimatedSwitcher(
-                                duration: const Duration(milliseconds: 250),
-                                child: themeRef.lightOption ==
+                              child: AnimatedContainer(
+                                duration: kThemeAnimationDuration,
+                                decoration: ShapeDecoration(
+                                  shape: CircleBorder(
+                                    side: BorderSide(
+                                      strokeAlign: -1.0,
+                                      width: 5.0,
+                                      color: theme.brightness == Brightness.light
+                                        ? theme.colorScheme.tertiary
+                                        : theme.colorScheme.inversePrimary,
+                                      style: themeRef.lightOption ==
                                         themeRef.lightColors.indexOf(color)
-                                    ? const Icon(
-                                        Icons.radio_button_unchecked,
-                                        size: _circleSize * 0.9,
-                                        color: Colors.white70,
-                                      )
-                                    : const SizedBox(),
+                                          ? BorderStyle.solid
+                                          : BorderStyle.none,
+                                    )
+                                  ),
+                                ),
                               ),
                             ),
                           ),
@@ -100,7 +107,7 @@ class ThemeButton extends HookConsumerWidget {
             ),
             Text(
               translate.darkTheme,
-              style: theme.textTheme.headline4,
+              style: theme.textTheme.headlineMedium,
             ),
             Padding(
               padding: const EdgeInsets.fromLTRB(0, 16, 0, 0),
@@ -118,16 +125,23 @@ class ThemeButton extends HookConsumerWidget {
                           child: CircleAvatar(
                             backgroundColor: color,
                             radius: _circleSize / 2,
-                            child: AnimatedSwitcher(
-                              duration: const Duration(milliseconds: 250),
-                              child: themeRef.darkOption ==
+                            child: AnimatedContainer(
+                              duration: kThemeAnimationDuration,
+                              decoration: ShapeDecoration(
+                                shape: CircleBorder(
+                                  side: BorderSide(
+                                    strokeAlign: -1.0,
+                                    width: 5.0,
+                                    color: theme.brightness == Brightness.dark
+                                      ? theme.colorScheme.inversePrimary
+                                      : theme.colorScheme.tertiary,
+                                    style: themeRef.darkOption ==
                                       themeRef.darkColors.indexOf(color)
-                                  ? const Icon(
-                                      Icons.radio_button_unchecked,
-                                      size: _circleSize * 0.9,
-                                      color: Colors.white70,
-                                    )
-                                  : const SizedBox(),
+                                        ? BorderStyle.solid
+                                        : BorderStyle.none,
+                                  )
+                                ),
+                              ),
                             ),
                           ),
                         ),

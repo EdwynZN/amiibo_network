@@ -219,7 +219,7 @@ class BodyStats extends HookConsumerWidget {
         return Center(
           child: Text(
             translate.emptyPage,
-            style: Theme.of(context).textTheme.headline4,
+            style: Theme.of(context).textTheme.headlineMedium,
           ),
         );
 
