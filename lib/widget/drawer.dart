@@ -4,6 +4,7 @@ import 'package:amiibo_network/riverpod/query_provider.dart';
 import 'package:amiibo_network/riverpod/stat_provider.dart';
 import 'package:amiibo_network/riverpod/theme_provider.dart';
 import 'package:amiibo_network/utils/format_color_on_theme.dart';
+import 'package:amiibo_network/utils/theme_extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:amiibo_network/widget/theme_widget.dart';
 import 'package:amiibo_network/enum/amiibo_category_enum.dart';
@@ -28,10 +29,12 @@ class _CollectionDrawerState extends ConsumerState<CollectionDrawer> {
   static bool _figureExpand = false;
   static bool _cardExpand = false;
   late ThemeData theme;
+  late PreferencesExtension preferencesExtension;
 
   @override
   void didChangeDependencies() {
     theme = Theme.of(context);
+    preferencesExtension = theme.extension<PreferencesExtension>()!;
     super.didChangeDependencies();
   }
 
@@ -152,6 +155,8 @@ class _CollectionDrawerState extends ConsumerState<CollectionDrawer> {
                                           fontWeight: FontWeight.bold)
                                       : null,
                                 ),
+                                selectedTileColor: preferencesExtension.ownContainer.withOpacity(0.54),
+                                selectedColor: preferencesExtension.onOwnContainer,
                                 selected: isOwned,
                               ),
                               const Gap(4.0),
@@ -166,6 +171,8 @@ class _CollectionDrawerState extends ConsumerState<CollectionDrawer> {
                                           fontWeight: FontWeight.bold)
                                       : null,
                                 ),
+                                selectedTileColor: preferencesExtension.wishContainer.withOpacity(0.54),
+                                selectedColor: preferencesExtension.onWishContainer,
                                 selected: isWishlist,
                               ),
                               const Gap(4.0),
