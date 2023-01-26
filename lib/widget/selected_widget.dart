@@ -3,6 +3,7 @@ import 'package:amiibo_network/repository/theme_repository.dart';
 import 'package:amiibo_network/riverpod/amiibo_provider.dart';
 import 'package:amiibo_network/riverpod/select_provider.dart';
 import 'package:amiibo_network/riverpod/service_provider.dart';
+import 'package:amiibo_network/utils/theme_extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -55,10 +56,11 @@ class _AnimatedSelectionState extends ConsumerState<AnimatedSelection> {
             ShapeBorder? cardShape = theme.cardTheme.shape;
             Border? border;
             Color? color;
+            final preferencesPalette = theme.extension<PreferencesExtension>()!;
             if (amiibo.wishlist) {
-              color = colorWished.shade100;
+              color = preferencesPalette.wishContainer;
             } else if (amiibo.owned) {
-              color = colorOwned.shade100;
+              color = preferencesPalette.ownContainer;
             }
             if (select.selected) {
               final side = BorderSide(
@@ -70,9 +72,8 @@ class _AnimatedSelectionState extends ConsumerState<AnimatedSelection> {
                 width: 4.0,
               );
               border = Border(left: side, right: side, top: side);
-              cardShape = cardShape == null
-                ? cardShape ?? border
-                : border + cardShape;
+              cardShape =
+                  cardShape == null ? cardShape ?? border : border + cardShape;
             }
 
             final hasAttribute = amiibo.wishlist || amiibo.owned;

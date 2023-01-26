@@ -42,17 +42,17 @@ class PreferencesExtension extends ThemeExtension<PreferencesExtension>
       0xFF8F4E00,
       <int, Color>{
         0: Colors.black,
-        10: Color(0XFF2E1500),
-        20: Color(0XFF4C2700),
-        30: Color(0XFF6D4A00),
-        40: Color(0XFF8F4E00),
-        50: Color(0XFFB36300),
-        60: Color(0XFFD87800),
-        70: Color(0XFFFF8F00),
-        80: Color(0XFFFFB77A),
-        90: Color(0XFFFFDDC2),
-        95: Color(0XFFFFEEE2),
-        98: Color(0xFFFFF8F5),
+        10: Color(0XFF1E1D00),
+        20: Color(0XFF343200),
+        30: Color(0XFF4B4900),
+        40: Color(0XFF646100),
+        50: Color(0XFF7E7A00),
+        60: Color(0XFF999500),
+        70: Color(0XFFB5B000),
+        80: Color(0XFFD1CC1F),
+        90: Color(0XFFEEE83F),
+        95: Color(0XFFFDF74D),
+        98: Color(0xFFFFFBF5),
         99: Color(0xFFFFFBFF),
         100: Colors.white,
       },
@@ -67,18 +67,23 @@ class PreferencesExtension extends ThemeExtension<PreferencesExtension>
       wish = wishPalette;
     }
     return PreferencesExtension._(
-      ownPalette: ownPalette,
-      wishPalette: wishPalette,
+      ownPalette: own,
+      wishPalette: wish,
       brightness: brightness,
     );
   }
 
   bool get _isDark => brightness == Brightness.dark;
 
-  Color get primary => _isDark ? ownPalette.shade80 : ownPalette.shade40;
-  Color get onPrimary => _isDark ? ownPalette.shade20 : ownPalette.shade100;
-  Color get container => _isDark ? ownPalette.shade30 : ownPalette.shade90;
-  Color get onContainer => _isDark ? ownPalette.shade90 : ownPalette.shade10;
+  Color get ownPrimary => _isDark ? ownPalette.shade80 : ownPalette.shade40;
+  Color get onOwnPrimary => _isDark ? ownPalette.shade20 : ownPalette.shade100;
+  Color get ownContainer => _isDark ? ownPalette.shade30 : ownPalette.shade90;
+  Color get onOwnContainer => _isDark ? ownPalette.shade90 : ownPalette.shade10;
+
+  Color get wishPrimary => _isDark ? wishPalette.shade80 : wishPalette.shade40;
+  Color get onWishPrimary => _isDark ? wishPalette.shade20 : wishPalette.shade100;
+  Color get wishContainer => _isDark ? wishPalette.shade30 : wishPalette.shade90;
+  Color get onWishContainer => _isDark ? wishPalette.shade90 : wishPalette.shade10;
 
   @override
   ThemeExtension<PreferencesExtension> copyWith({

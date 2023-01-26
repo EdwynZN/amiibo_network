@@ -1816,6 +1816,9 @@ class AmiiboTheme3 implements AmiiboTheme {
           splashFactory: InkSparkle.constantTurbulenceSeedSplashFactory,
           primaryColorLight: Colors.blueGrey[800],
           primaryColorDark: Colors.blueGrey[900],
+          extensions: [
+            PreferencesExtension.brigthness(_darkScheme.brightness, _darkScheme.primary),
+          ],
           textSelectionTheme: TextSelectionThemeData(
             selectionHandleColor: _darkAccentColor,
             selectionColor: _darkAccentColor.withOpacity(0.5),
@@ -2062,6 +2065,9 @@ class AmiiboTheme3 implements AmiiboTheme {
           splashFactory: InkSparkle.constantTurbulenceSeedSplashFactory,
           primaryColorLight: Colors.grey[850],
           primaryColorDark: Colors.grey[900],
+          extensions: [
+            PreferencesExtension.brigthness(_darkScheme.brightness, _darkScheme.primary),
+          ],
           textSelectionTheme: TextSelectionThemeData(
             selectionHandleColor: _darkAccentColor,
             selectionColor: _darkAccentColor.withOpacity(0.5),
@@ -2303,6 +2309,9 @@ class AmiiboTheme3 implements AmiiboTheme {
           splashFactory: InkSparkle.constantTurbulenceSeedSplashFactory,
           primaryColorLight: Colors.transparent,
           primaryColorDark: _darkAccentColor,
+          extensions: [
+            PreferencesExtension.brigthness(_darkScheme.brightness, _darkScheme.primary),
+          ],
           textSelectionTheme: TextSelectionThemeData(
             selectionHandleColor: _darkAccentColor,
             selectionColor: _darkAccentColor.withOpacity(0.5),

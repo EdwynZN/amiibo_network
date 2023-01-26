@@ -3,6 +3,7 @@ import 'package:amiibo_network/model/amiibo.dart';
 import 'package:amiibo_network/repository/theme_repository.dart';
 import 'package:amiibo_network/riverpod/amiibo_provider.dart';
 import 'package:amiibo_network/riverpod/service_provider.dart';
+import 'package:amiibo_network/utils/theme_extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
@@ -44,12 +45,13 @@ class WishedButton extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final S translate = S.of(context);
-    final color = colorWished.withOpacity(0.24);
+    final preferencesPalette = Theme.of(context).extension<PreferencesExtension>()!;
+    final color = preferencesPalette.wishContainer.withOpacity(0.24);
     return IconButton(
       icon: isActive
           ? const Icon(iconWished)
           : const Icon(Icons.check_box_outline_blank),
-      color: colorWished,
+      color: preferencesPalette.wishPalette.shade70,
       iconSize: 30.0,
       splashRadius: 24.0,
       tooltip: translate.wishTooltip,
@@ -84,12 +86,13 @@ class OwnedButton extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final S translate = S.of(context);
-    final color = colorOwned.withOpacity(0.24);
+    final preferencesPalette = Theme.of(context).extension<PreferencesExtension>()!;
+    final color = preferencesPalette.ownContainer.withOpacity(0.24);
     return IconButton(
       icon: isActive
           ? const Icon(iconOwned)
           : const Icon(Icons.radio_button_unchecked),
-      color: colorOwned,
+      color: preferencesPalette.ownPalette.shade70,
       iconSize: 30.0,
       splashRadius: 24.0,
       tooltip: translate.ownTooltip,
