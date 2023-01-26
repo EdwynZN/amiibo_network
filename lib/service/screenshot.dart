@@ -4,6 +4,7 @@ import 'package:amiibo_network/resources/resources.dart';
 import 'package:amiibo_network/riverpod/stat_provider.dart';
 import 'package:amiibo_network/riverpod/theme_provider.dart';
 import 'package:amiibo_network/utils/format_color_on_theme.dart';
+import 'package:amiibo_network/utils/theme_extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'dart:ui' as ui;
@@ -22,14 +23,16 @@ class Screenshot {
   late stat.StatProvider statProvider;
   late MaterialLocalizations materialLocalizations;
   Color? color;
+  Color? onOwned;
+  Color? onWished;
   String? owned;
   String? wished;
   String? createdOn;
 
   final S? _translate = S.current;
   final Service _service = Service();
-  final Paint ownedCardPaint = Paint()..color = colorOwned[100]!;
-  final Paint wishedCardPaint = Paint()..color = colorWished[100]!;
+  final Paint ownedCardPaint = Paint();
+  final Paint wishedCardPaint = Paint();
   final double margin = 20.0;
   final double padding = 10.0;
   final double space = 0.25;
@@ -65,9 +68,16 @@ class Screenshot {
   void customData(
       ThemeMode themeMode, BuildContext context, StatProvider statProvider) {
     final mediaBrightness = MediaQuery.of(context).platformBrightness;
+    final theme = Theme.of(context);
+    final preferences = theme.extension<PreferencesExtension>()
+      ?? PreferencesExtension.brigthness(theme.brightness);
     this
       ..color = colorOnThemeMode(themeMode, mediaBrightness)
-      ..theme = Theme.of(context)
+      ..ownedCardPaint.color = preferences.ownContainer
+      ..wishedCardPaint.color = preferences.wishContainer
+      ..onOwned = preferences.onOwnContainer
+      ..onWished = preferences.onWishContainer
+      ..theme = theme
       ..statProvider = statProvider
       ..owned = _translate!.owned
       ..wished = _translate!.wished
@@ -78,9 +88,16 @@ class Screenshot {
   void update(WidgetRef ref, BuildContext context) {
     final mediaBrightness = MediaQuery.of(context).platformBrightness;
     final themeMode = ref.read(themeProvider).preferredTheme;
+    final theme = Theme.of(context);
+    final preferences = theme.extension<PreferencesExtension>()
+      ?? PreferencesExtension.brigthness(theme.brightness);
     this
       ..color = colorOnThemeMode(themeMode, mediaBrightness)
-      ..theme = Theme.of(context)
+      ..ownedCardPaint.color = preferences.ownContainer
+      ..wishedCardPaint.color = preferences.wishContainer
+      ..onOwned = preferences.onOwnContainer
+      ..onWished = preferences.onWishContainer
+      ..theme = theme
       ..statProvider = ref.read(stat.statProvider)
       ..owned = _translate!.owned
       ..wished = _translate!.wished
@@ -236,7 +253,7 @@ class Screenshot {
     final iconWhatsHot = Icons.whatshot;
     final TextSpan ownedIcon = TextSpan(
       style: TextStyle(
-        color: colorOwned,
+        color: onOwned,
         fontFamily: iconOwnedDark.fontFamily,
         fontSize: 50,
       ),
@@ -244,7 +261,7 @@ class Screenshot {
     );
     final TextSpan wishedIcon = TextSpan(
       style: TextStyle(
-        color: colorWished,
+        color: onWished,
         fontFamily: iconWhatsHot.fontFamily,
         fontSize: 50,
       ),

@@ -4,24 +4,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-const colorOwned = const MaterialAccentColor(
-  0xFF2E7D32,
-  <int, Color>{
-    100: Color(0xFFB9F6CA),
-    200: Color(0xFF2E7D32),
-    400: Color(0xFF1B5E20),
-    700: Color(0xFF4A5F20),
-  },
-);
-const colorWished = const MaterialAccentColor(
-  0xFFF57F17,
-  <int, Color>{
-    100: Color(0xFFFFE57F),
-    200: Color(0xFFF57F17),
-    400: Color(0xFFFF8F00),
-    700: Color(0xFFFF6F00),
-  },
-);
 const iconOwned = Icons.check_circle_outline;
 const iconOwnedDark = Icons.check;
 const iconWished = Icons.card_giftcard;
