@@ -311,7 +311,7 @@ class _AmiiboListWidget extends HookConsumerWidget {
               style: theme.textTheme.headlineMedium!,
             );
           else
-            child = TextButton.icon(
+            child = OutlinedButton.icon(
               style: theme.textButtonTheme.style?.copyWith(
                 textStyle:
                     MaterialStateProperty.all(theme.textTheme.headlineMedium),
@@ -342,6 +342,34 @@ class _AmiiboListWidget extends HookConsumerWidget {
             child: Center(child: child),
           );
         }
+        /* return SliverList(
+          delegate: SliverChildBuilderDelegate(
+            (BuildContext _, int index) {
+              late final Widget child;
+              if (data != null) {
+                child = ProviderScope(
+                  key: ValueKey<int?>(data[index].key),
+                  overrides: [
+                    indexAmiiboProvider.overrideWithValue(index),
+                    keyAmiiboProvider.overrideWithValue(data[index].key),
+                  ],
+                  child: AnimatedSelectedListTile(ignore: ignore),
+                );
+              } else {
+                child = ShimmerCard(listenable: controller);
+              }
+              return ConstrainedBox(
+                constraints: const BoxConstraints(maxHeight: 72.0),
+                child: AnimatedSwitcher(
+                  duration: const Duration(seconds: 1),
+                  child: child,
+                ),
+              );
+            },
+            childCount: data != null ? data.length : null,
+          ),
+        ); */
+
         late final SliverGridDelegate grid;
         final bool bigGrid = MediaQuery.of(context).size.width >= 600;
         if (bigGrid)
