@@ -365,11 +365,7 @@ class _HeaderDrawer extends ConsumerWidget {
     final mediaBrightness = MediaQuery.of(context).platformBrightness;
     final themeMode = ref.watch(themeProvider.select((t) => t.preferredTheme));
     final color = colorOnThemeMode(themeMode, mediaBrightness);
-    final theme = Theme.of(context);
     return DrawerHeader(
-      decoration: BoxDecoration(
-        color: theme.drawerTheme.backgroundColor ?? theme.colorScheme.background,
-      ),
       padding: EdgeInsets.zero,
       margin: EdgeInsets.zero,
       child: Image.asset(
