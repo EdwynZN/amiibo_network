@@ -1419,7 +1419,7 @@ class AmiiboTheme3 implements AmiiboTheme {
       applyElevationOverlayColor: true,
       cupertinoOverrideTheme: const NoDefaultCupertinoThemeData(),
       extensions: [
-        PreferencesExtension.brigthness(scheme.brightness, scheme.primary),
+        PreferencesExtension.brigthness(scheme.brightness),
       ],
       inputDecorationTheme: const InputDecorationTheme(),
       materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
@@ -1799,7 +1799,7 @@ class AmiiboTheme3 implements AmiiboTheme {
           primaryColorLight: Colors.blueGrey[800],
           primaryColorDark: Colors.blueGrey[900],
           extensions: [
-            PreferencesExtension.brigthness(_darkScheme.brightness, _darkScheme.primary),
+            PreferencesExtension.brigthness(_darkScheme.brightness),
           ],
           textSelectionTheme: TextSelectionThemeData(
             selectionHandleColor: _darkAccentColor,
@@ -2048,7 +2048,7 @@ class AmiiboTheme3 implements AmiiboTheme {
           primaryColorLight: Colors.grey[850],
           primaryColorDark: Colors.grey[900],
           extensions: [
-            PreferencesExtension.brigthness(_darkScheme.brightness, _darkScheme.primary),
+            PreferencesExtension.brigthness(_darkScheme.brightness),
           ],
           textSelectionTheme: TextSelectionThemeData(
             selectionHandleColor: _darkAccentColor,
@@ -2292,7 +2292,7 @@ class AmiiboTheme3 implements AmiiboTheme {
           primaryColorLight: Colors.transparent,
           primaryColorDark: _darkAccentColor,
           extensions: [
-            PreferencesExtension.brigthness(_darkScheme.brightness, _darkScheme.primary),
+            PreferencesExtension.brigthness(_darkScheme.brightness),
           ],
           textSelectionTheme: TextSelectionThemeData(
             selectionHandleColor: _darkAccentColor,
