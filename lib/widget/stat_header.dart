@@ -5,8 +5,9 @@ import 'package:amiibo_network/enum/amiibo_category_enum.dart';
 import 'package:amiibo_network/generated/l10n.dart';
 import 'package:amiibo_network/model/stat.dart';
 import 'package:amiibo_network/riverpod/amiibo_provider.dart';
+import 'package:amiibo_network/riverpod/preferences_provider.dart';
 import 'package:amiibo_network/riverpod/query_provider.dart';
-import 'package:amiibo_network/riverpod/stat_provider.dart';
+import 'package:amiibo_network/utils/stat_utils.dart';
 import 'package:amiibo_network/widget/linear_stat_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -100,13 +101,12 @@ class _LinearStat extends ConsumerWidget {
     final category = ref.watch(
       queryProvider.notifier.select((value) => value.search.category),
     );
-    final stats = ref.watch(statProvider);
-    final usePercentage = stats.isPercentage;
+    final usePercentage = ref.watch(personalProvider.select((p) => p.usePercentage));
     final String ownedStat;
     final String wishedStat;
     if (usePercentage) {
-      ownedStat = stats.statLabel(owned, total);
-      wishedStat = stats.statLabel(wished, total);
+      ownedStat = StatUtils.parseStat(owned, total, usePercentage: usePercentage);
+      wishedStat = StatUtils.parseStat(wished, total, usePercentage: usePercentage);
     } else {
       ownedStat = owned.toString();
       wishedStat = wished.toString();

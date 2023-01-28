@@ -21,6 +21,9 @@ enum AndroidCode {
   T,
 }
 
+//Font feature is supported in Android 5 and above
+bool get isFontFeatureEnable => InfoPackage.version >= AndroidCode.Lollipop.version;
+
 extension AndroidCodeShortcuts on AndroidCode {
   int get version => this.index + 15;
 }

@@ -1,6 +1,8 @@
+import 'package:amiibo_network/riverpod/preferences_provider.dart';
+import 'package:amiibo_network/service/info_package.dart';
+import 'package:amiibo_network/utils/stat_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:amiibo_network/widget/radial_progression.dart';
-import 'package:amiibo_network/riverpod/stat_provider.dart';
 import 'dart:ui' as ui show FontFeature;
 
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -35,10 +37,10 @@ class StatWidget extends StatelessWidget {
         child: FittedBox(
           fit: BoxFit.scaleDown,
           child: Consumer(builder: (ctx, ref, _) {
-            final stats = ref.watch(statProvider);
-            final String myStat = stats.statLabel(numerator, den);
+            final isPercentage = ref.watch(personalProvider.select((p) => p.usePercentage));
+            final String myStat = StatUtils.parseStat(numerator, den, usePercentage: isPercentage);
             final bool fontFeatureStyle =
-                !stats.isPercentage && isFontFeatureEnable;
+              !isPercentage && isFontFeatureEnable;
 
             /// Activate fontFeature only if StatMode is Ratio and isFontFeatureEnable is true for this device
             return RichText(

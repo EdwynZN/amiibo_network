@@ -1,5 +1,7 @@
+import 'package:amiibo_network/enum/amiibo_category_enum.dart';
 import 'package:amiibo_network/model/amiibo.dart';
 import 'package:amiibo_network/riverpod/amiibo_provider.dart';
+import 'package:amiibo_network/riverpod/query_provider.dart';
 import 'package:amiibo_network/riverpod/select_provider.dart';
 import 'package:amiibo_network/riverpod/service_provider.dart';
 import 'package:amiibo_network/utils/theme_extensions.dart';
@@ -182,6 +184,12 @@ class AnimatedSelectedListTile extends AnimatedSelection {
 class _AnimatedSelectedListTileState extends _AnimatedSelectionState {
   @override
   Widget build(BuildContext context) {
+    final useSerie = ref.watch(queryProvider.notifier
+      .select((q) {
+        final category = q.search.category;
+        return category != AmiiboCategory.FigureSeries &&
+          category != AmiiboCategory.CardSeries;
+      }));
     final index = ref.watch(indexAmiiboProvider);
     final key = ref.watch(keyAmiiboProvider);
     final select = ref.watch(
@@ -263,7 +271,8 @@ class _AnimatedSelectedListTileState extends _AnimatedSelectionState {
                               end: Alignment.bottomCenter,
                               colors: const [Colors.black, Colors.transparent],
                               stops: const [0.80, 1.0],
-                            ).createShader(Rect.fromLTRB(0, 0, rect.width, rect.height));
+                            ).createShader(
+                                Rect.fromLTRB(0, 0, rect.width, rect.height));
                           },
                           blendMode: BlendMode.dstIn,
                           child: Hero(
@@ -306,6 +315,7 @@ class _AnimatedSelectedListTileState extends _AnimatedSelectionState {
                         elevation: 4.0,
                         child: _AmiiboListInfo.fromAmiibo(
                           amiibo: amiibo,
+                          useSerie: useSerie,
                           style: theme.primaryTextTheme.labelLarge?.copyWith(
                             fontWeight: FontWeight.bold,
                             color: select.selected
@@ -331,6 +341,7 @@ class _AmiiboListInfo extends StatelessWidget {
   final String serie;
   final String? type;
   final String? cardNumber;
+  final bool useSerie;
 
   const _AmiiboListInfo({
     // ignore: unused_element
@@ -338,6 +349,7 @@ class _AmiiboListInfo extends StatelessWidget {
     required this.name,
     required this.game,
     required this.serie,
+    required this.useSerie,
     // ignore: unused_element
     this.cardNumber,
     // ignore: unused_element
@@ -350,15 +362,19 @@ class _AmiiboListInfo extends StatelessWidget {
     // ignore: unused_element
     super.key,
     required Amiibo amiibo,
+    required this.useSerie,
     this.style,
-  }) : name = amiibo.name,
-       game = amiibo.gameSeries,
-       serie = amiibo.amiiboSeries,
-       type = amiibo.type,
-       cardNumber = amiibo.key.toString();//amiibo.cardNumber == null ? null : amiibo.cardNumber.toString();
+  })  : name = amiibo.name,
+        game = amiibo.gameSeries,
+        serie = amiibo.amiiboSeries,
+        type = amiibo.type,
+        cardNumber = amiibo.type != 'Card' || amiibo.cardNumber == null
+            ? null
+            : amiibo.cardNumber.toString();
 
   @override
   Widget build(BuildContext context) {
+    const subtitleStyle = TextStyle(fontSize: 12.0);
     return Padding(
       padding: const EdgeInsets.all(6.0),
       child: Column(
@@ -370,9 +386,7 @@ class _AmiiboListInfo extends StatelessWidget {
             TextSpan(
               text: cardNumber == null ? null : '#${cardNumber!} ',
               children: [
-                TextSpan(
-                  text: name,
-                ),
+                TextSpan(text: name),
               ],
             ),
             style: style,
@@ -380,30 +394,15 @@ class _AmiiboListInfo extends StatelessWidget {
             overflow: TextOverflow.fade,
             maxLines: 1,
           ),
-          if (type != null) ... [
-            const SizedBox(height: 2.0),
-            Text(
-              type!,
-              softWrap: false,
-              overflow: TextOverflow.fade,
-              style: style,
-              maxLines: 1,
-            ),
-          ],
-          /* Text(
-            game,
+          const SizedBox(height: 2.0),
+          Text(
+            useSerie ? serie : game,
+            style: style?.merge(subtitleStyle) ?? subtitleStyle,
             softWrap: false,
             overflow: TextOverflow.fade,
-            style: style,
+            maxLines: 1,
           ),
-          if (type != null)
-            Text(
-              type!,
-              softWrap: false,
-              overflow: TextOverflow.fade,
-              style: style,
-            ), */
-        ],
+        ]
       ),
     );
   }

@@ -1,15 +1,17 @@
+import 'package:amiibo_network/model/preferences.dart';
 import 'package:amiibo_network/model/stat.dart';
 import 'package:amiibo_network/repository/theme_repository.dart';
 import 'package:amiibo_network/resources/resources.dart';
-import 'package:amiibo_network/riverpod/stat_provider.dart';
+import 'package:amiibo_network/riverpod/preferences_provider.dart';
 import 'package:amiibo_network/riverpod/theme_provider.dart';
+import 'package:amiibo_network/service/info_package.dart';
 import 'package:amiibo_network/utils/format_color_on_theme.dart';
+import 'package:amiibo_network/utils/stat_utils.dart';
 import 'package:amiibo_network/utils/theme_extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'dart:ui' as ui;
 import 'package:amiibo_network/service/service.dart';
-import 'package:amiibo_network/riverpod/stat_provider.dart' as stat;
 import 'package:amiibo_network/generated/l10n.dart';
 import 'package:amiibo_network/model/search_result.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -20,7 +22,7 @@ const String _order = 'CASE WHEN type = "Figure" THEN 1 '
 
 class Screenshot {
   late ThemeData theme;
-  late stat.StatProvider statProvider;
+  late Preferences userPreferences;
   late MaterialLocalizations materialLocalizations;
   Color? color;
   Color? onOwned;
@@ -66,19 +68,19 @@ class Screenshot {
   }
 
   void customData(
-      ThemeMode themeMode, BuildContext context, StatProvider statProvider) {
+      ThemeMode themeMode, BuildContext context, Preferences preferences) {
     final mediaBrightness = MediaQuery.of(context).platformBrightness;
     final theme = Theme.of(context);
-    final preferences = theme.extension<PreferencesExtension>()
+    final preferencesTheme = theme.extension<PreferencesExtension>()
       ?? PreferencesExtension.brigthness(theme.brightness);
     this
       ..color = colorOnThemeMode(themeMode, mediaBrightness)
-      ..ownedCardPaint.color = preferences.ownContainer
-      ..wishedCardPaint.color = preferences.wishContainer
-      ..onOwned = preferences.onOwnContainer
-      ..onWished = preferences.onWishContainer
+      ..ownedCardPaint.color = preferencesTheme.ownContainer
+      ..wishedCardPaint.color = preferencesTheme.wishContainer
+      ..onOwned = preferencesTheme.onOwnContainer
+      ..onWished = preferencesTheme.onWishContainer
       ..theme = theme
-      ..statProvider = statProvider
+      ..userPreferences = preferences
       ..owned = _translate!.owned
       ..wished = _translate!.wished
       ..createdOn = _translate!.createdOn
@@ -98,7 +100,7 @@ class Screenshot {
       ..onOwned = preferences.onOwnContainer
       ..onWished = preferences.onWishContainer
       ..theme = theme
-      ..statProvider = ref.read(stat.statProvider)
+      ..userPreferences = ref.read(personalProvider)
       ..owned = _translate!.owned
       ..wished = _translate!.wished
       ..createdOn = _translate!.createdOn
@@ -195,7 +197,7 @@ class Screenshot {
 
     final String? longestWord = owned!.length > wished!.length ? owned : wished;
     final bool fontFeatureStyle =
-        !statProvider.isPercentage && stat.isFontFeatureEnable;
+        !userPreferences.usePercentage && isFontFeatureEnable;
 
     /// Activate fontFeature only if StatMode is Ratio and isFontFeatureEnable is true for this device
     TextSpan longestParagraphTest = TextSpan(
@@ -207,7 +209,7 @@ class Screenshot {
             if (!fontFeatureStyle) ui.FontFeature.tabularFigures()
           ],
         ),
-        text: statProvider.isPercentage ? '99.99%' : '99/100',
+        text: userPreferences.usePercentage ? '99.99%' : '99/100',
         children: [
           TextSpan(style: TextStyle(fontSize: 30), text: ' $longestWord')
         ]);
@@ -280,10 +282,16 @@ class Screenshot {
           singleStat.owned.toDouble() / singleStat.total.toDouble();
       final double? wishedPercent =
           singleStat.wished.toDouble() / singleStat.total.toDouble();
-      final String ownedStat = statProvider.statLabel(
-          singleStat.owned.toDouble(), singleStat.total.toDouble());
-      final String wishedStat = statProvider.statLabel(
-          singleStat.wished.toDouble(), singleStat.total.toDouble());
+      final String ownedStat = StatUtils.parseStat(
+        singleStat.owned,
+        singleStat.total,
+        usePercentage: userPreferences.usePercentage,
+      );
+      final String wishedStat = StatUtils.parseStat(
+        singleStat.wished,
+        singleStat.total,
+        usePercentage: userPreferences.usePercentage,
+      );
       _canvas!.drawRRect(cardPath, cardColor);
 
       TextSpan title = TextSpan(
@@ -413,8 +421,8 @@ class Screenshot {
     final double iconMargin = (banner * 0.2) / 2.0;
     final double maxX = size.width;
     final double maxY = size.height;
-    final bool fontFeatureStyle =
-        !statProvider.isPercentage && stat.isFontFeatureEnable;
+    final usePercentage = userPreferences.usePercentage;
+    final bool fontFeatureStyle = !usePercentage && isFontFeatureEnable;
 
     /// Activate fontFeature only if StatMode is Ratio and isFontFeatureEnable is true for this device
 
@@ -439,7 +447,7 @@ class Screenshot {
             ],
           ),
           text:
-              ' ${statProvider.statLabel(stats.owned.toDouble(), stats.total.toDouble())} ',
+              ' ${StatUtils.parseStat(stats.owned, stats.total, usePercentage: usePercentage)} ',
         ),
         TextSpan(
           style: TextStyle(color: textColor, fontSize: 35),
@@ -458,7 +466,7 @@ class Screenshot {
             ],
           ),
           text:
-              ' ${statProvider.statLabel(stats.wished.toDouble(), stats.total.toDouble())} ',
+              ' ${StatUtils.parseStat(stats.wished, stats.total, usePercentage: usePercentage)} ',
         ),
         TextSpan(
           style: TextStyle(color: textColor, fontSize: 35),

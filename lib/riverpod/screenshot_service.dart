@@ -1,7 +1,7 @@
 import 'package:amiibo_network/enum/amiibo_category_enum.dart';
 import 'package:amiibo_network/generated/l10n.dart';
+import 'package:amiibo_network/riverpod/preferences_provider.dart';
 import 'package:amiibo_network/riverpod/query_provider.dart';
-import 'package:amiibo_network/riverpod/stat_provider.dart';
 import 'package:amiibo_network/riverpod/theme_provider.dart';
 import 'package:amiibo_network/service/notification_service.dart';
 import 'package:amiibo_network/service/screenshot.dart';
@@ -12,12 +12,12 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 final screenshotProvider =
     StateNotifierProvider<ScreenshotNotifier, AsyncValue<bool>>(
   (ref) {
+    final localPreferences = ref.watch(personalProvider.notifier);
     final queryNotifier = ref.watch(queryProvider.notifier);
-    final statNotifier = ref.watch(statProvider.notifier);
     final themeNotifier = ref.watch(themeProvider.notifier);
     return ScreenshotNotifier(
       queryProvider: queryNotifier,
-      statProvider: statNotifier,
+      localPreferences: localPreferences,
       themeProvider: themeNotifier,
     );
   },
@@ -28,11 +28,11 @@ class ScreenshotNotifier extends StateNotifier<AsyncValue<bool>> {
   final NotificationService notificationService = NotificationService();
   final QueryBuilderProvider queryProvider;
   final ThemeProvider themeProvider;
-  final StatProvider statProvider;
+  final UserPreferencessNotifier localPreferences;
 
   ScreenshotNotifier({
     required this.queryProvider,
-    required this.statProvider,
+    required this.localPreferences,
     required this.themeProvider,
   }) : super(const AsyncData(true));
 
@@ -41,7 +41,7 @@ class ScreenshotNotifier extends StateNotifier<AsyncValue<bool>> {
       return;
     }
     final S translate = S.current;
-    _screenshot.customData(themeProvider.preferredTheme, context, statProvider);
+    _screenshot.customData(themeProvider.preferredTheme, context, localPreferences.state);
     state = const AsyncValue.loading();
     state = await AsyncValue.guard(() async {
       final category = queryProvider.search.category;
@@ -87,7 +87,7 @@ class ScreenshotNotifier extends StateNotifier<AsyncValue<bool>> {
       return;
     }
     final S translate = S.current;
-    _screenshot.customData(themeProvider.preferredTheme, context, statProvider);
+    _screenshot.customData(themeProvider.preferredTheme, context, localPreferences.state);
     state = const AsyncValue.loading();
     state = await AsyncValue.guard(() async {
       final category = queryProvider.search.category;

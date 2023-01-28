@@ -1,7 +1,7 @@
 import 'package:amiibo_network/repository/theme_repository.dart';
 import 'package:amiibo_network/resources/resources.dart';
+import 'package:amiibo_network/riverpod/preferences_provider.dart';
 import 'package:amiibo_network/riverpod/query_provider.dart';
-import 'package:amiibo_network/riverpod/stat_provider.dart';
 import 'package:amiibo_network/riverpod/theme_provider.dart';
 import 'package:amiibo_network/utils/format_color_on_theme.dart';
 import 'package:amiibo_network/utils/theme_extensions.dart';
@@ -98,9 +98,9 @@ class _CollectionDrawerState extends ConsumerState<CollectionDrawer> {
                                 title: Text(translate.showPercentage),
                                 inactiveTrackColor:
                                     theme.disabledColor.withOpacity(0.12),
-                                value: ref.watch(statProvider).isPercentage,
+                                value: ref.watch(personalProvider).usePercentage,
                                 onChanged: (value) async => await ref
-                                    .read(statProvider)
+                                    .read(personalProvider.notifier)
                                     .toggleStat(value),
                               ),
                               Divider(
