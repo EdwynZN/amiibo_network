@@ -88,8 +88,8 @@ class _CollectionDrawerState extends ConsumerState<CollectionDrawer> {
                         final isCustom = _category == AmiiboCategory.Custom;
                         final hiddenCategory =
                             ref.watch(hiddenCategoryProvider);
-                        final isFiguresHidden = hiddenCategory != HiddenTypes.Cards;
-                        final isCardsHidden = hiddenCategory != HiddenTypes.Figures;
+                        final isFiguresShown = hiddenCategory != HiddenTypes.Cards;
+                        final isCardsShown = hiddenCategory != HiddenTypes.Figures;
                         return SliverPadding(
                           padding: const EdgeInsets.symmetric(horizontal: 8.0),
                           sliver: SliverList(
@@ -100,9 +100,9 @@ class _CollectionDrawerState extends ConsumerState<CollectionDrawer> {
                                 onLongPress: () async {
                                   final filter =
                                       ref.read(queryProvider.notifier);
-                                  final List<String>? figures =
+                                  final List<String> figures =
                                       filter.customFigures;
-                                  final List<String>? cards =
+                                  final List<String> cards =
                                       filter.customCards;
                                   bool save = await showDialog<bool>(
                                         context: context,
@@ -182,7 +182,7 @@ class _CollectionDrawerState extends ConsumerState<CollectionDrawer> {
                                 ),
                                 selected: isAll,
                               ),
-                              if (isFiguresHidden) ...[
+                              if (isFiguresShown) ...[
                                 const Gap(4.0),
                                 HookConsumer(
                                   builder: (context, ref, child) {
@@ -241,7 +241,7 @@ class _CollectionDrawerState extends ConsumerState<CollectionDrawer> {
                                   },
                                 ),
                               ],
-                              if (isCardsHidden) ...[
+                              if (isCardsShown) ...[
                                 const Gap(4.0),
                                 HookConsumer(
                                   builder: (context, ref, child) {

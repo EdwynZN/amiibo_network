@@ -321,8 +321,8 @@ class _AmiiboListWidget extends HookConsumerWidget {
               ),
               onPressed: () async {
                 final filter = ref.read(queryProvider.notifier);
-                final List<String>? figures = filter.customFigures;
-                final List<String>? cards = filter.customCards;
+                final List<String> figures = filter.customFigures;
+                final List<String> cards = filter.customCards;
                 bool save = await showDialog<bool>(
                       context: context,
                       builder: (BuildContext context) => CustomQueryWidget(
