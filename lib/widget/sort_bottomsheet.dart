@@ -13,7 +13,7 @@ import 'package:sliver_tools/sliver_tools.dart';
 
 final _canSortCardProvider = Provider<bool>((ref) {
   final isCardsHidden =
-      ref.watch(hiddenCategoryProvider.select((h) =>  h != null && h != HiddenType.Cards));
+      ref.watch(hiddenCategoryProvider.select((h) => h == HiddenType.Cards));
   if (isCardsHidden) return false;
   final category = ref
       .watch(queryProvider.notifier.select((value) => value.search.category));

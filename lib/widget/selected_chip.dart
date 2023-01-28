@@ -14,9 +14,9 @@ class CustomQueryWidget extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final hiddenCategory = ref.watch(hiddenCategoryProvider);
-    final isFiguresShown = hiddenCategory != HiddenType.Cards;
-    final isCardsShown = hiddenCategory != HiddenType.Figures;
+    final hidden = ref.watch(hiddenCategoryProvider);
+    final isFiguresShown = hidden == null || hidden != HiddenType.Figures;
+    final isCardsShown = hidden == null || hidden != HiddenType.Cards;
     final S translate = S.of(context);
     return AlertDialog(
       titlePadding: const EdgeInsets.fromLTRB(16, 16, 16, 0),

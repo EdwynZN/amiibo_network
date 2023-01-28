@@ -86,12 +86,12 @@ class _CollectionDrawerState extends ConsumerState<CollectionDrawer> {
                         final isOwned = _category == AmiiboCategory.Owned;
                         final isWishlist = _category == AmiiboCategory.Wishlist;
                         final isCustom = _category == AmiiboCategory.Custom;
-                        final hiddenCategory =
+                        final hidden =
                             ref.watch(hiddenCategoryProvider);
                         final isFiguresShown =
-                            hiddenCategory != HiddenType.Cards;
+                          hidden == null || hidden != HiddenType.Figures;
                         final isCardsShown =
-                            hiddenCategory != HiddenType.Figures;
+                          hidden == null || hidden != HiddenType.Cards;
                         return SliverPadding(
                           padding: const EdgeInsets.symmetric(horizontal: 8.0),
                           sliver: SliverList(

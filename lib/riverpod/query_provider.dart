@@ -136,9 +136,10 @@ class QueryBuilderProvider extends StateNotifier<QueryBuilder> {
   void _updateExpression() {
     final hiddenCategory = ref.read(hiddenCategoryProvider);
     if (hiddenCategory != null &&
-      ((hiddenCategory != HiddenType.Cards && _cards.contains(search.category)) ||
-        (hiddenCategory != HiddenType.Figures && _figures.contains(search.category))
-      )) {
+        ((hiddenCategory == HiddenType.Cards &&
+                _cards.contains(search.category)) ||
+            (hiddenCategory == HiddenType.Figures &&
+                _figures.contains(search.category)))) {
       final search = _query;
       if ((search.customCards == null || search.customCards!.isEmpty) ||
           (search.customFigures == null || search.customFigures!.isEmpty)) {
@@ -185,7 +186,7 @@ class QueryBuilderProvider extends StateNotifier<QueryBuilder> {
             InCond.inn('amiiboSeries', _query.customCards!));
         if (hiddenCategory != null) {
           where =
-              hiddenCategory == HiddenType.Figures ? figuresWhere : cardsWhere;
+              hiddenCategory == HiddenType.Figures ? cardsWhere : figuresWhere;
         } else {
           where = figuresWhere | cardsWhere;
         }
@@ -198,8 +199,8 @@ class QueryBuilderProvider extends StateNotifier<QueryBuilder> {
       final figuresIgnore = InCond.notInn('type', figureType);
       final cardsIgnore = Cond.ne('type', 'Card');
       where =
-        (hiddenCategory == HiddenType.Figures ? cardsIgnore : figuresIgnore)
-        & (where.args.isEmpty ? where : Bracket(where));
+          (hiddenCategory == HiddenType.Figures ? figuresIgnore : cardsIgnore) &
+              (where.args.isEmpty ? where : Bracket(where));
     }
     final OrderBy orderBy = _figures.contains(_query.category) &&
             state.orderBy == OrderBy.CardNumber
@@ -207,6 +208,7 @@ class QueryBuilderProvider extends StateNotifier<QueryBuilder> {
         : state.orderBy;
 
     if (where != state.where || orderBy != state.orderBy) {
+      print('diff');
       state = state.copyWith(where: where, orderBy: orderBy);
     }
   }

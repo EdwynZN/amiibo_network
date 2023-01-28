@@ -336,9 +336,9 @@ class __SaveCollectionState extends ConsumerState<_SaveCollection> {
       icon: const Icon(Icons.save),
       onTap: () async {
         if (!(await permissionGranted(scaffoldState))) return;
-        final hiddenCategory = ref.watch(hiddenCategoryProvider);
-        final isFiguresShown = hiddenCategory != HiddenType.Cards;
-        final isCardsShown = hiddenCategory != HiddenType.Figures;
+        final hidden = ref.watch(hiddenCategoryProvider);
+        final isFiguresShown = hidden == null || hidden != HiddenType.Figures;
+        final isCardsShown = hidden == null || hidden != HiddenType.Cards;
         final filter = ref.read(queryProvider.notifier);
         final List<String> figures =
             isFiguresShown ? filter.customFigures.toList() : [];

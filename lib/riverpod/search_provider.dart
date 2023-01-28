@@ -66,7 +66,7 @@ final searchProvider =
   if (exp == null) return const [];
   final hiddenCategory = ref.read(hiddenCategoryProvider);
   if (hiddenCategory != null) {
-    exp = (hiddenCategory == HiddenType.Figures
+    exp = (hiddenCategory == HiddenType.Cards
         ? Cond.ne('type', 'Card')
         : InCond.notInn('type', figureType)
       )

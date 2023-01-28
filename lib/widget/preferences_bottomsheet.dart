@@ -200,15 +200,17 @@ class _BottomSheetSort extends StatelessWidget {
                                       ),
                                     ],
                                     selected: <HiddenType>{
-                                      if (category != HiddenType.Cards)
-                                        HiddenType.Figures,
                                       if (category != HiddenType.Figures)
+                                        HiddenType.Figures,
+                                      if (category != HiddenType.Cards)
                                         HiddenType.Cards,
                                     },
                                     onSelectionChanged: (newSelection) {
                                       HiddenType? newCategory;
                                       if (newSelection.length == 1) {
-                                        newCategory = newSelection.first;
+                                        newCategory = newSelection.first == HiddenType.Cards
+                                          ? HiddenType.Figures
+                                          : HiddenType.Cards;
                                       }
                                       ref
                                           .read(personalProvider.notifier)
