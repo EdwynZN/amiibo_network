@@ -196,8 +196,9 @@ class QueryBuilderProvider extends StateNotifier<QueryBuilder> {
     if (_query.category != AmiiboCategory.Custom && hiddenCategory != null) {
       final figuresIgnore = InCond.notInn('type', figureType);
       final cardsIgnore = Cond.ne('type', 'Card');
-      where = where &
-          (hiddenCategory == HiddenType.Figures ? cardsIgnore : figuresIgnore);
+      where =
+        (hiddenCategory == HiddenType.Figures ? cardsIgnore : figuresIgnore)
+        & Bracket(where);
     }
     final OrderBy orderBy = _figures.contains(_query.category) &&
             state.orderBy == OrderBy.CardNumber
