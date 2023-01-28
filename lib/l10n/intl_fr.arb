@@ -85,5 +85,6 @@
   "socket_exception": "Vérifiez votre connexion",
   "no_games_found": "Aucun jeu trouvé pour cette amiibo pour le moment",
   "no_date": "Bientôt disponible",
-  "showGrid": "Grille"
+  "showGrid": "Grille",
+  "hide_caution": "Attention, la désactivation d'une catégorie la masquera dans l'ensemble de l'application"
 }

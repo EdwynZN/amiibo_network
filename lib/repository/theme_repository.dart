@@ -1705,8 +1705,34 @@ class AmiiboTheme3 implements AmiiboTheme {
       radioTheme: const RadioThemeData(),
       scaffoldBackgroundColor: scheme.background,
       secondaryHeaderColor: scheme.secondaryContainer,
-      segmentedButtonTheme: const SegmentedButtonThemeData(),
-
+      segmentedButtonTheme: SegmentedButtonThemeData(
+        style: ButtonStyle(
+          backgroundColor: MaterialStateProperty.resolveWith<Color?>((states) {
+            if (states.contains(MaterialState.disabled)) return null;
+            else if (states.contains(MaterialState.selected)) return scheme.primary;
+            else if (states.contains(MaterialState.focused) ||
+                states.contains(MaterialState.pressed)) return scheme.primaryContainer;
+            return scheme.background;
+          }),
+          iconSize: MaterialStatePropertyAll(16.0),
+          iconColor: MaterialStateProperty.resolveWith<Color?>((states) {
+            if (states.contains(MaterialState.disabled)) return null;
+            else if (states.contains(MaterialState.selected)) return scheme.onPrimary;
+            else if (states.contains(MaterialState.focused) ||
+                states.contains(MaterialState.pressed)) return scheme.onPrimaryContainer;
+            return scheme.onBackground;
+          }),
+          textStyle:  MaterialStatePropertyAll(_textTheme.labelLarge),
+          foregroundColor: MaterialStateProperty.resolveWith<Color?>((states) {
+            if (states.contains(MaterialState.disabled)) return null;
+            else if (states.contains(MaterialState.selected)) return scheme.onPrimary;
+            else if (states.contains(MaterialState.focused) ||
+                states.contains(MaterialState.pressed)) return scheme.onPrimaryContainer;
+            return scheme.onBackground;
+          }),
+          elevation: MaterialStatePropertyAll(0.0),
+        ),
+      ),
       shadowColor: scheme.shadow, //Default color
       sliderTheme: const SliderThemeData(),
       snackBarTheme: SnackBarThemeData(
@@ -1916,6 +1942,34 @@ class AmiiboTheme3 implements AmiiboTheme {
             selectedTileColor: _darkScheme.secondaryContainer,
             selectedColor: _darkScheme.onSecondaryContainer,
           ),
+          segmentedButtonTheme: SegmentedButtonThemeData(
+            style: ButtonStyle(
+              backgroundColor: MaterialStateProperty.resolveWith<Color?>((states) {
+                if (states.contains(MaterialState.disabled)) return null;
+                else if (states.contains(MaterialState.selected)) return _darkScheme.primaryContainer;
+                else if (states.contains(MaterialState.focused) ||
+                    states.contains(MaterialState.pressed)) return _darkScheme.primary;
+                return _darkScheme.background;
+              }),
+              iconSize: MaterialStatePropertyAll(16.0),
+              iconColor: MaterialStateProperty.resolveWith<Color?>((states) {
+                if (states.contains(MaterialState.disabled)) return null;
+                else if (states.contains(MaterialState.selected)) return _darkScheme.onPrimaryContainer;
+                else if (states.contains(MaterialState.focused) ||
+                    states.contains(MaterialState.pressed)) return _darkScheme.onPrimary;
+                return _darkScheme.onBackground;
+              }),
+              textStyle:  MaterialStatePropertyAll(_textTheme.labelLarge),
+              foregroundColor: MaterialStateProperty.resolveWith<Color?>((states) {
+                if (states.contains(MaterialState.disabled)) return null;
+                else if (states.contains(MaterialState.selected)) return _darkScheme.onPrimaryContainer;
+                else if (states.contains(MaterialState.focused) ||
+                    states.contains(MaterialState.pressed)) return _darkScheme.onPrimary;
+                return _darkScheme.onBackground;
+              }),
+              elevation: MaterialStatePropertyAll(0.0),
+            ),
+          ),
           snackBarTheme: SnackBarThemeData(
             backgroundColor: Colors.blueGrey[800],
             contentTextStyle: TextStyle(color: Colors.white70),
@@ -2093,6 +2147,34 @@ class AmiiboTheme3 implements AmiiboTheme {
             shape:
                 RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
             elevation: 8,
+          ),
+          segmentedButtonTheme: SegmentedButtonThemeData(
+            style: ButtonStyle(
+              backgroundColor: MaterialStateProperty.resolveWith<Color?>((states) {
+                if (states.contains(MaterialState.disabled)) return null;
+                else if (states.contains(MaterialState.selected)) return _darkScheme.primaryContainer;
+                else if (states.contains(MaterialState.focused) ||
+                    states.contains(MaterialState.pressed)) return _darkScheme.primary;
+                return _darkScheme.background;
+              }),
+              iconSize: MaterialStatePropertyAll(16.0),
+              iconColor: MaterialStateProperty.resolveWith<Color?>((states) {
+                if (states.contains(MaterialState.disabled)) return null;
+                else if (states.contains(MaterialState.selected)) return _darkScheme.onPrimaryContainer;
+                else if (states.contains(MaterialState.focused) ||
+                    states.contains(MaterialState.pressed)) return _darkScheme.onPrimary;
+                return _darkScheme.onBackground;
+              }),
+              textStyle:  MaterialStatePropertyAll(_textTheme.labelLarge),
+              foregroundColor: MaterialStateProperty.resolveWith<Color?>((states) {
+                if (states.contains(MaterialState.disabled)) return null;
+                else if (states.contains(MaterialState.selected)) return _darkScheme.onPrimaryContainer;
+                else if (states.contains(MaterialState.focused) ||
+                    states.contains(MaterialState.pressed)) return _darkScheme.onPrimary;
+                return _darkScheme.onBackground;
+              }),
+              elevation: MaterialStatePropertyAll(0.0),
+            ),
           ),
           colorScheme: _darkScheme.copyWith(
             background: Colors.grey.shade800,
@@ -2409,6 +2491,34 @@ class AmiiboTheme3 implements AmiiboTheme {
             shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(8),
                 side: BorderSide(color: _darkAccentColor)),
+          ),
+          segmentedButtonTheme: SegmentedButtonThemeData(
+            style: ButtonStyle(
+              backgroundColor: MaterialStateProperty.resolveWith<Color?>((states) {
+                if (states.contains(MaterialState.disabled)) return null;
+                else if (states.contains(MaterialState.selected)) return _darkScheme.primaryContainer;
+                else if (states.contains(MaterialState.focused) ||
+                    states.contains(MaterialState.pressed)) return _darkScheme.primary;
+                return _darkScheme.background;
+              }),
+              iconSize: MaterialStatePropertyAll(16.0),
+              iconColor: MaterialStateProperty.resolveWith<Color?>((states) {
+                if (states.contains(MaterialState.disabled)) return null;
+                else if (states.contains(MaterialState.selected)) return _darkScheme.onPrimaryContainer;
+                else if (states.contains(MaterialState.focused) ||
+                    states.contains(MaterialState.pressed)) return _darkScheme.onPrimary;
+                return _darkScheme.onBackground;
+              }),
+              textStyle:  MaterialStatePropertyAll(_textTheme.labelLarge),
+              foregroundColor: MaterialStateProperty.resolveWith<Color?>((states) {
+                if (states.contains(MaterialState.disabled)) return null;
+                else if (states.contains(MaterialState.selected)) return _darkScheme.onPrimaryContainer;
+                else if (states.contains(MaterialState.focused) ||
+                    states.contains(MaterialState.pressed)) return _darkScheme.onPrimary;
+                return _darkScheme.onBackground;
+              }),
+              elevation: MaterialStatePropertyAll(0.0),
+            ),
           ),
           drawerTheme: DrawerThemeData(
             elevation: 2.0,

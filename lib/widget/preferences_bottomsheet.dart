@@ -33,19 +33,22 @@ class _BottomSheetSort extends StatelessWidget {
   Widget build(BuildContext context) {
     final S translate = S.of(context);
     final Size size = MediaQuery.of(context).size;
-    final double height = (460.0 / size.height).clamp(0.25, 0.50);
+    final double height = (460.0 / size.height).clamp(0.30, 0.50);
     EdgeInsetsGeometry padding = EdgeInsets.zero;
     if (size.longestSide >= 800)
       padding = EdgeInsets.symmetric(
         horizontal: (size.width / 2 - 210).clamp(0.0, double.infinity),
       );
+    const visualList = VisualDensity(vertical: -2.0);
     return Padding(
       padding: padding,
       child: DraggableScrollableSheet(
         key: const Key('Draggable'),
-        maxChildSize: height,
+        maxChildSize: 0.50,
         expand: false,
-        initialChildSize: 0.30,
+        initialChildSize: height,
+        snap: true,
+        snapSizes: const [0.25, 0.50],
         builder: (context, scrollController) {
           final ThemeData theme = Theme.of(context);
           return Material(
@@ -58,37 +61,42 @@ class _BottomSheetSort extends StatelessWidget {
               dense: true,
               style: ListTileStyle.drawer,
               minVerticalPadding: 12.0,
-              shape: theme.cardTheme.shape,
+              shape: const RoundedRectangleBorder(
+                borderRadius: BorderRadius.all(Radius.circular(8.0)),
+              ),
               selectedColor: theme.textButtonTheme.style?.foregroundColor
                   ?.resolve({MaterialState.selected}),
               child: CustomScrollView(
                 controller: scrollController,
                 slivers: <Widget>[
-                  SliverPinnedHeader(
-                    child: Padding(
-                      padding: const EdgeInsets.only(bottom: 8.0),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: <Widget>[
-                          Padding(
-                            padding: const EdgeInsets.only(
-                              top: 12.0,
-                              left: 24.0,
-                              right: 16.0,
+                  SliverSafeArea(
+                    sliver: SliverPinnedHeader(
+                      child: Container(
+                        color: theme.colorScheme.background,
+                        padding: const EdgeInsets.symmetric(vertical: 8.0),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: <Widget>[
+                            Padding(
+                              padding: const EdgeInsets.only(
+                                top: 12.0,
+                                left: 24.0,
+                                right: 16.0,
+                              ),
+                              child: Text(
+                                translate.appearance,
+                                style: Theme.of(context).textTheme.titleLarge,
+                              ),
                             ),
-                            child: Text(
-                              translate.appearance,
-                              style: Theme.of(context).textTheme.titleLarge,
+                            const Gap(8.0),
+                            const Divider(
+                              height: 0.0,
+                              indent: 16.0,
+                              endIndent: 16.0,
                             ),
-                          ),
-                          const Gap(8.0),
-                          const Divider(
-                            height: 0.0,
-                            indent: 16.0,
-                            endIndent: 16.0,
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
                     ),
                   ),
@@ -100,8 +108,7 @@ class _BottomSheetSort extends StatelessWidget {
                         return SliverList(
                           delegate: SliverChildListDelegate([
                             SwitchListTile.adaptive(
-                              visualDensity:
-                                  const VisualDensity(vertical: -2.0),
+                              visualDensity: visualList,
                               controlAffinity: ListTileControlAffinity.trailing,
                               title: Text(
                                 translate.showPercentage,
@@ -114,9 +121,9 @@ class _BottomSheetSort extends StatelessWidget {
                                   .read(personalProvider.notifier)
                                   .toggleStat(value),
                             ),
+                            const Gap(4.0),
                             SwitchListTile.adaptive(
-                              visualDensity:
-                                  const VisualDensity(vertical: -2.0),
+                              visualDensity: visualList,
                               controlAffinity: ListTileControlAffinity.trailing,
                               title: Text(
                                 translate.showGrid,
@@ -128,6 +135,70 @@ class _BottomSheetSort extends StatelessWidget {
                               onChanged: (value) async => await ref
                                   .read(personalProvider.notifier)
                                   .toggleVisualList(value),
+                            ),
+                            const Divider(),
+                            const Gap(8.0),
+                            Card(
+                              color: theme.colorScheme.tertiaryContainer,
+                              child: Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Text.rich(
+                                  TextSpan(
+                                    children: [
+                                      WidgetSpan(
+                                        alignment: PlaceholderAlignment.middle,
+                                        baseline: TextBaseline.ideographic,
+                                        child: Padding(
+                                          padding:
+                                              const EdgeInsets.only(right: 8.0),
+                                          child: Icon(
+                                            Icons.lightbulb_outline_sharp,
+                                            size: 16.0,
+                                            color: theme.colorScheme
+                                                .onTertiaryContainer,
+                                          ),
+                                        ),
+                                      ),
+                                      TextSpan(text: translate.hide_caution),
+                                    ],
+                                  ),
+                                  softWrap: true,
+                                  style: TextStyle(
+                                    color:
+                                        theme.colorScheme.onTertiaryContainer,
+                                  ),
+                                ),
+                              ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.symmetric(
+                                vertical: 16.0,
+                                horizontal: 8.0,
+                              ),
+                              child: SegmentedButton<int>(
+                                emptySelectionAllowed: false,
+                                multiSelectionEnabled: true,
+                                segments: <ButtonSegment<int>>[
+                                  ButtonSegment<int>(
+                                    value: 0,
+                                    label: Text(translate.figures),
+                                    icon: const ImageIcon(
+                                      AssetImage(
+                                        'assets/collection/icon_1.webp',
+                                      ),
+                                    ),
+                                  ),
+                                  ButtonSegment<int>(
+                                    value: 1,
+                                    label: Text(translate.cards),
+                                    icon: const Icon(Icons.view_carousel),
+                                  ),
+                                ],
+                                selected: <int>{
+                                  0,
+                                },
+                                onSelectionChanged: (Set<int> newSelection) {},
+                              ),
                             ),
                           ]),
                         );
