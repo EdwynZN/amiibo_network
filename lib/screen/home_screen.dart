@@ -226,7 +226,7 @@ class HomeScreenState extends ConsumerState<HomeScreen>
                         duration: const Duration(milliseconds: 250),
                         layoutBuilder: _defaultLayoutBuilder,
                         child: !isAmiiboList
-                            ? const SizedBox()
+                            ? const PreferencesButton()
                             : _multipleSelection
                                 ? const _SelectedOptions()
                                 : const _DefaultOptions(),

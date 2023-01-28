@@ -29,8 +29,8 @@ const String sharedCustomCards = 'CustomCards';
 /// Version of the App
 const String sharedVersion = 'Version';
 /// Stat Mode Preferences (Percentage or Ratio)
-const String sharedGridMode = 'StatMode';
+const String sharedGridMode = 'gridMode';
 /// Stat Mode Preferences (Percentage or Ratio)
-const String sharedIgnored = 'StatMode';
+const String sharedIgnored = 'ignoredType';
 /// Version of the App
 const int versionApp = 52;

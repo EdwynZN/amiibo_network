@@ -1,0 +1,1 @@
+enum HiddenTypes { Figures, Cards }

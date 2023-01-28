@@ -1,3 +1,5 @@
+import 'package:amiibo_network/enum/hidden_types.dart';
+import 'package:amiibo_network/riverpod/preferences_provider.dart';
 import 'package:amiibo_network/riverpod/service_provider.dart';
 import 'package:amiibo_network/utils/preferences_constants.dart';
 import 'package:flutter/foundation.dart';
@@ -8,6 +10,9 @@ import 'package:amiibo_network/enum/sort_enum.dart';
 import 'package:amiibo_network/riverpod/repository_provider.dart';
 import 'package:collection/collection.dart';
 import 'package:amiibo_network/model/search_result.dart';
+
+const _figures = {AmiiboCategory.FigureSeries, AmiiboCategory.Figures};
+const _cards = {AmiiboCategory.CardSeries, AmiiboCategory.Cards};
 
 final orderCategoryProvider =
     Provider.autoDispose<OrderBy>((ref) => ref.watch(queryProvider).orderBy);
@@ -69,12 +74,18 @@ final queryProvider = StateNotifierProvider<QueryBuilderProvider, QueryBuilder>(
       customCards: _customCards,
       customFigures: _customFigures,
     );
-    return QueryBuilderProvider(
+    final queryBuilder = QueryBuilderProvider(
       ref,
       search,
       orderBy,
       sortBy,
     );
+
+    ref.listen(hiddenCategoryProvider, (_, next) {
+      queryBuilder._updateExpression();
+    }, fireImmediately: false);
+
+    return queryBuilder;
   },
 );
 
@@ -84,13 +95,8 @@ class QueryBuilderProvider extends StateNotifier<QueryBuilder> {
   static bool? checkEquality(List<String>? eq1, List<String>? eq2) =>
       deepEq(eq1, eq2);
 
-  static const Set<AmiiboCategory> figuresCategories = {
-    AmiiboCategory.FigureSeries,
-    AmiiboCategory.Figures,
-  };
-
   final Ref ref;
-  late Search _preciousNotSearch;
+  late Search _previousNotSearch;
   Search _query;
 
   QueryBuilderProvider(
@@ -105,7 +111,7 @@ class QueryBuilderProvider extends StateNotifier<QueryBuilder> {
             orderBy: _orderBy,
           ),
         ) {
-    _preciousNotSearch = _query;
+    _previousNotSearch = _query;
     if (_query.category != AmiiboCategory.All) {
       _updateExpression();
     }
@@ -128,7 +134,20 @@ class QueryBuilderProvider extends StateNotifier<QueryBuilder> {
   List<String> get customCards => List<String>.of(_query.customCards!);
 
   void _updateExpression() {
-    late final Expression where;
+    final hiddenCategory = ref.read(hiddenCategoryProvider);
+    if (hiddenCategory != null &&
+        (_cards.contains(search.category) ||
+            _figures.contains(search.category))) {
+      final search = _query;
+      if ((search.customCards == null || search.customCards!.isEmpty) ||
+          (search.customFigures == null || search.customFigures!.isEmpty)) {
+        _query = search.copyWith(category: AmiiboCategory.All, search: 'All');
+      } else {
+        _query =
+            search.copyWith(category: AmiiboCategory.Custom, search: 'Custom');
+      }
+    }
+    late Expression where;
     switch (_query.category) {
       case AmiiboCategory.Owned:
       case AmiiboCategory.Wishlist:
@@ -159,16 +178,28 @@ class QueryBuilderProvider extends StateNotifier<QueryBuilder> {
         where = Cond.like('amiiboSeries', '%${_query.search}%');
         break;
       case AmiiboCategory.Custom:
-        where = Bracket(InCond.inn('type', figureType) &
-                InCond.inn('amiiboSeries', _query.customFigures!)) |
-            Bracket(Cond.eq('type', 'Card') &
-                InCond.inn('amiiboSeries', _query.customCards!));
+        final figuresWhere = Bracket(InCond.inn('type', figureType) &
+            InCond.inn('amiiboSeries', _query.customFigures!));
+        final cardsWhere = Bracket(Cond.eq('type', 'Card') &
+            InCond.inn('amiiboSeries', _query.customCards!));
+        if (hiddenCategory != null) {
+          where =
+              hiddenCategory == HiddenTypes.Figures ? figuresWhere : cardsWhere;
+        } else {
+          where = figuresWhere | cardsWhere;
+        }
         break;
       case AmiiboCategory.All:
       default:
         where = And();
     }
-    final OrderBy orderBy = figuresCategories.contains(_query.category) &&
+    if (_query.category != AmiiboCategory.Custom && hiddenCategory != null) {
+      final figuresIgnore = InCond.notInn('type', figureType);
+      final cardsIgnore = Cond.ne('type', 'Card');
+      where = where &
+          (hiddenCategory == HiddenTypes.Figures ? cardsIgnore : figuresIgnore);
+    }
+    final OrderBy orderBy = _figures.contains(_query.category) &&
             state.orderBy == OrderBy.CardNumber
         ? OrderBy.NA
         : state.orderBy;
@@ -179,8 +210,8 @@ class QueryBuilderProvider extends StateNotifier<QueryBuilder> {
   }
 
   void restart() {
-    if (_preciousNotSearch == _query) return;
-    _query = _preciousNotSearch;
+    if (_previousNotSearch == _query) return;
+    _query = _previousNotSearch;
     _updateExpression();
   }
 
@@ -192,7 +223,7 @@ class QueryBuilderProvider extends StateNotifier<QueryBuilder> {
       search: result.search,
     );
     if (!isSearch) {
-      _preciousNotSearch = _query;
+      _previousNotSearch = _query;
     }
     _updateExpression();
   }

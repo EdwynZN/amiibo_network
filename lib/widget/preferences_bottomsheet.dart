@@ -1,3 +1,4 @@
+import 'package:amiibo_network/enum/hidden_types.dart';
 import 'package:amiibo_network/generated/l10n.dart';
 import 'package:amiibo_network/riverpod/preferences_provider.dart';
 import 'package:flutter/material.dart';
@@ -175,29 +176,47 @@ class _BottomSheetSort extends StatelessWidget {
                                 vertical: 16.0,
                                 horizontal: 8.0,
                               ),
-                              child: SegmentedButton<int>(
-                                emptySelectionAllowed: false,
-                                multiSelectionEnabled: true,
-                                segments: <ButtonSegment<int>>[
-                                  ButtonSegment<int>(
-                                    value: 0,
-                                    label: Text(translate.figures),
-                                    icon: const ImageIcon(
-                                      AssetImage(
-                                        'assets/collection/icon_1.webp',
+                              child: Consumer(
+                                builder: (context, ref, _) {
+                                  final category =
+                                      ref.watch(hiddenCategoryProvider);
+                                  return SegmentedButton<HiddenTypes>(
+                                    emptySelectionAllowed: false,
+                                    multiSelectionEnabled: true,
+                                    segments: <ButtonSegment<HiddenTypes>>[
+                                      ButtonSegment<HiddenTypes>(
+                                        value: HiddenTypes.Figures,
+                                        label: Text(translate.figures),
+                                        icon: const ImageIcon(
+                                          AssetImage(
+                                            'assets/collection/icon_1.webp',
+                                          ),
+                                        ),
                                       ),
-                                    ),
-                                  ),
-                                  ButtonSegment<int>(
-                                    value: 1,
-                                    label: Text(translate.cards),
-                                    icon: const Icon(Icons.view_carousel),
-                                  ),
-                                ],
-                                selected: <int>{
-                                  0,
+                                      ButtonSegment<HiddenTypes>(
+                                        value: HiddenTypes.Cards,
+                                        label: Text(translate.cards),
+                                        icon: const Icon(Icons.view_carousel),
+                                      ),
+                                    ],
+                                    selected: <HiddenTypes>{
+                                      if (category != HiddenTypes.Cards)
+                                        HiddenTypes.Figures,
+                                      if (category != HiddenTypes.Figures)
+                                        HiddenTypes.Cards,
+                                    },
+                                    onSelectionChanged:
+                                        (Set<HiddenTypes> newSelection) {
+                                      HiddenTypes? newCategory;
+                                      if (newSelection.length == 1) {
+                                        newCategory = newSelection.first;
+                                      }
+                                      ref
+                                          .read(personalProvider.notifier)
+                                          .updateIgnoredList(newCategory);
+                                    },
+                                  );
                                 },
-                                onSelectionChanged: (Set<int> newSelection) {},
                               ),
                             ),
                           ]),
