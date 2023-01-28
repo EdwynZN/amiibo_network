@@ -1731,6 +1731,7 @@ class AmiiboTheme3 implements AmiiboTheme {
             return scheme.onBackground;
           }),
           elevation: MaterialStatePropertyAll(0.0),
+          side: MaterialStatePropertyAll(BorderSide(color: scheme.primaryContainer)),
         ),
       ),
       shadowColor: scheme.shadow, //Default color
