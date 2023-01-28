@@ -198,7 +198,7 @@ class QueryBuilderProvider extends StateNotifier<QueryBuilder> {
       final cardsIgnore = Cond.ne('type', 'Card');
       where =
         (hiddenCategory == HiddenType.Figures ? cardsIgnore : figuresIgnore)
-        & Bracket(where);
+        & (where.args.isEmpty ? where : Bracket(where));
     }
     final OrderBy orderBy = _figures.contains(_query.category) &&
             state.orderBy == OrderBy.CardNumber

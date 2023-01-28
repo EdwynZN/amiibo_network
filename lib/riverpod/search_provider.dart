@@ -1,3 +1,5 @@
+import 'package:amiibo_network/enum/hidden_types.dart';
+import 'package:amiibo_network/riverpod/preferences_provider.dart';
 import 'package:amiibo_network/riverpod/service_provider.dart';
 import 'package:riverpod/riverpod.dart';
 import 'package:amiibo_network/enum/amiibo_category_enum.dart';
@@ -60,7 +62,16 @@ final searchProvider =
     FutureProvider.autoDispose.family<List<String>, String>((ref, search) {
   final service = ref.watch(serviceProvider.notifier);
   final category = ref.watch(categorySearchProvider);
-  final exp = category.whereExpression(search)!;
+  var exp = category.whereExpression(search);
+  if (exp == null) return const [];
+  final hiddenCategory = ref.read(hiddenCategoryProvider);
+  if (hiddenCategory != null) {
+    exp = (hiddenCategory == HiddenType.Figures
+        ? Cond.ne('type', 'Card')
+        : InCond.notInn('type', figureType)
+      )
+      & Bracket(exp);
+  }
 
   return service.searchDB(exp, category.name);
 });
