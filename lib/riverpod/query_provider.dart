@@ -136,8 +136,9 @@ class QueryBuilderProvider extends StateNotifier<QueryBuilder> {
   void _updateExpression() {
     final hiddenCategory = ref.read(hiddenCategoryProvider);
     if (hiddenCategory != null &&
-        (_cards.contains(search.category) ||
-            _figures.contains(search.category))) {
+      ((hiddenCategory != HiddenType.Cards && _cards.contains(search.category)) ||
+        (hiddenCategory != HiddenType.Figures && _figures.contains(search.category))
+      )) {
       final search = _query;
       if ((search.customCards == null || search.customCards!.isEmpty) ||
           (search.customFigures == null || search.customFigures!.isEmpty)) {
