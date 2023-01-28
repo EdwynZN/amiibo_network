@@ -101,21 +101,69 @@ class _LinearStat extends ConsumerWidget {
     final category = ref.watch(
       queryProvider.notifier.select((value) => value.search.category),
     );
-    final usePercentage = ref.watch(personalProvider.select((p) => p.usePercentage));
+    final usePercentage =
+        ref.watch(personalProvider.select((p) => p.usePercentage));
     final String ownedStat;
     final String wishedStat;
     if (usePercentage) {
-      ownedStat = StatUtils.parseStat(owned, total, usePercentage: usePercentage);
-      wishedStat = StatUtils.parseStat(wished, total, usePercentage: usePercentage);
+      ownedStat =
+          StatUtils.parseStat(owned, total, usePercentage: usePercentage);
+      wishedStat =
+          StatUtils.parseStat(wished, total, usePercentage: usePercentage);
     } else {
       ownedStat = owned.toString();
       wishedStat = wished.toString();
     }
     final translate = S.of(context);
     final theme = Theme.of(context);
-    final ownedText = translate.owned;
-    final wishedText = translate.wished;
+    final ownedText = '$ownedStat ${translate.owned}';
+    final wishedText = '$wishedStat ${translate.wished}';
     final style = theme.textTheme.labelLarge;
+    final Widget title;
+    final bool isWishlist = category == AmiiboCategory.Wishlist;
+    final bool isOwn = category == AmiiboCategory.Owned;
+    if (isWishlist || isOwn) {
+      title = Text(
+        isWishlist ? wishedText : ownedText,
+        style: style,
+        textAlign: TextAlign.center,
+        maxLines: 1,
+        overflow: TextOverflow.clip,
+      );
+    } else {
+      title = Row(
+        mainAxisSize: MainAxisSize.min,
+        children: <Widget>[
+          Expanded(
+            child: Text(
+              ownedText,
+              style: style,
+              textAlign: TextAlign.center,
+              maxLines: 1,
+              overflow: TextOverflow.clip,
+            ),
+          ),
+          Expanded(
+            child: Text(
+              statList.total.toString(),
+              style: style,
+              textAlign: TextAlign.center,
+              maxLines: 1,
+              overflow: TextOverflow.clip,
+            ),
+          ),
+          Expanded(
+            child: Text(
+              wishedText,
+              style: style,
+              textAlign: TextAlign.center,
+              maxLines: 1,
+              overflow: TextOverflow.clip,
+            ),
+          ),
+        ],
+      );
+    }
     return Container(
       constraints: BoxConstraints.loose(const Size.fromWidth(360.0)),
       alignment: Alignment.bottomCenter,
@@ -124,42 +172,7 @@ class _LinearStat extends ConsumerWidget {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Row(
-            mainAxisSize: MainAxisSize.min,
-            children: <Widget>[
-              category == AmiiboCategory.Wishlist
-                  ? const Spacer()
-                  : Expanded(
-                      child: Text(
-                        '$ownedStat $ownedText',
-                        style: style,
-                        textAlign: TextAlign.center,
-                        maxLines: 1,
-                        overflow: TextOverflow.clip,
-                      ),
-                    ),
-              Expanded(
-                child: Text(
-                  statList.total.toString(),
-                  style: style,
-                  textAlign: TextAlign.center,
-                  maxLines: 1,
-                  overflow: TextOverflow.clip,
-                ),
-              ),
-              category == AmiiboCategory.Owned
-                  ? const Spacer()
-                  : Expanded(
-                      child: Text(
-                        '$wishedStat $wishedText',
-                        style: style,
-                        textAlign: TextAlign.center,
-                        maxLines: 1,
-                        overflow: TextOverflow.clip,
-                      ),
-                    ),
-            ],
-          ),
+          title,
           const SizedBox(height: 4.0),
           AnimatedLineProgress(
             size: const Size(360.0, 8.0),
