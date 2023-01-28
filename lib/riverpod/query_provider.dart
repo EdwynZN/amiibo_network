@@ -82,6 +82,12 @@ final queryProvider = StateNotifierProvider<QueryBuilderProvider, QueryBuilder>(
     );
 
     ref.listen(hiddenCategoryProvider, (_, next) {
+      final search = queryBuilder.search;
+      if ((next == null && {..._figures, ..._cards}.contains(search.category)) ||
+          (next == HiddenType.Cards && _figures.contains(search.category)) ||
+          (next == HiddenType.Figures && _cards.contains(search.category))) {
+        return;
+      }
       queryBuilder._updateExpression();
     }, fireImmediately: false);
 
@@ -208,7 +214,6 @@ class QueryBuilderProvider extends StateNotifier<QueryBuilder> {
         : state.orderBy;
 
     if (where != state.where || orderBy != state.orderBy) {
-      print('diff');
       state = state.copyWith(where: where, orderBy: orderBy);
     }
   }
