@@ -3,19 +3,21 @@ import 'package:flutter/material.dart';
 
 class AnimatedLineProgress extends ImplicitlyAnimatedWidget {
   final Size? size;
-  final double ownPercentage;
-  final double wishPercentage;
-  final double total;
+  final int owned;
+  final int wished;
+  final int total;
 
   const AnimatedLineProgress({
     Key? key,
-    required this.ownPercentage,
-    required this.wishPercentage,
+    required this.owned,
+    required this.wished,
     required this.total,
     Duration duration = const Duration(milliseconds: 600),
     Curve curve = Curves.easeInOutCubicEmphasized,
     this.size,
-  }) : super(duration: duration, curve: curve, key: key);
+  }) : assert(owned <= total, 'owned cannot be more than total: $owned > $total'),
+      assert(wished <= total, 'wished cannot be more than total: $wished > $total'),
+      super(duration: duration, curve: curve, key: key);
 
   @override
   ImplicitlyAnimatedWidgetState<ImplicitlyAnimatedWidget> createState() =>
@@ -38,8 +40,9 @@ class _AnimatedRadialState
 
   @override
   void forEachTween(TweenVisitor<dynamic> visitor) {
-    final ownPercent = widget.ownPercentage / widget.total;
-    final wishPercent = widget.wishPercentage / widget.total;
+    final double den = widget.total.toDouble();
+    final ownPercent = widget.owned / den;
+    final wishPercent = widget.wished / den;
     _ownPercent = visitor(_ownPercent, ownPercent,
         (dynamic value) => Tween<double>(begin: value)) as Tween<double>?;
     _wishPercent = visitor(_wishPercent, wishPercent,

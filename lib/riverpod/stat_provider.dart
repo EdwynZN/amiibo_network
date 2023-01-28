@@ -30,12 +30,12 @@ class StatProvider extends ValueNotifier<StatMode> {
     }
   }
 
-  String statLabel(double? num, double? den) {
+  String statLabel(num num, num den) {
     if (isPercentage) {
       if (den == 0 || num == 0) return '0%';
-      final double result = num! * 100 / den!;
+      final double result = num * 100 / den.toDouble();
       return '${_regPercent.firstMatch(result.toStringAsFixed(2))![1]}%';
     }
-    return '${num!.toInt()}/' '${den!.toInt()}';
+    return '${num.toInt()}/${den.toInt()}';
   }
 }

@@ -91,9 +91,9 @@ class _LinearStat extends ConsumerWidget {
     if (statList == null || statList == const Stat()) {
       return const SizedBox();
     }
-    final double total = statList.total.toDouble();
-    final double owned = statList.owned.toDouble();
-    final double wished = statList.wished.toDouble();
+    final int total = statList.total;
+    final int owned = statList.owned;
+    final int wished = statList.wished;
     if (total == 0 && owned == 0 && wished == 0) {
       return const SizedBox();
     }
@@ -108,8 +108,8 @@ class _LinearStat extends ConsumerWidget {
       ownedStat = stats.statLabel(owned, total);
       wishedStat = stats.statLabel(wished, total);
     } else {
-      ownedStat = owned.toInt().toString();
-      wishedStat = wished.toInt().toString();
+      ownedStat = owned.toString();
+      wishedStat = wished.toString();
     }
     final translate = S.of(context);
     final theme = Theme.of(context);
@@ -163,9 +163,9 @@ class _LinearStat extends ConsumerWidget {
           const SizedBox(height: 4.0),
           AnimatedLineProgress(
             size: const Size(360.0, 8.0),
-            ownPercentage: owned,
+            owned: owned,
             total: total,
-            wishPercentage: wished,
+            wished: wished,
           ),
         ],
       ),
