@@ -5,7 +5,7 @@ import 'package:amiibo_network/utils/preferences_constants.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-final hiddenCategoryProvider = Provider<HiddenTypes?>(
+final hiddenCategoryProvider = Provider<HiddenType?>(
   (ref) => ref.watch(personalProvider).ignored,
   name: 'hiddenCategoriesProvider',
 );
@@ -17,13 +17,13 @@ final personalProvider =
     final percent = sharedProvider.getBool(sharedStatMode) ?? false;
     final grid = sharedProvider.getBool(sharedGridMode) ?? true;
     final ignored = sharedProvider.getInt(sharedIgnored) ?? 0;
-    final HiddenTypes? categoryIgnored;
+    final HiddenType? categoryIgnored;
     switch (ignored) {
       case 1:
-        categoryIgnored = HiddenTypes.Figures;
+        categoryIgnored = HiddenType.Figures;
         break;
       case 2:
-        categoryIgnored = HiddenTypes.Cards;
+        categoryIgnored = HiddenType.Cards;
         break;
       default:
         categoryIgnored = null;
@@ -63,15 +63,15 @@ class UserPreferencessNotifier extends StateNotifier<Preferences> {
     }
   }
 
-  Future<void> updateIgnoredList(HiddenTypes? category) async {
+  Future<void> updateIgnoredList(HiddenType? category) async {
     if (category != state.ignored) {
       final SharedPreferences preferences = ref.read(preferencesProvider);
       final int value;
       switch (category) {
-        case HiddenTypes.Figures:
+        case HiddenType.Figures:
           value = 1;
           break;
-        case HiddenTypes.Cards:
+        case HiddenType.Cards:
           value = 2;
           break;
         default:

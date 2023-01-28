@@ -1,1 +1,1 @@
-enum HiddenTypes { Figures, Cards }
+enum HiddenType { Figures, Cards }

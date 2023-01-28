@@ -184,7 +184,7 @@ class QueryBuilderProvider extends StateNotifier<QueryBuilder> {
             InCond.inn('amiiboSeries', _query.customCards!));
         if (hiddenCategory != null) {
           where =
-              hiddenCategory == HiddenTypes.Figures ? figuresWhere : cardsWhere;
+              hiddenCategory == HiddenType.Figures ? figuresWhere : cardsWhere;
         } else {
           where = figuresWhere | cardsWhere;
         }
@@ -197,7 +197,7 @@ class QueryBuilderProvider extends StateNotifier<QueryBuilder> {
       final figuresIgnore = InCond.notInn('type', figureType);
       final cardsIgnore = Cond.ne('type', 'Card');
       where = where &
-          (hiddenCategory == HiddenTypes.Figures ? cardsIgnore : figuresIgnore);
+          (hiddenCategory == HiddenType.Figures ? cardsIgnore : figuresIgnore);
     }
     final OrderBy orderBy = _figures.contains(_query.category) &&
             state.orderBy == OrderBy.CardNumber

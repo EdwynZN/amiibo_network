@@ -180,12 +180,12 @@ class _BottomSheetSort extends StatelessWidget {
                                 builder: (context, ref, _) {
                                   final category =
                                       ref.watch(hiddenCategoryProvider);
-                                  return SegmentedButton<HiddenTypes>(
+                                  return SegmentedButton<HiddenType>(
                                     emptySelectionAllowed: false,
                                     multiSelectionEnabled: true,
-                                    segments: <ButtonSegment<HiddenTypes>>[
-                                      ButtonSegment<HiddenTypes>(
-                                        value: HiddenTypes.Figures,
+                                    segments: <ButtonSegment<HiddenType>>[
+                                      ButtonSegment<HiddenType>(
+                                        value: HiddenType.Figures,
                                         label: Text(translate.figures),
                                         icon: const ImageIcon(
                                           AssetImage(
@@ -193,21 +193,20 @@ class _BottomSheetSort extends StatelessWidget {
                                           ),
                                         ),
                                       ),
-                                      ButtonSegment<HiddenTypes>(
-                                        value: HiddenTypes.Cards,
+                                      ButtonSegment<HiddenType>(
+                                        value: HiddenType.Cards,
                                         label: Text(translate.cards),
                                         icon: const Icon(Icons.view_carousel),
                                       ),
                                     ],
-                                    selected: <HiddenTypes>{
-                                      if (category != HiddenTypes.Cards)
-                                        HiddenTypes.Figures,
-                                      if (category != HiddenTypes.Figures)
-                                        HiddenTypes.Cards,
+                                    selected: <HiddenType>{
+                                      if (category != HiddenType.Cards)
+                                        HiddenType.Figures,
+                                      if (category != HiddenType.Figures)
+                                        HiddenType.Cards,
                                     },
-                                    onSelectionChanged:
-                                        (Set<HiddenTypes> newSelection) {
-                                      HiddenTypes? newCategory;
+                                    onSelectionChanged: (newSelection) {
+                                      HiddenType? newCategory;
                                       if (newSelection.length == 1) {
                                         newCategory = newSelection.first;
                                       }

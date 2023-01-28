@@ -337,8 +337,8 @@ class __SaveCollectionState extends ConsumerState<_SaveCollection> {
       onTap: () async {
         if (!(await permissionGranted(scaffoldState))) return;
         final hiddenCategory = ref.watch(hiddenCategoryProvider);
-        final isFiguresShown = hiddenCategory != HiddenTypes.Cards;
-        final isCardsShown = hiddenCategory != HiddenTypes.Figures;
+        final isFiguresShown = hiddenCategory != HiddenType.Cards;
+        final isCardsShown = hiddenCategory != HiddenType.Figures;
         final filter = ref.read(queryProvider.notifier);
         final List<String> figures =
             isFiguresShown ? filter.customFigures.toList() : [];

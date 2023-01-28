@@ -88,8 +88,10 @@ class _CollectionDrawerState extends ConsumerState<CollectionDrawer> {
                         final isCustom = _category == AmiiboCategory.Custom;
                         final hiddenCategory =
                             ref.watch(hiddenCategoryProvider);
-                        final isFiguresShown = hiddenCategory != HiddenTypes.Cards;
-                        final isCardsShown = hiddenCategory != HiddenTypes.Figures;
+                        final isFiguresShown =
+                            hiddenCategory != HiddenType.Cards;
+                        final isCardsShown =
+                            hiddenCategory != HiddenType.Figures;
                         return SliverPadding(
                           padding: const EdgeInsets.symmetric(horizontal: 8.0),
                           sliver: SliverList(
@@ -102,8 +104,7 @@ class _CollectionDrawerState extends ConsumerState<CollectionDrawer> {
                                       ref.read(queryProvider.notifier);
                                   final List<String> figures =
                                       filter.customFigures;
-                                  final List<String> cards =
-                                      filter.customCards;
+                                  final List<String> cards = filter.customCards;
                                   bool save = await showDialog<bool>(
                                         context: context,
                                         builder: (BuildContext context) =>
