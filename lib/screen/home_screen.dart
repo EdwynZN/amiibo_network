@@ -5,6 +5,7 @@ import 'package:amiibo_network/model/title_search.dart';
 import 'package:amiibo_network/repository/theme_repository.dart';
 import 'package:amiibo_network/riverpod/amiibo_provider.dart';
 import 'package:amiibo_network/riverpod/lock_provider.dart';
+import 'package:amiibo_network/riverpod/preferences_provider.dart';
 import 'package:amiibo_network/riverpod/query_provider.dart';
 import 'package:amiibo_network/riverpod/screenshot_service.dart';
 import 'package:amiibo_network/riverpod/select_provider.dart';
@@ -14,6 +15,7 @@ import 'package:amiibo_network/widget/dash_menu/dash_menu.dart';
 import 'package:amiibo_network/widget/list_stats.dart';
 import 'package:amiibo_network/widget/loading_grid_shimmer.dart';
 import 'package:amiibo_network/widget/lock_icon.dart';
+import 'package:amiibo_network/widget/preferences_bottomsheet.dart';
 import 'package:amiibo_network/widget/route_transitions.dart';
 import 'package:amiibo_network/widget/selected_chip.dart';
 import 'package:amiibo_network/widget/selected_widget.dart';
@@ -342,33 +344,36 @@ class _AmiiboListWidget extends HookConsumerWidget {
             child: Center(child: child),
           );
         }
-        /* return SliverList(
-          delegate: SliverChildBuilderDelegate(
-            (BuildContext _, int index) {
-              late final Widget child;
-              if (data != null) {
-                child = ProviderScope(
-                  key: ValueKey<int?>(data[index].key),
-                  overrides: [
-                    indexAmiiboProvider.overrideWithValue(index),
-                    keyAmiiboProvider.overrideWithValue(data[index].key),
-                  ],
-                  child: AnimatedSelectedListTile(ignore: ignore),
+        final useGrid = ref.watch(personalProvider.select((p) => p.useGrid));
+        if (!useGrid) {
+          return SliverList(
+            delegate: SliverChildBuilderDelegate(
+              (BuildContext _, int index) {
+                late final Widget child;
+                if (data != null) {
+                  child = ProviderScope(
+                    key: ValueKey<int?>(data[index].key),
+                    overrides: [
+                      indexAmiiboProvider.overrideWithValue(index),
+                      keyAmiiboProvider.overrideWithValue(data[index].key),
+                    ],
+                    child: AnimatedSelectedListTile(ignore: ignore),
+                  );
+                } else {
+                  child = ShimmerCard(listenable: controller);
+                }
+                return ConstrainedBox(
+                  constraints: const BoxConstraints(maxHeight: 72.0),
+                  child: AnimatedSwitcher(
+                    duration: const Duration(seconds: 1),
+                    child: child,
+                  ),
                 );
-              } else {
-                child = ShimmerCard(listenable: controller);
-              }
-              return ConstrainedBox(
-                constraints: const BoxConstraints(maxHeight: 72.0),
-                child: AnimatedSwitcher(
-                  duration: const Duration(seconds: 1),
-                  child: child,
-                ),
-              );
-            },
-            childCount: data != null ? data.length : null,
-          ),
-        ); */
+              },
+              childCount: data != null ? data.length : null,
+            ),
+          );
+        }
 
         late final SliverGridDelegate grid;
         final bool bigGrid = MediaQuery.of(context).size.width >= 600;
@@ -506,6 +511,7 @@ class _DefaultOptions extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.end,
       children: const <Widget>[
         LockButton(),
+        PreferencesButton(),
         SortCollection(),
       ],
     );

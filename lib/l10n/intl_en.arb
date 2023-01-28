@@ -84,5 +84,6 @@
   "invalid_amiibo": "Invalid amiibo data",
   "socket_exception": "Check your network",
   "no_games_found": "No games found for this amiibo yet",
-  "no_date": "To be announced"
+  "no_date": "To be announced",
+  "showGrid": "Grid"
 }

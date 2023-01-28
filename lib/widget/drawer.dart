@@ -1,6 +1,5 @@
 import 'package:amiibo_network/repository/theme_repository.dart';
 import 'package:amiibo_network/resources/resources.dart';
-import 'package:amiibo_network/riverpod/preferences_provider.dart';
 import 'package:amiibo_network/riverpod/query_provider.dart';
 import 'package:amiibo_network/riverpod/theme_provider.dart';
 import 'package:amiibo_network/utils/format_color_on_theme.dart';
@@ -89,24 +88,6 @@ class _CollectionDrawerState extends ConsumerState<CollectionDrawer> {
                           padding: const EdgeInsets.symmetric(horizontal: 8.0),
                           sliver: SliverList(
                             delegate: SliverChildListDelegate([
-                              SwitchListTile.adaptive(
-                                contentPadding:
-                                    const EdgeInsets.only(left: 16.0),
-                                controlAffinity:
-                                    ListTileControlAffinity.trailing,
-                                secondary: const Icon(Icons.percent_outlined),
-                                title: Text(translate.showPercentage),
-                                inactiveTrackColor:
-                                    theme.disabledColor.withOpacity(0.12),
-                                value: ref.watch(personalProvider).usePercentage,
-                                onChanged: (value) async => await ref
-                                    .read(personalProvider.notifier)
-                                    .toggleStat(value),
-                              ),
-                              Divider(
-                                color: theme.dividerColor,
-                                height: 8.0,
-                              ),
                               ListTile(
                                 onTap: () => _onTapTile(
                                     ref, AmiiboCategory.Custom, 'Custom'),
