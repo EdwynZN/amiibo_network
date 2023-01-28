@@ -288,11 +288,12 @@ class _AmiiboListWidget extends HookConsumerWidget {
       duration: const Duration(seconds: 1),
       animationBehavior: AnimationBehavior.preserve,
     );
-    useMemoized(() {
+    useEffect(() {
       if (amiiboList is AsyncLoading<List<Amiibo>>)
         controller.repeat();
       else
         controller.forward();
+      return null;
     }, [amiiboList]);
     return amiiboList.maybeWhen(
       error: (_, __) => const SliverToBoxAdapter(),
@@ -360,10 +361,11 @@ class _AmiiboListWidget extends HookConsumerWidget {
                     child: AnimatedSelectedListTile(ignore: ignore),
                   );
                 } else {
-                  child = ShimmerCard(listenable: controller);
+                  child = ShimmerCard(listenable: controller, isGrid: false);
                 }
                 return ConstrainedBox(
-                  constraints: const BoxConstraints(maxHeight: 72.0),
+                  constraints:
+                      const BoxConstraints(maxHeight: 72.0, minHeight: 72.0),
                   child: AnimatedSwitcher(
                     duration: const Duration(seconds: 1),
                     child: child,

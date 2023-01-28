@@ -54,7 +54,7 @@ class _BottomSheetSort extends StatelessWidget {
             clipBehavior: Clip.antiAlias,
             child: ListTileTheme.merge(
               //selectedTileColor: theme.selectedRowColor.withOpacity(0.16),
-              contentPadding: const EdgeInsets.only(left: 8.0, right: 16.0),
+              contentPadding: const EdgeInsets.only(left: 8.0, right: 8.0),
               dense: true,
               style: ListTileStyle.drawer,
               minVerticalPadding: 12.0,
