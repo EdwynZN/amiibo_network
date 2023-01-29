@@ -83,8 +83,11 @@ final queryProvider = StateNotifierProvider<QueryBuilderProvider, QueryBuilder>(
 
     ref.listen(hiddenCategoryProvider, (_, next) {
       final search = queryBuilder.search;
-      if ((next == null && {..._figures, ..._cards}.contains(search.category)) ||
-          (next == HiddenType.Cards && _figures.contains(search.category)) ||
+      if ((next == null &&
+              {..._figures, ..._cards}.contains(search.category)) ||
+          (next == HiddenType.Cards &&
+              (_figures.contains(search.category) &&
+                  queryBuilder.query.orderBy != OrderBy.CardNumber)) ||
           (next == HiddenType.Figures && _cards.contains(search.category))) {
         return;
       }
@@ -118,7 +121,8 @@ class QueryBuilderProvider extends StateNotifier<QueryBuilder> {
           ),
         ) {
     _previousNotSearch = _query;
-    if (_query.category != AmiiboCategory.All) {
+    if (_query.category != AmiiboCategory.All ||
+      ref.read(hiddenCategoryProvider) != null) {
       _updateExpression();
     }
   }
@@ -208,8 +212,9 @@ class QueryBuilderProvider extends StateNotifier<QueryBuilder> {
           (hiddenCategory == HiddenType.Figures ? figuresIgnore : cardsIgnore) &
               (where.args.isEmpty ? where : Bracket(where));
     }
-    final OrderBy orderBy = _figures.contains(_query.category) &&
-            state.orderBy == OrderBy.CardNumber
+    final OrderBy orderBy = state.orderBy == OrderBy.CardNumber &&
+            (hiddenCategory == HiddenType.Cards ||
+                _figures.contains(_query.category))
         ? OrderBy.NA
         : state.orderBy;
 

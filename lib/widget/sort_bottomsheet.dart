@@ -11,7 +11,7 @@ import 'package:gap/gap.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:sliver_tools/sliver_tools.dart';
 
-final _canSortCardProvider = Provider<bool>((ref) {
+final _canSortCardProvider = Provider.autoDispose<bool>((ref) {
   final isCardsHidden =
       ref.watch(hiddenCategoryProvider.select((h) => h == HiddenType.Cards));
   if (isCardsHidden) return false;
