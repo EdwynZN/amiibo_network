@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:material_color_utilities/material_color_utilities.dart';
 
-class Material3Color extends ColorSwatch<int> {
+class TonalColor extends ColorSwatch<int> {
   /// Creates a color swatch with a variety of shades.
   ///
   /// The `primary` argument should be the 32 bit ARGB value of one of the
   /// values in the swatch, as would be passed to the [Color.new] constructor
   /// for that same color, and as is exposed by [value]. (This is distinct from
   /// the specific index of the color in the swatch.)
-  const Material3Color(super.primary, super.swatch);
+  const TonalColor(super.primary, super.swatch);
 
   /// Pure Black.
   Color get shade0 => this[0]!;
@@ -50,16 +51,63 @@ class Material3Color extends ColorSwatch<int> {
 
   /// Pure White.
   Color get shade100 => this[100]!;
+
+  TonalColor blend(Color sourceColor) {
+    final blend = Blend.harmonize;
+    return TonalColor(
+      blend(value, sourceColor.value),
+      <int, Color>{
+        0: Color(blend(this[0]!.value, sourceColor.value)),
+        10: Color(blend(this[10]!.value, sourceColor.value)),
+        20: Color(blend(this[20]!.value, sourceColor.value)),
+        30: Color(blend(this[30]!.value, sourceColor.value)),
+        40: Color(blend(this[40]!.value, sourceColor.value)),
+        50: Color(blend(this[50]!.value, sourceColor.value)),
+        60: Color(blend(this[60]!.value, sourceColor.value)),
+        70: Color(blend(this[70]!.value, sourceColor.value)),
+        80: Color(blend(this[80]!.value, sourceColor.value)),
+        90: Color(blend(this[90]!.value, sourceColor.value)),
+        95: Color(blend(this[95]!.value, sourceColor.value)),
+        98: Color(blend(this[98]!.value, sourceColor.value)),
+        99: Color(blend(this[99]!.value, sourceColor.value)),
+        100: Color(blend(this[100]!.value, sourceColor.value)),
+      },
+    );
+  }
+
+  static TonalColor? lerp(TonalColor? a, TonalColor? b, double t) {
+    final swatch = ColorSwatch.lerp(a, b, t);
+    if (swatch == null) return null;
+    return TonalColor(
+      swatch.value,
+      <int, Color>{
+        0: swatch[0]!,
+        10: swatch[10]!,
+        20: swatch[20]!,
+        30: swatch[30]!,
+        40: swatch[40]!,
+        50: swatch[50]!,
+        60: swatch[60]!,
+        70: swatch[70]!,
+        80: swatch[80]!,
+        90: swatch[90]!,
+        95: swatch[95]!,
+        98: swatch[98]!,
+        99: swatch[99]!,
+        100: swatch[100]!,
+      },
+    );
+  }
 }
 
 /// Work in progress
 class Material3Theme {
-  final Material3Color primary;
-  final Material3Color secondary;
-  final Material3Color tertiary;
-  final Material3Color error;
-  final Material3Color neutral;
-  final Material3Color neutralVariant;
+  final TonalColor primary;
+  final TonalColor secondary;
+  final TonalColor tertiary;
+  final TonalColor error;
+  final TonalColor neutral;
+  final TonalColor neutralVariant;
 
   const Material3Theme({
     required this.primary,

@@ -74,10 +74,14 @@ class AmiiboNetwork extends ConsumerWidget {
         return AnnotatedRegion<SystemUiOverlayStyle>(
           value: SystemUiOverlayStyle(
             systemNavigationBarColor: theme?.systemNavigationBarColor,
-            systemNavigationBarContrastEnforced: theme?.systemNavigationBarContrastEnforced,
-            systemNavigationBarDividerColor: theme?.systemNavigationBarDividerColor,
-            systemNavigationBarIconBrightness: theme?.systemNavigationBarIconBrightness,
-            systemStatusBarContrastEnforced: theme?.systemStatusBarContrastEnforced,
+            systemNavigationBarContrastEnforced:
+                theme?.systemNavigationBarContrastEnforced,
+            systemNavigationBarDividerColor:
+                theme?.systemNavigationBarDividerColor,
+            systemNavigationBarIconBrightness:
+                theme?.systemNavigationBarIconBrightness,
+            systemStatusBarContrastEnforced:
+                theme?.systemStatusBarContrastEnforced,
           ),
           child: child!,
         );

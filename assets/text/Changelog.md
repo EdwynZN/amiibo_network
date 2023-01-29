@@ -1,3 +1,8 @@
+## Version 2.1.5
+- **New** stats and amiibos home UI
+- Hide cards / figures
+- Swap between amiibo cards and list
+
 ## Version 2.0.0
 - **New** stats and amiibos cards UI
 - Order by card number added

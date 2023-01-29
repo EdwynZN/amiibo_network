@@ -5,6 +5,7 @@ import 'package:amiibo_network/model/title_search.dart';
 import 'package:amiibo_network/repository/theme_repository.dart';
 import 'package:amiibo_network/riverpod/amiibo_provider.dart';
 import 'package:amiibo_network/riverpod/lock_provider.dart';
+import 'package:amiibo_network/riverpod/preferences_provider.dart';
 import 'package:amiibo_network/riverpod/query_provider.dart';
 import 'package:amiibo_network/riverpod/screenshot_service.dart';
 import 'package:amiibo_network/riverpod/select_provider.dart';
@@ -14,6 +15,7 @@ import 'package:amiibo_network/widget/dash_menu/dash_menu.dart';
 import 'package:amiibo_network/widget/list_stats.dart';
 import 'package:amiibo_network/widget/loading_grid_shimmer.dart';
 import 'package:amiibo_network/widget/lock_icon.dart';
+import 'package:amiibo_network/widget/preferences_bottomsheet.dart';
 import 'package:amiibo_network/widget/route_transitions.dart';
 import 'package:amiibo_network/widget/selected_chip.dart';
 import 'package:amiibo_network/widget/selected_widget.dart';
@@ -224,7 +226,7 @@ class HomeScreenState extends ConsumerState<HomeScreen>
                         duration: const Duration(milliseconds: 250),
                         layoutBuilder: _defaultLayoutBuilder,
                         child: !isAmiiboList
-                            ? const SizedBox()
+                            ? const PreferencesButton()
                             : _multipleSelection
                                 ? const _SelectedOptions()
                                 : const _DefaultOptions(),
@@ -236,12 +238,15 @@ class HomeScreenState extends ConsumerState<HomeScreen>
                     ),
                     isAmiiboList
                         ? const SliverPadding(
-                            padding: EdgeInsets.symmetric(horizontal: 4),
+                            padding: EdgeInsets.symmetric(
+                              vertical: 12.0,
+                              horizontal: 4,
+                            ),
                             sliver: _AmiiboListWidget(),
                           )
                         : const HomeBodyStats(),
                     const SliverPadding(
-                      padding: EdgeInsets.symmetric(vertical: 48.0),
+                      padding: EdgeInsets.only(bottom: 96.0),
                     ),
                   ],
                 ),
@@ -283,11 +288,12 @@ class _AmiiboListWidget extends HookConsumerWidget {
       duration: const Duration(seconds: 1),
       animationBehavior: AnimationBehavior.preserve,
     );
-    useMemoized(() {
+    useEffect(() {
       if (amiiboList is AsyncLoading<List<Amiibo>>)
         controller.repeat();
       else
         controller.forward();
+      return null;
     }, [amiiboList]);
     return amiiboList.maybeWhen(
       error: (_, __) => const SliverToBoxAdapter(),
@@ -308,15 +314,15 @@ class _AmiiboListWidget extends HookConsumerWidget {
               style: theme.textTheme.headlineMedium!,
             );
           else
-            child = TextButton.icon(
+            child = OutlinedButton.icon(
               style: theme.textButtonTheme.style?.copyWith(
                 textStyle:
                     MaterialStateProperty.all(theme.textTheme.headlineMedium),
               ),
               onPressed: () async {
                 final filter = ref.read(queryProvider.notifier);
-                final List<String>? figures = filter.customFigures;
-                final List<String>? cards = filter.customCards;
+                final List<String> figures = filter.customFigures;
+                final List<String> cards = filter.customCards;
                 bool save = await showDialog<bool>(
                       context: context,
                       builder: (BuildContext context) => CustomQueryWidget(
@@ -339,6 +345,38 @@ class _AmiiboListWidget extends HookConsumerWidget {
             child: Center(child: child),
           );
         }
+        final useGrid = ref.watch(personalProvider.select((p) => p.useGrid));
+        if (!useGrid) {
+          return SliverList(
+            delegate: SliverChildBuilderDelegate(
+              (BuildContext _, int index) {
+                late final Widget child;
+                if (data != null) {
+                  child = ProviderScope(
+                    key: ValueKey<int?>(data[index].key),
+                    overrides: [
+                      indexAmiiboProvider.overrideWithValue(index),
+                      keyAmiiboProvider.overrideWithValue(data[index].key),
+                    ],
+                    child: AnimatedSelectedListTile(ignore: ignore),
+                  );
+                } else {
+                  child = ShimmerCard(listenable: controller, isGrid: false);
+                }
+                return ConstrainedBox(
+                  constraints:
+                      const BoxConstraints(maxHeight: 72.0, minHeight: 72.0),
+                  child: AnimatedSwitcher(
+                    duration: const Duration(seconds: 1),
+                    child: child,
+                  ),
+                );
+              },
+              childCount: data != null ? data.length : null,
+            ),
+          );
+        }
+
         late final SliverGridDelegate grid;
         final bool bigGrid = MediaQuery.of(context).size.width >= 600;
         if (bigGrid)
@@ -475,6 +513,7 @@ class _DefaultOptions extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.end,
       children: const <Widget>[
         LockButton(),
+        PreferencesButton(),
         SortCollection(),
       ],
     );

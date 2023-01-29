@@ -17,11 +17,13 @@ class _SlidingGradientTransform extends GradientTransform {
 
 class ShimmerCard extends HookWidget {
   final AnimationController listenable;
+  final bool isGrid;
   static final Random random = Random();
 
   ShimmerCard({
     Key? key,
     required this.listenable,
+    this.isGrid = true,
   }) : super(key: key);
 
   @override
@@ -29,36 +31,42 @@ class ShimmerCard extends HookWidget {
     final theme = Theme.of(context);
     final Color color = theme.colorScheme.primaryContainer;
     final int id = useMemoized(() => random.nextInt(70));
-    final Widget child = Column(
-      mainAxisAlignment: MainAxisAlignment.end,
-      textBaseline: TextBaseline.alphabetic,
-      children: <Widget>[
-        Flexible(
-          child: Center(
-            child: Padding(
-              padding: const EdgeInsets.all(4.0),
-              child: Image.asset(
-                'assets/collection/icon_${id+1}.webp',
-                fit: BoxFit.contain,
+    final Widget child;
+    if (isGrid) {
+      child = Column(
+        mainAxisAlignment: MainAxisAlignment.end,
+        textBaseline: TextBaseline.alphabetic,
+        children: <Widget>[
+          Flexible(
+            child: Center(
+              child: Padding(
+                padding: const EdgeInsets.all(4.0),
+                child: Image.asset(
+                  'assets/collection/icon_${id + 1}.webp',
+                  fit: BoxFit.contain,
+                ),
               ),
             ),
           ),
-        ),
-        Container(
-          decoration: ShapeDecoration(
-            color: Theme.of(context).primaryColorLight,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.vertical(
-                bottom: Radius.circular(8),
+          Container(
+            decoration: ShapeDecoration(
+              color: Theme.of(context).primaryColorLight,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.vertical(
+                  bottom: Radius.circular(8),
+                ),
               ),
             ),
+            alignment: Alignment.center,
+            padding: EdgeInsets.symmetric(horizontal: 5),
+            child: const Text(''),
           ),
-          alignment: Alignment.center,
-          padding: EdgeInsets.symmetric(horizontal: 5),
-          child: const Text(''),
-        ),
-      ],
-    );
+        ],
+      );
+    } else {
+      child = const SizedBox.expand();
+    }
+
     return Card(
       child: AnimatedBuilder(
         child: child,

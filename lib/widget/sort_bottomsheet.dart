@@ -1,13 +1,28 @@
 import 'package:amiibo_network/enum/amiibo_category_enum.dart';
+import 'package:amiibo_network/enum/hidden_types.dart';
 import 'package:amiibo_network/enum/sort_enum.dart';
 import 'package:amiibo_network/generated/l10n.dart';
 import 'package:amiibo_network/resources/resources.dart';
+import 'package:amiibo_network/riverpod/preferences_provider.dart';
 import 'package:amiibo_network/riverpod/query_provider.dart';
 import 'package:amiibo_network/widget/implicit_sort_direction_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:sliver_tools/sliver_tools.dart';
+
+final _canSortCardProvider = Provider.autoDispose<bool>((ref) {
+  final isCardsHidden =
+      ref.watch(hiddenCategoryProvider.select((h) => h == HiddenType.Cards));
+  if (isCardsHidden) return false;
+  final category = ref
+      .watch(queryProvider.notifier.select((value) => value.search.category));
+  const Set<AmiiboCategory> figures = {
+    AmiiboCategory.FigureSeries,
+    AmiiboCategory.Figures,
+  };
+  return !figures.contains(category);
+});
 
 class SortCollection extends StatelessWidget {
   const SortCollection({Key? key}) : super(key: key);
@@ -114,18 +129,11 @@ class _BottomSheetSort extends StatelessWidget {
                   ),
                   SliverPadding(
                     padding: const EdgeInsets.only(left: 16.0),
-                    sliver: HookConsumer(
+                    sliver: Consumer(
                       builder: (context, ref, child) {
                         final order = ref.watch(orderCategoryProvider);
                         final canUseCardNumber =
-                            ref.watch(queryProvider.notifier.select((value) {
-                          final category = value.search.category;
-                          const Set<AmiiboCategory> figures = {
-                            AmiiboCategory.FigureSeries,
-                            AmiiboCategory.Figures,
-                          };
-                          return !figures.contains(category);
-                        }));
+                            ref.watch(_canSortCardProvider);
                         return SliverList(
                           delegate: SliverChildListDelegate([
                             _SortListTile(

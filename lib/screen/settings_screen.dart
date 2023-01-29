@@ -1,4 +1,6 @@
+import 'package:amiibo_network/enum/hidden_types.dart';
 import 'package:amiibo_network/resources/resources.dart';
+import 'package:amiibo_network/riverpod/preferences_provider.dart';
 import 'package:amiibo_network/riverpod/query_provider.dart';
 import 'package:amiibo_network/riverpod/service_provider.dart';
 import 'package:amiibo_network/riverpod/theme_provider.dart';
@@ -334,19 +336,24 @@ class __SaveCollectionState extends ConsumerState<_SaveCollection> {
       icon: const Icon(Icons.save),
       onTap: () async {
         if (!(await permissionGranted(scaffoldState))) return;
+        final hidden = ref.watch(hiddenCategoryProvider);
+        final isFiguresShown = hidden == null || hidden != HiddenType.Figures;
+        final isCardsShown = hidden == null || hidden != HiddenType.Cards;
         final filter = ref.read(queryProvider.notifier);
-        final List<String>? figures = filter.customFigures;
-        final List<String>? cards = filter.customCards;
+        final List<String> figures =
+            isFiguresShown ? filter.customFigures.toList() : [];
+        final List<String> cards =
+            isCardsShown ? filter.customCards.toList() : [];
         bool save = await showDialog<bool>(
               context: context,
-              builder: (BuildContext context) => CustomQueryWidget(
+              builder: (_) => CustomQueryWidget(
                 translate.saveCollection,
                 figures: figures,
                 cards: cards,
               ),
             ) ??
             false;
-        if (save && (figures!.isNotEmpty || cards!.isNotEmpty)) {
+        if (save && (figures.isNotEmpty || cards.isNotEmpty)) {
           bool? equalFigures = false;
           bool? equalCards = false;
           AmiiboCategory category = AmiiboCategory.All;
@@ -355,7 +362,7 @@ class __SaveCollectionState extends ConsumerState<_SaveCollection> {
           if (figures.isNotEmpty)
             equalFigures =
                 QueryBuilderProvider.checkEquality(figures, listOfFigures);
-          if (cards!.isNotEmpty)
+          if (cards.isNotEmpty)
             equalCards = QueryBuilderProvider.checkEquality(cards, listOfCards);
           if (equalFigures! && cards.isEmpty)
             category = AmiiboCategory.Figures;

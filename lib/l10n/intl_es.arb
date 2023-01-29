@@ -84,5 +84,7 @@
   "invalid_amiibo": "Información no válida",
   "socket_exception": "Revisa tu conexión",
   "no_games_found": "No existe una lista de juegos para este amiibo aún",
-  "no_date": "Próximamente"
+  "no_date": "Próximamente",
+  "showGrid": "Cuadrícula",
+  "hide_caution": "Precaución, deshabilitar una categoría la escondera en toda la app"
 }
