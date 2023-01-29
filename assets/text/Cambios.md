@@ -1,3 +1,8 @@
+## Version 2.1.5
+- **Nueva** interfaz de amiibos y estadísticas (Material 3)
+- Esconder Tarjetas o Figuras
+- Cambiar entre cuadrpicula y lista
+
 ## Version 2.0.0
 - **Nueva** interfaz de amiibos y estadísticas
 - Se agregó el orden de tarjetas númerico

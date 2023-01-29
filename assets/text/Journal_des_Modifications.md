@@ -1,3 +1,8 @@
+## Version 2.1.5
+- **Nouvelle** UI
+- Masquer les cartes ou figurines
+- Basculer entre les cartes et la liste des amiibos
+
 ## Version 2.0.0
 - **Nouvelle** UI
 - Trier par card nombre

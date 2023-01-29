@@ -33,4 +33,4 @@ const String sharedGridMode = 'gridMode';
 /// Stat Mode Preferences (Percentage or Ratio)
 const String sharedIgnored = 'ignoredType';
 /// Version of the App
-const int versionApp = 52;
+const int versionApp = 58;
