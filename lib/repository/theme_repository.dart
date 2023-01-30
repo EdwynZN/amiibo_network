@@ -1467,11 +1467,12 @@ class AmiiboTheme3 implements AmiiboTheme {
       ),
       bottomSheetTheme: BottomSheetThemeData(
         elevation: 0.0,
-        backgroundColor: scheme.background,
+        backgroundColor: Colors.transparent,
+        constraints: const BoxConstraints(maxWidth: 400.0),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.vertical(top: Radius.circular(8)),
         ),
-        modalBackgroundColor: scheme.primaryContainer,
+        modalBackgroundColor: Colors.transparent,
         modalElevation: 0.0,
       ),
       bottomNavigationBarTheme: BottomNavigationBarThemeData(
@@ -2042,6 +2043,8 @@ class AmiiboTheme3 implements AmiiboTheme {
           bottomSheetTheme: BottomSheetThemeData(
             elevation: 0.0,
             backgroundColor: Colors.transparent,
+            modalBackgroundColor: Colors.transparent,
+            constraints: const BoxConstraints(maxWidth: 400.0),
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.vertical(
                 top: Radius.circular(8),
@@ -2317,6 +2320,8 @@ class AmiiboTheme3 implements AmiiboTheme {
           bottomSheetTheme: BottomSheetThemeData(
             elevation: 0.0,
             backgroundColor: Colors.transparent,
+            modalBackgroundColor: Colors.transparent,
+            constraints: const BoxConstraints(maxWidth: 400.0),
             shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.vertical(top: Radius.circular(8))),
           ),
@@ -2606,6 +2611,8 @@ class AmiiboTheme3 implements AmiiboTheme {
           bottomSheetTheme: BottomSheetThemeData(
             elevation: 0.0,
             backgroundColor: Colors.transparent,
+            modalBackgroundColor: Colors.transparent,
+            constraints: const BoxConstraints(maxWidth: 400.0),
             shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.vertical(top: Radius.circular(8))),
           ),
