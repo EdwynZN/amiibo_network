@@ -10,6 +10,7 @@ import 'package:flutter/material.dart';
 import 'package:amiibo_network/widget/theme_widget.dart';
 import 'package:amiibo_network/enum/amiibo_category_enum.dart';
 import 'package:amiibo_network/generated/l10n.dart';
+import 'package:flutter/services.dart';
 import 'package:gap/gap.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -31,11 +32,14 @@ class _CollectionDrawerState extends ConsumerState<CollectionDrawer> {
   static bool _cardExpand = false;
   late ThemeData theme;
   late PreferencesExtension preferencesExtension;
+  late SystemUiOverlayStyle? overlay;
 
   @override
   void didChangeDependencies() {
     theme = Theme.of(context);
     preferencesExtension = theme.extension<PreferencesExtension>()!;
+    final style = theme.appBarTheme.systemOverlayStyle;
+    overlay = style?.copyWith(statusBarColor: const Color(0x00000000));
     super.didChangeDependencies();
   }
 
@@ -56,7 +60,7 @@ class _CollectionDrawerState extends ConsumerState<CollectionDrawer> {
   @override
   Widget build(BuildContext context) {
     final S translate = S.of(context);
-    return ListTileTheme.merge(
+    final Widget child = ListTileTheme.merge(
       iconColor: theme.iconTheme.color,
       textColor: theme.textTheme.bodyMedium!.color,
       style: ListTileStyle.drawer,
@@ -86,12 +90,11 @@ class _CollectionDrawerState extends ConsumerState<CollectionDrawer> {
                         final isOwned = _category == AmiiboCategory.Owned;
                         final isWishlist = _category == AmiiboCategory.Wishlist;
                         final isCustom = _category == AmiiboCategory.Custom;
-                        final hidden =
-                            ref.watch(hiddenCategoryProvider);
+                        final hidden = ref.watch(hiddenCategoryProvider);
                         final isFiguresShown =
-                          hidden == null || hidden != HiddenType.Figures;
+                            hidden == null || hidden != HiddenType.Figures;
                         final isCardsShown =
-                          hidden == null || hidden != HiddenType.Cards;
+                            hidden == null || hidden != HiddenType.Cards;
                         return SliverPadding(
                           padding: const EdgeInsets.symmetric(horizontal: 8.0),
                           sliver: SliverList(
@@ -323,6 +326,13 @@ class _CollectionDrawerState extends ConsumerState<CollectionDrawer> {
           ],
         ),
       ),
+    );
+    if (overlay == null) {
+      return child;
+    }
+    return AnnotatedRegion<SystemUiOverlayStyle>(
+      value: overlay!,
+      child: child,
     );
   }
 }
