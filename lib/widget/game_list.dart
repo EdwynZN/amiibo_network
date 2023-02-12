@@ -22,6 +22,13 @@ class GameListWidget extends ConsumerWidget {
           data: (platforms) {
             return MultiSliver(
               children: [
+                if (platforms.gamesSwitch != null &&
+                    platforms.gamesSwitch!.isNotEmpty)
+                  _PlatformGameList(
+                    games: platforms.gamesSwitch!,
+                    title: translate.switch_platform,
+                    asset: NetworkIcons.switchPlatform,
+                  ),
                 if (platforms.games3DS != null &&
                     platforms.games3DS!.isNotEmpty)
                   _PlatformGameList(
@@ -35,13 +42,6 @@ class GameListWidget extends ConsumerWidget {
                     games: platforms.gamesWiiU!,
                     title: translate.wiiu_platform,
                     asset: NetworkIcons.wiiUPlatform,
-                  ),
-                if (platforms.gamesSwitch != null &&
-                    platforms.gamesSwitch!.isNotEmpty)
-                  _PlatformGameList(
-                    games: platforms.gamesSwitch!,
-                    title: translate.switch_platform,
-                    asset: NetworkIcons.switchPlatform,
                   ),
               ],
             );
