@@ -10669,10 +10669,10 @@
       "character": "Pyra",
       "gameSeries": "Xenoblade",
       "name": "Pyra",
-      "au": "soon",
-      "eu": "soon",
-      "jp": "soon",
-      "na": "soon",
+      "au": "2023",
+      "eu": "2023",
+      "jp": "2023",
+      "na": "2023",
       "type": "Figure"
     },
     {
@@ -10682,10 +10682,10 @@
       "character": "Mythra",
       "gameSeries": "Xenoblade",
       "name": "Mythra",
-      "au": "soon",
-      "eu": "soon",
-      "jp": "soon",
-      "na": "soon",
+      "au": "2023",
+      "eu": "2023",
+      "jp": "2023",
+      "na": "2023",
       "type": "Figure"
     },
     {
@@ -11450,7 +11450,20 @@
       "jp": "20221111",
       "na": "20221111",
       "type": "Figure"
+    },
+    {
+      "key": 842,
+      "id": null,
+      "amiiboSeries": "The Legend of Zelda",
+      "character": "Link",
+      "gameSeries": "The Legend of Zelda",
+      "name": "Link - Tears of the Kingdom",
+      "au": "20230512",
+      "eu": "20230512",
+      "jp": "20230512",
+      "na": "20230512",
+      "type": "Figure"
     }
   ],
-  "lastUpdated": "2023-23-01T21:45:00.000"
+  "lastUpdated": "2023-12-02T10:13:00.000"
 }
