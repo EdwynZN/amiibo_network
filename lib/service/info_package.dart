@@ -1,60 +1,61 @@
 import 'package:flutter/services.dart';
 
 enum AndroidCode {
-  Unknown,
-  JellyBean,
-  JellyBean_MR1,
-  JellyBean_MR2,
-  Kitkat,
-  Kitkat_Watch,
-  Lollipop,
-  Lollipop_MR1,
-  M,
-  N,
-  N_MR1,
-  O,
-  O_MR1,
-  P,
-  Q,
-  R,
-  S1,
-  S2,
-  T,
-  U,
+  Unknown(-1),
+  JellyBean(16),
+  JellyBean_MR1(17),
+  JellyBean_MR2(18),
+  Kitkat(19),
+  Kitkat_Watch(20),
+  Lollipop(21),
+  Lollipop_MR1(22),
+  M(23),
+  N(24),
+  N_MR1(25),
+  O(26),
+  O_MR1(27),
+  P(28),
+  Q(29),
+  R(30),
+  S1(31),
+  S2(32),
+  T(33),
+  U(34),
+  New(35);
+
+  const AndroidCode(this.code);
+
+  final int code;
+
+  factory AndroidCode.fromCode(int code) {
+    if (code < JellyBean.code) {
+      return AndroidCode.Unknown;
+    } else if (code >= AndroidCode.New.code) {
+      return AndroidCode.New;
+    }
+    return AndroidCode.values[code - JellyBean.code + 1];
+  }
 }
 
-//Font feature is supported in Android 5 and above
+// Font feature is supported in Android 5 and above
 bool get isFontFeatureEnable =>
-    InfoPackage.version >= AndroidCode.Lollipop.version;
-
-extension AndroidCodeShortcuts on AndroidCode {
-  int get version => this.index + 15;
-}
+    InfoPackage.androidVersionCode.code >= AndroidCode.Lollipop.code;
 
 class InfoPackage {
   static const _channel =
       const MethodChannel("com.dartz.amiibo_network/info_package");
-  static int get version => _version ?? 0; //returns android version code
-  static int? _version;
-  static AndroidCode get androidVersionCode {
-    if (version < 0 || version >= AndroidCode.values.length) {
-      return AndroidCode.Unknown;
-    }
-    return AndroidCode.values[version];
-  }
+  static AndroidCode _version = AndroidCode.Unknown;
+  static AndroidCode get androidVersionCode => _version;
 
-  static Future<int> versionCode() async {
+  static Future<void> versionCode() async {
     //TODO IOS Platform Channel
     try {
-      _version = await _channel.invokeMethod('version');
-      print('version $_version');
-      if (_version != null) {
-        _version = _version! - 15;
+      final version = await _channel.invokeMethod<int?>('version');
+      if (version != null) {
+        _version = AndroidCode.fromCode(version);
       }
-      return version;
     } on PlatformException catch (_) {
-      _version = 0;
-      return version;
+      _version = AndroidCode.Unknown;
     }
   }
 }
