@@ -20,7 +20,7 @@ String get dateTaken {
 }
 
 /// Ask for write permission in Android 9 and below
-/// If not grqanted and permanently denied shows a snackbar to open settings of the app
+/// If not granted and permanently denied shows a snackbar to open settings of the app
 /// to unlock it
 Future<bool> permissionGranted(ScaffoldMessengerState? scaffoldState) async{
   S translate = S.current;
@@ -29,13 +29,12 @@ Future<bool> permissionGranted(ScaffoldMessengerState? scaffoldState) async{
     final permissionStatus = await Permission.storage.request();
     if(!permissionStatus.isGranted) {
       if(permissionStatus.isPermanentlyDenied && (scaffoldState?.mounted ?? false)){
-        print(describeEnum(permissionStatus));
         scaffoldState?.hideCurrentSnackBar();
         scaffoldState?.showSnackBar(SnackBar(
           content: Text(translate.storagePermission(describeEnum(permissionStatus))),
           action: SnackBarAction(
             label: translate.openAppSettings,
-            onPressed: () => openAppSettings()
+            onPressed: () => openAppSettings(),
           ),
         ));
       }

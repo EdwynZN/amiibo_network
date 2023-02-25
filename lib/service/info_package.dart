@@ -17,12 +17,15 @@ enum AndroidCode {
   P,
   Q,
   R,
-  S,
+  S1,
+  S2,
   T,
+  U,
 }
 
 //Font feature is supported in Android 5 and above
-bool get isFontFeatureEnable => InfoPackage.version >= AndroidCode.Lollipop.version;
+bool get isFontFeatureEnable =>
+    InfoPackage.version >= AndroidCode.Lollipop.version;
 
 extension AndroidCodeShortcuts on AndroidCode {
   int get version => this.index + 15;
@@ -44,6 +47,7 @@ class InfoPackage {
     //TODO IOS Platform Channel
     try {
       _version = await _channel.invokeMethod('version');
+      print('version $_version');
       if (_version != null) {
         _version = _version! - 15;
       }
