@@ -23,7 +23,7 @@ dependencies:
     sdk: flutter
   gap: ^2.0.1
   go_router: ^5.2.1
-  hooks_riverpod: ^2.1.1
+  hooks_riverpod: ^2.3.0
   sqflite: ^2.2.1
   file_picker: ^5.2.3
   permission_handler: ^10.2.0
