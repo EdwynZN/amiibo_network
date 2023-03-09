@@ -232,19 +232,28 @@ class HomeScreenState extends ConsumerState<HomeScreen>
                                 : const _DefaultOptions(),
                       ),
                     ),
-                    SliverPersistentHeader(
-                      delegate: SliverStatsHeader(hideOptional: isAmiiboList),
-                      pinned: true,
-                    ),
-                    isAmiiboList
-                        ? const SliverPadding(
-                            padding: EdgeInsets.symmetric(
-                              vertical: 12.0,
-                              horizontal: 4,
-                            ),
-                            sliver: _AmiiboListWidget(),
-                          )
-                        : const HomeBodyStats(),
+                    if (isAmiiboList)
+                      ...[
+                        Builder(
+                          builder: (context) {
+                            return SliverPersistentHeader(
+                              delegate: SliverStatsHeader(
+                                topPadding: MediaQuery.of(context).padding.top,
+                                hideOptional: isAmiiboList,
+                              ),
+                              pinned: true,
+                            );
+                          },
+                        ),
+                        const SliverPadding(
+                          padding: EdgeInsets.symmetric(
+                            vertical: 12.0,
+                            horizontal: 4,
+                          ),
+                          sliver: _AmiiboListWidget(),
+                        ),
+                      ]
+                    else const HomeBodyStats(),
                     const SliverPadding(
                       padding: EdgeInsets.only(bottom: 96.0),
                     ),

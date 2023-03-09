@@ -25,10 +25,14 @@ final _dioProvider = Provider<Dio>((ref) {
 });
 
 final _characterProvider = StreamProvider.autoDispose.family<Amiibo?, int>(
-  (ref, key) => ref
-      .watch(detailAmiiboProvider(key).stream)
-      .map<Amiibo?>((cb) => cb?.copyWith(owned: false, wishlist: false))
-      .distinct(),
+  (ref, key) async* {
+    yield ref
+      .watch(detailAmiiboProvider(key))
+      .maybeWhen(
+        data: (cb) => cb?.copyWith(owned: false, wishlist: false),
+        orElse: () => null,
+      );
+  },
   name: 'Character Provider',
 );
 
