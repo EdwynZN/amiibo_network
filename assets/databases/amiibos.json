@@ -11463,7 +11463,20 @@
       "jp": "20230512",
       "na": "20230512",
       "type": "Figure"
+    },
+    {
+      "key": 843,
+      "id": "000000030430FF02",
+      "amiiboSeries": "Super Nintendo World",
+      "character": "Mario",
+      "gameSeries": "Super Mario",
+      "name": "Gold Mario Power-Up Band",
+      "au": null,
+      "eu": null,
+      "jp": "20230318",
+      "na": null,
+      "type": "Band"
     }
   ],
-  "lastUpdated": "2023-12-02T10:13:00.000"
+  "lastUpdated": "2023-12-03T10:13:00.000"
 }
