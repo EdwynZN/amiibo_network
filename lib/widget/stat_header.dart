@@ -13,9 +13,13 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 class SliverStatsHeader extends SliverPersistentHeaderDelegate {
+  final double topPadding;
   final bool hideOptional;
 
-  const SliverStatsHeader({this.hideOptional = true});
+  const SliverStatsHeader({
+    this.hideOptional = true,
+    required this.topPadding,
+  }) : assert(topPadding >= 0.0);
 
   @override
   Widget build(
@@ -25,9 +29,10 @@ class SliverStatsHeader extends SliverPersistentHeaderDelegate {
   ) {
     final appbarTheme = AppBarTheme.of(context);
     final _elevation = appbarTheme.elevation ?? 0.0;
-    final firstColor = appbarTheme.backgroundColor ?? Colors.white;
+    final firstColor = appbarTheme.backgroundColor ?? Theme.of(context).canvasColor;
     final bool isScrolledUnder =
         overlapsContent || shrinkOffset > maxExtent - minExtent;
+    final BoxDecoration decoration;
     final Color _color = ElevationOverlay.applySurfaceTint(
       firstColor,
       appbarTheme.surfaceTintColor,
@@ -37,32 +42,34 @@ class SliverStatsHeader extends SliverPersistentHeaderDelegate {
               : 4.0
           : _elevation,
     );
+    decoration = BoxDecoration(
+      gradient: LinearGradient(
+        begin: Alignment.topCenter,
+        end: Alignment.bottomCenter,
+        stops: const [0.20, 0.50, 1.0],
+        colors: [
+          _color,
+          _color.withOpacity(0.75),
+          _color.withOpacity(0.25),
+        ],
+      ),
+    );
     final Widget child = Container(
       height: math.max(minExtent, maxExtent - shrinkOffset),
       padding: const EdgeInsets.fromLTRB(6.0, 6.0, 6.0, 0.0),
       alignment: Alignment.bottomCenter,
-      decoration: BoxDecoration(
-        gradient: LinearGradient(
-          begin: Alignment.topCenter,
-          end: Alignment.bottomCenter,
-          stops: [0.20, 0.50, 1.0],
-          colors: [
-            _color,
-            _color.withOpacity(0.75),
-            _color.withOpacity(0.25),
-          ],
-        ),
-      ),
+      decoration: decoration,
       child: Visibility(
         visible: hideOptional,
         child: const _LinearStat(),
       ),
     );
+    final double sigma = 5.0 * (shrinkOffset / minExtent).clamp(0.15, 1.0);
     return ClipRect(
       child: BackdropFilter(
         filter: ImageFilter.blur(
-          sigmaX: 3.0,
-          sigmaY: 3.0,
+          sigmaX: sigma,
+          sigmaY: sigma,
           tileMode: TileMode.decal,
         ),
         child: child,
@@ -71,13 +78,15 @@ class SliverStatsHeader extends SliverPersistentHeaderDelegate {
   }
 
   @override
-  double get maxExtent => kToolbarHeight;
+  double get maxExtent => kMinInteractiveDimension + topPadding;
 
   @override
-  double get minExtent => kToolbarHeight;
+  double get minExtent => kMinInteractiveDimension + topPadding;
 
   @override
-  bool shouldRebuild(SliverPersistentHeaderDelegate oldDelegate) => true;
+  bool shouldRebuild(SliverStatsHeader oldDelegate) =>
+      topPadding != oldDelegate.topPadding ||
+      hideOptional != oldDelegate.hideOptional;
 }
 
 class _LinearStat extends ConsumerWidget {
@@ -170,7 +179,7 @@ class _LinearStat extends ConsumerWidget {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.stretch,
-        mainAxisAlignment: MainAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.end,
         children: [
           title,
           const SizedBox(height: 4.0),
