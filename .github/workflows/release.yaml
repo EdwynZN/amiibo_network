@@ -86,6 +86,9 @@ jobs:
         id: createServiceAccount
         run: echo '${{ secrets.PLAY_STORE_KEY }}' > android/api-play-store-key.json
 
+      - name: Configure Firebase
+        uses: ./.github/actions/firebase_settings.yaml
+
       - name: Build #and upload to google play
         run: |
           flutter build apk --no-pub --release

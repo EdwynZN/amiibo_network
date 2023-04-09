@@ -73,6 +73,9 @@ jobs:
           echo "storePassword=$KEYSTORE_STORE_PASSWORD" >> android/key.properties
           echo "keyPassword=$KEYSTORE_KEY_PASSWORD" >> android/key.properties
 
+      - name: Configure Firebase
+        uses: ./.github/actions/firebase_settings.yaml
+
       - name: Build release version for testing purpose
         run: flutter build apk --split-per-abi --no-pub --verbose --release
       
