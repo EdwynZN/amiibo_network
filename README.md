@@ -46,6 +46,38 @@ Light                      |             Dark
 ## Special Thanks
 French translation by Michael Put (De Liège Belgium)
 
+## Firebase Setup
+
+Since the project uses Firebase, some additional files will be needed:
+
+    lib/firebase_options.dart
+    ios/Runner/GoogleService-Info.plist
+    ios/firebase_app_id_file.json
+    android/app/google-services.json
+
+These files have been added to .gitignore, so you need to run this command to generate them using one of this options
+
+##### 1.  Using CLI
+
+**Make sure you have the Firebase CLI and FlutterFire CLI installed.**
+
+
+These files have been added to .gitignore, so you need to run this command to generate them with the flutterfire CLI:
+
+    firebase login
+    flutterfire configure
+
+##### 2.  Manually
+
+If you don't want to use FlutterFire CLI, follow these steps instead:
+
+- Register separate iOS, Android, and web apps in the Firebase project settings.
+- On Android, use com.example.starter_architecture_flutter_firebase as the package name.
+- then, download and copy google-services.json into android/app.
+- On iOS, use com.example.starterArchitectureFlutterFirebase as the bundle ID.
+- then, download and copy GoogleService-Info.plist into iOS/Runner, and add it to the Runner target in Xcode.
+
+
 ## Getting Started
 
 This project is a starting point for a Flutter application.
