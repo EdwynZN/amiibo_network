@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:amiibo_network/firebase_options.dart';
 import 'package:amiibo_network/riverpod/game_provider.dart';
+import 'package:amiibo_network/riverpod/provider_observer.dart';
 import 'package:amiibo_network/riverpod/router_provider.dart';
 import 'package:amiibo_network/service/info_package.dart';
 import 'package:amiibo_network/service/update_service.dart';
@@ -77,6 +78,11 @@ Future<void> main() async {
       );
       runApp(
         ProviderScope(
+          observers: [
+            if (!kDebugMode) FirebaseProviderObserver(
+              FirebaseCrashlytics.instance,
+            ),
+          ],
           overrides: [
             cacheProvider.overrideWithValue(cache),
             preferencesProvider.overrideWithValue(preferences),

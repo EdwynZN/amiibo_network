@@ -13,12 +13,14 @@ GoRouter createRouter({
   String initial = '/',
   bool routerNeglect = true,
   bool debugLogDiagnostics = kDebugMode,
+  List<NavigatorObserver>? observers,
 }) {
   return GoRouter(
     debugLogDiagnostics: debugLogDiagnostics,
     errorBuilder: (_, __) => const Material(),
     routerNeglect: routerNeglect,
     initialLocation: initial,
+    observers: observers,
     routes: [
       GoRoute(
         name: 'splash',

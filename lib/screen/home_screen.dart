@@ -4,6 +4,7 @@ import 'package:amiibo_network/model/amiibo.dart';
 import 'package:amiibo_network/model/title_search.dart';
 import 'package:amiibo_network/repository/theme_repository.dart';
 import 'package:amiibo_network/riverpod/amiibo_provider.dart';
+import 'package:amiibo_network/riverpod/analytics._provider.dart';
 import 'package:amiibo_network/riverpod/lock_provider.dart';
 import 'package:amiibo_network/riverpod/preferences_provider.dart';
 import 'package:amiibo_network/riverpod/query_provider.dart';
@@ -161,9 +162,11 @@ class HomeScreenState extends ConsumerState<HomeScreen>
       FadeRoute<Search>(builder: (_) => const SearchScreen()),
     );
     if (value?.search?.trim().isNotEmpty ?? false) {
+      final search = value!;
+      ref.read(analyticsProvider).logSearch(search.search!);
       final query = ref.read(queryProvider.notifier);
       WidgetsBinding.instance.addPostFrameCallback((_) {
-        query.updateOption(value!);
+        query.updateOption(search);
         _restartAnimation();
       });
     }
@@ -232,28 +235,27 @@ class HomeScreenState extends ConsumerState<HomeScreen>
                                 : const _DefaultOptions(),
                       ),
                     ),
-                    if (isAmiiboList)
-                      ...[
-                        Builder(
-                          builder: (context) {
-                            return SliverPersistentHeader(
-                              delegate: SliverStatsHeader(
-                                topPadding: MediaQuery.of(context).padding.top,
-                                hideOptional: isAmiiboList,
-                              ),
-                              pinned: true,
-                            );
-                          },
+                    if (isAmiiboList) ...[
+                      Builder(
+                        builder: (context) {
+                          return SliverPersistentHeader(
+                            delegate: SliverStatsHeader(
+                              topPadding: MediaQuery.of(context).padding.top,
+                              hideOptional: isAmiiboList,
+                            ),
+                            pinned: true,
+                          );
+                        },
+                      ),
+                      const SliverPadding(
+                        padding: EdgeInsets.symmetric(
+                          vertical: 12.0,
+                          horizontal: 4,
                         ),
-                        const SliverPadding(
-                          padding: EdgeInsets.symmetric(
-                            vertical: 12.0,
-                            horizontal: 4,
-                          ),
-                          sliver: _AmiiboListWidget(),
-                        ),
-                      ]
-                    else const HomeBodyStats(),
+                        sliver: _AmiiboListWidget(),
+                      ),
+                    ] else
+                      const HomeBodyStats(),
                     const SliverPadding(
                       padding: EdgeInsets.only(bottom: 96.0),
                     ),
