@@ -1,3 +1,7 @@
+## Version 2.1.59
+- Ajout des figurines Noah et Mio de la Xenoblade Chronicles
+- Nouveau série Xenoblade Chronicles
+
 ## Version 2.1.5
 - **Nouvelle** UI
 - Masquer les cartes ou figurines

@@ -1,7 +1,12 @@
+## Version 2.1.59
+- Actualización de fechas de amiibos 2023
+- Noah y Mio agregados
+- Nueva categoría Xenoblade Chronicles
+
 ## Version 2.1.5
 - **Nueva** interfaz de amiibos y estadísticas (Material 3)
 - Esconder Tarjetas o Figuras
-- Cambiar entre cuadrpicula y lista
+- Cambiar entre cuadrícula y lista
 
 ## Version 2.0.0
 - **Nueva** interfaz de amiibos y estadísticas
