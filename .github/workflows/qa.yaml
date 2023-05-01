@@ -67,7 +67,7 @@ jobs:
             FIREBASE_OPTIONS_DART: ${{ secrets.FIREBASE_OPTIONS_DART }}
         run: |
             echo Android google_services.json
-            echo "$GOOGLE_SERVICES_ANDROID_JSON" > google-services.json.b64
+            echo "$GOOGLE_SERVICES_ANDROID" > google-services.json.b64
             base64 -d -i google-services.json.b64 > android/app/google-services.json
             echo iOS google_services.json
             echo "$GOOGLE_SERVICES_IOS" > GoogleService-Info.plist.b64
