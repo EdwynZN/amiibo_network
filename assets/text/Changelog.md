@@ -1,3 +1,8 @@
+## Version 2.1.59
+- Date updated for Q1 2023 amiibos
+- Noah y Mio added
+- New amiibo category Xenoblade Chronicles
+
 ## Version 2.1.5
 - **New** stats and amiibos home UI
 - Hide cards / figures

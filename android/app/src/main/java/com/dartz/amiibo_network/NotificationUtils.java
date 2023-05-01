@@ -45,7 +45,7 @@ public class NotificationUtils extends ContextWrapper {
         getManager().createNotificationChannel(notificationChannel);
     }
 
-    public void sendNotification(Map<String, Object> arguments){
+    public void sendNotification(Map<String, Object> arguments) {
         String path = (String) arguments.get("path");
         String title = (String) arguments.get("title");
         String actionTitle = (String) arguments.get("actionTitle");
@@ -60,7 +60,7 @@ public class NotificationUtils extends ContextWrapper {
         }
     }
 
-    private Notification createNotification(String title, String path, String actionTitle, Integer id){
+    private Notification createNotification(String title, String path, String actionTitle, Integer id) {
         String text = path.substring(path.lastIndexOf("/")+1);
         File file = new File(path);
         Uri uri = FileProvider.getUriForFile(this, BuildConfig.APPLICATION_ID, file);
@@ -103,7 +103,7 @@ public class NotificationUtils extends ContextWrapper {
         return notificationBuilder.build();
     }
 
-    private Notification imageNotification(String title, String contentText, Uri uri, String actionTitle, Integer id, Bitmap bitmap){
+    private Notification imageNotification(String title, String contentText, Uri uri, String actionTitle, Integer id, Bitmap bitmap) {
         NotificationCompat.Builder notificationBuilder =
             new NotificationCompat.Builder(this, ANDROID_CHANNEL_ID);
         notificationBuilder//.setAutoCancel(true)
@@ -153,7 +153,7 @@ public class NotificationUtils extends ContextWrapper {
             .build();
     }
 
-    private Notification createSummary(String title){
+    private Notification createSummary(String title) {
         NotificationCompat.Builder summaryBuilder =
             new NotificationCompat.Builder(this, ANDROID_CHANNEL_ID);
         summaryBuilder.setAutoCancel(true)
@@ -168,7 +168,7 @@ public class NotificationUtils extends ContextWrapper {
         return summaryBuilder.build();
     }
 
-    public void cancelNotification(Integer id){
+    public void cancelNotification(Integer id) {
         getManager().cancel(id);
     }
 
