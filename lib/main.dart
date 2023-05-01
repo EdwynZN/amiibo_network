@@ -66,7 +66,7 @@ Future<void> main() async {
         await InfoPackage.versionCode();
       }
 
-      final bool notUpdateRequired = await updateService.compareLastUpdate;
+      final bool notUpdateRequired = await updateService.upToDate;
       final preferences = await SharedPreferences.getInstance();
       await updateOldTheme();
       final store = await newHiveDefaultCacheStore(path: cacheDir.path);
@@ -79,9 +79,10 @@ Future<void> main() async {
       runApp(
         ProviderScope(
           observers: [
-            if (!kDebugMode) FirebaseProviderObserver(
-              FirebaseCrashlytics.instance,
-            ),
+            if (!kDebugMode)
+              FirebaseProviderObserver(
+                FirebaseCrashlytics.instance,
+              ),
           ],
           overrides: [
             cacheProvider.overrideWithValue(cache),

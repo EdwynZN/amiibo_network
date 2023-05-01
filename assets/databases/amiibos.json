@@ -10682,10 +10682,10 @@
       "character": "Mythra",
       "gameSeries": "Xenoblade",
       "name": "Mythra",
-      "au": "2023",
-      "eu": "2023",
-      "jp": "2023",
-      "na": "2023",
+      "au": "20230721",
+      "eu": "20230721",
+      "jp": "20230721",
+      "na": "20230721",
       "type": "Figure"
     },
     {
@@ -11476,7 +11476,33 @@
       "jp": "20230318",
       "na": null,
       "type": "Band"
+    },
+    {
+      "key": 844,
+      "id": null,
+      "amiiboSeries": "Super Smash Bros.",
+      "character": "Noah",
+      "gameSeries": "Xenoblade",
+      "name": "Noah",
+      "au": "soon",
+      "eu": "soon",
+      "jp": "soon",
+      "na": "soon",
+      "type": "Figure"
+    },
+    {
+      "key": 845,
+      "id": null,
+      "amiiboSeries": "Xenoblade Chronicles",
+      "character": "Mio",
+      "gameSeries": "Xenoblade",
+      "name": "Mio",
+      "au": "soon",
+      "eu": "soon",
+      "jp": "soon",
+      "na": "soon",
+      "type": "Figure"
     }
   ],
-  "lastUpdated": "2023-12-03T10:13:00.000"
+  "lastUpdated": "2023-05-01T12:13:53.916"
 }

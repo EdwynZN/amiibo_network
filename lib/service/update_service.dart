@@ -1,5 +1,8 @@
+import 'dart:async';
+
 import 'package:amiibo_network/dao/SQLite/amiibo_sqlite.dart';
 import 'package:amiibo_network/enum/sort_enum.dart';
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/foundation.dart';
 import 'dart:convert';
 import 'package:flutter/services.dart';
@@ -85,12 +88,12 @@ class UpdateService {
   }
 
   Future<bool> createDB() async {
-    return compareLastUpdate.then((sameDate) async {
+    return upToDate.then((sameDate) async {
       //if (sameDate == null) throw Exception("Couldn't fetch last update");
       if (!sameDate) fetchAllAmiibo().then(_updateDB);
       return await Future.value(true);
-    }).catchError((e) {
-      print(e.toString());
+    }).catchError((e, s) {
+      unawaited(FirebaseCrashlytics.instance.recordError(e, s, reason: 'createDB'));
       return false;
     });
   }
@@ -105,7 +108,7 @@ class UpdateService {
     });
   }
 
-  Future<bool> get compareLastUpdate async {
+  Future<bool> get upToDate async {
     final dateDB = await lastUpdateDB;
     final dateJson = await lastUpdate;
 
