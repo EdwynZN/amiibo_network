@@ -37,9 +37,7 @@ class SliverStatsHeader extends SliverPersistentHeaderDelegate {
       firstColor,
       appbarTheme.surfaceTintColor,
       isScrolledUnder
-          ? _elevation * 2.0 > 4.0
-              ? _elevation * 2.0
-              : 4.0
+          ? (_elevation * 2.0).clamp(0.0, 4.0)
           : _elevation,
     );
     decoration = BoxDecoration(
@@ -78,10 +76,10 @@ class SliverStatsHeader extends SliverPersistentHeaderDelegate {
   }
 
   @override
-  double get maxExtent => kMinInteractiveDimension + topPadding;
+  double get maxExtent => minExtent;
 
   @override
-  double get minExtent => kMinInteractiveDimension + topPadding;
+  double get minExtent => 28.0 + topPadding;
 
   @override
   bool shouldRebuild(SliverStatsHeader oldDelegate) =>

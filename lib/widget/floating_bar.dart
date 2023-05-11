@@ -63,7 +63,7 @@ class _SliverFloatingBarState extends State<SliverFloatingBar>
 
   @override
   Widget build(BuildContext context) {
-    final double topPadding = MediaQuery.of(context).padding.top;
+    final double topPadding = MediaQuery.of(context).viewPadding.top;
     final double collapsedHeight = kToolbarHeight + topPadding;
     return MediaQuery.removePadding(
       context: context,
@@ -167,7 +167,7 @@ class _SliverFloatingPersistentHeader extends SliverPersistentHeaderDelegate {
   double get minExtent => collapsedHeight;
 
   @override
-  double get maxExtent => math.max(topPadding + kToolbarHeight, minExtent);
+  double get maxExtent => math.max(collapsedHeight, minExtent);
 
   @override
   bool shouldRebuild(_SliverFloatingPersistentHeader oldDelegate) {
@@ -292,12 +292,13 @@ class _AppBarState extends State<_AppBar> {
     final double innerElevation;
     if (states.contains(MaterialState.scrolledUnder)) {
       final _possible = _elevation * 2.0;
-      effectiveElevation = _possible > 4.0 ? _possible : 4.0;
+      effectiveElevation = _possible.clamp(0.0, 4.0);
       innerElevation = 2.0;
     } else {
       effectiveElevation = _elevation;
       innerElevation = 0.0;
     }
+
     return AnnotatedRegion<SystemUiOverlayStyle>(
       value: appbarTheme.systemOverlayStyle ??
           _systemOverlayStyleForBrightness(
@@ -305,45 +306,53 @@ class _AppBarState extends State<_AppBar> {
             theme.useMaterial3 ? const Color(0x00000000) : null,
           ),
       child: Material(
-        color: _background,
-        elevation: effectiveElevation,
+        color: ElevationOverlay.applySurfaceTint(
+          _background,
+          appbarTheme.surfaceTintColor,
+          effectiveElevation,
+        ),
+        elevation: 0,
         surfaceTintColor: appbarTheme.surfaceTintColor,
         type: MaterialType.canvas,
         child: SafeArea(
           bottom: false,
-          child: Padding(
-            padding: const EdgeInsets.symmetric(
-              horizontal: 12.0,
-              vertical: 4.0,
-            ),
-            child: ListTileTheme(
-              contentPadding: EdgeInsets.zero,
-              horizontalTitleGap: 0.0,
-              iconColor: theme.iconTheme.color,
-              textColor: theme.textTheme.titleLarge!.color,
-              dense: true,
-              child: Material(
-                type: MaterialType.card,
-                surfaceTintColor: theme.cardTheme.surfaceTintColor,
-                elevation: innerElevation,
-                shape: const StadiumBorder(),
-                //borderRadius: BorderRadius.circular(32.0),
-                clipBehavior: Clip.hardEdge,
-                child: ListTile(
-                  contentPadding: const EdgeInsets.symmetric(horizontal: 8.0),
-                  leading: widget.leading ??
-                      (useCloseButton ? CloseButton() : BackButton()),
-                  title: widget.title == null
-                      ? null
-                      : DefaultTextStyle.merge(
-                          textAlign: TextAlign.left,
-                          style: appbarTheme.titleTextStyle,
-                          softWrap: false,
-                          overflow: TextOverflow.fade,
-                          child: widget.title!,
-                        ),
-                  trailing: widget.trailing,
-                  onTap: widget.onTap,
+          child: Align(
+            alignment: Alignment.center,
+            child: Padding(
+              padding: const EdgeInsets.symmetric(
+                horizontal: 12.0,
+                vertical: 8.0,
+              ),
+              child: ListTileTheme(
+                contentPadding: EdgeInsets.zero,
+                horizontalTitleGap: 0.0,
+                iconColor: theme.iconTheme.color,
+                textColor: theme.textTheme.titleLarge!.color,
+                dense: true,
+                child: Material(
+                  type: MaterialType.card,
+                  surfaceTintColor: theme.cardTheme.surfaceTintColor,
+                  elevation: innerElevation,
+                  shape: const StadiumBorder(),
+                  //borderRadius: BorderRadius.circular(32.0),
+                  clipBehavior: Clip.hardEdge,
+                  child: ListTile(
+                    contentPadding: const EdgeInsets.symmetric(horizontal: 8.0),
+                    visualDensity: const VisualDensity(vertical: -2.0),
+                    leading: widget.leading ??
+                        (useCloseButton ? CloseButton() : BackButton()),
+                    title: widget.title == null
+                        ? null
+                        : DefaultTextStyle.merge(
+                            textAlign: TextAlign.left,
+                            style: appbarTheme.titleTextStyle,
+                            softWrap: false,
+                            overflow: TextOverflow.fade,
+                            child: widget.title!,
+                          ),
+                    trailing: widget.trailing,
+                    onTap: widget.onTap,
+                  ),
                 ),
               ),
             ),
