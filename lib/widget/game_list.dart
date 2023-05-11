@@ -51,7 +51,7 @@ class GameListWidget extends ConsumerWidget {
           error: (e, _) {
             late final Widget child;
             if (e is DioError) {
-              if (e.type == DioErrorType.response && e.response != null)
+              if (e.response != null)
                 switch (e.response!.statusCode) {
                   case 404:
                     child = Text(translate.no_games_found,
@@ -64,13 +64,14 @@ class GameListWidget extends ConsumerWidget {
                     );
                     break;
                 }
-              else if (e.error is SocketException && e.error.osError != null) {
+              else if (e.error is SocketException &&
+                (e.error as SocketException).osError != null) {
                 child = TextButton(
                   onPressed: () => ref.invalidate(gameProvider(id)),
                   child: Text(translate.socket_exception),
                 );
               } else
-                child = Text(e.message);
+                child = Text(e.message ?? e.type.name);
             } else if (e is ArgumentError) {
               child =
                   Text(translate.no_games_found, textAlign: TextAlign.center);

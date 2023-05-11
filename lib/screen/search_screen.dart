@@ -19,7 +19,7 @@ class SearchScreen extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
-    final style = theme.textTheme.headlineMedium;
+    final style = theme.textTheme.headlineSmall;
     final translate = S.of(context);
     final _textController = useTextEditingController();
     final amiiboCategory = ref.watch(
@@ -59,6 +59,7 @@ class SearchScreen extends HookConsumerWidget {
               autocorrect: false,
               decoration: InputDecoration(
                 isDense: true,
+                isCollapsed: true,
                 hintText: translate.category(amiiboCategory),
                 hintStyle: style?.copyWith(
                   color: style.color?.withOpacity(0.5),

@@ -45,7 +45,7 @@ GoRouter createRouter({
         builder: (context, state) => ProviderScope(
           overrides: [
             keyAmiiboProvider
-                .overrideWithValue(int.parse(state.params['id']!))
+                .overrideWithValue(int.parse(state.pathParameters['id']!))
           ],
           child: const DetailPage(),
         ),

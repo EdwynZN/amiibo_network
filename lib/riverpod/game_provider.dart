@@ -17,7 +17,7 @@ final _dioProvider = Provider<Dio>((ref) {
   final dio = Dio(
     BaseOptions(
       baseUrl: apiUrl,
-      connectTimeout: 5000,
+      connectTimeout: const Duration(seconds: 5),
     ),
   );
 
