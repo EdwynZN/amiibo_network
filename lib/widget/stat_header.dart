@@ -79,7 +79,7 @@ class SliverStatsHeader extends SliverPersistentHeaderDelegate {
   double get maxExtent => minExtent;
 
   @override
-  double get minExtent => 28.0 + topPadding;
+  double get minExtent => 32.0 + topPadding;
 
   @override
   bool shouldRebuild(SliverStatsHeader oldDelegate) =>
@@ -180,7 +180,7 @@ class _LinearStat extends ConsumerWidget {
         mainAxisAlignment: MainAxisAlignment.end,
         children: [
           title,
-          const SizedBox(height: 4.0),
+          const SizedBox(height: 2.0),
           AnimatedLineProgress(
             size: const Size(360.0, 8.0),
             owned: owned,

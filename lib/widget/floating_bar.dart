@@ -64,7 +64,7 @@ class _SliverFloatingBarState extends State<SliverFloatingBar>
   @override
   Widget build(BuildContext context) {
     final double topPadding = MediaQuery.of(context).viewPadding.top;
-    final double collapsedHeight = kToolbarHeight + topPadding;
+    final double collapsedHeight = kToolbarHeight + topPadding + 4.0;
     return MediaQuery.removePadding(
       context: context,
       removeBottom: true,
@@ -321,7 +321,7 @@ class _AppBarState extends State<_AppBar> {
             child: Padding(
               padding: const EdgeInsets.symmetric(
                 horizontal: 12.0,
-                vertical: 8.0,
+                vertical: 2.0,
               ),
               child: ListTileTheme(
                 contentPadding: EdgeInsets.zero,
@@ -338,7 +338,6 @@ class _AppBarState extends State<_AppBar> {
                   clipBehavior: Clip.hardEdge,
                   child: ListTile(
                     contentPadding: const EdgeInsets.symmetric(horizontal: 8.0),
-                    visualDensity: const VisualDensity(vertical: -2.0),
                     leading: widget.leading ??
                         (useCloseButton ? CloseButton() : BackButton()),
                     title: widget.title == null
