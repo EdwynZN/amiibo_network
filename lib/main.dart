@@ -71,7 +71,7 @@ Future<void> main() async {
       await updateOldTheme();
       final store = await newHiveDefaultCacheStore(path: cacheDir.path);
       final cache = await store.cache(
-        name: 'HiveCache',
+        name: 'HiveCacheMigration',
         fromEncodable: CacheValue.fromJson,
         maxEntries: 200,
         expiryPolicy: const AccessedExpiryPolicy(Duration(days: 7)),
