@@ -11502,7 +11502,33 @@
       "jp": "soon",
       "na": "soon",
       "type": "Figure"
+    },
+    {
+      "key": 846,
+      "id": null,
+      "amiiboSeries": "The Legend of Zelda",
+      "character": "Zelda",
+      "gameSeries": "The Legend of Zelda",
+      "name": "Zelda - Tears of the Kingdom",
+      "au": "soon",
+      "eu": "soon",
+      "jp": "soon",
+      "na": "soon",
+      "type": "Figure"
+    },
+    {
+      "key": 847,
+      "id": null,
+      "amiiboSeries": "The Legend of Zelda",
+      "character": "Ganondorf",
+      "gameSeries": "The Legend of Zelda",
+      "name": "Ganondorf - Tears of the Kingdom",
+      "au": "soon",
+      "eu": "soon",
+      "jp": "soon",
+      "na": "soon",
+      "type": "Figure"
     }
   ],
-  "lastUpdated": "2023-05-01T12:13:53.916"
+  "lastUpdated": "2023-06-24T10:29:43.044"
 }

@@ -1,3 +1,6 @@
+## Version 2.1.61
+- Ajout des figurines Zelda et Ganondorf (au milieu suavemente) de la série Tears of the Kingdom
+
 ## Version 2.1.59
 - Ajout des figurines Noah et Mio de la Xenoblade Chronicles
 - Nouveau série Xenoblade Chronicles

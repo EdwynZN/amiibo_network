@@ -24,9 +24,9 @@ final _dioProvider = Provider<Dio>((ref) {
   return dio..interceptors.add(stashOptions);
 });
 
-final _characterProvider = StreamProvider.autoDispose.family<Amiibo?, int>(
-  (ref, key) async* {
-    yield ref
+final _characterProvider = Provider.autoDispose.family<Amiibo?, int>(
+  (ref, key) {
+    return ref
       .watch(detailAmiiboProvider(key))
       .maybeWhen(
         data: (cb) => cb?.copyWith(owned: false, wishlist: false),
@@ -38,7 +38,7 @@ final _characterProvider = StreamProvider.autoDispose.family<Amiibo?, int>(
 
 final gameProvider =
     FutureProvider.autoDispose.family<NintendoPlatform, int>((ref, key) async {
-  final amiibo = await ref.watch(_characterProvider(key).future);
+  final amiibo = await ref.watch(_characterProvider(key));
   if (amiibo == null) return const NintendoPlatform();
   final dio = ref.watch(_dioProvider);
   final token = CancelToken();

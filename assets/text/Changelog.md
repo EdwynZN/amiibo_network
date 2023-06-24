@@ -1,3 +1,6 @@
+## Version 2.1.61
+- Zelda y Ganondorf (mid-suavemente) from Tears of the Kingdom added
+
 ## Version 2.1.59
 - Date updated for Q1 2023 amiibos
 - Noah y Mio added

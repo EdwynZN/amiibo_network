@@ -1,3 +1,7 @@
+## Version 2.1.61
+- Zelda edición Tears of the Kingdom agregado
+- Ganondorf posando suavemente edición Tears of the Kingdom agregado
+
 ## Version 2.1.59
 - Actualización de fechas de amiibos 2023
 - Noah y Mio agregados
