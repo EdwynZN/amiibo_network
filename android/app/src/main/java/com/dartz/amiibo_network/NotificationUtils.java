@@ -141,14 +141,13 @@ public class NotificationUtils extends ContextWrapper {
 
         PendingIntent pShareIntent = PendingIntent.getActivity(this, id, chooser, flag);
 
-
         return notificationBuilder
             .addAction(android.R.drawable.ic_menu_share, actionTitle, pShareIntent)
             .setContentIntent(pContentIntent)
             .setLargeIcon(bitmap)
             .setStyle(new NotificationCompat.BigPictureStyle()
                 .bigPicture(bitmap)
-                .bigLargeIcon(null)
+                .bigLargeIcon((Bitmap) null)
             )
             .build();
     }

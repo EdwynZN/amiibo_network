@@ -62,7 +62,7 @@ final gameProvider =
 
   if (result.data == null) throw ArgumentError();
   final data = result.data!['amiibo'];
-  if (data is! List<dynamic>) throw ArgumentError();
+  if (data is! List<dynamic> || data.isEmpty) throw ArgumentError();
   final single = data.first as Map<String, dynamic>;
   final NintendoPlatform platform = NintendoPlatform.fromJson(single);
   ref.keepAlive();

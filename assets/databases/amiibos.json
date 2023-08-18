@@ -11453,7 +11453,7 @@
     },
     {
       "key": 842,
-      "id": null,
+      "id": "0100000004180902",
       "amiiboSeries": "The Legend of Zelda",
       "character": "Link",
       "gameSeries": "The Legend of Zelda",
@@ -11528,7 +11528,46 @@
       "jp": "soon",
       "na": "soon",
       "type": "Figure"
+    },
+    {
+      "key": 848,
+      "id": null,
+      "amiiboSeries": "Splatoon",
+      "character": "Big Man",
+      "gameSeries": "Splatoon",
+      "name": "Big Man",
+      "au": null,
+      "eu": "20231117",
+      "jp": null,
+      "na": "20231117",
+      "type": "Figure"
+    },
+    {
+      "key": 849,
+      "id": null,
+      "amiiboSeries": "Splatoon",
+      "character": "Shiver",
+      "gameSeries": "Splatoon",
+      "name": "Shiver",
+      "au": null,
+      "eu": "20231117",
+      "jp": null,
+      "na": "20231117",
+      "type": "Figure"
+    },
+    {
+      "key": 850,
+      "id": null,
+      "amiiboSeries": "Splatoon",
+      "character": "Frye",
+      "gameSeries": "Splatoon",
+      "name": "Frye",
+      "au": null,
+      "eu": "20231117",
+      "jp": null,
+      "na": "20231117",
+      "type": "Figure"
     }
   ],
-  "lastUpdated": "2023-06-24T10:29:43.044"
+  "lastUpdated": "2023-08-17T10:29:43.044"
 }

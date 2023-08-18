@@ -50,7 +50,7 @@ class GameListWidget extends ConsumerWidget {
               const SliverToBoxAdapter(child: LinearProgressIndicator()),
           error: (e, _) {
             late final Widget child;
-            if (e is DioError) {
+            if (e is DioException) {
               if (e.response != null)
                 switch (e.response!.statusCode) {
                   case 404:
@@ -65,7 +65,7 @@ class GameListWidget extends ConsumerWidget {
                     break;
                 }
               else if (e.error is SocketException &&
-                (e.error as SocketException).osError != null) {
+                  (e.error as SocketException).osError != null) {
                 child = TextButton(
                   onPressed: () => ref.invalidate(gameProvider(id)),
                   child: Text(translate.socket_exception),
