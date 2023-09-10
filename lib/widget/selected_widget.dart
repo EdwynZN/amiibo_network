@@ -5,7 +5,9 @@ import 'package:amiibo_network/riverpod/query_provider.dart';
 import 'package:amiibo_network/riverpod/select_provider.dart';
 import 'package:amiibo_network/riverpod/service_provider.dart';
 import 'package:amiibo_network/utils/theme_extensions.dart';
+import 'package:amiibo_network/widget/amiibo_button_toggle.dart';
 import 'package:flutter/material.dart';
+import 'package:gap/gap.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:amiibo_network/model/selection.dart';
@@ -184,12 +186,11 @@ class AnimatedSelectedListTile extends AnimatedSelection {
 class _AnimatedSelectedListTileState extends _AnimatedSelectionState {
   @override
   Widget build(BuildContext context) {
-    final useSerie = ref.watch(queryProvider.notifier
-      .select((q) {
-        final category = q.search.category;
-        return category != AmiiboCategory.FigureSeries &&
+    final useSerie = ref.watch(queryProvider.notifier.select((q) {
+      final category = q.search.category;
+      return category != AmiiboCategory.FigureSeries &&
           category != AmiiboCategory.CardSeries;
-      }));
+    }));
     final index = ref.watch(indexAmiiboProvider);
     final key = ref.watch(keyAmiiboProvider);
     final select = ref.watch(
@@ -200,137 +201,147 @@ class _AnimatedSelectedListTileState extends _AnimatedSelectionState {
         ),
       ),
     );
+    
     return ref.watch(_singleAmiibo(index)).when(
-          loading: () => const Card(
+      loading: () => const Card(
             child: Center(
               child: CircularProgressIndicator(),
             ),
           ),
-          error: (_, __) => const Card(),
-          data: (amiibo) {
-            final theme = Theme.of(context);
-            ShapeBorder? cardShape = theme.cardTheme.shape;
-            Border? border;
-            Color? color;
-            final preferencesPalette = theme.extension<PreferencesExtension>()!;
-            if (amiibo.wishlist) {
-              color = preferencesPalette.wishContainer;
-            } else if (amiibo.owned) {
-              color = preferencesPalette.ownContainer;
-            }
-            if (select.selected) {
-              final side = BorderSide(
-                color: ElevationOverlay.applySurfaceTint(
-                  theme.colorScheme.secondary,
-                  theme.cardTheme.surfaceTintColor,
-                  12.0,
-                ),
-                width: 4.0,
-              );
-              border = Border.fromBorderSide(side);
-              cardShape =
-                  cardShape == null ? cardShape ?? border : border + cardShape;
-            }
-
-            final hasAttribute = amiibo.wishlist || amiibo.owned;
-
-            return Card(
-              elevation: hasAttribute ? 12.0 : 6.0,
-              color: hasAttribute ? color : theme.scaffoldBackgroundColor,
-              shadowColor: Colors.black12,
-              borderOnForeground: true,
-              clipBehavior: Clip.antiAlias,
-              shape: cardShape,
-              child: InkWell(
-                splashColor: theme.colorScheme.tertiaryContainer,
-                splashFactory: InkSparkle.constantTurbulenceSeedSplashFactory,
-                onDoubleTap: select.activated || widget.ignore
-                    ? null
-                    : () => _onDoubleTap(key),
-                onTap: () {
-                  if (widget.ignore) {
-                    _onDoubleTap(key);
-                  } else if (select.activated) {
-                    _onLongPress(key);
-                  } else {
-                    _onTap(key);
-                  }
-                },
-                onLongPress: widget.ignore ? null : () => _onLongPress(key),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  textBaseline: TextBaseline.alphabetic,
-                  children: <Widget>[
-                    Expanded(
-                      child: Padding(
-                        padding: const EdgeInsets.fromLTRB(4.0, 2.0, 4.0, 0.0),
-                        child: ShaderMask(
-                          shaderCallback: (rect) {
-                            return LinearGradient(
-                              begin: Alignment.topCenter,
-                              end: Alignment.bottomCenter,
-                              colors: const [Colors.black, Colors.transparent],
-                              stops: const [0.80, 1.0],
-                            ).createShader(
-                                Rect.fromLTRB(0, 0, rect.width, rect.height));
-                          },
-                          blendMode: BlendMode.dstIn,
-                          child: Hero(
-                            placeholderBuilder: (context, size, child) {
-                              final Color color =
-                                  theme.brightness == Brightness.dark
-                                      ? Colors.white24
-                                      : Colors.black54;
-                              return ColorFiltered(
-                                colorFilter:
-                                    ColorFilter.mode(color, BlendMode.srcIn),
-                                child: child,
-                              );
-                            },
-                            transitionOnUserGestures: true,
-                            tag: amiibo.key,
-                            child: Image.asset(
-                              'assets/collection/icon_${amiibo.key}.webp',
-                              fit: BoxFit.cover,
-                              alignment: Alignment.topCenter,
-                              semanticLabel: amiibo.name,
-                            ),
-                          ),
-                        ),
+      error: (_, __) => const Card(),
+      data: (amiibo) {
+        final theme = Theme.of(context);
+        return Card(
+          elevation: 0.0,
+          color: Colors.transparent,
+          borderOnForeground: true,
+          clipBehavior: Clip.hardEdge,
+          shape: RoundedRectangleBorder(
+            borderRadius: const BorderRadius.all(Radius.circular(12.0)),
+            side: BorderSide(
+              color: theme.colorScheme.primary,
+              style: BorderStyle.solid,
+              width: select.selected ? 3.0 : 0.75,
+            ),
+          ),
+          child: InkWell(
+            splashFactory: InkSparkle.constantTurbulenceSeedSplashFactory,
+            onTap: () {
+              if (select.activated) {
+                _onLongPress(key);
+              } else {
+                _onDoubleTap(key);
+              }
+            },
+            onLongPress: widget.ignore ? null : () => _onLongPress(key),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              textBaseline: TextBaseline.alphabetic,
+              children: [
+                Expanded(
+                  child: Material(
+                    elevation: select.selected ? 12.0 : 2.0,
+                    color: theme.colorScheme.background,
+                    surfaceTintColor: theme.colorScheme.primary,
+                    type: MaterialType.card,
+                    child: Padding(
+                      padding: const EdgeInsets.fromLTRB(6.0, 12.0, 6.0, 6.0),
+                      child: _ListAmiiboAsset(
+                        amiiboKey: amiibo.key,
+                        name: amiibo.name,
                       ),
                     ),
-                    Expanded(
-                      flex: 3,
-                      child: Card(
-                        shape: const RoundedRectangleBorder(
-                          borderRadius: BorderRadius.horizontal(
-                            left: Radius.circular(8),
-                          ),
-                        ),
-                        borderOnForeground: true,
-                        margin: const EdgeInsets.all(4.0),
-                        color: select.selected
-                            ? theme.colorScheme.secondary
-                            : theme.colorScheme.tertiaryContainer,
-                        elevation: 4.0,
-                        child: _AmiiboListInfo.fromAmiibo(
-                          amiibo: amiibo,
-                          useSerie: useSerie,
-                          style: theme.primaryTextTheme.labelLarge?.copyWith(
-                            fontWeight: FontWeight.bold,
-                            color: select.selected
-                                ? theme.colorScheme.onSecondary
-                                : theme.colorScheme.onSurfaceVariant,
-                          ),
-                        ),
+                  ),
+                ),
+                Expanded(
+                  flex: 3,
+                  child: _AmiiboListInfo.fromAmiibo(
+                    amiibo: amiibo,
+                    useSerie: useSerie,
+                    style: theme.primaryTextTheme.bodyLarge?.copyWith(
+                      fontWeight: FontWeight.bold,
+                      color: theme.colorScheme.onSurfaceVariant,
+                    ),
+                  ),
+                ),
+                Expanded(
+                  child: AnimatedCrossFade(
+                    firstChild: const SizedBox(),
+                    secondChild: Padding(
+                      padding: const EdgeInsets.all(4.0),
+                      child: Column(
+                        mainAxisSize: MainAxisSize.max,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: [
+                          WishedTonalButton(amiibo: amiibo),
+                          const Gap(4.0),
+                          OwnedTonalButton(amiibo: amiibo),
+                        ],
                       ),
                     ),
-                  ],
+                    crossFadeState: select.activated
+                      ? CrossFadeState.showFirst
+                      : CrossFadeState.showSecond,
+                    duration: const Duration(milliseconds: 250),
+                    firstCurve: Curves.easeInOutCubic,
+                  ),
                 ),
-              ),
-            );
-          },
+              ],
+            ),
+          ),
         );
+      }
+    );
+  }
+}
+
+class _ListAmiiboAsset extends StatelessWidget {
+  final int amiiboKey;
+  final String name;
+
+  const _ListAmiiboAsset({
+    // ignore: unused_element
+    super.key,
+    required this.amiiboKey,
+    required this.name,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    return ShaderMask(
+      shaderCallback: (rect) {
+        return LinearGradient(
+          begin: Alignment.topCenter,
+          end: Alignment.bottomCenter,
+          colors: const [Colors.black, Colors.transparent],
+          stops: const [0.80, 1.0],
+        ).createShader(Rect.fromLTRB(0, 0, rect.width, rect.height));
+      },
+      blendMode: BlendMode.dstIn,
+      child: Hero(
+        placeholderBuilder: (context, size, child) {
+          final Color color = theme.brightness == Brightness.dark
+              ? Colors.white24
+              : Colors.black54;
+          return ColorFiltered(
+            colorFilter: ColorFilter.mode(color, BlendMode.srcIn),
+            child: child,
+          );
+        },
+        transitionOnUserGestures: true,
+        tag: amiiboKey,
+        child: Image.asset(
+          'assets/collection/icon_$amiiboKey.webp',
+          fit: BoxFit.contain,
+          alignment: Alignment.center,
+          semanticLabel: name,
+          height: 104.0,
+          cacheHeight: 104,
+        ),
+      ),
+    );
   }
 }
 
@@ -374,7 +385,7 @@ class _AmiiboListInfo extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    const subtitleStyle = TextStyle(fontSize: 12.0);
+    const subtitleStyle = TextStyle(fontSize: 14.0);
     return Padding(
       padding: const EdgeInsets.all(6.0),
       child: Column(
@@ -394,7 +405,7 @@ class _AmiiboListInfo extends StatelessWidget {
             overflow: TextOverflow.fade,
             maxLines: 1,
           ),
-          const SizedBox(height: 2.0),
+          const Gap(2.0),
           Text(
             useSerie ? serie : game,
             style: style?.merge(subtitleStyle) ?? subtitleStyle,
@@ -402,7 +413,7 @@ class _AmiiboListInfo extends StatelessWidget {
             overflow: TextOverflow.fade,
             maxLines: 1,
           ),
-        ]
+        ],
       ),
     );
   }

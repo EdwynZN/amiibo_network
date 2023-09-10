@@ -375,8 +375,10 @@ class _AmiiboListWidget extends HookConsumerWidget {
                   child = ShimmerCard(listenable: controller, isGrid: false);
                 }
                 return ConstrainedBox(
-                  constraints:
-                      const BoxConstraints(maxHeight: 72.0, minHeight: 72.0),
+                  constraints: const BoxConstraints(
+                    maxHeight: 104.0,
+                    minHeight: 72.0,
+                  ),
                   child: AnimatedSwitcher(
                     duration: const Duration(seconds: 1),
                     child: child,

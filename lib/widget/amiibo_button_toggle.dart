@@ -125,3 +125,95 @@ class OwnedButton extends ConsumerWidget {
     );
   }
 }
+
+class WishedTonalButton extends ConsumerWidget {
+  WishedTonalButton({
+    Key? key,
+    required this.amiibo,
+  })  : isActive = amiibo != null && amiibo.wishlist,
+        super(key: key);
+
+  final Amiibo? amiibo;
+  final bool isActive;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final S translate = S.of(context);
+    final preferencesPalette =
+        Theme.of(context).extension<PreferencesExtension>()!;
+    final color = preferencesPalette.wishContainer.withOpacity(0.24);
+    return IconButton(
+      style: const ButtonStyle(
+        tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+      ),
+      isSelected: isActive,
+      icon: const Icon(Icons.favorite_border_outlined),
+      selectedIcon: const Icon(iconWished),
+      color: preferencesPalette.wishPalette.shade70,
+      constraints: BoxConstraints.tight(const Size.square(40.0)),
+      iconSize: 20.0,
+      splashRadius: 20.0,
+      tooltip: translate.wishTooltip,
+      splashColor: color,
+      highlightColor: color,
+      onPressed: () {
+        if (amiibo == null) return;
+        final bool newValue = !isActive;
+        ref.read(serviceProvider.notifier).update(
+          [
+            amiibo!.copyWith(
+              owned: newValue ? false : amiibo!.owned,
+              wishlist: newValue,
+            )
+          ],
+        );
+      },
+    );
+  }
+}
+
+class OwnedTonalButton extends ConsumerWidget {
+  OwnedTonalButton({
+    Key? key,
+    required this.amiibo,
+  })  : isActive = amiibo != null && amiibo.owned,
+        super(key: key);
+
+  final Amiibo? amiibo;
+  final bool isActive;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final S translate = S.of(context);
+    final preferencesPalette =
+        Theme.of(context).extension<PreferencesExtension>()!;
+    final color = preferencesPalette.ownContainer.withOpacity(0.24);
+    return IconButton(
+      style: const ButtonStyle(
+        tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+      ),
+      isSelected: isActive,
+      icon: const Icon(Icons.bookmark_outline_outlined),
+      selectedIcon: const Icon(iconOwned),
+      color: preferencesPalette.ownPalette.shade70,
+      constraints: BoxConstraints.tight(const Size.square(40.0)),
+      iconSize: 20.0,
+      splashRadius: 20.0,
+      tooltip: translate.ownTooltip,
+      splashColor: color,
+      highlightColor: color,
+      onPressed: () {
+        if (amiibo == null) return;
+        final bool newValue = !isActive;
+        ref.read(serviceProvider.notifier).update(
+          [
+            amiibo!.copyWith(
+              owned: newValue,
+              wishlist: newValue ? false : amiibo!.wishlist,
+            ),
+          ],
+        );
+      },
+    );
+  }
+}
