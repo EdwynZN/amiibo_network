@@ -5,9 +5,12 @@ class RegionDetail extends StatelessWidget {
   final String asset;
   final String description;
   final FormatDate formatDate;
+  final TextStyle? style;
 
-  RegionDetail(String dateString, this.asset, this.description)
-    : formatDate = dateString.isEmpty ? FormatDate.NoDateAvailable() : FormatDate(dateString);
+  RegionDetail(String dateString, this.asset, this.description, {this.style})
+      : formatDate = dateString.isEmpty
+            ? FormatDate.NoDateAvailable()
+            : FormatDate(dateString);
 
   @override
   Widget build(BuildContext context) {
@@ -30,10 +33,10 @@ class RegionDetail extends StatelessWidget {
                 overflow: TextOverflow.fade,
                 softWrap: false,
                 maxLines: 1,
-                style: Theme.of(context)
-                  .textTheme
-                  .bodyMedium!
-                  .copyWith(fontWeight: FontWeight.bold),
+                style: (style ?? Theme.of(context)
+                    .textTheme
+                    .bodyMedium!)
+                    .copyWith(fontWeight: FontWeight.bold),
               ),
             ),
           ),
@@ -60,9 +63,9 @@ class TextCardDetail extends StatelessWidget {
       overflow: TextOverflow.fade,
       maxLines: 1,
       style: Theme.of(context)
-        .textTheme
-        .bodyMedium!
-        .copyWith(fontWeight: FontWeight.bold),
+          .textTheme
+          .bodyMedium!
+          .copyWith(fontWeight: FontWeight.bold),
     );
   }
 }

@@ -245,15 +245,19 @@ class _SliverAnimatedPersistentHeader extends SliverPersistentHeaderDelegate {
     final Color color;
     final double elevation;
     if (isPinned) {
-      elevation = appBarTheme.scrolledUnderElevation ?? 8.0;
+      elevation = appBarTheme.scrolledUnderElevation ?? 4.0;
       color = ElevationOverlay.applySurfaceTint(
         appBarTheme.backgroundColor ?? theme.primaryColor,
         appBarTheme.surfaceTintColor,
         elevation,
       );
     } else {
-      elevation = 0.0;
-      color = theme.cardColor;
+      elevation = 2.0;
+      color = ElevationOverlay.applySurfaceTint(
+        appBarTheme.backgroundColor ?? theme.primaryColor,
+        appBarTheme.surfaceTintColor,
+        elevation,
+      );
     }
     return SizedBox(
       height: math.max(minExtent, maxExtent - shrinkOffset),

@@ -9,7 +9,7 @@
   "owned": "Owned",
   "wished": "Wished",
   "stats": "Stats",
-  "types": "{choice, select, Figure {Type: Figure} Card {Type: Card} Yarn {Type: Yarn} Band {Type: Band} other {Type: Other}}",
+  "types": "{choice, select, Figure {Figure} Card {Card} Yarn {Yarn} Band {Band} other {Other}}",
   "figures": "Figures",
   "cards": "Cards",
   "name": "Name: {name}",

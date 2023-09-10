@@ -9,7 +9,7 @@
   "owned": "Adquiridos",
   "wished": "Deseados",
   "stats": "Estadísticas",
-  "types": "{choice, select, Figure {Tipo: Figura} Card {Tipo: Tarjeta} Yarn {Tipo: Lana} Band {Type: Pulsera} other {Tipo: Otro}}",
+  "types": "{choice, select, Figure {Figura} Card {Tarjeta} Yarn {Lana} Band {Type: Pulsera} other {Otro}}",
   "figures": "Figuras",
   "cards": "Tarjetas",
   "name": "Nombre: {name}",

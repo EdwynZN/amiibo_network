@@ -4,9 +4,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-const iconOwned = Icons.check_circle_outline;
-const iconOwnedDark = Icons.check;
-const iconWished = Icons.card_giftcard;
+const iconOwned = Icons.bookmark_added_rounded;
+const iconOwnedDark = Icons.bookmark_added_sharp;
+const iconWished = Icons.favorite;
 
 abstract class AmiiboTheme {
   factory AmiiboTheme({int? light, int? dark}) = _Theme;
