@@ -1,5 +1,6 @@
 import 'package:amiibo_network/generated/l10n.dart';
 import 'package:amiibo_network/repository/theme_repository.dart';
+import 'package:amiibo_network/utils/theme_extensions.dart';
 import 'package:amiibo_network/widget/stat_widget.dart';
 import 'package:flutter/material.dart';
 
@@ -22,6 +23,7 @@ class SingleStat extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final S translate = S.of(context);
+    final preference = Theme.of(context).extension<PreferencesExtension>()!;
     return Card(
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
@@ -49,7 +51,11 @@ class SingleStat extends StatelessWidget {
                 numerator: owned!.toDouble(),
                 den: total!.toDouble(),
                 text: translate.owned,
-                icon: Icon(iconOwnedDark, color: Colors.green[800]),
+                icon: Icon(
+                  iconOwnedDark,
+                  color: preference.ownPrimary,
+                  size: 20.0,
+                ),
               ),
             ),
             Padding(
@@ -58,7 +64,11 @@ class SingleStat extends StatelessWidget {
                 numerator: wished!.toDouble(),
                 den: total!.toDouble(),
                 text: translate.wished,
-                icon: Icon(Icons.whatshot, color: Colors.amber[800]),
+                icon: Icon(
+                  iconWished,
+                  color: preference.wishPrimary,
+                  size: 20.0,
+                ),
               ),
             ),
           ],

@@ -29,6 +29,7 @@ import 'package:amiibo_network/widget/drawer.dart';
 import 'package:amiibo_network/widget/animated_widgets.dart';
 import 'package:amiibo_network/widget/floating_bar.dart';
 import 'package:gap/gap.dart';
+import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:amiibo_network/generated/l10n.dart';
 import 'package:amiibo_network/utils/preferences_constants.dart';
@@ -680,6 +681,7 @@ class _FAB extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final S translate = S.of(context);
+    final theme = Theme.of(context);
     final isLoading =
         ref.watch(screenshotProvider.select((value) => value is AsyncLoading));
     final fab = FloatingActionButton(
@@ -687,10 +689,10 @@ class _FAB extends ConsumerWidget {
       child: isLoading
           ? ConstrainedBox(
               constraints: BoxConstraints.loose(const Size.square(24.0)),
-              child: CircularProgressIndicator(
-                strokeWidth: 2.5,
-                color:
-                    Theme.of(context).floatingActionButtonTheme.foregroundColor,
+              child: LoadingAnimationWidget.inkDrop(
+                color: theme.floatingActionButtonTheme.foregroundColor ??
+                  theme.colorScheme.onSecondaryContainer,
+                size: 24,
               ),
             )
           : const Icon(Icons.save),

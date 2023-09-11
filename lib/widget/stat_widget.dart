@@ -37,10 +37,11 @@ class StatWidget extends StatelessWidget {
         child: FittedBox(
           fit: BoxFit.scaleDown,
           child: Consumer(builder: (ctx, ref, _) {
-            final isPercentage = ref.watch(personalProvider.select((p) => p.usePercentage));
-            final String myStat = StatUtils.parseStat(numerator, den, usePercentage: isPercentage);
-            final bool fontFeatureStyle =
-              !isPercentage && isFontFeatureEnable;
+            final isPercentage =
+                ref.watch(personalProvider.select((p) => p.usePercentage));
+            final String myStat = StatUtils.parseStat(numerator, den,
+                usePercentage: isPercentage);
+            final bool fontFeatureStyle = !isPercentage && isFontFeatureEnable;
 
             /// Activate fontFeature only if StatMode is Ratio and isFontFeatureEnable is true for this device
             return RichText(
@@ -118,7 +119,9 @@ class _AnimatedRadialState extends AnimatedWidgetBaseState<_AnimatedRadial> {
   @override
   void forEachTween(TweenVisitor<dynamic> visitor) {
     Color color = widget.percentage == 0.0
-        ? (widget.brightness == Brightness.light ? const Color(0xFF2B2922) : const Color(0xFFE7D9D9))
+        ? (widget.brightness == Brightness.light
+            ? const Color(0xFF2B2922)
+            : const Color(0xFFE7D9D9))
         : widget.percentage <= 0.25
             ? Colors.red.shade300
             : widget.percentage <= 0.50
@@ -146,14 +149,19 @@ class _AnimatedRadialState extends AnimatedWidgetBaseState<_AnimatedRadial> {
   Widget build(BuildContext context) {
     return CustomPaint(
       painter: RadialProgression(
-        emptyColor: widget.brightness == Brightness.light ? const Color(0xFF2B2922) : const Color(0xFFE7D9D9),
+        emptyColor: widget.brightness == Brightness.light
+            ? const Color(0xFF2B2922)
+            : const Color(0xFFE7D9D9),
         percent: _percentage!.evaluate(animation),
         color: _color!.evaluate(animation)!,
       ),
       willChange: true,
-      child: FadeTransition(
-        opacity: _opacityAnimation as Animation<double>,
-        child: widget.child,
+      child: Padding(
+        padding: const EdgeInsets.all(4.0),
+        child: FadeTransition(
+          opacity: _opacityAnimation as Animation<double>,
+          child: widget.child,
+        ),
       ),
     );
   }
