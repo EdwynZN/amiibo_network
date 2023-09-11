@@ -342,8 +342,8 @@ class _AmiiboListWidget extends HookConsumerWidget {
                   const Gap(24.0),
                   ElevatedButton.icon(
                     style: theme.textButtonTheme.style?.copyWith(
-                      textStyle:
-                          MaterialStateProperty.all(theme.textTheme.headlineMedium),
+                      textStyle: MaterialStateProperty.all(
+                          theme.textTheme.headlineMedium),
                     ),
                     onPressed: () async {
                       final filter = ref.read(queryProvider.notifier);
@@ -351,7 +351,8 @@ class _AmiiboListWidget extends HookConsumerWidget {
                       final List<String> cards = filter.customCards;
                       bool save = await showDialog<bool>(
                             context: context,
-                            builder: (BuildContext context) => CustomQueryWidget(
+                            builder: (BuildContext context) =>
+                                CustomQueryWidget(
                               translate.category(AmiiboCategory.Custom),
                               figures: figures,
                               cards: cards,
@@ -381,13 +382,10 @@ class _AmiiboListWidget extends HookConsumerWidget {
               (BuildContext _, int index) {
                 late final Widget child;
                 if (data != null) {
-                  child = ProviderScope(
-                    key: ValueKey<int?>(data[index].key),
-                    overrides: [
-                      indexAmiiboProvider.overrideWithValue(index),
-                      keyAmiiboProvider.overrideWithValue(data[index].key),
-                    ],
-                    child: AnimatedSelectedListTile(ignore: ignore),
+                  final amiibo = data[index];
+                  child = AnimatedSelectedListTile(
+                    amiibo: amiibo,
+                    ignore: ignore,
                   );
                 } else {
                   child = ShimmerCard(listenable: controller, isGrid: false);

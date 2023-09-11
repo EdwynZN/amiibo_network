@@ -26,7 +26,8 @@ class AnimatedSelection extends StatefulHookConsumerWidget {
   ConsumerState<AnimatedSelection> createState() => _AnimatedSelectionState();
 }
 
-class _AnimatedSelectionState extends ConsumerState<AnimatedSelection> {
+class _AnimatedSelectionState<T extends AnimatedSelection>
+    extends ConsumerState<T> {
   void _onDoubleTap(int key) => context.push('/amiibo/$key');
 
   void _onTap(int key) {
@@ -176,14 +177,21 @@ class _AnimatedSelectionState extends ConsumerState<AnimatedSelection> {
 }
 
 class AnimatedSelectedListTile extends AnimatedSelection {
-  AnimatedSelectedListTile({Key? key, super.ignore}) : super(key: key);
+  final Amiibo amiibo;
+
+  const AnimatedSelectedListTile({
+    super.key,
+    super.ignore,
+    required this.amiibo,
+  });
 
   @override
-  ConsumerState<AnimatedSelection> createState() =>
+  ConsumerState<AnimatedSelectedListTile> createState() =>
       _AnimatedSelectedListTileState();
 }
 
-class _AnimatedSelectedListTileState extends _AnimatedSelectionState {
+class _AnimatedSelectedListTileState
+    extends _AnimatedSelectionState<AnimatedSelectedListTile> {
   @override
   Widget build(BuildContext context) {
     final useSerie = ref.watch(queryProvider.notifier.select((q) {
@@ -191,8 +199,7 @@ class _AnimatedSelectedListTileState extends _AnimatedSelectionState {
       return category != AmiiboCategory.FigureSeries &&
           category != AmiiboCategory.CardSeries;
     }));
-    final index = ref.watch(indexAmiiboProvider);
-    final key = ref.watch(keyAmiiboProvider);
+    final key = widget.amiibo.key;
     final select = ref.watch(
       selectProvider.select<Selection>(
         (cb) => Selection(
@@ -201,97 +208,86 @@ class _AnimatedSelectedListTileState extends _AnimatedSelectionState {
         ),
       ),
     );
-    
-    return ref.watch(_singleAmiibo(index)).when(
-      loading: () => const Card(
-            child: Center(
-              child: CircularProgressIndicator(),
-            ),
-          ),
-      error: (_, __) => const Card(),
-      data: (amiibo) {
-        final theme = Theme.of(context);
-        return Card(
-          elevation: 0.0,
-          color: Colors.transparent,
-          borderOnForeground: true,
-          clipBehavior: Clip.hardEdge,
-          shape: RoundedRectangleBorder(
-            borderRadius: const BorderRadius.all(Radius.circular(12.0)),
-            side: BorderSide(
-              color: theme.colorScheme.primary,
-              style: BorderStyle.solid,
-              width: select.selected ? 3.0 : 0.75,
-            ),
-          ),
-          child: InkWell(
-            splashFactory: InkSparkle.constantTurbulenceSeedSplashFactory,
-            onTap: () {
-              if (select.activated) {
-                _onLongPress(key);
-              } else {
-                _onDoubleTap(key);
-              }
-            },
-            onLongPress: widget.ignore ? null : () => _onLongPress(key),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              textBaseline: TextBaseline.alphabetic,
-              children: [
-                Expanded(
-                  child: Material(
-                    elevation: select.selected ? 12.0 : 2.0,
-                    color: theme.colorScheme.background,
-                    surfaceTintColor: theme.colorScheme.primary,
-                    type: MaterialType.card,
-                    child: Padding(
-                      padding: const EdgeInsets.fromLTRB(6.0, 12.0, 6.0, 6.0),
-                      child: _ListAmiiboAsset(
-                        amiiboKey: amiibo.key,
-                        name: amiibo.name,
-                      ),
-                    ),
-                  ),
-                ),
-                Expanded(
-                  flex: 3,
-                  child: _AmiiboListInfo.fromAmiibo(
-                    amiibo: amiibo,
-                    useSerie: useSerie,
-                    style: theme.primaryTextTheme.bodyLarge?.copyWith(
-                      fontWeight: FontWeight.bold,
-                      color: theme.colorScheme.onSurfaceVariant,
-                    ),
-                  ),
-                ),
-                Expanded(
-                  child: AnimatedCrossFade(
-                    firstChild: const SizedBox(),
-                    secondChild: Padding(
-                      padding: const EdgeInsets.all(4.0),
-                      child: Column(
-                        mainAxisSize: MainAxisSize.max,
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.stretch,
-                        children: [
-                          WishedTonalButton(amiibo: amiibo),
-                          const Gap(4.0),
-                          OwnedTonalButton(amiibo: amiibo),
-                        ],
-                      ),
-                    ),
-                    crossFadeState: select.activated
-                      ? CrossFadeState.showFirst
-                      : CrossFadeState.showSecond,
-                    duration: const Duration(milliseconds: 250),
-                    firstCurve: Curves.easeInOutCubic,
-                  ),
-                ),
-              ],
-            ),
-          ),
-        );
-      }
+    final theme = Theme.of(context);
+
+    final asset = Material(
+      elevation: select.selected ? 12.0 : 2.0,
+      color: theme.colorScheme.background,
+      surfaceTintColor: theme.colorScheme.primary,
+      type: MaterialType.card,
+      child: Padding(
+        padding: const EdgeInsets.fromLTRB(6.0, 12.0, 6.0, 6.0),
+        child: _ListAmiiboAsset(
+          amiiboKey: widget.amiibo.key,
+          name: widget.amiibo.name,
+        ),
+      ),
+    );
+
+    final info = _AmiiboListInfo.fromAmiibo(
+      amiibo: widget.amiibo,
+      useSerie: useSerie,
+      style: theme.primaryTextTheme.bodyLarge?.copyWith(
+        fontWeight: FontWeight.bold,
+        color: theme.colorScheme.onSurfaceVariant,
+      ),
+    );
+
+    final buttons = AnimatedCrossFade(
+      firstChild: const SizedBox(),
+      secondChild: Padding(
+        padding: const EdgeInsets.all(4.0),
+        child: Column(
+          mainAxisSize: MainAxisSize.max,
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            WishedTonalButton(amiibo: widget.amiibo),
+            const Gap(4.0),
+            OwnedTonalButton(amiibo: widget.amiibo),
+          ],
+        ),
+      ),
+      crossFadeState: select.activated || widget.ignore
+          ? CrossFadeState.showFirst
+          : CrossFadeState.showSecond,
+      duration: const Duration(milliseconds: 250),
+      firstCurve: Curves.easeInOutCubic,
+    );
+
+    return Card(
+      elevation: 0.0,
+      color: Colors.transparent,
+      borderOnForeground: true,
+      clipBehavior: Clip.hardEdge,
+      shape: RoundedRectangleBorder(
+        borderRadius: const BorderRadius.all(Radius.circular(12.0)),
+        side: BorderSide(
+          color: theme.colorScheme.primary,
+          style: BorderStyle.solid,
+          width: select.selected ? 3.0 : 0.75,
+        ),
+      ),
+      child: InkWell(
+        splashFactory: InkSparkle.constantTurbulenceSeedSplashFactory,
+        onTap: () {
+          if (select.activated) {
+            _onLongPress(key);
+          } else {
+            _onDoubleTap(key);
+          }
+        },
+        onLongPress: widget.ignore ? null : () => _onLongPress(key),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          textBaseline: TextBaseline.alphabetic,
+          children: [
+            Expanded(child: asset),
+            Expanded(flex: 3, child: info),
+            SizedBox(width: 64.0, child: buttons),
+          ],
+        ),
+      ),
     );
   }
 }
