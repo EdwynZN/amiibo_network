@@ -65,15 +65,18 @@ class _AmiiboCard extends ConsumerWidget {
           elevation: 8.0,
           child: Padding(
             padding: const EdgeInsets.all(4.0),
-            child: Hero(
-              transitionOnUserGestures: true,
-              tag: key,
-              child: Image.asset(
-                'assets/collection/icon_$key.webp',
-                filterQuality: FilterQuality.medium,
-                fit: BoxFit.scaleDown,
-                height: 200.0,
-                cacheHeight: 200,
+            child: SizedBox(
+              width: double.infinity,
+              child: Hero(
+                transitionOnUserGestures: true,
+                tag: key,
+                child: Image.asset(
+                  'assets/collection/icon_$key.webp',
+                  filterQuality: FilterQuality.medium,
+                  fit: BoxFit.scaleDown,
+                  height: 200.0,
+                  cacheHeight: 200,
+                ),
               ),
             ),
           ),
