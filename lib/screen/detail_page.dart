@@ -1,6 +1,5 @@
 import 'package:amiibo_network/resources/resources.dart';
 import 'package:amiibo_network/riverpod/amiibo_provider.dart';
-import 'package:amiibo_network/riverpod/lock_provider.dart';
 import 'package:amiibo_network/widget/amiibo_button_toggle.dart';
 import 'package:amiibo_network/widget/card_details.dart';
 import 'package:amiibo_network/widget/game_list.dart';
@@ -22,6 +21,7 @@ class DetailPage extends ConsumerWidget {
     return Scaffold(
       appBar: AppBar(
         shadowColor: Colors.transparent,
+        centerTitle: false,
         title: Consumer(
           builder: (context, ref, _) => ref
               .watch(_nameAmiiboProvider(key))
@@ -114,10 +114,7 @@ class _AmiiboCard extends ConsumerWidget {
           ),
         ),
         const Gap(8.0),
-        IgnorePointer(
-          ignoring: ref.watch(lockProvider.select((l) => l.lock)),
-          child: const Buttons(),
-        ),
+        const Buttons(),
       ],
     );
 

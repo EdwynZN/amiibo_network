@@ -136,6 +136,10 @@ class _CollectionDrawerState extends ConsumerState<CollectionDrawer> {
                                           .updateCustom(figures, cards);
                                   },
                                 ),
+                                contentPadding: const EdgeInsets.only(
+                                  left: 16.0,
+                                  right: 8.0,
+                                ),
                                 selected: isCustom,
                               ),
                               const Gap(4.0),

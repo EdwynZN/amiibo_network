@@ -233,26 +233,19 @@ class _AnimatedSelectedListTileState
       ),
     );
 
-    final buttons = AnimatedCrossFade(
-      firstChild: const SizedBox(),
-      secondChild: Padding(
-        padding: const EdgeInsets.all(4.0),
-        child: Column(
-          mainAxisSize: MainAxisSize.max,
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            WishedTonalButton(amiibo: widget.amiibo),
-            const Gap(4.0),
-            OwnedTonalButton(amiibo: widget.amiibo),
-          ],
-        ),
+    final bool disable = widget.ignore || select.activated;
+    final buttons = Padding(
+      padding: const EdgeInsets.all(4.0),
+      child: Column(
+        mainAxisSize: MainAxisSize.max,
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          WishedButton(amiibo: widget.amiibo, isLock: disable),
+          const Gap(4.0),
+          OwnedButton(amiibo: widget.amiibo, isLock: disable),
+        ],
       ),
-      crossFadeState: select.activated || widget.ignore
-          ? CrossFadeState.showFirst
-          : CrossFadeState.showSecond,
-      duration: const Duration(milliseconds: 250),
-      firstCurve: Curves.easeInOutCubic,
     );
 
     return Card(
