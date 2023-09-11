@@ -268,6 +268,7 @@ class _SliverAnimatedPersistentHeader extends SliverPersistentHeaderDelegate {
       child: AnimatedPhysicalModel(
         duration: kThemeAnimationDuration,
         child: ListTileTheme.merge(
+          horizontalTitleGap: 32.0,
           textColor:
               isPinned ? appBarTheme.iconTheme?.color : theme.iconTheme.color,
           iconColor: isPinned
