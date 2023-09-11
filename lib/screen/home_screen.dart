@@ -28,6 +28,7 @@ import 'package:flutter/rendering.dart';
 import 'package:amiibo_network/widget/drawer.dart';
 import 'package:amiibo_network/widget/animated_widgets.dart';
 import 'package:amiibo_network/widget/floating_bar.dart';
+import 'package:gap/gap.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:amiibo_network/generated/l10n.dart';
 import 'package:amiibo_network/utils/preferences_constants.dart';
@@ -325,31 +326,48 @@ class _AmiiboListWidget extends HookConsumerWidget {
               style: theme.textTheme.headlineMedium!,
             );
           else
-            child = OutlinedButton.icon(
-              style: theme.textButtonTheme.style?.copyWith(
-                textStyle:
-                    MaterialStateProperty.all(theme.textTheme.headlineMedium),
+            child = Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    translate.emptyPage,
+                    style: const TextStyle(
+                      fontSize: 24.0,
+                      fontWeight: FontWeight.w600,
+                      height: 1.25,
+                    ),
+                  ),
+                  const Gap(24.0),
+                  ElevatedButton.icon(
+                    style: theme.textButtonTheme.style?.copyWith(
+                      textStyle:
+                          MaterialStateProperty.all(theme.textTheme.headlineMedium),
+                    ),
+                    onPressed: () async {
+                      final filter = ref.read(queryProvider.notifier);
+                      final List<String> figures = filter.customFigures;
+                      final List<String> cards = filter.customCards;
+                      bool save = await showDialog<bool>(
+                            context: context,
+                            builder: (BuildContext context) => CustomQueryWidget(
+                              translate.category(AmiiboCategory.Custom),
+                              figures: figures,
+                              cards: cards,
+                            ),
+                          ) ??
+                          false;
+                      if (save)
+                        await ref
+                            .read(queryProvider.notifier)
+                            .updateCustom(figures, cards);
+                    },
+                    icon: const Icon(Icons.create_outlined),
+                    label: Text(translate.emptyPageAction),
+                  ),
+                ],
               ),
-              onPressed: () async {
-                final filter = ref.read(queryProvider.notifier);
-                final List<String> figures = filter.customFigures;
-                final List<String> cards = filter.customCards;
-                bool save = await showDialog<bool>(
-                      context: context,
-                      builder: (BuildContext context) => CustomQueryWidget(
-                        translate.category(AmiiboCategory.Custom),
-                        figures: figures,
-                        cards: cards,
-                      ),
-                    ) ??
-                    false;
-                if (save)
-                  await ref
-                      .read(queryProvider.notifier)
-                      .updateCustom(figures, cards);
-              },
-              icon: const Icon(Icons.create),
-              label: Text(translate.emptyPage),
             );
           return SliverFillRemaining(
             hasScrollBody: false,

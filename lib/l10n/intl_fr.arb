@@ -42,6 +42,7 @@
   "saveStatsTooltip": "Enregistrer les statistiques",
   "upToolTip": "Vers le haut",
   "emptyPage": "Rien à voir ici ... encore",
+  "emptyPageAction": "Créer une collection",
   "export": "Exporter",
   "import": "Importer",
   "appearance": "Apparence",

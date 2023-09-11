@@ -102,35 +102,38 @@ class _CollectionDrawerState extends ConsumerState<CollectionDrawer> {
                               ListTile(
                                 onTap: () => _onTapTile(
                                     ref, AmiiboCategory.Custom, 'Custom'),
-                                onLongPress: () async {
-                                  final filter =
-                                      ref.read(queryProvider.notifier);
-                                  final List<String> figures =
-                                      filter.customFigures;
-                                  final List<String> cards = filter.customCards;
-                                  bool save = await showDialog<bool>(
-                                        context: context,
-                                        builder: (BuildContext context) =>
-                                            CustomQueryWidget(
-                                          translate
-                                              .category(AmiiboCategory.Custom),
-                                          figures: figures,
-                                          cards: cards,
-                                        ),
-                                      ) ??
-                                      false;
-                                  if (save)
-                                    await ref
-                                        .read(queryProvider.notifier)
-                                        .updateCustom(figures, cards);
-                                },
-                                leading: const Icon(Icons.create),
+                                leading: const Icon(Icons.dashboard_customize_rounded),
                                 title: Text(
                                   translate.category(AmiiboCategory.Custom),
                                   style: isCustom
                                       ? const TextStyle(
                                           fontWeight: FontWeight.bold)
                                       : null,
+                                ),
+                                trailing: IconButton.filledTonal(
+                                  icon: const Icon(Icons.create_outlined),
+                                  onPressed: () async {
+                                    final filter =
+                                        ref.read(queryProvider.notifier);
+                                    final List<String> figures =
+                                        filter.customFigures;
+                                    final List<String> cards = filter.customCards;
+                                    bool save = await showDialog<bool>(
+                                          context: context,
+                                          builder: (BuildContext context) =>
+                                              CustomQueryWidget(
+                                            translate
+                                                .category(AmiiboCategory.Custom),
+                                            figures: figures,
+                                            cards: cards,
+                                          ),
+                                        ) ??
+                                        false;
+                                    if (save)
+                                      await ref
+                                          .read(queryProvider.notifier)
+                                          .updateCustom(figures, cards);
+                                  },
                                 ),
                                 selected: isCustom,
                               ),

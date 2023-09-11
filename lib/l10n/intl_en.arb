@@ -42,6 +42,7 @@
   "saveStatsTooltip": "Save Stats",
   "upToolTip": "Up",
   "emptyPage": "Nothing to see here. . .yet",
+  "emptyPageAction": "Create a collection",
   "export": "Export",
   "import": "Import",
   "appearance": "Appearance",
