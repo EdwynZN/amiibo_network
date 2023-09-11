@@ -209,12 +209,16 @@ class _Subtitle extends StatelessWidget {
                 TextSpan(
                   text: translate.amiibo_usage_count(count!),
                   style: theme.primaryTextTheme.titleSmall?.copyWith(
-                    fontWeight: FontWeight.bold,
+                    color: theme.colorScheme.onBackground,
+                    fontWeight: FontWeight.w900,
                   ),
                 ),
               ],
       ),
-      style: theme.primaryTextTheme.titleSmall,
+      style: theme.primaryTextTheme.labelLarge?.copyWith(
+        color: theme.colorScheme.onBackground,
+        letterSpacing: 0.15,
+      ),
       overflow: TextOverflow.ellipsis,
       maxLines: 2,
     );

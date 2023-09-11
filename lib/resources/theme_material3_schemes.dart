@@ -1,6 +1,83 @@
 import 'package:flutter/material.dart';
 import 'package:material_color_utilities/material_color_utilities.dart';
 
+ColorScheme blendScheme(
+  ColorScheme originalScheme,
+  ColorScheme destinyScheme,
+  [double amount = 0.3]
+) {
+  Color _harmonize(Color original, Color destiny) => Color(
+        Blend.hctHue(original.value, destiny.value, amount),
+      );
+  return ColorScheme(
+    brightness: originalScheme.brightness,
+    primary: _harmonize(originalScheme.primary, destinyScheme.primary),
+    onPrimary: _harmonize(originalScheme.onPrimary, destinyScheme.onPrimary),
+    primaryContainer: _harmonize(
+      originalScheme.primaryContainer,
+      destinyScheme.primaryContainer,
+    ),
+    onPrimaryContainer: _harmonize(
+      originalScheme.onPrimaryContainer,
+      destinyScheme.onPrimaryContainer,
+    ),
+    secondary: _harmonize(originalScheme.secondary, destinyScheme.secondary),
+    onSecondary:
+        _harmonize(originalScheme.onSecondary, destinyScheme.onSecondary),
+    secondaryContainer: _harmonize(
+      originalScheme.secondaryContainer,
+      destinyScheme.secondaryContainer,
+    ),
+    onSecondaryContainer: _harmonize(
+      originalScheme.onSecondaryContainer,
+      destinyScheme.onSecondaryContainer,
+    ),
+    tertiary: _harmonize(originalScheme.tertiary, destinyScheme.tertiary),
+    onTertiary: _harmonize(originalScheme.onTertiary, destinyScheme.onTertiary),
+    tertiaryContainer: _harmonize(
+      originalScheme.tertiaryContainer,
+      destinyScheme.tertiaryContainer,
+    ),
+    onTertiaryContainer: _harmonize(
+      originalScheme.onTertiaryContainer,
+      destinyScheme.onTertiaryContainer,
+    ),
+    error: _harmonize(originalScheme.error, destinyScheme.error),
+    errorContainer: _harmonize(
+      originalScheme.errorContainer,
+      destinyScheme.errorContainer,
+    ),
+    onError: _harmonize(originalScheme.onError, destinyScheme.onError),
+    onErrorContainer: _harmonize(
+      originalScheme.onErrorContainer,
+      destinyScheme.onErrorContainer,
+    ),
+    background: _harmonize(originalScheme.background, destinyScheme.background),
+    onBackground:
+        _harmonize(originalScheme.onBackground, destinyScheme.onBackground),
+    surface: _harmonize(originalScheme.surface, destinyScheme.surface),
+    onSurface: _harmonize(originalScheme.onSurface, destinyScheme.onSurface),
+    surfaceVariant:
+        _harmonize(originalScheme.surfaceVariant, destinyScheme.surfaceVariant),
+    onSurfaceVariant: _harmonize(
+      originalScheme.onSurfaceVariant,
+      destinyScheme.onSurfaceVariant,
+    ),
+    outline: _harmonize(originalScheme.outline, destinyScheme.outline),
+    onInverseSurface: _harmonize(
+      originalScheme.onInverseSurface,
+      destinyScheme.onInverseSurface,
+    ),
+    inverseSurface:
+        _harmonize(originalScheme.inverseSurface, destinyScheme.inverseSurface),
+    inversePrimary:
+        _harmonize(originalScheme.inversePrimary, destinyScheme.inversePrimary),
+    shadow: _harmonize(originalScheme.shadow, destinyScheme.shadow),
+    surfaceTint:
+        _harmonize(originalScheme.surfaceTint, destinyScheme.surfaceTint),
+  );
+}
+
 class TonalColor extends ColorSwatch<int> {
   /// Creates a color swatch with a variety of shades.
   ///
@@ -124,6 +201,16 @@ class Material3Schemes {
   final ColorScheme dark;
 
   const Material3Schemes({required this.light, required this.dark});
+
+  factory Material3Schemes.blend(
+    Material3Schemes original,
+    Material3Schemes destiny,
+  ) {
+    return Material3Schemes(
+      light: blendScheme(original.light, destiny.light),
+      dark: blendScheme(original.dark, destiny.dark),
+    );
+  }
 }
 
 class ThemeSchemes {
