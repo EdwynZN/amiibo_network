@@ -112,6 +112,7 @@ class _CollectionDrawerState extends ConsumerState<CollectionDrawer> {
                                 ),
                                 trailing: IconButton.filledTonal(
                                   icon: const Icon(Icons.create_outlined),
+                                  iconSize: 20.0,
                                   onPressed: () async {
                                     final filter =
                                         ref.read(queryProvider.notifier);
