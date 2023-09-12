@@ -209,12 +209,16 @@ class _Subtitle extends StatelessWidget {
                 TextSpan(
                   text: translate.amiibo_usage_count(count!),
                   style: theme.primaryTextTheme.titleSmall?.copyWith(
-                    fontWeight: FontWeight.bold,
+                    color: theme.colorScheme.onBackground,
+                    fontWeight: FontWeight.w900,
                   ),
                 ),
               ],
       ),
-      style: theme.primaryTextTheme.titleSmall,
+      style: theme.primaryTextTheme.labelLarge?.copyWith(
+        color: theme.colorScheme.onBackground,
+        letterSpacing: 0.15,
+      ),
       overflow: TextOverflow.ellipsis,
       maxLines: 2,
     );
@@ -245,21 +249,26 @@ class _SliverAnimatedPersistentHeader extends SliverPersistentHeaderDelegate {
     final Color color;
     final double elevation;
     if (isPinned) {
-      elevation = appBarTheme.scrolledUnderElevation ?? 8.0;
+      elevation = appBarTheme.scrolledUnderElevation ?? 4.0;
       color = ElevationOverlay.applySurfaceTint(
         appBarTheme.backgroundColor ?? theme.primaryColor,
         appBarTheme.surfaceTintColor,
         elevation,
       );
     } else {
-      elevation = 0.0;
-      color = theme.cardColor;
+      elevation = 2.0;
+      color = ElevationOverlay.applySurfaceTint(
+        appBarTheme.backgroundColor ?? theme.primaryColor,
+        appBarTheme.surfaceTintColor,
+        elevation,
+      );
     }
     return SizedBox(
       height: math.max(minExtent, maxExtent - shrinkOffset),
       child: AnimatedPhysicalModel(
         duration: kThemeAnimationDuration,
         child: ListTileTheme.merge(
+          horizontalTitleGap: 32.0,
           textColor:
               isPinned ? appBarTheme.iconTheme?.color : theme.iconTheme.color,
           iconColor: isPinned

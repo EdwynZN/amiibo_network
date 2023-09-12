@@ -150,8 +150,8 @@ class _SupportButtons extends ConsumerWidget {
     final color = colorOnThemeMode(themeMode, mediaBrightness);
     final theme = Theme.of(context);
     final style = ElevatedButton.styleFrom(
-      backgroundColor: theme.colorScheme.tertiaryContainer,
-      foregroundColor: theme.colorScheme.onTertiaryContainer,
+      backgroundColor: theme.colorScheme.secondaryContainer,
+      foregroundColor: theme.colorScheme.onSecondaryContainer,
     );
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -229,8 +229,8 @@ class _ProjectButtons extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final style = ElevatedButton.styleFrom(
-      backgroundColor: theme.colorScheme.tertiaryContainer,
-      foregroundColor: theme.colorScheme.onTertiaryContainer,
+      backgroundColor: theme.colorScheme.secondaryContainer,
+      foregroundColor: theme.colorScheme.onSecondaryContainer,
     );
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -601,7 +601,7 @@ class _BottomBarState extends ConsumerState<BottomBar> {
       shape: const BeveledRectangleBorder(),
     );
     return BottomAppBar(
-      color: theme.colorScheme.tertiaryContainer,
+      color: theme.colorScheme.secondaryContainer,
       elevation: 6.0,
       child: ConstrainedBox(
         constraints: BoxConstraints(maxHeight: 48.0),
@@ -656,9 +656,12 @@ class _CardSettings extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     return Card(
+      color: theme.colorScheme.background,
       elevation: 4.0,
       margin: const EdgeInsets.symmetric(vertical: 6.0, horizontal: 8.0),
       child: Material(
+        elevation: 4.0,
+        type: MaterialType.transparency,
         color: Colors.transparent,
         shape: theme.cardTheme.shape,
         clipBehavior: Clip.hardEdge,

@@ -15,8 +15,7 @@ class PreferencesExtension extends ThemeExtension<PreferencesExtension>
     required this.brightness,
   });
 
-  factory PreferencesExtension.brigthness(
-    Brightness brightness) {
+  factory PreferencesExtension.brigthness(Brightness brightness) {
     const ownPalette = const TonalColor(
       0xFF2E7D32,
       <int, Color>{
@@ -55,15 +54,6 @@ class PreferencesExtension extends ThemeExtension<PreferencesExtension>
         100: Colors.white,
       },
     );
-    /* final TonalColor own;
-    final TonalColor wish;
-    if (source != null) {
-      own = ownPalette.blend(source);
-      wish = wishPalette.blend(source);
-    } else {
-      own = ownPalette;
-      wish = wishPalette;
-    } */
     return PreferencesExtension._(
       ownPalette: ownPalette,
       wishPalette: wishPalette,

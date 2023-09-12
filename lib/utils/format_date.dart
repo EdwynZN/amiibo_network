@@ -46,8 +46,7 @@ class FormatDate {
     switch (_format) {
       case _Format.FullDate:
         String formatDate =
-            MaterialLocalizations.of(context).formatFullDate(_dateTime!);
-        formatDate = formatDate.substring(formatDate.indexOf(' ') + 1);
+            MaterialLocalizations.of(context).formatShortDate(_dateTime!);
         return formatDate;
       case _Format.MonthYear:
         return MaterialLocalizations.of(context).formatMonthYear(_dateTime!);
