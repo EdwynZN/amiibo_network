@@ -83,18 +83,17 @@ class ThemeButton extends HookConsumerWidget {
                                 duration: kThemeAnimationDuration,
                                 decoration: ShapeDecoration(
                                   shape: CircleBorder(
-                                    side: BorderSide(
-                                      strokeAlign: -1.0,
-                                      width: 5.0,
-                                      color: theme.brightness == Brightness.light
+                                      side: BorderSide(
+                                    strokeAlign: -1.0,
+                                    width: 5.0,
+                                    color: theme.brightness == Brightness.light
                                         ? theme.colorScheme.tertiary
                                         : theme.colorScheme.inversePrimary,
-                                      style: themeRef.lightOption ==
-                                        themeRef.lightColors.indexOf(color)
-                                          ? BorderStyle.solid
-                                          : BorderStyle.none,
-                                    )
-                                  ),
+                                    style: themeRef.lightOption ==
+                                            themeRef.lightColors.indexOf(color)
+                                        ? BorderStyle.solid
+                                        : BorderStyle.none,
+                                  )),
                                 ),
                               ),
                             ),
@@ -120,8 +119,8 @@ class ThemeButton extends HookConsumerWidget {
                     children: <Widget>[
                       for (Color color in themeRef.darkColors)
                         GestureDetector(
-                          onTap: () => themeRef.darkTheme(
-                              themeRef.darkColors.indexOf(color)),
+                          onTap: () => themeRef
+                              .darkTheme(themeRef.darkColors.indexOf(color)),
                           child: CircleAvatar(
                             backgroundColor: color,
                             radius: _circleSize / 2,
@@ -129,18 +128,17 @@ class ThemeButton extends HookConsumerWidget {
                               duration: kThemeAnimationDuration,
                               decoration: ShapeDecoration(
                                 shape: CircleBorder(
-                                  side: BorderSide(
-                                    strokeAlign: -1.0,
-                                    width: 5.0,
-                                    color: theme.brightness == Brightness.dark
+                                    side: BorderSide(
+                                  strokeAlign: -1.0,
+                                  width: 5.0,
+                                  color: theme.brightness == Brightness.dark
                                       ? theme.colorScheme.inversePrimary
                                       : theme.colorScheme.tertiary,
-                                    style: themeRef.darkOption ==
-                                      themeRef.darkColors.indexOf(color)
-                                        ? BorderStyle.solid
-                                        : BorderStyle.none,
-                                  )
-                                ),
+                                  style: themeRef.darkOption ==
+                                          themeRef.darkColors.indexOf(color)
+                                      ? BorderStyle.solid
+                                      : BorderStyle.none,
+                                )),
                               ),
                             ),
                           ),
@@ -182,30 +180,45 @@ class ThemeButton extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final themeData = Theme.of(context);
     final ThemeMode? theme = ref.watch(
         themeProvider.select<ThemeMode?>((value) => value.preferredTheme));
-    return InkResponse(
-      radius: 18,
-      splashFactory: InkSparkle.splashFactory,
-      highlightColor: Colors.transparent,
-      child: AnimatedSwitcher(
-        duration: const Duration(milliseconds: 800),
-        reverseDuration: const Duration(milliseconds: 400),
-        switchInCurve: Curves.easeInOutBack,
-        switchOutCurve: Curves.easeOutBack,
-        transitionBuilder: (child, animation) {
-          return RotationTransition(
-            turns: animation,
-            child: FadeTransition(
-              opacity: animation,
-              child: child,
-            ),
-          );
-        },
-        child: _selectWidget(theme, Theme.of(context).colorScheme.onBackground),
+    return DecoratedBox(
+      decoration: ShapeDecoration(
+        shape: const CircleBorder(),
+        color: ElevationOverlay.applySurfaceTint(
+          themeData.scaffoldBackgroundColor,
+          themeData.colorScheme.primary,
+          12.0,
+        ),
       ),
-      onLongPress: openDialog ? () => dialog(context) : null,
-      onTap: () async => ref.read(themeProvider).toggleThemeMode(),
+      child: InkResponse(
+        splashFactory: InkSparkle.splashFactory,
+        containedInkWell: true,
+        customBorder: const CircleBorder(),
+        child: Padding(
+          padding: const EdgeInsets.all(6.0),
+          child: AnimatedSwitcher(
+            duration: const Duration(milliseconds: 800),
+            reverseDuration: const Duration(milliseconds: 400),
+            switchInCurve: Curves.easeInOutBack,
+            switchOutCurve: Curves.easeOutBack,
+            transitionBuilder: (child, animation) {
+              return RotationTransition(
+                turns: animation,
+                child: FadeTransition(
+                  opacity: animation,
+                  child: child,
+                ),
+              );
+            },
+            child: _selectWidget(
+                theme, Theme.of(context).colorScheme.onBackground),
+          ),
+        ),
+        onLongPress: openDialog ? () => dialog(context) : null,
+        onTap: () async => ref.read(themeProvider).toggleThemeMode(),
+      ),
     );
   }
 }

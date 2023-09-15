@@ -10664,20 +10664,20 @@
     },
     {
       "key": 785,
-      "id": null,
+      "id": "22410000041E0002",
       "amiiboSeries": "Super Smash Bros.",
       "character": "Pyra",
       "gameSeries": "Xenoblade",
       "name": "Pyra",
-      "au": "2023",
-      "eu": "2023",
-      "jp": "2023",
-      "na": "2023",
+      "au": "20230721",
+      "eu": "20230721",
+      "jp": "20230721",
+      "na": "20230721",
       "type": "Figure"
     },
     {
       "key": 786,
-      "id": null,
+      "id": "22420000041F0002",
       "amiiboSeries": "Super Smash Bros.",
       "character": "Mythra",
       "gameSeries": "Xenoblade",
@@ -11484,10 +11484,10 @@
       "character": "Noah",
       "gameSeries": "Xenoblade",
       "name": "Noah",
-      "au": "soon",
-      "eu": "soon",
-      "jp": "soon",
-      "na": "soon",
+      "au": "20240119",
+      "eu": "20240119",
+      "jp": "20240119",
+      "na": "20240119",
       "type": "Figure"
     },
     {
@@ -11497,10 +11497,10 @@
       "character": "Mio",
       "gameSeries": "Xenoblade",
       "name": "Mio",
-      "au": "soon",
-      "eu": "soon",
-      "jp": "soon",
-      "na": "soon",
+      "au": "20240119",
+      "eu": "20240119",
+      "jp": "20240119",
+      "na": "20240119",
       "type": "Figure"
     },
     {
@@ -11510,10 +11510,10 @@
       "character": "Zelda",
       "gameSeries": "The Legend of Zelda",
       "name": "Zelda - Tears of the Kingdom",
-      "au": "soon",
-      "eu": "soon",
-      "jp": "soon",
-      "na": "soon",
+      "au": "20231103",
+      "eu": "20231103",
+      "jp": "20231103",
+      "na": "20231103",
       "type": "Figure"
     },
     {
@@ -11523,10 +11523,10 @@
       "character": "Ganondorf",
       "gameSeries": "The Legend of Zelda",
       "name": "Ganondorf - Tears of the Kingdom",
-      "au": "soon",
-      "eu": "soon",
-      "jp": "soon",
-      "na": "soon",
+      "au": "20231103",
+      "eu": "20231103",
+      "jp": "20231103",
+      "na": "20231103",
       "type": "Figure"
     },
     {
@@ -11536,9 +11536,9 @@
       "character": "Big Man",
       "gameSeries": "Splatoon",
       "name": "Big Man",
-      "au": null,
+      "au": "20231117",
       "eu": "20231117",
-      "jp": null,
+      "jp": "20231117",
       "na": "20231117",
       "type": "Figure"
     },
@@ -11549,9 +11549,9 @@
       "character": "Shiver",
       "gameSeries": "Splatoon",
       "name": "Shiver",
-      "au": null,
+      "au": "20231117",
       "eu": "20231117",
-      "jp": null,
+      "jp": "20231117",
       "na": "20231117",
       "type": "Figure"
     },
@@ -11562,12 +11562,25 @@
       "character": "Frye",
       "gameSeries": "Splatoon",
       "name": "Frye",
-      "au": null,
+      "au": "20231117",
       "eu": "20231117",
-      "jp": null,
+      "jp": "20231117",
       "na": "20231117",
+      "type": "Figure"
+    },
+    {
+      "key": 851,
+      "id": null,
+      "amiiboSeries": "Super Smash Bros.",
+      "character": "Sora",
+      "gameSeries": "Kingdom Hearts",
+      "name": "Sora",
+      "au": "2024",
+      "eu": "2024",
+      "jp": "2024",
+      "na": "2024",
       "type": "Figure"
     }
   ],
-  "lastUpdated": "2023-08-17T10:29:43.044"
+  "lastUpdated": "2023-09-14T10:29:43.044"
 }

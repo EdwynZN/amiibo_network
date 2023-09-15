@@ -1837,7 +1837,7 @@ class AmiiboTheme3 implements AmiiboTheme {
     switch (dark) {
       case 0:
         final darkBlueGrey = ThemeSchemes.blueGrey.dark;
-        final theme = blendScheme(darkBlueGrey, _darkScheme);
+        final theme = blendScheme(darkBlueGrey, _darkScheme, 0.40);
         _darkTheme = _themeFromScheme(theme);
         Colors.grey;
         break;
@@ -1846,7 +1846,7 @@ class AmiiboTheme3 implements AmiiboTheme {
         _darkTheme = _themeFromScheme(theme);
         break;
       case 2:
-        final scheme = blendScheme(_greyScheme, _darkScheme, 0.15);
+        final scheme = blendScheme(_darkScheme, _greyScheme, 0.75);
         final theme = _themeFromScheme(scheme);
         final shape = RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(8),
@@ -1873,8 +1873,8 @@ class AmiiboTheme3 implements AmiiboTheme {
           colorScheme: theme.colorScheme.copyWith(background: Colors.black),
           floatingActionButtonTheme: FloatingActionButtonThemeData(
             shape: const CircleBorder(),
-            foregroundColor: _darkScheme.onPrimaryContainer,
-            backgroundColor: _darkScheme.primaryContainer,
+            foregroundColor: _darkScheme.onSecondaryContainer,
+            backgroundColor: _darkScheme.secondaryContainer,
           ),
           bottomSheetTheme: BottomSheetThemeData(
             elevation: 0.0,
