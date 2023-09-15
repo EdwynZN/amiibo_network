@@ -22,6 +22,13 @@ class DetailPage extends ConsumerWidget {
       appBar: AppBar(
         shadowColor: Colors.transparent,
         centerTitle: false,
+        titleSpacing: 0.0,
+        titleTextStyle: AppBarTheme.of(context).titleTextStyle?.copyWith(
+          fontSize: 22.0,
+          fontWeight: FontWeight.normal,
+          letterSpacing: -0.25,
+          wordSpacing: -0.15,
+        ),
         title: Consumer(
           builder: (context, ref, _) => ref
               .watch(_nameAmiiboProvider(key))
