@@ -143,11 +143,13 @@ class WishedButton extends ConsumerWidget {
     Key? key,
     required this.amiibo,
     required this.isLock,
+    this.size = const Size.square(40.0),
   })  : isActive = amiibo != null && amiibo.wishlist,
         super(key: key);
 
   final bool isLock;
   final Amiibo? amiibo;
+  final Size size;
   final bool isActive;
 
   @override
@@ -164,7 +166,7 @@ class WishedButton extends ConsumerWidget {
       icon: const Icon(Icons.favorite_border_outlined),
       selectedIcon: const Icon(iconWished),
       color: preferencesPalette.wishPalette.shade70,
-      constraints: BoxConstraints.tight(const Size.square(40.0)),
+      constraints: BoxConstraints.tight(size),
       iconSize: 20.0,
       splashRadius: 20.0,
       tooltip: translate.wishTooltip,
@@ -193,12 +195,14 @@ class OwnedButton extends ConsumerWidget {
     Key? key,
     required this.amiibo,
     required this.isLock,
+    this.size = const Size.square(40.0),
   })  : isActive = amiibo != null && amiibo.owned,
         super(key: key);
 
   final bool isLock;
   final Amiibo? amiibo;
   final bool isActive;
+  final Size size;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -214,24 +218,26 @@ class OwnedButton extends ConsumerWidget {
       icon: const Icon(Icons.bookmark_outline_outlined),
       selectedIcon: const Icon(iconOwned),
       color: preferencesPalette.ownPalette.shade70,
-      constraints: BoxConstraints.tight(const Size.square(40.0)),
+      constraints: BoxConstraints.tight(size),
       iconSize: 20.0,
       splashRadius: 20.0,
       tooltip: translate.ownTooltip,
       splashColor: color,
       highlightColor: color,
-      onPressed: isLock ? null : () {
-        if (amiibo == null) return;
-        final bool newValue = !isActive;
-        ref.read(serviceProvider.notifier).update(
-          [
-            amiibo!.copyWith(
-              owned: newValue,
-              wishlist: newValue ? false : amiibo!.wishlist,
-            ),
-          ],
-        );
-      },
+      onPressed: isLock
+          ? null
+          : () {
+              if (amiibo == null) return;
+              final bool newValue = !isActive;
+              ref.read(serviceProvider.notifier).update(
+                [
+                  amiibo!.copyWith(
+                    owned: newValue,
+                    wishlist: newValue ? false : amiibo!.wishlist,
+                  ),
+                ],
+              );
+            },
     );
   }
 }

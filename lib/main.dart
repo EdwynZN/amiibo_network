@@ -56,8 +56,8 @@ Future<void> main() async {
             .setCrashlyticsCollectionEnabled(false);
       }
 
-      final cacheDir = await getTemporaryDirectory();
       await Hive.initFlutter();
+      final cacheDir = await getTemporaryDirectory();
       final UpdateService updateService = UpdateService();
       await updateService.initDB();
 

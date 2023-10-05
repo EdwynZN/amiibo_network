@@ -8,6 +8,7 @@ import 'package:amiibo_network/service/update_service.dart';
 import 'package:amiibo_network/generated/l10n.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 
 class SplashScreen extends ConsumerStatefulWidget {
   const SplashScreen({Key? key}) : super(key: key);
@@ -86,13 +87,24 @@ class SplashScreenState extends ConsumerState<SplashScreen>
                   ),
                   child: AspectRatio(
                     aspectRatio: 1.7,
-                    child: FutureBuilder<bool>(
-                      future: updateDB,
-                      builder: (ctx, snapshot) {
+                    child: HookBuilder(
+                      builder: (ctx) {
+                        final snapshot = useFuture(
+                          updateDB,
+                          preserveState: true,
+                        );
+                        useValueChanged(
+                          snapshot.hasData,
+                          (_, __) => _animationController
+                            .forward().whenCompleteOrCancel(
+                              () => context.replaceNamed('home'),
+                            ),
+                        );
                         final S translate = S.of(ctx);
                         int key = 0;
                         Widget _child = const CircularProgressIndicator(
-                            backgroundColor: Colors.black);
+                          backgroundColor: Colors.black,
+                        );
                         String _text = translate.splashMessage;
                         if (snapshot.hasData) {
                           key = 1;
@@ -103,9 +115,6 @@ class SplashScreenState extends ConsumerState<SplashScreen>
                             NetworkIcons.iconApp,
                             fit: BoxFit.scaleDown,
                             color: color,
-                          );
-                          _animationController.forward().whenCompleteOrCancel(
-                            () => context.replaceNamed('home'),
                           );
                         }
                         return AnimatedSwitcher(

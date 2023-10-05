@@ -410,14 +410,15 @@ class _AmiiboListWidget extends HookConsumerWidget {
         late final SliverGridDelegate grid;
         final bool bigGrid = MediaQuery.of(context).size.width >= 600;
         if (bigGrid)
-          grid = SliverGridDelegateWithMaxCrossAxisExtent(
-            maxCrossAxisExtent: 192,
+          grid = const SliverGridDelegateWithMaxCrossAxisExtent(
+            maxCrossAxisExtent: 192.0,
             mainAxisSpacing: 8.0,
           );
         else
-          grid = SliverGridDelegateWithFixedCrossAxisCount(
+          grid = const SliverGridDelegateWithFixedCrossAxisCount(
             crossAxisCount: 3,
             mainAxisSpacing: 8.0,
+            mainAxisExtent: 192.0,
           );
         return SliverGrid(
           gridDelegate: grid,
@@ -425,13 +426,11 @@ class _AmiiboListWidget extends HookConsumerWidget {
             (BuildContext _, int index) {
               late final Widget child;
               if (data != null) {
-                child = ProviderScope(
-                  key: ValueKey<int?>(data[index].key),
-                  overrides: [
-                    indexAmiiboProvider.overrideWithValue(index),
-                    keyAmiiboProvider.overrideWithValue(data[index].key),
-                  ],
-                  child: AnimatedSelection(ignore: ignore),
+                final amiibo = data[index];
+                child = AnimatedSelection(
+                  key: ValueKey<int?>(amiibo.key),
+                  ignore: ignore,
+                  amiibo: amiibo,
                 );
               } else {
                 child = ShimmerCard(listenable: controller);
