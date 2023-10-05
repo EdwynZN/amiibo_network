@@ -106,11 +106,20 @@ jobs:
             echo "$FIREBASE_OPTIONS_DART" > FIREBASE_OPTIONS_DART.dart.b64
             base64 -d -i FIREBASE_OPTIONS_DART.dart.b64 > lib/firebase_options.dart
 
-      - name: Build #and upload to google play
+      - name: Build apk and appbundle
         run: |
-          flutter build apk --no-pub --release
-          flutter build appbundle --no-pub
-          bundle exec fastlane android internal
+          flutter build apk --no-pub --release --obfuscate --split-debug-info=build/app/outputs/apk-symbols/symbols
+          flutter build appbundle --no-pub --obfuscate --split-debug-info=build/app/outputs/aab-symbols/symbols
+
+      - name: Upload aab symbols to firebase
+        uses: w9jds/firebase-action@master
+        with:
+          args: crashlytics:symbols:upload --app=${{ secrets.FIREBASE_ANDROID_APP_ID }} build/app/outputs/aab-symbols/symbols
+        env:
+          FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
+
+      - name: Build appbundle and upload to google play
+        run: bundle exec fastlane android internal
       
       - name: Create Github Release
         uses: "marvinpinto/action-automatic-releases@latest"
