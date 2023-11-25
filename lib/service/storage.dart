@@ -5,7 +5,6 @@ import 'package:path_provider/path_provider.dart';
 import 'package:amiibo_network/service/info_package.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:amiibo_network/generated/l10n.dart';
-import 'package:flutter/foundation.dart';
 
 /// Date String in format year.month.day_hour.minute.second
 String get dateTaken {
@@ -37,7 +36,7 @@ Future<bool> permissionGranted(ScaffoldMessengerState? scaffoldState) async {
         scaffoldState?.hideCurrentSnackBar();
         scaffoldState?.showSnackBar(SnackBar(
           content:
-              Text(translate.storagePermission(describeEnum(permissionStatus))),
+              Text(translate.storagePermission(permissionStatus.name)),
           action: SnackBarAction(
             label: translate.openAppSettings,
             onPressed: () => openAppSettings(),

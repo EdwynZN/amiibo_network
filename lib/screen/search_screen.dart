@@ -2,7 +2,6 @@ import 'dart:async';
 import 'package:amiibo_network/model/search_result.dart';
 import 'package:amiibo_network/riverpod/query_provider.dart';
 import 'package:amiibo_network/riverpod/search_provider.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:amiibo_network/widget/floating_bar.dart';
@@ -24,7 +23,7 @@ class SearchScreen extends HookConsumerWidget {
     final _textController = useTextEditingController();
     final amiiboCategory = ref.watch(
       querySearchProvider.select<String>(
-        (value) => value.search ?? describeEnum(value.category),
+        (value) => value.search ?? value.category.name,
       ),
     );
     return Scaffold(

@@ -2,7 +2,6 @@ import 'package:amiibo_network/enum/hidden_types.dart';
 import 'package:amiibo_network/riverpod/preferences_provider.dart';
 import 'package:amiibo_network/riverpod/service_provider.dart';
 import 'package:amiibo_network/utils/preferences_constants.dart';
-import 'package:flutter/foundation.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:riverpod/riverpod.dart';
 import 'package:amiibo_network/enum/amiibo_category_enum.dart';
@@ -163,7 +162,7 @@ class QueryBuilderProvider extends StateNotifier<QueryBuilder> {
     switch (_query.category) {
       case AmiiboCategory.Owned:
       case AmiiboCategory.Wishlist:
-        where = Cond.iss(_query.search ?? describeEnum(_query.category), '1');
+        where = Cond.iss(_query.search ?? _query.category.name, '1');
         break;
       case AmiiboCategory.Figures:
         where = InCond.inn('type', figureType);

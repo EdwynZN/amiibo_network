@@ -31,9 +31,9 @@ mixin _OrderBy {
   late final SortBy sortBy;
 
   String get order {
-    final String order = describeEnum(orderBy);
+    final String order = orderBy.name;
     StringBuffer orderBuffer = StringBuffer();
-    final String sort = describeEnum(sortBy);
+    final String sort = sortBy.name;
     switch (orderBy) {
       case OrderBy.NA:
       case OrderBy.JP:
