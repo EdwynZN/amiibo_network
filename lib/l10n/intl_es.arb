@@ -87,5 +87,6 @@
   "no_games_found": "No existe una lista de juegos para este amiibo aún",
   "no_date": "Próximamente",
   "showGrid": "Cuadrícula",
-  "hide_caution": "Precaución, deshabilitar una categoría la escondera en toda la app"
+  "hide_caution": "Precaución, deshabilitar una categoría la escondera en toda la app",
+  "export_complete": "Archivo guardado"
 }

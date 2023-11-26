@@ -202,7 +202,6 @@ class HomeScreenState extends ConsumerState<HomeScreen>
   Widget build(BuildContext context) {
     final isAmiiboList = index == 0;
     final canPop = ref.watch(_canPopProvider);
-    print(canPop);
     return DashMenu(
       leftDrawer: CollectionDrawer(restart: _restartAnimation),
       body: PopScope(

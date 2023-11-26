@@ -112,8 +112,98 @@ class MediaStoreFlutter extends ContextWrapper {
         }
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.Q)
+    static public Uri updateDownloadStore(Context context, byte[] data, String nameFile) throws IOException {
+        ContentResolver resolver = context.getContentResolver();
+        Uri downloadCollection = MediaStore.Downloads.EXTERNAL_CONTENT_URI;
+        Uri uri = existsFile(resolver, downloadCollection, nameFile);
+
+        ContentValues content = new ContentValues();
+        content.put(MediaStore.DownloadColumns.IS_PENDING, 1);
+        if(uri == null) {
+            content.put(MediaStore.DownloadColumns.MIME_TYPE, "application/json");
+            content.put(MediaStore.DownloadColumns.DISPLAY_NAME, nameFile + ".json");
+            content.put(MediaStore.DownloadColumns.TITLE, nameFile);
+            content.put(MediaStore.DownloadColumns.RELATIVE_PATH, Environment.DIRECTORY_DOWNLOADS);
+            content.put(MediaStore.DownloadColumns.OWNER_PACKAGE_NAME, BuildConfig.APPLICATION_ID);
+            content.put(MediaStore.DownloadColumns.DATE_TAKEN, System.currentTimeMillis());
+            uri = resolver.insert(downloadCollection, content);
+        } else {
+            content.put(MediaStore.DownloadColumns.DATE_MODIFIED, System.currentTimeMillis() / 1000);
+            resolver.update(uri, content, null, null);
+        }
+
+        try (OutputStream stream = resolver.openOutputStream(uri, "w")) {
+            stream.write(data, 0, data.length);
+            content.clear();
+            content.put(MediaStore.DownloadColumns.IS_PENDING, 0);
+            resolver.update(uri, content, null, null);
+            //Log.v("uri", uri.toString());
+            //Log.v("Content", imageCollection.toString());
+            return uri;
+        }
+        catch (IOException e) {
+            // Don't leave an orphan entry in the MediaStore
+            if (uri != null) resolver.delete(uri, null, null);
+            throw e;
+        }
+    }
+
+    static public Uri updateLegacyDownloadStore(Context context, byte[] data, String nameFile) throws IOException {
+        File directory = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
+        if(!directory.exists()) directory.mkdirs();
+
+        Uri downloadCollection = MediaStore.Downloads.EXTERNAL_CONTENT_URI;
+        ContentResolver resolver = context.getContentResolver();
+        Uri uri = existsFile(resolver, downloadCollection, nameFile);
+
+        ContentValues content = new ContentValues();
+        if(uri == null) {
+            File file = new File(directory, nameFile + ".json");
+            content.put(MediaStore.DownloadColumns.MIME_TYPE, "application/json");
+            content.put(MediaStore.DownloadColumns.DISPLAY_NAME, nameFile + ".json");
+            content.put(MediaStore.DownloadColumns.TITLE, nameFile);
+            content.put(MediaStore.DownloadColumns.DATE_TAKEN, System.currentTimeMillis());
+            content.put(MediaStore.DownloadColumns.BUCKET_DISPLAY_NAME, folder);
+            content.put(MediaStore.DownloadColumns.DATA, file.getAbsolutePath());
+            uri = resolver.insert(downloadCollection, content);
+        }
+
+        try (OutputStream stream = resolver.openOutputStream(uri, "w")) {
+            stream.write(data, 0, data.length);
+            content.clear();
+            content.put(MediaStore.DownloadColumns.DATE_MODIFIED, System.currentTimeMillis() / 1000);
+            resolver.update(uri, content, null, null);
+            return uri;
+        } catch (IOException e) {
+            if (uri != null) resolver.delete(uri, null, null);
+            throw e;
+        }
+    }
+
     @Nullable
-    static public Uri exists(ContentResolver resolver, Uri uri, String nameFile){
+    static private Uri existsFile(ContentResolver resolver, Uri uri, String nameFile) {
+        String selection = MediaStore.DownloadColumns.MIME_TYPE + " = ? and " + MediaStore.Images.Media.TITLE + " = ?";
+        String[] args = new String[] {"application/json", nameFile};
+
+        Cursor cursor = resolver.query(
+            uri,
+            new String[] {MediaStore.DownloadColumns.MIME_TYPE, MediaStore.DownloadColumns.TITLE, MediaStore.Images.Media._ID},
+            selection,
+            args,
+            null
+        );
+        int id = 0;
+        if(cursor != null){
+            if(cursor.moveToFirst()) id = cursor.getInt(cursor.getColumnIndex(MediaStore.MediaColumns._ID));
+            cursor.close();
+            if(id != 0) return Uri.withAppendedPath(uri, String.valueOf(id));
+        }
+        return null;
+    }
+
+    @Nullable
+    static public Uri exists(ContentResolver resolver, Uri uri, String nameFile) {
         String selection = MediaStore.Images.Media.BUCKET_DISPLAY_NAME + " = ? and " + MediaStore.Images.Media.TITLE + " = ?";
         String[] args = new String[] {folder, nameFile};
 
