@@ -21,7 +21,6 @@ import 'package:amiibo_network/widget/route_transitions.dart';
 import 'package:amiibo_network/widget/selected_chip.dart';
 import 'package:amiibo_network/widget/selected_widget.dart';
 import 'package:amiibo_network/widget/sort_bottomsheet.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:amiibo_network/data/database.dart';
 import 'package:flutter/rendering.dart';
@@ -66,6 +65,17 @@ final AutoDisposeProvider<TitleSearch> _titleProvider =
     category: query.category,
   );
 });
+
+final AutoDisposeProvider<bool> _canPopProvider = Provider.autoDispose<bool>(
+  (ref) {
+    final selected = ref.watch(selectProvider);
+    ref.watch(queryProvider);
+    final isSearch = ref.watch(
+      queryProvider.notifier.select((provider) => provider.isSearch),
+    );
+    return !(selected.multipleSelected || isSearch);
+  },
+);
 
 class HomeScreen extends ConsumerStatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -174,35 +184,29 @@ class HomeScreenState extends ConsumerState<HomeScreen>
     }
   }
 
-  Future<bool> _exitApp() async {
-    final route = ModalRoute.of(context);
-
-    /// If the route is current and it has local history then let it handle it by itself
-    if (route != null && route.isCurrent && route.willHandlePopInternally) {
-      return SynchronousFuture(true);
-    }
-
-    final selected = ref.read(selectProvider);
-    final query = ref.read(queryProvider.notifier);
-    if (selected.multipleSelected) {
-      selected.clearSelected();
-      return false;
-    } else if (query.isSearch) {
-      query.restart();
-      return false;
-    } else {
+  Future<void> _exitApp(bool canPop) async {
+    if (canPop) {
       await ConnectionFactory().close();
-      return await Future.value(true);
+    } else {
+      final selected = ref.read(selectProvider);
+      final query = ref.read(queryProvider.notifier);
+      if (selected.multipleSelected) {
+        selected.clearSelected();
+      } else if (query.isSearch) {
+        query.restart();
+      }
     }
   }
 
   @override
   Widget build(BuildContext context) {
     final isAmiiboList = index == 0;
+    final canPop = ref.watch(_canPopProvider);
     return DashMenu(
       leftDrawer: CollectionDrawer(restart: _restartAnimation),
-      body: WillPopScope(
-        onWillPop: _exitApp,
+      body: PopScope(
+        canPop: canPop,
+        onPopInvoked: _exitApp,
         child: Scaffold(
           resizeToAvoidBottomInset: false,
           //drawer: CollectionDrawer(restart: _restartAnimation),
@@ -690,7 +694,7 @@ class _FAB extends ConsumerWidget {
               constraints: BoxConstraints.loose(const Size.square(24.0)),
               child: LoadingAnimationWidget.inkDrop(
                 color: theme.floatingActionButtonTheme.foregroundColor ??
-                  theme.colorScheme.onSecondaryContainer,
+                    theme.colorScheme.onSecondaryContainer,
                 size: 24,
               ),
             )

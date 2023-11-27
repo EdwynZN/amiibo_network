@@ -324,6 +324,9 @@ class __SaveCollectionState extends ConsumerState<_SaveCollection> {
           'name': '${name}_$dateTaken'
         };
         await NotificationService.saveImage(notificationArgs);
+        scaffoldState?.showSnackBar(
+          SnackBar(content: Text(translate.export_complete)),
+        );
       }
     }
   }
@@ -573,22 +576,19 @@ class _BottomBarState extends ConsumerState<BottomBar> {
 
   Future<void> _writePermission(WidgetRef ref) async {
     try {
+      if (!(await permissionGranted(scaffoldState))) return;
       final _service = ref.read(serviceProvider.notifier);
+      final amiibos = await _service.fetchAllAmiiboDB();
       openSnackBar(translate.savingCollectionMessage);
-      final Map<String, dynamic> args = Map<String, dynamic>();
-      args['amiibos'] = await _service.fetchAllAmiiboDB();
-      final file = await createFile();
-      args['file'] = file;
-      await compute(writeFile, args);
-      final Map<String, dynamic> notificationArgs = <String, dynamic>{
-        'title': translate.notificationTitle,
-        'path': file.path,
-        'actionTitle': translate.actionText,
-        'id': 6
-      };
-      await NotificationService.sendNotification(notificationArgs);
+      await NotificationService.saveJsonFile(
+        title: translate.notificationTitle,
+        actionNotificationTitle: translate.actionText,
+        amiibos: amiibos,
+        name: 'MyAmiiboNetwork',
+      );
+      openSnackBar(translate.export_complete);
     } catch (e) {
-      print(e);
+      openSnackBar(translate.storagePermission('denied'));
     }
   }
 

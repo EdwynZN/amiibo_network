@@ -55,19 +55,14 @@ public class MainActivity extends FlutterActivity{
               } catch(IOException e){
                 result.error("IOException: ", e.getMessage(), null);
               }
-              /*
-              Map<String, Object> imgArguments = call.arguments();
-              String name = (String)imgArguments.get("name");
-              byte[] imageData = (byte[])imgArguments.get("buffer");
+              break;
+            case "saveJson":
               try{
-                Bitmap bitmap;
-                if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) bitmap = MediaStoreFlutter.updateMediaStore(this, imageData, name);
-                else bitmap = MediaStoreFlutter.updateLegacyMediaStore(this, imageData, name);
+                mNotificationUtils.showJsonNotification(call.arguments());
                 result.success(true);
               } catch(IOException e){
                 result.error("IOException: ", e.getMessage(), null);
               }
-              */
               break;
             default:
               result.notImplemented();

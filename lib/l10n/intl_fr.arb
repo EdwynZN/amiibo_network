@@ -87,5 +87,6 @@
   "no_games_found": "Aucun jeu trouvé pour cette amiibo pour le moment",
   "no_date": "Bientôt disponible",
   "showGrid": "Grille",
-  "hide_caution": "Attention, la désactivation d'une catégorie la masquera dans l'ensemble de l'application"
+  "hide_caution": "Attention, la désactivation d'une catégorie la masquera dans l'ensemble de l'application",
+  "export_complete": "Exportation terminée"
 }

@@ -11,6 +11,7 @@ import android.content.Intent;
 import android.content.pm.ResolveInfo;
 import android.content.pm.PackageManager;
 import android.net.Uri;
+import android.provider.DocumentsContract;
 import java.io.File;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -103,9 +104,49 @@ public class NotificationUtils extends ContextWrapper {
         return notificationBuilder.build();
     }
 
+    private Notification createDownloadNotification(String title, Uri uri, String name, String actionTitle, Integer id) {
+        NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this, ANDROID_CHANNEL_ID);
+        notificationBuilder//.setAutoCancel(true)
+            .setSmallIcon(R.drawable.ic_notification)
+            .setTicker(title)
+            .setPriority(NotificationCompat.PRIORITY_LOW)
+            .setContentTitle(title)
+            .setGroup(GROUP_ID)
+            .setContentText(name);
+
+        Intent intent = new Intent();
+        intent.setAction(Intent.ACTION_OPEN_DOCUMENT);
+        intent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION | Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
+        intent.setDataAndType(uri, "application/json");
+
+        final int flag = Build.VERSION.SDK_INT >= Build.VERSION_CODES.M
+            ? PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE
+            : PendingIntent.FLAG_UPDATE_CURRENT;
+        PendingIntent pContentIntent = PendingIntent.getActivity(this, id, intent, flag);
+
+        Intent sendIntent = new Intent();
+        sendIntent.setAction(Intent.ACTION_SEND);
+        sendIntent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION | Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
+        sendIntent.putExtra(Intent.EXTRA_STREAM, uri);
+        sendIntent.setType("application/json");
+        Intent chooser = Intent.createChooser(sendIntent, actionTitle);
+
+        List<ResolveInfo> resInfoList = this.getPackageManager().queryIntentActivities(chooser, PackageManager.MATCH_DEFAULT_ONLY);
+        for (ResolveInfo resolveInfo : resInfoList) {
+            String packageName = resolveInfo.activityInfo.packageName;
+            this.grantUriPermission(packageName, uri, Intent.FLAG_GRANT_WRITE_URI_PERMISSION | Intent.FLAG_GRANT_READ_URI_PERMISSION);
+        }
+
+        PendingIntent pShareIntent = PendingIntent.getActivity(this, id, chooser, flag);
+
+        return notificationBuilder
+            .addAction(android.R.drawable.ic_menu_share, actionTitle, pShareIntent)
+            .setContentIntent(pContentIntent)
+            .build();
+    }
+
     private Notification imageNotification(String title, String contentText, Uri uri, String actionTitle, Integer id, Bitmap bitmap) {
-        NotificationCompat.Builder notificationBuilder =
-            new NotificationCompat.Builder(this, ANDROID_CHANNEL_ID);
+        NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this, ANDROID_CHANNEL_ID);
         notificationBuilder//.setAutoCancel(true)
             .setSmallIcon(R.drawable.ic_notification)
             .setTicker(title)
@@ -190,6 +231,25 @@ public class NotificationUtils extends ContextWrapper {
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) uri = MediaStoreFlutter.updateMediaStore(this, bitmap, name);
         else uri = MediaStoreFlutter.updateLegacyMediaStore(this, bitmap, name);
         Notification notification = imageNotification(title, name + ".png", uri, actionTitle, id, bitmap);
+        getManager().notify(id, notification);
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            Notification summary = createSummary(title);
+            getManager().notify(SUMMARY_ID, summary);
+        }
+    }
+
+    public void showJsonNotification(Map<String, Object> arguments) throws IOException{
+        String name = (String)arguments.get("name");
+        byte[] jsonBuffer = (byte[])arguments.get("buffer");
+        String title = (String) arguments.get("title");
+        String actionTitle = (String) arguments.get("actionTitle");
+        Integer id = (Integer) arguments.get("id");
+        if(jsonBuffer == null) return;
+        Uri uri;
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) uri = MediaStoreFlutter.updateDownloadStore(this, jsonBuffer, name);
+        else uri = MediaStoreFlutter.updateLegacyDownloadStore(this, jsonBuffer, name);
+        Notification notification = createDownloadNotification(title, uri, name, actionTitle, id);
         getManager().notify(id, notification);
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
