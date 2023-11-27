@@ -115,11 +115,11 @@ public class NotificationUtils extends ContextWrapper {
             .setContentText(name);
 
         Intent intent = new Intent();
-        intent.setAction(Intent.ACTION_VIEW);
+        intent.setAction(Intent.ACTION_OPEN_DOCUMENT);
         intent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION | Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
-        intent.setDataAndType(uri, DocumentsContract.Document.MIME_TYPE_DIR);
+        intent.setDataAndType(uri, "application/json");
 
-        final int flag =  Build.VERSION.SDK_INT >= Build.VERSION_CODES.M
+        final int flag = Build.VERSION.SDK_INT >= Build.VERSION_CODES.M
             ? PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE
             : PendingIntent.FLAG_UPDATE_CURRENT;
         PendingIntent pContentIntent = PendingIntent.getActivity(this, id, intent, flag);
