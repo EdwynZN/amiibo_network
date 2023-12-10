@@ -9988,7 +9988,7 @@
     },
     {
       "key": 733,
-      "id": "3801000103931702",
+      "id": "3800000103931702",
       "amiiboSeries": "Power Pros",
       "character": "Pawapuro",
       "gameSeries": "Power Pros",
@@ -11505,7 +11505,7 @@
     },
     {
       "key": 846,
-      "id": null,
+      "id": "0101000004190902",
       "amiiboSeries": "The Legend of Zelda",
       "character": "Zelda",
       "gameSeries": "The Legend of Zelda",
@@ -11518,7 +11518,7 @@
     },
     {
       "key": 847,
-      "id": null,
+      "id": "01020100041A0902",
       "amiiboSeries": "The Legend of Zelda",
       "character": "Ganondorf",
       "gameSeries": "The Legend of Zelda",
@@ -11531,7 +11531,7 @@
     },
     {
       "key": 848,
-      "id": null,
+      "id": "0809000004350402",
       "amiiboSeries": "Splatoon",
       "character": "Big Man",
       "gameSeries": "Splatoon",
@@ -11544,7 +11544,7 @@
     },
     {
       "key": 849,
-      "id": null,
+      "id": "0807000004330402",
       "amiiboSeries": "Splatoon",
       "character": "Shiver",
       "gameSeries": "Splatoon",
@@ -11557,7 +11557,7 @@
     },
     {
       "key": 850,
-      "id": null,
+      "id": "0808000004340402",
       "amiiboSeries": "Splatoon",
       "character": "Frye",
       "gameSeries": "Splatoon",
@@ -11580,7 +11580,33 @@
       "jp": "20240216",
       "na": "20240216",
       "type": "Figure"
+    },
+    {
+      "key": 852,
+      "id": null,
+      "amiiboSeries": "Super Nintendo World",
+      "character": "Donkey Kong",
+      "gameSeries": "Donkey Kong",
+      "name": "Donkey Kong Power-Up Band",
+      "au": null,
+      "eu": null,
+      "jp": "202403",
+      "na": null,
+      "type": "Band"
+    },
+    {
+      "key": 853,
+      "id": null,
+      "amiiboSeries": "Super Nintendo World",
+      "character": "Diddy Kong",
+      "gameSeries": "Donkey Kong",
+      "name": "Diddy Kong Power-Up Band",
+      "au": null,
+      "eu": null,
+      "jp": "202403",
+      "na": null,
+      "type": "Band"
     }
   ],
-  "lastUpdated": "2023-09-14T10:29:43.044"
+  "lastUpdated": "2023-12-10T10:29:43.044"
 }
