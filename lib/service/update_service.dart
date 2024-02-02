@@ -74,7 +74,7 @@ class UpdateService {
   }
 
   Future<List<Amiibo>> fetchAllAmiibo() async =>
-      compute(entityFromMap, await jsonFile);
+      compute(entityFromMap, (await jsonFile)!);
 
   Future<DateTime?> get lastUpdateDB async {
     final SharedPreferences preferences = await SharedPreferences.getInstance();

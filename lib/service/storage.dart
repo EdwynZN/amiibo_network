@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'dart:convert';
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:amiibo_network/service/info_package.dart';
@@ -28,15 +29,14 @@ Future<bool> permissionGranted(ScaffoldMessengerState? scaffoldState) async {
   if (versionCode == AndroidCode.Unknown)
     return false;
   else if (versionCode.code < AndroidCode.Q.code &&
-    versionCode.code > AndroidCode.Lollipop_MR1.code) {
+      versionCode.code > AndroidCode.Lollipop_MR1.code) {
     final permissionStatus = await Permission.storage.request();
     if (!permissionStatus.isGranted) {
       if (permissionStatus.isPermanentlyDenied &&
           (scaffoldState?.mounted ?? false)) {
         scaffoldState?.hideCurrentSnackBar();
         scaffoldState?.showSnackBar(SnackBar(
-          content:
-              Text(translate.storagePermission(permissionStatus.name)),
+          content: Text(translate.storagePermission(permissionStatus.name)),
           action: SnackBarAction(
             label: translate.openAppSettings,
             onPressed: () => openAppSettings(),
@@ -68,24 +68,18 @@ Map<String, dynamic>? readFile(String? path) {
   try {
     final file = File(path!);
     String data = file.readAsStringSync();
-    final Map<String, dynamic> jResult = jsonDecode(data);
-    if (!jResult.containsKey('amiibo'))
-      return null;
-    else
-      return jResult;
-  } catch (e) {
-    print(e.toString());
+    final jResult = jsonDecode(data);
+    if (jResult is Map && jResult.containsKey('amiibo')) {
+      return jResult as Map<String, dynamic>;
+    } else if (jResult is List<dynamic>) {
+      return {'amiibo': jResult};
+    }
+    return null;
+  } catch (e, s) {
+    FirebaseCrashlytics.instance.recordError(e, s);
     return null;
   }
 }
-
-void writeFile(Map<String, dynamic> arg) => arg['file'].writeAsStringSync(
-      jsonEncode(
-        <String, dynamic>{
-          'amiibo': arg['amiibos'],
-        },
-      ),
-    );
 
 void writeCollectionFile(Map<String, dynamic> arg) =>
     arg['file'].writeAsBytesSync(arg['buffer'], flush: true);
