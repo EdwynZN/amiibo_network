@@ -46,13 +46,13 @@ class FormatDate {
     switch (_format) {
       case _Format.FullDate:
         String formatDate =
-            MaterialLocalizations.of(context).formatShortDate(_dateTime!);
+            MaterialLocalizations.of(context).formatShortDate(_dateTime);
         return formatDate;
       case _Format.MonthYear:
-        return MaterialLocalizations.of(context).formatMonthYear(_dateTime!);
+        return MaterialLocalizations.of(context).formatMonthYear(_dateTime);
       case _Format.Year:
       default:
-        return MaterialLocalizations.of(context).formatYear(_dateTime!);
+        return MaterialLocalizations.of(context).formatYear(_dateTime);
     }
   }
 }
