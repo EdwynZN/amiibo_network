@@ -31,7 +31,7 @@ class Screenshot {
   String? wished;
   String? createdOn;
 
-  final S? _translate = S.current;
+  final S _translate = S.current;
   final Service _service = Service();
   final Paint ownedCardPaint = Paint();
   final Paint wishedCardPaint = Paint();
@@ -81,9 +81,9 @@ class Screenshot {
       ..onWished = preferencesTheme.onWishContainer
       ..theme = theme
       ..userPreferences = preferences
-      ..owned = _translate!.owned
-      ..wished = _translate!.wished
-      ..createdOn = _translate!.createdOn
+      ..owned = _translate.owned
+      ..wished = _translate.wished
+      ..createdOn = _translate.createdOn
       ..materialLocalizations = MaterialLocalizations.of(context);
   }
 
@@ -101,9 +101,9 @@ class Screenshot {
       ..onWished = preferences.onWishContainer
       ..theme = theme
       ..userPreferences = ref.read(personalProvider)
-      ..owned = _translate!.owned
-      ..wished = _translate!.wished
-      ..createdOn = _translate!.createdOn
+      ..owned = _translate.owned
+      ..wished = _translate.wished
+      ..createdOn = _translate.createdOn
       ..materialLocalizations = MaterialLocalizations.of(context);
   }
 
