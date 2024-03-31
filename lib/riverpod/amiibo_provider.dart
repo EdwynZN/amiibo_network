@@ -14,8 +14,8 @@ final indexAmiiboProvider =
 final statHomeProvider = Provider.autoDispose<AsyncValue<Stat>>(
     (ref) => ref.watch(amiiboHomeListProvider).whenData((value) {
           final total = value.length;
-          final owned = value.where((e) => e.owned).length;
-          final wished = value.where((e) => e.wishlist).length;
+          final owned = value.where((e) => e.userAttributes is OwnedUserAttributes).length;
+          final wished = value.where((e) => e.userAttributes is WishedUserAttributes).length;
           return Stat(total: total, owned: owned, wished: wished);
         }),
     name: 'Home Stats');

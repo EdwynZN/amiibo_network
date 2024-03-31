@@ -71,8 +71,8 @@ class Screenshot {
       ThemeMode themeMode, BuildContext context, Preferences preferences) {
     final mediaBrightness = MediaQuery.of(context).platformBrightness;
     final theme = Theme.of(context);
-    final preferencesTheme = theme.extension<PreferencesExtension>()
-      ?? PreferencesExtension.brigthness(theme.brightness);
+    final preferencesTheme = theme.extension<PreferencesExtension>() ??
+        PreferencesExtension.brigthness(theme.brightness);
     this
       ..color = colorOnThemeMode(themeMode, mediaBrightness)
       ..ownedCardPaint.color = preferencesTheme.ownContainer
@@ -91,8 +91,8 @@ class Screenshot {
     final mediaBrightness = MediaQuery.of(context).platformBrightness;
     final themeMode = ref.read(themeProvider).preferredTheme;
     final theme = Theme.of(context);
-    final preferences = theme.extension<PreferencesExtension>()
-      ?? PreferencesExtension.brigthness(theme.brightness);
+    final preferences = theme.extension<PreferencesExtension>() ??
+        PreferencesExtension.brigthness(theme.brightness);
     this
       ..color = colorOnThemeMode(themeMode, mediaBrightness)
       ..ownedCardPaint.color = preferences.ownContainer
@@ -145,9 +145,12 @@ class Screenshot {
           Radius.circular(8.0));
       final ByteData imageAsset = await rootBundle.load(strImage);
 
-      if (amiibo.owned || amiibo.wishlist) {
+      final userAttributes = amiibo.userAttributes;
+      if (userAttributes case OwnedUserAttributes() || WishedUserAttributes()) {
         _canvas!.drawRRect(
-            cardPath, amiibo.owned ? ownedCardPaint : wishedCardPaint);
+          cardPath,
+          userAttributes is OwnedUserAttributes ? ownedCardPaint : wishedCardPaint,
+        );
       }
 
       ui.Image _image = await ui

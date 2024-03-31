@@ -1,19 +1,36 @@
+import 'package:amiibo_network/model/amiibo_sqlite_model.dart';
+import 'package:amiibo_network/model/update_amiibo_user_attributes.dart';
+
 import '../dao.dart';
 import '../../data/database.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:amiibo_network/model/amiibo.dart';
 
 class AmiiboSQLite implements Dao<Amiibo?, int> {
+  static const String _amiiboTable = 'amiibo';
+  static const String _userAmiiboPreferencesTable = 'amiibo_user_preferences';
+
   static ConnectionFactory connectionFactory = ConnectionFactory();
 
   Future<void> initDB() async => await connectionFactory.database;
 
   Future<List<Amiibo>> fetchAll([String? orderBy = 'na']) async {
     Database _db = await connectionFactory.database;
-    List<Map<String, dynamic>> list =
-        await _db.query('amiibo', orderBy: orderBy);
+
+    List<Map<String, dynamic>> list = await _db.rawQuery('''SELECT 
+        a.*,
+        u.boxed,
+        u.opened,
+        u.wishlist
+      FROM ${_amiiboTable} a
+      LEFT JOIN ${_userAmiiboPreferencesTable} u ON u.amiibo_key = a.key
+      ${orderBy != null ? 'ORDER BY a.$orderBy' : ''};
+  ''');
     return list
-        .map((dynamic i) => Amiibo.fromJson(i as Map<String, dynamic>))
+        .map(
+          (dynamic i) =>
+              AmiiboSqlite.fromJson(i as Map<String, dynamic>).toDomain(),
+        )
         .toList();
   }
 
@@ -45,6 +62,7 @@ class AmiiboSQLite implements Dao<Amiibo?, int> {
 
   Future<List<Amiibo>> fetchByColumn(String? where, List<dynamic>? args,
       [String? orderBy]) async {
+    return fetchAll();
     Database _db = await connectionFactory.database;
     List<Map<String, dynamic>> list = await _db.query(
       'amiibo',
@@ -92,17 +110,17 @@ class AmiiboSQLite implements Dao<Amiibo?, int> {
       );
       ''', [
         query!.key,
-        query.id,
-        query.amiiboSeries,
-        query.character,
-        query.gameSeries,
-        query.name,
-        query.au,
-        query.eu,
-        query.jp,
-        query.na,
-        query.type,
-        query.cardNumber,
+        query.details.id,
+        query.details.amiiboSeries,
+        query.details.character,
+        query.details.gameSeries,
+        query.details.name,
+        query.details.au,
+        query.details.eu,
+        query.details.jp,
+        query.details.na,
+        query.details.type,
+        query.details.cardNumber,
         query.key,
         query.key,
       ]);
@@ -110,14 +128,29 @@ class AmiiboSQLite implements Dao<Amiibo?, int> {
     await batch.commit(noResult: true, continueOnError: true);
   }
 
-  Future<void> insertImport(List<Amiibo> list) async {
+  Future<void> insertImport(List<UpdateAmiiboUserAttributes> list) async {
     Database _db = await connectionFactory.database;
     final batch = _db.batch();
-    for (var query in list) {
-      batch.execute('''UPDATE amiibo
-        SET wishlist = ?, owned = ?
+    for (final query in list) {
+      final List<int> args = switch (query.attributes) {
+        const UserAttributes.wished() => const [1, 0, 0],
+        OwnedUserAttributes(
+          opened: final opened,
+          boxed: final boxed,
+        ) =>
+          [0, opened, boxed],
+        _ => const [0, 0, 0],
+      };
+      batch.execute(
+        '''UPDATE amiibo_user_preferences
+        SET
+          wishlist = ?,
+          opened = ?,
+          boxed = ?,
         WHERE key = ?;
-      ''', [query.wishlist, query.owned, query.key]);
+        ''',
+        [...args, query.id],
+      );
     }
     await batch.commit(noResult: true, continueOnError: true);
   }
@@ -132,16 +165,16 @@ class AmiiboSQLite implements Dao<Amiibo?, int> {
       );
       ''', [
       map!.key,
-      map.id,
-      map.amiiboSeries,
-      map.character,
-      map.gameSeries,
-      map.name,
-      map.au,
-      map.eu,
-      map.jp,
-      map.na,
-      map.type,
+      map.details.id,
+      map.details.amiiboSeries,
+      map.details.character,
+      map.details.gameSeries,
+      map.details.name,
+      map.details.au,
+      map.details.eu,
+      map.details.jp,
+      map.details.na,
+      map.details.type,
       map.key,
       map.key
     ]);

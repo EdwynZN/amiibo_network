@@ -563,7 +563,7 @@ class _BottomBarState extends ConsumerState<BottomBar> {
           openSnackBar(translate.errorImporting);
         else {
           List<Amiibo> amiibos = await compute(entityFromMap, map);
-          await service.update(amiibos);
+          await service.updateFromAmiibos(amiibos);
           openSnackBar(translate.successImport);
         }
       }

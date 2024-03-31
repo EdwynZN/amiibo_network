@@ -3,6 +3,7 @@ import 'package:amiibo_network/model/search_result.dart';
 import 'dart:convert';
 import 'package:amiibo_network/model/amiibo.dart';
 import 'package:amiibo_network/model/stat.dart';
+import 'package:amiibo_network/model/update_amiibo_user_attributes.dart';
 
 class Service {
   final AmiiboSQLite dao = AmiiboSQLite();
@@ -37,7 +38,7 @@ class Service {
 
   Future<Amiibo?> fetchAmiiboDBByKey(int key) => dao.fetchByKey(key);
 
-  Future<void> update(List<Amiibo> amiibos) => dao.insertImport(amiibos);
+  Future<void> update(List<UpdateAmiiboUserAttributes> amiibos) => dao.insertImport(amiibos);
 
   Future<List<String>> fetchDistinct(
       {List<String>? column, required Expression expression, String? orderBy}) {

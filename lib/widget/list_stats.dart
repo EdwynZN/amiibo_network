@@ -15,7 +15,7 @@ final _statsProvider = FutureProvider.autoDispose<List<Stat>>((ref) async {
   final service = ref.watch(serviceProvider.notifier);
   final list = await ref.watch(amiiboHomeListProvider.future);
 
-  final series = list.map((e) => e.amiiboSeries).toSet().toList();
+  final series = list.map((e) => e.details.amiiboSeries).toSet().toList();
   Expression exp = InCond.inn('amiiboSeries', series);
   final HiddenType? hidden = ref.watch(hiddenCategoryProvider);
   if (hidden != null) {

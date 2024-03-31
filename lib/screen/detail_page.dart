@@ -10,7 +10,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 final _nameAmiiboProvider = Provider.autoDispose
     .family<AsyncValue<String?>, int>((ref, key) =>
-        ref.watch(detailAmiiboProvider(key)).whenData((cb) => cb?.name));
+        ref.watch(detailAmiiboProvider(key)).whenData((cb) => cb?.details.name));
 
 class DetailPage extends ConsumerWidget {
   const DetailPage({Key? key}) : super(key: key);
@@ -107,7 +107,7 @@ class _AmiiboCard extends ConsumerWidget {
                 final text = ref.watch(detailAmiiboProvider(id)).maybeWhen(
                       data: (amiibo) {
                         if (amiibo == null) return '';
-                        return translate.types(amiibo.type!);
+                        return translate.types(amiibo.details.type!);
                       },
                       orElse: () => '...',
                     );
@@ -161,8 +161,9 @@ class _AmiiboInfo extends ConsumerWidget {
     final id = ref.watch(keyAmiiboProvider);
     final S translate = S.of(context);
     return ref.watch(detailAmiiboProvider(id)).maybeWhen(
-          data: (amiibo) {
-            if (amiibo == null) return const SizedBox();
+          data: (generalAmiibo) {
+            if (generalAmiibo == null) return const SizedBox();
+            final amiibo = generalAmiibo.details;
             final theme = Theme.of(context);
             final primaryTextTheme = theme.primaryTextTheme.apply(
               bodyColor: theme.colorScheme.onPrimaryContainer,

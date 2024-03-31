@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:amiibo_network/dao/SQLite/amiibo_sqlite.dart';
 import 'package:amiibo_network/model/amiibo.dart';
 import 'package:amiibo_network/model/search_result.dart';
+import 'package:amiibo_network/model/update_amiibo_user_attributes.dart';
 import 'package:amiibo_network/service/service.dart';
 import 'package:flutter/material.dart';
 import 'package:amiibo_network/model/stat.dart';
@@ -15,11 +16,14 @@ class ServiceNotifier extends ChangeNotifier implements Service {
   Future<void> shift(int key) async {
     final Amiibo? amiibo = await fetchOne(key);
     if (amiibo == null) return;
-    final Amiibo amiiboUpdated = amiibo.copyWith(
-      wishlist: amiibo.owned,
-      owned: !(amiibo.wishlist ^ amiibo.owned),
-    );
-    return update([amiiboUpdated]);
+    final amiiboUpdated = switch(amiibo.userAttributes) {
+      OwnedUserAttributes() => const WishedUserAttributes(),
+      const WishedUserAttributes() => const EmptyUserAttributes(),
+      _ => UserAttributes.owned(),
+    };
+    return update([
+      UpdateAmiiboUserAttributes(id: amiibo.key, attributes: amiiboUpdated),
+    ]);
   }
 
   @override
@@ -53,8 +57,14 @@ class ServiceNotifier extends ChangeNotifier implements Service {
   @override
   Future<Amiibo?> fetchAmiiboDBByKey(int key) => dao.fetchByKey(key);
 
+  Future<void> updateFromAmiibos(List<Amiibo> amiibos) async {
+    await update(amiibos.map((a) => 
+        UpdateAmiiboUserAttributes(id: a.key, attributes: a.userAttributes),
+    ).toList());
+  }
+
   @override
-  Future<void> update(List<Amiibo> amiibos) async {
+  Future<void> update(List<UpdateAmiiboUserAttributes> amiibos) async {
     await dao.insertImport(amiibos);
     notifyListeners();
   }
