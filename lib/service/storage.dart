@@ -1,11 +1,29 @@
-import 'dart:io';
 import 'dart:convert';
-import 'package:firebase_crashlytics/firebase_crashlytics.dart';
+import 'dart:io';
+
+import 'package:amiibo_network/generated/l10n.dart';
+import 'package:amiibo_network/model/amiibo.dart';
+import 'package:amiibo_network/service/info_package.dart';
 import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:amiibo_network/service/info_package.dart';
 import 'package:permission_handler/permission_handler.dart';
-import 'package:amiibo_network/generated/l10n.dart';
+
+sealed class AmiiboFile {
+  const AmiiboFile();
+}
+
+class AmiiboFileData extends AmiiboFile {
+  final List<Amiibo> amiibos;
+
+  const AmiiboFileData(this.amiibos);
+}
+
+class AmiiboFileError extends AmiiboFile {
+  final Object error;
+  final StackTrace stackTrace;
+
+  const AmiiboFileError(this.error, this.stackTrace);
+}
 
 /// Date String in format year.month.day_hour.minute.second
 String get dateTaken {
@@ -64,20 +82,24 @@ Future<File> createFile(
   return file;
 }
 
-Map<String, dynamic>? readFile(String? path) {
+AmiiboFile readFile(String path) {
   try {
-    final file = File(path!);
+    final file = File(path);
     String data = file.readAsStringSync();
     final jResult = jsonDecode(data);
     if (jResult is Map && jResult.containsKey('amiibo')) {
-      return jResult as Map<String, dynamic>;
+      final data = entityFromMap(jResult as Map<String, dynamic>);
+      return AmiiboFileData(data);
     } else if (jResult is List<dynamic>) {
-      return {'amiibo': jResult};
+      final data = entityFromMap({'amiibo': jResult});
+      return AmiiboFileData(data);
     }
-    return null;
+    return AmiiboFileError(
+      Exception('wrong format: ${jResult.runtimeType}'),
+      StackTrace.current,
+    );
   } catch (e, s) {
-    FirebaseCrashlytics.instance.recordError(e, s);
-    return null;
+    return AmiiboFileError(e, s);
   }
 }
 
