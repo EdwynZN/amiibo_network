@@ -22,7 +22,7 @@ class SearchScreen extends HookConsumerWidget {
     final translate = S.of(context);
     final _textController = useTextEditingController();
     final amiiboCategory = ref.watch(
-      querySearchProvider.select<String>(
+      queryProvider.select<String>(
         (value) => value.search ?? value.category.name,
       ),
     );

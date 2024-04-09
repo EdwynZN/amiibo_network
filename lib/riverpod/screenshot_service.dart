@@ -12,11 +12,11 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 final screenshotProvider =
     StateNotifierProvider<ScreenshotNotifier, AsyncValue<bool>>(
   (ref) {
+    ref.watch(queryProvider.notifier);
     final localPreferences = ref.watch(personalProvider.notifier);
-    final queryNotifier = ref.watch(queryProvider.notifier);
     final themeNotifier = ref.watch(themeProvider.notifier);
     return ScreenshotNotifier(
-      queryProvider: queryNotifier,
+      ref: ref,
       localPreferences: localPreferences,
       themeProvider: themeNotifier,
     );
@@ -26,12 +26,12 @@ final screenshotProvider =
 class ScreenshotNotifier extends StateNotifier<AsyncValue<bool>> {
   final Screenshot _screenshot = Screenshot();
   final NotificationService notificationService = NotificationService();
-  final QueryBuilderProvider queryProvider;
   final ThemeProvider themeProvider;
   final UserPreferencessNotifier localPreferences;
+  final Ref ref;
 
   ScreenshotNotifier({
-    required this.queryProvider,
+    required this.ref,
     required this.localPreferences,
     required this.themeProvider,
   }) : super(const AsyncData(true));
@@ -41,12 +41,20 @@ class ScreenshotNotifier extends StateNotifier<AsyncValue<bool>> {
       return;
     }
     final S translate = S.current;
-    _screenshot.customData(themeProvider.preferredTheme, context, localPreferences.state);
+    _screenshot.customData(
+      themeProvider.preferredTheme,
+      context,
+      localPreferences.state,
+    );
     state = const AsyncValue.loading();
     state = await AsyncValue.guard(() async {
-      final category = queryProvider.search.category;
-      final query = queryProvider.query;
-      final buffer = await _screenshot.saveStats(query.where);
+      final query = ref.read(queryProvider);
+      final hiddenTypeProvider = ref.read(hiddenCategoryProvider);
+      final category = query.category;
+      final buffer = await _screenshot.saveStats(
+        search: query,
+        hiddenType: hiddenTypeProvider,
+      );
       if (buffer != null) {
         String name;
         int id;
@@ -87,11 +95,13 @@ class ScreenshotNotifier extends StateNotifier<AsyncValue<bool>> {
       return;
     }
     final S translate = S.current;
-    _screenshot.customData(themeProvider.preferredTheme, context, localPreferences.state);
+    _screenshot.customData(
+        themeProvider.preferredTheme, context, localPreferences.state);
     state = const AsyncValue.loading();
     state = await AsyncValue.guard(() async {
-      final category = queryProvider.search.category;
-      final expression = queryProvider.query.where;
+      final query = ref.read(queryProvider);
+      final hiddenTypeProvider = ref.read(hiddenCategoryProvider);
+      final category = query.category;
       String name;
       int id;
       switch (category) {
@@ -113,7 +123,7 @@ class ScreenshotNotifier extends StateNotifier<AsyncValue<bool>> {
           id = 9;
           break;
       }
-      final buffer = await _screenshot.saveCollection(expression);
+      final buffer = await _screenshot.saveCollection(query, hiddenTypeProvider);
       if (buffer != null) {
         final Map<String, dynamic> notificationArgs = <String, dynamic>{
           'title': translate.notificationTitle,

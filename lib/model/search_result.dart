@@ -1,4 +1,5 @@
 import 'package:amiibo_network/enum/amiibo_category_enum.dart';
+import 'package:amiibo_network/enum/hidden_types.dart';
 import 'package:amiibo_network/enum/sort_enum.dart';
 import 'package:flutter/foundation.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
@@ -14,46 +15,25 @@ class Query with _$Query {
   const factory Query.search({
     String? search,
     required AmiiboCategory category,
-    List<String>? customFigures,
-    List<String>? customCards,
-  }) = Search;
-
-  @With<_OrderBy>()
-  factory Query.builder({
-    required Expression where,
     @Default(OrderBy.NA) OrderBy orderBy,
     @Default(SortBy.DESC) SortBy sortBy,
-  }) = QueryBuilder;
+    @Default([]) List<String> customFigures,
+    @Default([]) List<String> customCards,
+  }) = Search;
+
 }
 
-mixin _OrderBy {
-  late final OrderBy orderBy;
-  late final SortBy sortBy;
+@freezed
+class Filter with _$Filter {
 
-  String get order {
-    final String order = orderBy.name;
-    StringBuffer orderBuffer = StringBuffer();
-    final String sort = sortBy.name;
-    switch (orderBy) {
-      case OrderBy.NA:
-      case OrderBy.JP:
-      case OrderBy.AU:
-      case OrderBy.EU:
-      case OrderBy.CardNumber:
-        orderBuffer.write('$order IS NULL, $order $sort');
-        break;
-      case OrderBy.Owned:
-      case OrderBy.Wishlist:
-        final bool asc = sortBy == SortBy.ASC;
-        final int _then = asc ? 1 : 0;
-        final int _else = asc ? 0 : 1;
-        orderBuffer.write(
-          'CASE WHEN ($order IS NULL OR $order = 0) THEN $_then ELSE $_else END, key $sort');
-        break;
-      default:
-        orderBuffer.write('$order $sort');
-        break;
-    }
-    return orderBuffer.toString();
-  }
+  const factory Filter({
+    String? search,
+    required AmiiboCategory category,
+    @Default(OrderBy.NA) OrderBy orderBy,
+    @Default(SortBy.DESC) SortBy sortBy,
+    @Default([]) List<String> customFigures,
+    @Default([]) List<String> customCards,
+    HiddenType? hiddenType,
+  }) = _Filter;
+
 }

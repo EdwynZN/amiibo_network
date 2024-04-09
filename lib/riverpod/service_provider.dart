@@ -1,22 +1,25 @@
-import 'dart:convert';
-import 'package:amiibo_network/dao/SQLite/amiibo_sqlite.dart';
+import 'package:amiibo_network/enum/amiibo_category_enum.dart';
+import 'package:amiibo_network/enum/hidden_types.dart';
+import 'package:amiibo_network/enum/sort_enum.dart';
 import 'package:amiibo_network/model/amiibo.dart';
-import 'package:amiibo_network/model/search_result.dart';
+import 'package:amiibo_network/model/stat.dart';
 import 'package:amiibo_network/model/update_amiibo_user_attributes.dart';
 import 'package:amiibo_network/service/service.dart';
 import 'package:flutter/material.dart';
-import 'package:amiibo_network/model/stat.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-final serviceProvider = ChangeNotifierProvider<ServiceNotifier>((_) => ServiceNotifier());
+final serviceProvider = ChangeNotifierProvider<ProxyServiceNotifier>(
+  (_) => ProxyServiceNotifier(Service()),
+);
 
-class ServiceNotifier extends ChangeNotifier implements Service {
-  final AmiiboSQLite dao = AmiiboSQLite();
+class ProxyServiceNotifier extends ChangeNotifier implements Service {
+  final Service service;
+  ProxyServiceNotifier(this.service);
 
   Future<void> shift(int key) async {
     final Amiibo? amiibo = await fetchOne(key);
     if (amiibo == null) return;
-    final amiiboUpdated = switch(amiibo.userAttributes) {
+    final amiiboUpdated = switch (amiibo.userAttributes) {
       OwnedUserAttributes() => const WishedUserAttributes(),
       const WishedUserAttributes() => const EmptyUserAttributes(),
       _ => UserAttributes.owned(),
@@ -28,70 +31,107 @@ class ServiceNotifier extends ChangeNotifier implements Service {
 
   @override
   Future<List<Amiibo>> fetchAllAmiiboDB([String? orderBy]) =>
-      dao.fetchAll(orderBy);
+      service.fetchAllAmiiboDB(orderBy);
 
   @override
-  Future<List<Stat>> fetchStats(
-      {required Expression expression, bool group = false}) async {
-    String? where = expression.toString();
-    List<dynamic>? args = expression.args;
-    if (where.isEmpty || args.isEmpty) where = args = null;
-    final result = await dao.fetchSum(where, args, group);
-    return result.map<Stat>(Stat.fromJson).toList();
-  }
+  Future<List<Stat>> fetchStats({
+    required AmiiboCategory category,
+    List<String> figures = const [],
+    List<String> cards = const [],
+    List<String> series = const [],
+    HiddenType? hiddenCategories,
+    bool group = false,
+  }) =>
+      service.fetchStats(
+        category: category,
+        cards: cards,
+        figures: figures,
+        hiddenCategories: hiddenCategories,
+        series: series,
+        group: group,
+      );
 
   @override
-  Future<List<Amiibo>> fetchByCategory(QueryBuilder builder, [String? orderBy]) {
-    String? where = builder.where.toString();
-    List<dynamic>? args = builder.where.args;
-    if (where.isEmpty || args.isEmpty) where = args = null;
-    return dao.fetchByColumn(where, args, orderBy);
-  }
+  Future<List<Amiibo>> fetchByCategory({
+    required AmiiboCategory category,
+    String? search,
+    OrderBy orderBy = OrderBy.NA,
+    SortBy sortBy = SortBy.DESC,
+    List<String> figures = const [],
+    List<String> cards = const[],
+    HiddenType? hiddenCategories,
+  }) =>
+      service.fetchByCategory(
+        category: category,
+        search: search,
+        orderBy: orderBy,
+        sortBy: sortBy,
+        figures: figures,
+        cards: cards,
+        hiddenCategories: hiddenCategories,
+      );
 
   @override
-  Future<String> jsonFileDB() async {
-    final List<Amiibo> amiibos = await dao.fetchAll();
-    return jsonEncode(amiibos);
-  }
+  Future<String> jsonFileDB() => service.jsonFileDB();
 
   @override
-  Future<Amiibo?> fetchAmiiboDBByKey(int key) => dao.fetchByKey(key);
+  Future<Amiibo?> fetchAmiiboDBByKey(int key) =>
+      service.fetchAmiiboDBByKey(key);
 
   Future<void> updateFromAmiibos(List<Amiibo> amiibos) async {
-    await update(amiibos.map((a) => 
-        UpdateAmiiboUserAttributes(id: a.key, attributes: a.userAttributes),
-    ).toList());
+    await update(amiibos
+        .map(
+          (a) => UpdateAmiiboUserAttributes(
+              id: a.key, attributes: a.userAttributes),
+        )
+        .toList());
   }
 
   @override
   Future<void> update(List<UpdateAmiiboUserAttributes> amiibos) async {
-    await dao.insertImport(amiibos);
+    await service.update(amiibos);
     notifyListeners();
   }
 
   @override
-  Future<List<String>> fetchDistinct(
-      {List<String>? column, required Expression expression, String? orderBy}) {
-    String? where = expression.toString();
-    List<Object>? args = expression.args;
-    if (where.isEmpty || args.isEmpty) where = args = null;
-    return dao.fetchDistinct('amiibo', column, where, args, orderBy);
-  }
+  Future<List<String>> fetchDistinct({
+    List<String>? column,
+    required AmiiboCategory category,
+    String? search,
+    OrderBy orderBy = OrderBy.NA,
+    SortBy sortBy = SortBy.DESC,
+    List<String>? figures,
+    List<String>? cards,
+    HiddenType? hiddenCategories,
+  }) =>
+      service.fetchDistinct(
+        column: column,
+        category: category,
+        search: search,
+        figures: figures,
+        cards: cards,
+        hiddenCategories: hiddenCategories,
+        orderBy: orderBy,
+        sortBy: sortBy,
+      );
 
   @override
-  Future<List<String>> searchDB(Expression expression, String column) {
-    String? where = expression.toString();
-    List<dynamic>? args = expression.args;
-    if (where.isEmpty || args.isEmpty) where = args = null;
-    return dao.fetchLimit(where, args, 10, column);
-  }
+  Future<List<String>> searchDB({
+    required String filter,
+    required AmiiboCategory category,
+    HiddenType? hidden,
+  }) => service.searchDB(
+    filter: filter,
+    category: category,
+    hidden: hidden,
+  );
 
   @override
   Future<void> resetCollection() async {
-    await dao.updateAll('amiibo', {'wishlist': 0, 'owned': 0});
+    await service.resetCollection();
     notifyListeners();
   }
 
   @override
-  Future<Amiibo?> fetchOne(int key) => dao.fetchByKey(key);
+  Future<Amiibo?> fetchOne(int key) => service.fetchOne(key);
 }

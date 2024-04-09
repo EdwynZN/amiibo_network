@@ -47,7 +47,7 @@ class _CollectionDrawerState extends ConsumerState<CollectionDrawer> {
   void cardExpand(bool x) => _cardExpand = x;
 
   _onTapTile(WidgetRef ref, AmiiboCategory category, String? tile) {
-    final query = ref.read(querySearchProvider);
+    final query = ref.read(queryProvider);
     if (query.search != tile || query.category != category) {
       ref
           .read(queryProvider.notifier)
@@ -83,7 +83,7 @@ class _CollectionDrawerState extends ConsumerState<CollectionDrawer> {
                     ),
                     Consumer(
                       builder: (context, ref, child) {
-                        final query = ref.watch(querySearchProvider);
+                        final query = ref.watch(queryProvider);
                         final String? _selected = query.search;
                         final AmiiboCategory _category = query.category;
                         final isAll = _category == AmiiboCategory.All;

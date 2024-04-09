@@ -49,9 +49,8 @@ final AutoDisposeProvider<TitleSearch> _titleProvider =
       type: TitleType.count,
     );
   }
-  ref.watch(queryProvider);
+  final query = ref.watch(queryProvider);
   final provider = ref.watch(queryProvider.notifier);
-  final query = provider.search;
   if (provider.isSearch) {
     return TitleSearch(
       title: query.search!,
@@ -60,7 +59,11 @@ final AutoDisposeProvider<TitleSearch> _titleProvider =
     );
   }
   return TitleSearch(
-    title: query.search ?? query.category.name,
+    title: switch(query.category) {
+      AmiiboCategory.All => 'All',
+      AmiiboCategory.Custom => 'Custom',
+      _ => query.search ?? query.category.name,
+    },
     type: TitleType.category,
     category: query.category,
   );
@@ -299,8 +302,8 @@ class _AmiiboListWidget extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final ignore = ref.watch(lockProvider).lock;
     final amiiboList = ref.watch(amiiboHomeListProvider);
-    final isCustom = ref.watch(queryProvider.notifier
-        .select<bool>((cb) => cb.search.category == AmiiboCategory.Custom));
+    final isCustom = ref.watch(queryProvider
+        .select<bool>((cb) => cb.category == AmiiboCategory.Custom));
     final controller = useAnimationController(
       duration: const Duration(seconds: 1),
       animationBehavior: AnimationBehavior.preserve,
@@ -467,7 +470,7 @@ class _Leading extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final localizations = MaterialLocalizations.of(context);
     final searchSelect = ref.watch(
-      querySearchProvider.select<bool>((search) {
+      queryProvider.select<bool>((search) {
         final category = search.category;
         if (category == AmiiboCategory.Game ||
             category == AmiiboCategory.Name ||
@@ -564,7 +567,7 @@ class _TitleAppBar extends ConsumerWidget {
     final searchTitle = ref.watch(_titleProvider);
     final String message;
     final Widget child;
-    final InlineSpan title = TextSpan(text: searchTitle.title);
+    final InlineSpan title = TextSpan(text: translate.category(searchTitle.title));
     InlineSpan? categorySpan;
     if (searchTitle.category != null && searchTitle.type == TitleType.search) {
       final theme = Theme.of(context);

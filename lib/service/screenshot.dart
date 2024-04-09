@@ -1,3 +1,5 @@
+import 'package:amiibo_network/enum/amiibo_category_enum.dart';
+import 'package:amiibo_network/enum/hidden_types.dart';
 import 'package:amiibo_network/model/preferences.dart';
 import 'package:amiibo_network/model/stat.dart';
 import 'package:amiibo_network/repository/theme_repository.dart';
@@ -16,9 +18,6 @@ import 'package:amiibo_network/generated/l10n.dart';
 import 'package:amiibo_network/model/search_result.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:amiibo_network/model/amiibo.dart';
-
-const String _order = 'CASE WHEN type = "Figure" THEN 1 '
-    'WHEN type = "Yarn" OR type = "Band" THEN 2 ELSE 3 END, amiiboSeries, key';
 
 class Screenshot {
   late ThemeData theme;
@@ -107,11 +106,23 @@ class Screenshot {
       ..materialLocalizations = MaterialLocalizations.of(context);
   }
 
-  Future<Uint8List?> saveCollection(Expression expression) async {
-    final QueryBuilder query = QueryBuilder(where: expression);
-    List<Amiibo> amiibos = await _service.fetchByCategory(query, _order);
+  Future<Uint8List?> saveCollection(Search search, HiddenType? hiddenType) async {
+    List<Amiibo> amiibos = await _service.fetchByCategory(
+      category: search.category,
+      cards: search.customCards,
+      figures: search.customFigures,
+      hiddenCategories: hiddenType,
+      search: search.search,
+      sortBy: search.sortBy,
+      orderBy: search.orderBy,
+    );
     Stat _listStat =
-        List<Stat>.from(await _service.fetchStats(expression: expression))
+        List<Stat>.from(await _service.fetchStats(
+          category: search.category,
+          cards: search.customCards,
+          figures: search.customFigures,
+          hiddenCategories: hiddenType,
+        ))
             .first;
     if (isRecording || amiibos.isEmpty) return null;
 
@@ -189,12 +200,30 @@ class Screenshot {
     return await _saveFile(maxX.toInt(), maxY.toInt());
   }
 
-  Future<Uint8List?> saveStats(Expression expression) async {
-    final series = await _service.fetchDistinct(expression: expression);
-    final exp = InCond.inn('amiiboSeries', series.toSet().toList());
-    final List<Stat> stats =
-        await _service.fetchStats(group: true, expression: exp);
-    final List<Stat> general = await _service.fetchStats(expression: exp);
+  Future<Uint8List?> saveStats({
+    required Search search, 
+    HiddenType? hiddenType
+  }) async {
+    final series = await _service.fetchDistinct(
+      category: search.category,
+      cards: search.customCards,
+      figures: search.customFigures,
+      hiddenCategories: hiddenType,
+      orderBy: search.orderBy,
+      sortBy: search.sortBy,
+      search: search.search,
+    );
+    final List<Stat> stats = await _service.fetchStats(
+      group: true,
+      category: AmiiboCategory.AmiiboSeries,
+      series: series.toSet().toList(),
+      hiddenCategories: hiddenType,
+    );
+    final List<Stat> general = await _service.fetchStats(
+      category: AmiiboCategory.AmiiboSeries,
+      series: series.toSet().toList(),
+      hiddenCategories: hiddenType,
+    );
 
     if (isRecording || stats.isEmpty || general.isEmpty) return null;
 

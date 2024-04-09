@@ -176,8 +176,8 @@ class _AnimatedSelectedListTileState
     extends _AnimatedSelectionState<AnimatedSelectedListTile> {
   @override
   Widget build(BuildContext context) {
-    final useSerie = ref.watch(queryProvider.notifier.select((q) {
-      final category = q.search.category;
+    final useSerie = ref.watch(queryProvider.select((q) {
+      final category = q.category;
       return category != AmiiboCategory.FigureSeries &&
           category != AmiiboCategory.CardSeries;
     }));

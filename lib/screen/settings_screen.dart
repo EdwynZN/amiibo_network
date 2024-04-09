@@ -286,35 +286,30 @@ class __SaveCollectionState extends ConsumerState<_SaveCollection> {
     if (!_screenshot.isRecording) {
       String name;
       int id;
-      Expression expression;
       switch (category) {
         case AmiiboCategory.Cards:
           name = 'MyCardCollection';
           id = 4;
-          expression = Cond.eq('type', 'Card');
           break;
         case AmiiboCategory.Figures:
           name = 'MyFigureCollection';
-          expression = InCond.inn('type', figureType);
           id = 5;
           break;
         case AmiiboCategory.Custom:
           name = 'MyCustomCollection';
           id = 8;
-          expression = Bracket(InCond.inn('type', figureType) &
-                  InCond.inn('amiiboSeries', figures!)) |
-              Bracket(
-                  Cond.eq('type', 'Card') & InCond.inn('amiiboSeries', cards));
           break;
         case AmiiboCategory.All:
         default:
           name = 'MyAmiiboCollection';
           id = 9;
-          expression = And();
           break;
       }
       _screenshot.update(ref, context);
-      final buffer = await _screenshot.saveCollection(expression);
+      final buffer = await _screenshot.saveCollection(
+        Search(category: category),
+        null,
+      );
       if (buffer != null) {
         final Map<String, dynamic> notificationArgs = <String, dynamic>{
           'title': translate.notificationTitle,

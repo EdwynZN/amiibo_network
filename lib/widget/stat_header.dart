@@ -106,7 +106,7 @@ class _LinearStat extends ConsumerWidget {
       return const SizedBox();
     }
     final category = ref.watch(
-      queryProvider.notifier.select((value) => value.search.category),
+      queryProvider.select((value) => value.category),
     );
     final usePercentage =
         ref.watch(personalProvider.select((p) => p.usePercentage));

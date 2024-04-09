@@ -43,24 +43,43 @@ final detailAmiiboProvider =
 final amiiboHomeListProvider =
     StreamProvider.autoDispose<List<Amiibo>>((ref) async* {
   final service = ref.watch(serviceProvider.notifier);
-  final queryBuilder = ref.watch(queryProvider.notifier);
-  final streamController = StreamController<QueryBuilder>();
-  final subscription = queryBuilder.stream.listen(streamController.sink.add);
+  final streamController = StreamController<Filter>();
 
   void listen() {
-    streamController.sink.add(queryBuilder.query);
+    streamController.sink.add(ref.read(filterProvider));
   }
 
   service.addListener(listen);
 
+  final subscription = ref.listen(
+    filterProvider,
+    (previous, next) {
+      if (next != previous) {
+        streamController.sink.add(next);
+      }
+    },
+    fireImmediately: true,
+  );
+
   ref.onDispose(() {
-    subscription.cancel();
+    subscription.close();
     service.removeListener(listen);
     streamController.close();
   });
-  
+  /* 
   yield await service.fetchByCategory(
-      queryBuilder.query, queryBuilder.query.order);
+    queryBuilder.query,
+    queryBuilder.query.order,
+  ); */
   yield* streamController.stream
-      .asyncMap((cb) => service.fetchByCategory(cb, cb.order));
+      .asyncMap((cb) => service.fetchByCategory(
+          category: cb.category,
+          sortBy: cb.sortBy,
+          orderBy: cb.orderBy,
+          cards: cb.customCards,
+          figures: cb.customFigures,
+          hiddenCategories: cb.hiddenType,
+          search: cb.search,
+        )
+      );
 });

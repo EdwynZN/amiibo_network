@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:amiibo_network/model/stat.dart';
+import 'package:amiibo_network/riverpod/preferences_provider.dart';
 import 'package:amiibo_network/riverpod/query_provider.dart';
 import 'package:amiibo_network/riverpod/service_provider.dart';
 import 'package:amiibo_network/service/screenshot.dart';
@@ -14,11 +15,13 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 final _statsProvider =
-    StreamProvider.autoDispose.family<List<Stat>, Expression>((ref, exp) {
+    StreamProvider.autoDispose.family<List<Stat>, AmiiboCategory>((ref, category) {
   final service = ref.watch(serviceProvider.notifier);
-  final streamController = StreamController<Expression>()..sink.add(exp);
+  final query = ref.watch(queryProvider.notifier);
+  final hidden = ref.watch(hiddenCategoryProvider);
+  final streamController = StreamController<AmiiboCategory>()..sink.add(category);
 
-  void listener() => streamController.sink.add(exp);
+  void listener() => streamController.sink.add(category);
 
   service.addListener(listener);
 
@@ -29,8 +32,18 @@ final _statsProvider =
 
   return streamController.stream.asyncMap(
     (cb) async => <Stat>[
-      ...await service.fetchStats(expression: cb),
-      ...await service.fetchStats(group: true, expression: cb)
+      ...await service.fetchStats(
+        category: cb,
+        cards: query.customCards,
+        figures: query.customCards,
+        hiddenCategories: hidden,
+      ),
+      ...await service.fetchStats(
+        group: true, category: cb,
+        cards: query.customCards,
+        figures: query.customCards,
+        hiddenCategories: hidden,
+      )
     ],
   );
 });
@@ -44,7 +57,6 @@ class StatsPage extends StatefulHookConsumerWidget {
 
 class _StatsPageState extends ConsumerState<StatsPage> {
   AmiiboCategory category = AmiiboCategory.All;
-  Expression expression = And();
   S? translate;
   late Size size;
 
@@ -59,7 +71,7 @@ class _StatsPageState extends ConsumerState<StatsPage> {
     if (newCategory == category) return;
     setState(() {
       category = newCategory;
-      switch (category) {
+      /* switch (category) {
         case AmiiboCategory.All:
           expression = And();
           break;
@@ -78,17 +90,17 @@ class _StatsPageState extends ConsumerState<StatsPage> {
           break;
         default:
           break;
-      }
+      } */
     });
   }
 
   @override
   Widget build(BuildContext context) {
     final _canSave = ref.watch(
-      querySearchProvider.select<bool>((value) =>
+      queryProvider.select<bool>((value) =>
           AmiiboCategory.Custom != category ||
-          value.customFigures!.isNotEmpty ||
-          value.customCards!.isNotEmpty),
+          value.customFigures.isNotEmpty ||
+          value.customCards.isNotEmpty),
     );
     if (size.longestSide >= 800)
       return SafeArea(
@@ -133,14 +145,14 @@ class _StatsPageState extends ConsumerState<StatsPage> {
                         );
                       },
                       child: _canSave
-                          ? _FAB(category, expression)
+                          ? _FAB(category)
                           : const SizedBox(),
                     ),
                   ),
                   onDestinationSelected: (selected) =>
                       _updateCategory( AmiiboCategory.values[selected]),
                 ),
-                Expanded(child: BodyStats(expression))
+                Expanded(child: BodyStats(category))
               ],
             ),
           ),
@@ -148,8 +160,8 @@ class _StatsPageState extends ConsumerState<StatsPage> {
       );
     return SafeArea(
       child: Scaffold(
-        body: BodyStats.expanded(expression),
-        floatingActionButton: _canSave ? _FAB(category, expression) : null,
+        body: BodyStats.expanded(category),
+        floatingActionButton: _canSave ? _FAB(category) : null,
         floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,
         extendBody: true,
         bottomNavigationBar: BottomAppBar(
@@ -195,8 +207,8 @@ class _StatsPageState extends ConsumerState<StatsPage> {
   }
 }
 
-AsyncValue<List<Stat>> _usePreviousStat(WidgetRef ref, Expression expression) {
-  final snapshot = ref.watch(_statsProvider(expression));
+AsyncValue<List<Stat>> _usePreviousStat(WidgetRef ref, AmiiboCategory category) {
+  final snapshot = ref.watch(_statsProvider(category));
   final previous = usePrevious(snapshot);
   if (previous is AsyncData<List<Stat>> && snapshot is! AsyncData<List<Stat>>)
     return previous;
@@ -204,16 +216,16 @@ AsyncValue<List<Stat>> _usePreviousStat(WidgetRef ref, Expression expression) {
 }
 
 class BodyStats extends HookConsumerWidget {
-  final Expression expression;
+  final AmiiboCategory category;
   final bool expanded;
 
-  BodyStats(this.expression) : expanded = false;
-  BodyStats.expanded(this.expression) : expanded = true;
+  BodyStats(this.category) : expanded = false;
+  BodyStats.expanded(this.category) : expanded = true;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final S translate = S.of(context);
-    final snapshot = _usePreviousStat(ref, expression);
+    final snapshot = _usePreviousStat(ref, category);
     if (snapshot is AsyncData<List<Stat>>) {
       if (snapshot.value.length <= 1)
         return Center(
@@ -283,9 +295,8 @@ class BodyStats extends HookConsumerWidget {
 class _FAB extends ConsumerWidget {
   final Screenshot _screenshot = Screenshot();
   final AmiiboCategory _category;
-  final Expression _expression;
 
-  _FAB(this._category, this._expression);
+  _FAB(this._category);
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -305,7 +316,9 @@ class _FAB extends ConsumerWidget {
         scaffoldState.showSnackBar(SnackBar(content: Text(message)));
         if (!_screenshot.isRecording) {
           _screenshot.update(ref, context);
-          final buffer = await _screenshot.saveStats(_expression);
+          final buffer = await _screenshot.saveStats(
+            search: Search(category: _category),
+          );
           if (buffer != null) {
             String name;
             int id;

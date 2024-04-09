@@ -1,7 +1,6 @@
 import 'package:amiibo_network/enum/amiibo_category_enum.dart';
 import 'package:amiibo_network/enum/hidden_types.dart';
 import 'package:amiibo_network/generated/l10n.dart';
-import 'package:amiibo_network/model/search_result.dart';
 import 'package:amiibo_network/model/stat.dart';
 import 'package:amiibo_network/riverpod/amiibo_provider.dart';
 import 'package:amiibo_network/riverpod/preferences_provider.dart';
@@ -13,19 +12,23 @@ import 'package:sliver_tools/sliver_tools.dart';
 
 final _statsProvider = FutureProvider.autoDispose<List<Stat>>((ref) async {
   final service = ref.watch(serviceProvider.notifier);
+  final HiddenType? hidden = ref.watch(hiddenCategoryProvider);
   final list = await ref.watch(amiiboHomeListProvider.future);
 
   final series = list.map((e) => e.details.amiiboSeries).toSet().toList();
-  Expression exp = InCond.inn('amiiboSeries', series);
-  final HiddenType? hidden = ref.watch(hiddenCategoryProvider);
-  if (hidden != null) {
-    exp = hidden == HiddenType.Figures
-      ? InCond.notInn('type', figureType)
-      : Cond.ne('type', 'Card') & exp;
-  }
+  
   return <Stat>[
-    ...await service.fetchStats(expression: exp),
-    ...await service.fetchStats(group: true, expression: exp),
+    ...await service.fetchStats(
+      category: AmiiboCategory.AmiiboSeries,
+      series: series,
+      hiddenCategories: hidden,
+    ),
+    ...await service.fetchStats(
+      series: series,
+      group: true,
+      category: AmiiboCategory.AmiiboSeries,
+      hiddenCategories: hidden,
+    ),
   ];
 });
 

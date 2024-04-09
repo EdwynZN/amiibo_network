@@ -29,7 +29,7 @@ class AmiiboSqlite with _$AmiiboSqlite {
     @JsonKey(includeIfNull: true) String? type,
     int? cardNumber,
     @Default(0) final int boxed,
-    @Default(1) final int opened,
+    @Default(0) final int opened,
     @Default(false)
     @JsonKey(fromJson: intToBool, toJson: boolToInt)
     bool wishlist,
