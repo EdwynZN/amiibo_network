@@ -85,7 +85,13 @@ Future<File> createFile(
 AmiiboFile readFile(String path) {
   try {
     final file = File(path);
-    String data = file.readAsStringSync();
+    final uintList = file.readAsBytesSync();
+    /// some malformed json comes with a < 32 ASCII characters, we use this to
+    /// fix it by replacing them with 32 (space)
+    String data = utf8.decode(
+      uintList.map((x) => x < 32 ? 32 : x).toList(),
+      allowMalformed: true,
+    );
     final jResult = jsonDecode(data);
     if (jResult is Map && jResult.containsKey('amiibo')) {
       final data = entityFromMap(jResult as Map<String, dynamic>);
