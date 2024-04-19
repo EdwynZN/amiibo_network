@@ -37,12 +37,12 @@ class NotificationService {
     required String name,
     required List<Amiibo> amiibos,
   }) async {
-    final map = json.encode(amiibos);
+    final encoder = JsonUtf8Encoder();
     final Map<String, dynamic> args = <String, dynamic>{
       'title': title,
       'actionTitle': actionNotificationTitle,
       'id': 9,
-      'buffer': Uint8List.fromList(map.codeUnits),
+      'buffer': encoder.convert(amiibos),// Uint8List.fromList(map.codeUnits),
       'name': '${name}_$dateTaken',
     };
     //TODO IOS Platform Channel
