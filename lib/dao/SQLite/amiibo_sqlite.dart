@@ -146,8 +146,8 @@ class AmiiboSQLite implements Dao<Amiibo?, int> {
         SET
           wishlist = ?,
           opened = ?,
-          boxed = ?,
-        WHERE key = ?;
+          boxed = ?
+        WHERE amiibo_key = ?;
         ''',
         [...args, query.id],
       );
