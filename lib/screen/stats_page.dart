@@ -1,25 +1,26 @@
 import 'dart:async';
+
+import 'package:amiibo_network/enum/amiibo_category_enum.dart';
+import 'package:amiibo_network/generated/l10n.dart';
+import 'package:amiibo_network/model/search_result.dart';
 import 'package:amiibo_network/model/stat.dart';
 import 'package:amiibo_network/riverpod/preferences_provider.dart';
 import 'package:amiibo_network/riverpod/query_provider.dart';
+import 'package:amiibo_network/riverpod/screenshot_service.dart';
 import 'package:amiibo_network/riverpod/service_provider.dart';
-import 'package:amiibo_network/service/screenshot.dart';
-import 'package:flutter/material.dart';
 import 'package:amiibo_network/service/storage.dart';
-import 'package:amiibo_network/generated/l10n.dart';
 import 'package:amiibo_network/widget/single_stat.dart';
-import 'package:amiibo_network/service/notification_service.dart';
-import 'package:amiibo_network/model/search_result.dart';
-import 'package:amiibo_network/enum/amiibo_category_enum.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-final _statsProvider =
-    StreamProvider.autoDispose.family<List<Stat>, AmiiboCategory>((ref, category) {
+final _statsProvider = StreamProvider.autoDispose
+    .family<List<Stat>, AmiiboCategory>((ref, category) {
   final service = ref.watch(serviceProvider.notifier);
   final query = ref.watch(queryProvider.notifier);
   final hidden = ref.watch(hiddenCategoryProvider);
-  final streamController = StreamController<AmiiboCategory>()..sink.add(category);
+  final streamController = StreamController<AmiiboCategory>()
+    ..sink.add(category);
 
   void listener() => streamController.sink.add(category);
 
@@ -39,7 +40,8 @@ final _statsProvider =
         hiddenCategories: hidden,
       ),
       ...await service.fetchStats(
-        group: true, category: cb,
+        group: true,
+        category: cb,
         cards: query.customCards,
         figures: query.customCards,
         hiddenCategories: hidden,
@@ -144,13 +146,11 @@ class _StatsPageState extends ConsumerState<StatsPage> {
                           ),
                         );
                       },
-                      child: _canSave
-                          ? _FAB(category)
-                          : const SizedBox(),
+                      child: _canSave ? _FAB(category) : const SizedBox(),
                     ),
                   ),
                   onDestinationSelected: (selected) =>
-                      _updateCategory( AmiiboCategory.values[selected]),
+                      _updateCategory(AmiiboCategory.values[selected]),
                 ),
                 Expanded(child: BodyStats(category))
               ],
@@ -207,7 +207,8 @@ class _StatsPageState extends ConsumerState<StatsPage> {
   }
 }
 
-AsyncValue<List<Stat>> _usePreviousStat(WidgetRef ref, AmiiboCategory category) {
+AsyncValue<List<Stat>> _usePreviousStat(
+    WidgetRef ref, AmiiboCategory category) {
   final snapshot = ref.watch(_statsProvider(category));
   final previous = usePrevious(snapshot);
   if (previous is AsyncData<List<Stat>> && snapshot is! AsyncData<List<Stat>>)
@@ -283,7 +284,8 @@ class BodyStats extends HookConsumerWidget {
                   childCount: stats.length,
                 ),
               ),
-            if (expanded) const SliverToBoxAdapter(child: SizedBox(height: 92.0))
+            if (expanded)
+              const SliverToBoxAdapter(child: SizedBox(height: 92.0))
           ],
         ),
       );
@@ -293,7 +295,6 @@ class BodyStats extends HookConsumerWidget {
 }
 
 class _FAB extends ConsumerWidget {
-  final Screenshot _screenshot = Screenshot();
   final AmiiboCategory _category;
 
   _FAB(this._category);
@@ -301,55 +302,27 @@ class _FAB extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final S translate = S.of(context);
+    final isLoading =
+        ref.watch(screenshotProvider.select((value) => value.isLoading));
     return FloatingActionButton(
       elevation: 0.0,
       child: const Icon(Icons.save),
       tooltip: translate.saveStatsTooltip,
       heroTag: 'MenuFAB',
-      onPressed: () async {
+      onPressed: isLoading ? null : () async {
         final ScaffoldMessengerState scaffoldState =
             ScaffoldMessenger.of(context);
         if (!(await permissionGranted(scaffoldState))) return;
         String message = translate.savingCollectionMessage;
-        if (_screenshot.isRecording) message = translate.recordMessage;
+        final _screenshot = ref.read(screenshotProvider.notifier);
+        if (_screenshot.isLoading) message = translate.recordMessage;
         scaffoldState.hideCurrentSnackBar();
         scaffoldState.showSnackBar(SnackBar(content: Text(message)));
-        if (!_screenshot.isRecording) {
-          _screenshot.update(ref, context);
-          final buffer = await _screenshot.saveStats(
+        if (!_screenshot.isLoading) {
+          await _screenshot.saveStats(
+            context,
             search: Search(category: _category),
           );
-          if (buffer != null) {
-            String name;
-            int id;
-            switch (_category) {
-              case AmiiboCategory.Cards:
-                name = 'MyCardStats';
-                id = 2;
-                break;
-              case AmiiboCategory.Figures:
-                name = 'MyFigureStats';
-                id = 3;
-                break;
-              case AmiiboCategory.Custom:
-                name = 'MyCustomStats';
-                id = 7;
-                break;
-              case AmiiboCategory.All:
-              default:
-                name = 'MyAmiiboStats';
-                id = 1;
-                break;
-            }
-            final Map<String, dynamic> notificationArgs = <String, dynamic>{
-              'title': translate.notificationTitle,
-              'actionTitle': translate.actionText,
-              'id': id,
-              'buffer': buffer,
-              'name': '${name}_$dateTaken'
-            };
-            await NotificationService.saveImage(notificationArgs);
-          }
         }
       },
     );

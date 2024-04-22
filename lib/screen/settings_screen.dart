@@ -2,9 +2,9 @@ import 'package:amiibo_network/enum/hidden_types.dart';
 import 'package:amiibo_network/resources/resources.dart';
 import 'package:amiibo_network/riverpod/preferences_provider.dart';
 import 'package:amiibo_network/riverpod/query_provider.dart';
+import 'package:amiibo_network/riverpod/screenshot_service.dart';
 import 'package:amiibo_network/riverpod/service_provider.dart';
 import 'package:amiibo_network/riverpod/theme_provider.dart';
-import 'package:amiibo_network/service/screenshot.dart';
 import 'package:amiibo_network/enum/amiibo_category_enum.dart';
 import 'package:amiibo_network/utils/format_color_on_theme.dart';
 import 'package:flutter/foundation.dart';
@@ -265,7 +265,6 @@ class _SaveCollection extends ConsumerStatefulWidget {
 }
 
 class __SaveCollectionState extends ConsumerState<_SaveCollection> {
-  static final Screenshot _screenshot = Screenshot();
   late S translate;
   ScaffoldMessengerState? scaffoldState;
 
@@ -276,49 +275,24 @@ class __SaveCollectionState extends ConsumerState<_SaveCollection> {
     scaffoldState = ScaffoldMessenger.maybeOf(context);
   }
 
-  Future<void> _saveCollection(WidgetRef ref, AmiiboCategory category,
-      List<String>? figures, cards) async {
-    final String message = _screenshot.isRecording
+  Future<void> _saveCollection(
+    AmiiboCategory category,
+    List<String>? figures,
+    cards,
+  ) async {
+    final _screenshot = ref.read(screenshotProvider.notifier);
+    final String message = _screenshot.isLoading
         ? translate.recordMessage
         : translate.savingCollectionMessage;
     scaffoldState?.hideCurrentSnackBar();
     scaffoldState?.showSnackBar(SnackBar(content: Text(message)));
-    if (!_screenshot.isRecording) {
-      String name;
-      int id;
-      switch (category) {
-        case AmiiboCategory.Cards:
-          name = 'MyCardCollection';
-          id = 4;
-          break;
-        case AmiiboCategory.Figures:
-          name = 'MyFigureCollection';
-          id = 5;
-          break;
-        case AmiiboCategory.Custom:
-          name = 'MyCustomCollection';
-          id = 8;
-          break;
-        case AmiiboCategory.All:
-        default:
-          name = 'MyAmiiboCollection';
-          id = 9;
-          break;
-      }
-      _screenshot.update(ref, context);
-      final buffer = await _screenshot.saveCollection(
-        Search(category: category),
-        null,
+    if (!_screenshot.isLoading) {
+      await _screenshot.saveAmiibos(
+        context,
+        search: Search(category: category),
+        useHidden: false,
       );
-      if (buffer != null) {
-        final Map<String, dynamic> notificationArgs = <String, dynamic>{
-          'title': translate.notificationTitle,
-          'actionTitle': translate.actionText,
-          'id': id,
-          'buffer': buffer,
-          'name': '${name}_$dateTaken'
-        };
-        await NotificationService.saveImage(notificationArgs);
+      if (mounted) {
         scaffoldState?.showSnackBar(
           SnackBar(content: Text(translate.export_complete)),
         );
@@ -368,7 +342,7 @@ class __SaveCollectionState extends ConsumerState<_SaveCollection> {
             category = AmiiboCategory.Cards;
           else if (!equalCards || !equalFigures)
             category = AmiiboCategory.Custom;
-          await _saveCollection(ref, category, figures, cards);
+          await _saveCollection(category, figures, cards);
         }
       },
     );

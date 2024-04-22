@@ -5,6 +5,7 @@ import 'package:amiibo_network/model/stat.dart';
 import 'package:amiibo_network/repository/theme_repository.dart';
 import 'package:amiibo_network/resources/resources.dart';
 import 'package:amiibo_network/riverpod/preferences_provider.dart';
+import 'package:amiibo_network/riverpod/service_provider.dart';
 import 'package:amiibo_network/riverpod/theme_provider.dart';
 import 'package:amiibo_network/service/info_package.dart';
 import 'package:amiibo_network/utils/format_color_on_theme.dart';
@@ -31,7 +32,7 @@ class Screenshot {
   String? createdOn;
 
   final S _translate = S.current;
-  final Service _service = Service();
+  late Service _service;
   final Paint ownedCardPaint = Paint();
   final Paint wishedCardPaint = Paint();
   final double margin = 20.0;
@@ -67,7 +68,12 @@ class Screenshot {
   }
 
   void customData(
-      ThemeMode themeMode, BuildContext context, Preferences preferences) {
+    ThemeMode themeMode,
+    BuildContext context,
+    Preferences preferences,
+    Service service,
+  ) {
+    _service = service;
     final mediaBrightness = MediaQuery.of(context).platformBrightness;
     final theme = Theme.of(context);
     final preferencesTheme = theme.extension<PreferencesExtension>() ??
@@ -93,6 +99,7 @@ class Screenshot {
     final preferences = theme.extension<PreferencesExtension>() ??
         PreferencesExtension.brigthness(theme.brightness);
     this
+      .._service = ref.read(serviceProvider)
       ..color = colorOnThemeMode(themeMode, mediaBrightness)
       ..ownedCardPaint.color = preferences.ownContainer
       ..wishedCardPaint.color = preferences.wishContainer
@@ -106,7 +113,8 @@ class Screenshot {
       ..materialLocalizations = MaterialLocalizations.of(context);
   }
 
-  Future<Uint8List?> saveCollection(Search search, HiddenType? hiddenType) async {
+  Future<Uint8List?> saveCollection(
+      Search search, HiddenType? hiddenType) async {
     List<Amiibo> amiibos = await _service.fetchByCategory(
       category: search.category,
       cards: search.customCards,
@@ -116,14 +124,13 @@ class Screenshot {
       sortBy: search.sortBy,
       orderBy: search.orderBy,
     );
-    Stat _listStat =
-        List<Stat>.from(await _service.fetchStats(
-          category: search.category,
-          cards: search.customCards,
-          figures: search.customFigures,
-          hiddenCategories: hiddenType,
-        ))
-            .first;
+    Stat _listStat = List<Stat>.from(await _service.fetchStats(
+      category: search.category,
+      cards: search.customCards,
+      figures: search.customFigures,
+      hiddenCategories: hiddenType,
+    ))
+        .first;
     if (isRecording || amiibos.isEmpty) return null;
 
     final double maxSize = 60.0;
@@ -160,7 +167,9 @@ class Screenshot {
       if (userAttributes case OwnedUserAttributes() || WishedUserAttributes()) {
         _canvas!.drawRRect(
           cardPath,
-          userAttributes is OwnedUserAttributes ? ownedCardPaint : wishedCardPaint,
+          userAttributes is OwnedUserAttributes
+              ? ownedCardPaint
+              : wishedCardPaint,
         );
       }
 
@@ -200,10 +209,8 @@ class Screenshot {
     return await _saveFile(maxX.toInt(), maxY.toInt());
   }
 
-  Future<Uint8List?> saveStats({
-    required Search search, 
-    HiddenType? hiddenType
-  }) async {
+  Future<Uint8List?> saveStats(
+      {required Search search, HiddenType? hiddenType}) async {
     final series = await _service.fetchDistinct(
       category: search.category,
       cards: search.customCards,
