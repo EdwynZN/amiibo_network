@@ -14,8 +14,12 @@ final indexAmiiboProvider =
 final statHomeProvider = Provider.autoDispose<AsyncValue<Stat>>(
     (ref) => ref.watch(amiiboHomeListProvider).whenData((value) {
           final total = value.length;
-          final owned = value.where((e) => e.userAttributes is OwnedUserAttributes).length;
-          final wished = value.where((e) => e.userAttributes is WishedUserAttributes).length;
+          final owned = value
+              .where((e) => e.userAttributes is OwnedUserAttributes)
+              .length;
+          final wished = value
+              .where((e) => e.userAttributes is WishedUserAttributes)
+              .length;
           return Stat(total: total, owned: owned, wished: wished);
         }),
     name: 'Home Stats');
@@ -36,8 +40,8 @@ final detailAmiiboProvider =
     streamController.close();
   });
 
-  yield await service.fetchAmiiboDBByKey(key);
-  yield* streamController.stream.asyncMap(service.fetchAmiiboDBByKey);
+  yield await service.fetchOne(key);
+  yield* streamController.stream.asyncMap(service.fetchOne);
 }, name: 'Single Amiibo Details Provider');
 
 final amiiboHomeListProvider =
@@ -71,15 +75,13 @@ final amiiboHomeListProvider =
     queryBuilder.query,
     queryBuilder.query.order,
   ); */
-  yield* streamController.stream
-      .asyncMap((cb) => service.fetchByCategory(
-          category: cb.category,
-          sortBy: cb.sortBy,
-          orderBy: cb.orderBy,
-          cards: cb.customCards,
-          figures: cb.customFigures,
-          hiddenCategories: cb.hiddenType,
-          search: cb.search,
-        )
-      );
+  yield* streamController.stream.asyncMap((cb) => service.fetchByCategory(
+        category: cb.category,
+        sortBy: cb.sortBy,
+        orderBy: cb.orderBy,
+        cards: cb.customCards,
+        figures: cb.customFigures,
+        hiddenCategories: cb.hiddenType,
+        search: cb.search,
+      ));
 });

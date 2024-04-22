@@ -1,26 +1,37 @@
 import 'dart:async';
 
-import 'package:amiibo_network/dao/SQLite/amiibo_sqlite.dart';
+import 'package:amiibo_network/data/drift_sqlite/source/amiibo_dao.dart';
+import 'package:amiibo_network/data/drift_sqlite/source/drift_database.dart' as db;
 import 'package:amiibo_network/enum/sort_enum.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/foundation.dart';
 import 'dart:convert';
 import 'package:flutter/services.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../utils/preferences_constants.dart';
 import 'package:amiibo_network/model/amiibo.dart';
+
+final updateServiceProvider = Provider(
+  (ref) => UpdateService(
+    database: ref.watch(db.databaseProvider),
+  ),
+);
 
 class UpdateService {
   static Map<String, dynamic>? _jsonFile;
   static DateTime? _lastUpdate;
   static DateTime? _lastUpdateDB;
-  final AmiiboSQLite dao = AmiiboSQLite();
+  final AmiiboDao _dao;
+  /* final AmiiboSQLite dao = AmiiboSQLite();
 
   static final UpdateService _instance = UpdateService._();
   factory UpdateService() => _instance;
-  UpdateService._();
+  UpdateService._(); */
 
-  Future<void> initDB() => dao.initDB();
+  UpdateService({
+    required db.AppDatabase database,
+  }) : _dao = database.amiiboDao;
 
   Future<void> updateSort(SharedPreferences preferences) async {
     late final OrderBy order;
@@ -93,13 +104,14 @@ class UpdateService {
       if (!sameDate) fetchAllAmiibo().then(_updateDB);
       return await Future.value(true);
     }).catchError((e, s) {
-      unawaited(FirebaseCrashlytics.instance.recordError(e, s, reason: 'createDB'));
+      unawaited(
+          FirebaseCrashlytics.instance.recordError(e, s, reason: 'createDB'));
       return false;
     });
   }
 
   _updateDB(List<Amiibo> amiibo) async {
-    dao.insertAll(amiibo, "amiibo").then((_) async {
+    _dao.insertAll(amiibo).then((_) async {
       final SharedPreferences preferences =
           await SharedPreferences.getInstance();
       final DateTime? dateTime = await lastUpdate;

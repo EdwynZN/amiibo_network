@@ -211,8 +211,6 @@ interface class Service {
     return jsonEncode(amiibos);
   }
 
-  Future<Amiibo?> fetchAmiiboDBByKey(int key) => _dao.fetchByKey(key);
-
   Future<void> update(List<UpdateAmiiboUserAttributes> amiibos) =>
       _dao.insertImport(amiibos);
 

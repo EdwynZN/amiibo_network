@@ -58,15 +58,12 @@ Future<void> main() async {
 
       await Hive.initFlutter();
       final cacheDir = await getTemporaryDirectory();
-      final UpdateService updateService = UpdateService();
-      await updateService.initDB();
 
       /// Check Android version
       if (!kIsWeb && defaultTargetPlatform == TargetPlatform.android) {
         await InfoPackage.versionCode();
       }
 
-      final bool notUpdateRequired = await updateService.upToDate;
       final preferences = await SharedPreferences.getInstance();
       await updateOldTheme();
       final store = await newHiveDefaultCacheStore(path: cacheDir.path);
@@ -76,19 +73,26 @@ Future<void> main() async {
         maxEntries: 200,
         expiryPolicy: const AccessedExpiryPolicy(Duration(days: 7)),
       );
+      final container = ProviderContainer(
+        observers: [
+          if (!kDebugMode)
+            FirebaseProviderObserver(FirebaseCrashlytics.instance),
+        ],
+        overrides: [
+          cacheProvider.overrideWithValue(cache),
+          preferencesProvider.overrideWithValue(preferences),
+        ],
+      );
+
+      final UpdateService updateService = container.read(updateServiceProvider);
+      final bool notUpdateRequired = await updateService.upToDate;
+      if (notUpdateRequired) {
+        container.read(initialScreen.notifier).state = '/home';
+      }
+
       runApp(
-        ProviderScope(
-          observers: [
-            if (!kDebugMode)
-              FirebaseProviderObserver(
-                FirebaseCrashlytics.instance,
-              ),
-          ],
-          overrides: [
-            cacheProvider.overrideWithValue(cache),
-            preferencesProvider.overrideWithValue(preferences),
-            if (notUpdateRequired) initialScreen.overrideWithValue('/home'),
-          ],
+        UncontrolledProviderScope(
+          container: container,
           child: const AmiiboNetwork(),
         ),
       );
