@@ -11,6 +11,10 @@ List<AmiiboSqlite> entityFromMap(Map<String, dynamic> amiibo) =>
     List<AmiiboSqlite>.from(
         amiibo["amiibo"].map((x) => AmiiboSqlite.fromJson(x)));
 
+List<Amiibo> entityFromMapToDomain(Map<String, dynamic> amiibo) =>
+    List<Amiibo>.from(
+        amiibo["amiibo"].map((x) => AmiiboSqlite.fromJson(x).toDomain()));
+
 @freezed
 class AmiiboSqlite with _$AmiiboSqlite {
   const AmiiboSqlite._();

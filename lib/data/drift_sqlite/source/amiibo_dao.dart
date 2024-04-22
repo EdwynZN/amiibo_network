@@ -1,9 +1,10 @@
+import 'package:amiibo_network/data/drift_sqlite/model/map_converter.dart';
 import 'package:amiibo_network/data/drift_sqlite/source/drift_database.dart';
 import 'package:amiibo_network/enum/amiibo_category_enum.dart';
 import 'package:amiibo_network/enum/hidden_types.dart';
 import 'package:amiibo_network/enum/sort_enum.dart' as s;
 import 'package:amiibo_network/model/amiibo.dart' as domain;
-import 'package:amiibo_network/model/amiibo_sqlite_model.dart';
+import 'package:amiibo_network/data/sqlite/model/amiibo_sqlite_model.dart';
 import 'package:amiibo_network/model/update_amiibo_user_attributes.dart';
 import 'package:drift/drift.dart';
 
@@ -53,7 +54,6 @@ class AmiiboDao extends DatabaseAccessor<AppDatabase> with _$AmiiboDaoMixin {
     }
 
     final result = await query.get();
-    print(result);
     return result
         .map(
           (e) => AmiiboSqlite.fromJson(e.rawData.data).toDomain(),
@@ -77,10 +77,10 @@ class AmiiboDao extends DatabaseAccessor<AppDatabase> with _$AmiiboDaoMixin {
 
   Future<void> insertAll(List<domain.Amiibo> amiibos) async {
     final List<AmiiboData> amiibosData = [];
-    final List<AmiiboUserPreference> preferences = [];
+    final List<AmiiboUserPreferencesCompanion> preferences = [];
     for (final a in amiibos) {
-      amiibosData.add(AmiiboData.fromJson(a.toJson()));
-      preferences.add(AmiiboUserPreference.fromJson(a.toJson()));
+      amiibosData.add(dataFromDomain(a));
+      preferences.add(preferencesFromDomain(a));
     }
     await batch((batch) async {
       batch.insertAllOnConflictUpdate(amiibo, amiibosData);

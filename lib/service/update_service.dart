@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:amiibo_network/data/drift_sqlite/source/amiibo_dao.dart';
 import 'package:amiibo_network/data/drift_sqlite/source/drift_database.dart' as db;
+import 'package:amiibo_network/data/local_file_source/model/amiibo_local_json_model.dart' as dataModel;
 import 'package:amiibo_network/enum/sort_enum.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/foundation.dart';
@@ -84,8 +85,8 @@ class UpdateService {
         await rootBundle.loadString('assets/databases/amiibos.json'));
   }
 
-  Future<List<Amiibo>> fetchAllAmiibo() async =>
-      compute(entityFromMap, (await jsonFile)!);
+  Future<List<Amiibo>> _fetchAllAmiibo() async =>
+      compute(dataModel.entityFromMapToDomain, (await jsonFile)!);
 
   Future<DateTime?> get lastUpdateDB async {
     final SharedPreferences preferences = await SharedPreferences.getInstance();
@@ -101,7 +102,7 @@ class UpdateService {
   Future<bool> createDB() async {
     return upToDate.then((sameDate) async {
       //if (sameDate == null) throw Exception("Couldn't fetch last update");
-      if (!sameDate) fetchAllAmiibo().then(_updateDB);
+      if (!sameDate) _fetchAllAmiibo().then(_updateDB);
       return await Future.value(true);
     }).catchError((e, s) {
       unawaited(
