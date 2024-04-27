@@ -62,7 +62,6 @@ class AmiiboSQLite implements Dao<Amiibo?, int> {
 
   Future<List<Amiibo>> fetchByColumn(String? where, List<dynamic>? args,
       [String? orderBy]) async {
-    return fetchAll();
     Database _db = await connectionFactory.database;
     List<Map<String, dynamic>> list = await _db.query(
       'amiibo',

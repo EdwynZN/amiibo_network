@@ -1,8 +1,12 @@
 import 'dart:async';
 
+import 'package:amiibo_network/data/drift_sqlite/model/map_converter.dart';
 import 'package:amiibo_network/data/drift_sqlite/source/amiibo_dao.dart';
-import 'package:amiibo_network/data/drift_sqlite/source/drift_database.dart' as db;
-import 'package:amiibo_network/data/local_file_source/model/amiibo_local_json_model.dart' as dataModel;
+import 'package:amiibo_network/data/drift_sqlite/source/drift_database.dart'
+    as db;
+import 'package:amiibo_network/data/drift_sqlite/source/drift_database.dart' show AmiiboTable, AmiiboUserPreferencesCompanion;
+import 'package:amiibo_network/data/local_file_source/model/amiibo_local_json_model.dart'
+    as dataModel;
 import 'package:amiibo_network/enum/sort_enum.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/foundation.dart';
@@ -111,8 +115,16 @@ class UpdateService {
     });
   }
 
-  _updateDB(List<Amiibo> amiibo) async {
-    _dao.insertAll(amiibo).then((_) async {
+  _updateDB(List<Amiibo> amiibos) async {
+    final List<AmiiboTable> amiibosData = [];
+    final List<AmiiboUserPreferencesCompanion> preferences = [];
+    for (final a in amiibos) {
+      amiibosData.add(dataFromDomain(a));
+      preferences.add(
+        AmiiboUserPreferencesCompanion.insert(amiiboKey: a.key),
+      );
+    }
+    _dao.insertAll(amiibosData: amiibosData, preferences: preferences).then((_) async {
       final SharedPreferences preferences =
           await SharedPreferences.getInstance();
       final DateTime? dateTime = await lastUpdate;

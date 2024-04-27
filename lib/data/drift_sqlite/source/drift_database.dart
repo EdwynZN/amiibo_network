@@ -57,6 +57,10 @@ class AppDatabase extends _$AppDatabase {
       onCreate: (Migrator m) async {
         await m.createAll();
       },
+      beforeOpen: (details) async {
+        print(details.wasCreated);
+        print('now: ${details.versionNow} - before: ${details.versionBefore}');
+      },
       onUpgrade: (Migrator m, int from, int to) async {
         if (from < 2) {
           // we added the dueDate property in the change from version 1 to
@@ -93,6 +97,6 @@ LazyDatabase _openConnection(String databaseName) {
     // Explicitly tell it about the correct temporary directory.
     sqlite3.tempDirectory = cachebase;
 
-    return NativeDatabase.createInBackground(file);
+    return NativeDatabase.createInBackground(file, logStatements: true);
   });
 }

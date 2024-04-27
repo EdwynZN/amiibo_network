@@ -148,25 +148,37 @@ class DriftServiceNotifier extends ServiceNotifer {
   }) : _dao = database.amiiboDao;
 
   @override
-  Future<List<Amiibo>> fetchAllAmiiboDB([String? orderBy]) {
-    return _dao.fetchAll(category: AmiiboCategory.All);
+  Future<List<Amiibo>> fetchAllAmiiboDB([String? orderBy]) async {
+    final result = await _dao.fetchAll(category: AmiiboCategory.All);
+    return result.map((e) => e.toDomain()).toList();
   }
 
   @override
-  Future<Amiibo?> fetchOne(int key) {
-    return _dao.fetchByKey(key);
+  Future<Amiibo?> fetchOne(int key) async {
+    final result = await _dao.fetchByKey(key);
+    return result?.toDomain();
   }
 
   @override
-  Future<List<Amiibo>> fetchByCategory(
-      {required AmiiboCategory category,
-      String? search,
-      OrderBy orderBy = OrderBy.NA,
-      SortBy sortBy = SortBy.DESC,
-      List<String> figures = const [],
-      List<String> cards = const [],
-      HiddenType? hiddenCategories}) {
-    return _dao.fetchAll(category: AmiiboCategory.All);
+  Future<List<Amiibo>> fetchByCategory({
+    required AmiiboCategory category,
+    String? search,
+    OrderBy orderBy = OrderBy.NA,
+    SortBy sortBy = SortBy.DESC,
+    List<String> figures = const [],
+    List<String> cards = const [],
+    HiddenType? hiddenCategories,
+  }) async {
+    final result = await _dao.fetchAll(
+      category: AmiiboCategory.All,
+      cards: cards,
+      figures: figures,
+      hiddenCategories: hiddenCategories,
+      search: search,
+      orderBy: orderBy,
+      sortBy: sortBy,
+    );
+    return result.map((e) => e.toDomain()).toList();
   }
 
   @override
@@ -180,7 +192,15 @@ class DriftServiceNotifier extends ServiceNotifer {
     List<String>? cards,
     HiddenType? hiddenCategories,
   }) {
-    return _dao.searchName(search: search ?? '');
+    return _dao.fetchDistincts(
+      category: category,
+      cards: cards ?? const [],
+      figures: figures ?? const [],
+      hiddenCategories: hiddenCategories,
+      orderBy: orderBy,
+      sortBy: sortBy,
+      search: search,
+    );
   }
 
   @override
@@ -197,12 +217,16 @@ class DriftServiceNotifier extends ServiceNotifer {
 
   @override
   Future<String> jsonFileDB() async {
-    final List<Amiibo> amiibos = await _dao.fetchAll(category: AmiiboCategory.All);
+    final result = await _dao.fetchAll(category: AmiiboCategory.All);
+    final List<Amiibo> amiibos = result.map((e) => e.toDomain()).toList();
     return jsonEncode(amiibos);
   }
 
   @override
-  Future<void> resetCollection() => _dao.clear();
+  Future<void> resetCollection() async {
+    await _dao.clear();
+    notifyListeners();
+  }
 
   @override
   Future<List<String>> searchDB({
@@ -214,7 +238,8 @@ class DriftServiceNotifier extends ServiceNotifer {
   }
 
   @override
-  Future<void> update(List<UpdateAmiiboUserAttributes> amiibos) {
-    return _dao.updatePreferences(amiibos);
+  Future<void> update(List<UpdateAmiiboUserAttributes> amiibos) async {
+    await _dao.updatePreferences(amiibos);
+    notifyListeners();
   }
 }

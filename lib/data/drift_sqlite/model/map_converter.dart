@@ -2,9 +2,9 @@ import 'package:amiibo_network/data/drift_sqlite/source/drift_database.dart';
 import 'package:amiibo_network/model/amiibo.dart' as d;
 import 'package:drift/drift.dart';
 
-AmiiboData dataFromDomain(d.Amiibo amiibo) {
+AmiiboTable dataFromDomain(d.Amiibo amiibo) {
   final details = amiibo.details;
-  return AmiiboData(
+  return AmiiboTable(
     key: amiibo.key,
     id: details.id,
     name: details.name,
