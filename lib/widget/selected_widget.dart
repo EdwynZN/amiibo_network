@@ -178,8 +178,8 @@ class _AnimatedSelectedListTileState
   Widget build(BuildContext context) {
     final useSerie = ref.watch(queryProvider.select((q) {
       final category = q.categoryAttributes.category;
-      return category != AmiiboCategory.FigureSeries &&
-          category != AmiiboCategory.CardSeries;
+      return category != AmiiboCategory.Figures &&
+          category != AmiiboCategory.Cards;
     }));
     final key = widget.amiibo.key;
     final select = ref.watch(

@@ -252,12 +252,11 @@ class _CollectionDrawerState extends ConsumerState<CollectionDrawer> {
                                               _AmiiboTile(
                                                 name: series,
                                                 isSelected: _category ==
-                                                        AmiiboCategory
-                                                            .FigureSeries &&
+                                                  AmiiboCategory.Figures &&
                                                     _selected == series,
                                                 onTap: () => _onTapTile(
                                                   ref,
-                                                  AmiiboCategory.FigureSeries,
+                                                  AmiiboCategory.Figures,
                                                   series,
                                                 ),
                                               ),
@@ -308,12 +307,11 @@ class _CollectionDrawerState extends ConsumerState<CollectionDrawer> {
                                               _AmiiboTile(
                                                 name: series,
                                                 isSelected: _category ==
-                                                        AmiiboCategory
-                                                            .CardSeries &&
+                                                  AmiiboCategory.Cards &&
                                                     _selected == series,
                                                 onTap: () => _onTapTile(
                                                   ref,
-                                                  AmiiboCategory.CardSeries,
+                                                  AmiiboCategory.Cards,
                                                   series,
                                                 ),
                                               ),

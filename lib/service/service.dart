@@ -10,9 +10,6 @@ import 'package:amiibo_network/model/amiibo.dart';
 import 'package:amiibo_network/model/stat.dart';
 import 'package:amiibo_network/model/update_amiibo_user_attributes.dart';
 
-const _figures = {AmiiboCategory.FigureSeries, AmiiboCategory.Figures};
-const _cards = {AmiiboCategory.CardSeries, AmiiboCategory.Cards};
-
 interface class Service {
   final AmiiboSQLite _dao = AmiiboSQLite();
 
@@ -85,7 +82,7 @@ interface class Service {
       hiddenCategories: hiddenCategories,
     );
     if (orderBy == OrderBy.CardNumber &&
-        (hiddenCategories == HiddenType.Cards || _figures.contains(category))) {
+        (hiddenCategories == HiddenType.Cards || category == AmiiboCategory.Figures)) {
       orderBy = OrderBy.NA;
     }
     final order = _order(orderBy, sortBy);
@@ -134,9 +131,8 @@ interface class Service {
     HiddenType? hiddenCategories,
   }) {
     if (hiddenCategories != null &&
-        ((hiddenCategories == HiddenType.Cards && _cards.contains(category)) ||
-            (hiddenCategories == HiddenType.Figures &&
-                _figures.contains(category)))) {
+        ((hiddenCategories == HiddenType.Cards && category == AmiiboCategory.Cards) ||
+            (hiddenCategories == HiddenType.Figures && category == AmiiboCategory.Figures))) {
       category = cards.isEmpty || figures.isEmpty
           ? AmiiboCategory.All
           : AmiiboCategory.Custom;
@@ -149,21 +145,15 @@ interface class Service {
         break;
       case AmiiboCategory.Figures:
         where = InCond.inn('type', figureType);
-        break;
-      case AmiiboCategory.FigureSeries:
-        where = InCond.inn('type', figureType);
-        if (search != null) {
-          where &= Cond.eq('amiiboSeries', search);
-        }
-        break;
-      case AmiiboCategory.CardSeries:
-        where = Cond.eq('type', 'Card');
         if (search != null) {
           where &= Cond.eq('amiiboSeries', search);
         }
         break;
       case AmiiboCategory.Cards:
         where = Cond.eq('type', 'Card');
+        if (search != null) {
+          where &= Cond.eq('amiiboSeries', search);
+        }
         break;
       /* case AmiiboCategory.Game:
         where = Cond.like('gameSeries', '%$search%');
@@ -236,7 +226,7 @@ interface class Service {
       hiddenCategories: hiddenCategories,
     );
     if (orderBy == OrderBy.CardNumber &&
-        (hiddenCategories == HiddenType.Cards || _figures.contains(category))) {
+        (hiddenCategories == HiddenType.Cards || category == AmiiboCategory.Figures)) {
       orderBy = OrderBy.NA;
     }
     final order = _order(orderBy, sortBy);

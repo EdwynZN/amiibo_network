@@ -7,8 +7,6 @@ enum AmiiboCategory {
   Cards,
   Owned,
   Wishlist,
-  FigureSeries,
-  CardSeries,
   AmiiboSeries,
 }
 
