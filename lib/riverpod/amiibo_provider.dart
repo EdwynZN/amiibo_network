@@ -76,12 +76,12 @@ final amiiboHomeListProvider =
     queryBuilder.query.order,
   ); */
   yield* streamController.stream.asyncMap((cb) => service.fetchByCategory(
-        category: cb.category,
+        categoryAttributes: cb.categoryAttributes,
         sortBy: cb.sortBy,
         orderBy: cb.orderBy,
         cards: cb.customCards,
         figures: cb.customFigures,
         hiddenCategories: cb.hiddenType,
-        search: cb.search,
+        searchAttributes: cb.searchAttributes,
       ));
 });

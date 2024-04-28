@@ -48,10 +48,18 @@ class _CollectionDrawerState extends ConsumerState<CollectionDrawer> {
 
   _onTapTile(WidgetRef ref, AmiiboCategory category, String? tile) {
     final query = ref.read(queryProvider);
-    if (query.search != tile || query.category != category) {
-      ref
-          .read(queryProvider.notifier)
-          .updateOption(Search(category: category, search: tile));
+    final attributes = CategoryAttributes(
+      category: category,
+      filters: tile != null ? [tile] : null,
+    );
+    if (query.categoryAttributes != attributes) {
+      ref.read(queryProvider.notifier).updateTile(
+            CategoryAttributes(
+              category: category,
+              filters: tile != null ? [tile] : null,
+            ),
+          );
+      //.updateOption(Search(category: category, search: tile));
       widget.restart?.call();
     }
     Navigator.pop(context);
@@ -84,8 +92,12 @@ class _CollectionDrawerState extends ConsumerState<CollectionDrawer> {
                     Consumer(
                       builder: (context, ref, child) {
                         final query = ref.watch(queryProvider);
-                        final String? _selected = query.search;
-                        final AmiiboCategory _category = query.category;
+                        final categoryAttributes = query.categoryAttributes;
+                        final String? _selected = 
+                          (categoryAttributes.filters?.isEmpty ?? true)
+                            ? null
+                            : categoryAttributes.filters!.first;
+                        final AmiiboCategory _category = categoryAttributes.category;
                         final isAll = _category == AmiiboCategory.All;
                         final isOwned = _category == AmiiboCategory.Owned;
                         final isWishlist = _category == AmiiboCategory.Wishlist;
@@ -102,7 +114,8 @@ class _CollectionDrawerState extends ConsumerState<CollectionDrawer> {
                               ListTile(
                                 onTap: () => _onTapTile(
                                     ref, AmiiboCategory.Custom, 'Custom'),
-                                leading: const Icon(Icons.dashboard_customize_rounded),
+                                leading: const Icon(
+                                    Icons.dashboard_customize_rounded),
                                 title: Text(
                                   translate.category(AmiiboCategory.Custom),
                                   style: isCustom
@@ -118,13 +131,14 @@ class _CollectionDrawerState extends ConsumerState<CollectionDrawer> {
                                         ref.read(queryProvider.notifier);
                                     final List<String> figures =
                                         filter.customFigures;
-                                    final List<String> cards = filter.customCards;
+                                    final List<String> cards =
+                                        filter.customCards;
                                     bool save = await showDialog<bool>(
                                           context: context,
                                           builder: (BuildContext context) =>
                                               CustomQueryWidget(
-                                            translate
-                                                .category(AmiiboCategory.Custom),
+                                            translate.category(
+                                                AmiiboCategory.Custom),
                                             figures: figures,
                                             cards: cards,
                                           ),

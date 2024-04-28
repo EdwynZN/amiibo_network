@@ -1,7 +1,6 @@
 import 'package:amiibo_network/enum/amiibo_category_enum.dart';
 import 'package:amiibo_network/enum/hidden_types.dart';
 import 'package:amiibo_network/enum/sort_enum.dart';
-import 'package:flutter/foundation.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:equatable/equatable.dart';
 
@@ -13,8 +12,10 @@ class Query with _$Query {
   const Query._();
 
   const factory Query.search({
-    String? search,
-    required AmiiboCategory category,
+    @Deprecated('use SearchAttribute') required AmiiboCategory category,
+    @Default(CategoryAttributes(category: AmiiboCategory.All)) CategoryAttributes categoryAttributes,
+    @Deprecated('use SearchAttribute') String? search,
+    SearchAttributes? searchAttributes,
     @Default(OrderBy.NA) OrderBy orderBy,
     @Default(SortBy.DESC) SortBy sortBy,
     @Default([]) List<String> customFigures,
@@ -24,11 +25,31 @@ class Query with _$Query {
 }
 
 @freezed
+class CategoryAttributes with _$CategoryAttributes {
+
+  const factory CategoryAttributes({
+    List<String>? filters,
+    required AmiiboCategory category,
+  }) = _CategoryAttributes;
+
+}
+
+@freezed
+class SearchAttributes with _$SearchAttributes {
+
+  const factory SearchAttributes({
+    required String search,
+    required SearchCategory category,
+  }) = _SearchAttributes;
+
+}
+
+@freezed
 class Filter with _$Filter {
 
   const factory Filter({
-    String? search,
-    required AmiiboCategory category,
+    @Default(CategoryAttributes(category: AmiiboCategory.All)) CategoryAttributes categoryAttributes,
+    SearchAttributes? searchAttributes,
     @Default(OrderBy.NA) OrderBy orderBy,
     @Default(SortBy.DESC) SortBy sortBy,
     @Default([]) List<String> customFigures,

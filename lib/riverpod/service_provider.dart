@@ -7,6 +7,7 @@ import 'package:amiibo_network/enum/amiibo_category_enum.dart';
 import 'package:amiibo_network/enum/hidden_types.dart';
 import 'package:amiibo_network/enum/sort_enum.dart';
 import 'package:amiibo_network/model/amiibo.dart';
+import 'package:amiibo_network/model/search_result.dart';
 import 'package:amiibo_network/model/stat.dart';
 import 'package:amiibo_network/model/update_amiibo_user_attributes.dart';
 import 'package:amiibo_network/service/service.dart';
@@ -69,8 +70,8 @@ class ProxyServiceNotifier extends ServiceNotifer {
 
   @override
   Future<List<Amiibo>> fetchByCategory({
-    required AmiiboCategory category,
-    String? search,
+    required CategoryAttributes categoryAttributes,
+    required SearchAttributes? searchAttributes,
     OrderBy orderBy = OrderBy.NA,
     SortBy sortBy = SortBy.DESC,
     List<String> figures = const [],
@@ -78,8 +79,8 @@ class ProxyServiceNotifier extends ServiceNotifer {
     HiddenType? hiddenCategories,
   }) =>
       service.fetchByCategory(
-        category: category,
-        search: search,
+        categoryAttributes: categoryAttributes,
+        searchAttributes: searchAttributes,
         orderBy: orderBy,
         sortBy: sortBy,
         figures: figures,
@@ -100,7 +101,7 @@ class ProxyServiceNotifier extends ServiceNotifer {
   Future<List<String>> fetchDistinct({
     List<String>? column,
     required AmiiboCategory category,
-    String? search,
+    required SearchAttributes? searchAttributes,
     OrderBy orderBy = OrderBy.NA,
     SortBy sortBy = SortBy.DESC,
     List<String>? figures,
@@ -110,7 +111,7 @@ class ProxyServiceNotifier extends ServiceNotifer {
       service.fetchDistinct(
         column: column,
         category: category,
-        search: search,
+        searchAttributes: searchAttributes,
         figures: figures,
         cards: cards,
         hiddenCategories: hiddenCategories,
@@ -119,14 +120,12 @@ class ProxyServiceNotifier extends ServiceNotifer {
       );
 
   @override
-  Future<List<String>> searchDB({
-    required String filter,
-    required AmiiboCategory category,
+  Future<List<String>> search({
+    required SearchAttributes searchAttributes,
     HiddenType? hidden,
   }) =>
-      service.searchDB(
-        filter: filter,
-        category: category,
+      service.search(
+        searchAttributes: searchAttributes,
         hidden: hidden,
       );
 
@@ -161,7 +160,8 @@ class DriftServiceNotifier extends ServiceNotifer {
 
   @override
   Future<List<Amiibo>> fetchByCategory({
-    required AmiiboCategory category,
+    required CategoryAttributes categoryAttributes,
+    required SearchAttributes? searchAttributes,
     String? search,
     OrderBy orderBy = OrderBy.NA,
     SortBy sortBy = SortBy.DESC,
@@ -170,7 +170,7 @@ class DriftServiceNotifier extends ServiceNotifer {
     HiddenType? hiddenCategories,
   }) async {
     final result = await _dao.fetchAll(
-      category: AmiiboCategory.All,
+      category: categoryAttributes.category,
       cards: cards,
       figures: figures,
       hiddenCategories: hiddenCategories,
@@ -185,7 +185,7 @@ class DriftServiceNotifier extends ServiceNotifer {
   Future<List<String>> fetchDistinct({
     List<String>? column,
     required AmiiboCategory category,
-    String? search,
+    required SearchAttributes? searchAttributes,
     OrderBy orderBy = OrderBy.NA,
     SortBy sortBy = SortBy.DESC,
     List<String>? figures,
@@ -199,20 +199,21 @@ class DriftServiceNotifier extends ServiceNotifer {
       hiddenCategories: hiddenCategories,
       orderBy: orderBy,
       sortBy: sortBy,
-      search: search,
+      search: searchAttributes?.search,
     );
   }
 
   @override
-  Future<List<Stat>> fetchStats(
-      {required AmiiboCategory category,
-      List<String> figures = const [],
-      List<String> cards = const [],
-      List<String> series = const [],
-      HiddenType? hiddenCategories,
-      bool group = false}) {
-    // TODO: implement fetchStats
-    throw UnimplementedError();
+  Future<List<Stat>> fetchStats({
+    required AmiiboCategory category,
+    List<String> figures = const [],
+    List<String> cards = const [],
+    List<String> series = const [],
+    HiddenType? hiddenCategories,
+    bool group = false,
+  }) async {
+    final result = await _dao.fetchSum(group: group);
+    return result.map(Stat.fromJson).toList();
   }
 
   @override
@@ -229,12 +230,14 @@ class DriftServiceNotifier extends ServiceNotifer {
   }
 
   @override
-  Future<List<String>> searchDB({
-    required String filter,
-    required AmiiboCategory category,
+  Future<List<String>> search({
+    required SearchAttributes searchAttributes,
     HiddenType? hidden,
   }) {
-    return _dao.searchName(search: filter);
+    return _dao.searchName(
+      search: searchAttributes.search,
+      category: searchAttributes.category,
+    );
   }
 
   @override

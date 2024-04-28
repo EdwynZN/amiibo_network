@@ -1,5 +1,7 @@
 const figureType = ['Figure', 'Yarn', 'Band'];
 
+enum SearchCategory { Game, Name, AmiiboSeries }
+
 enum AmiiboCategory {
   All,
   Custom,

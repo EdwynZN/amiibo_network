@@ -177,7 +177,7 @@ class _AnimatedSelectedListTileState
   @override
   Widget build(BuildContext context) {
     final useSerie = ref.watch(queryProvider.select((q) {
-      final category = q.category;
+      final category = q.categoryAttributes.category;
       return category != AmiiboCategory.FigureSeries &&
           category != AmiiboCategory.CardSeries;
     }));

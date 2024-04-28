@@ -16,7 +16,7 @@ final _canSortCardProvider = Provider.autoDispose<bool>((ref) {
       ref.watch(hiddenCategoryProvider.select((h) => h == HiddenType.Cards));
   if (isCardsHidden) return false;
   final category = ref
-      .watch(queryProvider.select((value) => value.category));
+      .watch(queryProvider.select((value) => value.categoryAttributes.category));
   const Set<AmiiboCategory> figures = {
     AmiiboCategory.FigureSeries,
     AmiiboCategory.Figures,

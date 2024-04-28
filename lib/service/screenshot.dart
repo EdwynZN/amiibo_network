@@ -114,18 +114,20 @@ class Screenshot {
   }
 
   Future<Uint8List?> saveCollection(
-      Search search, HiddenType? hiddenType) async {
+    Search search,
+    HiddenType? hiddenType,
+  ) async {
     List<Amiibo> amiibos = await _service.fetchByCategory(
-      category: search.category,
+      categoryAttributes: search.categoryAttributes,
       cards: search.customCards,
       figures: search.customFigures,
       hiddenCategories: hiddenType,
-      search: search.search,
+      searchAttributes: search.searchAttributes,
       sortBy: search.sortBy,
       orderBy: search.orderBy,
     );
     Stat _listStat = List<Stat>.from(await _service.fetchStats(
-      category: search.category,
+      category: search.categoryAttributes.category,
       cards: search.customCards,
       figures: search.customFigures,
       hiddenCategories: hiddenType,
@@ -212,13 +214,13 @@ class Screenshot {
   Future<Uint8List?> saveStats(
       {required Search search, HiddenType? hiddenType}) async {
     final series = await _service.fetchDistinct(
-      category: search.category,
+      category: search.categoryAttributes.category,
       cards: search.customCards,
       figures: search.customFigures,
       hiddenCategories: hiddenType,
       orderBy: search.orderBy,
       sortBy: search.sortBy,
-      search: search.search,
+      searchAttributes: search.searchAttributes,
     );
     final List<Stat> stats = await _service.fetchStats(
       group: true,

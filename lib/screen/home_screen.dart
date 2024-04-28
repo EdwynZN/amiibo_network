@@ -51,21 +51,23 @@ final AutoDisposeProvider<TitleSearch> _titleProvider =
   }
   final query = ref.watch(queryProvider);
   final provider = ref.watch(queryProvider.notifier);
+  final category = query.categoryAttributes.category;
   if (provider.isSearch) {
     return TitleSearch(
-      title: query.search!,
+      title: query.searchAttributes!.search,
       type: TitleType.search,
-      category: query.category,
+      category: category,
     );
   }
   return TitleSearch(
-    title: switch(query.category) {
+    title: switch (category) {
       AmiiboCategory.All => 'All',
       AmiiboCategory.Custom => 'Custom',
-      _ => query.search ?? query.category.name,
+      _ => query.categoryAttributes.filters?.first ??
+          category.name,
     },
     type: TitleType.category,
-    category: query.category,
+    category: category,
   );
 });
 
@@ -172,13 +174,12 @@ class HomeScreenState extends ConsumerState<HomeScreen>
   }
 
   Future<void> _search() async {
-    Search? value = await Navigator.push<Search?>(
+    SearchAttributes? search = await Navigator.push<SearchAttributes?>(
       context,
-      FadeRoute<Search>(builder: (_) => const SearchScreen()),
+      FadeRoute<SearchAttributes>(builder: (_) => const SearchScreen()),
     );
-    if (value?.search?.trim().isNotEmpty ?? false) {
-      final search = value!;
-      ref.read(analyticsProvider).logSearch(search.search!);
+    if (search != null) {
+      ref.read(analyticsProvider).logSearch(search.search);
       final query = ref.read(queryProvider.notifier);
       WidgetsBinding.instance.addPostFrameCallback((_) {
         query.updateOption(search);
@@ -302,8 +303,8 @@ class _AmiiboListWidget extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final ignore = ref.watch(lockProvider).lock;
     final amiiboList = ref.watch(amiiboHomeListProvider);
-    final isCustom = ref.watch(queryProvider
-        .select<bool>((cb) => cb.category == AmiiboCategory.Custom));
+    final isCustom = ref.watch(queryProvider.select<bool>(
+        (cb) => cb.categoryAttributes.category == AmiiboCategory.Custom));
     final controller = useAnimationController(
       duration: const Duration(seconds: 1),
       animationBehavior: AnimationBehavior.preserve,
@@ -470,15 +471,7 @@ class _Leading extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final localizations = MaterialLocalizations.of(context);
     final searchSelect = ref.watch(
-      queryProvider.select<bool>((search) {
-        final category = search.category;
-        if (category == AmiiboCategory.Game ||
-            category == AmiiboCategory.Name ||
-            category == AmiiboCategory.AmiiboSeries) {
-          return true;
-        }
-        return false;
-      }),
+      queryProvider.select<bool>((q) => q.searchAttributes != null),
     );
     final isForward = searchSelect || isClose;
     final effectiveSearch = searchSelect && !isClose;
@@ -567,7 +560,8 @@ class _TitleAppBar extends ConsumerWidget {
     final searchTitle = ref.watch(_titleProvider);
     final String message;
     final Widget child;
-    final InlineSpan title = TextSpan(text: translate.category(searchTitle.title));
+    final InlineSpan title =
+        TextSpan(text: translate.category(searchTitle.title));
     InlineSpan? categorySpan;
     if (searchTitle.category != null && searchTitle.type == TitleType.search) {
       final theme = Theme.of(context);

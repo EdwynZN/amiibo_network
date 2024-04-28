@@ -62,7 +62,7 @@ class ScreenshotNotifier extends StateNotifier<AsyncValue<bool>> {
     state = await AsyncValue.guard(() async {
       final Search query = search ?? ref.read(queryProvider);
       final hiddenTypeProvider = useHidden ? ref.read(hiddenCategoryProvider) : null;
-      final category = query.category;
+      final category = query.categoryAttributes.category;
       final buffer = await _screenshot.saveStats(
         search: query,
         hiddenType: hiddenTypeProvider,
@@ -121,7 +121,7 @@ class ScreenshotNotifier extends StateNotifier<AsyncValue<bool>> {
     state = await AsyncValue.guard(() async {
       final Search query = search ?? ref.read(queryProvider);
       final hiddenTypeProvider = useHidden ? ref.read(hiddenCategoryProvider) : null;
-      final category = query.category;
+      final category = query.categoryAttributes.category;
       String name;
       int id;
       switch (category) {

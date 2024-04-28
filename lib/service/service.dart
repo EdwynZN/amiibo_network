@@ -37,8 +37,8 @@ interface class Service {
       case AmiiboCategory.Custom:
         expression = Bracket(InCond.inn('type', figureType) &
                 InCond.inn('amiiboSeries', figures)) |
-            Bracket(Cond.eq('type', 'Card') &
-                InCond.inn('amiiboSeries', cards));
+            Bracket(
+                Cond.eq('type', 'Card') & InCond.inn('amiiboSeries', cards));
         break;
       case AmiiboCategory.Figures:
         expression = InCond.inn('type', figureType);
@@ -54,8 +54,9 @@ interface class Service {
     }
     if (hiddenCategories != null) {
       expression = (hiddenCategories == HiddenType.Figures
-        ? InCond.notInn('type', figureType)
-        : Cond.ne('type', 'Card')) & expression;
+              ? InCond.notInn('type', figureType)
+              : Cond.ne('type', 'Card')) &
+          expression;
     }
     String? where = expression.toString();
     List<dynamic>? args = expression.args;
@@ -65,17 +66,18 @@ interface class Service {
   }
 
   Future<List<Amiibo>> fetchByCategory({
-    required AmiiboCategory category,
-    String? search,
+    required CategoryAttributes categoryAttributes,
+    required SearchAttributes? searchAttributes,
     OrderBy orderBy = OrderBy.NA,
     SortBy sortBy = SortBy.DESC,
     List<String> figures = const [],
     List<String> cards = const [],
     HiddenType? hiddenCategories,
   }) {
+    final category = categoryAttributes.category;
     final expression = _updateExpression(
       category: category,
-      search: search,
+      search: searchAttributes?.search,
       figures: figures,
       cards: cards,
       hiddenCategories: hiddenCategories,
@@ -105,7 +107,7 @@ interface class Service {
         break;
       case OrderBy.Type:
         orderBuffer.write('CASE WHEN type = "Figure" THEN 1 '
-    'WHEN type = "Yarn" OR type = "Band" THEN 2 ELSE 3 END, amiiboSeries, key');
+            'WHEN type = "Yarn" OR type = "Band" THEN 2 ELSE 3 END, amiiboSeries, key');
         break;
       case OrderBy.Owned:
       case OrderBy.Wishlist:
@@ -217,7 +219,7 @@ interface class Service {
   Future<List<String>> fetchDistinct({
     List<String>? column,
     required AmiiboCategory category,
-    String? search,
+    required SearchAttributes? searchAttributes,
     OrderBy orderBy = OrderBy.NA,
     SortBy sortBy = SortBy.DESC,
     List<String>? figures,
@@ -226,7 +228,7 @@ interface class Service {
   }) {
     final expression = _updateExpression(
       category: category,
-      search: search,
+      search: searchAttributes?.search,
       figures: figures ?? const [],
       cards: cards ?? const [],
       hiddenCategories: hiddenCategories,
@@ -242,12 +244,14 @@ interface class Service {
     return _dao.fetchDistinct('amiibo', column, where, args, order);
   }
 
-  Future<List<String>> searchDB({
-    required String filter,
-    required AmiiboCategory category,
+  Future<List<String>> search({
+    required SearchAttributes searchAttributes,
     HiddenType? hidden,
   }) async {
-    Expression? exp = _whereExpression(category, filter);
+    Expression? exp = _whereExpression(
+      searchAttributes.category,
+      searchAttributes.search,
+    );
     if (exp == null) return const [];
     if (hidden != null) {
       exp = (hidden == HiddenType.Cards
@@ -258,32 +262,19 @@ interface class Service {
     String? where = exp.toString();
     List<dynamic>? args = exp.args;
     if (where.isEmpty || args.isEmpty) where = args = null;
-    return _dao.fetchLimit(where, args, 10, category.name);
+    return _dao.fetchLimit(where, args, 10, searchAttributes.category.name);
   }
 
-  Expression? _whereExpression(AmiiboCategory category, String filter) {
+  Expression? _whereExpression(SearchCategory category, String filter) {
     if (filter.isEmpty) return null;
     switch (category) {
-      case AmiiboCategory.Figures:
-        return InCond.inn('type', figureType);
-      case AmiiboCategory.FigureSeries:
-        return InCond.inn('type', figureType) &
-            Cond.like('amiiboSeries', '%$filter%');
-      case AmiiboCategory.CardSeries:
-        return Cond.eq('type', 'Card') & Cond.like('amiiboSeries', '%$filter%');
-      case AmiiboCategory.Cards:
-        return Cond.eq('type', 'Card');
-      case AmiiboCategory.Name:
+      case SearchCategory.Name:
         return Cond.like('character', '%$filter%') |
             Cond.like('name', '%$filter%');
-      case AmiiboCategory.Game:
+      case SearchCategory.Game:
         return Cond.like('gameSeries', '%$filter%');
-      case AmiiboCategory.AmiiboSeries:
+      case SearchCategory.AmiiboSeries:
         return Cond.like('amiiboSeries', '%$filter%');
-      case AmiiboCategory.All:
-      case AmiiboCategory.Owned:
-      case AmiiboCategory.Wishlist:
-      case AmiiboCategory.Custom:
       default:
         return And();
     }

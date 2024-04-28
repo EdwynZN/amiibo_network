@@ -20,8 +20,8 @@ final filterProvider = Provider.autoDispose(
     final query = ref.watch(queryProvider);
     final hiddenType = ref.watch(hiddenCategoryProvider);
     return Filter(
-      category: query.category,
-      search: query.search,
+      categoryAttributes: query.categoryAttributes,
+      searchAttributes: query.searchAttributes,
       orderBy: query.orderBy,
       sortBy: query.sortBy,
       customCards: query.customCards,
@@ -37,6 +37,7 @@ final figuresProvider = FutureProvider.autoDispose<List<String>>((ref) async {
   final list = await service.fetchDistinct(
     column: ['amiiboSeries'],
     category: AmiiboCategory.Figures,
+    searchAttributes: null,
     orderBy: OrderBy.Name,
   );
 
@@ -50,6 +51,7 @@ final cardsProvider = FutureProvider.autoDispose<List<String>>((ref) async {
 
   final list = await service.fetchDistinct(
     column: ['amiiboSeries'],
+    searchAttributes: null,
     category: AmiiboCategory.Cards,
     orderBy: OrderBy.Name,
   );
@@ -102,31 +104,32 @@ class QueryBuilderProvider extends StateNotifier<Search> {
     super.state,
   ) : _previousNotSearch = state;
 
-  bool get isSearch {
-    final category = state.category;
-    return category == AmiiboCategory.Game ||
-        category == AmiiboCategory.Name ||
-        category == AmiiboCategory.AmiiboSeries;
-  }
+  bool get isSearch => state.searchAttributes != null;
 
-  List<String> get customFigures =>
-      List<String>.of(state.customFigures);
-  List<String> get customCards =>
-      List<String>.of(state.customCards);
+  List<String> get customFigures => List<String>.of(state.customFigures);
+  List<String> get customCards => List<String>.of(state.customCards);
 
   void restart() {
     if (_previousNotSearch == state) return;
     state = _previousNotSearch;
   }
 
-  void updateOption(Search result) {
-    if (result.category == state.category && result.search == state.search)
-      return;
+  void updateOption(SearchAttributes search) {
+    if (search == state.searchAttributes) return;
 
-    state = state.copyWith(
-      category: result.category,
-      search: result.search,
-    );
+    state = state.copyWith(searchAttributes: search);
+    if (!isSearch) {
+      _previousNotSearch = state;
+    }
+  }
+
+  void updateTile(CategoryAttributes category) {
+    if (category == state.categoryAttributes) {
+      return;
+    }
+
+    state =
+        state.copyWith(categoryAttributes: category, searchAttributes: null);
     if (!isSearch) {
       _previousNotSearch = state;
     }

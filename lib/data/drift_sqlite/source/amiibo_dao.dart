@@ -173,27 +173,52 @@ class AmiiboDao extends DatabaseAccessor<AppDatabase> with _$AmiiboDaoMixin {
     return result;
   }
 
-  Future<List<String>> searchName({String search = '', int limit = 10}) async {
+  Future<List<String>> searchName({
+    required SearchCategory category,
+    String search = '',
+    int limit = 10,
+  }) async {
     if (search.isEmpty) {
       return const [];
     }
+    final GeneratedColumn<String> column = switch (category) {
+      SearchCategory.AmiiboSeries => amiibo.amiiboSeries,
+      SearchCategory.Name => amiibo.name,
+      SearchCategory.Game => amiibo.gameSeries,
+    };
     final query = selectOnly(amiibo, distinct: true)
-      ..addColumns([amiibo.name])
-      ..where(amiibo.name.like('%$search%'))
+      ..addColumns([column])
+      ..where(column.like('%$search%'))
       ..limit(limit);
-    final result = await query.map((e) => e.read(amiibo.name)!).get();
+    final result = await query.map((e) => e.read(column)!).get();
     return result;
   }
 
-  /* Future<List<Map<String, dynamic>>> fetchSum({bool group = false}) async {
-    final sum = amiibo.amiiboSeries.length.sum();
-    final query = select(amiibo)..addColumns([sum]);
-    if (group) {
-      query..groupBy([amiibo.amiiboSeries]);
-    }
-    final result = await query.get();
-    return result.map((e) => e.name).toList();
-  } */
+  Future<List<Map<String, dynamic>>> fetchSum({bool group = false}) async {
+    final query = selectOnly(amiibo).join([
+      innerJoin(
+        amiiboUserPreferences,
+        amiiboUserPreferences.amiiboKey.equalsExp(amiibo.key),
+        useColumns: false,
+      ),
+    ]);
+    query
+      ..addColumns([
+        amiibo.amiiboSeries.count(),
+        amiibo.amiiboSeries.count(
+          filter: amiiboUserPreferences.wishlist.equals(true),
+        ),
+        amiibo.amiiboSeries.count(
+          filter: amiiboUserPreferences.opened.isBiggerThanValue(0) |
+          amiiboUserPreferences.boxed.isBiggerThanValue(0),
+        ),
+      ])
+      ..groupBy([amiibo.amiiboSeries]);
+
+    final result = await query.map((e) => e.rawData.data).get();
+    print(result);
+    return result;
+  }
 
   Future<void> clear() async {
     await update(amiiboUserPreferences).write(AmiiboUserPreferencesCompanion(
