@@ -53,13 +53,7 @@ class _CollectionDrawerState extends ConsumerState<CollectionDrawer> {
       filters: tile != null ? [tile] : null,
     );
     if (query.categoryAttributes != attributes) {
-      ref.read(queryProvider.notifier).updateTile(
-            CategoryAttributes(
-              category: category,
-              filters: tile != null ? [tile] : null,
-            ),
-          );
-      //.updateOption(Search(category: category, search: tile));
+      ref.read(queryProvider.notifier).updateTile(attributes);
       widget.restart?.call();
     }
     Navigator.pop(context);

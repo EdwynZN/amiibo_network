@@ -126,7 +126,7 @@ class Screenshot {
       sortBy: search.sortBy,
       orderBy: search.orderBy,
     );
-    Stat _listStat = List<Stat>.from(await _service.fetchStats(
+    Stat _listStat = (await _service.fetchStats(
       category: search.categoryAttributes.category,
       cards: search.customCards,
       figures: search.customFigures,

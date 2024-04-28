@@ -12,7 +12,8 @@ import 'package:drift/drift.dart';
 part 'amiibo_dao.g.dart';
 
 @DriftAccessor(include: const {'amiibo_tables.drift'})
-class AmiiboDao extends DatabaseAccessor<AppDatabase> with _$AmiiboDaoMixin {
+class AmiiboDao extends DatabaseAccessor<AppDatabase>
+    with _$AmiiboDaoMixin, _ExpressionBuilder {
   AmiiboDao(super.db);
 
   Future<List<AmiiboDriftModel>> fetchAll({
@@ -31,33 +32,7 @@ class AmiiboDao extends DatabaseAccessor<AppDatabase> with _$AmiiboDaoMixin {
           amiiboUserPreferences.amiiboKey.equalsExp(amiibo.key),
         ),
       ],
-    )..orderBy([
-        OrderingTerm(
-          expression: switch (orderBy) {
-            s.OrderBy.NA => amiibo.na,
-            s.OrderBy.EU => amiibo.eu,
-            s.OrderBy.JP => amiibo.jp,
-            s.OrderBy.AU => amiibo.au,
-            s.OrderBy.Name => amiibo.name,
-            s.OrderBy.Owned => amiiboUserPreferences.opened,
-            s.OrderBy.Wishlist => amiiboUserPreferences.wishlist,
-            s.OrderBy.CardNumber => amiibo.cardNumber,
-            s.OrderBy.Type => amiibo.type,
-          },
-          mode: switch (sortBy) {
-            s.SortBy.DESC => OrderingMode.desc,
-            s.SortBy.ASC => OrderingMode.asc,
-          },
-        ),
-        if (orderBy == s.OrderBy.Owned)
-          OrderingTerm(
-            expression: amiiboUserPreferences.boxed,
-            mode: switch (sortBy) {
-              s.SortBy.DESC => OrderingMode.desc,
-              s.SortBy.ASC => OrderingMode.asc,
-            },
-          ),
-      ]);
+    )..orderBy(_orderExpression(orderBy, sortBy));
     if (searchAttributes != null) {
       final search = '%${searchAttributes.search}%';
       query.where(
@@ -134,7 +109,8 @@ class AmiiboDao extends DatabaseAccessor<AppDatabase> with _$AmiiboDaoMixin {
     HiddenType? hiddenCategories,
   }) async {
     final query = selectOnly(amiibo, distinct: true)
-      ..addColumns([amiibo.amiiboSeries]);
+      ..addColumns([amiibo.amiiboSeries])
+      ..orderBy(_orderExpression(orderBy, sortBy));
     if (searchAttributes != null) {
       final search = '%${searchAttributes.search}%';
       query.where(
@@ -190,7 +166,9 @@ class AmiiboDao extends DatabaseAccessor<AppDatabase> with _$AmiiboDaoMixin {
     return result;
   }
 
-  Future<List<Map<String, dynamic>>> fetchSum({bool group = false}) async {
+  Future<List<Map<String, dynamic>>> fetchSum({
+    bool group = false,
+  }) async {
     final query = selectOnly(amiibo).join([
       innerJoin(
         amiiboUserPreferences,
@@ -219,6 +197,9 @@ class AmiiboDao extends DatabaseAccessor<AppDatabase> with _$AmiiboDaoMixin {
             ),
           ],
         ).count(),
+      ])
+      ..orderBy([
+        OrderingTerm(expression: amiibo.amiiboSeries, mode: OrderingMode.asc),
       ]);
     if (group) {
       query.groupBy([amiibo.amiiboSeries]);
@@ -277,6 +258,40 @@ class AmiiboDao extends DatabaseAccessor<AppDatabase> with _$AmiiboDaoMixin {
       }
     });
   }
+}
+
+mixin _ExpressionBuilder on _$AmiiboDaoMixin {
+  List<OrderingTerm> _orderExpression(s.OrderBy orderBy, s.SortBy sortBy) {
+    return [
+      OrderingTerm(
+        expression: switch (orderBy) {
+          s.OrderBy.NA => amiibo.na,
+          s.OrderBy.EU => amiibo.eu,
+          s.OrderBy.JP => amiibo.jp,
+          s.OrderBy.AU => amiibo.au,
+          s.OrderBy.Name => amiibo.name,
+          s.OrderBy.Owned => amiiboUserPreferences.opened,
+          s.OrderBy.Wishlist => amiiboUserPreferences.wishlist,
+          s.OrderBy.CardNumber => amiibo.cardNumber,
+          s.OrderBy.Type => amiibo.type,
+          s.OrderBy.AmiiboSerie => amiibo.amiiboSeries,
+          s.OrderBy.Game => amiibo.gameSeries,
+        },
+        mode: switch (sortBy) {
+          s.SortBy.DESC => OrderingMode.desc,
+          s.SortBy.ASC => OrderingMode.asc,
+        },
+      ),
+      if (orderBy == s.OrderBy.Owned)
+        OrderingTerm(
+          expression: amiiboUserPreferences.boxed,
+          mode: switch (sortBy) {
+            s.SortBy.DESC => OrderingMode.desc,
+            s.SortBy.ASC => OrderingMode.asc,
+          },
+        ),
+    ];
+  }
 
   Expression<bool>? _updateExpression({
     required CategoryAttributes categoryAttributes,
@@ -289,17 +304,9 @@ class AmiiboDao extends DatabaseAccessor<AppDatabase> with _$AmiiboDaoMixin {
     switch (category) {
       case AmiiboCategory.Cards:
         where = amiibo.type.equals('Card');
-        final filters = categoryAttributes.filters;
-        if (filters != null && filters.isNotEmpty) {
-          where = where & amiibo.amiiboSeries.isIn(filters);
-        }
         break;
       case AmiiboCategory.Figures:
         where = amiibo.type.isIn(figureType);
-        final filters = categoryAttributes.filters;
-        if (filters != null && filters.isNotEmpty) {
-          where = where & amiibo.amiiboSeries.isIn(filters);
-        }
         break;
       case AmiiboCategory.Owned:
         where = amiiboUserPreferences.boxed.isBiggerThanValue(0) |
@@ -327,6 +334,11 @@ class AmiiboDao extends DatabaseAccessor<AppDatabase> with _$AmiiboDaoMixin {
         break;
       default:
         break;
+    }
+    final filters = categoryAttributes.filters;
+    if (filters != null && filters.isNotEmpty) {
+      final innerFilter = amiibo.amiiboSeries.isIn(filters);
+      where = where == null ? innerFilter : where & innerFilter;
     }
     return where;
   }
