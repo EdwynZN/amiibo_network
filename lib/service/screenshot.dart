@@ -211,8 +211,10 @@ class Screenshot {
     return await _saveFile(maxX.toInt(), maxY.toInt());
   }
 
-  Future<Uint8List?> saveStats(
-      {required Search search, HiddenType? hiddenType}) async {
+  Future<Uint8List?> saveStats({
+    required Search search,
+    HiddenType? hiddenType,
+  }) async {
     final series = await _service.fetchDistinct(
       categoryAttributes: search.categoryAttributes,
       cards: search.customCards,

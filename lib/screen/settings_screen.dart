@@ -549,7 +549,7 @@ class _BottomBarState extends ConsumerState<BottomBar> {
     try {
       if (!(await permissionGranted(scaffoldState))) return;
       final _service = ref.read(serviceProvider.notifier);
-      final amiibos = await _service.fetchAllAmiiboDB();
+      final amiibos = await _service.fetchAllAmiibo();
       openSnackBar(translate.savingCollectionMessage);
       await NotificationService.saveJsonFile(
         title: translate.notificationTitle,

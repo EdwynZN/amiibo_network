@@ -47,8 +47,7 @@ class ProxyServiceNotifier extends ServiceNotifer {
   }
 
   @override
-  Future<List<Amiibo>> fetchAllAmiiboDB([String? orderBy]) =>
-      service.fetchAllAmiiboDB(orderBy);
+  Future<List<Amiibo>> fetchAllAmiibo() => service.fetchAllAmiibo();
 
   @override
   Future<List<Stat>> fetchStats({
@@ -145,9 +144,10 @@ class DriftServiceNotifier extends ServiceNotifer {
   }) : _dao = database.amiiboDao;
 
   @override
-  Future<List<Amiibo>> fetchAllAmiiboDB([String? orderBy]) async {
+  Future<List<Amiibo>> fetchAllAmiibo() async {
     final result = await _dao.fetchAll(
-      categoryAttributes: const CategoryAttributes(category: AmiiboCategory.All),
+      categoryAttributes:
+          const CategoryAttributes(category: AmiiboCategory.All),
     );
     return result.map((e) => e.toDomain()).toList();
   }
@@ -216,7 +216,7 @@ class DriftServiceNotifier extends ServiceNotifer {
 
   @override
   Future<String> jsonFileDB() async {
-    final amiibos = await fetchAllAmiiboDB();
+    final amiibos = await fetchAllAmiibo();
     return jsonEncode(amiibos);
   }
 

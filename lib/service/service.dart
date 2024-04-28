@@ -17,8 +17,8 @@ interface class Service {
     return _dao.fetchByKey(key);
   }
 
-  Future<List<Amiibo>> fetchAllAmiiboDB([String? orderBy]) =>
-      _dao.fetchAll(orderBy);
+  Future<List<Amiibo>> fetchAllAmiibo() =>
+      _dao.fetchAll();
 
   Future<List<Stat>> fetchStats({
     required AmiiboCategory category,

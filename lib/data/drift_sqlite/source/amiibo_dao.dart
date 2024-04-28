@@ -104,14 +104,10 @@ class AmiiboDao extends DatabaseAccessor<AppDatabase> with _$AmiiboDaoMixin {
       ],
     )..where(amiibo.key.equals(key));
 
-    try {
-      final result = await query
-          .map((p0) => AmiiboDriftModel.fromJson(p0.rawData.data))
-          .getSingle();
-      return result;
-    } catch (_, __) {
-      return null;
-    }
+    final result = await query
+        .map((p0) => AmiiboDriftModel.fromJson(p0.rawData.data))
+        .getSingleOrNull();
+    return result;
   }
 
   Future<void> insertAll({
@@ -204,18 +200,40 @@ class AmiiboDao extends DatabaseAccessor<AppDatabase> with _$AmiiboDaoMixin {
     ]);
     query
       ..addColumns([
+        if (group) amiibo.amiiboSeries,
         amiibo.amiiboSeries.count(),
-        amiibo.amiiboSeries.count(
-          filter: amiiboUserPreferences.wishlist.equals(true),
-        ),
-        amiibo.amiiboSeries.count(
-          filter: amiiboUserPreferences.opened.isBiggerThanValue(0) |
-              amiiboUserPreferences.boxed.isBiggerThanValue(0),
-        ),
-      ])
-      ..groupBy([amiibo.amiiboSeries]);
+        CaseWhenExpression(
+          cases: [
+            CaseWhen(
+              amiiboUserPreferences.wishlist.isValue(true),
+              then: const Constant(1),
+            ),
+          ],
+        ).count(),
+        CaseWhenExpression(
+          cases: [
+            CaseWhen(
+              amiiboUserPreferences.opened.isBiggerThanValue(0) |
+                  amiiboUserPreferences.boxed.isBiggerThanValue(0),
+              then: const Constant(1),
+            ),
+          ],
+        ).count(),
+      ]);
+    if (group) {
+      query.groupBy([amiibo.amiiboSeries]);
+    }
 
-    final result = await query.map((e) => e.rawData.data).get();
+    final result = await query.map((e) {
+      final map = e.rawData.data;
+      int index = group ? 1 : 0;
+      return {
+        if (group) 'amiiboSeries': map['amiibo.amiiboSeries'],
+        'Total': map['c${index++}'],
+        'Wished': map['c${index++}'],
+        'Owned': map['c${index++}'],
+      };
+    }).get();
     return result;
   }
 
