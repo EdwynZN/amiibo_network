@@ -73,7 +73,7 @@ class _StatsPageState extends ConsumerState<StatsPage> {
         case AmiiboCategory.All:
           expression = And();
           break;
-        case AmiiboCategory.Custom:
+        case AmiiboCategory.AmiiboSeries:
           final query = ref.read(queryProvider.notifier);
           expression = Bracket(InCond.inn('type', figureType) &
                   InCond.inn('amiiboSeries', query.customFigures)) |
@@ -96,9 +96,9 @@ class _StatsPageState extends ConsumerState<StatsPage> {
   Widget build(BuildContext context) {
     final _canSave = ref.watch(
       queryProvider.select<bool>((value) =>
-        AmiiboCategory.Custom != category ||
-        value.categoryAttributes.filters.isEmpty
-      ),
+          AmiiboCategory.AmiiboSeries != category ||
+          (value.categoryAttributes.cards.isEmpty &&
+              value.categoryAttributes.figures.isEmpty)),
     );
     if (size.longestSide >= 800)
       return SafeArea(
@@ -115,7 +115,8 @@ class _StatsPageState extends ConsumerState<StatsPage> {
                     NavigationRailDestination(
                       icon: const Icon(Icons.edit_outlined),
                       selectedIcon: const Icon(Icons.edit),
-                      label: Text(translate!.category(AmiiboCategory.Custom)),
+                      label: Text(
+                          translate!.category(AmiiboCategory.AmiiboSeries)),
                     ),
                     NavigationRailDestination(
                       icon: const Icon(Icons.sports_esports_outlined),
@@ -179,7 +180,7 @@ class _StatsPageState extends ConsumerState<StatsPage> {
                 BottomNavigationBarItem(
                   icon: const Icon(Icons.edit_outlined),
                   activeIcon: const Icon(Icons.edit),
-                  label: translate!.category(AmiiboCategory.Custom),
+                  label: translate!.category(AmiiboCategory.AmiiboSeries),
                 ),
                 BottomNavigationBarItem(
                   icon: const Icon(Icons.sports_esports_outlined),
@@ -305,24 +306,26 @@ class _FAB extends ConsumerWidget {
       child: const Icon(Icons.save),
       tooltip: translate.saveStatsTooltip,
       heroTag: 'MenuFAB',
-      onPressed: isLoading ? null : () async {
-        final ScaffoldMessengerState scaffoldState =
-            ScaffoldMessenger.of(context);
-        if (!(await permissionGranted(scaffoldState))) return;
-        String message = translate.savingCollectionMessage;
-        final _screenshot = ref.read(screenshotProvider.notifier);
-        if (_screenshot.isLoading) message = translate.recordMessage;
-        scaffoldState.hideCurrentSnackBar();
-        scaffoldState.showSnackBar(SnackBar(content: Text(message)));
-        if (!_screenshot.isLoading) {
-          await _screenshot.saveStats(
-            context,
-            search: Search(
-              categoryAttributes: CategoryAttributes(category: _category),
-            ),
-          );
-        }
-      },
+      onPressed: isLoading
+          ? null
+          : () async {
+              final ScaffoldMessengerState scaffoldState =
+                  ScaffoldMessenger.of(context);
+              if (!(await permissionGranted(scaffoldState))) return;
+              String message = translate.savingCollectionMessage;
+              final _screenshot = ref.read(screenshotProvider.notifier);
+              if (_screenshot.isLoading) message = translate.recordMessage;
+              scaffoldState.hideCurrentSnackBar();
+              scaffoldState.showSnackBar(SnackBar(content: Text(message)));
+              if (!_screenshot.isLoading) {
+                await _screenshot.saveStats(
+                  context,
+                  search: Search(
+                    categoryAttributes: CategoryAttributes(category: _category),
+                  ),
+                );
+              }
+            },
     );
   }
 }

@@ -26,27 +26,24 @@ interface class Service {
     bool group = false,
   }) async {
     final category = categoryAttributes.category;
-    final series = categoryAttributes.filters;
+    final figures = categoryAttributes.figures;
+    final cards = categoryAttributes.cards;
     late Expression expression;
     switch (category) {
       case AmiiboCategory.All:
         expression = And();
         break;
-      case AmiiboCategory.Custom:
+      case AmiiboCategory.AmiiboSeries:
         expression = Bracket(InCond.inn('type', figureType) &
-                InCond.inn('amiiboSeries', series)) |
+                InCond.inn('amiiboSeries', figures)) |
             Bracket(
-                Cond.eq('type', 'Card') & InCond.inn('amiiboSeries', series));
+                Cond.eq('type', 'Card') & InCond.inn('amiiboSeries', cards));
         break;
       case AmiiboCategory.Figures:
         expression = InCond.inn('type', figureType);
         break;
       case AmiiboCategory.Cards:
         expression = Cond.eq('type', 'Card');
-        break;
-      case AmiiboCategory.AmiiboSeries:
-        expression =
-            InCond.inn('amiiboSeries', series);
         break;
       default:
         break;
@@ -138,7 +135,7 @@ interface class Service {
                 category == AmiiboCategory.Figures))) {
       category = cards.isEmpty || figures.isEmpty
           ? AmiiboCategory.All
-          : AmiiboCategory.Custom;
+          : AmiiboCategory.AmiiboSeries;
     }
     late Expression where;
     switch (category) {
@@ -158,17 +155,7 @@ interface class Service {
           where &= Cond.eq('amiiboSeries', search);
         }
         break;
-      /* case AmiiboCategory.Game:
-        where = Cond.like('gameSeries', '%$search%');
-        break;
-      case AmiiboCategory.Name:
-        where = Cond.like('name', '%$search%') |
-            Cond.like('character', '%$search%');
-        break; */
       case AmiiboCategory.AmiiboSeries:
-        where = Cond.like('amiiboSeries', '%$search%');
-        break;
-      case AmiiboCategory.Custom:
         final figuresWhere = Bracket(InCond.inn('type', figureType) &
             InCond.inn('amiiboSeries', figures));
         final cardsWhere = Bracket(
@@ -180,12 +167,13 @@ interface class Service {
         } else {
           where = figuresWhere | cardsWhere;
         }
+        where &= Cond.like('amiiboSeries', '%$search%');
         break;
       case AmiiboCategory.All:
       default:
         where = And();
     }
-    if (category != AmiiboCategory.Custom && hiddenCategories != null) {
+    if (category != AmiiboCategory.AmiiboSeries && hiddenCategories != null) {
       final figuresIgnore = InCond.notInn('type', figureType);
       final cardsIgnore = Cond.ne('type', 'Card');
       where = (hiddenCategories == HiddenType.Figures

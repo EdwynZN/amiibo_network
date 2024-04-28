@@ -79,7 +79,7 @@ class ScreenshotNotifier extends StateNotifier<AsyncValue<bool>> {
             name = 'MyFigureStats';
             id = 3;
             break;
-          case AmiiboCategory.Custom:
+          case AmiiboCategory.AmiiboSeries:
             name = 'MyCustomStats';
             id = 7;
             break;
@@ -133,7 +133,7 @@ class ScreenshotNotifier extends StateNotifier<AsyncValue<bool>> {
           name = 'MyFigureCollection';
           id = 5;
           break;
-        case AmiiboCategory.Custom:
+        case AmiiboCategory.AmiiboSeries:
           name = 'MyCustomCollection';
           id = 8;
           break;

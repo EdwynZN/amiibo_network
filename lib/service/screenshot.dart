@@ -212,27 +212,17 @@ class Screenshot {
     required Search search,
     HiddenType? hiddenType,
   }) async {
-    final series = await _service.fetchDistinct(
-      categoryAttributes: search.categoryAttributes,
-      hiddenCategories: hiddenType,
-      orderBy: search.orderBy,
-      sortBy: search.sortBy,
-      searchAttributes: search.searchAttributes,
+    final copyWithAmiiboSeries = search.categoryAttributes.copyWith(
+      category: AmiiboCategory.AmiiboSeries,
     );
     final List<Stat> stats = await _service.fetchStats(
       group: true,
-      categoryAttributes: CategoryAttributes(
-        category: AmiiboCategory.AmiiboSeries,
-        filters: series.toSet().toList(),
-      ),
+      categoryAttributes: copyWithAmiiboSeries,
       searchAttributes: null,
       hiddenCategories: hiddenType,
     );
     final List<Stat> general = await _service.fetchStats(
-      categoryAttributes: CategoryAttributes(
-        category: AmiiboCategory.AmiiboSeries,
-        filters: series.toSet().toList(),
-      ),
+      categoryAttributes: copyWithAmiiboSeries,
       searchAttributes: null,
       hiddenCategories: hiddenType,
     );

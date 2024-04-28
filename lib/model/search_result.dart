@@ -22,7 +22,8 @@ class Query with _$Query {
 class CategoryAttributes with _$CategoryAttributes {
 
   const factory CategoryAttributes({
-    @Default([]) List<String> filters,
+    @Default([]) List<String> figures,
+    @Default([]) List<String> cards,
     required AmiiboCategory category,
   }) = _CategoryAttributes;
 

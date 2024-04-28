@@ -77,13 +77,12 @@ final queryProvider = StateNotifierProvider<QueryBuilderProvider, Search>(
     final sortBy = SortBy.values[sort];
     final category = _customCards.isEmpty && _customFigures.isEmpty
         ? AmiiboCategory.All
-        : AmiiboCategory.Custom;
+        : AmiiboCategory.AmiiboSeries;
     final search = Search(
       categoryAttributes: CategoryAttributes(
         category: category,
-        filters: category != AmiiboCategory.Custom
-            ? const []
-            : [..._customFigures, ..._customCards],
+        cards: _customCards,
+        figures: _customFigures,
       ),
       orderBy: orderBy,
       sortBy: sortBy,
@@ -144,9 +143,10 @@ class QueryBuilderProvider extends StateNotifier<Search> {
       return;
     }
 
-    if (category.category == AmiiboCategory.Custom) {
+    if (category.category == AmiiboCategory.AmiiboSeries) {
       category = category.copyWith(
-        filters: [..._customCards, ..._customFigures],
+        cards: _customCards,
+        figures: _customFigures,
       );
     }
 
@@ -166,9 +166,11 @@ class QueryBuilderProvider extends StateNotifier<Search> {
       await preferences.setStringList(sharedCustomFigures, figures!);
       _customFigures = figures;
       _customCards = cards;
-      if (state.categoryAttributes.category == AmiiboCategory.Custom) {
-        state =
-            state.copyWith.categoryAttributes(filters: [...figures, ...cards]);
+      if (state.categoryAttributes.category == AmiiboCategory.AmiiboSeries) {
+        state = state.copyWith.categoryAttributes(
+          figures: figures,
+          cards: cards,
+        );
       }
     }
   }

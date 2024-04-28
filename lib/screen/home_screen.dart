@@ -62,8 +62,8 @@ final AutoDisposeProvider<TitleSearch> _titleProvider =
   return TitleSearch(
     title: switch (category) {
       AmiiboCategory.All => 'All',
-      AmiiboCategory.Custom => 'Custom',
-      _ => query.categoryAttributes.filters.firstOrNull
+      AmiiboCategory.AmiiboSeries => 'Custom',
+      _ => query.categoryAttributes.figures.firstOrNull
         ?? category.name,
     },
     type: TitleType.category,
@@ -304,7 +304,7 @@ class _AmiiboListWidget extends HookConsumerWidget {
     final ignore = ref.watch(lockProvider).lock;
     final amiiboList = ref.watch(amiiboHomeListProvider);
     final isCustom = ref.watch(queryProvider.select<bool>(
-        (cb) => cb.categoryAttributes.category == AmiiboCategory.Custom));
+        (cb) => cb.categoryAttributes.category == AmiiboCategory.AmiiboSeries));
     final controller = useAnimationController(
       duration: const Duration(seconds: 1),
       animationBehavior: AnimationBehavior.preserve,
@@ -362,7 +362,7 @@ class _AmiiboListWidget extends HookConsumerWidget {
                             context: context,
                             builder: (BuildContext context) =>
                                 CustomQueryWidget(
-                              translate.category(AmiiboCategory.Custom),
+                              translate.category(AmiiboCategory.AmiiboSeries),
                               figures: figures,
                               cards: cards,
                             ),

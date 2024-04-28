@@ -343,7 +343,7 @@ class __SaveCollectionState extends ConsumerState<_SaveCollection> {
           else if (equalCards! && figures.isEmpty)
             category = AmiiboCategory.Cards;
           else if (!equalCards || !equalFigures)
-            category = AmiiboCategory.Custom;
+            category = AmiiboCategory.AmiiboSeries;
           await _saveCollection(category, figures, cards);
         }
       },

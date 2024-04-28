@@ -4,7 +4,7 @@
   "splashWelcome": "Bienvenue",
   "splashError": "Impossible de mettre à jour \u2639",
   "showPercentage": "Afficher le pourcentage",
-  "category": "{choice, select, All {Tous} Owned {Possédé} Wishlist {Liste de souhaits} Name {Nom} Game {Jeux} AmiiboSeries {Série} Figures {Tous les Figurines} Cards {Toutes les Cartes} Custom {Personnel} other {{choice}}} ",
+  "category": "{choice, select, All {Tous} Owned {Possédé} Wishlist {Liste de souhaits} Name {Nom} Game {Jeux} Figures {Tous les Figurines} Cards {Toutes les Cartes} AmiiboSeries {Personnel} other {{choice}}} ",
   "all": "Tous",
   "owned": "Possédé",
   "wished": "Souhaité",
