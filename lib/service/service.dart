@@ -1,4 +1,6 @@
-import 'package:amiibo_network/dao/SQLite/amiibo_sqlite.dart';
+import 'package:amiibo_network/data/common.dart';
+import 'package:amiibo_network/data/sqlite/dao/SQLite/amiibo_sqlite.dart';
+import 'package:amiibo_network/data/sqlite/model/expression.dart';
 import 'package:amiibo_network/enum/amiibo_category_enum.dart';
 import 'package:amiibo_network/enum/hidden_types.dart';
 import 'package:amiibo_network/enum/sort_enum.dart';
@@ -163,13 +165,13 @@ interface class Service {
       case AmiiboCategory.Cards:
         where = Cond.eq('type', 'Card');
         break;
-      case AmiiboCategory.Game:
+      /* case AmiiboCategory.Game:
         where = Cond.like('gameSeries', '%$search%');
         break;
       case AmiiboCategory.Name:
         where = Cond.like('name', '%$search%') |
             Cond.like('character', '%$search%');
-        break;
+        break; */
       case AmiiboCategory.AmiiboSeries:
         where = Cond.like('amiiboSeries', '%$search%');
         break;

@@ -2,9 +2,7 @@ import 'package:amiibo_network/enum/amiibo_category_enum.dart';
 import 'package:amiibo_network/enum/hidden_types.dart';
 import 'package:amiibo_network/enum/sort_enum.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:equatable/equatable.dart';
 
-part 'expression.dart';
 part 'search_result.freezed.dart';
 
 @freezed
@@ -12,9 +10,7 @@ class Query with _$Query {
   const Query._();
 
   const factory Query.search({
-    @Deprecated('use SearchAttribute') required AmiiboCategory category,
-    @Default(CategoryAttributes(category: AmiiboCategory.All)) CategoryAttributes categoryAttributes,
-    @Deprecated('use SearchAttribute') String? search,
+    @Default(CategoryAttributes(category: AmiiboCategory.All)) required CategoryAttributes categoryAttributes,
     SearchAttributes? searchAttributes,
     @Default(OrderBy.NA) OrderBy orderBy,
     @Default(SortBy.DESC) SortBy sortBy,

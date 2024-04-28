@@ -321,7 +321,9 @@ class _FAB extends ConsumerWidget {
         if (!_screenshot.isLoading) {
           await _screenshot.saveStats(
             context,
-            search: Search(category: _category),
+            search: Search(
+              categoryAttributes: CategoryAttributes(category: _category),
+            ),
           );
         }
       },

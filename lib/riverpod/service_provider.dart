@@ -162,7 +162,6 @@ class DriftServiceNotifier extends ServiceNotifer {
   Future<List<Amiibo>> fetchByCategory({
     required CategoryAttributes categoryAttributes,
     required SearchAttributes? searchAttributes,
-    String? search,
     OrderBy orderBy = OrderBy.NA,
     SortBy sortBy = SortBy.DESC,
     List<String> figures = const [],
@@ -174,7 +173,7 @@ class DriftServiceNotifier extends ServiceNotifer {
       cards: cards,
       figures: figures,
       hiddenCategories: hiddenCategories,
-      search: search,
+      searchAttributes: searchAttributes,
       orderBy: orderBy,
       sortBy: sortBy,
     );
@@ -199,7 +198,7 @@ class DriftServiceNotifier extends ServiceNotifer {
       hiddenCategories: hiddenCategories,
       orderBy: orderBy,
       sortBy: sortBy,
-      search: searchAttributes?.search,
+      searchAttributes: searchAttributes,
     );
   }
 

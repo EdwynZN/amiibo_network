@@ -2,7 +2,7 @@ import 'dart:async';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import '../utils/preferences_constants.dart';
+import '../../utils/preferences_constants.dart';
 
 const String _amiiboTable = '''
     CREATE TABLE IF NOT EXISTS amiibo(

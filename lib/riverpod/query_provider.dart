@@ -76,9 +76,11 @@ final queryProvider = StateNotifierProvider<QueryBuilderProvider, Search>(
     final orderBy = OrderBy.values[order];
     final sortBy = SortBy.values[sort];
     final search = Search(
-      category: _customCards.isEmpty && _customFigures.isEmpty
+      categoryAttributes: CategoryAttributes(
+        category: _customCards.isEmpty && _customFigures.isEmpty
           ? AmiiboCategory.All
           : AmiiboCategory.Custom,
+      ),
       customCards: _customCards,
       customFigures: _customFigures,
       orderBy: orderBy,

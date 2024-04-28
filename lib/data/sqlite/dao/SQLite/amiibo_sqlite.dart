@@ -2,7 +2,7 @@ import 'package:amiibo_network/data/sqlite/model/amiibo_sqlite_model.dart';
 import 'package:amiibo_network/model/update_amiibo_user_attributes.dart';
 
 import '../dao.dart';
-import '../../data/database.dart';
+import '../../database.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:amiibo_network/model/amiibo.dart';
 

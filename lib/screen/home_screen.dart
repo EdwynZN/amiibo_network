@@ -22,7 +22,7 @@ import 'package:amiibo_network/widget/selected_chip.dart';
 import 'package:amiibo_network/widget/selected_widget.dart';
 import 'package:amiibo_network/widget/sort_bottomsheet.dart';
 import 'package:flutter/material.dart';
-import 'package:amiibo_network/data/database.dart';
+import 'package:amiibo_network/data/sqlite/database.dart';
 import 'package:flutter/rendering.dart';
 import 'package:amiibo_network/widget/drawer.dart';
 import 'package:amiibo_network/widget/animated_widgets.dart';

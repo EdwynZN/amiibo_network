@@ -289,7 +289,9 @@ class __SaveCollectionState extends ConsumerState<_SaveCollection> {
     if (!_screenshot.isLoading) {
       await _screenshot.saveAmiibos(
         context,
-        search: Search(category: category),
+        search: Search(
+          categoryAttributes: CategoryAttributes(category: category),
+        ),
         useHidden: false,
       );
       if (mounted) {

@@ -1,15 +1,15 @@
+import 'package:amiibo_network/data/common.dart';
 import 'package:amiibo_network/data/drift_sqlite/model/drift_joined_amiibo_preferences.dart';
 import 'package:amiibo_network/data/drift_sqlite/source/drift_database.dart';
 import 'package:amiibo_network/enum/amiibo_category_enum.dart';
 import 'package:amiibo_network/enum/hidden_types.dart';
 import 'package:amiibo_network/enum/sort_enum.dart' as s;
 import 'package:amiibo_network/model/amiibo.dart' hide Amiibo;
+import 'package:amiibo_network/model/search_result.dart';
 import 'package:amiibo_network/model/update_amiibo_user_attributes.dart';
 import 'package:drift/drift.dart';
 
 part 'amiibo_dao.g.dart';
-
-const _figureTypes = ['Figure', 'Yarn', 'Band'];
 
 @DriftAccessor(include: const {'amiibo_tables.drift'})
 class AmiiboDao extends DatabaseAccessor<AppDatabase> with _$AmiiboDaoMixin {
@@ -17,7 +17,7 @@ class AmiiboDao extends DatabaseAccessor<AppDatabase> with _$AmiiboDaoMixin {
 
   Future<List<AmiiboDriftModel>> fetchAll({
     required AmiiboCategory category,
-    String? search,
+    SearchAttributes? searchAttributes,
     s.OrderBy orderBy = s.OrderBy.NA,
     s.SortBy sortBy = s.SortBy.DESC,
     List<String> figures = const [],
@@ -58,12 +58,12 @@ class AmiiboDao extends DatabaseAccessor<AppDatabase> with _$AmiiboDaoMixin {
             },
           ),
       ]);
-    if (search != null) {
-      search = '%$search%';
+    if (searchAttributes != null) {
+      final search = '%${searchAttributes.search}%';
       query.where(
-        switch (category) {
-          AmiiboCategory.Game => amiibo.gameSeries.like(search),
-          AmiiboCategory.AmiiboSeries => amiibo.amiiboSeries.like(search),
+        switch (searchAttributes.category) {
+          SearchCategory.Game => amiibo.gameSeries.like(search),
+          SearchCategory.AmiiboSeries => amiibo.amiiboSeries.like(search),
           _ => amiibo.name.like(search) | amiibo.character.like(search),
         },
       );
@@ -72,7 +72,7 @@ class AmiiboDao extends DatabaseAccessor<AppDatabase> with _$AmiiboDaoMixin {
       final typeCol = amiibo.type;
       query.where(
         switch (hiddenCategories) {
-          HiddenType.Figures => typeCol.isNotIn(_figureTypes),
+          HiddenType.Figures => typeCol.isNotIn(figureType),
           HiddenType.Cards => typeCol.isNotValue('Card'),
         },
       );
@@ -130,7 +130,7 @@ class AmiiboDao extends DatabaseAccessor<AppDatabase> with _$AmiiboDaoMixin {
 
   Future<List<String>> fetchDistincts({
     required AmiiboCategory category,
-    String? search,
+    SearchAttributes? searchAttributes,
     s.OrderBy orderBy = s.OrderBy.NA,
     s.SortBy sortBy = s.SortBy.DESC,
     List<String> figures = const [],
@@ -139,12 +139,12 @@ class AmiiboDao extends DatabaseAccessor<AppDatabase> with _$AmiiboDaoMixin {
   }) async {
     final query = selectOnly(amiibo, distinct: true)
       ..addColumns([amiibo.amiiboSeries]);
-    if (search != null) {
-      search = '%$search%';
+    if (searchAttributes != null) {
+      final search = '%${searchAttributes.search}%';
       query.where(
-        switch (category) {
-          AmiiboCategory.Game => amiibo.gameSeries.like(search),
-          AmiiboCategory.AmiiboSeries => amiibo.amiiboSeries.like(search),
+        switch (searchAttributes.category) {
+          SearchCategory.Game => amiibo.gameSeries.like(search),
+          SearchCategory.AmiiboSeries => amiibo.amiiboSeries.like(search),
           _ => amiibo.name.like(search) | amiibo.character.like(search),
         },
       );
@@ -153,7 +153,7 @@ class AmiiboDao extends DatabaseAccessor<AppDatabase> with _$AmiiboDaoMixin {
       final typeCol = amiibo.type;
       query.where(
         switch (hiddenCategories) {
-          HiddenType.Figures => typeCol.isNotIn(_figureTypes),
+          HiddenType.Figures => typeCol.isNotIn(figureType),
           HiddenType.Cards => typeCol.isNotValue('Card'),
         },
       );
@@ -216,7 +216,6 @@ class AmiiboDao extends DatabaseAccessor<AppDatabase> with _$AmiiboDaoMixin {
       ..groupBy([amiibo.amiiboSeries]);
 
     final result = await query.map((e) => e.rawData.data).get();
-    print(result);
     return result;
   }
 
