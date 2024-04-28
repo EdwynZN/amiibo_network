@@ -234,7 +234,7 @@ class _CollectionDrawerState extends ConsumerState<CollectionDrawer> {
                                           _AmiiboTile(
                                             name: translate.category(
                                                 AmiiboCategory.Figures),
-                                            isSelected: _selected == 'Figures',
+                                            isSelected: _selected == null && _category == AmiiboCategory.Figures,
                                             icon: const Icon(
                                               Icons.all_inclusive,
                                               size: 16,
@@ -242,7 +242,7 @@ class _CollectionDrawerState extends ConsumerState<CollectionDrawer> {
                                             onTap: () => _onTapTile(
                                               ref,
                                               AmiiboCategory.Figures,
-                                              'Figures',
+                                              null,
                                             ),
                                           ),
                                           if (snapshot
@@ -289,7 +289,7 @@ class _CollectionDrawerState extends ConsumerState<CollectionDrawer> {
                                           _AmiiboTile(
                                             name: translate
                                                 .category(AmiiboCategory.Cards),
-                                            isSelected: _selected == 'Cards',
+                                            isSelected: _selected == null && _category == AmiiboCategory.Cards,
                                             icon: const Icon(
                                               Icons.all_inclusive,
                                               size: 16,
@@ -297,7 +297,7 @@ class _CollectionDrawerState extends ConsumerState<CollectionDrawer> {
                                             onTap: () => _onTapTile(
                                               ref,
                                               AmiiboCategory.Cards,
-                                              'Cards',
+                                              null,
                                             ),
                                           ),
                                           if (snapshot

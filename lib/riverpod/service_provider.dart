@@ -99,8 +99,7 @@ class ProxyServiceNotifier extends ServiceNotifer {
 
   @override
   Future<List<String>> fetchDistinct({
-    List<String>? column,
-    required AmiiboCategory category,
+    required CategoryAttributes categoryAttributes,
     required SearchAttributes? searchAttributes,
     OrderBy orderBy = OrderBy.NA,
     SortBy sortBy = SortBy.DESC,
@@ -109,8 +108,7 @@ class ProxyServiceNotifier extends ServiceNotifer {
     HiddenType? hiddenCategories,
   }) =>
       service.fetchDistinct(
-        column: column,
-        category: category,
+        categoryAttributes: categoryAttributes,
         searchAttributes: searchAttributes,
         figures: figures,
         cards: cards,
@@ -148,7 +146,9 @@ class DriftServiceNotifier extends ServiceNotifer {
 
   @override
   Future<List<Amiibo>> fetchAllAmiiboDB([String? orderBy]) async {
-    final result = await _dao.fetchAll(category: AmiiboCategory.All);
+    final result = await _dao.fetchAll(
+      categoryAttributes: const CategoryAttributes(category: AmiiboCategory.All),
+    );
     return result.map((e) => e.toDomain()).toList();
   }
 
@@ -169,7 +169,7 @@ class DriftServiceNotifier extends ServiceNotifer {
     HiddenType? hiddenCategories,
   }) async {
     final result = await _dao.fetchAll(
-      category: categoryAttributes.category,
+      categoryAttributes: categoryAttributes,
       cards: cards,
       figures: figures,
       hiddenCategories: hiddenCategories,
@@ -182,8 +182,7 @@ class DriftServiceNotifier extends ServiceNotifer {
 
   @override
   Future<List<String>> fetchDistinct({
-    List<String>? column,
-    required AmiiboCategory category,
+    required CategoryAttributes categoryAttributes,
     required SearchAttributes? searchAttributes,
     OrderBy orderBy = OrderBy.NA,
     SortBy sortBy = SortBy.DESC,
@@ -192,7 +191,7 @@ class DriftServiceNotifier extends ServiceNotifer {
     HiddenType? hiddenCategories,
   }) {
     return _dao.fetchDistincts(
-      category: category,
+      categoryAttributes: categoryAttributes,
       cards: cards ?? const [],
       figures: figures ?? const [],
       hiddenCategories: hiddenCategories,
@@ -217,8 +216,7 @@ class DriftServiceNotifier extends ServiceNotifer {
 
   @override
   Future<String> jsonFileDB() async {
-    final result = await _dao.fetchAll(category: AmiiboCategory.All);
-    final List<Amiibo> amiibos = result.map((e) => e.toDomain()).toList();
+    final amiibos = await fetchAllAmiiboDB();
     return jsonEncode(amiibos);
   }
 

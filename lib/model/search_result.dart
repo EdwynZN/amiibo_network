@@ -10,7 +10,7 @@ class Query with _$Query {
   const Query._();
 
   const factory Query.search({
-    @Default(CategoryAttributes(category: AmiiboCategory.All)) required CategoryAttributes categoryAttributes,
+    @Default(CategoryAttributes(category: AmiiboCategory.All)) CategoryAttributes categoryAttributes,
     SearchAttributes? searchAttributes,
     @Default(OrderBy.NA) OrderBy orderBy,
     @Default(SortBy.DESC) SortBy sortBy,

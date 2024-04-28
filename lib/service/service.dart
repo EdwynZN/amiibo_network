@@ -82,7 +82,8 @@ interface class Service {
       hiddenCategories: hiddenCategories,
     );
     if (orderBy == OrderBy.CardNumber &&
-        (hiddenCategories == HiddenType.Cards || category == AmiiboCategory.Figures)) {
+        (hiddenCategories == HiddenType.Cards ||
+            category == AmiiboCategory.Figures)) {
       orderBy = OrderBy.NA;
     }
     final order = _order(orderBy, sortBy);
@@ -131,8 +132,10 @@ interface class Service {
     HiddenType? hiddenCategories,
   }) {
     if (hiddenCategories != null &&
-        ((hiddenCategories == HiddenType.Cards && category == AmiiboCategory.Cards) ||
-            (hiddenCategories == HiddenType.Figures && category == AmiiboCategory.Figures))) {
+        ((hiddenCategories == HiddenType.Cards &&
+                category == AmiiboCategory.Cards) ||
+            (hiddenCategories == HiddenType.Figures &&
+                category == AmiiboCategory.Figures))) {
       category = cards.isEmpty || figures.isEmpty
           ? AmiiboCategory.All
           : AmiiboCategory.Custom;
@@ -209,8 +212,7 @@ interface class Service {
       _dao.insertImport(amiibos);
 
   Future<List<String>> fetchDistinct({
-    List<String>? column,
-    required AmiiboCategory category,
+    required CategoryAttributes categoryAttributes,
     required SearchAttributes? searchAttributes,
     OrderBy orderBy = OrderBy.NA,
     SortBy sortBy = SortBy.DESC,
@@ -218,6 +220,7 @@ interface class Service {
     List<String>? cards,
     HiddenType? hiddenCategories,
   }) {
+    final category = categoryAttributes.category;
     final expression = _updateExpression(
       category: category,
       search: searchAttributes?.search,
@@ -226,14 +229,15 @@ interface class Service {
       hiddenCategories: hiddenCategories,
     );
     if (orderBy == OrderBy.CardNumber &&
-        (hiddenCategories == HiddenType.Cards || category == AmiiboCategory.Figures)) {
+        (hiddenCategories == HiddenType.Cards ||
+            category == AmiiboCategory.Figures)) {
       orderBy = OrderBy.NA;
     }
     final order = _order(orderBy, sortBy);
     String? where = expression.toString();
     List<Object>? args = expression.args;
     if (where.isEmpty || args.isEmpty) where = args = null;
-    return _dao.fetchDistinct('amiibo', column, where, args, order);
+    return _dao.fetchDistinct('amiibo', where, args, order);
   }
 
   Future<List<String>> search({

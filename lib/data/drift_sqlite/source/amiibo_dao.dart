@@ -16,7 +16,7 @@ class AmiiboDao extends DatabaseAccessor<AppDatabase> with _$AmiiboDaoMixin {
   AmiiboDao(super.db);
 
   Future<List<AmiiboDriftModel>> fetchAll({
-    required AmiiboCategory category,
+    required CategoryAttributes categoryAttributes,
     SearchAttributes? searchAttributes,
     s.OrderBy orderBy = s.OrderBy.NA,
     s.SortBy sortBy = s.SortBy.DESC,
@@ -79,7 +79,7 @@ class AmiiboDao extends DatabaseAccessor<AppDatabase> with _$AmiiboDaoMixin {
     }
 
     final whereExpression = _updateExpression(
-      category: category,
+      categoryAttributes: categoryAttributes,
       cards: cards,
       figures: figures,
       hiddenCategories: hiddenCategories,
@@ -129,7 +129,7 @@ class AmiiboDao extends DatabaseAccessor<AppDatabase> with _$AmiiboDaoMixin {
   }
 
   Future<List<String>> fetchDistincts({
-    required AmiiboCategory category,
+    required CategoryAttributes categoryAttributes,
     SearchAttributes? searchAttributes,
     s.OrderBy orderBy = s.OrderBy.NA,
     s.SortBy sortBy = s.SortBy.DESC,
@@ -160,7 +160,7 @@ class AmiiboDao extends DatabaseAccessor<AppDatabase> with _$AmiiboDaoMixin {
     }
 
     final whereExpression = _updateExpression(
-      category: category,
+      categoryAttributes: categoryAttributes,
       cards: cards,
       figures: figures,
       hiddenCategories: hiddenCategories,
@@ -210,7 +210,7 @@ class AmiiboDao extends DatabaseAccessor<AppDatabase> with _$AmiiboDaoMixin {
         ),
         amiibo.amiiboSeries.count(
           filter: amiiboUserPreferences.opened.isBiggerThanValue(0) |
-          amiiboUserPreferences.boxed.isBiggerThanValue(0),
+              amiiboUserPreferences.boxed.isBiggerThanValue(0),
         ),
       ])
       ..groupBy([amiibo.amiiboSeries]);
@@ -261,13 +261,28 @@ class AmiiboDao extends DatabaseAccessor<AppDatabase> with _$AmiiboDaoMixin {
   }
 
   Expression<bool>? _updateExpression({
-    required AmiiboCategory category,
+    required CategoryAttributes categoryAttributes,
     HiddenType? hiddenCategories,
     List<String> figures = const [],
     List<String> cards = const [],
   }) {
     Expression<bool>? where;
+    final category = categoryAttributes.category;
     switch (category) {
+      case AmiiboCategory.Cards:
+        where = amiibo.type.equals('Card');
+        final filters = categoryAttributes.filters;
+        if (filters != null && filters.isNotEmpty) {
+          where = where & amiibo.amiiboSeries.isIn(filters);
+        }
+        break;
+      case AmiiboCategory.Figures:
+        where = amiibo.type.isIn(figureType);
+        final filters = categoryAttributes.filters;
+        if (filters != null && filters.isNotEmpty) {
+          where = where & amiibo.amiiboSeries.isIn(filters);
+        }
+        break;
       case AmiiboCategory.Owned:
         where = amiiboUserPreferences.boxed.isBiggerThanValue(0) |
             amiiboUserPreferences.opened.isBiggerThanValue(0);

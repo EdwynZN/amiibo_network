@@ -214,7 +214,7 @@ class Screenshot {
   Future<Uint8List?> saveStats(
       {required Search search, HiddenType? hiddenType}) async {
     final series = await _service.fetchDistinct(
-      category: search.categoryAttributes.category,
+      categoryAttributes: search.categoryAttributes,
       cards: search.customCards,
       figures: search.customFigures,
       hiddenCategories: hiddenType,

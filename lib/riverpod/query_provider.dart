@@ -35,8 +35,7 @@ final figuresProvider = FutureProvider.autoDispose<List<String>>((ref) async {
   final service = ref.watch(serviceProvider.notifier);
 
   final list = await service.fetchDistinct(
-    column: ['amiiboSeries'],
-    category: AmiiboCategory.Figures,
+    categoryAttributes: const CategoryAttributes(category: AmiiboCategory.Figures),
     searchAttributes: null,
     orderBy: OrderBy.Name,
   );
@@ -50,9 +49,8 @@ final cardsProvider = FutureProvider.autoDispose<List<String>>((ref) async {
   final service = ref.watch(serviceProvider.notifier);
 
   final list = await service.fetchDistinct(
-    column: ['amiiboSeries'],
     searchAttributes: null,
-    category: AmiiboCategory.Cards,
+    categoryAttributes: const CategoryAttributes(category: AmiiboCategory.Cards),
     orderBy: OrderBy.Name,
   );
 

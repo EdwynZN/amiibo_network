@@ -34,13 +34,12 @@ class AmiiboSQLite implements Dao<Amiibo?, int> {
         .toList();
   }
 
-  Future<List<String>> fetchDistinct(String name, List<String>? column,
+  Future<List<String>> fetchDistinct(String name,
       String? where, List<Object>? args, String? orderBy) async {
     Database _db = await connectionFactory.database;
     List<Map<String, dynamic>> maps = await _db.query(
       name,
       distinct: true,
-      columns: column,
       where: where,
       whereArgs: args,
       orderBy: orderBy,
