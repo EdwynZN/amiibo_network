@@ -33,30 +33,17 @@ class AmiiboDao extends DatabaseAccessor<AppDatabase>
         ),
       ],
     )..orderBy(_orderExpression(orderBy, sortBy));
-    if (searchAttributes != null) {
-      final search = '%${searchAttributes.search}%';
-      query.where(
-        switch (searchAttributes.category) {
-          SearchCategory.Game => amiibo.gameSeries.like(search),
-          SearchCategory.AmiiboSeries => amiibo.amiiboSeries.like(search),
-          _ => amiibo.name.like(search) | amiibo.character.like(search),
-        },
-      );
-    }
-    if (hiddenCategories != null) {
-      final typeCol = amiibo.type;
-      query.where(
-        switch (hiddenCategories) {
-          HiddenType.Figures => typeCol.isNotIn(figureType),
-          HiddenType.Cards => typeCol.isNotValue('Card'),
-        },
-      );
-    }
+    _updateQueryWhere(
+      query,
+      categoryAttributes,
+      searchAttributes,
+      hiddenCategories,
+      figures,
+      cards,
+    );
 
     final whereExpression = _updateExpression(
       categoryAttributes: categoryAttributes,
-      cards: cards,
-      figures: figures,
       hiddenCategories: hiddenCategories,
     );
 
@@ -111,36 +98,14 @@ class AmiiboDao extends DatabaseAccessor<AppDatabase>
     final query = selectOnly(amiibo, distinct: true)
       ..addColumns([amiibo.amiiboSeries])
       ..orderBy(_orderExpression(orderBy, sortBy));
-    if (searchAttributes != null) {
-      final search = '%${searchAttributes.search}%';
-      query.where(
-        switch (searchAttributes.category) {
-          SearchCategory.Game => amiibo.gameSeries.like(search),
-          SearchCategory.AmiiboSeries => amiibo.amiiboSeries.like(search),
-          _ => amiibo.name.like(search) | amiibo.character.like(search),
-        },
-      );
-    }
-    if (hiddenCategories != null) {
-      final typeCol = amiibo.type;
-      query.where(
-        switch (hiddenCategories) {
-          HiddenType.Figures => typeCol.isNotIn(figureType),
-          HiddenType.Cards => typeCol.isNotValue('Card'),
-        },
-      );
-    }
-
-    final whereExpression = _updateExpression(
-      categoryAttributes: categoryAttributes,
-      cards: cards,
-      figures: figures,
-      hiddenCategories: hiddenCategories,
+    _updateQueryWhere(
+      query,
+      categoryAttributes,
+      searchAttributes,
+      hiddenCategories,
+      figures,
+      cards,
     );
-
-    if (whereExpression != null) {
-      query.where(whereExpression);
-    }
     final result = await query.map((e) => e.read(amiibo.amiiboSeries)!).get();
     return result;
   }
@@ -167,7 +132,10 @@ class AmiiboDao extends DatabaseAccessor<AppDatabase>
   }
 
   Future<List<Map<String, dynamic>>> fetchSum({
+    required CategoryAttributes categoryAttributes,
+    SearchAttributes? searchAttributes,
     bool group = false,
+    HiddenType? hiddenCategories,
   }) async {
     final query = selectOnly(amiibo).join([
       innerJoin(
@@ -204,6 +172,12 @@ class AmiiboDao extends DatabaseAccessor<AppDatabase>
     if (group) {
       query.groupBy([amiibo.amiiboSeries]);
     }
+    _updateQueryWhere(
+      query,
+      categoryAttributes,
+      searchAttributes,
+      hiddenCategories,
+    );
 
     final result = await query.map((e) {
       final map = e.rawData.data;
@@ -258,6 +232,44 @@ class AmiiboDao extends DatabaseAccessor<AppDatabase>
       }
     });
   }
+
+  void _updateQueryWhere(
+    JoinedSelectStatement query,
+    CategoryAttributes categoryAttributes,
+    SearchAttributes? searchAttributes,
+    HiddenType? hiddenCategories, [
+    List<String> figures = const [],
+    List<String> cards = const [],
+  ]) {
+    if (searchAttributes != null) {
+      final search = '%${searchAttributes.search}%';
+      query.where(
+        switch (searchAttributes.category) {
+          SearchCategory.Game => amiibo.gameSeries.like(search),
+          SearchCategory.AmiiboSeries => amiibo.amiiboSeries.like(search),
+          _ => amiibo.name.like(search) | amiibo.character.like(search),
+        },
+      );
+    }
+    if (hiddenCategories != null) {
+      final typeCol = amiibo.type;
+      query.where(
+        switch (hiddenCategories) {
+          HiddenType.Figures => typeCol.isNotIn(figureType),
+          HiddenType.Cards => typeCol.isNotValue('Card'),
+        },
+      );
+    }
+
+    final whereExpression = _updateExpression(
+      categoryAttributes: categoryAttributes,
+      hiddenCategories: hiddenCategories,
+    );
+
+    if (whereExpression != null) {
+      query.where(whereExpression);
+    }
+  }
 }
 
 mixin _ExpressionBuilder on _$AmiiboDaoMixin {
@@ -296,8 +308,6 @@ mixin _ExpressionBuilder on _$AmiiboDaoMixin {
   Expression<bool>? _updateExpression({
     required CategoryAttributes categoryAttributes,
     HiddenType? hiddenCategories,
-    List<String> figures = const [],
-    List<String> cards = const [],
   }) {
     Expression<bool>? where;
     final category = categoryAttributes.category;
@@ -316,14 +326,8 @@ mixin _ExpressionBuilder on _$AmiiboDaoMixin {
         where = amiiboUserPreferences.wishlist.equals(true);
         break;
       case AmiiboCategory.Custom:
-        final figuresWhere = Expression.and([
-          amiibo.type.isIn(figureType),
-          amiibo.amiiboSeries.isIn(figures),
-        ]);
-        final cardsWhere = Expression.and([
-          amiibo.type.equals('Card'),
-          amiibo.amiiboSeries.isIn(cards),
-        ]);
+        final figuresWhere = amiibo.type.isIn(figureType);
+        final cardsWhere = amiibo.type.equals('Card');
         if (hiddenCategories != null) {
           where = hiddenCategories == HiddenType.Figures
               ? cardsWhere
@@ -336,7 +340,7 @@ mixin _ExpressionBuilder on _$AmiiboDaoMixin {
         break;
     }
     final filters = categoryAttributes.filters;
-    if (filters != null && filters.isNotEmpty) {
+    if (filters.isNotEmpty) {
       final innerFilter = amiibo.amiiboSeries.isIn(filters);
       where = where == null ? innerFilter : where & innerFilter;
     }

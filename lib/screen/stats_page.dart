@@ -4,7 +4,6 @@ import 'package:amiibo_network/enum/amiibo_category_enum.dart';
 import 'package:amiibo_network/generated/l10n.dart';
 import 'package:amiibo_network/model/search_result.dart';
 import 'package:amiibo_network/model/stat.dart';
-import 'package:amiibo_network/riverpod/preferences_provider.dart';
 import 'package:amiibo_network/riverpod/query_provider.dart';
 import 'package:amiibo_network/riverpod/screenshot_service.dart';
 import 'package:amiibo_network/riverpod/service_provider.dart';
@@ -17,8 +16,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 final _statsProvider = StreamProvider.autoDispose
     .family<List<Stat>, AmiiboCategory>((ref, category) {
   final service = ref.watch(serviceProvider.notifier);
-  final query = ref.watch(queryProvider.notifier);
-  final hidden = ref.watch(hiddenCategoryProvider);
+  final filter = ref.watch(filterProvider);
   final streamController = StreamController<AmiiboCategory>()
     ..sink.add(category);
 
@@ -34,17 +32,15 @@ final _statsProvider = StreamProvider.autoDispose
   return streamController.stream.asyncMap(
     (cb) async => <Stat>[
       ...await service.fetchStats(
-        category: cb,
-        cards: query.customCards,
-        figures: query.customCards,
-        hiddenCategories: hidden,
+        categoryAttributes: filter.categoryAttributes,
+        searchAttributes: null,
+        hiddenCategories: filter.hiddenType,
       ),
       ...await service.fetchStats(
         group: true,
-        category: cb,
-        cards: query.customCards,
-        figures: query.customCards,
-        hiddenCategories: hidden,
+        categoryAttributes: filter.categoryAttributes,
+        searchAttributes: null,
+        hiddenCategories: filter.hiddenType,
       )
     ],
   );
@@ -100,9 +96,9 @@ class _StatsPageState extends ConsumerState<StatsPage> {
   Widget build(BuildContext context) {
     final _canSave = ref.watch(
       queryProvider.select<bool>((value) =>
-          AmiiboCategory.Custom != category ||
-          value.customFigures.isNotEmpty ||
-          value.customCards.isNotEmpty),
+        AmiiboCategory.Custom != category ||
+        value.categoryAttributes.filters.isEmpty
+      ),
     );
     if (size.longestSide >= 800)
       return SafeArea(

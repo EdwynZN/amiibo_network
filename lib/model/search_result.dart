@@ -14,8 +14,6 @@ class Query with _$Query {
     SearchAttributes? searchAttributes,
     @Default(OrderBy.NA) OrderBy orderBy,
     @Default(SortBy.DESC) SortBy sortBy,
-    @Default([]) List<String> customFigures,
-    @Default([]) List<String> customCards,
   }) = Search;
 
 }
@@ -24,7 +22,7 @@ class Query with _$Query {
 class CategoryAttributes with _$CategoryAttributes {
 
   const factory CategoryAttributes({
-    List<String>? filters,
+    @Default([]) List<String> filters,
     required AmiiboCategory category,
   }) = _CategoryAttributes;
 
@@ -48,8 +46,6 @@ class Filter with _$Filter {
     SearchAttributes? searchAttributes,
     @Default(OrderBy.NA) OrderBy orderBy,
     @Default(SortBy.DESC) SortBy sortBy,
-    @Default([]) List<String> customFigures,
-    @Default([]) List<String> customCards,
     HiddenType? hiddenType,
   }) = _Filter;
 

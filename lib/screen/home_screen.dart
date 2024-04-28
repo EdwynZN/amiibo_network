@@ -63,8 +63,8 @@ final AutoDisposeProvider<TitleSearch> _titleProvider =
     title: switch (category) {
       AmiiboCategory.All => 'All',
       AmiiboCategory.Custom => 'Custom',
-      _ => query.categoryAttributes.filters?.first ??
-          category.name,
+      _ => query.categoryAttributes.filters.firstOrNull
+        ?? category.name,
     },
     type: TitleType.category,
     category: category,

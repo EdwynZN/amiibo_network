@@ -50,7 +50,7 @@ class _CollectionDrawerState extends ConsumerState<CollectionDrawer> {
     final query = ref.read(queryProvider);
     final attributes = CategoryAttributes(
       category: category,
-      filters: tile != null ? [tile] : null,
+      filters: tile != null ? [tile] : const [],
     );
     if (query.categoryAttributes != attributes) {
       ref.read(queryProvider.notifier).updateTile(attributes);
@@ -88,9 +88,9 @@ class _CollectionDrawerState extends ConsumerState<CollectionDrawer> {
                         final query = ref.watch(queryProvider);
                         final categoryAttributes = query.categoryAttributes;
                         final String? _selected = 
-                          (categoryAttributes.filters?.isEmpty ?? true)
+                          categoryAttributes.filters.isEmpty
                             ? null
-                            : categoryAttributes.filters!.first;
+                            : categoryAttributes.filters.first;
                         final AmiiboCategory _category = categoryAttributes.category;
                         final isAll = _category == AmiiboCategory.All;
                         final isOwned = _category == AmiiboCategory.Owned;

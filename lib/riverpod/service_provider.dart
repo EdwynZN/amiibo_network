@@ -51,19 +51,15 @@ class ProxyServiceNotifier extends ServiceNotifer {
 
   @override
   Future<List<Stat>> fetchStats({
-    required AmiiboCategory category,
-    List<String> figures = const [],
-    List<String> cards = const [],
-    List<String> series = const [],
+    required CategoryAttributes categoryAttributes,
+    required SearchAttributes? searchAttributes,
     HiddenType? hiddenCategories,
     bool group = false,
   }) =>
       service.fetchStats(
-        category: category,
-        cards: cards,
-        figures: figures,
+        categoryAttributes: categoryAttributes,
+        searchAttributes: searchAttributes,
         hiddenCategories: hiddenCategories,
-        series: series,
         group: group,
       );
 
@@ -102,15 +98,11 @@ class ProxyServiceNotifier extends ServiceNotifer {
     required SearchAttributes? searchAttributes,
     OrderBy orderBy = OrderBy.NA,
     SortBy sortBy = SortBy.DESC,
-    List<String>? figures,
-    List<String>? cards,
     HiddenType? hiddenCategories,
   }) =>
       service.fetchDistinct(
         categoryAttributes: categoryAttributes,
         searchAttributes: searchAttributes,
-        figures: figures,
-        cards: cards,
         hiddenCategories: hiddenCategories,
         orderBy: orderBy,
         sortBy: sortBy,
@@ -186,14 +178,10 @@ class DriftServiceNotifier extends ServiceNotifer {
     required SearchAttributes? searchAttributes,
     OrderBy orderBy = OrderBy.NA,
     SortBy sortBy = SortBy.DESC,
-    List<String>? figures,
-    List<String>? cards,
     HiddenType? hiddenCategories,
   }) {
     return _dao.fetchDistincts(
       categoryAttributes: categoryAttributes,
-      cards: cards ?? const [],
-      figures: figures ?? const [],
       hiddenCategories: hiddenCategories,
       orderBy: orderBy,
       sortBy: sortBy,
@@ -203,14 +191,20 @@ class DriftServiceNotifier extends ServiceNotifer {
 
   @override
   Future<List<Stat>> fetchStats({
-    required AmiiboCategory category,
+    required CategoryAttributes categoryAttributes,
+    required SearchAttributes? searchAttributes,
     List<String> figures = const [],
     List<String> cards = const [],
     List<String> series = const [],
     HiddenType? hiddenCategories,
     bool group = false,
   }) async {
-    final result = await _dao.fetchSum(group: group);
+    final result = await _dao.fetchSum(
+      categoryAttributes: categoryAttributes,
+      searchAttributes: searchAttributes,
+      hiddenCategories: hiddenCategories,
+      group: group,
+    );
     return result.map(Stat.fromJson).toList();
   }
 

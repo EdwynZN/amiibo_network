@@ -119,17 +119,14 @@ class Screenshot {
   ) async {
     List<Amiibo> amiibos = await _service.fetchByCategory(
       categoryAttributes: search.categoryAttributes,
-      cards: search.customCards,
-      figures: search.customFigures,
       hiddenCategories: hiddenType,
       searchAttributes: search.searchAttributes,
       sortBy: search.sortBy,
       orderBy: search.orderBy,
     );
     Stat _listStat = (await _service.fetchStats(
-      category: search.categoryAttributes.category,
-      cards: search.customCards,
-      figures: search.customFigures,
+      categoryAttributes: search.categoryAttributes,
+      searchAttributes: null,
       hiddenCategories: hiddenType,
     ))
         .first;
@@ -217,8 +214,6 @@ class Screenshot {
   }) async {
     final series = await _service.fetchDistinct(
       categoryAttributes: search.categoryAttributes,
-      cards: search.customCards,
-      figures: search.customFigures,
       hiddenCategories: hiddenType,
       orderBy: search.orderBy,
       sortBy: search.sortBy,
@@ -226,13 +221,19 @@ class Screenshot {
     );
     final List<Stat> stats = await _service.fetchStats(
       group: true,
-      category: AmiiboCategory.AmiiboSeries,
-      series: series.toSet().toList(),
+      categoryAttributes: CategoryAttributes(
+        category: AmiiboCategory.AmiiboSeries,
+        filters: series.toSet().toList(),
+      ),
+      searchAttributes: null,
       hiddenCategories: hiddenType,
     );
     final List<Stat> general = await _service.fetchStats(
-      category: AmiiboCategory.AmiiboSeries,
-      series: series.toSet().toList(),
+      categoryAttributes: CategoryAttributes(
+        category: AmiiboCategory.AmiiboSeries,
+        filters: series.toSet().toList(),
+      ),
+      searchAttributes: null,
       hiddenCategories: hiddenType,
     );
 

@@ -79,8 +79,6 @@ final amiiboHomeListProvider =
         categoryAttributes: cb.categoryAttributes,
         sortBy: cb.sortBy,
         orderBy: cb.orderBy,
-        cards: cb.customCards,
-        figures: cb.customFigures,
         hiddenCategories: cb.hiddenType,
         searchAttributes: cb.searchAttributes,
       ));

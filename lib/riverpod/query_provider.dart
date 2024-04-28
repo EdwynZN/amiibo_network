@@ -24,8 +24,6 @@ final filterProvider = Provider.autoDispose(
       searchAttributes: query.searchAttributes,
       orderBy: query.orderBy,
       sortBy: query.sortBy,
-      customCards: query.customCards,
-      customFigures: query.customFigures,
       hiddenType: hiddenType,
     );
   },
@@ -35,7 +33,8 @@ final figuresProvider = FutureProvider.autoDispose<List<String>>((ref) async {
   final service = ref.watch(serviceProvider.notifier);
 
   final list = await service.fetchDistinct(
-    categoryAttributes: const CategoryAttributes(category: AmiiboCategory.Figures),
+    categoryAttributes:
+        const CategoryAttributes(category: AmiiboCategory.Figures),
     searchAttributes: null,
     orderBy: OrderBy.AmiiboSerie,
     sortBy: SortBy.ASC,
@@ -51,7 +50,8 @@ final cardsProvider = FutureProvider.autoDispose<List<String>>((ref) async {
 
   final list = await service.fetchDistinct(
     searchAttributes: null,
-    categoryAttributes: const CategoryAttributes(category: AmiiboCategory.Cards),
+    categoryAttributes:
+        const CategoryAttributes(category: AmiiboCategory.Cards),
     orderBy: OrderBy.AmiiboSerie,
     sortBy: SortBy.ASC,
   );
@@ -75,18 +75,25 @@ final queryProvider = StateNotifierProvider<QueryBuilderProvider, Search>(
 
     final orderBy = OrderBy.values[order];
     final sortBy = SortBy.values[sort];
+    final category = _customCards.isEmpty && _customFigures.isEmpty
+        ? AmiiboCategory.All
+        : AmiiboCategory.Custom;
     final search = Search(
       categoryAttributes: CategoryAttributes(
-        category: _customCards.isEmpty && _customFigures.isEmpty
-          ? AmiiboCategory.All
-          : AmiiboCategory.Custom,
+        category: category,
+        filters: category != AmiiboCategory.Custom
+            ? const []
+            : [..._customFigures, ..._customCards],
       ),
-      customCards: _customCards,
-      customFigures: _customFigures,
       orderBy: orderBy,
       sortBy: sortBy,
     );
-    final queryBuilder = QueryBuilderProvider(ref, search);
+    final queryBuilder = QueryBuilderProvider(
+      ref: ref,
+      customCards: _customCards,
+      customFigures: _customFigures,
+      search,
+    );
 
     return queryBuilder;
   },
@@ -101,15 +108,22 @@ class QueryBuilderProvider extends StateNotifier<Search> {
   final Ref ref;
   late Search _previousNotSearch;
 
+  List<String> _customFigures;
+  List<String> _customCards;
+
   QueryBuilderProvider(
-    this.ref,
-    super.state,
-  ) : _previousNotSearch = state;
+    super.state, {
+    required this.ref,
+    required List<String> customFigures,
+    required List<String> customCards,
+  })  : _previousNotSearch = state,
+        _customFigures = customFigures,
+        _customCards = customCards;
 
   bool get isSearch => state.searchAttributes != null;
 
-  List<String> get customFigures => List<String>.of(state.customFigures);
-  List<String> get customCards => List<String>.of(state.customCards);
+  List<String> get customFigures => List<String>.of(_customFigures);
+  List<String> get customCards => List<String>.of(_customCards);
 
   void restart() {
     if (_previousNotSearch == state) return;
@@ -130,6 +144,12 @@ class QueryBuilderProvider extends StateNotifier<Search> {
       return;
     }
 
+    if (category.category == AmiiboCategory.Custom) {
+      category = category.copyWith(
+        filters: [..._customCards, ..._customFigures],
+      );
+    }
+
     state =
         state.copyWith(categoryAttributes: category, searchAttributes: null);
     if (!isSearch) {
@@ -138,13 +158,18 @@ class QueryBuilderProvider extends StateNotifier<Search> {
   }
 
   Future<void> updateCustom(List<String>? figures, List<String>? cards) async {
-    final bool equal = checkEquality(figures, state.customFigures)! &&
-        checkEquality(cards, state.customCards)!;
+    final bool equal = checkEquality(figures, _customFigures)! &&
+        checkEquality(cards, _customCards)!;
     if (!equal) {
       final preferences = ref.read(preferencesProvider);
       await preferences.setStringList(sharedCustomCards, cards!);
       await preferences.setStringList(sharedCustomFigures, figures!);
-      state = state.copyWith(customCards: cards, customFigures: figures);
+      _customFigures = figures;
+      _customCards = cards;
+      if (state.categoryAttributes.category == AmiiboCategory.Custom) {
+        state =
+            state.copyWith.categoryAttributes(filters: [...figures, ...cards]);
+      }
     }
   }
 

@@ -17,17 +17,16 @@ interface class Service {
     return _dao.fetchByKey(key);
   }
 
-  Future<List<Amiibo>> fetchAllAmiibo() =>
-      _dao.fetchAll();
+  Future<List<Amiibo>> fetchAllAmiibo() => _dao.fetchAll();
 
   Future<List<Stat>> fetchStats({
-    required AmiiboCategory category,
-    List<String> figures = const [],
-    List<String> cards = const [],
-    List<String> series = const [],
+    required CategoryAttributes categoryAttributes,
+    required SearchAttributes? searchAttributes,
     HiddenType? hiddenCategories,
     bool group = false,
   }) async {
+    final category = categoryAttributes.category;
+    final series = categoryAttributes.filters;
     late Expression expression;
     switch (category) {
       case AmiiboCategory.All:
@@ -35,9 +34,9 @@ interface class Service {
         break;
       case AmiiboCategory.Custom:
         expression = Bracket(InCond.inn('type', figureType) &
-                InCond.inn('amiiboSeries', figures)) |
+                InCond.inn('amiiboSeries', series)) |
             Bracket(
-                Cond.eq('type', 'Card') & InCond.inn('amiiboSeries', cards));
+                Cond.eq('type', 'Card') & InCond.inn('amiiboSeries', series));
         break;
       case AmiiboCategory.Figures:
         expression = InCond.inn('type', figureType);
@@ -46,7 +45,8 @@ interface class Service {
         expression = Cond.eq('type', 'Card');
         break;
       case AmiiboCategory.AmiiboSeries:
-        expression = InCond.inn('amiiboSeries', series);
+        expression =
+            InCond.inn('amiiboSeries', series);
         break;
       default:
         break;
@@ -216,16 +216,12 @@ interface class Service {
     required SearchAttributes? searchAttributes,
     OrderBy orderBy = OrderBy.NA,
     SortBy sortBy = SortBy.DESC,
-    List<String>? figures,
-    List<String>? cards,
     HiddenType? hiddenCategories,
   }) {
     final category = categoryAttributes.category;
     final expression = _updateExpression(
       category: category,
       search: searchAttributes?.search,
-      figures: figures ?? const [],
-      cards: cards ?? const [],
       hiddenCategories: hiddenCategories,
     );
     if (orderBy == OrderBy.CardNumber &&
