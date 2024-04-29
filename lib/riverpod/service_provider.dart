@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:amiibo_network/data/drift_sqlite/source/amiibo_dao.dart';
 import 'package:amiibo_network/data/drift_sqlite/source/drift_database.dart'
     as db;
@@ -82,9 +80,6 @@ class ProxyServiceNotifier extends ServiceNotifer {
         cards: cards,
         hiddenCategories: hiddenCategories,
       );
-
-  @override
-  Future<String> jsonFileDB() => service.jsonFileDB();
 
   @override
   Future<void> update(List<UpdateAmiiboUserAttributes> amiibos) async {
@@ -206,12 +201,6 @@ class DriftServiceNotifier extends ServiceNotifer {
       group: group,
     );
     return result.map(Stat.fromJson).toList();
-  }
-
-  @override
-  Future<String> jsonFileDB() async {
-    final amiibos = await fetchAllAmiibo();
-    return jsonEncode(amiibos);
   }
 
   @override

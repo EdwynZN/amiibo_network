@@ -1,8 +1,9 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:amiibo_network/data/local_file_source/model/amiibo_local_read_json_model.dart';
 import 'package:amiibo_network/generated/l10n.dart';
-import 'package:amiibo_network/model/amiibo.dart';
+import 'package:amiibo_network/model/update_amiibo_user_attributes.dart';
 import 'package:amiibo_network/service/info_package.dart';
 import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
@@ -13,9 +14,9 @@ sealed class AmiiboFile {
 }
 
 class AmiiboFileData extends AmiiboFile {
-  final List<Amiibo> amiibos;
+  final List<UpdateAmiiboUserAttributes> amiibosUserAttributes;
 
-  const AmiiboFileData(this.amiibos);
+  const AmiiboFileData(this.amiibosUserAttributes);
 }
 
 class AmiiboFileError extends AmiiboFile {
@@ -67,8 +68,10 @@ Future<bool> permissionGranted(ScaffoldMessengerState? scaffoldState) async {
   return true;
 }
 
-Future<File> createFile(
-    [String name = 'MyAmiiboNetwork', String type = 'json']) async {
+Future<File> createFile([
+  String name = 'MyAmiiboNetwork',
+  String type = 'json',
+]) async {
   Directory dir;
   StorageDirectory storage = StorageDirectory.documents;
   if (type == 'png') storage = StorageDirectory.pictures;
@@ -86,6 +89,7 @@ AmiiboFile readFile(String path) {
   try {
     final file = File(path);
     final uintList = file.readAsBytesSync();
+
     /// some malformed json comes with a < 32 ASCII characters, we use this to
     /// fix it by replacing them with 32 (space)
     String data = utf8.decode(
@@ -93,12 +97,15 @@ AmiiboFile readFile(String path) {
       allowMalformed: true,
     );
     final jResult = jsonDecode(data);
+    List<AmiiboLocalReadJsonModel>? amiibos;
     if (jResult is Map && jResult.containsKey('amiibo')) {
-      final data = entityFromMap(jResult as Map<String, dynamic>);
-      return AmiiboFileData(data);
+      final List list = (jResult as Map<String, dynamic>)['amiibo'];
+      amiibos = amiiboLocalReadListFromJson(list);
     } else if (jResult is List<dynamic>) {
-      final data = entityFromMap({'amiibo': jResult});
-      return AmiiboFileData(data);
+      amiibos = amiiboLocalReadListFromJson(jResult);
+    }
+    if (amiibos != null) {
+      return AmiiboFileData(amiibos.map((e) => e.toDomain()).toList());
     }
     return AmiiboFileError(
       Exception('wrong format: ${jResult.runtimeType}'),

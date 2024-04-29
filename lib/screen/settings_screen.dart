@@ -546,7 +546,8 @@ class _BottomBarState extends ConsumerState<BottomBar> {
           openSnackBar(translate.errorImporting);
           return;
         }
-        await service.updateFromAmiibos((amiiboFile as AmiiboFileData).amiibos);
+        await service
+            .update((amiiboFile as AmiiboFileData).amiibosUserAttributes);
         openSnackBar(translate.successImport);
       }
       await FilePicker.platform.clearTemporaryFiles();

@@ -5,7 +5,6 @@ import 'package:amiibo_network/enum/amiibo_category_enum.dart';
 import 'package:amiibo_network/enum/hidden_types.dart';
 import 'package:amiibo_network/enum/sort_enum.dart';
 import 'package:amiibo_network/model/search_result.dart';
-import 'dart:convert';
 import 'package:amiibo_network/model/amiibo.dart';
 import 'package:amiibo_network/model/stat.dart';
 import 'package:amiibo_network/model/update_amiibo_user_attributes.dart';
@@ -191,10 +190,6 @@ interface class Service {
     return dao.fetchByColumn(where, args, orderBy);
   } */
 
-  Future<String> jsonFileDB() async {
-    final List<Amiibo> amiibos = await _dao.fetchAll();
-    return jsonEncode(amiibos);
-  }
 
   Future<void> update(List<UpdateAmiiboUserAttributes> amiibos) =>
       _dao.insertImport(amiibos);
