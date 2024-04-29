@@ -7,6 +7,7 @@ import 'package:amiibo_network/riverpod/service_provider.dart';
 import 'package:amiibo_network/riverpod/theme_provider.dart';
 import 'package:amiibo_network/enum/amiibo_category_enum.dart';
 import 'package:amiibo_network/utils/format_color_on_theme.dart';
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -22,7 +23,6 @@ import 'package:amiibo_network/utils/urls_constants.dart';
 import 'package:amiibo_network/service/notification_service.dart';
 import 'package:amiibo_network/model/search_result.dart';
 import 'package:amiibo_network/widget/selected_chip.dart';
-import 'package:amiibo_network/model/amiibo.dart';
 
 class SettingsPage extends ConsumerWidget {
   const SettingsPage({Key? key}) : super(key: key);
@@ -536,19 +536,27 @@ class _BottomBarState extends ConsumerState<BottomBar> {
       else if (file?.files.single.extension != 'json') {
         openSnackBar(translate.errorImporting);
       } else {
-        Map<String, dynamic>? map = await compute(readFile, _path);
-        if (map == null)
+        //final Uint8List data = file!.files.single.bytes!;
+        final AmiiboFile amiiboFile = await compute(readFile, _path);
+        if (amiiboFile is AmiiboFileError) {
+          FirebaseCrashlytics.instance.recordError(
+            amiiboFile.error,
+            amiiboFile.stackTrace,
+          );
           openSnackBar(translate.errorImporting);
-        else {
-          List<Amiibo> amiibos = await compute(entityFromMap, map);
-          await service.updateFromAmiibos(amiibos);
-          openSnackBar(translate.successImport);
+          return;
         }
+        await service.updateFromAmiibos((amiiboFile as AmiiboFileData).amiibos);
+        openSnackBar(translate.successImport);
       }
       await FilePicker.platform.clearTemporaryFiles();
-    } on PlatformException catch (e) {
+    } on PlatformException catch (e, s) {
+      FirebaseCrashlytics.instance.recordError(e, s);
       debugPrint(e.message);
       openSnackBar(translate.storagePermission('denied'));
+    } catch (e, s) {
+      FirebaseCrashlytics.instance.recordError(e, s);
+      openSnackBar(translate.errorImporting);
     }
   }
 
