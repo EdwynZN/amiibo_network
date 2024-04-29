@@ -1,4 +1,3 @@
-import 'package:amiibo_network/enum/amiibo_category_enum.dart';
 import 'package:amiibo_network/enum/hidden_types.dart';
 import 'package:amiibo_network/model/preferences.dart';
 import 'package:amiibo_network/model/stat.dart';
@@ -212,17 +211,14 @@ class Screenshot {
     required Search search,
     HiddenType? hiddenType,
   }) async {
-    final copyWithAmiiboSeries = search.categoryAttributes.copyWith(
-      category: AmiiboCategory.AmiiboSeries,
-    );
     final List<Stat> stats = await _service.fetchStats(
       group: true,
-      categoryAttributes: copyWithAmiiboSeries,
+      categoryAttributes: search.categoryAttributes,
       searchAttributes: null,
       hiddenCategories: hiddenType,
     );
     final List<Stat> general = await _service.fetchStats(
-      categoryAttributes: copyWithAmiiboSeries,
+      categoryAttributes: search.categoryAttributes,
       searchAttributes: null,
       hiddenCategories: hiddenType,
     );

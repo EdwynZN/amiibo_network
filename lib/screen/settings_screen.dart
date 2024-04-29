@@ -277,8 +277,8 @@ class __SaveCollectionState extends ConsumerState<_SaveCollection> {
 
   Future<void> _saveCollection(
     AmiiboCategory category,
-    List<String>? figures,
-    cards,
+    List<String> figures,
+    List<String> cards,
   ) async {
     final _screenshot = ref.read(screenshotProvider.notifier);
     final String message = _screenshot.isLoading
@@ -290,7 +290,11 @@ class __SaveCollectionState extends ConsumerState<_SaveCollection> {
       await _screenshot.saveAmiibos(
         context,
         search: Search(
-          categoryAttributes: CategoryAttributes(category: category),
+          categoryAttributes: CategoryAttributes(
+            category: category,
+            cards: cards,
+            figures: figures,
+          ),
         ),
         useHidden: false,
       );
@@ -328,22 +332,25 @@ class __SaveCollectionState extends ConsumerState<_SaveCollection> {
             ) ??
             false;
         if (save && (figures.isNotEmpty || cards.isNotEmpty)) {
-          bool? equalFigures = false;
-          bool? equalCards = false;
+          bool equalFigures = false;
+          bool equalCards = false;
           AmiiboCategory category = AmiiboCategory.All;
           final listOfFigures = await ref.read(figuresProvider.future);
           final listOfCards = await ref.read(cardsProvider.future);
-          if (figures.isNotEmpty)
+          if (figures.isNotEmpty) {
             equalFigures =
                 QueryBuilderProvider.checkEquality(figures, listOfFigures);
-          if (cards.isNotEmpty)
+          }
+          if (cards.isNotEmpty) {
             equalCards = QueryBuilderProvider.checkEquality(cards, listOfCards);
-          if (equalFigures! && cards.isEmpty)
+          }
+          if (equalFigures && cards.isEmpty) {
             category = AmiiboCategory.Figures;
-          else if (equalCards! && figures.isEmpty)
+          } else if (equalCards && figures.isEmpty) {
             category = AmiiboCategory.Cards;
-          else if (!equalCards || !equalFigures)
+          } else if (!equalCards || !equalFigures) {
             category = AmiiboCategory.AmiiboSeries;
+          }
           await _saveCollection(category, figures, cards);
         }
       },

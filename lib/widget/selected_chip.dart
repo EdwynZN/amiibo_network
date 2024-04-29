@@ -113,17 +113,18 @@ class _SelectedWrapState extends State<SelectedWrap> {
                   if (isSelected) widget.mySeries.addAll(widget.series);
                 }),
             selected: QueryBuilderProvider.checkEquality(
-                widget.mySeries, widget.series)!),
+                widget.mySeries, widget.series)),
         for (String series in widget.series)
           FilterChip(
-              showCheckmark: false,
-              label: Text(series),
-              tooltip: series,
-              onSelected: (isSelected) => setState(() {
-                    final bool removed = widget.mySeries.remove(series);
-                    if (!removed && isSelected) widget.mySeries.add(series);
-                  }),
-              selected: widget.mySeries.contains(series)),
+            showCheckmark: false,
+            label: Text(series),
+            tooltip: series,
+            onSelected: (isSelected) => setState(() {
+              final bool removed = widget.mySeries.remove(series);
+              if (!removed && isSelected) widget.mySeries.add(series);
+            }),
+            selected: widget.mySeries.contains(series),
+          ),
       ],
     );
   }

@@ -101,7 +101,7 @@ final queryProvider = StateNotifierProvider<QueryBuilderProvider, Search>(
 class QueryBuilderProvider extends StateNotifier<Search> {
   static final Function deepEq =
       const DeepCollectionEquality.unordered().equals;
-  static bool? checkEquality(List<String>? eq1, List<String>? eq2) =>
+  static bool checkEquality(List<String>? eq1, List<String>? eq2) =>
       deepEq(eq1, eq2);
 
   final Ref ref;
@@ -158,8 +158,8 @@ class QueryBuilderProvider extends StateNotifier<Search> {
   }
 
   Future<void> updateCustom(List<String>? figures, List<String>? cards) async {
-    final bool equal = checkEquality(figures, _customFigures)! &&
-        checkEquality(cards, _customCards)!;
+    final bool equal = checkEquality(figures, _customFigures) &&
+        checkEquality(cards, _customCards);
     if (!equal) {
       final preferences = ref.read(preferencesProvider);
       await preferences.setStringList(sharedCustomCards, cards!);

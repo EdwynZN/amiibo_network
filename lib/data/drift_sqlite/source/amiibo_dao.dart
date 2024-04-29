@@ -304,13 +304,23 @@ mixin _ExpressionBuilder on _$AmiiboDaoMixin {
     final cards = categoryAttributes.cards;
     final figures = categoryAttributes.figures;
     final category = categoryAttributes.category;
+    final cardFilter = amiibo.type.equals('Card');
+    final figureFilter = amiibo.type.isIn(figureType);
     switch (category) {
       case AmiiboCategory.Cards:
-        where = amiibo.type.equals('Card');
-        break;
+        if (hiddenCategories == HiddenType.Cards) {
+          return amiibo.amiiboSeries.isIn(const []);
+        }
+        where = cardFilter;
+        return cards.isEmpty ? where : where & amiibo.amiiboSeries.isIn(cards);
       case AmiiboCategory.Figures:
-        where = amiibo.type.isIn(figureType);
-        break;
+        if (hiddenCategories == HiddenType.Figures) {
+          return amiibo.amiiboSeries.isIn(const []);
+        }
+        where = figureFilter;
+        return figures.isEmpty
+            ? where
+            : where & amiibo.amiiboSeries.isIn(figures);
       case AmiiboCategory.Owned:
         where = Expression.or([
           amiiboUserPreferences.boxed.isBiggerThanValue(0),
@@ -332,13 +342,13 @@ mixin _ExpressionBuilder on _$AmiiboDaoMixin {
     Expression<bool>? cardsWhere;
     if (figures.isNotEmpty) {
       figuresWhere = Expression.and([
-        amiibo.type.isIn(figureType),
+        figureFilter,
         amiibo.amiiboSeries.isIn(figures),
       ]);
     }
     if (cards.isNotEmpty) {
       cardsWhere = Expression.and([
-        amiibo.type.equals('Card'),
+        cardFilter,
         amiibo.amiiboSeries.isIn(cards),
       ]);
     }
@@ -346,8 +356,8 @@ mixin _ExpressionBuilder on _$AmiiboDaoMixin {
     final Expression<bool>? seriesExpression;
     if (hiddenCategories != null) {
       seriesExpression = switch (hiddenCategories) {
-        HiddenType.Figures => cardsWhere,
-        HiddenType.Cards => figuresWhere,
+        HiddenType.Figures => cardsWhere ?? cardFilter,
+        HiddenType.Cards => figuresWhere ?? figureFilter,
       };
     } else {
       final noFigures = figuresWhere == null;
