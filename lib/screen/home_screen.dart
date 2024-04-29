@@ -43,30 +43,32 @@ const String _amiiboIcon = 'assets/collection/icon_2.webp';
 final AutoDisposeProvider<TitleSearch> _titleProvider =
     Provider.autoDispose<TitleSearch>((ref) {
   final count = ref.watch(selectProvider);
+  final query = ref.watch(queryProvider);
+  final category = query.categoryAttributes.category;
   if (count.multipleSelected) {
-    return TitleSearch(
+    return TitleSearch.count(
       title: count.length.toString(),
-      type: TitleType.count,
+      category: category,
     );
   }
-  final query = ref.watch(queryProvider);
   final provider = ref.watch(queryProvider.notifier);
-  final category = query.categoryAttributes.category;
   if (provider.isSearch) {
-    return TitleSearch(
+    return TitleSearch.search(
       title: query.searchAttributes!.search,
-      type: TitleType.search,
+      searchCategory: query.searchAttributes!.category,
       category: category,
     );
   }
   return TitleSearch(
     title: switch (category) {
-      AmiiboCategory.All => 'All',
-      AmiiboCategory.AmiiboSeries => 'Custom',
-      _ => query.categoryAttributes.figures.firstOrNull
-        ?? category.name,
+      AmiiboCategory.Cards
+          when query.categoryAttributes.cards.firstOrNull != null =>
+        query.categoryAttributes.cards.first,
+      AmiiboCategory.Figures
+          when query.categoryAttributes.figures.firstOrNull != null =>
+        query.categoryAttributes.figures.first,
+      _ => category.name,
     },
-    type: TitleType.category,
     category: category,
   );
 });
@@ -558,12 +560,11 @@ class _TitleAppBar extends ConsumerWidget {
         MaterialLocalizations.of(context);
     final S translate = S.of(context);
     final searchTitle = ref.watch(_titleProvider);
-    final String message;
     final Widget child;
     final InlineSpan title =
         TextSpan(text: translate.category(searchTitle.title));
     InlineSpan? categorySpan;
-    if (searchTitle.category != null && searchTitle.type == TitleType.search) {
+    if (searchTitle is TitleSearchCategory) {
       final theme = Theme.of(context);
       final size = theme.appBarTheme.toolbarTextStyle?.fontSize;
       final foreground = theme.colorScheme.onSecondaryContainer;
@@ -590,7 +591,7 @@ class _TitleAppBar extends ConsumerWidget {
                 Icon(Icons.search, size: size, color: foreground),
                 const SizedBox(width: 2.0),
                 Text(
-                  translate.category(searchTitle.category!.name),
+                  translate.searchCategory(searchTitle.searchCategory),
                   style: TextStyle(
                     fontSize: size,
                     color: foreground,
@@ -602,18 +603,12 @@ class _TitleAppBar extends ConsumerWidget {
         ),
       );
     }
-    switch (searchTitle.type) {
-      case TitleType.count:
-        message = localizations
-            .selectedRowCountTitle(num.parse(searchTitle.title) as int);
-        break;
-      case TitleType.search:
-        message = localizations.searchFieldLabel;
-        break;
-      default:
-        message = searchTitle.category!.name;
-        break;
-    }
+    final message = switch (searchTitle) {
+      TitleCount(title: final title) =>
+        localizations.selectedRowCountTitle(num.parse(title) as int),
+      TitleSearchCategory() => localizations.searchFieldLabel,
+      TitleCategory(category: final category) => translate.category(category),
+    };
     child = Text.rich(
       categorySpan != null ? TextSpan(children: [categorySpan, title]) : title,
     );

@@ -3,14 +3,22 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'title_search.freezed.dart';
 
-enum TitleType { count, search, category }
-
 @freezed
-class TitleSearch with _$TitleSearch {
+sealed class TitleSearch with _$TitleSearch {
   const factory TitleSearch({
     required String title,
-    required TitleType type,
-    AmiiboCategory? category,
-  }) = _TitleSearch;
+    required AmiiboCategory category,
+  }) = TitleCategory;
+
+  const factory TitleSearch.count({
+    required String title,
+    required AmiiboCategory category,
+  }) = TitleCount;
+
+  const factory TitleSearch.search({
+    required String title,
+    required AmiiboCategory category,
+    required SearchCategory searchCategory,
+  }) = TitleSearchCategory;
 	
 }

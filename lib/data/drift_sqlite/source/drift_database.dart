@@ -97,6 +97,6 @@ LazyDatabase _openConnection(String databaseName) {
     // Explicitly tell it about the correct temporary directory.
     sqlite3.tempDirectory = cachebase;
 
-    return NativeDatabase.createInBackground(file, logStatements: true);
+    return NativeDatabase.createInBackground(file);
   });
 }
