@@ -3,7 +3,6 @@ import 'package:amiibo_network/screen/detail_page.dart';
 import 'package:amiibo_network/screen/home_screen.dart';
 import 'package:amiibo_network/screen/settings_screen.dart';
 import 'package:amiibo_network/screen/splash_screen.dart';
-import 'package:amiibo_network/screen/stats_page.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
@@ -49,11 +48,6 @@ GoRouter createRouter({
           ],
           child: const DetailPage(),
         ),
-      ),
-      GoRoute(
-        name: 'stats',
-        path: '/stats',
-        builder: (context, state) => const StatsPage(),
       ),
       GoRoute(
         name: 'settings',
