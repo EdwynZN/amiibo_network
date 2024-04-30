@@ -1,16 +1,11 @@
-import 'dart:io';
-
 import 'package:amiibo_network/data/drift_sqlite/source/amiibo_dao.dart';
 import 'package:amiibo_network/utils/preferences_constants.dart';
 import 'package:drift/drift.dart';
-import 'package:drift/native.dart';
+import 'package:drift_dev/api/migrations.dart';
+import 'package:drift_sqflite/drift_sqflite.dart';
+import 'package:flutter/foundation.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:path/path.dart';
-import 'package:path_provider/path_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:sqflite/sqflite.dart';
-import 'package:sqlite3/sqlite3.dart';
-import 'package:sqlite3_flutter_libs/sqlite3_flutter_libs.dart';
 
 part 'drift_database.g.dart';
 
@@ -24,7 +19,7 @@ final databaseProvider = Provider((ref) => AppDatabase());
 class AppDatabase extends _$AppDatabase {
   static const String _databaseName = "Amiibo.db";
 
-  AppDatabase() : super(_openConnection(AppDatabase._databaseName));
+  AppDatabase() : super(_openExecuter(AppDatabase._databaseName));
 
   @override
   int get schemaVersion => 5;
@@ -37,6 +32,11 @@ class AppDatabase extends _$AppDatabase {
       },
       beforeOpen: (details) async {
         await customStatement('PRAGMA foreign_keys = ON');
+        if (kDebugMode) {
+            // This check pulls in a fair amount of code that's not needed
+            // anywhere else, so we recommend only doing it in debug builds.
+            await validateDatabaseSchema();
+          }
       },
       onUpgrade: (Migrator m, int from, int to) async {
         await customStatement('PRAGMA foreign_keys = OFF');
@@ -124,14 +124,14 @@ class AppDatabase extends _$AppDatabase {
           await transaction(() async {
             await customStatement('ALTER TABLE amiibo RENAME TO _amiibo_old;');
             await m.createAll();
-            await customInsert('''INSERT INTO
+            await customStatement('''INSERT INTO
                 amiibo(key, id, amiiboSeries, character, gameSeries, character,
                   name, au, eu, jp, na, type)
                 SELECT key, id, amiiboSeries, character, gameSeries, character, 
                   name, au, eu, jp, na, type
                 FROM _amiibo_old ORDER BY id;
               ''');
-            await customInsert('''INSERT OR REPLACE INTO 
+            await customStatement('''INSERT OR REPLACE INTO 
                 amiibo_user_preferences(amiibo_key, opened, boxed, wishlist)
                 SELECT key, owned, 0, wishlist FROM _amiibo_old ORDER BY id;
               ''');
@@ -143,9 +143,10 @@ class AppDatabase extends _$AppDatabase {
   }
 }
 
-LazyDatabase _openConnection(String databaseName) {
+QueryExecutor _openExecuter(String databaseName) {
+  return SqfliteQueryExecutor.inDatabaseFolder(path: databaseName);
   // the LazyDatabase util lets us find the right location for the file async.
-  return LazyDatabase(() async {
+  /* return LazyDatabase(() async {
     // put the database file, called db.sqlite here, into the documents folder
     // for your app.
     String documentsDir = await getDatabasesPath();
@@ -164,5 +165,5 @@ LazyDatabase _openConnection(String databaseName) {
     sqlite3.tempDirectory = cachebase;
 
     return NativeDatabase.createInBackground(file);
-  });
+  }); */
 }

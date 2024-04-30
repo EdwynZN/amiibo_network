@@ -49,7 +49,7 @@ dependencies:
   loading_animation_widget: ^1.2.1
   drift: ^2.17.0
   sqlite3_flutter_libs: ^0.5.0
-  path: ^1.9.0
+  drift_sqflite: ^2.0.1
 
 dev_dependencies:
   flutter_test:
