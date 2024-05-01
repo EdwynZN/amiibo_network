@@ -81,7 +81,7 @@ class AmiiboDao extends DatabaseAccessor<AppDatabase>
       batch.insertAll(
         amiiboUserPreferences,
         preferences,
-        mode: InsertMode.insertOrAbort,
+        mode: InsertMode.insertOrIgnore,
       );
     });
   }
