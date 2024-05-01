@@ -1,0 +1,25 @@
+-- This table was added in schema version 5
+CREATE TABLE IF NOT EXISTS amiibo(
+    "key" INTEGER NOT NULL PRIMARY KEY,
+    id TEXT,
+    amiiboSeries TEXT NOT NULL,
+    character TEXT NOT NULL,
+    gameSeries TEXT NOT NULL,
+    name TEXT NOT NULL,
+    au TEXT,
+    eu TEXT,
+    jp TEXT,
+    na TEXT,
+    type TEXT NOT NULL,
+    cardNumber INTEGER
+) AS AmiiboTable;
+
+CREATE TABLE IF NOT EXISTS amiibo_user_preferences(
+    "key" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    amiibo_key INTEGER NOT NULL,
+    boxed INTEGER NOT NULL DEFAULT 0,
+    opened INTEGER NOT NULL DEFAULT 0,
+    wishlist BOOLEAN NOT NULL DEFAULT false,
+    FOREIGN KEY(amiibo_key) REFERENCES amiibo("key"),
+    UNIQUE (amiibo_key)
+) AS AmiiboUserPreferenceTable;

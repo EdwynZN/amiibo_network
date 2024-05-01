@@ -5,6 +5,7 @@ targets:
         generate_for:
           include:
             - lib/model/**.dart
+            - lib/data/**/model/**.dart
       json_serializable:
         options:
           # Options configure how source code is generated for every

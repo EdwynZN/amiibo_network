@@ -24,14 +24,12 @@ final _dioProvider = Provider<Dio>((ref) {
   return dio..interceptors.add(stashOptions);
 });
 
-final _characterProvider = Provider.autoDispose.family<Amiibo?, int>(
+final _characterProvider = Provider.autoDispose.family<AmiiboDetails?, int>(
   (ref, key) {
-    return ref
-      .watch(detailAmiiboProvider(key))
-      .maybeWhen(
-        data: (cb) => cb?.copyWith(owned: false, wishlist: false),
-        orElse: () => null,
-      );
+    return ref.watch(detailAmiiboProvider(key)).maybeWhen(
+          data: (cb) => cb?.details,
+          orElse: () => null,
+        );
   },
   name: 'Character Provider',
 );

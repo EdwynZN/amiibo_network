@@ -82,9 +82,7 @@ class SliverStatsHeader extends SliverPersistentHeaderDelegate {
   double get minExtent => 32.0 + topPadding;
 
   @override
-  bool shouldRebuild(SliverStatsHeader oldDelegate) =>
-      topPadding != oldDelegate.topPadding ||
-      hideOptional != oldDelegate.hideOptional;
+  bool shouldRebuild(SliverStatsHeader oldDelegate) => true;
 }
 
 class _LinearStat extends ConsumerWidget {
@@ -106,7 +104,7 @@ class _LinearStat extends ConsumerWidget {
       return const SizedBox();
     }
     final category = ref.watch(
-      queryProvider.notifier.select((value) => value.search.category),
+      queryProvider.select((value) => value.categoryAttributes.category),
     );
     final usePercentage =
         ref.watch(personalProvider.select((p) => p.usePercentage));

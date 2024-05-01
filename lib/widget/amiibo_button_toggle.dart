@@ -30,16 +30,15 @@ class Buttons extends ConsumerWidget {
 
 class WishedOutlinedButton extends ConsumerWidget {
   final bool isLock;
+  final Amiibo? amiibo;
+  final bool isActive;
 
   WishedOutlinedButton({
     Key? key,
     required this.amiibo,
     required this.isLock,
-  })  : isActive = amiibo != null && amiibo.wishlist,
+  })  : isActive = amiibo != null && amiibo.userAttributes is WishedUserAttributes,
         super(key: key);
-
-  final Amiibo? amiibo;
-  final bool isActive;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -70,11 +69,12 @@ class WishedOutlinedButton extends ConsumerWidget {
           : () {
               if (amiibo == null) return;
               final bool newValue = !isActive;
-              ref.read(serviceProvider.notifier).update(
+              ref.read(serviceProvider.notifier).updateFromAmiibos(
                 [
                   amiibo!.copyWith(
-                    owned: newValue ? false : amiibo!.owned,
-                    wishlist: newValue,
+                    userAttributes: newValue
+                      ? const WishedUserAttributes()
+                      : const EmptyUserAttributes(),
                   )
                 ],
               );
@@ -90,7 +90,7 @@ class OwnedOutlinedButton extends ConsumerWidget {
     Key? key,
     required this.amiibo,
     required this.isLock,
-  })  : isActive = amiibo != null && amiibo.owned,
+  })  : isActive = amiibo != null && amiibo.userAttributes is OwnedUserAttributes,
         super(key: key);
 
   final Amiibo? amiibo;
@@ -125,11 +125,12 @@ class OwnedOutlinedButton extends ConsumerWidget {
           : () {
               if (amiibo == null) return;
               final bool newValue = !isActive;
-              ref.read(serviceProvider.notifier).update(
+              ref.read(serviceProvider.notifier).updateFromAmiibos(
                 [
                   amiibo!.copyWith(
-                    owned: newValue,
-                    wishlist: newValue ? false : amiibo!.wishlist,
+                    userAttributes: newValue
+                      ? UserAttributes.owned()
+                      : const EmptyUserAttributes(),
                   ),
                 ],
               );
@@ -144,7 +145,7 @@ class WishedButton extends ConsumerWidget {
     required this.amiibo,
     required this.isLock,
     this.size = const Size.square(40.0),
-  })  : isActive = amiibo != null && amiibo.wishlist,
+  })  : isActive = amiibo != null && amiibo.userAttributes is WishedUserAttributes,
         super(key: key);
 
   final bool isLock;
@@ -177,11 +178,12 @@ class WishedButton extends ConsumerWidget {
           : () {
               if (amiibo == null) return;
               final bool newValue = !isActive;
-              ref.read(serviceProvider.notifier).update(
+              ref.read(serviceProvider.notifier).updateFromAmiibos(
                 [
                   amiibo!.copyWith(
-                    owned: newValue ? false : amiibo!.owned,
-                    wishlist: newValue,
+                    userAttributes: newValue
+                      ? const WishedUserAttributes()
+                      : const EmptyUserAttributes(),
                   )
                 ],
               );
@@ -196,7 +198,7 @@ class OwnedButton extends ConsumerWidget {
     required this.amiibo,
     required this.isLock,
     this.size = const Size.square(40.0),
-  })  : isActive = amiibo != null && amiibo.owned,
+  })  : isActive = amiibo != null && amiibo.userAttributes is OwnedUserAttributes,
         super(key: key);
 
   final bool isLock;
@@ -229,11 +231,12 @@ class OwnedButton extends ConsumerWidget {
           : () {
               if (amiibo == null) return;
               final bool newValue = !isActive;
-              ref.read(serviceProvider.notifier).update(
+              ref.read(serviceProvider.notifier).updateFromAmiibos(
                 [
                   amiibo!.copyWith(
-                    owned: newValue,
-                    wishlist: newValue ? false : amiibo!.wishlist,
+                    userAttributes: newValue
+                      ? UserAttributes.owned()
+                      : const EmptyUserAttributes(),
                   ),
                 ],
               );

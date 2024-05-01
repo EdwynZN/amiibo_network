@@ -24,7 +24,7 @@ class SplashScreenState extends ConsumerState<SplashScreen>
   late final ThemeMode themeMode;
 
   Future<bool> get updateDB async {
-    final UpdateService updateService = UpdateService();
+    final UpdateService updateService = ref.read(updateServiceProvider);
     bool result = await updateService.createDB();
     await _animationController
         .forward()

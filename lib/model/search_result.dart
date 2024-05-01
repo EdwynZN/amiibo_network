@@ -1,10 +1,8 @@
 import 'package:amiibo_network/enum/amiibo_category_enum.dart';
+import 'package:amiibo_network/enum/hidden_types.dart';
 import 'package:amiibo_network/enum/sort_enum.dart';
-import 'package:flutter/foundation.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:equatable/equatable.dart';
 
-part 'expression.dart';
 part 'search_result.freezed.dart';
 
 @freezed
@@ -12,48 +10,44 @@ class Query with _$Query {
   const Query._();
 
   const factory Query.search({
-    String? search,
-    required AmiiboCategory category,
-    List<String>? customFigures,
-    List<String>? customCards,
-  }) = Search;
-
-  @With<_OrderBy>()
-  factory Query.builder({
-    required Expression where,
+    @Default(CategoryAttributes(category: AmiiboCategory.All)) CategoryAttributes categoryAttributes,
+    SearchAttributes? searchAttributes,
     @Default(OrderBy.NA) OrderBy orderBy,
     @Default(SortBy.DESC) SortBy sortBy,
-  }) = QueryBuilder;
+  }) = Search;
+
 }
 
-mixin _OrderBy {
-  late final OrderBy orderBy;
-  late final SortBy sortBy;
+@freezed
+class CategoryAttributes with _$CategoryAttributes {
 
-  String get order {
-    final String order = orderBy.name;
-    StringBuffer orderBuffer = StringBuffer();
-    final String sort = sortBy.name;
-    switch (orderBy) {
-      case OrderBy.NA:
-      case OrderBy.JP:
-      case OrderBy.AU:
-      case OrderBy.EU:
-      case OrderBy.CardNumber:
-        orderBuffer.write('$order IS NULL, $order $sort');
-        break;
-      case OrderBy.Owned:
-      case OrderBy.Wishlist:
-        final bool asc = sortBy == SortBy.ASC;
-        final int _then = asc ? 1 : 0;
-        final int _else = asc ? 0 : 1;
-        orderBuffer.write(
-          'CASE WHEN ($order IS NULL OR $order = 0) THEN $_then ELSE $_else END, key $sort');
-        break;
-      default:
-        orderBuffer.write('$order $sort');
-        break;
-    }
-    return orderBuffer.toString();
-  }
+  const factory CategoryAttributes({
+    @Default([]) List<String> figures,
+    @Default([]) List<String> cards,
+    required AmiiboCategory category,
+  }) = _CategoryAttributes;
+
+}
+
+@freezed
+class SearchAttributes with _$SearchAttributes {
+
+  const factory SearchAttributes({
+    required String search,
+    required SearchCategory category,
+  }) = _SearchAttributes;
+
+}
+
+@freezed
+class Filter with _$Filter {
+
+  const factory Filter({
+    @Default(CategoryAttributes(category: AmiiboCategory.All)) CategoryAttributes categoryAttributes,
+    SearchAttributes? searchAttributes,
+    @Default(OrderBy.NA) OrderBy orderBy,
+    @Default(SortBy.DESC) SortBy sortBy,
+    HiddenType? hiddenType,
+  }) = _Filter;
+
 }

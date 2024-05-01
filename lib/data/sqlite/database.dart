@@ -2,7 +2,7 @@ import 'dart:async';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import '../utils/preferences_constants.dart';
+import '../../utils/preferences_constants.dart';
 
 const String _amiiboTable = '''
     CREATE TABLE IF NOT EXISTS amiibo(
@@ -106,11 +106,56 @@ void _onUpgrade(Database db, int oldVersion, int newVersion) async {
       await tx.execute('DROP TABLE _amiibo_old;');
     });
   }
+
+  /// Migration to add separated tables of wished and owned with its own characteristics
+  if (oldVersion < 5) {
+    await db.transaction((tx) async {
+      await tx.execute('ALTER TABLE amiibo RENAME TO _amiibo_old;');
+      await tx.execute('''
+        CREATE TABLE IF NOT EXISTS amiibo(
+          key INTEGER PRIMARY KEY AUTOINCREMENT,
+          id TEXT,
+          amiiboSeries TEXT NOT NULL,
+          character TEXT NOT NULL,
+          gameSeries TEXT NOT NULL,
+          name TEXT NOT NULL,
+          au TEXT,
+          eu TEXT,
+          jp TEXT,
+          na TEXT,
+          type TEXT NOT NULL,
+          cardNumber INTEGER
+        );
+      ''');
+      await tx.execute('''
+        CREATE TABLE IF NOT EXISTS amiibo_user_preferences(
+          key INTEGER PRIMARY KEY AUTOINCREMENT,
+          amiibo_key INTEGER NOT NULL,
+          boxed INTEGER,
+          opened INTEGER,
+          wishlist INTEGER,
+          FOREIGN KEY(amiibo_key) REFERENCES amiibo(key)
+        );
+      ''');
+      await tx.execute('''INSERT INTO
+          amiibo(key, id, amiiboSeries, character, gameSeries, character,
+            name, au, eu, jp, na, type)
+          SELECT key, id, amiiboSeries, character, gameSeries, character, 
+            name, au, eu, jp, na, type
+          FROM _amiibo_old ORDER BY id;
+        ''');
+      await tx.execute('''INSERT OR REPLACE INTO 
+          amiibo_user_preferences(amiibo_key, opened, boxed, wishlist)
+          SELECT key, owned, 0, wishlist FROM _amiibo_old ORDER BY id;
+        ''');
+      await tx.execute('DROP TABLE _amiibo_old;');
+    });
+  }
 }
 
 class ConnectionFactory {
   static const String _databaseName = "Amiibo.db";
-  static const int _databaseVersion = 4;
+  static const int _databaseVersion = 5;
   Database? _database;
 
   ConnectionFactory._();
@@ -129,10 +174,12 @@ class ConnectionFactory {
     String documentsDir = await getDatabasesPath();
     String path = join(documentsDir, _databaseName);
 
-    return await openDatabase(path,
-        version: _databaseVersion,
-        onOpen: (db) => null,
-        onCreate: _onCreate,
-        onUpgrade: _onUpgrade);
+    return await openDatabase(
+      path,
+      version: _databaseVersion,
+      onOpen: (db) => null,
+      onCreate: _onCreate,
+      onUpgrade: _onUpgrade,
+    );
   }
 }

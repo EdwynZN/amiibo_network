@@ -1,43 +1,8 @@
-import 'package:amiibo_network/model/search_result.dart';
-import 'package:amiibo_network/riverpod/amiibo_provider.dart';
-import 'package:amiibo_network/screen/home_screen.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:amiibo_network/screen/detail_page.dart';
-import 'package:amiibo_network/screen/settings_screen.dart';
-import 'package:amiibo_network/screen/search_screen.dart';
-import 'package:amiibo_network/screen/stats_page.dart';
-import 'package:flutter/services.dart';
 import 'dart:math' as math;
-import 'package:amiibo_network/utils/routes_constants.dart';
-import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-class Routes{
-  static Route<dynamic>? getRoute(RouteSettings settings) {
-    switch(settings.name){
-      case detailsRoute:
-        return cupertinoRoute(
-          child: ProviderScope(
-            overrides: [
-              keyAmiiboProvider.overrideWithValue((settings.arguments as int?) ?? 0)
-            ],
-            child: const DetailPage(),
-          ), 
-          settings: settings,
-        );
-      case homeRoute:
-        return FadeRoute(builder: (_) => const HomeScreen());
-      case settingsRoute:
-        return cupertinoRoute(child: const SettingsPage(), settings: settings);
-      case searchRoute:
-        return FadeRoute<Search>(builder: (_) => const SearchScreen());
-      case statsRoute:
-        return cupertinoRoute(child: const StatsPage(), settings: settings);
-      default:
-        return null;
-    }
-  }
-}
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 CupertinoPageRoute cupertinoRoute({Widget? child, RouteSettings? settings, bool fullscreenDialog = false}){
   return CupertinoPageRoute(

@@ -2,9 +2,9 @@ import 'package:amiibo_network/enum/hidden_types.dart';
 import 'package:amiibo_network/resources/resources.dart';
 import 'package:amiibo_network/riverpod/preferences_provider.dart';
 import 'package:amiibo_network/riverpod/query_provider.dart';
+import 'package:amiibo_network/riverpod/screenshot_service.dart';
 import 'package:amiibo_network/riverpod/service_provider.dart';
 import 'package:amiibo_network/riverpod/theme_provider.dart';
-import 'package:amiibo_network/service/screenshot.dart';
 import 'package:amiibo_network/enum/amiibo_category_enum.dart';
 import 'package:amiibo_network/utils/format_color_on_theme.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
@@ -265,7 +265,6 @@ class _SaveCollection extends ConsumerStatefulWidget {
 }
 
 class __SaveCollectionState extends ConsumerState<_SaveCollection> {
-  static final Screenshot _screenshot = Screenshot();
   late S translate;
   ScaffoldMessengerState? scaffoldState;
 
@@ -276,54 +275,30 @@ class __SaveCollectionState extends ConsumerState<_SaveCollection> {
     scaffoldState = ScaffoldMessenger.maybeOf(context);
   }
 
-  Future<void> _saveCollection(WidgetRef ref, AmiiboCategory category,
-      List<String>? figures, cards) async {
-    final String message = _screenshot.isRecording
+  Future<void> _saveCollection(
+    AmiiboCategory category,
+    List<String> figures,
+    List<String> cards,
+  ) async {
+    final _screenshot = ref.read(screenshotProvider.notifier);
+    final String message = _screenshot.isLoading
         ? translate.recordMessage
         : translate.savingCollectionMessage;
     scaffoldState?.hideCurrentSnackBar();
     scaffoldState?.showSnackBar(SnackBar(content: Text(message)));
-    if (!_screenshot.isRecording) {
-      String name;
-      int id;
-      Expression expression;
-      switch (category) {
-        case AmiiboCategory.Cards:
-          name = 'MyCardCollection';
-          id = 4;
-          expression = Cond.eq('type', 'Card');
-          break;
-        case AmiiboCategory.Figures:
-          name = 'MyFigureCollection';
-          expression = InCond.inn('type', figureType);
-          id = 5;
-          break;
-        case AmiiboCategory.Custom:
-          name = 'MyCustomCollection';
-          id = 8;
-          expression = Bracket(InCond.inn('type', figureType) &
-                  InCond.inn('amiiboSeries', figures!)) |
-              Bracket(
-                  Cond.eq('type', 'Card') & InCond.inn('amiiboSeries', cards));
-          break;
-        case AmiiboCategory.All:
-        default:
-          name = 'MyAmiiboCollection';
-          id = 9;
-          expression = And();
-          break;
-      }
-      _screenshot.update(ref, context);
-      final buffer = await _screenshot.saveCollection(expression);
-      if (buffer != null) {
-        final Map<String, dynamic> notificationArgs = <String, dynamic>{
-          'title': translate.notificationTitle,
-          'actionTitle': translate.actionText,
-          'id': id,
-          'buffer': buffer,
-          'name': '${name}_$dateTaken'
-        };
-        await NotificationService.saveImage(notificationArgs);
+    if (!_screenshot.isLoading) {
+      await _screenshot.saveAmiibos(
+        context,
+        search: Search(
+          categoryAttributes: CategoryAttributes(
+            category: category,
+            cards: cards,
+            figures: figures,
+          ),
+        ),
+        useHidden: false,
+      );
+      if (mounted) {
         scaffoldState?.showSnackBar(
           SnackBar(content: Text(translate.export_complete)),
         );
@@ -357,23 +332,26 @@ class __SaveCollectionState extends ConsumerState<_SaveCollection> {
             ) ??
             false;
         if (save && (figures.isNotEmpty || cards.isNotEmpty)) {
-          bool? equalFigures = false;
-          bool? equalCards = false;
+          bool equalFigures = false;
+          bool equalCards = false;
           AmiiboCategory category = AmiiboCategory.All;
           final listOfFigures = await ref.read(figuresProvider.future);
           final listOfCards = await ref.read(cardsProvider.future);
-          if (figures.isNotEmpty)
+          if (figures.isNotEmpty) {
             equalFigures =
                 QueryBuilderProvider.checkEquality(figures, listOfFigures);
-          if (cards.isNotEmpty)
+          }
+          if (cards.isNotEmpty) {
             equalCards = QueryBuilderProvider.checkEquality(cards, listOfCards);
-          if (equalFigures! && cards.isEmpty)
+          }
+          if (equalFigures && cards.isEmpty) {
             category = AmiiboCategory.Figures;
-          else if (equalCards! && figures.isEmpty)
+          } else if (equalCards && figures.isEmpty) {
             category = AmiiboCategory.Cards;
-          else if (!equalCards || !equalFigures)
-            category = AmiiboCategory.Custom;
-          await _saveCollection(ref, category, figures, cards);
+          } else if (!equalCards || !equalFigures) {
+            category = AmiiboCategory.AmiiboSeries;
+          }
+          await _saveCollection(category, figures, cards);
         }
       },
     );
@@ -568,7 +546,8 @@ class _BottomBarState extends ConsumerState<BottomBar> {
           openSnackBar(translate.errorImporting);
           return;
         }
-        await service.update((amiiboFile as AmiiboFileData).amiibos);
+        await service
+            .update((amiiboFile as AmiiboFileData).amiibosUserAttributes);
         openSnackBar(translate.successImport);
       }
       await FilePicker.platform.clearTemporaryFiles();
@@ -586,7 +565,7 @@ class _BottomBarState extends ConsumerState<BottomBar> {
     try {
       if (!(await permissionGranted(scaffoldState))) return;
       final _service = ref.read(serviceProvider.notifier);
-      final amiibos = await _service.fetchAllAmiiboDB();
+      final amiibos = await _service.fetchAllAmiibo();
       openSnackBar(translate.savingCollectionMessage);
       await NotificationService.saveJsonFile(
         title: translate.notificationTitle,

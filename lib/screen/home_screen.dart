@@ -10,6 +10,7 @@ import 'package:amiibo_network/riverpod/preferences_provider.dart';
 import 'package:amiibo_network/riverpod/query_provider.dart';
 import 'package:amiibo_network/riverpod/screenshot_service.dart';
 import 'package:amiibo_network/riverpod/select_provider.dart';
+import 'package:amiibo_network/riverpod/stat_ui_remote_config_provider.dart';
 import 'package:amiibo_network/screen/search_screen.dart';
 import 'package:amiibo_network/service/storage.dart';
 import 'package:amiibo_network/widget/dash_menu/dash_menu.dart';
@@ -22,7 +23,6 @@ import 'package:amiibo_network/widget/selected_chip.dart';
 import 'package:amiibo_network/widget/selected_widget.dart';
 import 'package:amiibo_network/widget/sort_bottomsheet.dart';
 import 'package:flutter/material.dart';
-import 'package:amiibo_network/data/database.dart';
 import 'package:flutter/rendering.dart';
 import 'package:amiibo_network/widget/drawer.dart';
 import 'package:amiibo_network/widget/animated_widgets.dart';
@@ -43,26 +43,33 @@ const String _amiiboIcon = 'assets/collection/icon_2.webp';
 final AutoDisposeProvider<TitleSearch> _titleProvider =
     Provider.autoDispose<TitleSearch>((ref) {
   final count = ref.watch(selectProvider);
+  final query = ref.watch(queryProvider);
+  final category = query.categoryAttributes.category;
   if (count.multipleSelected) {
-    return TitleSearch(
+    return TitleSearch.count(
       title: count.length.toString(),
-      type: TitleType.count,
+      category: category,
     );
   }
-  ref.watch(queryProvider);
   final provider = ref.watch(queryProvider.notifier);
-  final query = provider.search;
   if (provider.isSearch) {
-    return TitleSearch(
-      title: query.search!,
-      type: TitleType.search,
-      category: query.category,
+    return TitleSearch.search(
+      title: query.searchAttributes!.search,
+      searchCategory: query.searchAttributes!.category,
+      category: category,
     );
   }
   return TitleSearch(
-    title: query.search ?? query.category.name,
-    type: TitleType.category,
-    category: query.category,
+    title: switch (category) {
+      AmiiboCategory.Cards
+          when query.categoryAttributes.cards.firstOrNull != null =>
+        query.categoryAttributes.cards.first,
+      AmiiboCategory.Figures
+          when query.categoryAttributes.figures.firstOrNull != null =>
+        query.categoryAttributes.figures.first,
+      _ => category.name,
+    },
+    category: category,
   );
 });
 
@@ -169,13 +176,12 @@ class HomeScreenState extends ConsumerState<HomeScreen>
   }
 
   Future<void> _search() async {
-    Search? value = await Navigator.push<Search?>(
+    SearchAttributes? search = await Navigator.push<SearchAttributes?>(
       context,
-      FadeRoute<Search>(builder: (_) => const SearchScreen()),
+      FadeRoute<SearchAttributes>(builder: (_) => const SearchScreen()),
     );
-    if (value?.search?.trim().isNotEmpty ?? false) {
-      final search = value!;
-      ref.read(analyticsProvider).logSearch(search.search!);
+    if (search != null) {
+      ref.read(analyticsProvider).logSearch(search.search);
       final query = ref.read(queryProvider.notifier);
       WidgetsBinding.instance.addPostFrameCallback((_) {
         query.updateOption(search);
@@ -185,9 +191,7 @@ class HomeScreenState extends ConsumerState<HomeScreen>
   }
 
   Future<void> _exitApp(bool canPop) async {
-    if (canPop) {
-      await ConnectionFactory().close();
-    } else {
+    if (!canPop) {
       final selected = ref.read(selectProvider);
       final query = ref.read(queryProvider.notifier);
       if (selected.multipleSelected) {
@@ -202,8 +206,21 @@ class HomeScreenState extends ConsumerState<HomeScreen>
   Widget build(BuildContext context) {
     final isAmiiboList = index == 0;
     final canPop = ref.watch(_canPopProvider);
+    final newStatUI = ref.watch(remoteStatUIProvider);
     return DashMenu(
       leftDrawer: CollectionDrawer(restart: _restartAnimation),
+      rightDrawer: newStatUI ? Scaffold(
+        body: const CustomScrollView(
+          slivers: [
+            SliverSafeArea(sliver: HomeBodyStats()),
+            SliverGap(72.0),
+          ],
+        ),
+        floatingActionButton: _FAB(
+          animation: const AlwaysStoppedAnimation(1.0),
+          index: 1,
+        ),
+      ) : null,
       body: PopScope(
         canPop: canPop,
         onPopInvoked: _exitApp,
@@ -241,7 +258,7 @@ class HomeScreenState extends ConsumerState<HomeScreen>
                                 : const _DefaultOptions(),
                       ),
                     ),
-                    if (isAmiiboList) ...[
+                    if (isAmiiboList || newStatUI) ...[
                       Builder(
                         builder: (context) {
                           return SliverPersistentHeader(
@@ -270,14 +287,15 @@ class HomeScreenState extends ConsumerState<HomeScreen>
               );
             },
           ),
-          extendBody: true,
-          floatingActionButtonLocation:
-              FloatingActionButtonLocation.centerDocked,
+          extendBody: !newStatUI,
+          floatingActionButtonLocation: newStatUI
+            ? FloatingActionButtonLocation.endFloat
+            : FloatingActionButtonLocation.centerDocked,
           floatingActionButton: _FAB(
-            animationController: _animationController,
-            index: index,
+            animation: _animationController,
+            index: newStatUI ? 0 : index,
           ),
-          bottomNavigationBar: _BottomBar(
+          bottomNavigationBar: newStatUI ? null : _BottomBar(
             animationController: _animationController,
             index: index,
             onTap: (selected) => setState(() {
@@ -299,8 +317,8 @@ class _AmiiboListWidget extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final ignore = ref.watch(lockProvider).lock;
     final amiiboList = ref.watch(amiiboHomeListProvider);
-    final isCustom = ref.watch(queryProvider.notifier
-        .select<bool>((cb) => cb.search.category == AmiiboCategory.Custom));
+    final isCustom = ref.watch(queryProvider.select<bool>(
+        (cb) => cb.categoryAttributes.category == AmiiboCategory.AmiiboSeries));
     final controller = useAnimationController(
       duration: const Duration(seconds: 1),
       animationBehavior: AnimationBehavior.preserve,
@@ -358,7 +376,7 @@ class _AmiiboListWidget extends HookConsumerWidget {
                             context: context,
                             builder: (BuildContext context) =>
                                 CustomQueryWidget(
-                              translate.category(AmiiboCategory.Custom),
+                              translate.category(AmiiboCategory.AmiiboSeries),
                               figures: figures,
                               cards: cards,
                             ),
@@ -467,15 +485,7 @@ class _Leading extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final localizations = MaterialLocalizations.of(context);
     final searchSelect = ref.watch(
-      querySearchProvider.select<bool>((search) {
-        final category = search.category;
-        if (category == AmiiboCategory.Game ||
-            category == AmiiboCategory.Name ||
-            category == AmiiboCategory.AmiiboSeries) {
-          return true;
-        }
-        return false;
-      }),
+      queryProvider.select<bool>((q) => q.searchAttributes != null),
     );
     final isForward = searchSelect || isClose;
     final effectiveSearch = searchSelect && !isClose;
@@ -536,18 +546,24 @@ class _Leading extends HookConsumerWidget {
   }
 }
 
-class _DefaultOptions extends StatelessWidget {
+class _DefaultOptions extends ConsumerWidget {
   const _DefaultOptions({Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final newStatUI = ref.watch(remoteStatUIProvider);
     return Row(
       mainAxisSize: MainAxisSize.min,
       mainAxisAlignment: MainAxisAlignment.end,
-      children: const <Widget>[
-        LockButton(),
-        PreferencesButton(),
-        SortCollection(),
+      children: <Widget>[
+        const LockButton(),
+        const PreferencesButton(),
+        const SortCollection(),
+        if (newStatUI) IconButton(
+          onPressed: () => DashMenu.of(context).openRightDrawer(),
+          tooltip: S.of(context).stats,
+          icon: const Icon(Icons.auto_graph_outlined),
+        ),
       ],
     );
   }
@@ -562,11 +578,11 @@ class _TitleAppBar extends ConsumerWidget {
         MaterialLocalizations.of(context);
     final S translate = S.of(context);
     final searchTitle = ref.watch(_titleProvider);
-    final String message;
     final Widget child;
-    final InlineSpan title = TextSpan(text: searchTitle.title);
+    final InlineSpan title =
+        TextSpan(text: translate.category(searchTitle.title));
     InlineSpan? categorySpan;
-    if (searchTitle.category != null && searchTitle.type == TitleType.search) {
+    if (searchTitle is TitleSearchCategory) {
       final theme = Theme.of(context);
       final size = theme.appBarTheme.toolbarTextStyle?.fontSize;
       final foreground = theme.colorScheme.onSecondaryContainer;
@@ -593,7 +609,7 @@ class _TitleAppBar extends ConsumerWidget {
                 Icon(Icons.search, size: size, color: foreground),
                 const SizedBox(width: 2.0),
                 Text(
-                  translate.category(searchTitle.category!.name),
+                  translate.searchCategory(searchTitle.searchCategory),
                   style: TextStyle(
                     fontSize: size,
                     color: foreground,
@@ -605,18 +621,12 @@ class _TitleAppBar extends ConsumerWidget {
         ),
       );
     }
-    switch (searchTitle.type) {
-      case TitleType.count:
-        message = localizations
-            .selectedRowCountTitle(num.parse(searchTitle.title) as int);
-        break;
-      case TitleType.search:
-        message = localizations.searchFieldLabel;
-        break;
-      default:
-        message = searchTitle.category!.name;
-        break;
-    }
+    final message = switch (searchTitle) {
+      TitleCount(title: final title) =>
+        localizations.selectedRowCountTitle(num.parse(title) as int),
+      TitleSearchCategory() => localizations.searchFieldLabel,
+      TitleCategory(category: final category) => translate.category(category),
+    };
     child = Text.rich(
       categorySpan != null ? TextSpan(children: [categorySpan, title]) : title,
     );
@@ -668,15 +678,15 @@ class _FAB extends ConsumerWidget {
   _FAB({
     // ignore: unused_element
     super.key,
-    required AnimationController animationController,
+    required Animation<double> animation,
     required int index,
   })  : scale = Tween<double>(begin: 0.25, end: 1.0).animate(CurvedAnimation(
-          parent: animationController,
+          parent: animation,
           curve: Interval(0.25, 1.0, curve: Curves.decelerate),
         )),
         slide = Tween<Offset>(begin: const Offset(0.0, 2.0), end: Offset.zero)
             .animate(CurvedAnimation(
-          parent: animationController,
+          parent: animation,
           curve: Interval(0.0, 1),
         )),
         isAmiibo = index == 0;

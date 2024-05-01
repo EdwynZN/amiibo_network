@@ -1,4 +1,4 @@
-part of 'search_result.dart';
+import 'package:equatable/equatable.dart';
 
 abstract class Expression extends Equatable {
   const Expression();

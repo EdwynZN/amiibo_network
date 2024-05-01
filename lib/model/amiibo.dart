@@ -11,8 +11,23 @@ List<Amiibo> entityFromMap(Map<String, dynamic> amiibo) =>
 
 @freezed
 class Amiibo with _$Amiibo {
+
   const factory Amiibo({
     required int key,
+    required final AmiiboDetails details,
+    /* @Default(false)
+    @JsonKey(fromJson: intToBool, toJson: boolToInt)
+    bool wishlist, */
+    //@Default(false) @JsonKey(fromJson: intToBool, toJson: boolToInt) bool owned,
+    @Default(UserAttributes.none()) UserAttributes userAttributes,
+  }) = _Amiibo;
+
+  factory Amiibo.fromJson(Map<String, dynamic> json) => _$AmiiboFromJson(json);
+}
+
+@freezed
+class AmiiboDetails with _$AmiiboDetails {
+  const factory AmiiboDetails({
     @JsonKey(includeIfNull: true) String? id,
     @Default('') String amiiboSeries,
     @Default('') String character,
@@ -24,10 +39,24 @@ class Amiibo with _$Amiibo {
     @JsonKey(includeIfNull: true) String? na,
     @JsonKey(includeIfNull: true) String? type,
     int? cardNumber,
-    @Default(false)
-    @JsonKey(fromJson: intToBool, toJson: boolToInt) bool wishlist,
-    @Default(false) @JsonKey(fromJson: intToBool, toJson: boolToInt) bool owned,
-  }) = _Amiibo;
+  }) = _AmiiboDetails;
 
-  factory Amiibo.fromJson(Map<String, dynamic> json) => _$AmiiboFromJson(json);
+  factory AmiiboDetails.fromJson(Map<String, dynamic> json) =>
+      _$AmiiboDetailsFromJson(json);
+}
+
+@freezed
+sealed class UserAttributes with _$UserAttributes {
+  const factory UserAttributes.none() = EmptyUserAttributes;
+
+  const factory UserAttributes.wished() = WishedUserAttributes;
+
+  @Assert('(boxed > 0) || (opened > 0)', 'boxed or opened cannot be both less than 0')
+  const factory UserAttributes.owned({
+    @Default(0) final int boxed,
+    @Default(1) final int opened,
+  }) = OwnedUserAttributes;
+
+  factory UserAttributes.fromJson(Map<String, dynamic> json) =>
+      _$UserAttributesFromJson(json);
 }

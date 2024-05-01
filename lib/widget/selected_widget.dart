@@ -141,7 +141,7 @@ class _AnimatedSelectionState<T extends AnimatedSelection>
                   horizontal: 6.0,
                 ),
                 child: Text(
-                  amiibo.name,
+                  amiibo.details.name,
                   softWrap: false,
                   overflow: TextOverflow.fade,
                   style: theme.primaryTextTheme.bodySmall?.copyWith(
@@ -176,10 +176,10 @@ class _AnimatedSelectedListTileState
     extends _AnimatedSelectionState<AnimatedSelectedListTile> {
   @override
   Widget build(BuildContext context) {
-    final useSerie = ref.watch(queryProvider.notifier.select((q) {
-      final category = q.search.category;
-      return category != AmiiboCategory.FigureSeries &&
-          category != AmiiboCategory.CardSeries;
+    final useSerie = ref.watch(queryProvider.select((q) {
+      final category = q.categoryAttributes.category;
+      return category != AmiiboCategory.Figures &&
+          category != AmiiboCategory.Cards;
     }));
     final key = widget.amiibo.key;
     final select = ref.watch(
@@ -201,13 +201,13 @@ class _AnimatedSelectedListTileState
         padding: const EdgeInsets.fromLTRB(6.0, 12.0, 6.0, 6.0),
         child: _ListAmiiboAsset(
           amiiboKey: widget.amiibo.key,
-          name: widget.amiibo.name,
+          name: widget.amiibo.details.name,
         ),
       ),
     );
 
     final info = _AmiiboListInfo.fromAmiibo(
-      amiibo: widget.amiibo,
+      amiibo: widget.amiibo.details,
       useSerie: useSerie,
       style: theme.primaryTextTheme.bodyLarge?.copyWith(
         fontWeight: FontWeight.bold,
@@ -337,7 +337,7 @@ class _AmiiboListInfo extends StatelessWidget {
   _AmiiboListInfo.fromAmiibo({
     // ignore: unused_element
     super.key,
-    required Amiibo amiibo,
+    required AmiiboDetails amiibo,
     required this.useSerie,
     this.style,
   })  : name = amiibo.name,

@@ -22,8 +22,8 @@ class SearchScreen extends HookConsumerWidget {
     final translate = S.of(context);
     final _textController = useTextEditingController();
     final amiiboCategory = ref.watch(
-      querySearchProvider.select<String>(
-        (value) => value.search ?? value.category.name,
+      queryProvider.select<String>(
+        (value) => value.searchAttributes?.search ?? value.categoryAttributes.category.name,
       ),
     );
     return Scaffold(
@@ -49,10 +49,12 @@ class SearchScreen extends HookConsumerWidget {
               textInputAction: TextInputAction.search,
               autofocus: true,
               onSubmitted: (text) => Navigator.of(context).pop(
-                Search(
-                  search: text,
-                  category: ref.read(categorySearchProvider.notifier).state,
-                ),
+                text.isEmpty
+                  ? null
+                  : SearchAttributes(
+                    search: text,
+                    category: ref.read(categorySearchProvider.notifier).state,
+                  ),
               ),
               style: style,
               autocorrect: false,
@@ -174,7 +176,7 @@ class _Suggestions extends HookConsumerWidget {
               shape: shape,
               child: ListTile(
                 onTap: () => Navigator.of(context).pop(
-                  Search(
+                  SearchAttributes(
                     search: data[index],
                     category: ref.read(categorySearchProvider.notifier).state,
                   ),
@@ -262,7 +264,7 @@ class _CategoryControlState extends ConsumerState<CategoryControl> {
     super.didChangeDependencies();
   }
 
-  void _selectCategory(WidgetRef ref, AmiiboCategory category) {
+  void _selectCategory(WidgetRef ref, SearchCategory category) {
     final _search = ref.read(categorySearchProvider.notifier);
     if (_search.state == category) return;
     _search.state = category;
@@ -279,46 +281,46 @@ class _CategoryControlState extends ConsumerState<CategoryControl> {
           child: OutlinedButton.icon(
             style: OutlinedButton.styleFrom(
               foregroundColor:
-                  _search == AmiiboCategory.Name ? _accentTextThemeColor : null,
+                  _search == SearchCategory.Name ? _accentTextThemeColor : null,
               shape: RoundedRectangleBorder(
                 borderRadius:
                     const BorderRadius.horizontal(left: Radius.circular(16.0)),
               ),
               backgroundColor:
-                  _search == AmiiboCategory.Name ? _accentColor : null,
+                  _search == SearchCategory.Name ? _accentColor : null,
             ),
-            onPressed: () => _selectCategory(ref, AmiiboCategory.Name),
+            onPressed: () => _selectCategory(ref, SearchCategory.Name),
             icon: const Icon(
               Icons.group,
               size: _iconSize,
             ),
             label: FittedBox(
-              child: Text(translate.category(AmiiboCategory.Name)),
+              child: Text(translate.category(SearchCategory.Name)),
             ),
           ),
         ),
         Expanded(
           child: OutlinedButton.icon(
-            style: _search == AmiiboCategory.Game
+            style: _search == SearchCategory.Game
                 ? OutlinedButton.styleFrom(
                     foregroundColor: _accentTextThemeColor,
                     backgroundColor: _accentColor,
                   )
                 : null,
-            onPressed: () => _selectCategory(ref, AmiiboCategory.Game),
+            onPressed: () => _selectCategory(ref, SearchCategory.Game),
             icon: const Icon(
               Icons.games,
               size: _iconSize,
             ),
             label: FittedBox(
-              child: Text(translate.category(AmiiboCategory.Game)),
+              child: Text(translate.category(SearchCategory.Game)),
             ),
           ),
         ),
         Expanded(
           child: OutlinedButton.icon(
             style: OutlinedButton.styleFrom(
-              foregroundColor: _search == AmiiboCategory.AmiiboSeries
+              foregroundColor: _search == SearchCategory.AmiiboSeries
                   ? _accentTextThemeColor
                   : null,
               shape: RoundedRectangleBorder(
@@ -326,15 +328,15 @@ class _CategoryControlState extends ConsumerState<CategoryControl> {
                     const BorderRadius.horizontal(right: Radius.circular(16.0)),
               ),
               backgroundColor:
-                  _search == AmiiboCategory.AmiiboSeries ? _accentColor : null,
+                  _search == SearchCategory.AmiiboSeries ? _accentColor : null,
             ),
-            onPressed: () => _selectCategory(ref, AmiiboCategory.AmiiboSeries),
+            onPressed: () => _selectCategory(ref, SearchCategory.AmiiboSeries),
             icon: const Icon(
               Icons.nfc,
               size: _iconSize,
             ),
             label: FittedBox(
-              child: Text(translate.category(AmiiboCategory.AmiiboSeries)),
+              child: Text(translate.category(SearchCategory.AmiiboSeries)),
             ),
           ),
         ),

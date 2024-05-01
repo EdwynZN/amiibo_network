@@ -1,15 +1,11 @@
-const figureType = ['Figure', 'Yarn', 'Band'];
+enum SearchCategory { Game, Name, AmiiboSeries }
 
 enum AmiiboCategory {
   All,
-  Custom,
   Figures,
   Cards,
   Owned,
   Wishlist,
-  FigureSeries,
-  CardSeries,
-  Name,
   AmiiboSeries,
-  Game
 }
+

@@ -46,12 +46,18 @@ class _CollectionDrawerState extends ConsumerState<CollectionDrawer> {
   void figureExpand(bool x) => _figureExpand = x;
   void cardExpand(bool x) => _cardExpand = x;
 
-  _onTapTile(WidgetRef ref, AmiiboCategory category, String? tile) {
-    final query = ref.read(querySearchProvider);
-    if (query.search != tile || query.category != category) {
-      ref
-          .read(queryProvider.notifier)
-          .updateOption(Search(category: category, search: tile));
+  _onTapTile(AmiiboCategory category, [String? tile]) {
+    final query = ref.read(queryProvider);
+    final attributes = CategoryAttributes(
+      category: category,
+      figures: category == AmiiboCategory.Figures && tile != null
+          ? [tile]
+          : const [],
+      cards:
+          category == AmiiboCategory.Cards && tile != null ? [tile] : const [],
+    );
+    if (query.categoryAttributes != attributes) {
+      ref.read(queryProvider.notifier).updateTile(attributes);
       widget.restart?.call();
     }
     Navigator.pop(context);
@@ -83,13 +89,23 @@ class _CollectionDrawerState extends ConsumerState<CollectionDrawer> {
                     ),
                     Consumer(
                       builder: (context, ref, child) {
-                        final query = ref.watch(querySearchProvider);
-                        final String? _selected = query.search;
-                        final AmiiboCategory _category = query.category;
+                        final query = ref.watch(queryProvider);
+                        final categoryAttributes = query.categoryAttributes;
+                        final String? _selectedFigure =
+                            categoryAttributes.figures.isEmpty
+                                ? null
+                                : categoryAttributes.figures.first;
+                        final String? _selectedCard =
+                            categoryAttributes.cards.isEmpty
+                                ? null
+                                : categoryAttributes.cards.first;
+                        final AmiiboCategory _category =
+                            categoryAttributes.category;
                         final isAll = _category == AmiiboCategory.All;
                         final isOwned = _category == AmiiboCategory.Owned;
                         final isWishlist = _category == AmiiboCategory.Wishlist;
-                        final isCustom = _category == AmiiboCategory.Custom;
+                        final isCustom =
+                            _category == AmiiboCategory.AmiiboSeries;
                         final hidden = ref.watch(hiddenCategoryProvider);
                         final isFiguresShown =
                             hidden == null || hidden != HiddenType.Figures;
@@ -100,11 +116,13 @@ class _CollectionDrawerState extends ConsumerState<CollectionDrawer> {
                           sliver: SliverList(
                             delegate: SliverChildListDelegate([
                               ListTile(
-                                onTap: () => _onTapTile(
-                                    ref, AmiiboCategory.Custom, 'Custom'),
-                                leading: const Icon(Icons.dashboard_customize_rounded),
+                                onTap: () =>
+                                    _onTapTile(AmiiboCategory.AmiiboSeries),
+                                leading: const Icon(
+                                    Icons.dashboard_customize_rounded),
                                 title: Text(
-                                  translate.category(AmiiboCategory.Custom),
+                                  translate
+                                      .category(AmiiboCategory.AmiiboSeries),
                                   style: isCustom
                                       ? const TextStyle(
                                           fontWeight: FontWeight.bold)
@@ -118,13 +136,14 @@ class _CollectionDrawerState extends ConsumerState<CollectionDrawer> {
                                         ref.read(queryProvider.notifier);
                                     final List<String> figures =
                                         filter.customFigures;
-                                    final List<String> cards = filter.customCards;
+                                    final List<String> cards =
+                                        filter.customCards;
                                     bool save = await showDialog<bool>(
                                           context: context,
                                           builder: (BuildContext context) =>
                                               CustomQueryWidget(
-                                            translate
-                                                .category(AmiiboCategory.Custom),
+                                            translate.category(
+                                                AmiiboCategory.AmiiboSeries),
                                             figures: figures,
                                             cards: cards,
                                           ),
@@ -144,8 +163,7 @@ class _CollectionDrawerState extends ConsumerState<CollectionDrawer> {
                               ),
                               const Gap(4.0),
                               ListTile(
-                                onTap: () => _onTapTile(
-                                    ref, AmiiboCategory.Owned, 'Owned'),
+                                onTap: () => _onTapTile(AmiiboCategory.Owned),
                                 leading: const Icon(iconOwned),
                                 title: Text(
                                   translate.category(AmiiboCategory.Owned),
@@ -163,8 +181,8 @@ class _CollectionDrawerState extends ConsumerState<CollectionDrawer> {
                               ),
                               const Gap(4.0),
                               ListTile(
-                                onTap: () => _onTapTile(
-                                    ref, AmiiboCategory.Wishlist, 'Wishlist'),
+                                onTap: () =>
+                                    _onTapTile(AmiiboCategory.Wishlist),
                                 leading: const Icon(iconWished),
                                 title: Text(
                                   translate.category(AmiiboCategory.Wishlist),
@@ -182,8 +200,7 @@ class _CollectionDrawerState extends ConsumerState<CollectionDrawer> {
                               ),
                               const Gap(4.0),
                               ListTile(
-                                onTap: () =>
-                                    _onTapTile(ref, AmiiboCategory.All, 'All'),
+                                onTap: () => _onTapTile(AmiiboCategory.All),
                                 leading: const Icon(Icons.all_inclusive),
                                 title: Text(
                                   translate.category(AmiiboCategory.All),
@@ -220,16 +237,16 @@ class _CollectionDrawerState extends ConsumerState<CollectionDrawer> {
                                           _AmiiboTile(
                                             name: translate.category(
                                                 AmiiboCategory.Figures),
-                                            isSelected: _selected == 'Figures',
+                                            isSelected:
+                                                _selectedFigure == null &&
+                                                    _category ==
+                                                        AmiiboCategory.Figures,
                                             icon: const Icon(
                                               Icons.all_inclusive,
                                               size: 16,
                                             ),
                                             onTap: () => _onTapTile(
-                                              ref,
-                                              AmiiboCategory.Figures,
-                                              'Figures',
-                                            ),
+                                                AmiiboCategory.Figures),
                                           ),
                                           if (snapshot
                                               is AsyncData<List<String>>)
@@ -239,11 +256,10 @@ class _CollectionDrawerState extends ConsumerState<CollectionDrawer> {
                                                 name: series,
                                                 isSelected: _category ==
                                                         AmiiboCategory
-                                                            .FigureSeries &&
-                                                    _selected == series,
+                                                            .Figures &&
+                                                    _selectedFigure == series,
                                                 onTap: () => _onTapTile(
-                                                  ref,
-                                                  AmiiboCategory.FigureSeries,
+                                                  AmiiboCategory.Figures,
                                                   series,
                                                 ),
                                               ),
@@ -276,16 +292,15 @@ class _CollectionDrawerState extends ConsumerState<CollectionDrawer> {
                                           _AmiiboTile(
                                             name: translate
                                                 .category(AmiiboCategory.Cards),
-                                            isSelected: _selected == 'Cards',
+                                            isSelected: _selectedCard == null &&
+                                                _category ==
+                                                    AmiiboCategory.Cards,
                                             icon: const Icon(
                                               Icons.all_inclusive,
                                               size: 16,
                                             ),
                                             onTap: () => _onTapTile(
-                                              ref,
-                                              AmiiboCategory.Cards,
-                                              'Cards',
-                                            ),
+                                                AmiiboCategory.Cards),
                                           ),
                                           if (snapshot
                                               is AsyncData<List<String>>)
@@ -294,12 +309,10 @@ class _CollectionDrawerState extends ConsumerState<CollectionDrawer> {
                                               _AmiiboTile(
                                                 name: series,
                                                 isSelected: _category ==
-                                                        AmiiboCategory
-                                                            .CardSeries &&
-                                                    _selected == series,
+                                                        AmiiboCategory.Cards &&
+                                                    _selectedCard == series,
                                                 onTap: () => _onTapTile(
-                                                  ref,
-                                                  AmiiboCategory.CardSeries,
+                                                  AmiiboCategory.Cards,
                                                   series,
                                                 ),
                                               ),

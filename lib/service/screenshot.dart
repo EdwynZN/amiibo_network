@@ -1,8 +1,10 @@
+import 'package:amiibo_network/enum/hidden_types.dart';
 import 'package:amiibo_network/model/preferences.dart';
 import 'package:amiibo_network/model/stat.dart';
 import 'package:amiibo_network/repository/theme_repository.dart';
 import 'package:amiibo_network/resources/resources.dart';
 import 'package:amiibo_network/riverpod/preferences_provider.dart';
+import 'package:amiibo_network/riverpod/service_provider.dart';
 import 'package:amiibo_network/riverpod/theme_provider.dart';
 import 'package:amiibo_network/service/info_package.dart';
 import 'package:amiibo_network/utils/format_color_on_theme.dart';
@@ -17,9 +19,6 @@ import 'package:amiibo_network/model/search_result.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:amiibo_network/model/amiibo.dart';
 
-const String _order = 'CASE WHEN type = "Figure" THEN 1 '
-    'WHEN type = "Yarn" OR type = "Band" THEN 2 ELSE 3 END, amiiboSeries, key';
-
 class Screenshot {
   late ThemeData theme;
   late Preferences userPreferences;
@@ -32,7 +31,7 @@ class Screenshot {
   String? createdOn;
 
   final S _translate = S.current;
-  final Service _service = Service();
+  late Service _service;
   final Paint ownedCardPaint = Paint();
   final Paint wishedCardPaint = Paint();
   final double margin = 20.0;
@@ -68,11 +67,16 @@ class Screenshot {
   }
 
   void customData(
-      ThemeMode themeMode, BuildContext context, Preferences preferences) {
+    ThemeMode themeMode,
+    BuildContext context,
+    Preferences preferences,
+    Service service,
+  ) {
+    _service = service;
     final mediaBrightness = MediaQuery.of(context).platformBrightness;
     final theme = Theme.of(context);
-    final preferencesTheme = theme.extension<PreferencesExtension>()
-      ?? PreferencesExtension.brigthness(theme.brightness);
+    final preferencesTheme = theme.extension<PreferencesExtension>() ??
+        PreferencesExtension.brigthness(theme.brightness);
     this
       ..color = colorOnThemeMode(themeMode, mediaBrightness)
       ..ownedCardPaint.color = preferencesTheme.ownContainer
@@ -91,9 +95,10 @@ class Screenshot {
     final mediaBrightness = MediaQuery.of(context).platformBrightness;
     final themeMode = ref.read(themeProvider).preferredTheme;
     final theme = Theme.of(context);
-    final preferences = theme.extension<PreferencesExtension>()
-      ?? PreferencesExtension.brigthness(theme.brightness);
+    final preferences = theme.extension<PreferencesExtension>() ??
+        PreferencesExtension.brigthness(theme.brightness);
     this
+      .._service = ref.read(serviceProvider)
       ..color = colorOnThemeMode(themeMode, mediaBrightness)
       ..ownedCardPaint.color = preferences.ownContainer
       ..wishedCardPaint.color = preferences.wishContainer
@@ -107,12 +112,23 @@ class Screenshot {
       ..materialLocalizations = MaterialLocalizations.of(context);
   }
 
-  Future<Uint8List?> saveCollection(Expression expression) async {
-    final QueryBuilder query = QueryBuilder(where: expression);
-    List<Amiibo> amiibos = await _service.fetchByCategory(query, _order);
-    Stat _listStat =
-        List<Stat>.from(await _service.fetchStats(expression: expression))
-            .first;
+  Future<Uint8List?> saveCollection(
+    Search search,
+    HiddenType? hiddenType,
+  ) async {
+    List<Amiibo> amiibos = await _service.fetchByCategory(
+      categoryAttributes: search.categoryAttributes,
+      hiddenCategories: hiddenType,
+      searchAttributes: search.searchAttributes,
+      sortBy: search.sortBy,
+      orderBy: search.orderBy,
+    );
+    Stat _listStat = (await _service.fetchStats(
+      categoryAttributes: search.categoryAttributes,
+      searchAttributes: null,
+      hiddenCategories: hiddenType,
+    ))
+        .first;
     if (isRecording || amiibos.isEmpty) return null;
 
     final double maxSize = 60.0;
@@ -145,9 +161,14 @@ class Screenshot {
           Radius.circular(8.0));
       final ByteData imageAsset = await rootBundle.load(strImage);
 
-      if (amiibo.owned || amiibo.wishlist) {
+      final userAttributes = amiibo.userAttributes;
+      if (userAttributes case OwnedUserAttributes() || WishedUserAttributes()) {
         _canvas!.drawRRect(
-            cardPath, amiibo.owned ? ownedCardPaint : wishedCardPaint);
+          cardPath,
+          userAttributes is OwnedUserAttributes
+              ? ownedCardPaint
+              : wishedCardPaint,
+        );
       }
 
       ui.Image _image = await ui
@@ -186,12 +207,21 @@ class Screenshot {
     return await _saveFile(maxX.toInt(), maxY.toInt());
   }
 
-  Future<Uint8List?> saveStats(Expression expression) async {
-    final series = await _service.fetchDistinct(expression: expression);
-    final exp = InCond.inn('amiiboSeries', series.toSet().toList());
-    final List<Stat> stats =
-        await _service.fetchStats(group: true, expression: exp);
-    final List<Stat> general = await _service.fetchStats(expression: exp);
+  Future<Uint8List?> saveStats({
+    required Search search,
+    HiddenType? hiddenType,
+  }) async {
+    final List<Stat> stats = await _service.fetchStats(
+      group: true,
+      categoryAttributes: search.categoryAttributes,
+      searchAttributes: null,
+      hiddenCategories: hiddenType,
+    );
+    final List<Stat> general = await _service.fetchStats(
+      categoryAttributes: search.categoryAttributes,
+      searchAttributes: null,
+      hiddenCategories: hiddenType,
+    );
 
     if (isRecording || stats.isEmpty || general.isEmpty) return null;
 
