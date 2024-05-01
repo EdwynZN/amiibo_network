@@ -84,7 +84,10 @@ Future<void> main() async {
 
       final preferences = await SharedPreferences.getInstance();
       await updateOldTheme();
-      final store = await newHiveDefaultCacheStore(path: cacheDir.path);
+      final store = await newHiveDefaultCacheStore(
+        path: cacheDir.path,
+        crashRecovery: true,
+      );
       final cache = await store.cache(
         name: 'HiveCacheMigration',
         fromEncodable: CacheValue.fromJson,
