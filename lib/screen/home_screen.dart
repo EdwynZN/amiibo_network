@@ -10,6 +10,7 @@ import 'package:amiibo_network/riverpod/preferences_provider.dart';
 import 'package:amiibo_network/riverpod/query_provider.dart';
 import 'package:amiibo_network/riverpod/screenshot_service.dart';
 import 'package:amiibo_network/riverpod/select_provider.dart';
+import 'package:amiibo_network/riverpod/stat_ui_remote_config_provider.dart';
 import 'package:amiibo_network/screen/search_screen.dart';
 import 'package:amiibo_network/service/storage.dart';
 import 'package:amiibo_network/widget/dash_menu/dash_menu.dart';
@@ -205,8 +206,21 @@ class HomeScreenState extends ConsumerState<HomeScreen>
   Widget build(BuildContext context) {
     final isAmiiboList = index == 0;
     final canPop = ref.watch(_canPopProvider);
+    final newStatUI = ref.watch(remoteStatUIProvider);
     return DashMenu(
       leftDrawer: CollectionDrawer(restart: _restartAnimation),
+      rightDrawer: newStatUI ? Scaffold(
+        body: const CustomScrollView(
+          slivers: [
+            SliverSafeArea(sliver: HomeBodyStats()),
+            SliverGap(72.0),
+          ],
+        ),
+        floatingActionButton: _FAB(
+          animation: const AlwaysStoppedAnimation(1.0),
+          index: 1,
+        ),
+      ) : null,
       body: PopScope(
         canPop: canPop,
         onPopInvoked: _exitApp,
@@ -244,7 +258,7 @@ class HomeScreenState extends ConsumerState<HomeScreen>
                                 : const _DefaultOptions(),
                       ),
                     ),
-                    if (isAmiiboList) ...[
+                    if (isAmiiboList || newStatUI) ...[
                       Builder(
                         builder: (context) {
                           return SliverPersistentHeader(
@@ -273,14 +287,15 @@ class HomeScreenState extends ConsumerState<HomeScreen>
               );
             },
           ),
-          extendBody: true,
-          floatingActionButtonLocation:
-              FloatingActionButtonLocation.centerDocked,
+          extendBody: !newStatUI,
+          floatingActionButtonLocation: newStatUI
+            ? FloatingActionButtonLocation.endFloat
+            : FloatingActionButtonLocation.centerDocked,
           floatingActionButton: _FAB(
-            animationController: _animationController,
-            index: index,
+            animation: _animationController,
+            index: newStatUI ? 0 : index,
           ),
-          bottomNavigationBar: _BottomBar(
+          bottomNavigationBar: newStatUI ? null : _BottomBar(
             animationController: _animationController,
             index: index,
             onTap: (selected) => setState(() {
@@ -531,18 +546,24 @@ class _Leading extends HookConsumerWidget {
   }
 }
 
-class _DefaultOptions extends StatelessWidget {
+class _DefaultOptions extends ConsumerWidget {
   const _DefaultOptions({Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final newStatUI = ref.watch(remoteStatUIProvider);
     return Row(
       mainAxisSize: MainAxisSize.min,
       mainAxisAlignment: MainAxisAlignment.end,
-      children: const <Widget>[
-        LockButton(),
-        PreferencesButton(),
-        SortCollection(),
+      children: <Widget>[
+        const LockButton(),
+        const PreferencesButton(),
+        const SortCollection(),
+        if (newStatUI) IconButton(
+          onPressed: () => DashMenu.of(context).openRightDrawer(),
+          tooltip: S.of(context).stats,
+          icon: const Icon(Icons.auto_graph_outlined),
+        ),
       ],
     );
   }
@@ -657,15 +678,15 @@ class _FAB extends ConsumerWidget {
   _FAB({
     // ignore: unused_element
     super.key,
-    required AnimationController animationController,
+    required Animation<double> animation,
     required int index,
   })  : scale = Tween<double>(begin: 0.25, end: 1.0).animate(CurvedAnimation(
-          parent: animationController,
+          parent: animation,
           curve: Interval(0.25, 1.0, curve: Curves.decelerate),
         )),
         slide = Tween<Offset>(begin: const Offset(0.0, 2.0), end: Offset.zero)
             .animate(CurvedAnimation(
-          parent: animationController,
+          parent: animation,
           curve: Interval(0.0, 1),
         )),
         isAmiibo = index == 0;

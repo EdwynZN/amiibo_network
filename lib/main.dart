@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:amiibo_network/data/remote_config/model/default_remote_config.dart';
 import 'package:amiibo_network/firebase_options.dart';
 import 'package:amiibo_network/riverpod/game_provider.dart';
 import 'package:amiibo_network/riverpod/provider_observer.dart';
@@ -8,6 +9,7 @@ import 'package:amiibo_network/service/info_package.dart';
 import 'package:amiibo_network/service/update_service.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
+import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -56,6 +58,22 @@ Future<void> main() async {
             .setCrashlyticsCollectionEnabled(false);
       }
 
+      /// Firebase Remote config
+      final remoteConfig = FirebaseRemoteConfig.instance;
+      await remoteConfig.ensureInitialized();
+      await remoteConfig.setConfigSettings(RemoteConfigSettings(
+        fetchTimeout: const Duration(minutes: 1),
+        minimumFetchInterval: kDebugMode
+          ? const Duration(minutes: 5)
+          : const Duration(days: 1),
+      ));
+      await remoteConfig.setDefaults(const DefaultRemoteConfig().toJson());
+      if (remoteConfig.lastFetchStatus == RemoteConfigFetchStatus.success) {
+        await remoteConfig.activate();
+      }
+      remoteConfig.fetch().ignore();
+
+      /// Hive cache
       await Hive.initFlutter();
       final cacheDir = await getTemporaryDirectory();
 

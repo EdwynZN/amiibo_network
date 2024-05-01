@@ -82,9 +82,7 @@ class SliverStatsHeader extends SliverPersistentHeaderDelegate {
   double get minExtent => 32.0 + topPadding;
 
   @override
-  bool shouldRebuild(SliverStatsHeader oldDelegate) =>
-      topPadding != oldDelegate.topPadding ||
-      hideOptional != oldDelegate.hideOptional;
+  bool shouldRebuild(SliverStatsHeader oldDelegate) => true;
 }
 
 class _LinearStat extends ConsumerWidget {
