@@ -3,7 +3,6 @@ import 'package:amiibo_network/resources/resources.dart';
 import 'package:amiibo_network/riverpod/amiibo_provider.dart';
 import 'package:amiibo_network/widget/card_details.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:gap/gap.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 

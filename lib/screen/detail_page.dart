@@ -2,6 +2,8 @@ import 'package:amiibo_network/resources/resources.dart';
 import 'package:amiibo_network/riverpod/amiibo_provider.dart';
 import 'package:amiibo_network/widget/amiibo_button_toggle.dart';
 import 'package:amiibo_network/widget/card_details.dart';
+import 'package:amiibo_network/widget/detail/amiibo_header_card.dart';
+import 'package:amiibo_network/widget/detail/user_preferences_card.dart';
 import 'package:amiibo_network/widget/game_list.dart';
 import 'package:flutter/material.dart';
 import 'package:amiibo_network/generated/l10n.dart';
@@ -40,7 +42,10 @@ class DetailPage extends ConsumerWidget {
       ),
       body: CustomScrollView(
         slivers: [
-          const SliverToBoxAdapter(child: _AmiiboCard()),
+          const SliverToBoxAdapter(child: AmiiboCard()),
+          const SliverToBoxAdapter(child: Gap(12.0)),
+          const PreferencesSliver(),
+          const SliverToBoxAdapter(child: Gap(12.0)),
           const SliverPadding(
             padding: EdgeInsets.symmetric(vertical: 8.0),
             sliver: GameListWidget(),
