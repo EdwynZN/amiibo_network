@@ -1,5 +1,6 @@
 import 'package:amiibo_network/generated/l10n.dart';
 import 'package:amiibo_network/model/amiibo.dart';
+import 'package:amiibo_network/model/update_amiibo_user_attributes.dart';
 import 'package:amiibo_network/repository/theme_repository.dart';
 import 'package:amiibo_network/riverpod/amiibo_provider.dart';
 import 'package:amiibo_network/riverpod/lock_provider.dart';
@@ -12,165 +13,170 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:gap/gap.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-enum _UserPreferenceType { owned, wished }
-
 enum _ButtonEffects { remove, delete, disable }
 
-class PreferencesSliver extends HookConsumerWidget {
+class PreferencesSliver extends StatelessWidget {
   const PreferencesSliver({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return const SliverToBoxAdapter(child: UserPreferenceCard());
+  }
+}
+
+class UserPreferenceCard extends HookConsumerWidget {
+  // ignore: unused_element
+  const UserPreferenceCard({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final amiiboKey = ref.watch(keyAmiiboProvider);
-    final amiibo = ref.watch(
-      detailAmiiboProvider(amiiboKey).select((value) => value.valueOrNull),
+    final userAttributes = ref.watch(
+      detailAmiiboProvider(amiiboKey)
+          .select((value) => value.valueOrNull?.userAttributes),
     );
     final isLock = ref.watch(lockProvider.select((value) => value.lock));
     final isDisable = useMemoized(
-      () => isLock || amiibo == null,
-      [isLock, amiibo],
+      () => isLock || userAttributes == null,
+      [isLock, userAttributes == null],
     );
 
-    final Widget buttons = Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16.0),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: <Widget>[
-          _OutlinedPreferencesButton.owned(
-            userAttribute: amiibo?.userAttributes,
-            onPressed: isLock
-                ? null
-                : () {
-                    if (amiibo == null) return;
-                    final bool newValue =
-                        amiibo.userAttributes is! OwnedUserAttributes;
-                    ref.read(serviceProvider.notifier).updateFromAmiibos(
-                      [
-                        amiibo.copyWith(
-                          userAttributes: newValue
-                              ? UserAttributes.owned()
-                              : const EmptyUserAttributes(),
-                        ),
-                      ],
-                    );
-                  },
-          ),
-          const Gap(24.0),
-          _OutlinedPreferencesButton.wished(
-            userAttribute: amiibo?.userAttributes,
-            onPressed: isDisable
-                ? null
-                : () {
-                    if (amiibo == null) return;
-                    final bool newValue =
-                        amiibo.userAttributes is! WishedUserAttributes;
-                    ref.read(serviceProvider.notifier).updateFromAmiibos(
-                      [
-                        amiibo.copyWith(
-                          userAttributes: newValue
-                              ? const WishedUserAttributes()
-                              : const EmptyUserAttributes(),
-                        )
-                      ],
-                    );
-                  },
-          ),
-        ],
-      ),
-    );
-
-    final ownedKey = ValueKey(
-      amiibo == null || amiibo.userAttributes is! OwnedUserAttributes,
-    );
-    return SliverIgnorePointer(
-      ignoring: isDisable,
-      sliver: SliverMainAxisGroup(
-        slivers: [
-          SliverToBoxAdapter(
-            child: Center(
-              child: _OutlinedPreferencesButton.wished(
-                userAttribute: amiibo?.userAttributes,
-                onPressed: isDisable
-                    ? null
-                    : () {
-                        if (amiibo == null) return;
-                        final bool newValue =
-                            amiibo.userAttributes is! WishedUserAttributes;
-                        ref.read(serviceProvider.notifier).updateFromAmiibos(
-                          [
-                            amiibo.copyWith(
-                              userAttributes: newValue
-                                  ? const WishedUserAttributes()
-                                  : const EmptyUserAttributes(),
-                            )
-                          ],
-                        );
-                      },
-              ),
-            ),
-          ),
-          const SliverToBoxAdapter(child: Gap(12.0)),
-          SliverToBoxAdapter(
-            child: _OwnedCard(
-              amiiboId: amiiboKey,
-              userAttribute: amiibo?.userAttributes,
-              isDisable: isDisable,
-            ),
-          ),
-          /* SliverAnimatedPaintExtent(
-            duration: const Duration(milliseconds: 500),
-            curve: Curves.easeInOutCirc,
-            child: SliverToBoxAdapter(
-              key: ownedKey,
-              child: ownedKey.value ? const SizedBox() : const _OwnedCard(),
-            ),
-          ), */
-        ],
-      ),
-    );
-  }
-}
-
-class _OwnedCard extends HookConsumerWidget {
-  final UserAttributes? userAttribute;
-  final int amiiboId;
-  final bool isDisable;
-
-  const _OwnedCard({
-    // ignore: unused_element
-    super.key,
-    required this.amiiboId,
-    required this.userAttribute,
-    required this.isDisable,
-  });
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
     final translate = S.of(context);
     final theme = Theme.of(context);
     final preferencesPalette = theme.extension<PreferencesExtension>()!;
     final openedTextController = useTextEditingController(text: '0');
     final boxedTextController = useTextEditingController(text: '0');
+
+    /// initialize controllers with attributes
+    useEffect(
+      () {
+        if (userAttributes != null) {
+          final ({String boxed, String opened}) values = switch (userAttributes) {
+            OwnedUserAttributes(
+              boxed: final boxed,
+              opened: final opened,
+            ) =>
+              (boxed: boxed.toString(), opened: opened.toString()),
+            _ => (boxed: '0', opened: '0'),
+          };
+
+          if (openedTextController.text != values.opened) {
+            openedTextController.text = values.opened;
+          }
+          if (boxedTextController.text != values.boxed) {
+            boxedTextController.text = values.boxed;
+          }
+        }
+        return;
+      },
+      [userAttributes, openedTextController, boxedTextController],
+    );
+
+    final onChangeOwned = useCallback(
+      ({int? boxed, int? opened}) {
+        final UserAttributes newAttributes;
+        if (boxed != null) {
+          newAttributes = UserAttributes.fromOwnedOrEmpty(
+            boxed: boxed,
+            opened: int.parse(openedTextController.text),
+          );
+        } else if (opened != null) {
+          newAttributes = UserAttributes.fromOwnedOrEmpty(
+            boxed: int.parse(boxedTextController.text),
+            opened: opened,
+          );
+        } else {
+          return null;
+        }
+        return ref.read(serviceProvider.notifier).update(
+          [
+            UpdateAmiiboUserAttributes(
+              id: amiiboKey,
+              attributes: newAttributes,
+            ),
+          ],
+        );
+      },
+      [openedTextController, boxedTextController, ref, amiiboKey],
+    );
+
+    /// UI attribute colors and text from type of userAttributes
+    final ({
+      Color? surfaceColor,
+      String title,
+      Color? foregroundTitle,
+      IconData icon,
+    }) attributes = useMemoized(
+      () {
+        return switch (userAttributes) {
+          OwnedUserAttributes() => (
+              surfaceColor: preferencesPalette.ownPrimary,
+              title: translate.owned,
+              foregroundTitle: preferencesPalette.onOwnPrimary,
+              icon: iconOwned,
+            ),
+          WishedUserAttributes() => (
+              surfaceColor: preferencesPalette.wishPrimary,
+              title: translate.wished,
+              foregroundTitle: preferencesPalette.onWishPrimary,
+              icon: iconWished,
+            ),
+          _ => (
+              surfaceColor: null,
+              title: '',
+              foregroundTitle: null,
+              icon: Icons.indeterminate_check_box_outlined,
+            ),
+        };
+      },
+      [
+        userAttributes,
+        translate,
+        preferencesPalette,
+      ],
+    );
     return _ColumnCardWrapper(
       color: theme.colorScheme.background,
-      surfaceTintColor: preferencesPalette.ownPalette,
+      surfaceTintColor: attributes.surfaceColor,
       borderColor: theme.colorScheme.outlineVariant,
-      elevation: 0.0,
+      elevation: attributes.surfaceColor == null ? 0.0 : 4.0,
       child: Column(
         children: [
           Container(
             padding: const EdgeInsets.all(12.0),
-            color: preferencesPalette.ownPrimary,
+            color: attributes.surfaceColor,
             child: Row(
               children: [
-                Icon(iconOwned, color: preferencesPalette.onOwnPrimary),
+                Icon(attributes.icon, color: attributes.foregroundTitle),
                 const Gap(8.0),
                 Text(
-                  'Owned',
+                  attributes.title,
                   style: theme.textTheme.titleSmall
-                      ?.copyWith(color: preferencesPalette.onOwnPrimary),
+                      ?.copyWith(color: attributes.foregroundTitle),
                 ),
+                if (userAttributes is OwnedUserAttributes)
+                  Expanded(
+                    child: Align(
+                      alignment: Alignment.centerRight,
+                      child: IconButton.filledTonal(
+                        onPressed: () {
+                          ref.read(serviceProvider.notifier).update(
+                            [
+                              UpdateAmiiboUserAttributes(
+                                id: amiiboKey,
+                                attributes: const EmptyUserAttributes(),
+                              ),
+                            ],
+                          );
+                        },
+                        icon: const Icon(Icons.clear_outlined),
+                        visualDensity: const VisualDensity(
+                          vertical: -4.0,
+                          horizontal: 2.0,
+                        ),
+                      ),
+                    ),
+                  ),
               ],
             ),
           ),
@@ -182,36 +188,36 @@ class _OwnedCard extends HookConsumerWidget {
                 ColumnButton(
                   textController: openedTextController,
                   title: translate.owned,
+                  isDisabled: isDisable,
+                  onChanged: (value) => onChangeOwned(opened: value),
                 ),
                 ColumnButton(
                   textController: boxedTextController,
                   title: translate.ownTooltip,
+                  isDisabled: isDisable,
+                  onChanged: (value) => onChangeOwned(boxed: value),
                 ),
-                Padding(
-                  padding: theme.cardTheme.margin ?? EdgeInsets.zero,
-                  child: _OutlinedPreferencesButton.wished(
-                    userAttribute: userAttribute,
-                    onPressed: isDisable
-                    ? null
-                    : () {
-                        /* if (amiibo == null) return;
-                        final bool newValue =
-                            amiibo.userAttributes is! WishedUserAttributes;
-                        ref.read(serviceProvider.notifier).updateFromAmiibos(
-                          [
-                            amiibo.copyWith(
-                              userAttributes: newValue
-                                  ? const WishedUserAttributes()
-                                  : const EmptyUserAttributes(),
-                            )
-                          ],
-                        ); */
-                      },
-                    constraints: const BoxConstraints.tightFor(
-                      width: 72.0,
-                      height: 140.0,
-                    ),
-                  ),
+                const SizedBox(height: 140.0, child: VerticalDivider()),
+                _OutlinedColumnButton(
+                  isSelected: userAttributes is WishedUserAttributes,
+                  title: translate.wished,
+                  onPressed: isDisable
+                      ? null
+                      : () {
+                          if (userAttributes == null) return;
+                          final bool newValue =
+                              userAttributes is! WishedUserAttributes;
+                          ref.read(serviceProvider.notifier).update(
+                            [
+                              UpdateAmiiboUserAttributes(
+                                id: amiiboKey,
+                                attributes: newValue
+                                    ? const WishedUserAttributes()
+                                    : const EmptyUserAttributes(),
+                              ),
+                            ],
+                          );
+                        },
                 ),
               ],
             ),
@@ -222,92 +228,69 @@ class _OwnedCard extends HookConsumerWidget {
   }
 }
 
-class _OutlinedPreferencesButton extends StatelessWidget {
-  final _UserPreferenceType _preferenceType;
-  final UserAttributes? userAttribute;
+class _OutlinedColumnButton extends StatelessWidget {
+  final String title;
   final VoidCallback? onPressed;
-  final BoxConstraints? constraints;
+  final bool isSelected;
 
-  const _OutlinedPreferencesButton.wished({
+  const _OutlinedColumnButton({
     // ignore: unused_element
     super.key,
-    required this.userAttribute,
+    required this.title,
+    required this.isSelected,
     required this.onPressed,
-    this.constraints,
-  }) : _preferenceType = _UserPreferenceType.wished;
-
-  const _OutlinedPreferencesButton.owned({
-    // ignore: unused_element
-    super.key,
-    required this.userAttribute,
-    required this.onPressed,
-    this.constraints,
-  }) : _preferenceType = _UserPreferenceType.owned;
+  });
 
   @override
   Widget build(BuildContext context) {
-    final S translate = S.of(context);
-    final preferencesPalette =
-        Theme.of(context).extension<PreferencesExtension>()!;
+    final theme = Theme.of(context);
+    final preferencesPalette = theme.extension<PreferencesExtension>()!;
 
-    final ({
-      bool isActive,
-      IconData icon,
-      IconData selectedIcon,
-      Color color,
-      Color highlightColor,
-      String tooltip,
-    }) attributes = switch (_preferenceType) {
-      _UserPreferenceType.wished => (
-          isActive: userAttribute is WishedUserAttributes,
-          icon: Icons.favorite_border_outlined,
-          selectedIcon: iconWished,
-          color: preferencesPalette.wishPalette.shade70,
-          highlightColor: preferencesPalette.wishContainer,
-          tooltip: translate.wishTooltip,
-        ),
-      _UserPreferenceType.owned => (
-          isActive: userAttribute is OwnedUserAttributes,
-          icon: Icons.bookmark_outline_outlined,
-          selectedIcon: iconOwned,
-          color: preferencesPalette.ownPalette.shade70,
-          highlightColor: preferencesPalette.ownContainer,
-          tooltip: translate.ownTooltip,
-        ),
-    };
-
-    final color = attributes.highlightColor.withOpacity(0.24);
-    return IconButton.outlined(
-      style: const ButtonStyle(
-        shape: MaterialStatePropertyAll(
-          RoundedRectangleBorder(
-            borderRadius: BorderRadius.all(Radius.circular(16.0)),
-          ),
+    return _ColumnCardWrapper(
+      color: theme.colorScheme.background,
+      surfaceTintColor: onPressed == null
+          ? theme.disabledColor
+          : preferencesPalette.wishPalette,
+      borderColor: theme.colorScheme.outlineVariant,
+      child: ConstrainedBox(
+        constraints: const BoxConstraints.tightFor(width: 72.0, height: 140.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            _ContainerTitle(
+              title: title,
+              background: preferencesPalette.wishPrimary,
+              foreground: preferencesPalette.onWishPrimary,
+            ),
+            Expanded(
+              child: IconButton(
+                style: const ButtonStyle(
+                  shape: MaterialStatePropertyAll(RoundedRectangleBorder()),
+                ),
+                icon: Icon(Icons.favorite_border_outlined),
+                selectedIcon: Icon(iconWished),
+                isSelected: isSelected,
+                onPressed: onPressed,
+              ),
+            ),
+          ],
         ),
       ),
-      isSelected: attributes.isActive,
-      icon: Icon(attributes.icon),
-      selectedIcon: Icon(attributes.selectedIcon),
-      color: attributes.color,
-      constraints: constraints ??
-          const BoxConstraints.tightFor(height: 56.0, width: 120.0),
-      iconSize: 24.0,
-      splashRadius: 24.0,
-      tooltip: attributes.tooltip,
-      splashColor: color,
-      highlightColor: color,
-      onPressed: onPressed,
     );
   }
 }
 
 class ColumnButton extends StatelessWidget {
   final String title;
+  final bool isDisabled;
   final TextEditingController textController;
+  final ValueChanged<int> onChanged;
 
   const ColumnButton({
     super.key,
     required this.title,
+    required this.onChanged,
+    required this.isDisabled,
     required this.textController,
   });
 
@@ -319,34 +302,34 @@ class ColumnButton extends StatelessWidget {
 
     return _ColumnCardWrapper(
       color: theme.colorScheme.background,
-      surfaceTintColor: preferencesPalette.ownPalette,
+      surfaceTintColor:
+          isDisabled ? theme.disabledColor : preferencesPalette.ownPalette,
       borderColor: theme.colorScheme.outlineVariant,
       child: ConstrainedBox(
         constraints: const BoxConstraints.tightFor(width: 72.0, height: 140.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            Container(
-              padding: const EdgeInsets.symmetric(vertical: 4.0),
-              color: preferencesPalette.ownPrimary,
-              child: Text(
-                title,
-                style: theme.textTheme.bodySmall?.merge(
-                  TextStyle(color: preferencesPalette.onOwnPrimary),
-                ),
-                textAlign: TextAlign.center,
-              ),
+            _ContainerTitle(
+              title: title,
+              background: preferencesPalette.ownPrimary,
+              foreground: preferencesPalette.onOwnPrimary,
             ),
             IconButton(
               style: const ButtonStyle(
                 shape: MaterialStatePropertyAll(RoundedRectangleBorder()),
                 visualDensity: const VisualDensity(vertical: -2.0),
               ),
-              icon: const Icon(Icons.add),
-              onPressed: () {
-                int value = int.tryParse(textController.text) ?? 0;
-                textController.text = '${++value}';
-              },
+              icon: isDisabled
+                  ? const Icon(Icons.add_circle_rounded)
+                  : const Icon(Icons.add),
+              onPressed: isDisabled
+                  ? null
+                  : () {
+                      int value = int.tryParse(textController.text) ?? 0;
+                      textController.text = '${++value}';
+                      onChanged(value);
+                    },
             ),
             const Divider(height: 2.0),
             Expanded(
@@ -359,6 +342,7 @@ class ColumnButton extends StatelessWidget {
                   controller: textController,
                   textInputAction: TextInputAction.done,
                   maxLines: 1,
+                  enabled: !isDisabled,
                   keyboardType: TextInputType.number,
                   textAlign: TextAlign.center,
                   style:
@@ -372,6 +356,7 @@ class ColumnButton extends StatelessWidget {
                     ),
                     const NumberInputFormatter(),
                   ],
+                  onChanged: (value) => onChanged(int.tryParse(value) ?? 0),
                 ),
               ),
             ),
@@ -410,6 +395,7 @@ class ColumnButton extends StatelessWidget {
                           if (value <= 0) {
                           } else {
                             textController.text = '${--value}';
+                            onChanged(value);
                           }
                         },
                 );
@@ -439,4 +425,33 @@ class _ColumnCardWrapper extends Card {
             side: BorderSide(color: borderColor),
           ),
         );
+}
+
+class _ContainerTitle extends StatelessWidget {
+  final String title;
+  final Color background;
+  final Color foreground;
+
+  const _ContainerTitle({
+    // ignore: unused_element
+    super.key,
+    required this.title,
+    required this.background,
+    required this.foreground,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.symmetric(vertical: 4.0),
+      color: background,
+      child: Text(
+        title,
+        style: Theme.of(context).textTheme.bodySmall?.merge(
+              TextStyle(color: foreground),
+            ),
+        textAlign: TextAlign.center,
+      ),
+    );
+  }
 }

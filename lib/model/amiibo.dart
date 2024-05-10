@@ -57,6 +57,13 @@ sealed class UserAttributes with _$UserAttributes {
     @Default(1) final int opened,
   }) = OwnedUserAttributes;
 
+  factory UserAttributes.fromOwnedOrEmpty({
+    required final int boxed,
+    required final int opened,
+  }) => boxed + opened <= 0
+    ? const EmptyUserAttributes()
+    : OwnedUserAttributes(boxed: boxed, opened: opened);
+
   factory UserAttributes.fromJson(Map<String, dynamic> json) =>
       _$UserAttributesFromJson(json);
 }
