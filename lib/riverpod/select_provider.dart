@@ -25,12 +25,12 @@ class SelectProvider extends ChangeNotifier {
   bool removeSelected(int? value) => _set.remove(value);
   bool isSelected(int? value) => _set.contains(value);
 
-  void updateAmiibos(SelectedType type) {
+  void updateAmiibos(SelectedType type, [UserAttributes? owned]) {
     final amiibos = _set.map(
       (cb) => switch (type) {
         SelectedType.Owned => UpdateAmiiboUserAttributes(
           id: cb,
-          attributes: OwnedUserAttributes(),
+          attributes: owned ?? const OwnedUserAttributes(),
         ),
         SelectedType.Wished => UpdateAmiiboUserAttributes(
           id: cb,

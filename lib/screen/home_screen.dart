@@ -14,6 +14,7 @@ import 'package:amiibo_network/riverpod/stat_ui_remote_config_provider.dart';
 import 'package:amiibo_network/screen/search_screen.dart';
 import 'package:amiibo_network/service/storage.dart';
 import 'package:amiibo_network/widget/dash_menu/dash_menu.dart';
+import 'package:amiibo_network/widget/detail/owned_bottom_sheet.dart';
 import 'package:amiibo_network/widget/list_stats.dart';
 import 'package:amiibo_network/widget/loading_grid_shimmer.dart';
 import 'package:amiibo_network/widget/lock_icon.dart';
@@ -209,18 +210,20 @@ class HomeScreenState extends ConsumerState<HomeScreen>
     final newStatUI = ref.watch(remoteStatUIProvider);
     return DashMenu(
       leftDrawer: CollectionDrawer(restart: _restartAnimation),
-      rightDrawer: newStatUI ? Scaffold(
-        body: const CustomScrollView(
-          slivers: [
-            SliverSafeArea(sliver: HomeBodyStats()),
-            SliverGap(72.0),
-          ],
-        ),
-        floatingActionButton: _FAB(
-          animation: const AlwaysStoppedAnimation(1.0),
-          index: 1,
-        ),
-      ) : null,
+      rightDrawer: newStatUI
+          ? Scaffold(
+              body: const CustomScrollView(
+                slivers: [
+                  SliverSafeArea(sliver: HomeBodyStats()),
+                  SliverGap(72.0),
+                ],
+              ),
+              floatingActionButton: _FAB(
+                animation: const AlwaysStoppedAnimation(1.0),
+                index: 1,
+              ),
+            )
+          : null,
       body: PopScope(
         canPop: canPop,
         onPopInvoked: _exitApp,
@@ -289,21 +292,23 @@ class HomeScreenState extends ConsumerState<HomeScreen>
           ),
           extendBody: !newStatUI,
           floatingActionButtonLocation: newStatUI
-            ? FloatingActionButtonLocation.endFloat
-            : FloatingActionButtonLocation.centerDocked,
+              ? FloatingActionButtonLocation.endFloat
+              : FloatingActionButtonLocation.centerDocked,
           floatingActionButton: _FAB(
             animation: _animationController,
             index: newStatUI ? 0 : index,
           ),
-          bottomNavigationBar: newStatUI ? null : _BottomBar(
-            animationController: _animationController,
-            index: index,
-            onTap: (selected) => setState(() {
-              index = selected;
-              _controller.jumpTo(0);
-              ref.read(selectProvider.notifier).clearSelected();
-            }),
-          ),
+          bottomNavigationBar: newStatUI
+              ? null
+              : _BottomBar(
+                  animationController: _animationController,
+                  index: index,
+                  onTap: (selected) => setState(() {
+                    index = selected;
+                    _controller.jumpTo(0);
+                    ref.read(selectProvider.notifier).clearSelected();
+                  }),
+                ),
         ),
       ),
     );
@@ -559,11 +564,12 @@ class _DefaultOptions extends ConsumerWidget {
         const LockButton(),
         const PreferencesButton(),
         const SortCollection(),
-        if (newStatUI) IconButton(
-          onPressed: () => DashMenu.of(context).openRightDrawer(),
-          tooltip: S.of(context).stats,
-          icon: const Icon(Icons.auto_graph_outlined),
-        ),
+        if (newStatUI)
+          IconButton(
+            onPressed: () => DashMenu.of(context).openRightDrawer(),
+            tooltip: S.of(context).stats,
+            icon: const Icon(Icons.auto_graph_outlined),
+          ),
       ],
     );
   }
@@ -655,8 +661,28 @@ class _SelectedOptions extends ConsumerWidget {
         ),
         IconButton(
           icon: const Icon(iconOwned),
-          onPressed: () =>
-              ref.read(selectProvider).updateAmiibos(SelectedType.Owned),
+          onPressed: () async {
+            final theme = Theme.of(context);
+            final attributes = await showModalBottomSheet<UserAttributes>(
+              context: context,
+              backgroundColor: theme.colorScheme.background,
+              useSafeArea: false,
+              elevation: 4.0,
+              enableDrag: false,
+              constraints: const BoxConstraints(maxWidth: 400.0),
+              isScrollControlled: true,
+              builder: (context) => Padding(
+                padding: const EdgeInsets.all(16.0).add(
+                  EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom)
+                ),
+                child: const OwnedButtomSheet(),
+              ),
+            );
+            if (attributes == null) {
+              return;
+            }
+            ref.read(selectProvider).updateAmiibos(SelectedType.Owned, attributes);
+          },
           tooltip: translate.ownTooltip,
         ),
         IconButton(

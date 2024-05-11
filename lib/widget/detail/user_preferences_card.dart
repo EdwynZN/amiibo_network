@@ -51,7 +51,8 @@ class UserPreferenceCard extends HookConsumerWidget {
     useEffect(
       () {
         if (userAttributes != null) {
-          final ({String boxed, String opened}) values = switch (userAttributes) {
+          final ({String boxed, String opened}) values =
+              switch (userAttributes) {
             OwnedUserAttributes(
               boxed: final boxed,
               opened: final opened,
@@ -284,13 +285,15 @@ class ColumnButton extends StatelessWidget {
   final String title;
   final bool isDisabled;
   final TextEditingController textController;
-  final ValueChanged<int> onChanged;
+  final ValueChanged<int>? onChanged;
+  final double width;
 
   const ColumnButton({
     super.key,
     required this.title,
-    required this.onChanged,
-    required this.isDisabled,
+    this.onChanged,
+    this.isDisabled = false,
+    this.width = 72,
     required this.textController,
   });
 
@@ -307,7 +310,10 @@ class ColumnButton extends StatelessWidget {
           isDisabled ? theme.disabledColor : preferencesPalette.ownPalette,
       borderColor: preferencesPalette.ownPrimary,
       child: ConstrainedBox(
-        constraints: const BoxConstraints.tightFor(width: 72.0, height: 140.0),
+        constraints: BoxConstraints.tightFor(
+          width: width.clamp(72.0, 140.0),
+          height: 140.0,
+        ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
@@ -329,7 +335,9 @@ class ColumnButton extends StatelessWidget {
                   : () {
                       int value = int.tryParse(textController.text) ?? 0;
                       textController.text = '${++value}';
-                      onChanged(value);
+                      if (onChanged != null) {
+                        onChanged!(value);
+                      }
                     },
             ),
             const Divider(height: 2.0),
@@ -357,7 +365,9 @@ class ColumnButton extends StatelessWidget {
                     ),
                     const NumberInputFormatter(),
                   ],
-                  onChanged: (value) => onChanged(int.tryParse(value) ?? 0),
+                  onChanged: onChanged == null
+                      ? null
+                      : (value) => onChanged!(int.tryParse(value) ?? 0),
                 ),
               ),
             ),
@@ -396,7 +406,9 @@ class ColumnButton extends StatelessWidget {
                           if (value <= 0) {
                           } else {
                             textController.text = '${--value}';
-                            onChanged(value);
+                            if (onChanged != null) {
+                              onChanged!(value);
+                            }
                           }
                         },
                 );
