@@ -155,7 +155,7 @@ class UserPreferenceCard extends HookConsumerWidget {
                   style: theme.textTheme.titleSmall
                       ?.copyWith(color: attributes.foregroundTitle),
                 ),
-                if (userAttributes is! EmptyUserAttributes)
+                if (!isDisable && userAttributes is! EmptyUserAttributes)
                   Expanded(
                     child: Align(
                       alignment: Alignment.centerRight,
@@ -394,12 +394,14 @@ class ColumnButton extends StatelessWidget {
                     visualDensity: const VisualDensity(vertical: -2.0),
                   ),
                   highlightColor: color?.withOpacity(0.16),
-                  icon: switch (effect) {
+                  icon: isDisabled
+                    ? const Icon(Icons.remove_circle_sharp)
+                    : switch (effect) {
                     _ButtonEffects.delete => Icon(Icons.delete, color: color),
                     _ButtonEffects.disable => Icon(Icons.remove_circle_sharp),
                     _ => Icon(Icons.remove),
                   },
-                  onPressed: effect == _ButtonEffects.disable
+                  onPressed: isDisabled || effect == _ButtonEffects.disable
                       ? null
                       : () {
                           int value = int.tryParse(textController.text) ?? 0;
