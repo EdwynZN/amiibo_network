@@ -1,5 +1,4 @@
 import 'package:amiibo_network/enum/amiibo_category_enum.dart';
-import 'package:amiibo_network/enum/selected_enum.dart';
 import 'package:amiibo_network/model/amiibo.dart';
 import 'package:amiibo_network/model/title_search.dart';
 import 'package:amiibo_network/repository/theme_repository.dart';
@@ -656,7 +655,7 @@ class _SelectedOptions extends ConsumerWidget {
         IconButton(
           icon: const Icon(Icons.remove),
           onPressed: () =>
-              ref.read(selectProvider).updateAmiibos(SelectedType.Clear),
+              ref.read(selectProvider).updateAmiibos(const UserAttributes.none()),
           tooltip: translate.removeTooltip,
         ),
         IconButton(
@@ -681,14 +680,14 @@ class _SelectedOptions extends ConsumerWidget {
             if (attributes == null) {
               return;
             }
-            ref.read(selectProvider).updateAmiibos(SelectedType.Owned, attributes);
+            ref.read(selectProvider).updateAmiibos(attributes);
           },
           tooltip: translate.ownTooltip,
         ),
         IconButton(
           icon: const Icon(iconWished),
           onPressed: () =>
-              ref.read(selectProvider).updateAmiibos(SelectedType.Wished),
+              ref.read(selectProvider).updateAmiibos(const UserAttributes.wished()),
           tooltip: translate.wishTooltip,
         ),
       ],
