@@ -8,6 +8,8 @@
   "searchCategory": "{choice, select, Game {Game} Name {Name} AmiiboSeries {Serie} other {{choice}}}",
   "all": "All",
   "owned": "Owned",
+  "boxed": "Boxed",
+  "unboxed": "Unboxed",
   "wished": "Wished",
   "stats": "Stats",
   "types": "{choice, select, Figure {Figure} Card {Card} Yarn {Yarn} Band {Band} other {Other}}",

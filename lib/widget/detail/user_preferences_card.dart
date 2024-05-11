@@ -125,7 +125,7 @@ class UserPreferenceCard extends HookConsumerWidget {
               surfaceColor: null,
               title: '',
               foregroundTitle: null,
-              icon: Icons.indeterminate_check_box_outlined,
+              icon: Icons.remove_sharp,
             ),
         };
       },
@@ -154,7 +154,7 @@ class UserPreferenceCard extends HookConsumerWidget {
                   style: theme.textTheme.titleSmall
                       ?.copyWith(color: attributes.foregroundTitle),
                 ),
-                if (userAttributes is OwnedUserAttributes)
+                if (userAttributes is! EmptyUserAttributes)
                   Expanded(
                     child: Align(
                       alignment: Alignment.centerRight,
@@ -187,13 +187,13 @@ class UserPreferenceCard extends HookConsumerWidget {
               children: [
                 ColumnButton(
                   textController: openedTextController,
-                  title: translate.owned,
+                  title: translate.unboxed,
                   isDisabled: isDisable,
                   onChanged: (value) => onChangeOwned(opened: value),
                 ),
                 ColumnButton(
                   textController: boxedTextController,
-                  title: translate.ownTooltip,
+                  title: translate.boxed,
                   isDisabled: isDisable,
                   onChanged: (value) => onChangeOwned(boxed: value),
                 ),
@@ -302,9 +302,10 @@ class ColumnButton extends StatelessWidget {
 
     return _ColumnCardWrapper(
       color: theme.colorScheme.background,
+      elevation: isDisabled ? 0.0 : 4.0,
       surfaceTintColor:
           isDisabled ? theme.disabledColor : preferencesPalette.ownPalette,
-      borderColor: theme.colorScheme.outlineVariant,
+      borderColor: preferencesPalette.ownPrimary,
       child: ConstrainedBox(
         constraints: const BoxConstraints.tightFor(width: 72.0, height: 140.0),
         child: Column(
