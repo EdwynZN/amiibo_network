@@ -270,6 +270,7 @@ class _OutlinedColumnButton extends StatelessWidget {
                 ),
                 icon: Icon(Icons.favorite_border_outlined),
                 selectedIcon: Icon(iconWished),
+                color: preferencesPalette.wishPrimary,
                 isSelected: isSelected,
                 onPressed: onPressed,
               ),
@@ -466,6 +467,7 @@ class _ContainerTitle extends StatelessWidget {
               TextStyle(color: foreground),
             ),
         textAlign: TextAlign.center,
+        maxLines: 1,
       ),
     );
   }
