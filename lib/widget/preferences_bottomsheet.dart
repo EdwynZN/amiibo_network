@@ -136,7 +136,7 @@ class _BottomSheetSort extends StatelessWidget {
                                           padding:
                                               const EdgeInsets.only(right: 8.0),
                                           child: Icon(
-                                            Icons.lightbulb_outline_sharp,
+                                            Icons.lightbulb_sharp,
                                             size: 16.0,
                                             color: theme.colorScheme
                                                 .onTertiaryContainer,
@@ -148,6 +148,7 @@ class _BottomSheetSort extends StatelessWidget {
                                   ),
                                   softWrap: true,
                                   style: TextStyle(
+                                    fontWeight: FontWeight.w600,
                                     color:
                                         theme.colorScheme.onTertiaryContainer,
                                     height: 1.5,
