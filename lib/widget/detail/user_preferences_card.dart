@@ -124,9 +124,9 @@ class UserPreferenceCard extends HookConsumerWidget {
             ),
           _ => (
               surfaceColor: null,
-              title: '',
+              title: translate.select_user_attribute,
               foregroundTitle: null,
-              icon: Icons.remove_sharp,
+              icon: Icons.calculate_rounded,
             ),
         };
       },

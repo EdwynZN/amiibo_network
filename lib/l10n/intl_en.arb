@@ -94,5 +94,6 @@
   "no_date": "To be announced",
   "showGrid": "Grid",
   "hide_caution": "Caution, disabling a feature will hide it from all aspects of the app",
-  "export_complete": "Export completed!"
+  "export_complete": "Export completed!",
+  "select_user_attribute": "Select a category"
 }

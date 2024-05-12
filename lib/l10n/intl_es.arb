@@ -94,5 +94,6 @@
   "no_date": "Próximamente",
   "showGrid": "Cuadrícula",
   "hide_caution": "Precaución, deshabilitar una funcionalidad la escondera en toda la app",
-  "export_complete": "Archivo guardado"
+  "export_complete": "Archivo guardado",
+  "select_user_attribute": "Seleccione una categoría"
 }

@@ -94,5 +94,6 @@
   "no_date": "Bientôt disponible",
   "showGrid": "Grille",
   "hide_caution": "Attention, la désactivation d'une caractéristique la masquera dans l'ensemble de l'application",
-  "export_complete": "Exportation terminée"
+  "export_complete": "Exportation terminée",
+  "select_user_attribute": "Choisir une catégorie"
 }
