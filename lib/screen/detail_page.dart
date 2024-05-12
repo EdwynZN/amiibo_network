@@ -1,5 +1,6 @@
 import 'package:amiibo_network/resources/resources.dart';
 import 'package:amiibo_network/riverpod/amiibo_provider.dart';
+import 'package:amiibo_network/riverpod/preferences_provider.dart';
 import 'package:amiibo_network/widget/amiibo_button_toggle.dart';
 import 'package:amiibo_network/widget/card_details.dart';
 import 'package:amiibo_network/widget/detail/amiibo_header_card.dart';
@@ -20,6 +21,7 @@ class DetailPage extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final key = ref.watch(keyAmiiboProvider);
+    final showOwnerCategories = ref.watch(ownTypesCategoryProvider);
     return Scaffold(
       appBar: AppBar(
         shadowColor: Colors.transparent,
@@ -42,10 +44,13 @@ class DetailPage extends ConsumerWidget {
       ),
       body: CustomScrollView(
         slivers: [
-          const SliverToBoxAdapter(child: AmiiboCard()),
-          const SliverToBoxAdapter(child: Gap(12.0)),
-          const PreferencesSliver(),
-          const SliverToBoxAdapter(child: Gap(12.0)),
+          if (showOwnerCategories) ...const [
+            SliverToBoxAdapter(child: AmiiboCard()),
+            SliverGap(12.0),
+            PreferencesSliver(),
+            SliverGap(12),
+          ]
+          else SliverToBoxAdapter(child: _AmiiboCard()),
           const SliverPadding(
             padding: EdgeInsets.symmetric(vertical: 8.0),
             sliver: GameListWidget(),
@@ -84,7 +89,7 @@ class _AmiiboCard extends ConsumerWidget {
                 tag: key,
                 child: Image.asset(
                   'assets/collection/icon_$key.webp',
-                  filterQuality: FilterQuality.medium,
+                  filterQuality: FilterQuality.high,
                   fit: BoxFit.scaleDown,
                   height: 200.0,
                   cacheHeight: 200,

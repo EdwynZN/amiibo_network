@@ -14,9 +14,9 @@ final hiddenCategoryProvider = Provider<HiddenType?>(
 final ownTypesCategoryProvider = Provider<bool>(
   (ref) {
     final ownedCategories = ref.watch(remoteOwnedCategoryProvider);
-    return ownedCategories && ref.watch(personalProvider).ownTypes;
+    return ownedCategories && ref.watch(personalProvider.select((value) => value.ownTypes));
   },
-  name: 'hiddenCategoriesProvider',
+  name: 'OwnerCategoriesFlagProvider',
 );
 
 final personalProvider =

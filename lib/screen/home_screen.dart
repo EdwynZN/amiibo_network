@@ -662,20 +662,27 @@ class _SelectedOptions extends ConsumerWidget {
           icon: const Icon(iconOwned),
           onPressed: () async {
             final theme = Theme.of(context);
-            final attributes = await showModalBottomSheet<UserAttributes>(
-              context: context,
-              backgroundColor: theme.colorScheme.background,
-              useSafeArea: false,
-              elevation: 4.0,
-              enableDrag: false,
-              constraints: const BoxConstraints(maxWidth: 400.0),
-              isScrollControlled: true,
-              builder: (context) => const OwnedButtomSheet(),
-            );
-            if (attributes == null) {
+            final showOwnerCategories = ref.read(ownTypesCategoryProvider);
+            final UserAttributes? newAttributes;
+            if (showOwnerCategories) {
+              newAttributes = await showModalBottomSheet<UserAttributes>(
+                context: context,
+                backgroundColor: theme.colorScheme.background,
+                useSafeArea: false,
+                elevation: 4.0,
+                enableDrag: false,
+                constraints: const BoxConstraints(maxWidth: 400.0),
+                isScrollControlled: true,
+                builder: (context) => const OwnedButtomSheet(),
+              );
+            } else {
+              newAttributes = UserAttributes.owned();
+            }
+
+            if (newAttributes == null) {
               return;
             }
-            ref.read(selectProvider).updateAmiibos(attributes);
+            ref.read(selectProvider.notifier).updateAmiibos(newAttributes);
           },
           tooltip: translate.ownTooltip,
         ),

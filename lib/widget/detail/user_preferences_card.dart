@@ -4,9 +4,11 @@ import 'package:amiibo_network/model/update_amiibo_user_attributes.dart';
 import 'package:amiibo_network/repository/theme_repository.dart';
 import 'package:amiibo_network/riverpod/amiibo_provider.dart';
 import 'package:amiibo_network/riverpod/lock_provider.dart';
+import 'package:amiibo_network/riverpod/preferences_provider.dart';
 import 'package:amiibo_network/riverpod/service_provider.dart';
 import 'package:amiibo_network/utils/number_text_input_formatters.dart';
 import 'package:amiibo_network/utils/theme_extensions.dart';
+import 'package:amiibo_network/widget/amiibo_button_toggle.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
@@ -40,10 +42,122 @@ class UserPreferenceCard extends HookConsumerWidget {
       () => isLock || userAttributes == null,
       [isLock, userAttributes == null],
     );
+    final showOwnerCategories = ref.watch(ownTypesCategoryProvider);
 
     final translate = S.of(context);
     final theme = Theme.of(context);
     final preferencesPalette = theme.extension<PreferencesExtension>()!;
+
+    /// UI attribute colors and text from type of userAttributes
+    final ({
+      Color? surfaceColor,
+      String title,
+      Color? foregroundTitle,
+      IconData icon,
+    }) attributes = useMemoized(
+      () {
+        return switch (userAttributes) {
+          OwnedUserAttributes() => (
+              surfaceColor: preferencesPalette.ownPrimary,
+              title: translate.owned,
+              foregroundTitle: preferencesPalette.onOwnPrimary,
+              icon: iconOwned,
+            ),
+          WishedUserAttributes() => (
+              surfaceColor: preferencesPalette.wishPrimary,
+              title: translate.wished,
+              foregroundTitle: preferencesPalette.onWishPrimary,
+              icon: iconWished,
+            ),
+          _ => (
+              surfaceColor: null,
+              title: translate.select_user_attribute,
+              foregroundTitle: null,
+              icon: Icons.calculate_rounded,
+            ),
+        };
+      },
+      [
+        userAttributes,
+        translate,
+        preferencesPalette,
+      ],
+    );
+    return _ColumnCardWrapper(
+      color: theme.colorScheme.background,
+      surfaceTintColor: attributes.surfaceColor,
+      borderColor: theme.colorScheme.outlineVariant,
+      elevation: attributes.surfaceColor == null ? 0.0 : 4.0,
+      child: Column(
+        children: [
+          Container(
+            padding: const EdgeInsets.all(12.0),
+            color: attributes.surfaceColor,
+            child: Row(
+              children: [
+                Icon(attributes.icon, color: attributes.foregroundTitle),
+                const Gap(8.0),
+                Text(
+                  attributes.title,
+                  style: theme.textTheme.titleLarge
+                      ?.copyWith(color: attributes.foregroundTitle),
+                ),
+                if (!isDisable && userAttributes is! EmptyUserAttributes)
+                  Expanded(
+                    child: Align(
+                      alignment: Alignment.centerRight,
+                      child: IconButton.filledTonal(
+                        onPressed: () {
+                          ref.read(serviceProvider.notifier).update(
+                            [
+                              UpdateAmiiboUserAttributes(
+                                id: amiiboKey,
+                                attributes: const EmptyUserAttributes(),
+                              ),
+                            ],
+                          );
+                        },
+                        icon: const Icon(Icons.clear_outlined),
+                        visualDensity: const VisualDensity(
+                          vertical: -4.0,
+                          horizontal: 2.0,
+                        ),
+                      ),
+                    ),
+                  ),
+              ],
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: showOwnerCategories ? _InnerUserCaterogies(
+              isDisable: isDisable,
+              amiiboKey: amiiboKey,
+              userAttributes: userAttributes,
+            ) : const Buttons(),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _InnerUserCaterogies extends HookConsumerWidget {
+  final bool isDisable;
+  final int amiiboKey;
+  final UserAttributes? userAttributes;
+
+  const _InnerUserCaterogies({
+    // ignore: unused_element
+    super.key,
+    required this.amiiboKey,
+    required this.isDisable,
+    required this.userAttributes,
+  });
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final translate = S.of(context);
     final openedTextController = useTextEditingController(text: '0');
     final boxedTextController = useTextEditingController(text: '0');
 
@@ -101,130 +215,43 @@ class UserPreferenceCard extends HookConsumerWidget {
       [openedTextController, boxedTextController, ref, amiiboKey],
     );
 
-    /// UI attribute colors and text from type of userAttributes
-    final ({
-      Color? surfaceColor,
-      String title,
-      Color? foregroundTitle,
-      IconData icon,
-    }) attributes = useMemoized(
-      () {
-        return switch (userAttributes) {
-          OwnedUserAttributes() => (
-              surfaceColor: preferencesPalette.ownPrimary,
-              title: translate.owned,
-              foregroundTitle: preferencesPalette.onOwnPrimary,
-              icon: iconOwned,
-            ),
-          WishedUserAttributes() => (
-              surfaceColor: preferencesPalette.wishPrimary,
-              title: translate.wished,
-              foregroundTitle: preferencesPalette.onWishPrimary,
-              icon: iconWished,
-            ),
-          _ => (
-              surfaceColor: null,
-              title: translate.select_user_attribute,
-              foregroundTitle: null,
-              icon: Icons.calculate_rounded,
-            ),
-        };
-      },
-      [
-        userAttributes,
-        translate,
-        preferencesPalette,
-      ],
-    );
-    return _ColumnCardWrapper(
-      color: theme.colorScheme.background,
-      surfaceTintColor: attributes.surfaceColor,
-      borderColor: theme.colorScheme.outlineVariant,
-      elevation: attributes.surfaceColor == null ? 0.0 : 4.0,
-      child: Column(
-        children: [
-          Container(
-            padding: const EdgeInsets.all(12.0),
-            color: attributes.surfaceColor,
-            child: Row(
-              children: [
-                Icon(attributes.icon, color: attributes.foregroundTitle),
-                const Gap(8.0),
-                Text(
-                  attributes.title,
-                  style: theme.textTheme.titleSmall
-                      ?.copyWith(color: attributes.foregroundTitle),
-                ),
-                if (!isDisable && userAttributes is! EmptyUserAttributes)
-                  Expanded(
-                    child: Align(
-                      alignment: Alignment.centerRight,
-                      child: IconButton.filledTonal(
-                        onPressed: () {
-                          ref.read(serviceProvider.notifier).update(
-                            [
-                              UpdateAmiiboUserAttributes(
-                                id: amiiboKey,
-                                attributes: const EmptyUserAttributes(),
-                              ),
-                            ],
-                          );
-                        },
-                        icon: const Icon(Icons.clear_outlined),
-                        visualDensity: const VisualDensity(
-                          vertical: -4.0,
-                          horizontal: 2.0,
-                        ),
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        ColumnButton(
+          textController: openedTextController,
+          title: translate.unboxed,
+          isDisabled: isDisable,
+          onChanged: (value) => onChangeOwned(opened: value),
+        ),
+        ColumnButton(
+          textController: boxedTextController,
+          title: translate.boxed,
+          isDisabled: isDisable,
+          onChanged: (value) => onChangeOwned(boxed: value),
+        ),
+        const SizedBox(height: 140.0, child: VerticalDivider()),
+        _OutlinedColumnButton(
+          isSelected: userAttributes is WishedUserAttributes,
+          title: translate.wished,
+          onPressed: isDisable
+              ? null
+              : () {
+                  if (userAttributes == null) return;
+                  final bool newValue = userAttributes is! WishedUserAttributes;
+                  ref.read(serviceProvider.notifier).update(
+                    [
+                      UpdateAmiiboUserAttributes(
+                        id: amiiboKey,
+                        attributes: newValue
+                            ? const WishedUserAttributes()
+                            : const EmptyUserAttributes(),
                       ),
-                    ),
-                  ),
-              ],
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                ColumnButton(
-                  textController: openedTextController,
-                  title: translate.unboxed,
-                  isDisabled: isDisable,
-                  onChanged: (value) => onChangeOwned(opened: value),
-                ),
-                ColumnButton(
-                  textController: boxedTextController,
-                  title: translate.boxed,
-                  isDisabled: isDisable,
-                  onChanged: (value) => onChangeOwned(boxed: value),
-                ),
-                const SizedBox(height: 140.0, child: VerticalDivider()),
-                _OutlinedColumnButton(
-                  isSelected: userAttributes is WishedUserAttributes,
-                  title: translate.wished,
-                  onPressed: isDisable
-                      ? null
-                      : () {
-                          if (userAttributes == null) return;
-                          final bool newValue =
-                              userAttributes is! WishedUserAttributes;
-                          ref.read(serviceProvider.notifier).update(
-                            [
-                              UpdateAmiiboUserAttributes(
-                                id: amiiboKey,
-                                attributes: newValue
-                                    ? const WishedUserAttributes()
-                                    : const EmptyUserAttributes(),
-                              ),
-                            ],
-                          );
-                        },
-                ),
-              ],
-            ),
-          ),
-        ],
-      ),
+                    ],
+                  );
+                },
+        ),
+      ],
     );
   }
 }
@@ -396,12 +423,14 @@ class ColumnButton extends StatelessWidget {
                   ),
                   highlightColor: color?.withOpacity(0.16),
                   icon: isDisabled
-                    ? const Icon(Icons.remove_circle_sharp)
-                    : switch (effect) {
-                    _ButtonEffects.delete => Icon(Icons.delete, color: color),
-                    _ButtonEffects.disable => Icon(Icons.remove_circle_sharp),
-                    _ => Icon(Icons.remove),
-                  },
+                      ? const Icon(Icons.remove_circle_sharp)
+                      : switch (effect) {
+                          _ButtonEffects.delete =>
+                            Icon(Icons.delete, color: color),
+                          _ButtonEffects.disable =>
+                            Icon(Icons.remove_circle_sharp),
+                          _ => Icon(Icons.remove),
+                        },
                   onPressed: isDisabled || effect == _ButtonEffects.disable
                       ? null
                       : () {
@@ -464,8 +493,8 @@ class _ContainerTitle extends StatelessWidget {
       child: Text(
         title,
         style: Theme.of(context).textTheme.bodySmall?.merge(
-              TextStyle(color: foreground),
-            ),
+          TextStyle(color: foreground),
+        ),
         textAlign: TextAlign.center,
         maxLines: 1,
       ),
