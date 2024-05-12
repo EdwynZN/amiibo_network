@@ -5,9 +5,36 @@ import 'package:amiibo_network/riverpod/amiibo_provider.dart';
 import 'package:amiibo_network/riverpod/lock_provider.dart';
 import 'package:amiibo_network/riverpod/service_provider.dart';
 import 'package:amiibo_network/utils/theme_extensions.dart';
+import 'package:amiibo_network/widget/detail/owned_bottom_sheet.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+
+Future<UserAttributes?> _ownedBottomSheet(BuildContext context, UserAttributes userAttributes) {
+  final theme = Theme.of(context);
+  final ({int boxed, int opened}) values =
+  switch (userAttributes) {
+    OwnedUserAttributes(
+      boxed: final boxed,
+      opened: final opened,
+    ) =>
+      (boxed: boxed, opened: opened),
+    _ => (boxed: 0, opened: 0),
+  };
+  return showModalBottomSheet<UserAttributes>(
+    context: context,
+    backgroundColor: theme.colorScheme.background,
+    useSafeArea: false,
+    elevation: 4.0,
+    enableDrag: false,
+    constraints: const BoxConstraints(maxWidth: 400.0),
+    isScrollControlled: true,
+    builder: (context) => OwnedButtomSheet(
+      initialBoxed: values.boxed,
+      initialUnboxed: values.opened,
+    ),
+  );
+}
 
 class Buttons extends ConsumerWidget {
   const Buttons({Key? key}) : super(key: key);
@@ -122,17 +149,15 @@ class OwnedOutlinedButton extends ConsumerWidget {
       highlightColor: color,
       onPressed: isLock
           ? null
-          : () {
+          : () async {
               if (amiibo == null) return;
-              final bool newValue = !isActive;
+              final userAttributes = amiibo!.userAttributes;
+              final attributes = await _ownedBottomSheet(context, userAttributes);
+              if (attributes == null) {
+                return;
+              }
               ref.read(serviceProvider.notifier).updateFromAmiibos(
-                [
-                  amiibo!.copyWith(
-                    userAttributes: newValue
-                      ? UserAttributes.owned()
-                      : const EmptyUserAttributes(),
-                  ),
-                ],
+                [amiibo!.copyWith(userAttributes: attributes)],
               );
             },
     );
@@ -228,17 +253,15 @@ class OwnedButton extends ConsumerWidget {
       highlightColor: color,
       onPressed: isLock
           ? null
-          : () {
+          : () async {
               if (amiibo == null) return;
-              final bool newValue = !isActive;
+              final userAttributes = amiibo!.userAttributes;
+              final attributes = await _ownedBottomSheet(context, userAttributes);
+              if (attributes == null) {
+                return;
+              }
               ref.read(serviceProvider.notifier).updateFromAmiibos(
-                [
-                  amiibo!.copyWith(
-                    userAttributes: newValue
-                      ? UserAttributes.owned()
-                      : const EmptyUserAttributes(),
-                  ),
-                ],
+                [amiibo!.copyWith(userAttributes: attributes)],
               );
             },
     );

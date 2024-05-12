@@ -8,6 +8,7 @@ class Preferences with _$Preferences {
   const factory Preferences({
     required bool usePercentage,
     required bool useGrid,
+    required bool ownTypes,
     HiddenType? ignored,
   }) = _Preferences;
 }

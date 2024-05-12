@@ -4,6 +4,8 @@
   "splashWelcome": "WELCOME",
   "splashError": "Couldn't Update \u2639",
   "showPercentage": "Show percentage",
+  "showOwnerCategories": "Show owner categories",
+  "showOwnerCategoriesDetails": "Allow to visualize owned amiibos by boxed/unboxed",
   "category": "{choice, select, All {All} Owned {Owned} Wishlist {Wishlist} Name {Name} Game {Game} Figures {All Figures} Cards {All Cards} AmiiboSeries {Custom} other {{choice}}}",
   "searchCategory": "{choice, select, Game {Game} Name {Name} AmiiboSeries {Serie} other {{choice}}}",
   "all": "All",
@@ -49,6 +51,7 @@
   "export": "Export",
   "import": "Import",
   "appearance": "Appearance",
+  "features": "Features",
   "appearanceSubtitle": "More personalization",
   "credits": "Credits",
   "creditsSubtitle": "Those who make it possible",
@@ -90,6 +93,6 @@
   "no_games_found": "No games found for this amiibo yet",
   "no_date": "To be announced",
   "showGrid": "Grid",
-  "hide_caution": "Caution, disabling a category will hide it from all aspects of the app",
+  "hide_caution": "Caution, disabling a feature will hide it from all aspects of the app",
   "export_complete": "Export completed!"
 }

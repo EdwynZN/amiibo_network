@@ -670,12 +670,7 @@ class _SelectedOptions extends ConsumerWidget {
               enableDrag: false,
               constraints: const BoxConstraints(maxWidth: 400.0),
               isScrollControlled: true,
-              builder: (context) => Padding(
-                padding: const EdgeInsets.all(16.0).add(
-                  EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom)
-                ),
-                child: const OwnedButtomSheet(),
-              ),
+              builder: (context) => const OwnedButtomSheet(),
             );
             if (attributes == null) {
               return;

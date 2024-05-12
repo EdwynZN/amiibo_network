@@ -8,6 +8,7 @@ part 'default_remote_config.g.dart';
 class DefaultRemoteConfig with _$DefaultRemoteConfig {
   const factory DefaultRemoteConfig({
     @Default(false) @JsonKey(name: RemoteKey.statDrawer) bool statDrawer, 
+    @Default(false) @JsonKey(name: RemoteKey.ownedCategories) bool ownedCategories, 
   }) = _DefaultRemoteConfig;
 	
   factory DefaultRemoteConfig.fromJson(Map<String, dynamic> json) =>

@@ -4,6 +4,8 @@
   "splashWelcome": "Bienvenido",
   "splashError": "Error al actualizar \u2639",
   "showPercentage": "Mostrar porcentaje",
+  "showOwnerCategories": "Mostrar categorías de propietario",
+  "showOwnerCategoriesDetails": "Permite visualizar los amiibos adquiridos en caja y sin caja",
   "category": "{choice, select, All {Todos} Owned {Adquiridos} Wishlist {Lista de deseos} Name {Nombre} Game {Juego} Figures {Todas las Figuras} Cards {Todas las Tarjetas} AmiiboSeries {Personal} other {{choice}}}",
   "searchCategory": "{choice, select, Game {Juego} Name {Nombre} AmiiboSeries {Serie} other {{choice}}}",
   "all": "Todos",
@@ -49,6 +51,7 @@
   "export": "Exportar",
   "import": "Importar",
   "appearance": "Apariencia",
+  "features": "Funcionalidades",
   "appearanceSubtitle": "Más personalización",
   "credits": "Créditos",
   "creditsSubtitle": "Los que hicieron todo posible",
@@ -90,6 +93,6 @@
   "no_games_found": "No existe una lista de juegos para este amiibo aún",
   "no_date": "Próximamente",
   "showGrid": "Cuadrícula",
-  "hide_caution": "Precaución, deshabilitar una categoría la escondera en toda la app",
+  "hide_caution": "Precaución, deshabilitar una funcionalidad la escondera en toda la app",
   "export_complete": "Archivo guardado"
 }
