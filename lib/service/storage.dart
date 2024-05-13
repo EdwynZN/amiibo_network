@@ -44,7 +44,7 @@ String get dateTaken {
 /// to unlock it
 Future<bool> permissionGranted(ScaffoldMessengerState? scaffoldState) async {
   S translate = S.current;
-  final versionCode = InfoPackage.androidVersionCode;
+  final versionCode = InfoPackage.instance.androidVersionCode;
   if (versionCode == AndroidCode.Unknown)
     return false;
   else if (versionCode.code < AndroidCode.Q.code &&

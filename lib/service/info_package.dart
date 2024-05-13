@@ -37,17 +37,25 @@ enum AndroidCode {
   }
 }
 
-// Font feature is supported in Android 5 and above
-bool get isFontFeatureEnable =>
-    InfoPackage.androidVersionCode.code >= AndroidCode.Lollipop.code;
-
 class InfoPackage {
   static const _channel =
-      const MethodChannel("com.dartz.amiibo_network/info_package");
-  static AndroidCode _version = AndroidCode.Unknown;
-  static AndroidCode get androidVersionCode => _version;
+    MethodChannel("com.dartz.amiibo_network/info_package");
+  AndroidCode _version = AndroidCode.Unknown;
+  AndroidCode get androidVersionCode => _version;
 
-  static Future<void> versionCode() async {
+  InfoPackage._();
+  static final InfoPackage _instance = InfoPackage._();
+  static InfoPackage get instance => _instance;
+
+  // Font feature is supported in Android 5 and above
+  bool get isFontFeatureEnable => 
+    androidVersionCode.code >= AndroidCode.Lollipop.code;
+
+  // upsert feature is supported in Android API 30 (SQLite >= 3.24.0) and above
+  bool get isUpsertEnabled => androidVersionCode == AndroidCode.Unknown ||
+    androidVersionCode.code >= AndroidCode.R.code;
+
+  Future<void> versionCode() async {
     //TODO IOS Platform Channel
     try {
       final version = await _channel.invokeMethod<int?>('version');

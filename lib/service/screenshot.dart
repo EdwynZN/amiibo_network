@@ -227,7 +227,7 @@ class Screenshot {
 
     final String? longestWord = owned!.length > wished!.length ? owned : wished;
     final bool fontFeatureStyle =
-        !userPreferences.usePercentage && isFontFeatureEnable;
+        !userPreferences.usePercentage && InfoPackage.instance.isFontFeatureEnable;
 
     /// Activate fontFeature only if StatMode is Ratio and isFontFeatureEnable is true for this device
     TextSpan longestParagraphTest = TextSpan(
@@ -452,7 +452,7 @@ class Screenshot {
     final double maxX = size.width;
     final double maxY = size.height;
     final usePercentage = userPreferences.usePercentage;
-    final bool fontFeatureStyle = !usePercentage && isFontFeatureEnable;
+    final bool fontFeatureStyle = !usePercentage && InfoPackage.instance.isFontFeatureEnable;
 
     /// Activate fontFeature only if StatMode is Ratio and isFontFeatureEnable is true for this device
 

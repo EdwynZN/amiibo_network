@@ -41,7 +41,7 @@ class StatWidget extends StatelessWidget {
                 ref.watch(personalProvider.select((p) => p.usePercentage));
             final String myStat = StatUtils.parseStat(numerator, den,
                 usePercentage: isPercentage);
-            final bool fontFeatureStyle = !isPercentage && isFontFeatureEnable;
+            final bool fontFeatureStyle = !isPercentage && InfoPackage.instance.isFontFeatureEnable;
 
             /// Activate fontFeature only if StatMode is Ratio and isFontFeatureEnable is true for this device
             return RichText(
