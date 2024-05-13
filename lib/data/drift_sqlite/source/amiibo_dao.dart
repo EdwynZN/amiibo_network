@@ -7,6 +7,7 @@ import 'package:amiibo_network/enum/sort_enum.dart' as s;
 import 'package:amiibo_network/model/amiibo.dart' hide Amiibo;
 import 'package:amiibo_network/model/search_result.dart';
 import 'package:amiibo_network/model/update_amiibo_user_attributes.dart';
+import 'package:amiibo_network/service/info_package.dart';
 import 'package:drift/drift.dart';
 
 part 'amiibo_dao.g.dart';
@@ -77,7 +78,15 @@ class AmiiboDao extends DatabaseAccessor<AppDatabase>
     required List<AmiiboUserPreferencesCompanion> preferences,
   }) async {
     await batch((batch) {
-      batch.insertAllOnConflictUpdate(amiibo, amiibosData);
+      if (InfoPackage.instance.isUpsertFeatureAvailable) {
+        batch.insertAllOnConflictUpdate(amiibo, amiibosData);
+      } else {
+        batch.insertAll(
+          amiibo,
+          amiibosData,
+          mode: InsertMode.insertOrReplace,
+        );
+      }
       batch.insertAll(
         amiiboUserPreferences,
         preferences,

@@ -61,7 +61,7 @@ class AmiiboCard extends ConsumerWidget {
                           if (amiibo == null) return '';
                           final details = amiibo.details;
                           final title = StringBuffer(
-                            translate.types(details.type ?? ''),
+                            translate.types(details.type),
                           );
                           if (details.cardNumber != null) {
                             title.write(' #${details.cardNumber}');

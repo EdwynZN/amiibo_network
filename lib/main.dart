@@ -79,7 +79,7 @@ Future<void> main() async {
 
       /// Check Android version
       if (!kIsWeb && defaultTargetPlatform == TargetPlatform.android) {
-        await InfoPackage.versionCode();
+        await InfoPackage.instance.versionCode();
       }
 
       final preferences = await SharedPreferences.getInstance();

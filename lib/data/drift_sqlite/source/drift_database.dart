@@ -22,7 +22,7 @@ class AppDatabase extends _$AppDatabase {
   AppDatabase() : super(_openExecuter(AppDatabase._databaseName));
 
   @override
-  int get schemaVersion => 5;
+  int get schemaVersion => 6;
 
   @override
   MigrationStrategy get migration {
@@ -33,10 +33,10 @@ class AppDatabase extends _$AppDatabase {
       beforeOpen: (details) async {
         await customStatement('PRAGMA foreign_keys = ON');
         if (kDebugMode) {
-            // This check pulls in a fair amount of code that's not needed
-            // anywhere else, so we recommend only doing it in debug builds.
-            await validateDatabaseSchema();
-          }
+          // This check pulls in a fair amount of code that's not needed
+          // anywhere else, so we recommend only doing it in debug builds.
+          await validateDatabaseSchema();
+        }
       },
       onUpgrade: (Migrator m, int from, int to) async {
         await customStatement('PRAGMA foreign_keys = OFF');
@@ -136,6 +136,27 @@ class AppDatabase extends _$AppDatabase {
                 SELECT key, owned, 0, wishlist FROM _amiibo_old ORDER BY id;
               ''');
             await customStatement('DROP TABLE _amiibo_old;');
+          });
+        }
+        if (from == 5 && to == 6) {
+          await transaction(() async {
+            await customStatement(
+                'ALTER TABLE amiibo_user_preferences RENAME TO _amiibo_user_preferences_old;');
+            await m.createAll();
+            await customStatement('''INSERT OR REPLACE INTO 
+                amiibo_user_preferences(key, amiibo_key, opened, boxed, wishlist)
+                SELECT
+                  key,
+                  amiibo_key,
+                  opened,
+                  boxed,
+                  CASE
+                    WHEN wishlist = '1' OR wishlist = 1 THEN 1
+                    ELSE 0
+                  END AS wishlist
+                FROM _amiibo_user_preferences_old ORDER BY amiibo_key;
+              ''');
+            await customStatement('DROP TABLE _amiibo_user_preferences_old;');
           });
         }
       },

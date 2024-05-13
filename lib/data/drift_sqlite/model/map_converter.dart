@@ -11,7 +11,7 @@ AmiiboTable dataFromDomain(d.Amiibo amiibo) {
     character: details.character,
     gameSeries: details.gameSeries,
     amiiboSeries: details.amiiboSeries,
-    type: details.type!,
+    type: details.type,
     na: details.na,
     au: details.au,
     eu: details.eu,

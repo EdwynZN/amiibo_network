@@ -117,7 +117,7 @@ class _AmiiboCard extends ConsumerWidget {
                 final text = ref.watch(detailAmiiboProvider(id)).maybeWhen(
                       data: (amiibo) {
                         if (amiibo == null) return '';
-                        return translate.types(amiibo.details.type!);
+                        return translate.types(amiibo.details.type);
                       },
                       orElse: () => '...',
                     );
