@@ -204,8 +204,11 @@ class HomeScreenState extends ConsumerState<HomeScreen>
 
   @override
   Widget build(BuildContext context) {
+    final route = ModalRoute.of(context);
+    final canPopModalRoute =
+        route != null && route.isCurrent && route.willHandlePopInternally;
     final isAmiiboList = index == 0;
-    final canPop = ref.watch(_canPopProvider);
+    final canPop = canPopModalRoute || ref.watch(_canPopProvider);
     final newStatUI = ref.watch(remoteStatUIProvider);
     return DashMenu(
       leftDrawer: CollectionDrawer(restart: _restartAnimation),
@@ -654,8 +657,9 @@ class _SelectedOptions extends ConsumerWidget {
       children: <Widget>[
         IconButton(
           icon: const Icon(Icons.remove),
-          onPressed: () =>
-              ref.read(selectProvider).updateAmiibos(const UserAttributes.none()),
+          onPressed: () => ref
+              .read(selectProvider)
+              .updateAmiibos(const UserAttributes.none()),
           tooltip: translate.removeTooltip,
         ),
         IconButton(
@@ -688,8 +692,9 @@ class _SelectedOptions extends ConsumerWidget {
         ),
         IconButton(
           icon: const Icon(iconWished),
-          onPressed: () =>
-              ref.read(selectProvider).updateAmiibos(const UserAttributes.wished()),
+          onPressed: () => ref
+              .read(selectProvider)
+              .updateAmiibos(const UserAttributes.wished()),
           tooltip: translate.wishTooltip,
         ),
       ],
