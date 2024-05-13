@@ -12,4 +12,9 @@ class NetworkIcons {
   static const String na = 'assets/images/na.webp';
   static const String switchPlatform = 'assets/images/switch_platform.webp';
   static const String wiiUPlatform = 'assets/images/wii_u_platform.webp';
+  static const String lockedBox = 'assets/icons/locked_box.webp';
+  static const String lockedBoxSelected =
+      'assets/icons/locked_box_selected.webp';
+  static const String openBox = 'assets/icons/open_box.webp';
+  static const String openBoxSelected = 'assets/icons/open_box_selected.webp';
 }

@@ -5,3 +5,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 final remoteStatUIProvider = Provider<bool>(
   (_) => FirebaseRemoteConfig.instance.getBool(RemoteKey.statDrawer),
 );
+
+final remoteOwnedCategoryProvider = Provider<bool>(
+  (_) => FirebaseRemoteConfig.instance.getBool(RemoteKey.ownedCategories),
+);

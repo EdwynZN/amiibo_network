@@ -1,6 +1,7 @@
 import 'package:amiibo_network/enum/hidden_types.dart';
 import 'package:amiibo_network/model/preferences.dart';
 import 'package:amiibo_network/riverpod/repository_provider.dart';
+import 'package:amiibo_network/riverpod/stat_ui_remote_config_provider.dart';
 import 'package:amiibo_network/utils/preferences_constants.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -10,6 +11,14 @@ final hiddenCategoryProvider = Provider<HiddenType?>(
   name: 'hiddenCategoriesProvider',
 );
 
+final ownTypesCategoryProvider = Provider<bool>(
+  (ref) {
+    final ownedCategories = ref.watch(remoteOwnedCategoryProvider);
+    return ownedCategories && ref.watch(personalProvider.select((value) => value.ownTypes));
+  },
+  name: 'OwnerCategoriesFlagProvider',
+);
+
 final personalProvider =
     StateNotifierProvider<UserPreferencessNotifier, Preferences>(
   (ref) {
@@ -17,6 +26,7 @@ final personalProvider =
     final percent = sharedProvider.getBool(sharedStatMode) ?? false;
     final grid = sharedProvider.getBool(sharedGridMode) ?? true;
     final ignored = sharedProvider.getInt(sharedIgnored) ?? 0;
+    final ownType = sharedProvider.getBool(sharedOwnType) ?? false;
     final HiddenType? categoryIgnored;
     switch (ignored) {
       case 1:
@@ -33,6 +43,7 @@ final personalProvider =
     final initial = Preferences(
       usePercentage: percent,
       useGrid: grid,
+      ownTypes: ownType,
       ignored: categoryIgnored,
     );
     return UserPreferencessNotifier(initial, ref);
@@ -46,6 +57,14 @@ class UserPreferencessNotifier extends StateNotifier<Preferences> {
   UserPreferencessNotifier(super._state, this.ref);
 
   bool get isPercentage => state.usePercentage;
+
+  Future<void> toggleOwnType(bool newValue) async {
+    if (newValue != state.ownTypes) {
+      final SharedPreferences preferences = ref.read(preferencesProvider);
+      await preferences.setBool(sharedOwnType, newValue);
+      state = state.copyWith(ownTypes: newValue);
+    }
+  }
 
   Future<void> toggleStat(bool newValue) async {
     if (newValue != isPercentage) {

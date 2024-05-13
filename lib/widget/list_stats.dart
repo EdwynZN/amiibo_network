@@ -50,45 +50,38 @@ class HomeBodyStats extends ConsumerWidget {
           if (stats.length > 1)
             SliverToBoxAdapter(
               key: Key('Amiibo Network'),
-              child: SingleStat(
-                title: generalStats.name,
-                owned: generalStats.owned,
-                total: generalStats.total,
-                wished: generalStats.wished,
-              ),
+              child: SingleStat(stat: generalStats),
             ),
-          (MediaQuery.of(context).size.width <= 600)
-              ? SliverList(
-                  delegate: SliverChildBuilderDelegate(
-                    (BuildContext context, int index) => SingleStat(
-                      key: ValueKey(index),
-                      title: stats[index].name,
-                      owned: stats[index].owned,
-                      total: stats[index].total,
-                      wished: stats[index].wished,
-                    ),
-                    semanticIndexOffset: 1,
-                    childCount: stats.length,
-                  ),
-                )
-              : SliverGrid(
-                  gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
-                    maxCrossAxisExtent: 230,
-                    mainAxisSpacing: 8.0,
-                    mainAxisExtent: 140,
-                  ),
-                  delegate: SliverChildBuilderDelegate(
-                    (BuildContext context, int index) => SingleStat(
-                      key: ValueKey(index),
-                      title: stats[index].name,
-                      owned: stats[index].owned,
-                      total: stats[index].total,
-                      wished: stats[index].wished,
-                    ),
-                    semanticIndexOffset: 1,
-                    childCount: stats.length,
-                  ),
-                )
+          SliverLayoutBuilder(
+            builder: (context, constraints) {
+              return (constraints.crossAxisExtent <= 600)
+                  ? SliverList(
+                      delegate: SliverChildBuilderDelegate(
+                        (BuildContext context, int index) => SingleStat(
+                          key: ValueKey(index),
+                          stat: stats[index],
+                        ),
+                        semanticIndexOffset: 1,
+                        childCount: stats.length,
+                      ),
+                    )
+                  : SliverGrid(
+                      gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
+                        maxCrossAxisExtent: 360,
+                        mainAxisSpacing: 8.0,
+                        mainAxisExtent: 180,
+                      ),
+                      delegate: SliverChildBuilderDelegate(
+                        (BuildContext context, int index) => SingleStat(
+                          key: ValueKey(index),
+                          stat: stats[index],
+                        ),
+                        semanticIndexOffset: 1,
+                        childCount: stats.length,
+                      ),
+                    );
+            },
+          ),
         ],
       );
     }

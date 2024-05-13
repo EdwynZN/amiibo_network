@@ -1,10 +1,10 @@
 import 'package:amiibo_network/enum/hidden_types.dart';
 import 'package:amiibo_network/generated/l10n.dart';
 import 'package:amiibo_network/riverpod/preferences_provider.dart';
+import 'package:amiibo_network/riverpod/stat_ui_remote_config_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:sliver_tools/sliver_tools.dart';
 
 class PreferencesButton extends StatelessWidget {
   const PreferencesButton({Key? key}) : super(key: key);
@@ -34,24 +34,27 @@ class _BottomSheetSort extends StatelessWidget {
   Widget build(BuildContext context) {
     final S translate = S.of(context);
     final Size size = MediaQuery.of(context).size;
-    final double height = (460.0 / size.height).clamp(0.30, 0.50);
+    final double height = (460.0 / size.height).clamp(0.30, 0.75);
     const visualList = VisualDensity(vertical: -2.0);
     return DraggableScrollableSheet(
       key: const Key('Draggable'),
-      maxChildSize: 0.50,
+      maxChildSize: 0.75,
+      minChildSize: 0.25,
       expand: false,
       initialChildSize: height,
       snap: true,
-      snapSizes: const [0.25, 0.50],
+      snapSizes: const [0.35, 0.75],
       builder: (context, scrollController) {
         final ThemeData theme = Theme.of(context);
         return Material(
-          color: theme.colorScheme.background,
+          color: theme.colorScheme.surface,
           shape: theme.bottomSheetTheme.shape,
+          elevation: 4.0,
+          surfaceTintColor: theme.colorScheme.surfaceTint,
           clipBehavior: Clip.antiAlias,
           child: ListTileTheme.merge(
             //selectedTileColor: theme.selectedRowColor.withOpacity(0.16),
-            contentPadding: const EdgeInsets.only(left: 8.0, right: 8.0),
+            contentPadding: const EdgeInsets.symmetric(horizontal: 16.0),
             dense: true,
             style: ListTileStyle.drawer,
             minVerticalPadding: 12.0,
@@ -63,44 +66,15 @@ class _BottomSheetSort extends StatelessWidget {
             child: CustomScrollView(
               controller: scrollController,
               slivers: <Widget>[
-                SliverSafeArea(
-                  sliver: SliverPinnedHeader(
-                    child: Container(
-                      color: theme.colorScheme.background,
-                      padding: const EdgeInsets.symmetric(vertical: 8.0),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: <Widget>[
-                          Padding(
-                            padding: const EdgeInsets.only(
-                              top: 12.0,
-                              left: 24.0,
-                              right: 16.0,
-                            ),
-                            child: Text(
-                              translate.appearance,
-                              style: Theme.of(context).textTheme.titleLarge,
-                            ),
-                          ),
-                          const Gap(8.0),
-                          const Divider(
-                            height: 0.0,
-                            indent: 16.0,
-                            endIndent: 16.0,
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                ),
                 SliverPadding(
-                  padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                  padding: const EdgeInsets.all(16.0),
                   sliver: Consumer(
                     builder: (context, ref, child) {
                       final pref = ref.watch(personalProvider);
                       return SliverList(
                         delegate: SliverChildListDelegate([
+                          _CategoryTitle(title: translate.appearance),
+                          const Gap(8.0),
                           SwitchListTile.adaptive(
                             visualDensity: visualList,
                             controlAffinity: ListTileControlAffinity.trailing,
@@ -130,99 +104,164 @@ class _BottomSheetSort extends StatelessWidget {
                                 .read(personalProvider.notifier)
                                 .toggleVisualList(value),
                           ),
-                          const Divider(),
-                          const Gap(8.0),
-                          Card(
-                            color: theme.colorScheme.tertiaryContainer,
-                            child: Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Text.rich(
-                                TextSpan(
-                                  children: [
-                                    WidgetSpan(
-                                      alignment: PlaceholderAlignment.middle,
-                                      baseline: TextBaseline.ideographic,
-                                      child: Padding(
-                                        padding:
-                                            const EdgeInsets.only(right: 8.0),
-                                        child: Icon(
-                                          Icons.lightbulb_outline_sharp,
-                                          size: 16.0,
-                                          color: theme.colorScheme
-                                              .onTertiaryContainer,
-                                        ),
-                                      ),
-                                    ),
-                                    TextSpan(text: translate.hide_caution),
-                                  ],
-                                ),
-                                softWrap: true,
-                                style: TextStyle(
-                                  color:
-                                      theme.colorScheme.onTertiaryContainer,
-                                ),
-                              ),
-                            ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.symmetric(
-                              vertical: 16.0,
-                              horizontal: 8.0,
-                            ),
-                            child: Consumer(
-                              builder: (context, ref, _) {
-                                final category =
-                                    ref.watch(hiddenCategoryProvider);
-                                return SegmentedButton<HiddenType>(
-                                  emptySelectionAllowed: false,
-                                  multiSelectionEnabled: true,
-                                  segments: <ButtonSegment<HiddenType>>[
-                                    ButtonSegment<HiddenType>(
-                                      value: HiddenType.Figures,
-                                      label: Text(translate.figures),
-                                      icon: const ImageIcon(
-                                        AssetImage(
-                                          'assets/collection/icon_1.webp',
-                                        ),
-                                      ),
-                                    ),
-                                    ButtonSegment<HiddenType>(
-                                      value: HiddenType.Cards,
-                                      label: Text(translate.cards),
-                                      icon: const Icon(Icons.view_carousel),
-                                    ),
-                                  ],
-                                  selected: <HiddenType>{
-                                    if (category != HiddenType.Figures)
-                                      HiddenType.Figures,
-                                    if (category != HiddenType.Cards)
-                                      HiddenType.Cards,
-                                  },
-                                  onSelectionChanged: (newSelection) {
-                                    HiddenType? newCategory;
-                                    if (newSelection.length == 1) {
-                                      newCategory = newSelection.first == HiddenType.Cards
-                                        ? HiddenType.Figures
-                                        : HiddenType.Cards;
-                                    }
-                                    ref
-                                        .read(personalProvider.notifier)
-                                        .updateIgnoredList(newCategory);
-                                  },
-                                );
-                              },
-                            ),
-                          ),
                         ]),
                       );
                     },
                   ),
+                ),
+                SliverGap(16.0, color: theme.colorScheme.background),
+                SliverPadding(
+                  padding: const EdgeInsets.all(16.0),
+                  sliver: Consumer(
+                      child: _CategoryTitle(title: translate.features),
+                      builder: (context, ref, child) {
+                        final ownedCategoriesRemote =
+                            ref.watch(remoteOwnedCategoryProvider);
+                        return SliverList(
+                          delegate: SliverChildListDelegate([
+                            child!,
+                            const Gap(8.0),
+                            Card(
+                              margin: const EdgeInsets.symmetric(vertical: 8.0),
+                              color: theme.colorScheme.tertiaryContainer,
+                              child: Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Text.rich(
+                                  TextSpan(
+                                    children: [
+                                      WidgetSpan(
+                                        alignment: PlaceholderAlignment.baseline,
+                                        baseline: TextBaseline.ideographic,
+                                        child: Padding(
+                                          padding: const EdgeInsets.only(right: 4.0),
+                                          child: Icon(
+                                            Icons.warning_rounded,
+                                            size: 16.0,
+                                            color: theme.colorScheme
+                                                .onTertiaryContainer,
+                                          ),
+                                        ),
+                                      ),
+                                      TextSpan(text: translate.hide_caution),
+                                    ],
+                                  ),
+                                  softWrap: true,
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.w600,
+                                    color:
+                                        theme.colorScheme.onTertiaryContainer,
+                                    height: 1.5,
+                                  ),
+                                ),
+                              ),
+                            ),
+                            if (ownedCategoriesRemote) ...[
+                              Consumer(builder: (context, ref, _) {
+                                return SwitchListTile.adaptive(
+                                  visualDensity: visualList,
+                                  controlAffinity:
+                                      ListTileControlAffinity.trailing,
+                                  title: Text(
+                                    translate.showOwnerCategories,
+                                    style: theme.textTheme.bodyLarge,
+                                  ),
+                                  subtitle: Text(
+                                    translate.showOwnerCategoriesDetails,
+                                  ),
+                                  isThreeLine: true,
+                                  inactiveTrackColor:
+                                      theme.disabledColor.withOpacity(0.12),
+                                  value: ref.watch(ownTypesCategoryProvider),
+                                  onChanged: (value) async => await ref
+                                      .read(personalProvider.notifier)
+                                      .toggleOwnType(value),
+                                );
+                              }),
+                              const Gap(8.0),
+                            ],
+                            Padding(
+                              padding: const EdgeInsets.symmetric(
+                                vertical: 16.0,
+                                horizontal: 8.0,
+                              ),
+                              child: Consumer(
+                                builder: (context, ref, _) {
+                                  final category =
+                                      ref.watch(hiddenCategoryProvider);
+                                  return SegmentedButton<HiddenType>(
+                                    emptySelectionAllowed: false,
+                                    multiSelectionEnabled: true,
+                                    segments: <ButtonSegment<HiddenType>>[
+                                      ButtonSegment<HiddenType>(
+                                        value: HiddenType.Figures,
+                                        label: Text(translate.figures),
+                                        icon: const ImageIcon(
+                                          AssetImage(
+                                            'assets/collection/icon_1.webp',
+                                          ),
+                                        ),
+                                      ),
+                                      ButtonSegment<HiddenType>(
+                                        value: HiddenType.Cards,
+                                        label: Text(translate.cards),
+                                        icon: const Icon(Icons.view_carousel),
+                                      ),
+                                    ],
+                                    selected: <HiddenType>{
+                                      if (category != HiddenType.Figures)
+                                        HiddenType.Figures,
+                                      if (category != HiddenType.Cards)
+                                        HiddenType.Cards,
+                                    },
+                                    onSelectionChanged: (newSelection) {
+                                      HiddenType? newCategory;
+                                      if (newSelection.length == 1) {
+                                        newCategory = newSelection.first ==
+                                                HiddenType.Cards
+                                            ? HiddenType.Figures
+                                            : HiddenType.Cards;
+                                      }
+                                      ref
+                                          .read(personalProvider.notifier)
+                                          .updateIgnoredList(newCategory);
+                                    },
+                                  );
+                                },
+                              ),
+                            ),
+                          ]),
+                        );
+                      }),
                 ),
               ],
             ),
           ),
         );
       },
+    );
+  }
+}
+
+class _CategoryTitle extends StatelessWidget {
+  final String title;
+
+  // ignore: unused_element
+  const _CategoryTitle({super.key, required this.title});
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 4.0),
+      child: Text(
+        title,
+        maxLines: 1,
+        style: theme.textTheme.titleLarge?.copyWith(
+          fontWeight: FontWeight.bold,
+          color: theme.colorScheme.onSurface,
+          letterSpacing: -0.5,
+        ),
+      ),
     );
   }
 }

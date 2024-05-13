@@ -16,7 +16,9 @@ use_part_of: true
 package: resources
 
 groups:
-  - path: assets/images
+  - paths:
+      - assets/images
+      - assets/icons
     class_name: NetworkIcons
     file_name: assets_icons
     types: [ .png, .jpg, .jpeg, .webp ]

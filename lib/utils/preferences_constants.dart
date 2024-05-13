@@ -28,9 +28,11 @@ const String sharedCustomFigures = 'CustomFigures';
 const String sharedCustomCards = 'CustomCards';
 /// Version of the App
 const String sharedVersion = 'Version';
-/// Stat Mode Preferences (Percentage or Ratio)
+/// Grid/list Mode
 const String sharedGridMode = 'gridMode';
-/// Stat Mode Preferences (Percentage or Ratio)
+/// hidden type (figure, cards or none)
 const String sharedIgnored = 'ignoredType';
+/// if owned system should be enable (shows boxed/unboxed owned amiibos or just owned as a whole)
+const String sharedOwnType = 'ownType';
 /// Version of the App
 const int versionApp = 58;

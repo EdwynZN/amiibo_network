@@ -1,5 +1,4 @@
 import 'package:amiibo_network/enum/amiibo_category_enum.dart';
-import 'package:amiibo_network/enum/selected_enum.dart';
 import 'package:amiibo_network/model/amiibo.dart';
 import 'package:amiibo_network/model/title_search.dart';
 import 'package:amiibo_network/repository/theme_repository.dart';
@@ -14,6 +13,7 @@ import 'package:amiibo_network/riverpod/stat_ui_remote_config_provider.dart';
 import 'package:amiibo_network/screen/search_screen.dart';
 import 'package:amiibo_network/service/storage.dart';
 import 'package:amiibo_network/widget/dash_menu/dash_menu.dart';
+import 'package:amiibo_network/widget/detail/owned_bottom_sheet.dart';
 import 'package:amiibo_network/widget/list_stats.dart';
 import 'package:amiibo_network/widget/loading_grid_shimmer.dart';
 import 'package:amiibo_network/widget/lock_icon.dart';
@@ -204,23 +204,28 @@ class HomeScreenState extends ConsumerState<HomeScreen>
 
   @override
   Widget build(BuildContext context) {
+    final route = ModalRoute.of(context);
+    final canPopModalRoute =
+        route != null && route.isCurrent && route.willHandlePopInternally;
     final isAmiiboList = index == 0;
-    final canPop = ref.watch(_canPopProvider);
+    final canPop = canPopModalRoute || ref.watch(_canPopProvider);
     final newStatUI = ref.watch(remoteStatUIProvider);
     return DashMenu(
       leftDrawer: CollectionDrawer(restart: _restartAnimation),
-      rightDrawer: newStatUI ? Scaffold(
-        body: const CustomScrollView(
-          slivers: [
-            SliverSafeArea(sliver: HomeBodyStats()),
-            SliverGap(72.0),
-          ],
-        ),
-        floatingActionButton: _FAB(
-          animation: const AlwaysStoppedAnimation(1.0),
-          index: 1,
-        ),
-      ) : null,
+      rightDrawer: newStatUI
+          ? Scaffold(
+              body: const CustomScrollView(
+                slivers: [
+                  SliverSafeArea(sliver: HomeBodyStats()),
+                  SliverGap(72.0),
+                ],
+              ),
+              floatingActionButton: _FAB(
+                animation: const AlwaysStoppedAnimation(1.0),
+                index: 1,
+              ),
+            )
+          : null,
       body: PopScope(
         canPop: canPop,
         onPopInvoked: _exitApp,
@@ -289,21 +294,23 @@ class HomeScreenState extends ConsumerState<HomeScreen>
           ),
           extendBody: !newStatUI,
           floatingActionButtonLocation: newStatUI
-            ? FloatingActionButtonLocation.endFloat
-            : FloatingActionButtonLocation.centerDocked,
+              ? FloatingActionButtonLocation.endFloat
+              : FloatingActionButtonLocation.centerDocked,
           floatingActionButton: _FAB(
             animation: _animationController,
             index: newStatUI ? 0 : index,
           ),
-          bottomNavigationBar: newStatUI ? null : _BottomBar(
-            animationController: _animationController,
-            index: index,
-            onTap: (selected) => setState(() {
-              index = selected;
-              _controller.jumpTo(0);
-              ref.read(selectProvider.notifier).clearSelected();
-            }),
-          ),
+          bottomNavigationBar: newStatUI
+              ? null
+              : _BottomBar(
+                  animationController: _animationController,
+                  index: index,
+                  onTap: (selected) => setState(() {
+                    index = selected;
+                    _controller.jumpTo(0);
+                    ref.read(selectProvider.notifier).clearSelected();
+                  }),
+                ),
         ),
       ),
     );
@@ -559,11 +566,12 @@ class _DefaultOptions extends ConsumerWidget {
         const LockButton(),
         const PreferencesButton(),
         const SortCollection(),
-        if (newStatUI) IconButton(
-          onPressed: () => DashMenu.of(context).openRightDrawer(),
-          tooltip: S.of(context).stats,
-          icon: const Icon(Icons.auto_graph_outlined),
-        ),
+        if (newStatUI)
+          IconButton(
+            onPressed: () => DashMenu.of(context).openRightDrawer(),
+            tooltip: S.of(context).stats,
+            icon: const Icon(Icons.auto_graph_outlined),
+          ),
       ],
     );
   }
@@ -649,20 +657,44 @@ class _SelectedOptions extends ConsumerWidget {
       children: <Widget>[
         IconButton(
           icon: const Icon(Icons.remove),
-          onPressed: () =>
-              ref.read(selectProvider).updateAmiibos(SelectedType.Clear),
+          onPressed: () => ref
+              .read(selectProvider)
+              .updateAmiibos(const UserAttributes.none()),
           tooltip: translate.removeTooltip,
         ),
         IconButton(
           icon: const Icon(iconOwned),
-          onPressed: () =>
-              ref.read(selectProvider).updateAmiibos(SelectedType.Owned),
+          onPressed: () async {
+            final theme = Theme.of(context);
+            final showOwnerCategories = ref.read(ownTypesCategoryProvider);
+            final UserAttributes? newAttributes;
+            if (showOwnerCategories) {
+              newAttributes = await showModalBottomSheet<UserAttributes>(
+                context: context,
+                backgroundColor: theme.colorScheme.background,
+                useSafeArea: false,
+                elevation: 4.0,
+                enableDrag: false,
+                constraints: const BoxConstraints(maxWidth: 400.0),
+                isScrollControlled: true,
+                builder: (context) => const OwnedButtomSheet(),
+              );
+            } else {
+              newAttributes = UserAttributes.owned();
+            }
+
+            if (newAttributes == null) {
+              return;
+            }
+            ref.read(selectProvider.notifier).updateAmiibos(newAttributes);
+          },
           tooltip: translate.ownTooltip,
         ),
         IconButton(
           icon: const Icon(iconWished),
-          onPressed: () =>
-              ref.read(selectProvider).updateAmiibos(SelectedType.Wished),
+          onPressed: () => ref
+              .read(selectProvider)
+              .updateAmiibos(const UserAttributes.wished()),
           tooltip: translate.wishTooltip,
         ),
       ],
