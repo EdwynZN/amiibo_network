@@ -28,7 +28,7 @@ class AmiiboDetailInfo extends ConsumerWidget {
                 if (amiibo.amiiboSeries != amiibo.gameSeries)
                   TextCardDetail(text: translate.game(amiibo.gameSeries)),
                 TextCardDetail(
-                  text: translate.types(amiibo.type!),
+                  text: translate.types(amiibo.type),
                 ),
                 if (amiibo.au != null)
                   RegionDetail(amiibo.au!, NetworkIcons.au, translate.au),

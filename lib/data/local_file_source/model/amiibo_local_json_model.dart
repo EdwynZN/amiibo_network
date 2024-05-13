@@ -15,15 +15,15 @@ class AmiiboLocalFile with _$AmiiboLocalFile {
   const factory AmiiboLocalFile({
     required int key,
     @JsonKey(includeIfNull: true) String? id,
-    @Default('') String amiiboSeries,
-    @Default('') String character,
-    @Default('') String gameSeries,
-    @Default('') String name,
+    @JsonKey(required: true) required String amiiboSeries,
+    @JsonKey(required: true) required String character,
+    @JsonKey(required: true) required String gameSeries,
+    @JsonKey(required: true) required String name,
     @JsonKey(includeIfNull: true) String? au,
     @JsonKey(includeIfNull: true) String? eu,
     @JsonKey(includeIfNull: true) String? jp,
     @JsonKey(includeIfNull: true) String? na,
-    @JsonKey(includeIfNull: true) String? type,
+    @JsonKey(required: true) required String type,
     int? cardNumber,
   }) = _AmiiboLocalFile;
 
