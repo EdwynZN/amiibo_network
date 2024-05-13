@@ -39,7 +39,7 @@ enum AndroidCode {
 
 class InfoPackage {
   static const _channel =
-    MethodChannel("com.dartz.amiibo_network/info_package");
+      MethodChannel("com.dartz.amiibo_network/info_package");
   AndroidCode _version = AndroidCode.Unknown;
   AndroidCode get androidVersionCode => _version;
 
@@ -48,12 +48,13 @@ class InfoPackage {
   static InfoPackage get instance => _instance;
 
   // Font feature is supported in Android 5 and above
-  bool get isFontFeatureEnable => 
-    androidVersionCode.code >= AndroidCode.Lollipop.code;
+  bool get isFontFeatureEnable =>
+      androidVersionCode.code >= AndroidCode.Lollipop.code;
 
   // upsert feature is supported in Android API 30 (SQLite >= 3.24.0) and above
-  bool get isUpsertEnabled => androidVersionCode == AndroidCode.Unknown ||
-    androidVersionCode.code >= AndroidCode.R.code;
+  bool get isUpsertFeatureAvailable =>
+      androidVersionCode == AndroidCode.Unknown ||
+      androidVersionCode.code >= AndroidCode.R.code;
 
   Future<void> versionCode() async {
     //TODO IOS Platform Channel
