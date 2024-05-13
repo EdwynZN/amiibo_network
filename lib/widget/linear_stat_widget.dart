@@ -6,18 +6,22 @@ class AnimatedLineProgress extends ImplicitlyAnimatedWidget {
   final int owned;
   final int wished;
   final int total;
+  final bool showEmptyColor;
 
   const AnimatedLineProgress({
     Key? key,
     required this.owned,
     required this.wished,
     required this.total,
+    this.showEmptyColor = false,
     Duration duration = const Duration(milliseconds: 600),
     Curve curve = Curves.easeInOutCubicEmphasized,
     this.size,
-  }) : assert(owned <= total, 'owned cannot be more than total: $owned > $total'),
-      assert(wished <= total, 'wished cannot be more than total: $wished > $total'),
-      super(duration: duration, curve: curve, key: key);
+  })  : assert(
+            owned <= total, 'owned cannot be more than total: $owned > $total'),
+        assert(wished <= total,
+            'wished cannot be more than total: $wished > $total'),
+        super(duration: duration, curve: curve, key: key);
 
   @override
   ImplicitlyAnimatedWidgetState<ImplicitlyAnimatedWidget> createState() =>
@@ -54,7 +58,9 @@ class _AnimatedRadialState
     return CustomPaint(
       size: widget.size ?? const Size.fromHeight(8.0),
       painter: LinearProgression(
-        emptyColor: Colors.transparent,
+        emptyColor: widget.showEmptyColor
+          ? theme.disabledColor
+          : Colors.transparent,
         ownColor: preferred.ownContainer,
         wishColor: preferred.wishContainer,
         ownPercent: _ownPercent!.evaluate(animation),

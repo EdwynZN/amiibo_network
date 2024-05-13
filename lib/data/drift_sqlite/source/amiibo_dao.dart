@@ -165,6 +165,8 @@ class AmiiboDao extends DatabaseAccessor<AppDatabase>
             ),
           ],
         ).count(),
+        amiiboUserPreferences.opened.sum(),
+        amiiboUserPreferences.boxed.sum(),
       ])
       ..orderBy([
         OrderingTerm(expression: amiibo.amiiboSeries, mode: OrderingMode.asc),
@@ -187,6 +189,8 @@ class AmiiboDao extends DatabaseAccessor<AppDatabase>
         'Total': map['c${index++}'],
         'Wished': map['c${index++}'],
         'Owned': map['c${index++}'],
+        'Unboxed': map['c${index++}'],
+        'Boxed': map['c${index++}'],
       };
     }).get();
     return result;

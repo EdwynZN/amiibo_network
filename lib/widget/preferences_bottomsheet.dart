@@ -130,13 +130,12 @@ class _BottomSheetSort extends StatelessWidget {
                                   TextSpan(
                                     children: [
                                       WidgetSpan(
-                                        alignment: PlaceholderAlignment.middle,
+                                        alignment: PlaceholderAlignment.baseline,
                                         baseline: TextBaseline.ideographic,
                                         child: Padding(
-                                          padding:
-                                              const EdgeInsets.only(right: 8.0),
+                                          padding: const EdgeInsets.only(right: 4.0),
                                           child: Icon(
-                                            Icons.lightbulb_sharp,
+                                            Icons.warning_rounded,
                                             size: 16.0,
                                             color: theme.colorScheme
                                                 .onTertiaryContainer,
