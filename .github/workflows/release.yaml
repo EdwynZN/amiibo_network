@@ -10,7 +10,7 @@ on:
 env:
   java_version: '11.0.14+9'
   ruby_version: '2.7.2'
-  flutter_version: '3.19.6'
+  flutter_version: '3.22.0'
   
 jobs:
   android-internal:
