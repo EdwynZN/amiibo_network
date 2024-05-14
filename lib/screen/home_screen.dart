@@ -372,7 +372,7 @@ class _AmiiboListWidget extends HookConsumerWidget {
                   const Gap(24.0),
                   ElevatedButton.icon(
                     style: theme.textButtonTheme.style?.copyWith(
-                      textStyle: MaterialStateProperty.all(
+                      textStyle: WidgetStateProperty.all(
                           theme.textTheme.headlineMedium),
                     ),
                     onPressed: () async {
@@ -671,7 +671,7 @@ class _SelectedOptions extends ConsumerWidget {
             if (showOwnerCategories) {
               newAttributes = await showModalBottomSheet<UserAttributes>(
                 context: context,
-                backgroundColor: theme.colorScheme.background,
+                backgroundColor: theme.colorScheme.surface,
                 useSafeArea: false,
                 elevation: 4.0,
                 enableDrag: false,

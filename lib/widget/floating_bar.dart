@@ -274,9 +274,9 @@ class _AppBarState extends State<_AppBar> {
   Widget build(BuildContext context) {
     final FlexibleSpaceBarSettings? settings =
         context.dependOnInheritedWidgetOfExactType<FlexibleSpaceBarSettings>();
-    final Set<MaterialState> states = <MaterialState>{
+    final Set<WidgetState> states = <WidgetState>{
       if (settings?.isScrolledUnder ?? _scrolledUnder)
-        MaterialState.scrolledUnder,
+        WidgetState.scrolledUnder,
     };
 
     final ModalRoute<dynamic>? parentRoute = ModalRoute.of(context);
@@ -290,7 +290,7 @@ class _AppBarState extends State<_AppBar> {
         parentRoute is PageRoute<dynamic> && parentRoute.fullscreenDialog;
     final double effectiveElevation;
     final double innerElevation;
-    if (states.contains(MaterialState.scrolledUnder)) {
+    if (states.contains(WidgetState.scrolledUnder)) {
       final _possible = _elevation * 2.0;
       effectiveElevation = _possible.clamp(0.0, 4.0);
       innerElevation = 2.0;

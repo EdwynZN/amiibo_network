@@ -62,7 +62,7 @@ class _BottomSheetSort extends StatelessWidget {
               borderRadius: BorderRadius.all(Radius.circular(8.0)),
             ),
             selectedColor: theme.textButtonTheme.style?.foregroundColor
-                ?.resolve({MaterialState.selected}),
+                ?.resolve({WidgetState.selected}),
             child: CustomScrollView(
               controller: scrollController,
               slivers: <Widget>[
@@ -109,7 +109,7 @@ class _BottomSheetSort extends StatelessWidget {
                     },
                   ),
                 ),
-                SliverGap(16.0, color: theme.colorScheme.background),
+                SliverGap(16.0, color: theme.colorScheme.surface),
                 SliverPadding(
                   padding: const EdgeInsets.all(16.0),
                   sliver: Consumer(

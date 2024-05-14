@@ -643,7 +643,7 @@ class _CardSettings extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     return Card(
-      color: theme.colorScheme.background,
+      color: theme.colorScheme.surface,
       elevation: 4.0,
       margin: const EdgeInsets.symmetric(vertical: 6.0, horizontal: 8.0),
       child: Material(

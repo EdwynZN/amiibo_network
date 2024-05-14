@@ -65,7 +65,7 @@ class _BottomSheetSort extends StatelessWidget {
         builder: (context, scrollController) {
           final ThemeData theme = Theme.of(context);
           return Material(
-            color: theme.colorScheme.background,
+            color: theme.colorScheme.surface,
             shape: theme.bottomSheetTheme.shape,
             clipBehavior: Clip.antiAlias,
             child: ListTileTheme.merge(
@@ -79,13 +79,13 @@ class _BottomSheetSort extends StatelessWidget {
                 ),
               ),
               selectedColor: theme.textButtonTheme.style?.foregroundColor
-                  ?.resolve({MaterialState.selected}),
+                  ?.resolve({WidgetState.selected}),
               child: CustomScrollView(
                 controller: scrollController,
                 slivers: <Widget>[
                   SliverPinnedHeader(
                     child: Container(
-                      color: theme.colorScheme.background,
+                      color: theme.colorScheme.surface,
                       padding: const EdgeInsets.only(bottom: 4.0),
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.end,

@@ -84,7 +84,7 @@ class UserPreferenceCard extends HookConsumerWidget {
       ],
     );
     return _ColumnCardWrapper(
-      color: theme.colorScheme.background,
+      color: theme.colorScheme.surface,
       surfaceTintColor: attributes.surfaceColor,
       borderColor: theme.colorScheme.outlineVariant,
       elevation: attributes.surfaceColor == null ? 0.0 : 4.0,
@@ -275,7 +275,7 @@ class _OutlinedColumnButton extends StatelessWidget {
     final preferencesPalette = theme.extension<PreferencesExtension>()!;
 
     return _ColumnCardWrapper(
-      color: theme.colorScheme.background,
+      color: theme.colorScheme.surface,
       surfaceTintColor: onPressed == null
           ? theme.disabledColor
           : preferencesPalette.wishPalette,
@@ -293,7 +293,7 @@ class _OutlinedColumnButton extends StatelessWidget {
             Expanded(
               child: IconButton(
                 style: const ButtonStyle(
-                  shape: MaterialStatePropertyAll(RoundedRectangleBorder()),
+                  shape: WidgetStatePropertyAll(RoundedRectangleBorder()),
                 ),
                 icon: Icon(Icons.favorite_border_outlined),
                 selectedIcon: Icon(iconWished),
@@ -332,7 +332,7 @@ class ColumnButton extends StatelessWidget {
     final preferencesPalette = theme.extension<PreferencesExtension>()!;
 
     return _ColumnCardWrapper(
-      color: theme.colorScheme.background,
+      color: theme.colorScheme.surface,
       elevation: isDisabled ? 0.0 : 4.0,
       surfaceTintColor:
           isDisabled ? theme.disabledColor : preferencesPalette.ownPalette,
@@ -352,7 +352,7 @@ class ColumnButton extends StatelessWidget {
             ),
             IconButton(
               style: const ButtonStyle(
-                shape: MaterialStatePropertyAll(RoundedRectangleBorder()),
+                shape: WidgetStatePropertyAll(RoundedRectangleBorder()),
                 visualDensity: const VisualDensity(vertical: -2.0),
               ),
               icon: isDisabled
@@ -418,7 +418,7 @@ class ColumnButton extends StatelessWidget {
                     : null;
                 return IconButton(
                   style: const ButtonStyle(
-                    shape: MaterialStatePropertyAll(RoundedRectangleBorder()),
+                    shape: WidgetStatePropertyAll(RoundedRectangleBorder()),
                     visualDensity: const VisualDensity(vertical: -2.0),
                   ),
                   highlightColor: color?.withOpacity(0.16),
