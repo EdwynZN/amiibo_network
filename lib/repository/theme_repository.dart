@@ -1418,7 +1418,7 @@ class AmiiboTheme3 implements AmiiboTheme {
     setDark = dark ?? 0;
   }
 
-  ThemeData _themeFromScheme(ColorScheme scheme) {
+  ThemeData _themeFromScheme(ColorScheme scheme, [bool useSurfaceElevation = true]) {
     final overlay = scheme.primary.withOpacity(0.24);
     final inverseBrightness = scheme.brightness == Brightness.light
         ? Brightness.dark
@@ -1442,7 +1442,7 @@ class AmiiboTheme3 implements AmiiboTheme {
       visualDensity: const VisualDensity(),
       // COLOR CONFIGURATION
       appBarTheme: AppBarTheme(
-        elevation: 2.0,
+        elevation: !useSurfaceElevation ? 0 : 2.0,
         shadowColor: scheme.shadow,
         surfaceTintColor: scheme.surfaceTint,
         scrolledUnderElevation: 8.0,
@@ -1466,16 +1466,16 @@ class AmiiboTheme3 implements AmiiboTheme {
       bannerTheme: MaterialBannerThemeData(
         backgroundColor: scheme.tertiary,
         contentTextStyle: _textTheme.titleMedium,
-        elevation: 4.0,
+        elevation: !useSurfaceElevation ? 0 : 4.0,
       ),
       bottomAppBarTheme: BottomAppBarTheme(
         color: scheme.surface,
-        elevation: 0.0,
+        elevation: !useSurfaceElevation ? 0 : 0.0,
         height: kBottomNavigationBarHeight,
         padding: EdgeInsets.zero,
       ),
       bottomSheetTheme: BottomSheetThemeData(
-        elevation: 0.0,
+        elevation: !useSurfaceElevation ? 0 : 0.0,
         backgroundColor: Colors.transparent,
         constraints: const BoxConstraints(maxWidth: 400.0),
         shape: RoundedRectangleBorder(
@@ -1486,7 +1486,7 @@ class AmiiboTheme3 implements AmiiboTheme {
       ),
       bottomNavigationBarTheme: BottomNavigationBarThemeData(
         backgroundColor: scheme.secondaryContainer,
-        elevation: 8.0,
+        elevation: !useSurfaceElevation ? 0 : 8.0,
         type: BottomNavigationBarType.fixed,
         selectedIconTheme: const IconThemeData(),
         selectedItemColor: scheme.onSecondaryContainer,
@@ -1520,7 +1520,7 @@ class AmiiboTheme3 implements AmiiboTheme {
         shape: const RoundedRectangleBorder(
           borderRadius: BorderRadius.all(Radius.circular(8.0)),
         ),
-        elevation: 4.0,
+        elevation: !useSurfaceElevation ? 0 : 4.0,
         shadowColor: scheme.surface.withOpacity(0.12),
         surfaceTintColor: scheme.surfaceTint,
       ),
@@ -1538,7 +1538,7 @@ class AmiiboTheme3 implements AmiiboTheme {
       ),
       chipTheme: ChipThemeData(
         surfaceTintColor: scheme.surfaceTint,
-        elevation: 4.0,
+        elevation: !useSurfaceElevation ? 0 : 4.0,
         pressElevation: 6.0,
         checkmarkColor: scheme.onPrimary,
         backgroundColor: scheme.surface,
@@ -1568,7 +1568,7 @@ class AmiiboTheme3 implements AmiiboTheme {
       /// Deprecated in the future
       dialogBackgroundColor: scheme.surface,
       dialogTheme: DialogTheme(
-        elevation: 2.0,
+        elevation: !useSurfaceElevation ? 0 : 2.0,
         titleTextStyle:
             _textTheme.titleLarge!.copyWith(color: scheme.onSurface),
         contentTextStyle:
@@ -1588,9 +1588,10 @@ class AmiiboTheme3 implements AmiiboTheme {
         thickness: 0.75,
       ),
       drawerTheme: DrawerThemeData(
-        elevation: 4.0,
+        elevation: !useSurfaceElevation ? 0 : 4.0,
         shadowColor: scheme.shadow,
         backgroundColor: scheme.surface,
+        surfaceTintColor: scheme.surfaceTint,
         shape: const RoundedRectangleBorder(),
       ),
       elevatedButtonTheme: ElevatedButtonThemeData(
@@ -1603,7 +1604,7 @@ class AmiiboTheme3 implements AmiiboTheme {
               RoundedRectangleBorder(borderRadius: BorderRadius.circular(8))),
           elevation: WidgetStateProperty.resolveWith<double>((states) {
             if (states.contains(WidgetState.pressed)) return 0.0;
-            return 4.0;
+            return !useSurfaceElevation ? 0 : 4.0;
           }),
           backgroundColor:
               WidgetStateProperty.all<Color?>(scheme.secondaryContainer),
@@ -1654,14 +1655,14 @@ class AmiiboTheme3 implements AmiiboTheme {
         labelTextStyle: WidgetStateProperty.all(_textTheme.labelLarge),
       ),
       navigationDrawerTheme: NavigationDrawerThemeData(
-        elevation: 4.0,
+        elevation: !useSurfaceElevation ? 0 : 4.0,
         shadowColor: scheme.shadow,
         backgroundColor: scheme.surface,
       ),
       navigationRailTheme: NavigationRailThemeData(
         labelType: NavigationRailLabelType.selected,
         backgroundColor: scheme.primaryContainer,
-        elevation: 8.0,
+        elevation: !useSurfaceElevation ? 0 : 8.0,
         groupAlignment: 1.0,
         selectedIconTheme: IconThemeData(color: scheme.tertiary),
         selectedLabelTextStyle: __lightAccentTextTheme.bodyMedium!.apply(
@@ -1690,7 +1691,7 @@ class AmiiboTheme3 implements AmiiboTheme {
       popupMenuTheme: PopupMenuThemeData(
         textStyle: _textTheme.bodyLarge,
         color: scheme.primaryContainer,
-        elevation: 8.0,
+        elevation: !useSurfaceElevation ? 0 : 8.0,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(4.0),
           side: BorderSide(color: scheme.secondaryContainer),
@@ -1839,7 +1840,7 @@ class AmiiboTheme3 implements AmiiboTheme {
         break;
       case 2:
         final scheme = blendScheme(_darkScheme, _greyScheme, 0.75);
-        final theme = _themeFromScheme(scheme);
+        final theme = _themeFromScheme(scheme, false);
         final shape = RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(8),
           side: BorderSide(color: _darkScheme.primary),
@@ -1874,12 +1875,12 @@ class AmiiboTheme3 implements AmiiboTheme {
             modalBackgroundColor: Colors.transparent,
             constraints: const BoxConstraints(maxWidth: 400.0),
             shape: shape,
-            surfaceTintColor: _darkScheme.surface,
+            surfaceTintColor: _darkScheme.surfaceTint,
           ),
           canvasColor: Colors.black,
           cardColor: Colors.black,
           cardTheme: CardTheme(
-            surfaceTintColor: _darkScheme.primaryContainer,
+            surfaceTintColor: null,
             color: Colors.black,
             margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
             shape: RoundedRectangleBorder(
@@ -1899,10 +1900,10 @@ class AmiiboTheme3 implements AmiiboTheme {
             shape: shape,
             surfaceTintColor: _darkScheme.surfaceTint,
             backgroundColor: Colors.black,
-            elevation: 2.0,
+            elevation: 0.0,
           ),
           drawerTheme: DrawerThemeData(
-            elevation: 3.0,
+            elevation: 0.0,
             shadowColor: _darkScheme.shadow,
             surfaceTintColor: _darkScheme.surfaceTint,
             backgroundColor: Colors.black,

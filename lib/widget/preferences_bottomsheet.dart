@@ -49,7 +49,7 @@ class _BottomSheetSort extends StatelessWidget {
         return Material(
           color: theme.colorScheme.surface,
           shape: theme.bottomSheetTheme.shape,
-          elevation: 4.0,
+          elevation: theme.cardTheme.elevation ?? 0.0,
           surfaceTintColor: theme.colorScheme.surfaceTint,
           clipBehavior: Clip.antiAlias,
           child: ListTileTheme.merge(
@@ -130,10 +130,12 @@ class _BottomSheetSort extends StatelessWidget {
                                   TextSpan(
                                     children: [
                                       WidgetSpan(
-                                        alignment: PlaceholderAlignment.baseline,
+                                        alignment:
+                                            PlaceholderAlignment.baseline,
                                         baseline: TextBaseline.ideographic,
                                         child: Padding(
-                                          padding: const EdgeInsets.only(right: 4.0),
+                                          padding:
+                                              const EdgeInsets.only(right: 4.0),
                                           child: Icon(
                                             Icons.warning_rounded,
                                             size: 16.0,
