@@ -69,7 +69,7 @@ class _AmiiboCard extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final key = ref.watch(keyAmiiboProvider);
     final theme = Theme.of(context);
-    final cardColor = theme.colorScheme.background;
+    final cardColor = theme.colorScheme.surface;
 
     final Widget letf = Column(
       crossAxisAlignment: CrossAxisAlignment.start,

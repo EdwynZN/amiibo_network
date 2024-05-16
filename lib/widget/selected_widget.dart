@@ -127,7 +127,7 @@ class _AnimatedSelectionState<T extends AnimatedSelection>
               margin: EdgeInsets.zero,
               color: select.selected
                   ? theme.colorScheme.secondary
-                  : theme.colorScheme.surfaceVariant,
+                  : theme.colorScheme.surfaceContainerHighest,
               elevation: 12.0,
               shape: const RoundedRectangleBorder(
                 borderRadius: BorderRadius.vertical(
@@ -194,7 +194,7 @@ class _AnimatedSelectedListTileState
 
     final asset = Material(
       elevation: select.selected ? 12.0 : 2.0,
-      color: theme.colorScheme.background,
+      color: theme.colorScheme.surface,
       surfaceTintColor: theme.colorScheme.primary,
       type: MaterialType.card,
       child: Padding(

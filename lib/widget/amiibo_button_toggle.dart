@@ -25,7 +25,7 @@ Future<UserAttributes?> _ownedBottomSheet(
   };
   return showModalBottomSheet<UserAttributes>(
     context: context,
-    backgroundColor: theme.colorScheme.background,
+    backgroundColor: theme.colorScheme.surface,
     useSafeArea: false,
     elevation: 4.0,
     enableDrag: false,
@@ -78,7 +78,7 @@ class WishedOutlinedButton extends ConsumerWidget {
     final color = preferencesPalette.wishContainer.withOpacity(0.24);
     return IconButton.outlined(
       style: const ButtonStyle(
-        shape: MaterialStatePropertyAll(
+        shape: WidgetStatePropertyAll(
           RoundedRectangleBorder(
             borderRadius: BorderRadius.all(Radius.circular(16.0)),
           ),
@@ -135,7 +135,7 @@ class OwnedOutlinedButton extends ConsumerWidget {
     final color = preferencesPalette.ownContainer.withOpacity(0.24);
     return IconButton.outlined(
       style: const ButtonStyle(
-        shape: MaterialStatePropertyAll(
+        shape: WidgetStatePropertyAll(
           RoundedRectangleBorder(
             borderRadius: BorderRadius.all(Radius.circular(16.0)),
           ),

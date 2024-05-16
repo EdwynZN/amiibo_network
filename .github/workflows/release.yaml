@@ -10,7 +10,7 @@ on:
 env:
   java_version: '11.0.14+9'
   ruby_version: '2.7.2'
-  flutter_version: '3.19.6'
+  flutter_version: '3.22.0'
   
 jobs:
   android-internal:
@@ -19,7 +19,7 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           fetch-depth: 0
       
@@ -122,10 +122,10 @@ jobs:
         run: bundle exec fastlane android internal
       
       - name: Create Github Release
-        uses: "marvinpinto/action-automatic-releases@latest"
+        uses: softprops/action-gh-release@v2
         with:
-          repo_token: "${{ secrets.GITHUB_TOKEN }}"
-          automatic_release_tag: "${{ steps.pubspec.outputs.data }}"
+          token: "${{ secrets.GITHUB_TOKEN }}"
+          tag_name: "${{ steps.pubspec.outputs.data }}"
           draft: true
           prerelease: true
           files: build/app/outputs/flutter-apk/app-release.apk

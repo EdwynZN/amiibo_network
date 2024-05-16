@@ -110,7 +110,7 @@ class SingleStat extends HookConsumerWidget {
     );
 
     return Card(
-      color: theme.colorScheme.background,
+      color: theme.colorScheme.surface,
       elevation: 6.0,
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
@@ -196,7 +196,7 @@ class _StatContainer extends StatelessWidget {
               text: ' $subtitle',
               style: TextStyle(
                 fontSize: 12.0,
-                color: theme.colorScheme.onBackground.withOpacity(0.72),
+                color: theme.colorScheme.onSurface.withOpacity(0.72),
                 fontFeatures: const [
                   FontFeature.tabularFigures(),
                 ],
@@ -207,7 +207,7 @@ class _StatContainer extends StatelessWidget {
         style: TextStyle(
           fontSize: 14.0,
           fontWeight: FontWeight.w600,
-          color: theme.colorScheme.onBackground,
+          color: theme.colorScheme.onSurface,
         ),
         maxLines: 1,
       ),
@@ -233,7 +233,7 @@ class StatChip extends StatelessWidget {
       label: Text(title),
       avatar: Icon(Icons.add),
       side: BorderSide(color: backgroundColor),
-      color: MaterialStatePropertyAll(Theme.of(context).colorScheme.background),
+      color: WidgetStatePropertyAll(Theme.of(context).colorScheme.surface),
       elevation: 12.0,
       surfaceTintColor: backgroundColor,
       labelStyle: TextStyle(

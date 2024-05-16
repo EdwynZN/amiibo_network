@@ -209,14 +209,14 @@ class _Subtitle extends StatelessWidget {
                 TextSpan(
                   text: translate.amiibo_usage_count(count!),
                   style: theme.primaryTextTheme.titleSmall?.copyWith(
-                    color: theme.colorScheme.onBackground,
+                    color: theme.colorScheme.onSurface,
                     fontWeight: FontWeight.w900,
                   ),
                 ),
               ],
       ),
       style: theme.primaryTextTheme.labelLarge?.copyWith(
-        color: theme.colorScheme.onBackground,
+        color: theme.colorScheme.onSurface,
         letterSpacing: 0.15,
       ),
       overflow: TextOverflow.ellipsis,

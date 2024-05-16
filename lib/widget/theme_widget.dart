@@ -213,7 +213,7 @@ class ThemeButton extends HookConsumerWidget {
               );
             },
             child: _selectWidget(
-                theme, Theme.of(context).colorScheme.onBackground),
+                theme, Theme.of(context).colorScheme.onSurface),
           ),
         ),
         onLongPress: openDialog ? () => dialog(context) : null,
