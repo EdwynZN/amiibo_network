@@ -1,34 +1,34 @@
+import 'dart:ui' as ui;
+
 import 'package:amiibo_network/enum/hidden_types.dart';
+import 'package:amiibo_network/generated/l10n.dart';
+import 'package:amiibo_network/model/amiibo.dart';
 import 'package:amiibo_network/model/preferences.dart';
+import 'package:amiibo_network/model/search_result.dart';
 import 'package:amiibo_network/model/stat.dart';
 import 'package:amiibo_network/repository/theme_repository.dart';
 import 'package:amiibo_network/resources/resources.dart';
-import 'package:amiibo_network/riverpod/preferences_provider.dart';
-import 'package:amiibo_network/riverpod/service_provider.dart';
-import 'package:amiibo_network/riverpod/theme_provider.dart';
 import 'package:amiibo_network/service/info_package.dart';
+import 'package:amiibo_network/service/service.dart';
 import 'package:amiibo_network/utils/format_color_on_theme.dart';
 import 'package:amiibo_network/utils/stat_utils.dart';
 import 'package:amiibo_network/utils/theme_extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'dart:ui' as ui;
-import 'package:amiibo_network/service/service.dart';
-import 'package:amiibo_network/generated/l10n.dart';
-import 'package:amiibo_network/model/search_result.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:amiibo_network/model/amiibo.dart';
 
 class Screenshot {
   late ThemeData theme;
   late Preferences userPreferences;
   late MaterialLocalizations materialLocalizations;
+  late String owned;
+  late String wished;
+  late String boxed;
+  late String unboxed;
+  late String createdOn;
+  bool _showOwnedTypes = false;
   Color? color;
   Color? onOwned;
   Color? onWished;
-  String? owned;
-  String? wished;
-  String? createdOn;
 
   final S _translate = S.current;
   late Service _service;
@@ -37,7 +37,7 @@ class Screenshot {
   final double margin = 20.0;
   final double padding = 10.0;
   final double space = 0.25;
-  final double banner = 100;
+  final double banner = 120;
 
   static final Screenshot _instance = Screenshot._();
   factory Screenshot() => _instance;
@@ -71,6 +71,7 @@ class Screenshot {
     BuildContext context,
     Preferences preferences,
     Service service,
+    bool showOwnedTypes,
   ) {
     _service = service;
     final mediaBrightness = MediaQuery.of(context).platformBrightness;
@@ -78,6 +79,7 @@ class Screenshot {
     final preferencesTheme = theme.extension<PreferencesExtension>() ??
         PreferencesExtension.brigthness(theme.brightness);
     this
+      .._showOwnedTypes = showOwnedTypes
       ..color = colorOnThemeMode(themeMode, mediaBrightness)
       ..ownedCardPaint.color = preferencesTheme.ownContainer
       ..wishedCardPaint.color = preferencesTheme.wishContainer
@@ -86,27 +88,8 @@ class Screenshot {
       ..theme = theme
       ..userPreferences = preferences
       ..owned = _translate.owned
-      ..wished = _translate.wished
-      ..createdOn = _translate.createdOn
-      ..materialLocalizations = MaterialLocalizations.of(context);
-  }
-
-  void update(WidgetRef ref, BuildContext context) {
-    final mediaBrightness = MediaQuery.of(context).platformBrightness;
-    final themeMode = ref.read(themeProvider).preferredTheme;
-    final theme = Theme.of(context);
-    final preferences = theme.extension<PreferencesExtension>() ??
-        PreferencesExtension.brigthness(theme.brightness);
-    this
-      .._service = ref.read(serviceProvider)
-      ..color = colorOnThemeMode(themeMode, mediaBrightness)
-      ..ownedCardPaint.color = preferences.ownContainer
-      ..wishedCardPaint.color = preferences.wishContainer
-      ..onOwned = preferences.onOwnContainer
-      ..onWished = preferences.onWishContainer
-      ..theme = theme
-      ..userPreferences = ref.read(personalProvider)
-      ..owned = _translate.owned
+      ..boxed = _translate.boxed
+      ..unboxed = _translate.unboxed
       ..wished = _translate.wished
       ..createdOn = _translate.createdOn
       ..materialLocalizations = MaterialLocalizations.of(context);
@@ -225,9 +208,9 @@ class Screenshot {
 
     if (isRecording || stats.isEmpty || general.isEmpty) return null;
 
-    final String? longestWord = owned!.length > wished!.length ? owned : wished;
-    final bool fontFeatureStyle =
-        !userPreferences.usePercentage && InfoPackage.instance.isFontFeatureEnable;
+    final String? longestWord = owned.length > wished.length ? owned : wished;
+    final bool fontFeatureStyle = !userPreferences.usePercentage &&
+        InfoPackage.instance.isFontFeatureEnable;
 
     /// Activate fontFeature only if StatMode is Ratio and isFontFeatureEnable is true for this device
     TextSpan longestParagraphTest = TextSpan(
@@ -303,11 +286,12 @@ class Screenshot {
     for (Stat singleStat in stats) {
       final Offset _offset = Offset(xOffset, yOffset);
       final RRect cardPath = RRect.fromRectAndRadius(
-          Rect.fromPoints(
-              _offset,
-              _offset.translate(
-                  cardSizeX + 2 * padding, cardSizeY + 2 * padding)),
-          Radius.circular(8.0));
+        Rect.fromPoints(
+            _offset,
+            _offset.translate(
+                cardSizeX + 2 * padding, cardSizeY + 2 * padding)),
+        Radius.circular(8.0),
+      );
       final double? ownedPercent =
           singleStat.owned.toDouble() / singleStat.total.toDouble();
       final double? wishedPercent =
@@ -443,16 +427,17 @@ class Screenshot {
   }
 
   Future<void> _paintBanner(Size size, Stat stats) async {
-    final Color? textColor = theme.textTheme.titleLarge!.color;
+    final Color? textColor = theme.textTheme.titleLarge?.color;
     final Paint paint = Paint();
     String date = materialLocalizations.formatFullDate(DateTime.now());
     date = date.substring(date.indexOf(' ') + 1);
-    final double iconSize = banner * 0.8;
-    final double iconMargin = (banner * 0.2) / 2.0;
+    final double iconSize = banner * 0.65;
+    final double iconMargin = (banner * 0.16) / 2.0;
     final double maxX = size.width;
     final double maxY = size.height;
     final usePercentage = userPreferences.usePercentage;
-    final bool fontFeatureStyle = !usePercentage && InfoPackage.instance.isFontFeatureEnable;
+    final bool fontFeatureStyle =
+        !usePercentage && InfoPackage.instance.isFontFeatureEnable;
 
     /// Activate fontFeature only if StatMode is Ratio and isFontFeatureEnable is true for this device
 
@@ -464,30 +449,12 @@ class Screenshot {
           style: TextStyle(color: textColor, fontSize: 15, wordSpacing: 35),
           text: '\u00A9 ',
         ),
-        const TextSpan(text: '   ', style: TextStyle(letterSpacing: 8.0)),
-        TextSpan(
-          style: TextStyle(
-            color: Colors.black,
-            fontSize: fontFeatureStyle ? 35 : 30,
-            fontWeight: FontWeight.w300,
-            background: ownedCardPaint,
-            fontFeatures: [
-              if (fontFeatureStyle) ui.FontFeature.enable('frac'),
-              if (!fontFeatureStyle) ui.FontFeature.tabularFigures()
-            ],
-          ),
-          text:
-              ' ${StatUtils.parseStat(stats.owned, stats.total, usePercentage: usePercentage)} ',
-        ),
-        TextSpan(
-          style: TextStyle(color: textColor, fontSize: 35),
-          text: ' $owned',
-        ),
         const TextSpan(text: '   ', style: TextStyle(letterSpacing: 2.0)),
         TextSpan(
           style: TextStyle(
-            color: Colors.black,
+            color: onWished,
             fontSize: fontFeatureStyle ? 35 : 30,
+            height: 1.5,
             fontWeight: FontWeight.w300,
             background: wishedCardPaint,
             fontFeatures: [
@@ -497,16 +464,59 @@ class Screenshot {
           ),
           text:
               ' ${StatUtils.parseStat(stats.wished, stats.total, usePercentage: usePercentage)} ',
+          children: [
+            TextSpan(
+              style: TextStyle(color: onWished, fontSize: 35),
+              text: ' $wished ',
+            ),
+          ],
         ),
+        const TextSpan(text: ' ', style: TextStyle(letterSpacing: 8.0)),
         TextSpan(
-          style: TextStyle(color: textColor, fontSize: 35),
-          text: ' $wished',
+          style: TextStyle(
+            color: onOwned,
+            fontSize: fontFeatureStyle ? 35 : 30,
+            height: 1.5,
+            fontWeight: FontWeight.w300,
+            background: ownedCardPaint,
+            textBaseline: TextBaseline.ideographic,
+          ),
+          children: [
+            TextSpan(
+              text:
+                  ' ${StatUtils.parseStat(stats.owned, stats.total, usePercentage: usePercentage)} ',
+              style: TextStyle(
+                decoration: _showOwnedTypes ? TextDecoration.underline : TextDecoration.none,
+                decorationStyle: TextDecorationStyle.double,
+                fontFeatures: [
+                  if (fontFeatureStyle) ui.FontFeature.enable('frac'),
+                  if (!fontFeatureStyle) ui.FontFeature.tabularFigures(),
+                ],
+              ),
+              children: [TextSpan(text: ' $owned')],
+            ),
+            const TextSpan(text: '\u0020'),
+            if (_showOwnedTypes) ...[
+              TextSpan(
+                style: const TextStyle(decoration: TextDecoration.underline),
+                text: '${boxed}',
+                children: [TextSpan(text: ' ${stats.boxed}')],
+              ),
+              const TextSpan(text: '  '),
+              TextSpan(
+                style: const TextStyle(decoration: TextDecoration.underline),
+                text: '${unboxed}',
+                children: [TextSpan(text: ' ${stats.unboxed}')],
+              ),
+              const TextSpan(text: '\u0020'),
+            ],
+          ],
         ),
       ],
     );
     TextPainter(text: aNetwork, textDirection: TextDirection.ltr)
       ..layout(minWidth: maxX - 125 - margin)
-      ..paint(_canvas!, Offset(125, maxY - margin - 75));
+      ..paint(_canvas!, Offset(125, maxY - margin - 90));
 
     TextSpan createdDate = TextSpan(
         style: TextStyle(color: textColor, fontSize: 25),
@@ -527,12 +537,16 @@ class Screenshot {
         // ignore: invalid_return_type_for_catch_error
         .catchError((e) => null);
 
-    if (color != null)
+    if (color != null) {
       paint.colorFilter = ColorFilter.mode(color!, BlendMode.srcIn);
-
-    if (appIcon != null)
-      _canvas!.drawImage(appIcon,
-          Offset(margin, maxY - margin - iconSize - iconMargin), paint);
+    }
+    if (appIcon != null) {
+      _canvas!.drawImage(
+        appIcon,
+        Offset(margin, maxY - 2 * margin - iconSize - iconMargin),
+        paint,
+      );
+    }
 
     appIcon?.dispose();
   }

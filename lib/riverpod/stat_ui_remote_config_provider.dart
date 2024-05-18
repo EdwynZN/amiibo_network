@@ -7,5 +7,5 @@ final remoteStatUIProvider = Provider<bool>(
 );
 
 final remoteOwnedCategoryProvider = Provider<bool>(
-  (_) => FirebaseRemoteConfig.instance.getBool(RemoteKey.ownedCategories),
+  (_) => !FirebaseRemoteConfig.instance.getBool(RemoteKey.ownedCategories),
 );
