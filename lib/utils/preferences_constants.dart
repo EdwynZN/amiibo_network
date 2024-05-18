@@ -37,4 +37,4 @@ const String sharedOwnType = 'ownType';
 /// locale index from S.delegate.supportedLocales or null
 const String sharedLanguageCode = 'localeIndex';
 /// Version of the App
-const int versionApp = 58;
+const int versionApp = 85;

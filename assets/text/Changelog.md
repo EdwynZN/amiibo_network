@@ -1,3 +1,7 @@
+## Version 2.1.10
+- Now you can change the language of the app from settings (English, French or Spanish)
+- New feature to add owned amiibos as boxed / unboxed (experimental)
+
 ## Version 2.1.61
 - Zelda y Ganondorf (mid-suavemente) from Tears of the Kingdom added
 

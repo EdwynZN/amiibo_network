@@ -1,3 +1,7 @@
+## Version 2.1.10
+- Ahora se puede cambiar el idioma en las opciones (Inglés, Francés o Español)
+- Nueva funcionalidad para agregar amiibos en caja o abiertos y cuantos (experimental)
+
 ## Version 2.1.61
 - Zelda edición Tears of the Kingdom agregado
 - Ganondorf posando suavemente edición Tears of the Kingdom agregado

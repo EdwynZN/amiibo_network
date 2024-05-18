@@ -1,3 +1,7 @@
+## Version 2.1.10
+- Vous pouvez désormais changer la langue de l'application depuis les paramètres (Anglais, Français ou Espagnol)
+- Nouvelle fonctionnalité pour ajouter des amiibos possédés en boîte/sans boîte (expérimental)
+
 ## Version 2.1.61
 - Ajout des figurines Zelda et Ganondorf (au milieu suavemente) de la série Tears of the Kingdom
 
