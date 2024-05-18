@@ -9,6 +9,7 @@ class Preferences with _$Preferences {
     required bool usePercentage,
     required bool useGrid,
     required bool ownTypes,
+    String? languageCode,
     HiddenType? ignored,
   }) = _Preferences;
 }
