@@ -16,22 +16,24 @@ class LocaleDialog extends HookConsumerWidget {
     final selectedLocale = ref.watch(localeProvider);
     final ValueNotifier<String?> state = useState(selectedLocale?.languageCode);
     return AlertDialog(
-      title: Text(translate.appearance),
+      title: Text(translate.language),
       scrollable: true,
       alignment: Alignment.center,
       content: ListBody(
         children: [
+          RadioListTile<String?>(
+            value: null,
+            groupValue: state.value,
+            title: Text(translate.system),
+            onChanged: (value) => state.value = value,
+          ),
           for (final locale in S.delegate.supportedLocales)
             RadioListTile<String?>(
               value: locale.languageCode,
               groupValue: state.value,
+              title: Text(translate.localization(locale.languageCode)),
               onChanged: (value) => state.value = value,
             ),
-          RadioListTile<String?>(
-            value: null,
-            groupValue: state.value,
-            onChanged: (value) => state.value = value,
-          ),
         ],
       ),
       actions: [

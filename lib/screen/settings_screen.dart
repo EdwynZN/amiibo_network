@@ -66,8 +66,8 @@ class SettingsPage extends ConsumerWidget {
                     onTap: () => ThemeButton.dialog(context),
                   ),
                   _CardSettings(
-                    title: translate.appearance,
-                    subtitle: translate.appearanceSubtitle,
+                    title: translate.language,
+                    subtitle: translate.languageSubtitle,
                     icon: const Icon(Icons.language),
                     onTap: () async {
                       final localeResult = await showDialog<Result<String?>>(
