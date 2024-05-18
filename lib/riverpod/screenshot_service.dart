@@ -57,6 +57,7 @@ class ScreenshotNotifier extends StateNotifier<AsyncValue<bool>> {
       context,
       localPreferences.state,
       ref.read(serviceProvider),
+      ref.read(ownTypesCategoryProvider),
     );
     state = const AsyncValue.loading();
     state = await AsyncValue.guard(() async {
@@ -116,6 +117,7 @@ class ScreenshotNotifier extends StateNotifier<AsyncValue<bool>> {
       context,
       localPreferences.state,
       ref.read(serviceProvider),
+      ref.read(ownTypesCategoryProvider),
     );
     state = const AsyncValue.loading();
     state = await AsyncValue.guard(() async {
