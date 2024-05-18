@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:amiibo_network/enum/hidden_types.dart';
 import 'package:amiibo_network/model/preferences.dart';
 import 'package:amiibo_network/riverpod/repository_provider.dart';
@@ -14,9 +16,22 @@ final hiddenCategoryProvider = Provider<HiddenType?>(
 final ownTypesCategoryProvider = Provider<bool>(
   (ref) {
     final ownedCategories = ref.watch(remoteOwnedCategoryProvider);
-    return ownedCategories && ref.watch(personalProvider.select((value) => value.ownTypes));
+    return ownedCategories &&
+        ref.watch(personalProvider.select((value) => value.ownTypes));
   },
   name: 'OwnerCategoriesFlagProvider',
+);
+
+final localeProvider = Provider<Locale?>(
+  (ref) {
+    final languageCode =
+        ref.watch(personalProvider.select((value) => value.languageCode));
+    if (languageCode == null || languageCode.isEmpty) {
+      return null;
+    }
+    return Locale.fromSubtags(languageCode: languageCode);
+  },
+  name: 'LocaleProvider',
 );
 
 final personalProvider =
@@ -26,6 +41,7 @@ final personalProvider =
     final percent = sharedProvider.getBool(sharedStatMode) ?? false;
     final grid = sharedProvider.getBool(sharedGridMode) ?? true;
     final ignored = sharedProvider.getInt(sharedIgnored) ?? 0;
+    final languageCode = sharedProvider.getString(sharedLanguageCode);
     final ownType = sharedProvider.getBool(sharedOwnType) ?? false;
     final HiddenType? categoryIgnored;
     switch (ignored) {
@@ -45,6 +61,7 @@ final personalProvider =
       useGrid: grid,
       ownTypes: ownType,
       ignored: categoryIgnored,
+      languageCode: languageCode,
     );
     return UserPreferencessNotifier(initial, ref);
   },
@@ -57,6 +74,18 @@ class UserPreferencessNotifier extends StateNotifier<Preferences> {
   UserPreferencessNotifier(super._state, this.ref);
 
   bool get isPercentage => state.usePercentage;
+
+  Future<void> forceLocale(String? newLanguageCode) async {
+    if (newLanguageCode != state.languageCode) {
+      final SharedPreferences preferences = ref.read(preferencesProvider);
+      if (newLanguageCode == null) {
+        await preferences.remove(sharedLanguageCode);
+      } else {
+        await preferences.setString(sharedLanguageCode, newLanguageCode);
+      }
+      state = state.copyWith(languageCode: newLanguageCode);
+    }
+  }
 
   Future<void> toggleOwnType(bool newValue) async {
     if (newValue != state.ownTypes) {

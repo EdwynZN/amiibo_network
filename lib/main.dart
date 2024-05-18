@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:amiibo_network/data/remote_config/model/default_remote_config.dart';
 import 'package:amiibo_network/firebase_options.dart';
 import 'package:amiibo_network/riverpod/game_provider.dart';
+import 'package:amiibo_network/riverpod/preferences_provider.dart';
 import 'package:amiibo_network/riverpod/provider_observer.dart';
 import 'package:amiibo_network/riverpod/router_provider.dart';
 import 'package:amiibo_network/service/info_package.dart';
@@ -63,9 +64,8 @@ Future<void> main() async {
       await remoteConfig.ensureInitialized();
       await remoteConfig.setConfigSettings(RemoteConfigSettings(
         fetchTimeout: const Duration(minutes: 1),
-        minimumFetchInterval: kDebugMode
-          ? const Duration(minutes: 5)
-          : const Duration(days: 1),
+        minimumFetchInterval:
+            kDebugMode ? const Duration(minutes: 5) : const Duration(days: 1),
       ));
       await remoteConfig.setDefaults(const DefaultRemoteConfig().toJson());
       if (remoteConfig.lastFetchStatus == RemoteConfigFetchStatus.success) {
@@ -135,6 +135,7 @@ class AmiiboNetwork extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final ThemeProvider themeMode = ref.watch(themeProvider);
     final router = ref.watch(routerProvider);
+    final Locale? locale = ref.watch(localeProvider);
     return MaterialApp.router(
       localizationsDelegates: [
         S.delegate,
@@ -144,6 +145,7 @@ class AmiiboNetwork extends ConsumerWidget {
       ],
       supportedLocales: S.delegate.supportedLocales,
       debugShowCheckedModeBanner: false,
+      locale: locale,
       theme: themeMode.light,
       darkTheme: themeMode.dark,
       themeMode: themeMode.preferredTheme,

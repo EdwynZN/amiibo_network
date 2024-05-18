@@ -1,4 +1,5 @@
 import 'package:amiibo_network/enum/hidden_types.dart';
+import 'package:amiibo_network/model/result.dart';
 import 'package:amiibo_network/resources/resources.dart';
 import 'package:amiibo_network/riverpod/preferences_provider.dart';
 import 'package:amiibo_network/riverpod/query_provider.dart';
@@ -7,6 +8,7 @@ import 'package:amiibo_network/riverpod/service_provider.dart';
 import 'package:amiibo_network/riverpod/theme_provider.dart';
 import 'package:amiibo_network/enum/amiibo_category_enum.dart';
 import 'package:amiibo_network/utils/format_color_on_theme.dart';
+import 'package:amiibo_network/widget/locale_selection_dialog.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -62,6 +64,23 @@ class SettingsPage extends ConsumerWidget {
                     subtitle: translate.appearanceSubtitle,
                     icon: const Icon(Icons.color_lens),
                     onTap: () => ThemeButton.dialog(context),
+                  ),
+                  _CardSettings(
+                    title: translate.language,
+                    subtitle: translate.languageSubtitle,
+                    icon: const Icon(Icons.language),
+                    onTap: () async {
+                      final localeResult = await showDialog<Result<String?>>(
+                        context: context,
+                        builder: (context) => const LocaleDialog(),
+                      );
+                      if (localeResult == null) {
+                        return;
+                      }
+                      ref
+                          .read(personalProvider.notifier)
+                          .forceLocale(localeResult.data);
+                    },
                   ),
                   _CardSettings(
                     title: translate.changelog,

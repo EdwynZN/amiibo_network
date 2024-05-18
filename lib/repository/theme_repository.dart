@@ -1615,7 +1615,7 @@ class AmiiboTheme3 implements AmiiboTheme {
             _textTheme.bodyLarge,
           ),
           overlayColor: WidgetStateProperty.all<Color>(overlay),
-          visualDensity: const VisualDensity(vertical: 2.5),
+          visualDensity: const VisualDensity(vertical: 0),
         ),
       ),
 
