@@ -11606,7 +11606,59 @@
       "jp": "202403",
       "na": null,
       "type": "Band"
+    },
+    {
+      "key": 854,
+      "id": null,
+      "amiiboSeries": "Splatoon",
+      "character": "Callie",
+      "gameSeries": "Splatoon",
+      "name": "Callie (Alterna)",
+      "au": "20240905",
+      "eu": "20240905",
+      "jp": "20240905",
+      "na": "20240905",
+      "type": "Figure"
+    },
+    {
+      "key": 855,
+      "id": null,
+      "amiiboSeries": "Splatoon",
+      "character": " Marie",
+      "gameSeries": "Splatoon",
+      "name": " Marie (Alterna)",
+      "au": "20240905",
+      "eu": "20240905",
+      "jp": "20240905",
+      "na": "20240905",
+      "type": "Figure"
+    },
+    {
+      "key": 856,
+      "id": null,
+      "amiiboSeries": "Splatoon",
+      "character": "Pearl",
+      "gameSeries": "Splatoon",
+      "name": "Pearl (Alterna)",
+      "au": "20240905",
+      "eu": "20240905",
+      "jp": "20240905",
+      "na": "20240905",
+      "type": "Figure"
+    },
+    {
+      "key": 857,
+      "id": null,
+      "amiiboSeries": "Splatoon",
+      "character": "Marina",
+      "gameSeries": "Splatoon",
+      "name": "Marina (Alterna)",
+      "au": "20240905",
+      "eu": "20240905",
+      "jp": "20240905",
+      "na": "20240905",
+      "type": "Figure"
     }
   ],
-  "lastUpdated": "2023-12-10T10:29:43.044"
+  "lastUpdated": "2024-07-20T10:00:00.000"
 }
