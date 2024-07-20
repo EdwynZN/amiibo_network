@@ -30,6 +30,7 @@ if (keystorePropertiesFile.exists()) {
 }
 
 android {
+    namespace "com.dartz.amiibo_network"
     compileSdkVersion 34
 
     lintOptions {

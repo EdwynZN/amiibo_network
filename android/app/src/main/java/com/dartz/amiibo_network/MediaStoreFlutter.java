@@ -45,7 +45,7 @@ class MediaStoreFlutter extends ContextWrapper {
             pictureContent.put(MediaStore.Images.Media.DISPLAY_NAME, nameFile + ".png");
             pictureContent.put(MediaStore.Images.Media.TITLE, nameFile);
             pictureContent.put(MediaStore.Images.Media.RELATIVE_PATH, Environment.DIRECTORY_PICTURES + File.separator + folder);
-            pictureContent.put(MediaStore.Images.Media.OWNER_PACKAGE_NAME, BuildConfig.APPLICATION_ID);
+            pictureContent.put(MediaStore.Images.Media.OWNER_PACKAGE_NAME, context.getPackageName());
             pictureContent.put(MediaStore.Images.Media.DATE_TAKEN, System.currentTimeMillis());
             imageUri = resolver.insert(imageCollection, pictureContent);
         }
@@ -125,7 +125,7 @@ class MediaStoreFlutter extends ContextWrapper {
             content.put(MediaStore.Files.FileColumns.DISPLAY_NAME, nameFile + ".json");
             content.put(MediaStore.Files.FileColumns.TITLE, nameFile);
             content.put(MediaStore.Files.FileColumns.RELATIVE_PATH, Environment.DIRECTORY_DOCUMENTS);
-            content.put(MediaStore.Files.FileColumns.OWNER_PACKAGE_NAME, BuildConfig.APPLICATION_ID);
+            content.put(MediaStore.Files.FileColumns.OWNER_PACKAGE_NAME, context.getPackageName());
             content.put(MediaStore.Files.FileColumns.DATE_TAKEN, System.currentTimeMillis());
             uri = resolver.insert(docCollection, content);
         } else {

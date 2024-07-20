@@ -8,7 +8,7 @@ on:
       - v*
 
 env:
-  java_version: '11.0.14+9'
+  java_version: '17'
   ruby_version: '2.7.2'
   flutter_version: '3.22.3'
   
