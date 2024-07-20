@@ -1,4 +1,6 @@
 package com.dartz.amiibo_network;
+
+import com.dartz.amiibo_network.R;
 import android.app.Notification;
 import android.app.NotificationChannel;
 
@@ -64,7 +66,7 @@ public class NotificationUtils extends ContextWrapper {
     private Notification createNotification(String title, String path, String actionTitle, Integer id) {
         String text = path.substring(path.lastIndexOf("/")+1);
         File file = new File(path);
-        Uri uri = FileProvider.getUriForFile(this, BuildConfig.APPLICATION_ID, file);
+        Uri uri = FileProvider.getUriForFile(this, this.getPackageName(), file);
         //Log.v("Uri: ", uri.toString());
 
         NotificationCompat.Builder notificationBuilder =

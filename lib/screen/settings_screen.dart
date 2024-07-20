@@ -16,7 +16,7 @@ import 'package:flutter/services.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:amiibo_network/service/storage.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:launch_review/launch_review.dart';
+import 'package:launch_app_store/launch_app_store.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:amiibo_network/widget/theme_widget.dart';
 import 'package:amiibo_network/widget/markdown_widget.dart';
