@@ -1,3 +1,6 @@
+## Version 2.1.92
+- Splatoon 3 alterner amiibos (Marie, Callie, Pearl & Marina)
+
 ## Version 2.1.10
 - Vous pouvez désormais changer la langue de l'application depuis les paramètres (Anglais, Français ou Espagnol)
 - Nouvelle fonctionnalité pour ajouter des amiibos possédés en boîte/sans boîte (expérimental)

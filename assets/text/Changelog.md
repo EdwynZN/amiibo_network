@@ -1,3 +1,6 @@
+## Version 2.1.92
+- Splatoon 3 alterna amiibos added (Marie, Callie, Pearl & Marina)
+
 ## Version 2.1.10
 - Now you can change the language of the app from settings (English, French or Spanish)
 - New feature to add owned amiibos as boxed / unboxed (experimental)
