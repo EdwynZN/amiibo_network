@@ -1,3 +1,6 @@
+## Version 2.1.92
+- Splatoon 3 alterna amiibos añadidos (Marie, Callie, Pearl & Marina)
+
 ## Version 2.1.10
 - Ahora se puede cambiar el idioma en las opciones (Inglés, Francés o Español)
 - Nueva funcionalidad para agregar amiibos en caja o abiertos y cuantos (experimental)
