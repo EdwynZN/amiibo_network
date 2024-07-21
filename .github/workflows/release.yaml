@@ -112,7 +112,7 @@ jobs:
           flutter build appbundle --no-pub --obfuscate --split-debug-info=build/app/outputs/aab-symbols/symbols
 
       - name: Upload aab symbols to firebase
-        uses: w9jds/firebase-action@8354b09
+        uses: w9jds/firebase-action@8354b09806f3107c9a27e22ec444f60452608104
         with:
           args: crashlytics:symbols:upload --app=${{ secrets.FIREBASE_ANDROID_APP_ID }} build/app/outputs/aab-symbols/symbols
         env:
