@@ -11639,7 +11639,7 @@
       "amiiboSeries": "Splatoon",
       "character": "Pearl",
       "gameSeries": "Splatoon",
-      "name": "Pearl (Alterna)",
+      "name": "Pearl (Side Order)",
       "au": "20240905",
       "eu": "20240905",
       "jp": "20240905",
@@ -11652,7 +11652,7 @@
       "amiiboSeries": "Splatoon",
       "character": "Marina",
       "gameSeries": "Splatoon",
-      "name": "Marina (Alterna)",
+      "name": "Marina (Side Order)",
       "au": "20240905",
       "eu": "20240905",
       "jp": "20240905",
@@ -11660,5 +11660,5 @@
       "type": "Figure"
     }
   ],
-  "lastUpdated": "2024-07-20T10:00:00.000"
+  "lastUpdated": "2024-08-02T10:00:00.000"
 }
