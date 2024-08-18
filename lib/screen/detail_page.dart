@@ -12,8 +12,9 @@ import 'package:gap/gap.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 final _nameAmiiboProvider = Provider.autoDispose
-    .family<AsyncValue<String?>, int>((ref, key) =>
-        ref.watch(detailAmiiboProvider(key)).whenData((cb) => cb?.details.name));
+    .family<AsyncValue<String?>, int>((ref, key) => ref
+        .watch(detailAmiiboProvider(key))
+        .whenData((cb) => cb?.details.name));
 
 class DetailPage extends ConsumerWidget {
   const DetailPage({Key? key}) : super(key: key);
@@ -22,17 +23,67 @@ class DetailPage extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final key = ref.watch(keyAmiiboProvider);
     final showOwnerCategories = ref.watch(ownTypesCategoryProvider);
+    final isTablet = MediaQuery.of(context).size.width >= 900;
+    final Widget body;
+    if (isTablet) {
+      final theme = Theme.of(context);
+      final cardColor = theme.colorScheme.surface;
+      body = Row(
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          SizedBox(
+            width: 450.0,
+            child: Material(
+              elevation: 2.0,
+              color: cardColor,
+              surfaceTintColor: theme.colorScheme.primary,
+              child: Column(
+                children: showOwnerCategories
+                  ? [
+                      AmiiboCard(),
+                      Gap(12.0),
+                      UserPreferenceCard(),
+                    ]
+                  : [_AmiiboCard()],
+              ),
+            ),
+          ),
+          const Expanded(
+            child: CustomScrollView(
+              slivers: [GameListWidget()],
+            ),
+          ),
+        ],
+      );
+    } else {
+      body = CustomScrollView(
+        slivers: [
+          if (showOwnerCategories) ...const [
+            SliverToBoxAdapter(child: AmiiboCard()),
+            SliverGap(12.0),
+            PreferencesSliver(),
+            SliverGap(12),
+          ] else
+            SliverToBoxAdapter(child: _AmiiboCard()),
+          const SliverPadding(
+            padding: EdgeInsets.symmetric(vertical: 8.0),
+            sliver: GameListWidget(),
+          ),
+        ],
+      );
+    }
     return Scaffold(
       appBar: AppBar(
         shadowColor: Colors.transparent,
         centerTitle: false,
         titleSpacing: 0.0,
         titleTextStyle: AppBarTheme.of(context).titleTextStyle?.copyWith(
-          fontSize: 22.0,
-          fontWeight: FontWeight.normal,
-          letterSpacing: -0.25,
-          wordSpacing: -0.15,
-        ),
+              fontSize: 22.0,
+              fontWeight: FontWeight.normal,
+              letterSpacing: -0.25,
+              wordSpacing: -0.15,
+            ),
         title: Consumer(
           builder: (context, ref, _) => ref
               .watch(_nameAmiiboProvider(key))
@@ -42,21 +93,7 @@ class DetailPage extends ConsumerWidget {
               ),
         ),
       ),
-      body: CustomScrollView(
-        slivers: [
-          if (showOwnerCategories) ...const [
-            SliverToBoxAdapter(child: AmiiboCard()),
-            SliverGap(12.0),
-            PreferencesSliver(),
-            SliverGap(12),
-          ]
-          else SliverToBoxAdapter(child: _AmiiboCard()),
-          const SliverPadding(
-            padding: EdgeInsets.symmetric(vertical: 8.0),
-            sliver: GameListWidget(),
-          ),
-        ],
-      ),
+      body: body,
     );
   }
 }

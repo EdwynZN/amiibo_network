@@ -735,7 +735,7 @@ class _FAB extends ConsumerWidget {
             )
           : const Icon(Icons.save),
       tooltip: translate.saveCollection,
-      heroTag: 'MenuFAB',
+      heroTag: 'MenuFAB${isAmiibo ? 'Amiibo' : 'Stats'}',
       onPressed: () async {
         final _screenshotProvider = ref.watch(screenshotProvider.notifier);
         final scaffoldState = ScaffoldMessenger.of(context);
