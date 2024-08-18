@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:amiibo_network/generated/l10n.dart';
 import 'package:amiibo_network/model/search_result.dart';
 import 'package:amiibo_network/model/stat.dart';
@@ -8,22 +10,46 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:sliver_tools/sliver_tools.dart';
 
-final _statsProvider = FutureProvider.autoDispose<List<Stat>>((ref) async {
+final _statsProvider = StreamProvider.autoDispose<List<Stat>>((ref) async* {
   final service = ref.watch(serviceProvider.notifier);
-  final Filter filter = ref.watch(filterProvider);
-  return <Stat>[
-    ...await service.fetchStats(
-      categoryAttributes: filter.categoryAttributes,
-      searchAttributes: filter.searchAttributes,
-      hiddenCategories: filter.hiddenType,
-    ),
-    ...await service.fetchStats(
-      group: true,
-      categoryAttributes: filter.categoryAttributes,
-      searchAttributes: filter.searchAttributes,
-      hiddenCategories: filter.hiddenType,
-    ),
-  ];
+  final streamController = StreamController<Filter>();
+
+  void listen() {
+    streamController.sink.add(ref.read(filterProvider));
+  }
+
+  service.addListener(listen);
+
+  final subscription = ref.listen(
+    filterProvider,
+    (previous, next) {
+      if (next != previous) {
+        streamController.sink.add(next);
+      }
+    },
+    fireImmediately: true,
+  );
+
+  ref.onDispose(() {
+    subscription.close();
+    service.removeListener(listen);
+    streamController.close();
+  });
+
+  yield* streamController.stream.asyncMap((filter) async => <Stat>[
+      ...await service.fetchStats(
+        categoryAttributes: filter.categoryAttributes,
+        searchAttributes: filter.searchAttributes,
+        hiddenCategories: filter.hiddenType,
+      ),
+      ...await service.fetchStats(
+        group: true,
+        categoryAttributes: filter.categoryAttributes,
+        searchAttributes: filter.searchAttributes,
+        hiddenCategories: filter.hiddenType,
+      ),
+    ],
+  );
 });
 
 class HomeBodyStats extends ConsumerWidget {

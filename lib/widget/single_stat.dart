@@ -106,6 +106,7 @@ class SingleStat extends HookConsumerWidget {
         translate,
         preference,
         theme.disabledColor,
+        stat,
       ],
     );
 
