@@ -1503,7 +1503,6 @@ class AmiiboTheme3 implements AmiiboTheme {
 
       /// Deprecated in the future
       brightness: scheme.brightness,
-      buttonBarTheme: const ButtonBarThemeData(),
       buttonTheme: ButtonThemeData(
         // Deprecated: Used in old RaisedButton/FlatButton
         textTheme: ButtonTextTheme.normal,
