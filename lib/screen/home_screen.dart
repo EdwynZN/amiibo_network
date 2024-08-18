@@ -9,7 +9,6 @@ import 'package:amiibo_network/riverpod/preferences_provider.dart';
 import 'package:amiibo_network/riverpod/query_provider.dart';
 import 'package:amiibo_network/riverpod/screenshot_service.dart';
 import 'package:amiibo_network/riverpod/select_provider.dart';
-import 'package:amiibo_network/riverpod/stat_ui_remote_config_provider.dart';
 import 'package:amiibo_network/screen/search_screen.dart';
 import 'package:amiibo_network/service/storage.dart';
 import 'package:amiibo_network/widget/dash_menu/dash_menu.dart';
@@ -37,8 +36,6 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:amiibo_network/widget/stat_header.dart';
 import 'package:amiibo_network/model/search_result.dart';
-
-const String _amiiboIcon = 'assets/collection/icon_2.webp';
 
 final AutoDisposeProvider<TitleSearch> _titleProvider =
     Provider.autoDispose<TitleSearch>((ref) {
@@ -97,7 +94,6 @@ class HomeScreenState extends ConsumerState<HomeScreen>
   late final AnimationController _animationController;
   late S translate;
   late MaterialLocalizations localizations;
-  int index = 0;
   static Widget _defaultLayoutBuilder(
       Widget? currentChild, List<Widget> previousChildren) {
     List<Widget> children = previousChildren;
@@ -190,7 +186,7 @@ class HomeScreenState extends ConsumerState<HomeScreen>
     }
   }
 
-  Future<void> _exitApp(bool canPop) async {
+  Future<void> _exitApp(bool canPop, dynamic _) async {
     if (!canPop) {
       final selected = ref.read(selectProvider);
       final query = ref.read(queryProvider.notifier);
@@ -207,28 +203,24 @@ class HomeScreenState extends ConsumerState<HomeScreen>
     final route = ModalRoute.of(context);
     final canPopModalRoute =
         route != null && route.isCurrent && route.willHandlePopInternally;
-    final isAmiiboList = index == 0;
     final canPop = canPopModalRoute || ref.watch(_canPopProvider);
-    final newStatUI = ref.watch(remoteStatUIProvider);
     return DashMenu(
       leftDrawer: CollectionDrawer(restart: _restartAnimation),
-      rightDrawer: newStatUI
-          ? Scaffold(
-              body: const CustomScrollView(
-                slivers: [
-                  SliverSafeArea(sliver: HomeBodyStats()),
-                  SliverGap(72.0),
-                ],
-              ),
-              floatingActionButton: _FAB(
-                animation: const AlwaysStoppedAnimation(1.0),
-                index: 1,
-              ),
-            )
-          : null,
+      rightDrawer: Scaffold(
+        body: const CustomScrollView(
+          slivers: [
+            SliverSafeArea(sliver: HomeBodyStats()),
+            SliverGap(72.0),
+          ],
+        ),
+        floatingActionButton: _FAB(
+          animation: const AlwaysStoppedAnimation(1.0),
+          index: 1,
+        ),
+      ),
       body: PopScope(
         canPop: canPop,
-        onPopInvoked: _exitApp,
+        onPopInvokedWithResult: _exitApp,
         child: Scaffold(
           resizeToAvoidBottomInset: false,
           //drawer: CollectionDrawer(restart: _restartAnimation),
@@ -256,61 +248,38 @@ class HomeScreenState extends ConsumerState<HomeScreen>
                       trailing: AnimatedSwitcher(
                         duration: const Duration(milliseconds: 250),
                         layoutBuilder: _defaultLayoutBuilder,
-                        child: !isAmiiboList
-                            ? const PreferencesButton()
-                            : _multipleSelection
-                                ? const _SelectedOptions()
-                                : const _DefaultOptions(),
+                        child: _multipleSelection
+                          ? const _SelectedOptions()
+                          : const _DefaultOptions(),
                       ),
                     ),
-                    if (isAmiiboList || newStatUI) ...[
-                      Builder(
-                        builder: (context) {
-                          return SliverPersistentHeader(
-                            delegate: SliverStatsHeader(
-                              topPadding: MediaQuery.of(context).padding.top,
-                              hideOptional: isAmiiboList,
-                            ),
-                            pinned: true,
-                          );
-                        },
-                      ),
-                      const SliverPadding(
-                        padding: EdgeInsets.symmetric(
-                          vertical: 12.0,
-                          horizontal: 4,
-                        ),
-                        sliver: _AmiiboListWidget(),
-                      ),
-                    ] else
-                      const HomeBodyStats(),
+                    Builder(
+                      builder: (context) {
+                        return SliverPersistentHeader(
+                          delegate: SliverStatsHeader(
+                            topPadding: MediaQuery.of(context).padding.top,
+                          ),
+                          pinned: true,
+                        );
+                      },
+                    ),
                     const SliverPadding(
-                      padding: EdgeInsets.only(bottom: 96.0),
+                      padding: EdgeInsets.symmetric(
+                        vertical: 12.0,
+                        horizontal: 4,
+                      ),
+                      sliver: _AmiiboListWidget(),
                     ),
                   ],
                 ),
               );
             },
           ),
-          extendBody: !newStatUI,
-          floatingActionButtonLocation: newStatUI
-              ? FloatingActionButtonLocation.endFloat
-              : FloatingActionButtonLocation.centerDocked,
+          floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
           floatingActionButton: _FAB(
             animation: _animationController,
-            index: newStatUI ? 0 : index,
+            index: 0,
           ),
-          bottomNavigationBar: newStatUI
-              ? null
-              : _BottomBar(
-                  animationController: _animationController,
-                  index: index,
-                  onTap: (selected) => setState(() {
-                    index = selected;
-                    _controller.jumpTo(0);
-                    ref.read(selectProvider.notifier).clearSelected();
-                  }),
-                ),
         ),
       ),
     );
@@ -558,7 +527,6 @@ class _DefaultOptions extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final newStatUI = ref.watch(remoteStatUIProvider);
     return Row(
       mainAxisSize: MainAxisSize.min,
       mainAxisAlignment: MainAxisAlignment.end,
@@ -566,12 +534,11 @@ class _DefaultOptions extends ConsumerWidget {
         const LockButton(),
         const PreferencesButton(),
         const SortCollection(),
-        if (newStatUI)
-          IconButton(
-            onPressed: () => DashMenu.of(context).openRightDrawer(),
-            tooltip: S.of(context).stats,
-            icon: const Icon(Icons.auto_graph_outlined),
-          ),
+        IconButton(
+          onPressed: () => DashMenu.maybeOf(context)?.openRightDrawer(),
+          tooltip: S.of(context).stats,
+          icon: const Icon(Icons.auto_graph_outlined),
+        ),
       ],
     );
   }
@@ -741,7 +708,7 @@ class _FAB extends ConsumerWidget {
               ),
             )
           : const Icon(Icons.save),
-      tooltip: isAmiibo ? translate.saveCollection : translate.saveStatsTooltip,
+      tooltip: translate.saveCollection,
       heroTag: 'MenuFAB',
       onPressed: () async {
         final _screenshotProvider = ref.watch(screenshotProvider.notifier);
@@ -767,82 +734,6 @@ class _FAB extends ConsumerWidget {
       child: ScaleTransition(
         scale: scale,
         child: fab,
-      ),
-    );
-  }
-}
-
-class _BottomBar extends StatelessWidget {
-  final Animation<Offset> slide;
-  final ValueChanged<int> onTap;
-  final int index;
-
-  _BottomBar({
-    // ignore: unused_element
-    super.key,
-    required AnimationController animationController,
-    required this.onTap,
-    required this.index,
-  }) : slide = Tween<Offset>(begin: const Offset(0.0, 1.0), end: Offset.zero)
-            .animate(CurvedAnimation(
-          parent: animationController,
-          curve: Interval(0.0, 1),
-        ));
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    return SlideTransition(
-      position: slide,
-      child: BottomAppBar(
-        shape: const CircularNotchedRectangle(),
-        elevation: 0.0,
-        color: theme.appBarTheme.systemOverlayStyle?.systemNavigationBarColor,
-        clipBehavior: Clip.hardEdge,
-        child: BottomNavigationBar(
-          showSelectedLabels: true,
-          showUnselectedLabels: false,
-          elevation: 0.0,
-          backgroundColor:
-              theme.appBarTheme.systemOverlayStyle?.systemNavigationBarColor,
-          iconSize: 20.0,
-          selectedLabelStyle: const TextStyle(fontSize: 11.0),
-          unselectedLabelStyle: const TextStyle(fontSize: 11.0),
-          items: [
-            BottomNavigationBarItem(
-              icon: const ImageIcon(AssetImage(_amiiboIcon)),
-              activeIcon: Container(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 16.0,
-                  vertical: 4.0,
-                ),
-                decoration: ShapeDecoration(
-                  shape: const StadiumBorder(),
-                  color: theme.colorScheme.secondaryContainer,
-                ),
-                child: const ImageIcon(AssetImage(_amiiboIcon)),
-              ),
-              label: 'Amiibos',
-            ),
-            BottomNavigationBarItem(
-              icon: const Icon(Icons.timeline),
-              activeIcon: Container(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 16.0,
-                  vertical: 4.0,
-                ),
-                decoration: ShapeDecoration(
-                  shape: const StadiumBorder(),
-                  color: theme.colorScheme.secondaryContainer,
-                ),
-                child: const Icon(Icons.timeline),
-              ),
-              label: S.of(context).stats,
-            ),
-          ],
-          currentIndex: index,
-          onTap: onTap,
-        ),
       ),
     );
   }
