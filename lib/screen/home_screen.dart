@@ -11,6 +11,7 @@ import 'package:amiibo_network/riverpod/screenshot_service.dart';
 import 'package:amiibo_network/riverpod/select_provider.dart';
 import 'package:amiibo_network/screen/search_screen.dart';
 import 'package:amiibo_network/service/storage.dart';
+import 'package:amiibo_network/utils/tablet_utils.dart';
 import 'package:amiibo_network/widget/dash_menu/dash_menu.dart';
 import 'package:amiibo_network/widget/detail/owned_bottom_sheet.dart';
 import 'package:amiibo_network/widget/list_stats.dart';
@@ -127,7 +128,7 @@ class HomeScreenState extends ConsumerState<HomeScreen>
   @override
   didChangeDependencies() {
     super.didChangeDependencies();
-    isTablet = MediaQuery.of(context).size.width >= 900;
+    isTablet = isHorizontalTablet(MediaQuery.of(context).size);
     translate = S.of(context);
     localizations = MaterialLocalizations.of(context);
   }
@@ -425,18 +426,10 @@ class _AmiiboListWidget extends HookConsumerWidget {
         }
 
         late final SliverGridDelegate grid;
-        final bool bigGrid = MediaQuery.of(context).size.width >= 600;
-        if (bigGrid)
-          grid = const SliverGridDelegateWithMaxCrossAxisExtent(
-            maxCrossAxisExtent: 192.0,
-            mainAxisSpacing: 8.0,
-          );
-        else
-          grid = const SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: 3,
-            mainAxisSpacing: 8.0,
-            mainAxisExtent: 192.0,
-          );
+        grid = const SliverGridDelegateWithMaxCrossAxisExtent(
+          maxCrossAxisExtent: 192.0,
+          mainAxisSpacing: 8.0,
+        );
         return SliverGrid(
           gridDelegate: grid,
           delegate: SliverChildBuilderDelegate(

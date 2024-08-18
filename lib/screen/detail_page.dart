@@ -1,6 +1,7 @@
 import 'package:amiibo_network/resources/resources.dart';
 import 'package:amiibo_network/riverpod/amiibo_provider.dart';
 import 'package:amiibo_network/riverpod/preferences_provider.dart';
+import 'package:amiibo_network/utils/tablet_utils.dart';
 import 'package:amiibo_network/widget/amiibo_button_toggle.dart';
 import 'package:amiibo_network/widget/card_details.dart';
 import 'package:amiibo_network/widget/detail/amiibo_header_card.dart';
@@ -23,7 +24,7 @@ class DetailPage extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final key = ref.watch(keyAmiiboProvider);
     final showOwnerCategories = ref.watch(ownTypesCategoryProvider);
-    final isTablet = MediaQuery.of(context).size.width >= 900;
+    final isTablet = isHorizontalTablet(MediaQuery.of(context).size);
     final Widget body;
     if (isTablet) {
       final theme = Theme.of(context);
@@ -40,12 +41,12 @@ class DetailPage extends ConsumerWidget {
               surfaceTintColor: theme.colorScheme.primary,
               child: Column(
                 children: showOwnerCategories
-                  ? [
-                      AmiiboCard(),
-                      Gap(12.0),
-                      UserPreferenceCard(),
-                    ]
-                  : [_AmiiboCard()],
+                    ? [
+                        AmiiboCard(),
+                        Gap(12.0),
+                        UserPreferenceCard(),
+                      ]
+                    : [_AmiiboCard()],
               ),
             ),
           ),
