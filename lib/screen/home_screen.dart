@@ -94,6 +94,7 @@ class HomeScreenState extends ConsumerState<HomeScreen>
   late final AnimationController _animationController;
   late S translate;
   late MaterialLocalizations localizations;
+  late bool isTablet;
   static Widget _defaultLayoutBuilder(
       Widget? currentChild, List<Widget> previousChildren) {
     List<Widget> children = previousChildren;
@@ -126,6 +127,7 @@ class HomeScreenState extends ConsumerState<HomeScreen>
   @override
   didChangeDependencies() {
     super.didChangeDependencies();
+    isTablet = MediaQuery.of(context).size.width >= 900;
     translate = S.of(context);
     localizations = MaterialLocalizations.of(context);
   }
@@ -204,55 +206,58 @@ class HomeScreenState extends ConsumerState<HomeScreen>
     final canPopModalRoute =
         route != null && route.isCurrent && route.willHandlePopInternally;
     final canPop = canPopModalRoute || ref.watch(_canPopProvider);
-    return DashMenu(
-      leftDrawer: CollectionDrawer(restart: _restartAnimation),
-      rightDrawer: Scaffold(
-        body: const CustomScrollView(
-          slivers: [
-            SliverSafeArea(sliver: HomeBodyStats()),
-            SliverGap(72.0),
-          ],
-        ),
-        floatingActionButton: _FAB(
-          animation: const AlwaysStoppedAnimation(1.0),
-          index: 1,
-        ),
+
+    final Widget statWidget = Scaffold(
+      key: const ValueKey<String>('ColumnStats'),
+      body: const CustomScrollView(
+        slivers: [
+          SliverSafeArea(sliver: HomeBodyStats()),
+          SliverGap(72.0),
+        ],
       ),
-      body: PopScope(
-        canPop: canPop,
-        onPopInvokedWithResult: _exitApp,
-        child: Scaffold(
-          resizeToAvoidBottomInset: false,
-          //drawer: CollectionDrawer(restart: _restartAnimation),
-          body: HookConsumer(
-            builder: (context, ref, child) {
-              final _multipleSelection = ref.watch(
-                selectProvider.select<bool>((value) => value.multipleSelected),
-              );
-              return Scrollbar(
+      floatingActionButton: _FAB(
+        animation: const AlwaysStoppedAnimation(1.0),
+        isAmiibo: false,
+      ),
+    );
+
+    final Widget body = PopScope(
+      canPop: canPop,
+      onPopInvokedWithResult: _exitApp,
+      child: Scaffold(
+        key: const ValueKey<String>('AmiiboScaffoldBody'),
+        resizeToAvoidBottomInset: false,
+        drawer: isTablet ? CollectionDrawer(restart: _restartAnimation) : null,
+        body: HookConsumer(
+          builder: (context, ref, child) {
+            final _multipleSelection = ref.watch(
+              selectProvider.select<bool>((value) => value.multipleSelected),
+            );
+            return Scrollbar(
+              controller: _controller,
+              interactive: true,
+              child: CustomScrollView(
                 controller: _controller,
-                interactive: true,
-                child: CustomScrollView(
-                  controller: _controller,
-                  slivers: <Widget>[
-                    SliverFloatingBar(
-                      floating: true,
-                      forward: _multipleSelection,
-                      snap: true,
-                      leading: _Leading(
-                        isClose: _multipleSelection,
-                        onClose: _cancelSelection,
-                      ),
-                      title: const _TitleAppBar(),
-                      onTap: _multipleSelection ? null : _search,
-                      trailing: AnimatedSwitcher(
-                        duration: const Duration(milliseconds: 250),
-                        layoutBuilder: _defaultLayoutBuilder,
-                        child: _multipleSelection
-                          ? const _SelectedOptions()
-                          : const _DefaultOptions(),
-                      ),
+                slivers: <Widget>[
+                  SliverFloatingBar(
+                    floating: true,
+                    forward: _multipleSelection,
+                    snap: true,
+                    leading: _Leading(
+                      isClose: _multipleSelection,
+                      onClose: _cancelSelection,
                     ),
+                    title: const _TitleAppBar(),
+                    onTap: _multipleSelection ? null : _search,
+                    trailing: AnimatedSwitcher(
+                      duration: const Duration(milliseconds: 250),
+                      layoutBuilder: _defaultLayoutBuilder,
+                      child: _multipleSelection
+                          ? const _SelectedOptions()
+                          : _DefaultOptions(hasDrawer: !isTablet),
+                    ),
+                  ),
+                  if (!isTablet)
                     Builder(
                       builder: (context) {
                         return SliverPersistentHeader(
@@ -263,25 +268,39 @@ class HomeScreenState extends ConsumerState<HomeScreen>
                         );
                       },
                     ),
-                    const SliverPadding(
-                      padding: EdgeInsets.symmetric(
-                        vertical: 12.0,
-                        horizontal: 4,
-                      ),
-                      sliver: _AmiiboListWidget(),
+                  const SliverPadding(
+                    padding: EdgeInsets.symmetric(
+                      vertical: 12.0,
+                      horizontal: 4,
                     ),
-                  ],
-                ),
-              );
-            },
-          ),
-          floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
-          floatingActionButton: _FAB(
-            animation: _animationController,
-            index: 0,
-          ),
+                    sliver: _AmiiboListWidget(),
+                  ),
+                ],
+              ),
+            );
+          },
+        ),
+        floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
+        floatingActionButton: _FAB(
+          animation: _animationController,
+          isAmiibo: true,
         ),
       ),
+    );
+
+    if (isTablet) {
+      return Row(
+        children: [
+          Expanded(child: body),
+          SizedBox(width: 350.0, child: statWidget),
+        ],
+      );
+    }
+
+    return DashMenu(
+      leftDrawer: CollectionDrawer(restart: _restartAnimation),
+      rightDrawer: statWidget,
+      body: body,
     );
   }
 }
@@ -501,7 +520,12 @@ class _Leading extends HookConsumerWidget {
       } else if (isClose) {
         onClose();
       } else {
-        DashMenu.of(context).openDrawer();
+        final dashMenu = DashMenu.maybeOf(context);
+        if (dashMenu != null) {
+          dashMenu.openDrawer();
+        } else {
+          Scaffold.of(context).openDrawer();
+        }
       }
     }, [effectiveSearch, isClose, onClose]);
     final icon = ImplicitIcon(key: const Key('Menu'), forward: isForward);
@@ -523,7 +547,9 @@ class _Leading extends HookConsumerWidget {
 }
 
 class _DefaultOptions extends ConsumerWidget {
-  const _DefaultOptions({Key? key}) : super(key: key);
+  final bool hasDrawer;
+
+  const _DefaultOptions({Key? key, required this.hasDrawer}) : super(key: key);
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -534,11 +560,12 @@ class _DefaultOptions extends ConsumerWidget {
         const LockButton(),
         const PreferencesButton(),
         const SortCollection(),
-        IconButton(
-          onPressed: () => DashMenu.maybeOf(context)?.openRightDrawer(),
-          tooltip: S.of(context).stats,
-          icon: const Icon(Icons.auto_graph_outlined),
-        ),
+        if (hasDrawer)
+          IconButton(
+            onPressed: () => DashMenu.of(context).openRightDrawer(),
+            tooltip: S.of(context).stats,
+            icon: const Icon(Icons.auto_graph_outlined),
+          ),
       ],
     );
   }
@@ -678,7 +705,7 @@ class _FAB extends ConsumerWidget {
     // ignore: unused_element
     super.key,
     required Animation<double> animation,
-    required int index,
+    required this.isAmiibo,
   })  : scale = Tween<double>(begin: 0.25, end: 1.0).animate(CurvedAnimation(
           parent: animation,
           curve: Interval(0.25, 1.0, curve: Curves.decelerate),
@@ -687,8 +714,7 @@ class _FAB extends ConsumerWidget {
             .animate(CurvedAnimation(
           parent: animation,
           curve: Interval(0.0, 1),
-        )),
-        isAmiibo = index == 0;
+        ));
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
