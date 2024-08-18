@@ -1450,7 +1450,16 @@ class AmiiboTheme3 implements AmiiboTheme {
           statusBarBrightness: inverseBrightness,
           statusBarIconBrightness: inverseBrightness,
           systemNavigationBarIconBrightness: inverseBrightness,
-          systemNavigationBarColor: scheme.surface,
+          systemNavigationBarColor: ElevationOverlay.applySurfaceTint(
+            scheme.surface,
+            scheme.surfaceTint,
+            2.0,
+          ),
+          systemNavigationBarDividerColor: ElevationOverlay.applySurfaceTint(
+            scheme.surface,
+            scheme.surfaceTint,
+            6.0,
+          ),
           systemStatusBarContrastEnforced: false,
           statusBarColor: Colors.transparent,
         ),

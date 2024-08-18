@@ -59,21 +59,21 @@ class SingleStat extends HookConsumerWidget {
               : stat.owned.toString(),
         );
         final List<Widget> ownerDetailsList = showOwnerDetails && stat.owned > 0
-          ? [
-            _StatContainer(
-              assetIcon: NetworkIcons.lockedBoxSelected,
-              indicatorColor: preference.ownPrimary,
-              title: translate.boxed,
-              subtitle: stat.boxed.toString(),
-            ),
-            _StatContainer(
-              assetIcon: NetworkIcons.openBoxSelected,
-              indicatorColor: preference.ownPrimary,
-              title: translate.unboxed,
-              subtitle: stat.unboxed.toString(),
-            ),
-          ]
-          : const [];
+            ? [
+                _StatContainer(
+                  assetIcon: NetworkIcons.lockedBoxSelected,
+                  indicatorColor: preference.ownPrimary,
+                  title: translate.boxed,
+                  subtitle: stat.boxed.toString(),
+                ),
+                _StatContainer(
+                  assetIcon: NetworkIcons.openBoxSelected,
+                  indicatorColor: preference.ownPrimary,
+                  title: translate.unboxed,
+                  subtitle: stat.unboxed.toString(),
+                ),
+              ]
+            : const [];
         final Widget wishedContainer = _StatContainer(
           indicatorColor: preference.wishContainer,
           title: translate.wished,
@@ -112,7 +112,7 @@ class SingleStat extends HookConsumerWidget {
 
     return Card(
       color: theme.colorScheme.surface,
-      elevation: 6.0,
+      elevation: 12.0,
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
         child: Column(

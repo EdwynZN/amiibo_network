@@ -34,19 +34,19 @@ class DetailPage extends ConsumerWidget {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           SizedBox(
-            width: 450.0,
+            width: 400.0,
             child: Material(
               elevation: 2.0,
               color: cardColor,
               surfaceTintColor: theme.colorScheme.primary,
               child: Column(
                 children: showOwnerCategories
-                    ? [
+                    ? const [
                         AmiiboCard(),
                         Gap(12.0),
                         UserPreferenceCard(),
                       ]
-                    : [_AmiiboCard()],
+                    : const [_AmiiboCard()],
               ),
             ),
           ),
@@ -191,9 +191,9 @@ class _AmiiboCard extends ConsumerWidget {
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-            Expanded(flex: 4, child: letf),
+            Expanded(flex: 2, child: letf),
             const VerticalDivider(indent: 0.0, endIndent: 0.0, width: 24.0),
-            const Expanded(flex: 7, child: _AmiiboInfo()),
+            const Expanded(flex: 3, child: _AmiiboInfo()),
           ],
         ),
       ),

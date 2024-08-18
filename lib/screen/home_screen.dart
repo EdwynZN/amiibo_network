@@ -203,22 +203,42 @@ class HomeScreenState extends ConsumerState<HomeScreen>
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     final route = ModalRoute.of(context);
     final canPopModalRoute =
         route != null && route.isCurrent && route.willHandlePopInternally;
     final canPop = canPopModalRoute || ref.watch(_canPopProvider);
 
-    final Widget statWidget = Scaffold(
+    final Widget statWidget = Material(
       key: const ValueKey<String>('ColumnStats'),
-      body: const CustomScrollView(
-        slivers: [
-          SliverSafeArea(sliver: HomeBodyStats()),
-          SliverGap(72.0),
+      type: MaterialType.card,
+      color: theme.colorScheme.surface,
+      surfaceTintColor: theme.colorScheme.surfaceTint,
+      elevation: 2.0,
+      child: Stack(
+        fit: StackFit.passthrough,
+        children: [
+          const Positioned.fill(
+            child: CustomScrollView(
+              slivers: [
+                SliverSafeArea(sliver: HomeBodyStats()),
+                SliverGap(72.0),
+              ],
+            ),
+          ),
+          Positioned(
+            right: 0.0,
+            bottom: 0.0,
+            child: Container(
+              margin: const EdgeInsets.only(right: 16.0, bottom: 16.0),
+              alignment: Alignment.centerRight,
+              child: _FAB(
+                animation: const AlwaysStoppedAnimation(1.0),
+                isAmiibo: false,
+              ),
+            ),
+          ),
         ],
-      ),
-      floatingActionButton: _FAB(
-        animation: const AlwaysStoppedAnimation(1.0),
-        isAmiibo: false,
       ),
     );
 
