@@ -18,5 +18,6 @@ void main() {
     expect(File(NetworkIcons.lockedBoxSelected).existsSync(), isTrue);
     expect(File(NetworkIcons.openBox).existsSync(), isTrue);
     expect(File(NetworkIcons.openBoxSelected).existsSync(), isTrue);
+    expect(File(NetworkIcons.superMarioToad).existsSync(), isTrue);
   });
 }

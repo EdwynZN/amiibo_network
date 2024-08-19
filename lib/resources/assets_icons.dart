@@ -17,4 +17,5 @@ class NetworkIcons {
       'assets/icons/locked_box_selected.webp';
   static const String openBox = 'assets/icons/open_box.webp';
   static const String openBoxSelected = 'assets/icons/open_box_selected.webp';
+  static const String superMarioToad = 'assets/icons/super_mario_toad.webp';
 }
