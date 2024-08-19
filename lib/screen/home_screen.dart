@@ -475,9 +475,9 @@ class _AmiiboListWidget extends HookConsumerWidget {
           );
         }
 
-        late final SliverGridDelegate grid;
-        grid = const SliverGridDelegateWithMaxCrossAxisExtent(
-          maxCrossAxisExtent: 192.0,
+        const grid = SliverGridDelegateWithMaxCrossAxisExtent(
+          maxCrossAxisExtent: 160.0,
+          childAspectRatio: 0.78,
           mainAxisSpacing: 8.0,
         );
         return SliverGrid(
