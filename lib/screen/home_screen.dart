@@ -9,6 +9,7 @@ import 'package:amiibo_network/riverpod/preferences_provider.dart';
 import 'package:amiibo_network/riverpod/query_provider.dart';
 import 'package:amiibo_network/riverpod/screenshot_service.dart';
 import 'package:amiibo_network/riverpod/select_provider.dart';
+import 'package:amiibo_network/riverpod/stats_amiibo_provider.dart';
 import 'package:amiibo_network/screen/search_screen.dart';
 import 'package:amiibo_network/service/storage.dart';
 import 'package:amiibo_network/utils/tablet_utils.dart';
@@ -215,42 +216,84 @@ class HomeScreenState extends ConsumerState<HomeScreen>
       color: theme.colorScheme.surface,
       surfaceTintColor: theme.colorScheme.surfaceTint,
       elevation: 2.0,
-      child: Stack(
-        fit: StackFit.passthrough,
-        children: [
-          const Positioned.fill(
-            child: CustomScrollView(
-              slivers: [
-                SliverSafeArea(sliver: HomeBodyStats()),
-                SliverGap(72.0),
-              ],
-            ),
+      child: Consumer(
+        builder: (context, ref, child) {
+          final hasStats = ref.watch(
+            statsProvider.select((stats) {
+              return stats.maybeWhen(
+                data: (data) {
+                  if (data.isEmpty) {
+                    return false;
+                  } else if (data.length == 1) {
+                    return data.first.total != 0;
+                  }
+                  return false;
+                },
+                orElse: () => false,
+              );
+            }),
+          );
+          return Stack(
+            fit: StackFit.passthrough,
+            children: [
+              child!,
+              if (hasStats)
+                Positioned(
+                  right: 0.0,
+                  bottom: 0.0,
+                  child: Container(
+                    margin: const EdgeInsets.only(right: 16.0, bottom: 16.0),
+                    alignment: Alignment.centerRight,
+                    child: _FAB(
+                      animation: const AlwaysStoppedAnimation(1.0),
+                      isAmiibo: false,
+                    ),
+                  ),
+                ),
+            ],
+          );
+        },
+        child: const Positioned.fill(
+          child: CustomScrollView(
+            slivers: [
+              SliverSafeArea(sliver: HomeBodyStats()),
+              SliverGap(72.0),
+            ],
           ),
-          Positioned(
-            right: 0.0,
-            bottom: 0.0,
-            child: Container(
-              margin: const EdgeInsets.only(right: 16.0, bottom: 16.0),
-              alignment: Alignment.centerRight,
-              child: _FAB(
-                animation: const AlwaysStoppedAnimation(1.0),
-                isAmiibo: false,
-              ),
-            ),
-          ),
-        ],
+        ),
       ),
     );
 
     final Widget body = PopScope(
       canPop: canPop,
       onPopInvokedWithResult: _exitApp,
-      child: Scaffold(
-        key: const ValueKey<String>('AmiiboScaffoldBody'),
-        resizeToAvoidBottomInset: false,
-        drawer: isTablet ? CollectionDrawer(restart: _restartAnimation) : null,
-        body: HookConsumer(
-          builder: (context, ref, child) {
+      child: Consumer(
+        builder: (context, ref, innerBody) {
+          final hasAmiibos = ref.watch(
+            amiiboHomeListProvider.select((amiiboList) {
+              return amiiboList.maybeWhen(
+                data: (data) => data.isNotEmpty,
+                orElse: () => false,
+              );
+            }),
+          );
+          return Scaffold(
+            key: const ValueKey<String>('AmiiboScaffoldBody'),
+            resizeToAvoidBottomInset: false,
+            drawer:
+                isTablet ? CollectionDrawer(restart: _restartAnimation) : null,
+            body: innerBody,
+            floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
+            floatingActionButton: hasAmiibos
+                ? _FAB(
+                    animation: _animationController,
+                    isAmiibo: true,
+                  )
+                : null,
+          );
+        },
+        child: HookBuilder(
+          builder: (context) {
             final _multipleSelection = ref.watch(
               selectProvider.select<bool>((value) => value.multipleSelected),
             );
@@ -301,11 +344,6 @@ class HomeScreenState extends ConsumerState<HomeScreen>
             );
           },
         ),
-        floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
-        floatingActionButton: _FAB(
-          animation: _animationController,
-          isAmiibo: true,
-        ),
       ),
     );
 
@@ -349,35 +387,26 @@ class _AmiiboListWidget extends HookConsumerWidget {
     return amiiboList.maybeWhen(
       error: (_, __) => const SliverToBoxAdapter(),
       orElse: () {
-        late final List<Amiibo>? data;
-        if (amiiboList is AsyncData<List<Amiibo>>)
-          data = amiiboList.value;
-        else
-          data = null;
+        late final List<Amiibo>? data =
+            amiiboList is AsyncData<List<Amiibo>> ? amiiboList.value : null;
         if (data != null && data.isEmpty) {
-          late final Widget child;
           final theme = Theme.of(context);
           final S translate = S.of(context);
-          if (!isCustom)
-            child = Text(
-              translate.emptyPage,
-              textAlign: TextAlign.center,
-              style: theme.textTheme.headlineMedium!,
-            );
-          else
-            child = Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(
-                    translate.emptyPage,
-                    style: const TextStyle(
-                      fontSize: 24.0,
-                      fontWeight: FontWeight.w600,
-                      height: 1.25,
-                    ),
+          final Widget child = Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                  translate.emptyPage,
+                  style: const TextStyle(
+                    fontSize: 24.0,
+                    fontWeight: FontWeight.w600,
+                    height: 1.25,
                   ),
+                  textAlign: TextAlign.center,
+                ),
+                if (isCustom) ...[
                   const Gap(24.0),
                   ElevatedButton.icon(
                     style: theme.textButtonTheme.style?.copyWith(
@@ -407,8 +436,9 @@ class _AmiiboListWidget extends HookConsumerWidget {
                     label: Text(translate.emptyPageAction),
                   ),
                 ],
-              ),
-            );
+              ],
+            ),
+          );
           return SliverFillRemaining(
             hasScrollBody: false,
             child: Center(child: child),
