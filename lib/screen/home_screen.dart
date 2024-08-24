@@ -2,6 +2,7 @@ import 'package:amiibo_network/enum/amiibo_category_enum.dart';
 import 'package:amiibo_network/model/amiibo.dart';
 import 'package:amiibo_network/model/title_search.dart';
 import 'package:amiibo_network/repository/theme_repository.dart';
+import 'package:amiibo_network/resources/resources.dart';
 import 'package:amiibo_network/riverpod/amiibo_provider.dart';
 import 'package:amiibo_network/riverpod/analytics._provider.dart';
 import 'package:amiibo_network/riverpod/lock_provider.dart';
@@ -12,6 +13,7 @@ import 'package:amiibo_network/riverpod/select_provider.dart';
 import 'package:amiibo_network/riverpod/stats_amiibo_provider.dart';
 import 'package:amiibo_network/screen/search_screen.dart';
 import 'package:amiibo_network/service/storage.dart';
+import 'package:amiibo_network/utils/empty_page_random.dart';
 import 'package:amiibo_network/utils/tablet_utils.dart';
 import 'package:amiibo_network/widget/dash_menu/dash_menu.dart';
 import 'package:amiibo_network/widget/detail/owned_bottom_sheet.dart';
@@ -392,56 +394,81 @@ class _AmiiboListWidget extends HookConsumerWidget {
         if (data != null && data.isEmpty) {
           final theme = Theme.of(context);
           final S translate = S.of(context);
-          final Widget child = Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(
-                  translate.emptyPage,
-                  style: const TextStyle(
-                    fontSize: 24.0,
-                    fontWeight: FontWeight.w600,
-                    height: 1.25,
-                  ),
-                  textAlign: TextAlign.center,
-                ),
-                if (isCustom) ...[
-                  const Gap(24.0),
-                  ElevatedButton.icon(
-                    style: theme.textButtonTheme.style?.copyWith(
-                      textStyle: WidgetStateProperty.all(
-                          theme.textTheme.headlineMedium),
+          final Widget child = HookBuilder(
+            key: const ValueKey('EmptyMessageBuilder'),
+            builder: (context) {
+              final messageType = useMemoized(
+                () => EmptyPageRandomizer.instance.randomeMessage,
+              );
+              return Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    ImageIcon(
+                      AssetImage(
+                        switch (messageType) {
+                          EmptyMessageType.pokemon => GameIcons.pokemon,
+                          EmptyMessageType.pokeball => GameIcons.pokeball,
+                          EmptyMessageType.mario => GameIcons.superMario,
+                          EmptyMessageType.mushroom => GameIcons.superMarioToad,
+                          EmptyMessageType.pacman => GameIcons.pacman,
+                          EmptyMessageType.pacmanGhost => GameIcons.pacmanGhost,
+                          EmptyMessageType.link => GameIcons.tlozSword,
+                        },
+                      ),
+                      size: 196,
                     ),
-                    onPressed: () async {
-                      final filter = ref.read(queryProvider.notifier);
-                      final List<String> figures = filter.customFigures;
-                      final List<String> cards = filter.customCards;
-                      bool save = await showDialog<bool>(
-                            context: context,
-                            builder: (BuildContext context) =>
-                                CustomQueryWidget(
-                              translate.category(AmiiboCategory.AmiiboSeries),
-                              figures: figures,
-                              cards: cards,
-                            ),
-                          ) ??
-                          false;
-                      if (save)
-                        await ref
-                            .read(queryProvider.notifier)
-                            .updateCustom(figures, cards);
-                    },
-                    icon: const Icon(Icons.create_outlined),
-                    label: Text(translate.emptyPageAction),
-                  ),
-                ],
-              ],
-            ),
+                    const Gap(12),
+                    Text(
+                      translate.emptyMessageType(messageType),
+                      style: const TextStyle(
+                        fontSize: 24.0,
+                        fontWeight: FontWeight.w600,
+                        height: 1.25,
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+                    if (isCustom) ...[
+                      const Gap(24.0),
+                      ElevatedButton.icon(
+                        style: theme.textButtonTheme.style?.copyWith(
+                          textStyle: WidgetStateProperty.all(
+                              theme.textTheme.headlineMedium),
+                        ),
+                        onPressed: () async {
+                          final filter = ref.read(queryProvider.notifier);
+                          final List<String> figures = filter.customFigures;
+                          final List<String> cards = filter.customCards;
+                          bool save = await showDialog<bool>(
+                                context: context,
+                                builder: (BuildContext context) =>
+                                    CustomQueryWidget(
+                                  translate
+                                      .category(AmiiboCategory.AmiiboSeries),
+                                  figures: figures,
+                                  cards: cards,
+                                ),
+                              ) ??
+                              false;
+                          if (save)
+                            await ref
+                                .read(queryProvider.notifier)
+                                .updateCustom(figures, cards);
+                        },
+                        icon: const Icon(Icons.create_outlined),
+                        label: Text(translate.emptyPageAction),
+                      ),
+                    ],
+                  ],
+                ),
+              );
+            },
           );
           return SliverFillRemaining(
             hasScrollBody: false,
-            child: Center(child: child),
+            child: child,
           );
         }
         final useGrid = ref.watch(personalProvider.select((p) => p.useGrid));
