@@ -1,4 +1,3 @@
-import 'package:amiibo_network/generated/l10n.dart';
 import 'package:amiibo_network/model/stat.dart';
 import 'package:amiibo_network/riverpod/stats_amiibo_provider.dart';
 import 'package:amiibo_network/widget/single_stat.dart';
@@ -11,19 +10,10 @@ class HomeBodyStats extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final S translate = S.of(context);
     final snapshot = ref.watch(statsProvider);
     if (snapshot is AsyncData<List<Stat>>) {
       if (snapshot.value.length <= 1)
-        return SliverFillRemaining(
-          hasScrollBody: false,
-          child: Center(
-            child: Text(
-              translate.emptyPage,
-              style: Theme.of(context).textTheme.headlineMedium,
-            ),
-          ),
-        );
+        return SliverToBoxAdapter();
       final Stat generalStats = snapshot.value.first;
       final List<Stat> stats = snapshot.value.sublist(1);
       return MultiSliver(

@@ -101,5 +101,6 @@
   "showGrid": "Cuadrícula",
   "hide_caution": "Precaución, deshabilitar una funcionalidad la escondera en toda la app",
   "export_complete": "Archivo guardado",
-  "select_user_attribute": "Seleccione una categoría"
+  "select_user_attribute": "Seleccione una categoría",
+  "emptyMessageType": "{choice, select, pokemon {Tengo que atraparlos!} pokeball {Tengo que atraparlos!} mario {Lo lamento, pero tu colección parece estar en otro castillo} mushroom {1 colección extra aquí} pacman {Habmre por amiibos} pacmanGhost {¿Hambre por amiibos?} link {Hyaaa!! (No hay amiibos aquí)} other {No hay nada que mostrar . . . aún}}"
 }

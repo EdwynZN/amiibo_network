@@ -113,7 +113,7 @@ class _EmptyGames extends StatelessWidget {
       child: Column(
         children: [
           ImageIcon(
-            const AssetImage(GameIcons.superMarioToad),
+            const AssetImage(GameIcons.nintendoSwitch),
             size: 196,
             color: theme.colorScheme.primary,
           ),
