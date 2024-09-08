@@ -92,6 +92,12 @@ class ThemeProvider extends ChangeNotifier {
     }
   }
 
+  Future<void> selectMode(ThemeMode mode) async {
+    await themeDB(mode);
+    _preferredTheme = mode;
+    notifyListeners();
+  }
+
   Future<void> toggleThemeMode() async {
     switch (_preferredTheme) {
       case ThemeMode.system:
