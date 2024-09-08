@@ -14,10 +14,8 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 class SliverStatsHeader extends SliverPersistentHeaderDelegate {
   final double topPadding;
-  final bool hideOptional;
 
   const SliverStatsHeader({
-    this.hideOptional = true,
     required this.topPadding,
   }) : assert(topPadding >= 0.0);
 
@@ -57,10 +55,7 @@ class SliverStatsHeader extends SliverPersistentHeaderDelegate {
       padding: const EdgeInsets.fromLTRB(6.0, 6.0, 6.0, 0.0),
       alignment: Alignment.bottomCenter,
       decoration: decoration,
-      child: Visibility(
-        visible: hideOptional,
-        child: const _LinearStat(),
-      ),
+      child: const _LinearStat(),
     );
     final double sigma = 5.0 * (shrinkOffset / minExtent).clamp(0.15, 1.0);
     return ClipRect(

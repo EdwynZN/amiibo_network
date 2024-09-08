@@ -11609,7 +11609,7 @@
     },
     {
       "key": 854,
-      "id": null,
+      "id": "0801000004360402",
       "amiiboSeries": "Splatoon",
       "character": "Callie",
       "gameSeries": "Splatoon",
@@ -11622,7 +11622,7 @@
     },
     {
       "key": 855,
-      "id": null,
+      "id": "0802000004370402",
       "amiiboSeries": "Splatoon",
       "character": " Marie",
       "gameSeries": "Splatoon",
@@ -11635,7 +11635,7 @@
     },
     {
       "key": 856,
-      "id": null,
+      "id": "0803000004380402",
       "amiiboSeries": "Splatoon",
       "character": "Pearl",
       "gameSeries": "Splatoon",
@@ -11648,7 +11648,7 @@
     },
     {
       "key": 857,
-      "id": null,
+      "id": "0804000004390402",
       "amiiboSeries": "Splatoon",
       "character": "Marina",
       "gameSeries": "Splatoon",
@@ -11660,5 +11660,5 @@
       "type": "Figure"
     }
   ],
-  "lastUpdated": "2024-08-02T10:00:00.000"
+  "lastUpdated": "2024-09-05T10:00:00.000"
 }

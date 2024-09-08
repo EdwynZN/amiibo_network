@@ -1,3 +1,5 @@
+// ignore_for_file: unused_element
+
 import 'dart:io';
 import 'package:amiibo_network/generated/l10n.dart';
 import 'package:amiibo_network/model/game.dart';
@@ -6,6 +8,7 @@ import 'package:amiibo_network/riverpod/amiibo_provider.dart';
 import 'package:amiibo_network/riverpod/game_provider.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:gap/gap.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:sliver_tools/sliver_tools.dart';
 import 'dart:math' as math;
@@ -20,31 +23,32 @@ class GameListWidget extends ConsumerWidget {
     return ref.watch(gameProvider(id)).when(
           skipLoadingOnRefresh: false,
           data: (platforms) {
-            return MultiSliver(
-              children: [
-                if (platforms.gamesSwitch != null &&
-                    platforms.gamesSwitch!.isNotEmpty)
-                  _PlatformGameList(
-                    games: platforms.gamesSwitch!,
-                    title: translate.switch_platform,
-                    asset: NetworkIcons.switchPlatform,
-                  ),
-                if (platforms.games3DS != null &&
-                    platforms.games3DS!.isNotEmpty)
-                  _PlatformGameList(
-                    games: platforms.games3DS!,
-                    title: translate.console_3DS_platform,
-                    asset: NetworkIcons.dsPlatform,
-                  ),
-                if (platforms.gamesWiiU != null &&
-                    platforms.gamesWiiU!.isNotEmpty)
-                  _PlatformGameList(
-                    games: platforms.gamesWiiU!,
-                    title: translate.wiiu_platform,
-                    asset: NetworkIcons.wiiUPlatform,
-                  ),
-              ],
-            );
+            final games = <Widget>[
+              if (platforms.gamesSwitch != null &&
+                  platforms.gamesSwitch!.isNotEmpty)
+                _PlatformGameList(
+                  games: platforms.gamesSwitch!,
+                  title: translate.switch_platform,
+                  asset: NetworkIcons.switchPlatform,
+                ),
+              if (platforms.games3DS != null && platforms.games3DS!.isNotEmpty)
+                _PlatformGameList(
+                  games: platforms.games3DS!,
+                  title: translate.console_3DS_platform,
+                  asset: NetworkIcons.dsPlatform,
+                ),
+              if (platforms.gamesWiiU != null &&
+                  platforms.gamesWiiU!.isNotEmpty)
+                _PlatformGameList(
+                  games: platforms.gamesWiiU!,
+                  title: translate.wiiu_platform,
+                  asset: NetworkIcons.wiiUPlatform,
+                ),
+            ];
+            if (games.isEmpty) {
+              games.add(const _EmptyGames());
+            }
+            return MultiSliver(children: games);
           },
           loading: () =>
               const SliverToBoxAdapter(child: LinearProgressIndicator()),
@@ -54,8 +58,7 @@ class GameListWidget extends ConsumerWidget {
               if (e.response != null)
                 switch (e.response!.statusCode) {
                   case 404:
-                    child = Text(translate.no_games_found,
-                        textAlign: TextAlign.center);
+                    child = const _EmptyGames();
                     break;
                   default:
                     child = Text(
@@ -96,6 +99,40 @@ class GameListWidget extends ConsumerWidget {
             );
           },
         );
+  }
+}
+
+class _EmptyGames extends StatelessWidget {
+  const _EmptyGames({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    return Padding(
+      padding: const EdgeInsets.all(24.0),
+      child: Column(
+        children: [
+          ImageIcon(
+            const AssetImage(GameIcons.nintendoSwitch),
+            size: 196,
+            color: theme.colorScheme.primary,
+          ),
+          const Gap(12),
+          SizedBox(
+            width: 340.0,
+            child: Text(
+              S.of(context).no_games_found,
+              style: theme.textTheme.headlineMedium?.copyWith(
+                fontSize: 24.0,
+                fontWeight: FontWeight.w500,
+                color: theme.colorScheme.primary,
+              ),
+              textAlign: TextAlign.center,
+            ),
+          ),
+        ],
+      ),
+    );
   }
 }
 
@@ -232,7 +269,6 @@ class _SliverAnimatedPersistentHeader extends SliverPersistentHeaderDelegate {
   final String asset;
 
   const _SliverAnimatedPersistentHeader({
-    // ignore: unused_element
     this.vsync,
     required this.title,
     required this.asset,

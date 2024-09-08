@@ -22,6 +22,11 @@ groups:
     class_name: NetworkIcons
     file_name: assets_icons
     types: [ .png, .jpg, .jpeg, .webp ]
+  - paths:
+      - assets/game_icons
+    class_name: GameIcons
+    file_name: game_assets_icons
+    types: [ .png, .jpg, .jpeg, .webp ]
 #  - path: assets/vectors
 #    class_name: Svgs
 #    package: res
