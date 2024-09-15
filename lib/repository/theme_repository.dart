@@ -597,8 +597,7 @@ class _Theme implements AmiiboTheme {
               color: _darkAccentColor,
               width: 1,
             )),
-            backgroundColor:
-                WidgetStateProperty.all<Color>(Colors.transparent),
+            backgroundColor: WidgetStateProperty.all<Color>(Colors.transparent),
             foregroundColor: WidgetStateProperty.all<Color>(_darkAccentColor),
           )),
           textButtonTheme: TextButtonThemeData(
@@ -608,8 +607,7 @@ class _Theme implements AmiiboTheme {
             //enableFeedback: false,
             shape: WidgetStateProperty.all<OutlinedBorder>(
                 RoundedRectangleBorder(borderRadius: BorderRadius.circular(8))),
-            backgroundColor:
-                WidgetStateProperty.all<Color>(Colors.transparent),
+            backgroundColor: WidgetStateProperty.all<Color>(Colors.transparent),
             foregroundColor: WidgetStateProperty.all<Color>(_darkAccentColor),
             overlayColor: WidgetStateProperty.all<Color>(
                 _darkAccentColor.withOpacity(0.24)),
@@ -805,8 +803,7 @@ class _Theme implements AmiiboTheme {
               color: _darkAccentColor,
               width: 1,
             )),
-            backgroundColor:
-                WidgetStateProperty.all<Color>(Colors.transparent),
+            backgroundColor: WidgetStateProperty.all<Color>(Colors.transparent),
             foregroundColor: WidgetStateProperty.all<Color>(_darkAccentColor),
           )),
           textButtonTheme: TextButtonThemeData(
@@ -816,8 +813,7 @@ class _Theme implements AmiiboTheme {
             //enableFeedback: false,
             shape: WidgetStateProperty.all<OutlinedBorder>(
                 RoundedRectangleBorder(borderRadius: BorderRadius.circular(8))),
-            backgroundColor:
-                WidgetStateProperty.all<Color>(Colors.transparent),
+            backgroundColor: WidgetStateProperty.all<Color>(Colors.transparent),
             foregroundColor: WidgetStateProperty.all<Color>(_darkAccentColor),
             overlayColor: WidgetStateProperty.all<Color>(
                 _darkAccentColor.withOpacity(0.24)),
@@ -830,8 +826,7 @@ class _Theme implements AmiiboTheme {
                   shape: WidgetStateProperty.all<OutlinedBorder>(
                       RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(8))),
-                  elevation:
-                      WidgetStateProperty.resolveWith<double>((states) {
+                  elevation: WidgetStateProperty.resolveWith<double>((states) {
                     if (states.contains(WidgetState.pressed)) return 0.0;
                     return 8.0;
                   }),
@@ -1029,8 +1024,7 @@ class _Theme implements AmiiboTheme {
             )),
             overlayColor: WidgetStateProperty.all<Color>(
                 _darkAccentColor.withOpacity(0.5)),
-            backgroundColor:
-                WidgetStateProperty.all<Color>(Colors.transparent),
+            backgroundColor: WidgetStateProperty.all<Color>(Colors.transparent),
             foregroundColor: WidgetStateProperty.all<Color>(_darkAccentColor),
           )),
           textButtonTheme: TextButtonThemeData(
@@ -1040,8 +1034,7 @@ class _Theme implements AmiiboTheme {
             //enableFeedback: false,
             shape: WidgetStateProperty.all<OutlinedBorder>(
                 RoundedRectangleBorder(borderRadius: BorderRadius.circular(8))),
-            backgroundColor:
-                WidgetStateProperty.all<Color>(Colors.transparent),
+            backgroundColor: WidgetStateProperty.all<Color>(Colors.transparent),
             foregroundColor: WidgetStateProperty.all<Color>(_darkAccentColor),
             overlayColor: WidgetStateProperty.all<Color>(
                 _darkAccentColor.withOpacity(0.24)),
@@ -1418,7 +1411,8 @@ class AmiiboTheme3 implements AmiiboTheme {
     setDark = dark ?? 0;
   }
 
-  ThemeData _themeFromScheme(ColorScheme scheme, [bool useSurfaceElevation = true]) {
+  ThemeData _themeFromScheme(ColorScheme scheme,
+      [bool useSurfaceElevation = true]) {
     final overlay = scheme.primary.withOpacity(0.24);
     final inverseBrightness = scheme.brightness == Brightness.light
         ? Brightness.dark
@@ -1650,14 +1644,17 @@ class AmiiboTheme3 implements AmiiboTheme {
         iconColor: scheme.onSurface,
         selectedTileColor: scheme.secondaryContainer,
         selectedColor: scheme.onSecondaryContainer,
+        shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.all(Radius.circular(16.0)),
+        ),
       ),
       menuBarTheme: const MenuBarThemeData(),
       menuButtonTheme: const MenuButtonThemeData(),
       menuTheme: const MenuThemeData(),
       navigationBarTheme: NavigationBarThemeData(
         backgroundColor: scheme.surface,
-        iconTheme: WidgetStateProperty.all(
-            IconThemeData(color: scheme.onSurface)),
+        iconTheme:
+            WidgetStateProperty.all(IconThemeData(color: scheme.onSurface)),
         indicatorColor: scheme.primaryContainer,
         labelBehavior: NavigationDestinationLabelBehavior.alwaysShow,
         labelTextStyle: WidgetStateProperty.all(_textTheme.labelLarge),
@@ -1779,18 +1776,28 @@ class AmiiboTheme3 implements AmiiboTheme {
       splashColor: scheme.tertiaryContainer.withOpacity(0.24),
       switchTheme: SwitchThemeData(
         thumbColor: WidgetStateProperty.resolveWith<Color?>((states) {
-          if (states.contains(WidgetState.disabled)) return null;
-          if (states.contains(WidgetState.focused) ||
-              states.contains(WidgetState.pressed))
+          if (states.contains(WidgetState.disabled)) {
+            return null;
+          } else if (states.contains(WidgetState.focused) ||
+              states.contains(WidgetState.pressed)) {
             return scheme.primaryContainer;
-          return scheme.primary;
+          } else if (states.contains(WidgetState.selected)) {
+            return scheme.primary;
+          }
+          return null;
         }),
         trackColor: WidgetStateProperty.resolveWith<Color?>((states) {
-          if (states.contains(WidgetState.disabled)) return null;
-          if (states.contains(WidgetState.focused) ||
-              states.contains(WidgetState.pressed)) return scheme.primary;
-          return scheme.primaryContainer;
+          if (states.contains(WidgetState.disabled)) {
+            return null;
+          } else if (states.contains(WidgetState.focused) ||
+              states.contains(WidgetState.pressed)) {
+            return scheme.onPrimaryContainer.withOpacity(0.24);
+          } else if (states.contains(WidgetState.selected)) {
+            return scheme.primary.withOpacity(0.24);
+          }
+          return null;
         }),
+        trackOutlineWidth: WidgetStatePropertyAll(2.0),
       ),
       tabBarTheme: const TabBarTheme(),
       textButtonTheme: TextButtonThemeData(
@@ -1801,8 +1808,7 @@ class AmiiboTheme3 implements AmiiboTheme {
           shape: WidgetStateProperty.all<OutlinedBorder>(
               RoundedRectangleBorder(borderRadius: BorderRadius.circular(8))),
           backgroundColor: WidgetStateProperty.all<Color>(Colors.transparent),
-          foregroundColor:
-              WidgetStateProperty.all<Color>(scheme.onSurface),
+          foregroundColor: WidgetStateProperty.all<Color>(scheme.onSurface),
           overlayColor: WidgetStateProperty.all<Color>(overlay),
         ),
       ),
@@ -1921,6 +1927,9 @@ class AmiiboTheme3 implements AmiiboTheme {
             iconColor: _darkScheme.onSurface,
             selectedTileColor: _darkScheme.secondaryContainer,
             selectedColor: _darkScheme.onSecondaryContainer,
+            shape: const RoundedRectangleBorder(
+              borderRadius: BorderRadius.all(Radius.circular(16.0)),
+            ),
           ),
           snackBarTheme: SnackBarThemeData(
             backgroundColor: const Color(0xFF212121),

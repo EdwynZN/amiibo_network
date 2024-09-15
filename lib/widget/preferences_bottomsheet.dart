@@ -2,6 +2,7 @@ import 'package:amiibo_network/enum/hidden_types.dart';
 import 'package:amiibo_network/generated/l10n.dart';
 import 'package:amiibo_network/riverpod/preferences_provider.dart';
 import 'package:amiibo_network/riverpod/stat_ui_remote_config_provider.dart';
+import 'package:amiibo_network/widget/feature_disable_message_card.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -121,42 +122,7 @@ class _BottomSheetSort extends StatelessWidget {
                           delegate: SliverChildListDelegate([
                             child!,
                             const Gap(8.0),
-                            Card(
-                              margin: const EdgeInsets.symmetric(vertical: 8.0),
-                              color: theme.colorScheme.tertiaryContainer,
-                              child: Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: Text.rich(
-                                  TextSpan(
-                                    children: [
-                                      WidgetSpan(
-                                        alignment:
-                                            PlaceholderAlignment.baseline,
-                                        baseline: TextBaseline.ideographic,
-                                        child: Padding(
-                                          padding:
-                                              const EdgeInsets.only(right: 4.0),
-                                          child: Icon(
-                                            Icons.warning_rounded,
-                                            size: 16.0,
-                                            color: theme.colorScheme
-                                                .onTertiaryContainer,
-                                          ),
-                                        ),
-                                      ),
-                                      TextSpan(text: translate.hide_caution),
-                                    ],
-                                  ),
-                                  softWrap: true,
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.w600,
-                                    color:
-                                        theme.colorScheme.onTertiaryContainer,
-                                    height: 1.5,
-                                  ),
-                                ),
-                              ),
-                            ),
+                            const FeatureDisableMessageCard(),
                             if (ownedCategoriesRemote) ...[
                               Consumer(builder: (context, ref, _) {
                                 return SwitchListTile.adaptive(

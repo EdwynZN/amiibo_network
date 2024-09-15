@@ -102,5 +102,11 @@
   "hide_caution": "Attention, la désactivation d'une caractéristique la masquera dans l'ensemble de l'application",
   "export_complete": "Exportation terminée",
   "select_user_attribute": "Choisir une catégorie",
-  "emptyMessageType": "{choice, select, other {Rien à voir ici ... encore}}"
+  "emptyMessageType": "{choice, select, other {Rien à voir ici ... encore}}",
+  "about": "À propos",
+  "support": "Support",
+  "color_mode": "Aspect",
+  "amiibo_type": "Type d'Amiibo",
+  "export_subtitle": "Sauvegarder un fichier de votre collection",
+  "import_subtitle": "Restaurez votre collection à partir d'un fichier"
 }

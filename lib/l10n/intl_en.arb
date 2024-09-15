@@ -38,8 +38,8 @@
   "sure": "Sure",
   "light": "Light",
   "dark": "Dark",
-  "auto": "Auto",
-  "themeMode": "{choice, select, system {Auto} light {Light} dark {Dark} other {Auto}}",
+  "auto": "System",
+  "themeMode": "{choice, select, system {System} light {Light} dark {Dark} other {Auto}}",
   "mode": "Theme Mode",
   "lightTheme": "Light Theme",
   "darkTheme": "Dark Theme",
@@ -102,5 +102,11 @@
   "hide_caution": "Caution, disabling a feature will hide it from all aspects of the app",
   "export_complete": "Export completed!",
   "select_user_attribute": "Select a category",
-  "emptyMessageType": "{choice, select, pokemon {Gotta collect 'em all} pokeball {Gotta collect 'em all} mario {Your collection is in another castle} mushroom {1UP Collection this way} pacman {Hungry for amiibos} pacmanGhost {Hungry for amiibos?} link {Hyaaa!! (No amiibos here)} other {Nothing to see here. . .yet}}"
+  "emptyMessageType": "{choice, select, pokemon {Gotta collect 'em all} pokeball {Gotta collect 'em all} mario {Your collection is in another castle} mushroom {1UP Collection this way} pacman {Hungry for amiibos} pacmanGhost {Hungry for amiibos?} link {Hyaaa!! (No amiibos here)} other {Nothing to see here. . .yet}}",
+  "about": "About",
+  "support": "Support",
+  "color_mode": "Look and feel",
+  "amiibo_type": "Amiibo type",
+  "export_subtitle": "Save a file of your collection",
+  "import_subtitle": "Restore your collection from a file"
 }
