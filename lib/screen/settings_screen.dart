@@ -87,7 +87,7 @@ class _AppearanceListWidget extends ConsumerWidget {
               return _ListSettings(
                 title: translate.appearance,
                 subtitle: translate.themeMode(mode),
-                icon: const Icon(Icons.color_lens),
+                icon: const Icon(Icons.color_lens_outlined),
                 onTap: () => ThemeButton.dialog(context),
               );
             },
@@ -243,13 +243,13 @@ class _FeatureListWidgetState extends ConsumerState<_FeatureListWidget> {
           _ListSettings(
             title: translate.export,
             subtitle: translate.export_subtitle,
-            icon: const Icon(Icons.file_upload),
+            icon: const ImageIcon(AssetImage(NetworkIcons.fileExport)),
             onTap: _writePermission,
           ),
           _ListSettings(
             title: translate.import,
             subtitle: translate.import_subtitle,
-            icon: const Icon(Icons.file_download),
+            icon: const ImageIcon(AssetImage(NetworkIcons.fileImport)),
             onTap: _openFileExplorer,
           ),
           if (ownedCategoriesRemote)
@@ -345,7 +345,7 @@ class _AboutListWidget extends StatelessWidget {
           _ListSettings(
             title: translate.changelog,
             subtitle: translate.changelogSubtitle,
-            icon: const Icon(Icons.build),
+            icon: const Icon(Icons.build_outlined),
             onTap: () {
               showDialog(
                 context: context,
@@ -359,7 +359,7 @@ class _AboutListWidget extends StatelessWidget {
           _ListSettings(
             title: translate.credits,
             subtitle: translate.creditsSubtitle,
-            icon: const Icon(Icons.theaters),
+            icon: const Icon(Icons.theaters_outlined),
             onTap: () => showDialog(
               context: context,
               builder: (context) => MarkdownReader(
@@ -371,7 +371,7 @@ class _AboutListWidget extends StatelessWidget {
           _ListSettings(
             title: translate.privacyPolicy,
             subtitle: translate.privacySubtitle,
-            icon: const Icon(Icons.help),
+            icon: const Icon(Icons.policy_outlined),
             onTap: () => showDialog(
               context: context,
               builder: (context) => MarkdownReader(
@@ -414,12 +414,12 @@ class _SupportListWidget extends ConsumerWidget {
           const Gap(4.0),
           _ListSettings(
             title: 'Github',
-            icon: const Icon(Icons.code),
+            icon: const ImageIcon(AssetImage(NetworkIcons.github)),
             onTap: () => _launchURL(github, context),
           ),
           _ListSettings(
             title: translate.reportBug,
-            icon: const Icon(Icons.bug_report),
+            icon: const Icon(Icons.bug_report_outlined),
             onTap: () => _launchURL(reportIssue, context),
           ),
           _ListSettings(
@@ -506,7 +506,7 @@ class __SaveCollectionState extends ConsumerState<_SaveCollection> {
     return _ListSettings(
       title: translate.saveCollection,
       subtitle: translate.saveCollectionSubtitle,
-      icon: const Icon(Icons.save),
+      icon: const ImageIcon(AssetImage(NetworkIcons.jpg)),
       onTap: () async {
         if (!(await permissionGranted(scaffoldState))) return;
         final hidden = ref.watch(hiddenCategoryProvider);
