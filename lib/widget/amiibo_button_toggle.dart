@@ -1,7 +1,7 @@
 import 'package:amiibo_network/generated/l10n.dart';
 import 'package:amiibo_network/model/amiibo.dart';
 import 'package:amiibo_network/model/update_amiibo_user_attributes.dart';
-import 'package:amiibo_network/repository/theme_repository.dart';
+import 'package:amiibo_network/repository/theme_mode_scheme_repository.dart';
 import 'package:amiibo_network/riverpod/amiibo_provider.dart';
 import 'package:amiibo_network/riverpod/lock_provider.dart';
 import 'package:amiibo_network/riverpod/preferences_provider.dart';

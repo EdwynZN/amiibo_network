@@ -1,5 +1,5 @@
 import 'package:amiibo_network/enum/hidden_types.dart';
-import 'package:amiibo_network/repository/theme_repository.dart';
+import 'package:amiibo_network/repository/theme_mode_scheme_repository.dart';
 import 'package:amiibo_network/resources/resources.dart';
 import 'package:amiibo_network/riverpod/preferences_provider.dart';
 import 'package:amiibo_network/riverpod/query_provider.dart';
