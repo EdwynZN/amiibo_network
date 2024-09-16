@@ -35,7 +35,7 @@ class SplashScreenState extends ConsumerState<SplashScreen>
   @override
   void initState() {
     super.initState();
-    themeMode = ref.read(themeProvider).preferredTheme;
+    themeMode = ref.read(themeProvider).preferredMode;
     _animationController = AnimationController(
         duration: Duration(seconds: 3),
         vsync: this,
@@ -96,9 +96,10 @@ class SplashScreenState extends ConsumerState<SplashScreen>
                         useValueChanged(
                           snapshot.hasData,
                           (_, __) => _animationController
-                            .forward().whenCompleteOrCancel(
-                              () => context.replaceNamed('home'),
-                            ),
+                              .forward()
+                              .whenCompleteOrCancel(
+                                () => context.replaceNamed('home'),
+                              ),
                         );
                         final S translate = S.of(ctx);
                         int key = 0;

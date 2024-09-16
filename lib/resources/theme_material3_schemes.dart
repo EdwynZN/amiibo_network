@@ -1,3 +1,4 @@
+import 'package:amiibo_network/resources/material3_schemes.dart';
 import 'package:flutter/material.dart';
 import 'package:material_color_utilities/material_color_utilities.dart';
 
@@ -170,42 +171,6 @@ class TonalColor extends ColorSwatch<int> {
         99: swatch[99]!,
         100: swatch[100]!,
       },
-    );
-  }
-}
-
-/// Work in progress
-class Material3Theme {
-  final TonalColor primary;
-  final TonalColor secondary;
-  final TonalColor tertiary;
-  final TonalColor error;
-  final TonalColor neutral;
-  final TonalColor neutralVariant;
-
-  const Material3Theme({
-    required this.primary,
-    required this.secondary,
-    required this.tertiary,
-    required this.error,
-    required this.neutral,
-    required this.neutralVariant,
-  });
-}
-
-class Material3Schemes {
-  final ColorScheme light;
-  final ColorScheme dark;
-
-  const Material3Schemes({required this.light, required this.dark});
-
-  factory Material3Schemes.blend(
-    Material3Schemes original,
-    Material3Schemes destiny,
-  ) {
-    return Material3Schemes(
-      light: blendScheme(original.light, destiny.light),
-      dark: blendScheme(original.dark, destiny.dark),
     );
   }
 }

@@ -46,7 +46,7 @@ class ThemeButton extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final themeData = Theme.of(context);
     final ThemeMode? themeMode = ref.watch(
-      themeProvider.select<ThemeMode?>((value) => value.preferredTheme),
+      themeProvider.select<ThemeMode?>((value) => value.preferredMode),
     );
     return DecoratedBox(
       decoration: ShapeDecoration(
@@ -124,7 +124,7 @@ class _DialogTheme extends ConsumerWidget {
     final S translate = S.of(context);
     final theme = Theme.of(context);
     final ThemeMode themeMode = ref.watch(
-      themeProvider.select<ThemeMode>((value) => value.preferredTheme),
+      themeProvider.select<ThemeMode>((value) => value.preferredMode),
     );
     final segmentedModes = SegmentedButton<ThemeMode>(
       emptySelectionAllowed: false,
@@ -183,8 +183,9 @@ class _DialogTheme extends ConsumerWidget {
                   child: ListBody(
                     children: [
                       segmentedModes,
+                      const _WallpaperTile(size: _circleSize),
                       Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 16),
+                        padding: const EdgeInsets.only(bottom: 16),
                         child: ConstrainedBox(
                           constraints: _constraint,
                           child: Consumer(
@@ -198,28 +199,19 @@ class _DialogTheme extends ConsumerWidget {
                                     GestureDetector(
                                       onTap: () => themeRef.lightTheme(
                                           themeRef.lightColors.indexOf(color)),
-                                      child: CircleAvatar(
-                                        backgroundColor: color,
-                                        radius: _circleSize / 2,
-                                        child: AnimatedContainer(
-                                          duration: kThemeAnimationDuration,
-                                          decoration: ShapeDecoration(
-                                            shape: CircleBorder(
-                                                side: BorderSide(
-                                              strokeAlign: -1.0,
-                                              width: 5.0,
-                                              color: theme.brightness ==
-                                                      Brightness.light
-                                                  ? theme.colorScheme.tertiary
-                                                  : theme
-                                                      .colorScheme.inversePrimary,
-                                              style: themeRef.lightOption ==
-                                                      themeRef.lightColors
-                                                          .indexOf(color)
-                                                  ? BorderStyle.solid
-                                                  : BorderStyle.none,
-                                            )),
-                                          ),
+                                      child: _ColorCircleAvatar(
+                                        color: color,
+                                        size: _circleSize,
+                                        isDynamic: false,
+                                        side: BorderSide(
+                                          strokeAlign: -1.0,
+                                          width: 5.0,
+                                          color: theme.colorScheme.tertiary,
+                                          style: themeRef.lightOption ==
+                                                  themeRef.lightColors
+                                                      .indexOf(color)
+                                              ? BorderStyle.solid
+                                              : BorderStyle.none,
                                         ),
                                       ),
                                     ),
@@ -238,6 +230,7 @@ class _DialogTheme extends ConsumerWidget {
                         child: Consumer(
                           builder: (context, ref, child) {
                             final themeRef = ref.watch(themeProvider);
+                            final isDynamic = themeRef.useCustom;
                             return Wrap(
                               spacing: spacing,
                               runSpacing: 10.0,
@@ -245,32 +238,27 @@ class _DialogTheme extends ConsumerWidget {
                                 for (Color color in themeRef.darkColors)
                                   GestureDetector(
                                     onTap: () => themeRef.darkTheme(
-                                        themeRef.darkColors.indexOf(color)),
-                                    child: CircleAvatar(
-                                      backgroundColor: color,
-                                      radius: _circleSize / 2,
-                                      child: AnimatedContainer(
-                                        duration: kThemeAnimationDuration,
-                                        decoration: ShapeDecoration(
-                                          shape: CircleBorder(
-                                              side: BorderSide(
-                                            strokeAlign: -1.0,
-                                            width: 5.0,
-                                            color: theme.brightness ==
-                                                    Brightness.dark
-                                                ? theme.colorScheme.inversePrimary
-                                                : theme.colorScheme.tertiary,
-                                            style: themeRef.darkOption ==
-                                                    themeRef.darkColors
-                                                        .indexOf(color)
-                                                ? BorderStyle.solid
-                                                : BorderStyle.none,
-                                          ),
-                                        ),
+                                      themeRef.darkColors.indexOf(color),
+                                    ),
+                                    child: _ColorCircleAvatar(
+                                      color: color,
+                                      size: _circleSize,
+                                      isDynamic: isDynamic,
+                                      side: BorderSide(
+                                        strokeAlign: -1.0,
+                                        width: 5.0,
+                                        color: theme.brightness ==
+                                                Brightness.dark
+                                            ? theme.colorScheme.inversePrimary
+                                            : theme.colorScheme.primary,
+                                        style: themeRef.darkOption ==
+                                                themeRef.darkColors
+                                                    .indexOf(color)
+                                            ? BorderStyle.solid
+                                            : BorderStyle.none,
                                       ),
                                     ),
                                   ),
-                                ),
                               ],
                             );
                           },
@@ -287,8 +275,126 @@ class _DialogTheme extends ConsumerWidget {
     );
     final isTablet = isHorizontalTablet(MediaQuery.of(context).size);
 
-    return isTablet
-      ? Dialog(child: child)
-      : Dialog.fullscreen(child: child);
+    return isTablet ? Dialog(child: child) : Dialog.fullscreen(child: child);
+  }
+}
+
+class _ColorCircleAvatar extends ConsumerWidget {
+  final Color color;
+  final double size;
+  final BorderSide side;
+  final bool isDynamic;
+
+  const _ColorCircleAvatar({
+    // ignore: unused_element
+    super.key,
+    required this.color,
+    required this.size,
+    required this.side,
+    required this.isDynamic,
+  });
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    if (isDynamic) {
+      return _SelectedMaterialAvatar(color: color, size: size, side: side);
+    }
+    return CircleAvatar(
+      backgroundColor: color,
+      radius: size / 2,
+      child: AnimatedContainer(
+        duration: kThemeAnimationDuration,
+        decoration: ShapeDecoration(shape: CircleBorder(side: side)),
+      ),
+    );
+  }
+}
+
+class _WallpaperTile extends ConsumerWidget {
+  final double? size;
+
+  const _WallpaperTile({
+    // ignore: unused_element
+    super.key,
+    this.size,
+  });
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final wallpaperTheme = ref.watch(customSchemesProvider);
+    if (wallpaperTheme == null) {
+      return const SizedBox();
+    }
+    final themeRef = ref.watch(themeProvider);
+    final theme = Theme.of(context);
+    final S translate = S.of(context);
+    final bool isSelected = themeRef.useCustom;
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 16),
+      child: ListTile(
+        style: ListTileStyle.list,
+        dense: false,
+        selected: isSelected,
+        onTap: () => themeRef.useCustomScheme(wallpaperTheme),
+        minVerticalPadding: 16.0,
+        minTileHeight: 84.0,
+        leading: _SelectedMaterialAvatar(
+          size: size,
+          color: wallpaperTheme.light.primaryContainer,
+          side: BorderSide(
+            strokeAlign: -1.0,
+            width: 5.0,
+            color: theme.colorScheme.secondary,
+            style: themeRef.useCustom ? BorderStyle.solid : BorderStyle.none,
+          ),
+        ),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.all(Radius.circular(16.0)),
+          side: BorderSide(color: theme.colorScheme.secondary, width: 2),
+        ),
+        selectedTileColor: theme.colorScheme.secondaryContainer,
+        selectedColor: theme.colorScheme.onSecondaryContainer,
+        textColor: theme.colorScheme.onSurface,
+        titleTextStyle: theme.textTheme.titleLarge,
+        subtitleTextStyle: theme.textTheme.bodySmall,
+        title: Text(translate.use_wallpaper),
+        subtitle: Text(translate.use_wallpaper_subtitle),
+      ),
+    );
+  }
+}
+
+class _SelectedMaterialAvatar extends StatelessWidget {
+  const _SelectedMaterialAvatar({
+    // ignore: unused_element
+    super.key,
+    this.color,
+    required this.size,
+    required this.side,
+  });
+
+  final double? size;
+  final Color? color;
+  final BorderSide side;
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox.square(
+      dimension: size ?? 48.0,
+      child: AnimatedContainer(
+        duration: kThemeAnimationDuration,
+        decoration: ShapeDecoration(
+          color: color,
+          shape: StarBorder(
+            pointRounding: 0.45,
+            points: 8,
+            valleyRounding: 0.24,
+            innerRadiusRatio: 0.75,
+            rotation: 45,
+            side: side,
+          ),
+        ),
+      ),
+    );
   }
 }

@@ -403,7 +403,7 @@ class _HeaderDrawer extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final mediaBrightness = MediaQuery.of(context).platformBrightness;
-    final themeMode = ref.watch(themeProvider.select((t) => t.preferredTheme));
+    final themeMode = ref.watch(themeProvider.select((t) => t.preferredMode));
     final color = colorOnThemeMode(themeMode, mediaBrightness);
     return DrawerHeader(
       padding: EdgeInsets.zero,

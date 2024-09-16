@@ -148,7 +148,7 @@ class AmiiboNetwork extends ConsumerWidget {
       locale: locale,
       theme: themeMode.light,
       darkTheme: themeMode.dark,
-      themeMode: themeMode.preferredTheme,
+      themeMode: themeMode.preferredMode,
       routerDelegate: router.routerDelegate,
       routeInformationParser: router.routeInformationParser,
       routeInformationProvider: router.routeInformationProvider,

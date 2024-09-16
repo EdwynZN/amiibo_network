@@ -108,5 +108,7 @@
   "color_mode": "Aspect",
   "amiibo_type": "Type d'Amiibo",
   "export_subtitle": "Sauvegarder un fichier de votre collection",
-  "import_subtitle": "Restaurez votre collection à partir d'un fichier"
+  "import_subtitle": "Restaurez votre collection à partir d'un fichier",
+  "use_wallpaper": "Couleur dynamique",
+  "use_wallpaper_subtitle": "Utilisez votre papier peint comme une palette de couleurss"
 }

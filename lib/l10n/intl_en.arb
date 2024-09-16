@@ -108,5 +108,7 @@
   "color_mode": "Look and feel",
   "amiibo_type": "Amiibo type",
   "export_subtitle": "Save a file of your collection",
-  "import_subtitle": "Restore your collection from a file"
+  "import_subtitle": "Restore your collection from a file",
+  "use_wallpaper": "Dynamic Color",
+  "use_wallpaper_subtitle": "Use your wallpaper as a palette of colors"
 }

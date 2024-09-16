@@ -108,5 +108,7 @@
   "color_mode": "Aspecto",
   "amiibo_type": "Tipo de Amiibo",
   "export_subtitle": "Guarda un archivo de tu colección",
-  "import_subtitle": "Restaura tu colección a partir de un archivo"
+  "import_subtitle": "Restaura tu colección a partir de un archivo",
+  "use_wallpaper": "Color dinámico",
+  "use_wallpaper_subtitle": "Use tu fondo de pantalla como tema de color"
 }
