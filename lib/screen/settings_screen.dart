@@ -237,7 +237,10 @@ class _FeatureListWidgetState extends ConsumerState<_FeatureListWidget> {
         children: [
           _TitleSetting(title: S.of(context).features),
           const Gap(4.0),
-          const FeatureDisableMessageCard(),
+          ConstrainedBox(
+            constraints: const BoxConstraints(minWidth: 400, maxWidth: 450),
+            child: const FeatureDisableMessageCard(),
+          ),
           const _ResetCollection(),
           const _SaveCollection(),
           _ListSettings(
