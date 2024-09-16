@@ -31,7 +31,7 @@ Future<void> updateOldTheme() async {
   }
 }
 
-final _materialYouThemeProvider = FutureProvider<Material3Schemes?>(
+final dynamicSchemeProvider = FutureProvider<Material3Schemes?>(
   (ref) async {
     ColorScheme? light;
     ColorScheme? dark;
@@ -60,7 +60,7 @@ final _materialYouThemeProvider = FutureProvider<Material3Schemes?>(
 );
 
 final customSchemesProvider = Provider<Material3Schemes?>(
-  (ref) => ref.watch(_materialYouThemeProvider).valueOrNull,
+  (ref) => ref.watch(dynamicSchemeProvider).valueOrNull,
 );
 
 final themeProvider = ChangeNotifierProvider<ThemeProvider>((ref) {

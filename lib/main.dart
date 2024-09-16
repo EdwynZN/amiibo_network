@@ -102,6 +102,8 @@ Future<void> main() async {
         overrides: [
           cacheProvider.overrideWithValue(cache),
           preferencesProvider.overrideWithValue(preferences),
+          if (InfoPackage.instance.androidVersionCode.code < 31)
+            dynamicSchemeProvider.overrideWith((_) => null),
         ],
       );
 
