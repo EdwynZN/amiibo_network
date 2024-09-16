@@ -185,7 +185,7 @@ class _DialogTheme extends ConsumerWidget {
                       segmentedModes,
                       const _WallpaperTile(size: _circleSize),
                       Padding(
-                        padding: const EdgeInsets.only(bottom: 16),
+                        padding: const EdgeInsets.symmetric(vertical: 16),
                         child: ConstrainedBox(
                           constraints: _constraint,
                           child: Consumer(
@@ -330,7 +330,7 @@ class _WallpaperTile extends ConsumerWidget {
     final S translate = S.of(context);
     final bool isSelected = themeRef.useCustom;
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 16),
+      padding: const EdgeInsets.only(top: 16),
       child: ListTile(
         style: ListTileStyle.list,
         dense: false,
