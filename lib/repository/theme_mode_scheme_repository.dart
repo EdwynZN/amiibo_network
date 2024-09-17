@@ -757,11 +757,11 @@ class AmiiboTheme3 implements AmiiboTheme {
     switch (_dark) {
       case 0:
         final darkBlueGrey = ThemeSchemes.blueGrey.dark;
-        final theme = blendScheme(_darkScheme, darkBlueGrey, 0.65);
+        final theme = blendScheme(darkBlueGrey, _darkScheme, 0.25);
         _darkTheme = _themeFromScheme(theme);
         break;
       case 1:
-        final theme = blendScheme(_greyScheme, _darkScheme, 0.75);
+        final theme = blendScheme(_greyScheme, _darkScheme, 0.35);
         _darkTheme = _themeFromScheme(theme);
         break;
       case 2:
