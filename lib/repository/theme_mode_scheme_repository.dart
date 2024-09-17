@@ -765,7 +765,7 @@ class AmiiboTheme3 implements AmiiboTheme {
         _darkTheme = _themeFromScheme(theme);
         break;
       case 2:
-        final scheme = blendScheme(_greyScheme, _darkScheme, 0.75);
+        final scheme = blendScheme(_darkScheme, _greyScheme, 0.75);
         final theme = _themeFromScheme(scheme, false);
         final shape = RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(8),

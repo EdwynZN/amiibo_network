@@ -206,7 +206,9 @@ class _DialogTheme extends ConsumerWidget {
                                         side: BorderSide(
                                           strokeAlign: -1.0,
                                           width: 5.0,
-                                          color: theme.colorScheme.tertiary,
+                                          color: theme.brightness == Brightness.light
+                                            ? theme.colorScheme.tertiary
+                                            : theme.colorScheme.inversePrimary,
                                           style: themeRef.lightOption ==
                                                   themeRef.lightColors
                                                       .indexOf(color)
