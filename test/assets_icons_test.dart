@@ -14,6 +14,10 @@ void main() {
     expect(File(NetworkIcons.na).existsSync(), isTrue);
     expect(File(NetworkIcons.switchPlatform).existsSync(), isTrue);
     expect(File(NetworkIcons.wiiUPlatform).existsSync(), isTrue);
+    expect(File(NetworkIcons.fileExport).existsSync(), isTrue);
+    expect(File(NetworkIcons.fileImport).existsSync(), isTrue);
+    expect(File(NetworkIcons.github).existsSync(), isTrue);
+    expect(File(NetworkIcons.jpg).existsSync(), isTrue);
     expect(File(NetworkIcons.lockedBox).existsSync(), isTrue);
     expect(File(NetworkIcons.lockedBoxSelected).existsSync(), isTrue);
     expect(File(NetworkIcons.openBox).existsSync(), isTrue);

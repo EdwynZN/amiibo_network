@@ -38,8 +38,8 @@
   "sure": "Seguro",
   "light": "Claro",
   "dark": "Oscuro",
-  "auto": "Automático",
-  "themeMode": "{choice, select, system {Autom.} light {Claro} dark {Oscuro} other {Autom.}}",
+  "auto": "Sistema",
+  "themeMode": "{choice, select, system {Sistema} light {Claro} dark {Oscuro} other {Autom.}}",
   "mode": "Modo",
   "lightTheme": "Tema Claro",
   "darkTheme": "Tema Oscuro",
@@ -102,5 +102,13 @@
   "hide_caution": "Precaución, deshabilitar una funcionalidad la escondera en toda la app",
   "export_complete": "Archivo guardado",
   "select_user_attribute": "Seleccione una categoría",
-  "emptyMessageType": "{choice, select, pokemon {Tengo que atraparlos!} pokeball {Tengo que atraparlos!} mario {Lo lamento, pero tu colección parece estar en otro castillo} mushroom {1 colección extra aquí} pacman {Habmre por amiibos} pacmanGhost {¿Hambre por amiibos?} link {Hyaaa!! (No hay amiibos aquí)} other {No hay nada que mostrar . . . aún}}"
+  "emptyMessageType": "{choice, select, pokemon {Tengo que atraparlos!} pokeball {Tengo que atraparlos!} mario {Lo lamento, pero tu colección parece estar en otro castillo} mushroom {1 colección extra aquí} pacman {Habmre por amiibos} pacmanGhost {¿Hambre por amiibos?} link {Hyaaa!! (No hay amiibos aquí)} other {No hay nada que mostrar . . . aún}}",
+  "about": "Acerca de",
+  "support": "Soporte",
+  "color_mode": "Aspecto",
+  "amiibo_type": "Tipo de Amiibo",
+  "export_subtitle": "Guarda un archivo de tu colección",
+  "import_subtitle": "Restaura tu colección a partir de un archivo",
+  "use_wallpaper": "Color dinámico",
+  "use_wallpaper_subtitle": "Use tu fondo de pantalla como tema de color"
 }

@@ -1,5 +1,5 @@
 import 'package:amiibo_network/enum/hidden_types.dart';
-import 'package:amiibo_network/repository/theme_repository.dart';
+import 'package:amiibo_network/repository/theme_mode_scheme_repository.dart';
 import 'package:amiibo_network/resources/resources.dart';
 import 'package:amiibo_network/riverpod/preferences_provider.dart';
 import 'package:amiibo_network/riverpod/query_provider.dart';
@@ -403,7 +403,7 @@ class _HeaderDrawer extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final mediaBrightness = MediaQuery.of(context).platformBrightness;
-    final themeMode = ref.watch(themeProvider.select((t) => t.preferredTheme));
+    final themeMode = ref.watch(themeProvider.select((t) => t.preferredMode));
     final color = colorOnThemeMode(themeMode, mediaBrightness);
     return DrawerHeader(
       padding: EdgeInsets.zero,

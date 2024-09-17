@@ -6,7 +6,7 @@ import 'package:amiibo_network/model/amiibo.dart';
 import 'package:amiibo_network/model/preferences.dart';
 import 'package:amiibo_network/model/search_result.dart';
 import 'package:amiibo_network/model/stat.dart';
-import 'package:amiibo_network/repository/theme_repository.dart';
+import 'package:amiibo_network/repository/theme_mode_scheme_repository.dart';
 import 'package:amiibo_network/resources/resources.dart';
 import 'package:amiibo_network/service/info_package.dart';
 import 'package:amiibo_network/service/service.dart';

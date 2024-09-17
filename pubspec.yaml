@@ -12,11 +12,12 @@ description: An Amiibo collection app designed to allow you to keep track of
 # In iOS, build-name is used as CFBundleShortVersionString while build-number used as CFBundleVersion.
 # Read more about iOS versioning at
 # https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
-version: 2.1.10+89
+version: 2.2.0+90
 
 environment:
   sdk: '>=3.5.0 <4.0.0'
 
+publish_to: none
 dependencies:
   dio: ^5.4.1
   drift: ^2.17.0
@@ -38,7 +39,7 @@ dependencies:
   go_router: ^14.2.1
   hive_flutter: ^1.1.0
   hooks_riverpod: ^2.4.10
-  json_annotation: ^4.8.1
+  json_annotation: ^4.9.0
   launch_app_store: ^1.1.2
   loading_animation_widget: ^1.2.1
   material_color_utilities: ^0.11.1
@@ -52,6 +53,11 @@ dependencies:
   stash_dio: ^5.1.0
   stash_hive: ^5.1.0
   url_launcher: ^6.2.5
+  dynamic_color:
+    git:
+      url: https://github.com/EdwynZN/flutter-packages.git
+      ref: patch-1
+      path: packages/dynamic_color
 
 dev_dependencies:
   build_runner: ^2.4.12
@@ -59,8 +65,8 @@ dev_dependencies:
   drift_dev: ^2.17.0
   flutter_test:
     sdk: flutter
-  freezed: ^2.4.7
-  json_serializable: ^6.7.1
+  freezed: ^2.5.2
+  json_serializable: ^6.8.0
   riverpod_lint: ^2.3.9
   test: any
 

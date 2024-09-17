@@ -1,7 +1,7 @@
 import 'package:amiibo_network/enum/amiibo_category_enum.dart';
 import 'package:amiibo_network/model/amiibo.dart';
 import 'package:amiibo_network/model/title_search.dart';
-import 'package:amiibo_network/repository/theme_repository.dart';
+import 'package:amiibo_network/repository/theme_mode_scheme_repository.dart';
 import 'package:amiibo_network/resources/resources.dart';
 import 'package:amiibo_network/riverpod/amiibo_provider.dart';
 import 'package:amiibo_network/riverpod/analytics._provider.dart';
