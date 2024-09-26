@@ -22,6 +22,11 @@ dependencies:
   dio: ^5.4.1
   drift: ^2.17.0
   drift_sqflite: ^2.0.1
+  dynamic_color:
+    git:
+      url: https://github.com/EdwynZN/flutter-packages.git
+      ref: patch-1
+      path: packages/dynamic_color
   equatable: ^2.0.5
   file_picker: ^8.0.6
   firebase_analytics: ^11.2.0
@@ -45,6 +50,7 @@ dependencies:
   material_color_utilities: ^0.11.1
   path_provider: ^2.1.2
   permission_handler: ^11.3.0
+  riverpod_annotation: ^2.3.5
   shared_preferences: ^2.2.0
   sliver_tools: ^0.2.12
   sqflite: ^2.3.2
@@ -53,11 +59,6 @@ dependencies:
   stash_dio: ^5.1.0
   stash_hive: ^5.1.0
   url_launcher: ^6.2.5
-  dynamic_color:
-    git:
-      url: https://github.com/EdwynZN/flutter-packages.git
-      ref: patch-1
-      path: packages/dynamic_color
 
 dev_dependencies:
   build_runner: ^2.4.12
@@ -67,6 +68,7 @@ dev_dependencies:
     sdk: flutter
   freezed: ^2.5.2
   json_serializable: ^6.8.0
+  riverpod_generator: ^2.4.3
   riverpod_lint: ^2.3.9
   test: any
 

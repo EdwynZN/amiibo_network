@@ -14,6 +14,7 @@ void main() {
     expect(File(NetworkIcons.na).existsSync(), isTrue);
     expect(File(NetworkIcons.switchPlatform).existsSync(), isTrue);
     expect(File(NetworkIcons.wiiUPlatform).existsSync(), isTrue);
+    expect(File(NetworkIcons.amazon).existsSync(), isTrue);
     expect(File(NetworkIcons.fileExport).existsSync(), isTrue);
     expect(File(NetworkIcons.fileImport).existsSync(), isTrue);
     expect(File(NetworkIcons.github).existsSync(), isTrue);

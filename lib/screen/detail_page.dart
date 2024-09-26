@@ -1,3 +1,4 @@
+import 'package:amiibo_network/affiliation_product/presentation/widget/amazon_affiliation_button.dart';
 import 'package:amiibo_network/resources/resources.dart';
 import 'package:amiibo_network/riverpod/amiibo_provider.dart';
 import 'package:amiibo_network/riverpod/preferences_provider.dart';
@@ -93,6 +94,10 @@ class DetailPage extends ConsumerWidget {
                 orElse: () => const SizedBox(),
               ),
         ),
+        actions: const [
+          AmazonAffiliationIconButton(),
+          Gap(8.0),
+        ],
       ),
       body: body,
     );

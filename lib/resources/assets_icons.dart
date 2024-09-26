@@ -12,6 +12,7 @@ class NetworkIcons {
   static const String na = 'assets/images/na.webp';
   static const String switchPlatform = 'assets/images/switch_platform.webp';
   static const String wiiUPlatform = 'assets/images/wii_u_platform.webp';
+  static const String amazon = 'assets/icons/amazon.webp';
   static const String fileExport = 'assets/icons/file_export.webp';
   static const String fileImport = 'assets/icons/file_import.webp';
   static const String github = 'assets/icons/github.webp';
