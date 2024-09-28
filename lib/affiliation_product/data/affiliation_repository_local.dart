@@ -4,7 +4,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'affiliation_repository_local.g.dart';
 
-@riverpod
+@Riverpod(keepAlive: true)
 AffiliationRepository affiliationRepository(AffiliationRepositoryRef ref) {
   return const AffiliationRepositoryLocal();
 }
@@ -14,102 +14,144 @@ class AffiliationRepositoryLocal implements AffiliationRepository {
 
   @override
   Future<List<AffiliationLink>> links() async {
-    return _amazonDomains.map((a) {
-      final map = {
-        'link': 'https://www.${a['amazon_domain']}/',
-        'countryCode': a['country_code'],
-        'countryName': a['country_name'],
-      };
+    return _affiliatedDomains.map((a) {
+      final map = Map<String, dynamic>.from(a);
+      map['link'] = map.remove('amazonLink')! + '/';
+      map['countryName'] = (map.remove('translation')! as Map)['en'];
       return AffiliationLink.fromJson(map);
     }).toList();
   }
 }
 
-const _amazonDomains = [
-  {"amazon_domain": "amazon.ae", "country_code": "ae", "country_name": "UAE"},
+const _affiliatedDomains = [
   {
-    "amazon_domain": "amazon.ca",
-    "country_code": "ca",
-    "country_name": "Canada"
-  },
-  {"amazon_domain": "amazon.cn", "country_code": "cn", "country_name": "China"},
-  {
-    "amazon_domain": "amazon.co.jp",
-    "country_code": "jp",
-    "country_name": "Japan"
+    "amazonLink": "https://amazon.ae",
+    "countryCode": "ae",
+    "translation": {
+      "en": "UAE",
+      "es": "Emiratos Árabes Unidos",
+      "fr": "Émirats arabes unis"
+    },
   },
   {
-    "amazon_domain": "amazon.co.uk",
-    "country_code": "uk",
-    "country_name": "United Kingdom"
+    "amazonLink": "https://amazon.ca",
+    "countryCode": "ca",
+    "translation": {"en": "Canada", "es": "Canadá", "fr": "Canada"},
   },
   {
-    "amazon_domain": "amazon.com",
-    "country_code": "us",
-    "country_name": "United States"
+    "amazonLink": "https://amazon.cn",
+    "countryCode": "cn",
+    "translation": {"en": "China", "es": "China", "fr": "Chine"},
   },
   {
-    "amazon_domain": "amazon.com.au",
-    "country_code": "au",
-    "country_name": "Australia"
+    "amazonLink": "https://amazon.co.jp",
+    "countryCode": "jp",
+    "translation": {"en": "Japan", "es": "Japón", "fr": "Japon"},
   },
   {
-    "amazon_domain": "amazon.com.be",
-    "country_code": "be",
-    "country_name": "Belgium"
+    "amazonLink": "https://amazon.co.uk",
+    "countryCode": "uk",
+    "translation": {
+      "en": "United Kingdom",
+      "es": "Reino Unido",
+      "fr": "Royaume-Uni"
+    },
   },
   {
-    "amazon_domain": "amazon.com.br",
-    "country_code": "br",
-    "country_name": "Brasil"
+    "amazonLink": "https://amazon.com",
+    "countryCode": "us",
+    "translation": {
+      "en": "United States",
+      "es": "Estados Unidos",
+      "fr": "États-Unis"
+    },
   },
   {
-    "amazon_domain": "amazon.com.tr",
-    "country_code": "tr",
-    "country_name": "Turkey"
+    "amazonLink": "https://amazon.com.au",
+    "countryCode": "au",
+    "translation": {"en": "Australia", "es": "Australia", "fr": "Australie"},
   },
   {
-    "amazon_domain": "amazon.com.mx",
-    "country_code": "mx",
-    "country_name": "Mexico"
+    "amazonLink": "https://amazon.com.be",
+    "countryCode": "be",
+    "translation": {"en": "Belgium", "es": "Bélgica", "fr": "Belgique"},
   },
   {
-    "amazon_domain": "amazon.de",
-    "country_code": "de",
-    "country_name": "Germany"
-  },
-  {"amazon_domain": "amazon.es", "country_code": "es", "country_name": "Spain"},
-  {"amazon_domain": "amazon.eg", "country_code": "eg", "country_name": "Egypt"},
-  {
-    "amazon_domain": "amazon.fr",
-    "country_code": "fr",
-    "country_name": "France"
-  },
-  {"amazon_domain": "amazon.in", "country_code": "in", "country_name": "India"},
-  {"amazon_domain": "amazon.it", "country_code": "it", "country_name": "Italy"},
-  {
-    "amazon_domain": "amazon.nl",
-    "country_code": "nl",
-    "country_name": "Netherlands"
+    "amazonLink": "https://amazon.com.br",
+    "countryCode": "br",
+    "translation": {"en": "Brazil", "es": "Brasil", "fr": "Brésil"},
   },
   {
-    "amazon_domain": "amazon.pl",
-    "country_code": "pl",
-    "country_name": "Poland"
+    "amazonLink": "https://amazon.com.tr",
+    "countryCode": "tr",
+    "translation": {"en": "Türkiye", "es": "Turquía", "fr": "Turquie"},
   },
   {
-    "amazon_domain": "amazon.sa",
-    "country_code": "sa",
-    "country_name": "Saudi Arabia"
+    "amazonLink": "https://amazon.com.mx",
+    "countryCode": "mx",
+    "translation": {"en": "Mexico", "es": "México", "fr": "Mexique"},
   },
   {
-    "amazon_domain": "amazon.se",
-    "country_code": "se",
-    "country_name": "Sweden"
+    "amazonLink": "https://amazon.de",
+    "countryCode": "de",
+    "translation": {"en": "Germany", "es": "Alemania", "fr": "Allemagne"},
   },
   {
-    "amazon_domain": "amazon.sg",
-    "country_code": "sg",
-    "country_name": "Singapore"
-  }
+    "amazonLink": "https://amazon.es",
+    "countryCode": "es",
+    "translation": {"en": "Spain", "es": "España", "fr": "Espagne"},
+  },
+  {
+    "amazonLink": "https://amazon.eg",
+    "countryCode": "eg",
+    "translation": {"en": "Egypt", "es": "Egipto", "fr": "Égypte"},
+  },
+  {
+    "amazonLink": "https://amazon.fr",
+    "countryCode": "fr",
+    "translation": {"en": "France", "es": "Francia", "fr": "France"},
+  },
+  {
+    "amazonLink": "https://amazon.in",
+    "countryCode": "in",
+    "translation": {"en": "India", "es": "India", "fr": "Inde"},
+  },
+  {
+    "amazonLink": "https://amazon.it",
+    "countryCode": "it",
+    "translation": {"en": "Italy", "es": "Italia", "fr": "Italie"},
+  },
+  {
+    "amazonLink": "https://amazon.nl",
+    "countryCode": "nl",
+    "translation": {
+      "en": "Netherlands",
+      "es": "Países Bajos",
+      "fr": "Pays-Bas"
+    },
+  },
+  {
+    "amazonLink": "https://amazon.pl",
+    "countryCode": "pl",
+    "translation": {"en": "Poland", "es": "Polonia", "fr": "Pologne"},
+  },
+  {
+    "amazonLink": "https://amazon.sa",
+    "countryCode": "sa",
+    "translation": {
+      "en": "Saudi Arabia",
+      "es": "Arabia Saudita",
+      "fr": "Arabie Saoudite"
+    },
+  },
+  {
+    "amazonLink": "https://amazon.se",
+    "countryCode": "se",
+    "translation": {"en": "Sweden", "es": "Suecia", "fr": "Suède"},
+  },
+  {
+    "amazonLink": "https://amazon.sg",
+    "countryCode": "sg",
+    "translation": {"en": "Singapore", "es": "Singapur", "fr": "Singapour"},
+  },
 ];

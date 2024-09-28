@@ -1,7 +1,10 @@
+import 'package:amiibo_network/affiliation_product/presentation/controller/amazon_afilliation_provider.dart';
 import 'package:amiibo_network/resources/resources.dart';
+import 'package:amiibo_network/riverpod/amiibo_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:material_color_utilities/material_color_utilities.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 /// Amazon branding color
 const amazonColor = Color(0xFFFF9900);
@@ -57,15 +60,23 @@ class AmazonAffiliationIconButton extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final id = ref.watch(keyAmiiboProvider);
+    final asyncSelected = ref.watch(
+      selectedAmazonAffiliationProvider(key: id),
+    );
+    final list = asyncSelected.valueOrNull;
+    final hide = list == null || list.isEmpty;
+    if (hide) {
+      return const SizedBox();
+    }
     final style = ElevatedButtonTheme.of(context).style;
     return IconButton.filledTonal(
       style: ButtonStyle(
         backgroundColor: WidgetStateProperty.resolveWith((state) {
-          final color = style
-              ?.backgroundColor
-              ?.resolve(state);
+          final color = style?.backgroundColor?.resolve(state);
           if (color != null) {
-            final int value = Blend.hctHue(color.value,
+            final int value = Blend.hctHue(
+              color.value,
               amazonColor.value,
               0.15,
             );
@@ -74,9 +85,7 @@ class AmazonAffiliationIconButton extends HookConsumerWidget {
           return color;
         }),
         foregroundColor: WidgetStateProperty.resolveWith((state) {
-          final color = style
-              ?.foregroundColor
-              ?.resolve(state);
+          final color = style?.foregroundColor?.resolve(state);
           if (color != null) {
             final int value = Blend.hctHue(
               color.value,
@@ -88,7 +97,10 @@ class AmazonAffiliationIconButton extends HookConsumerWidget {
           return color;
         }),
       ),
-      onPressed: () {},
+      onPressed: () async {
+        final first = list.firstWhere((a) => a.countryCode == 'jp').link;
+        await launchUrl(first, mode: LaunchMode.inAppBrowserView);
+      },
       icon: ImageIcon(AssetImage(NetworkIcons.amazon)),
     );
   }

@@ -23,7 +23,7 @@ class DetailPage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final key = ref.watch(keyAmiiboProvider);
+    final id = ref.watch(keyAmiiboProvider);
     final showOwnerCategories = ref.watch(ownTypesCategoryProvider);
     final isTablet = isHorizontalTablet(MediaQuery.of(context).size);
     final Widget body;
@@ -88,7 +88,7 @@ class DetailPage extends ConsumerWidget {
             ),
         title: Consumer(
           builder: (context, ref, _) => ref
-              .watch(_nameAmiiboProvider(key))
+              .watch(_nameAmiiboProvider(id))
               .maybeWhen(
                 data: (name) => name != null ? Text(name) : const SizedBox(),
                 orElse: () => const SizedBox(),
