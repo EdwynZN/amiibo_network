@@ -33,7 +33,13 @@ class AffiliationLinkDao extends DatabaseAccessor<AppDatabase>
           country.code.equalsExp(affiliationLink.countryCode),
         ),
       ],
-    );
+    )..orderBy([
+        OrderingTerm(
+          expression: country.code.equals('us'),
+          mode: OrderingMode.desc,
+        ),
+        OrderingTerm(expression: country.code, mode: OrderingMode.asc),
+      ]);
     return query
         .map((p0) => model.AffiliationLinkReadModel.fromDB(p0.rawData.data))
         .get();

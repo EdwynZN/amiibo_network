@@ -111,6 +111,10 @@
   "import_subtitle": "Restaurez votre collection à partir d'un fichier",
   "use_wallpaper": "Couleur dynamique",
   "use_wallpaper_subtitle": "Utilisez votre papier peint comme une palette de couleurss",
-  "useInAppBrowser": "Ouvrir les pages Web affiliées dans l'application",
-  "useInAppBrowserSubtitle": "Autoriser l'ouverture des liens d'affiliation dans l'application"
+  "use_in_app_browser": "Ouvrir les pages Web affiliées dans l'application",
+  "use_in_app_browser_subtitle": "Autoriser l'ouverture des liens d'affiliation dans l'application",
+  "amazon_link_setting": "Site d'Amazon",
+  "amazon_link_setting_subtitle": "Choisissez le site Amazon spécifique à votre pays",
+  "no_link_selected": "Aucune préférence",
+  "no_link_selected_subtitle": "Sélectionner si nécessaire"
 }

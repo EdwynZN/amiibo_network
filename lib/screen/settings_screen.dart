@@ -1,3 +1,4 @@
+import 'package:amiibo_network/affiliation_product/presentation/widget/amazon_affiliation_link_selection_bottomsheet.dart';
 import 'package:amiibo_network/enum/hidden_types.dart';
 import 'package:amiibo_network/model/result.dart';
 import 'package:amiibo_network/resources/resources.dart';
@@ -266,13 +267,25 @@ class _FeatureListWidgetState extends ConsumerState<_FeatureListWidget> {
                   .toggleOwnType(value),
             ),
           _SwitchListSettings(
-            title: translate.useInAppBrowser,
+            title: translate.use_in_app_browser,
             icon: const Icon(Icons.open_in_new),
-            subtitle: translate.useInAppBrowserSubtitle,
+            subtitle: translate.use_in_app_browser_subtitle,
             value: ref.watch(
               personalProvider.select((userPref) => userPref.inAppBrowser),
             ),
             onChanged: ref.read(personalProvider.notifier).toogleInAppBrowser,
+          ),
+          Consumer(
+            builder: (context, ref, _) {
+              return _ListSettings(
+                title: translate.amazon_link_setting,
+                subtitle: translate.amazon_link_setting_subtitle,
+                icon: const ImageIcon(AssetImage(NetworkIcons.amazon)),
+                onTap: () {
+                  amazonLinkBottomSheet(context);
+                },
+              );
+            },
           ),
           const Gap(4.0),
           Center(
