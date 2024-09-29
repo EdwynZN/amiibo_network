@@ -110,5 +110,7 @@
   "export_subtitle": "Save a file of your collection",
   "import_subtitle": "Restore your collection from a file",
   "use_wallpaper": "Dynamic Color",
-  "use_wallpaper_subtitle": "Use your wallpaper as a palette of colors"
+  "use_wallpaper_subtitle": "Use your wallpaper as a palette of colors",
+  "useInAppBrowser": "Open affiliate web pages in app",
+  "useInAppBrowserSubtitle": "Allow affiliate links to open inside the app"
 }

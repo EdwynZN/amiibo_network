@@ -43,25 +43,20 @@ final personalProvider =
     final ignored = sharedProvider.getInt(sharedIgnored) ?? 0;
     final languageCode = sharedProvider.getString(sharedLanguageCode);
     final ownType = sharedProvider.getBool(sharedOwnType) ?? false;
-    final HiddenType? categoryIgnored;
-    switch (ignored) {
-      case 1:
-        categoryIgnored = HiddenType.Figures;
-        break;
-      case 2:
-        categoryIgnored = HiddenType.Cards;
-        break;
-      default:
-        categoryIgnored = null;
-        break;
-    }
-    //final percent = shraedProvider.getBool(sharedIgnored) ?? false;
+    final HiddenType? categoryIgnored = switch (ignored) {
+      1 => HiddenType.Figures,
+      2 => HiddenType.Cards,
+      _ => null,
+    };
+    final inAppBrowser = sharedProvider.getBool(sharedInAppBrowser) ?? false;
+
     final initial = Preferences(
       usePercentage: percent,
       useGrid: grid,
       ownTypes: ownType,
       ignored: categoryIgnored,
       languageCode: languageCode,
+      inAppBrowser: inAppBrowser,
     );
     return UserPreferencessNotifier(initial, ref);
   },
@@ -130,4 +125,13 @@ class UserPreferencessNotifier extends StateNotifier<Preferences> {
       state = state.copyWith(ignored: category);
     }
   }
+
+  Future<void> toogleInAppBrowser(bool newValue) async {
+    if (newValue != state.ownTypes) {
+      final SharedPreferences preferences = ref.read(preferencesProvider);
+      await preferences.setBool(sharedInAppBrowser, newValue);
+      state = state.copyWith(inAppBrowser: newValue);
+    }
+  }
+
 }

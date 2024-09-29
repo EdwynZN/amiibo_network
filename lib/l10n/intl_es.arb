@@ -110,5 +110,7 @@
   "export_subtitle": "Guarda un archivo de tu colección",
   "import_subtitle": "Restaura tu colección a partir de un archivo",
   "use_wallpaper": "Color dinámico",
-  "use_wallpaper_subtitle": "Use tu fondo de pantalla como tema de color"
+  "use_wallpaper_subtitle": "Use tu fondo de pantalla como tema de color",
+  "useInAppBrowser": "Abrir links de afiliación dentro de la app",
+  "useInAppBrowserSubtitle": "Los links se abriran de manera interna"
 }
