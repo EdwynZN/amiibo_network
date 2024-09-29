@@ -1,5 +1,5 @@
-import 'package:amiibo_network/affiliation_product/domain/model/affiliation_link.dart';
+import 'package:amiibo_network/affiliation_product/domain/model/affiliation_link_read_model.dart';
 
 abstract interface class AffiliationRepository {
-  Future<List<AffiliationLink>> links();
+  Future<List<AffiliationLinkReadModel>> links();
 }

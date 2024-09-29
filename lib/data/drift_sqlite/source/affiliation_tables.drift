@@ -1,0 +1,15 @@
+-- This table was added in schema version 7
+CREATE TABLE IF NOT EXISTS country(
+    code TEXT NOT NULL PRIMARY KEY,
+    en TEXT NOT NULL,
+    es TEXT NOT NULL,
+    fr TEXT NOT NULL
+) AS CountryTable;
+
+CREATE TABLE IF NOT EXISTS affiliation_link(
+    id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    country_code TEXT NOT NULL,
+    amazon TEXT NOT NULL,
+    FOREIGN KEY(country_code) REFERENCES country(code),
+    UNIQUE (country_code)
+) AS AffiliationLinkTable;

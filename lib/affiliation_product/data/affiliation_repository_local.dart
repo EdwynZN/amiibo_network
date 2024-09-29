@@ -1,28 +1,35 @@
 import 'package:amiibo_network/affiliation_product/domain/repository/affiliation_repository.dart';
-import 'package:amiibo_network/affiliation_product/domain/model/affiliation_link.dart';
+import 'package:amiibo_network/affiliation_product/domain/model/affiliation_link_read_model.dart';
+import 'package:amiibo_network/data/drift_sqlite/source/affiliation_link_dao.dart';
+import 'package:amiibo_network/data/drift_sqlite/source/drift_database.dart'
+    as db;
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'affiliation_repository_local.g.dart';
 
 @Riverpod(keepAlive: true)
 AffiliationRepository affiliationRepository(AffiliationRepositoryRef ref) {
-  return const AffiliationRepositoryLocal();
+  final appDB = ref.watch(db.databaseProvider);
+  return AffiliationRepositoryLocal(appDB.affiliationLinkDao);
 }
 
 class AffiliationRepositoryLocal implements AffiliationRepository {
-  const AffiliationRepositoryLocal();
+  final AffiliationLinkDao _affiliationLinkDao;
+
+  AffiliationRepositoryLocal(this._affiliationLinkDao);
 
   @override
-  Future<List<AffiliationLink>> links() async {
-    return _affiliatedDomains.map((a) {
+  Future<List<AffiliationLinkReadModel>> links() async {
+    return _affiliationLinkDao.getLinks();
+    /* return _affiliatedDomains.map((a) {
       final map = Map<String, dynamic>.from(a);
       map['link'] = map.remove('amazonLink')! + '/';
       map['countryName'] = (map.remove('translation')! as Map)['en'];
       return AffiliationLink.fromJson(map);
-    }).toList();
+    }).toList(); */
   }
 }
-
+/* 
 const _affiliatedDomains = [
   {
     "amazonLink": "https://amazon.ae",
@@ -155,3 +162,4 @@ const _affiliatedDomains = [
     "translation": {"en": "Singapore", "es": "Singapur", "fr": "Singapour"},
   },
 ];
+ */

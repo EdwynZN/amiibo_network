@@ -1,12 +1,15 @@
 import 'dart:async';
 
 import 'package:amiibo_network/data/drift_sqlite/model/map_converter.dart';
+import 'package:amiibo_network/data/drift_sqlite/source/affiliation_link_dao.dart';
 import 'package:amiibo_network/data/drift_sqlite/source/amiibo_dao.dart';
 import 'package:amiibo_network/data/drift_sqlite/source/drift_database.dart'
     as db;
-import 'package:amiibo_network/data/drift_sqlite/source/drift_database.dart' show AmiiboTable, AmiiboUserPreferencesCompanion;
+import 'package:amiibo_network/data/drift_sqlite/source/drift_database.dart'
+    show AmiiboUserPreferencesCompanion;
 import 'package:amiibo_network/data/local_file_source/model/amiibo_local_json_model.dart'
     as dataModel;
+import 'package:amiibo_network/data/local_file_source/model/country_local_file_model.dart';
 import 'package:amiibo_network/enum/sort_enum.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/foundation.dart';
@@ -25,9 +28,11 @@ final updateServiceProvider = Provider(
 
 class UpdateService {
   static Map<String, dynamic>? _jsonFile;
+  static List<Map<String, dynamic>>? _affiliationJsonFile;
   static DateTime? _lastUpdate;
   static DateTime? _lastUpdateDB;
   final AmiiboDao _dao;
+  final AffiliationLinkDao _affiliationLinkDao;
   /* final AmiiboSQLite dao = AmiiboSQLite();
 
   static final UpdateService _instance = UpdateService._();
@@ -36,7 +41,8 @@ class UpdateService {
 
   UpdateService({
     required db.AppDatabase database,
-  }) : _dao = database.amiiboDao;
+  })  : _dao = database.amiiboDao,
+        _affiliationLinkDao = database.affiliationLinkDao;
 
   Future<void> updateSort(SharedPreferences preferences) async {
     late final OrderBy order;
@@ -92,6 +98,15 @@ class UpdateService {
   Future<List<Amiibo>> _fetchAllAmiibo() async =>
       compute(dataModel.entityFromMapToDomain, (await jsonFile)!);
 
+  Future<List<Map<String, dynamic>>> get _countryJsonFile async {
+    return _affiliationJsonFile ??= (jsonDecode(
+      await rootBundle.loadString('assets/databases/affiliation.json'),
+    ) as List).cast<Map<String, dynamic>>();
+  }
+
+  Future<List<CountryLocalFileModel>> _modelCountries() async =>
+      compute(fileCountryToModel, await _countryJsonFile);
+
   Future<DateTime?> get lastUpdateDB async {
     final SharedPreferences preferences = await SharedPreferences.getInstance();
     return _lastUpdateDB ??=
@@ -106,7 +121,9 @@ class UpdateService {
   Future<bool> createDB() async {
     return upToDate.then((sameDate) async {
       //if (sameDate == null) throw Exception("Couldn't fetch last update");
-      if (!sameDate) _fetchAllAmiibo().then(_updateDB);
+      if (!sameDate) {
+        await _updateDB();
+      }
       return await Future.value(true);
     }).catchError((e, s) {
       unawaited(
@@ -115,8 +132,9 @@ class UpdateService {
     });
   }
 
-  _updateDB(List<Amiibo> amiibos) async {
-    final List<AmiiboTable> amiibosData = [];
+  _updateDB() async {
+    final amiibos = await _fetchAllAmiibo();
+    final List<db.AmiiboTable> amiibosData = [];
     final List<AmiiboUserPreferencesCompanion> preferences = [];
     for (final a in amiibos) {
       amiibosData.add(dataFromDomain(a));
@@ -124,13 +142,33 @@ class UpdateService {
         AmiiboUserPreferencesCompanion.insert(amiiboKey: a.key),
       );
     }
-    _dao.insertAll(amiibosData: amiibosData, preferences: preferences).then((_) async {
-      final SharedPreferences preferences =
-          await SharedPreferences.getInstance();
-      final DateTime? dateTime = await lastUpdate;
-      if (dateTime != null)
-        await preferences.setString(sharedDateDB, dateTime.toIso8601String());
-    });
+    await _dao.insertAll(amiibosData: amiibosData, preferences: preferences);
+    final countries = await _modelCountries();
+    final List<db.CountryTable> contryTableList = [];
+    final List<db.AffiliationLinkCompanion> links = [];
+    for (final c in countries) {
+      contryTableList.add(
+        db.CountryTable(
+          code: c.countryCode,
+          en: c.translation.en,
+          es: c.translation.es,
+          fr: c.translation.fr,
+        ),
+      );
+      links.add(
+        db.AffiliationLinkCompanion.insert(
+          countryCode: c.countryCode,
+          amazon: c.amazonLink,
+        ),
+      );
+    }
+    await _affiliationLinkDao.saveCountries(countries: contryTableList);
+    await _affiliationLinkDao.saveLinks(links: links);
+    final SharedPreferences sharedPref = await SharedPreferences.getInstance();
+    final DateTime? dateTime = await lastUpdate;
+    if (dateTime != null) {
+      await sharedPref.setString(sharedDateDB, dateTime.toIso8601String());
+    }
   }
 
   Future<bool> get upToDate async {
