@@ -1,5 +1,8 @@
 Dart Bot built the Amiibo Network app as a Free app. This SERVICE is provided by Dart Bot at no cost and is intended for use as is.
 
+## Affiliation Link
+Amazon affiliation links are a way for you to find the best deals in Amazon while receiving a small comission, this without worsing your app experience
+
 ## Personal Identification Information
 * I do not collect any personal information. 
 * I don't sell any data, since I have nothing collected.
