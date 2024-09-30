@@ -38,5 +38,9 @@ const String sharedIgnored = 'ignoredType';
 const String sharedOwnType = 'ownType';
 /// locale index from S.delegate.supportedLocales or null
 const String sharedLanguageCode = 'localeIndex';
+/// Open links in a webview instead of the default browser
+const String sharedInAppBrowser = 'inAppBrowser';
+/// Open links in a webview instead of the default browser
+const String sharedAmazonCountryCode = 'amazonCountryCode';
 /// Version of the App
 const int versionApp = 85;

@@ -110,5 +110,11 @@
   "export_subtitle": "Save a file of your collection",
   "import_subtitle": "Restore your collection from a file",
   "use_wallpaper": "Dynamic Color",
-  "use_wallpaper_subtitle": "Use your wallpaper as a palette of colors"
+  "use_wallpaper_subtitle": "Use your wallpaper as a palette of colors",
+  "use_in_app_browser": "Open affiliate web pages in app",
+  "use_in_app_browser_subtitle": "Allow affiliate links to open inside the app",
+  "amazon_link_setting": "Amazon site",
+  "amazon_link_setting_subtitle": "Choose your country-specific Amazon site",
+  "no_link_selected": "No preference",
+  "no_link_selected_subtitle": "Will be asked each time"
 }

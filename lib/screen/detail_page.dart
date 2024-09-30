@@ -1,3 +1,4 @@
+import 'package:amiibo_network/affiliation_product/presentation/widget/amazon_affiliation_button.dart';
 import 'package:amiibo_network/resources/resources.dart';
 import 'package:amiibo_network/riverpod/amiibo_provider.dart';
 import 'package:amiibo_network/riverpod/preferences_provider.dart';
@@ -22,7 +23,7 @@ class DetailPage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final key = ref.watch(keyAmiiboProvider);
+    final id = ref.watch(keyAmiiboProvider);
     final showOwnerCategories = ref.watch(ownTypesCategoryProvider);
     final isTablet = isHorizontalTablet(MediaQuery.of(context).size);
     final Widget body;
@@ -87,12 +88,16 @@ class DetailPage extends ConsumerWidget {
             ),
         title: Consumer(
           builder: (context, ref, _) => ref
-              .watch(_nameAmiiboProvider(key))
+              .watch(_nameAmiiboProvider(id))
               .maybeWhen(
                 data: (name) => name != null ? Text(name) : const SizedBox(),
                 orElse: () => const SizedBox(),
               ),
         ),
+        actions: const [
+          AmazonAffiliationIconButton(),
+          Gap(8.0),
+        ],
       ),
       body: body,
     );

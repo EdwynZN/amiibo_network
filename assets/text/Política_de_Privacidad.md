@@ -1,5 +1,8 @@
 Dart Bot desarrollo Amiibo Network como una aplicación libre. Este SERVICIO es provisto por Dart Bot sin costo alguno y está diseñado para usarse así
 
+## Link de afiiación
+Los links de Amazon generan una pequeña comisión sin afectar la experiencia de usuario
+
 ## Información Personal
 * No almaceno ninguna información personal.
 * No vendo información alguna ya que no tengo información personal almacenada.

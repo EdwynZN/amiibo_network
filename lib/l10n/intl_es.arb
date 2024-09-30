@@ -110,5 +110,11 @@
   "export_subtitle": "Guarda un archivo de tu colección",
   "import_subtitle": "Restaura tu colección a partir de un archivo",
   "use_wallpaper": "Color dinámico",
-  "use_wallpaper_subtitle": "Use tu fondo de pantalla como tema de color"
+  "use_wallpaper_subtitle": "Use tu fondo de pantalla como tema de color",
+  "use_in_app_browser": "Abrir links de afiliación dentro de la app",
+  "use_in_app_browser_subtitle": "Los links se abriran de manera interna",
+  "amazon_link_setting": "Sitio de Amazon",
+  "amazon_link_setting_subtitle": "Escoge la tienda Amazon de tu país",
+  "no_link_selected": "Sin preferencia",
+  "no_link_selected_subtitle": "Se preguntará cuando se necesite"
 }

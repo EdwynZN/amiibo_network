@@ -6,6 +6,8 @@ targets:
           include:
             - lib/model/**.dart
             - lib/data/**/model/**.dart
+            - lib/**/data/model/**.dart
+            - lib/**/domain/model/**.dart
             - lib/resources/**.dart
       json_serializable:
         options:

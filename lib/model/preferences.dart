@@ -9,6 +9,8 @@ class Preferences with _$Preferences {
     required bool usePercentage,
     required bool useGrid,
     required bool ownTypes,
+    required bool inAppBrowser,
+    String? amazonCountryCode,
     String? languageCode,
     HiddenType? ignored,
   }) = _Preferences;

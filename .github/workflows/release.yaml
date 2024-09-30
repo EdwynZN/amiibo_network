@@ -107,9 +107,11 @@ jobs:
             base64 -d -i FIREBASE_OPTIONS_DART.dart.b64 > lib/firebase_options.dart
 
       - name: Build apk and appbundle
+        env:
+          AMAZON_TAG: ${{ secrets.AMAZON_TAG }}
         run: |
-          flutter build apk --no-pub --release --obfuscate --split-debug-info=build/app/outputs/apk-symbols/symbols
-          flutter build appbundle --no-pub --obfuscate --split-debug-info=build/app/outputs/aab-symbols/symbols
+          flutter build apk --no-pub --release --obfuscate --split-debug-info=build/app/outputs/apk-symbols/symbols --dart-define=amazon_tag=$AMAZON_TAG
+          flutter build appbundle --no-pub --obfuscate --split-debug-info=build/app/outputs/aab-symbols/symbols --dart-define=amazon_tag=$AMAZON_TAG
 
       - name: Upload aab symbols to firebase
         uses: w9jds/firebase-action@8354b09806f3107c9a27e22ec444f60452608104

@@ -1,3 +1,4 @@
+import 'package:amiibo_network/data/drift_sqlite/source/affiliation_link_dao.dart';
 import 'package:amiibo_network/data/drift_sqlite/source/amiibo_dao.dart';
 import 'package:amiibo_network/utils/preferences_constants.dart';
 import 'package:drift/drift.dart';
@@ -13,8 +14,8 @@ final databaseProvider = Provider((ref) => AppDatabase());
 
 @DriftDatabase(
   //tables: [AmiiboTable, AmiiboUserPreferencesTable],
-  daos: [AmiiboDao],
-  include: const {'amiibo_tables.drift'},
+  daos: [AmiiboDao, AffiliationLinkDao],
+  include: const {'amiibo_tables.drift', 'affiliation_tables.drift'},
 )
 class AppDatabase extends _$AppDatabase {
   static const String _databaseName = "Amiibo.db";
@@ -22,7 +23,7 @@ class AppDatabase extends _$AppDatabase {
   AppDatabase() : super(_openExecuter(AppDatabase._databaseName));
 
   @override
-  int get schemaVersion => 6;
+  int get schemaVersion => 7;
 
   @override
   MigrationStrategy get migration {
@@ -158,6 +159,10 @@ class AppDatabase extends _$AppDatabase {
               ''');
             await customStatement('DROP TABLE _amiibo_user_preferences_old;');
           });
+        }
+        if (from == 6) {
+          await m.createTable(country);
+          await m.createTable(affiliationLink);
         }
       },
     );
