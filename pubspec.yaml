@@ -15,10 +15,11 @@ description: An Amiibo collection app designed to allow you to keep track of
 version: 2.2.0+90
 
 environment:
-  sdk: '>=3.5.0 <4.0.0'
+  sdk: ">=3.5.0 <4.0.0"
 
 publish_to: none
 dependencies:
+  collection: ^1.18.0
   dio: ^5.4.1
   drift: ^2.17.0
   drift_sqflite: ^2.0.1
@@ -76,7 +77,6 @@ dev_dependencies:
 # following page: https://dart.dev/tools/pub/pubspec
 # The following section is specific to Flutter.
 flutter:
-
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in
   # the material Icons class.

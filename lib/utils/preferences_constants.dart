@@ -40,5 +40,7 @@ const String sharedOwnType = 'ownType';
 const String sharedLanguageCode = 'localeIndex';
 /// Open links in a webview instead of the default browser
 const String sharedInAppBrowser = 'inAppBrowser';
+/// Open links in a webview instead of the default browser
+const String sharedAmazonCountryCode = 'amazonCountryCode';
 /// Version of the App
 const int versionApp = 85;

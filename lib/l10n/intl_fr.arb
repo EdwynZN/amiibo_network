@@ -116,5 +116,5 @@
   "amazon_link_setting": "Site d'Amazon",
   "amazon_link_setting_subtitle": "Choisissez le site Amazon spécifique à votre pays",
   "no_link_selected": "Aucune préférence",
-  "no_link_selected_subtitle": "Sélectionner si nécessaire"
+  "no_link_selected_subtitle": "Sera demandé à chaque fois"
 }

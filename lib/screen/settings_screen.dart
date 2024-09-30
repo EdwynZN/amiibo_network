@@ -1,3 +1,4 @@
+import 'package:amiibo_network/affiliation_product/presentation/controller/amazon_afilliation_provider.dart';
 import 'package:amiibo_network/affiliation_product/presentation/widget/amazon_affiliation_link_selection_bottomsheet.dart';
 import 'package:amiibo_network/enum/hidden_types.dart';
 import 'package:amiibo_network/model/result.dart';
@@ -277,12 +278,23 @@ class _FeatureListWidgetState extends ConsumerState<_FeatureListWidget> {
           ),
           Consumer(
             builder: (context, ref, _) {
+              final selected = ref.watch(selectedAmazonAffiliationProvider);
               return _ListSettings(
                 title: translate.amazon_link_setting,
-                subtitle: translate.amazon_link_setting_subtitle,
+                subtitle: selected == null
+                  ? translate.amazon_link_setting_subtitle
+                  : selected.link.toString(),
                 icon: const ImageIcon(AssetImage(NetworkIcons.amazon)),
-                onTap: () {
-                  amazonLinkBottomSheet(context);
+                onTap: () async {
+                  final result = await amazonLinkBottomSheet(
+                    context,
+                    showSelected: true,
+                  );
+                  if (result != null) {
+                    ref
+                        .read(personalProvider.notifier)
+                        .changeAmazonCountryCode(result.result?.countryCode);
+                  }
                 },
               );
             },

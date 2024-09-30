@@ -49,6 +49,7 @@ final personalProvider =
       _ => null,
     };
     final inAppBrowser = sharedProvider.getBool(sharedInAppBrowser) ?? false;
+    final amazonCountryCode = sharedProvider.getString(sharedAmazonCountryCode);
 
     final initial = Preferences(
       usePercentage: percent,
@@ -57,6 +58,7 @@ final personalProvider =
       ignored: categoryIgnored,
       languageCode: languageCode,
       inAppBrowser: inAppBrowser,
+      amazonCountryCode: amazonCountryCode,
     );
     return UserPreferencessNotifier(initial, ref);
   },
@@ -127,10 +129,22 @@ class UserPreferencessNotifier extends StateNotifier<Preferences> {
   }
 
   Future<void> toogleInAppBrowser(bool newValue) async {
-    if (newValue != state.ownTypes) {
+    if (newValue != state.inAppBrowser) {
       final SharedPreferences preferences = ref.read(preferencesProvider);
       await preferences.setBool(sharedInAppBrowser, newValue);
       state = state.copyWith(inAppBrowser: newValue);
+    }
+  }
+
+  Future<void> changeAmazonCountryCode(String? newValue) async {
+    if (newValue != state.amazonCountryCode) {
+      final SharedPreferences preferences = ref.read(preferencesProvider);
+      if (newValue == null) {
+        await preferences.remove(sharedInAppBrowser);
+      } else {
+        await preferences.setString(sharedInAppBrowser, newValue);
+      }
+      state = state.copyWith(amazonCountryCode: newValue);
     }
   }
 
