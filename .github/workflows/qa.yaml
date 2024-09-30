@@ -95,7 +95,9 @@ jobs:
           echo "keyPassword=$KEYSTORE_KEY_PASSWORD" >> android/key.properties
 
       - name: Build release version for testing purpose
-        run: flutter build apk --split-per-abi --no-pub --verbose --release
+        env:
+          AMAZON_TAG: ${{ secrets.AMAZON_TAG }}
+        run: flutter build apk --split-per-abi --no-pub --verbose --release --dart-define=amazon_tag=$AMAZON_TAG
       
       - name: Upload APK
         uses: actions/upload-artifact@v4
