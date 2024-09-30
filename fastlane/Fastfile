@@ -24,7 +24,7 @@ platform :android do
   
   desc "Deploy internal to Google Play Store"
   lane :internal do
-    sh("cd .. && flutter build appbundle --release")
+    # sh("cd .. && flutter build appbundle --release")
     upload_to_play_store(
       aab:'./build/app/outputs/bundle/release/app-release.aab',
       skip_upload_screenshots:true,
