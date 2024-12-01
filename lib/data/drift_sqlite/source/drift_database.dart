@@ -2,7 +2,7 @@ import 'package:amiibo_network/data/drift_sqlite/source/affiliation_link_dao.dar
 import 'package:amiibo_network/data/drift_sqlite/source/amiibo_dao.dart';
 import 'package:amiibo_network/utils/preferences_constants.dart';
 import 'package:drift/drift.dart';
-import 'package:drift_dev/api/migrations.dart';
+import 'package:drift_dev/api/migrations_native.dart';
 import 'package:drift_sqflite/drift_sqflite.dart';
 import 'package:flutter/foundation.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
