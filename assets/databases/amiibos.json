@@ -10373,7 +10373,7 @@
       "au": null,
       "eu": null,
       "jp": "20210204",
-      "na": null,
+      "na": "20230217",
       "type": "Band"
     },
     {
@@ -10386,7 +10386,7 @@
       "au": null,
       "eu": null,
       "jp": "20210204",
-      "na": null,
+      "na": "20230217",
       "type": "Band"
     },
     {
@@ -10399,7 +10399,7 @@
       "au": null,
       "eu": null,
       "jp": "20210204",
-      "na": null,
+      "na": "20230217",
       "type": "Band"
     },
     {
@@ -10412,7 +10412,7 @@
       "au": null,
       "eu": null,
       "jp": "20210204",
-      "na": null,
+      "na": "20230217",
       "type": "Band"
     },
     {
@@ -10425,7 +10425,7 @@
       "au": null,
       "eu": null,
       "jp": "20210204",
-      "na": null,
+      "na": "20230217",
       "type": "Band"
     },
     {
@@ -10438,7 +10438,7 @@
       "au": null,
       "eu": null,
       "jp": "20210204",
-      "na": null,
+      "na": "20230217",
       "type": "Band"
     },
     {
@@ -11590,7 +11590,7 @@
       "name": "Donkey Kong Power-Up Band",
       "au": null,
       "eu": null,
-      "jp": "202403",
+      "jp": "20241211",
       "na": null,
       "type": "Band"
     },
@@ -11603,7 +11603,7 @@
       "name": "Diddy Kong Power-Up Band",
       "au": null,
       "eu": null,
-      "jp": "202403",
+      "jp": "20241211",
       "na": null,
       "type": "Band"
     },
@@ -11660,5 +11660,5 @@
       "type": "Figure"
     }
   ],
-  "lastUpdated": "2024-09-25T10:00:00.000"
+  "lastUpdated": "2024-11-30T14:00:00.000"
 }

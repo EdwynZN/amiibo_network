@@ -4,6 +4,7 @@ import 'package:amiibo_network/affiliation_product/domain/model/affiliation_link
 import 'package:amiibo_network/riverpod/amiibo_provider.dart';
 import 'package:amiibo_network/riverpod/preferences_provider.dart';
 import 'package:collection/collection.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'amazon_afilliation_provider.g.dart';
@@ -11,17 +12,13 @@ part 'amazon_afilliation_provider.g.dart';
 const _kAmazonTag = String.fromEnvironment('amazon_tag');
 
 @Riverpod(keepAlive: true)
-Future<List<AffiliationLinkReadModel>> amazonAffiliation(
-  AmazonAffiliationRef ref,
-) {
+Future<List<AffiliationLinkReadModel>> amazonAffiliation(Ref ref) {
   final repo = ref.watch(affiliationRepositoryProvider);
   return repo.links();
 }
 
 @riverpod
-AffiliationLinkReadModel? selectedAmazonAffiliation(
-  SelectedAmazonAffiliationRef ref,
-) {
+AffiliationLinkReadModel? selectedAmazonAffiliation(Ref ref) {
   final countryCode = ref.watch(
     personalProvider.select((p) => p.amazonCountryCode),
   );
@@ -43,7 +40,7 @@ AffiliationLinkReadModel? selectedAmazonAffiliation(
 
 @riverpod
 Future<List<AffiliationLinkReadModel>> selectedAmazonAffiliationDetail(
-  SelectedAmazonAffiliationDetailRef ref, {
+  Ref ref, {
   required int key,
 }) async {
   if (_kAmazonTag.isEmpty) {
