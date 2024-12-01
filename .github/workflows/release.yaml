@@ -24,11 +24,8 @@ jobs:
           fetch-depth: 0
       
       - name: Read YAML Data
-        uses: KJ002/read-yaml@1.6
+        uses: RCSandberg/dart-read-package-semantic-version-action@v2
         id: pubspec
-        with:
-          file: 'pubspec.yaml'
-          key-path: '["version"]'
 
       - name: Setup ruby
         uses: ruby/setup-ruby@v1
@@ -37,9 +34,9 @@ jobs:
           bundler-cache: true
 
       - name: Setup Java
-        uses: actions/setup-java@v3
+        uses: actions/setup-java@v4
         with:
-          distribution: 'adopt-hotspot'
+          distribution: 'temurin'
           java-version: ${{ env.java_version }}
           cache: 'gradle'
 
@@ -127,7 +124,7 @@ jobs:
         uses: softprops/action-gh-release@v2
         with:
           token: "${{ secrets.GITHUB_TOKEN }}"
-          tag_name: "${{ steps.pubspec.outputs.data }}"
+          tag_name: "${{ steps.pubspec.outputs.version }}"
           draft: true
           prerelease: true
           files: build/app/outputs/flutter-apk/app-release.apk
