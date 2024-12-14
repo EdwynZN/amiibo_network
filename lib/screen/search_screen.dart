@@ -63,7 +63,7 @@ class SearchScreen extends HookConsumerWidget {
                 isCollapsed: true,
                 hintText: translate.category(amiiboCategory),
                 hintStyle: style?.copyWith(
-                  color: style.color?.withOpacity(0.5),
+                  color: style.color?.withValues(alpha: 0.5),
                 ),
                 border: InputBorder.none,
               ),
@@ -221,8 +221,8 @@ class _SliverPersistentHeader extends SliverPersistentHeaderDelegate {
           stops: const [0.3, 0.6, 0.9],
           colors: [
             _color,
-            _color.withOpacity(0.85),
-            _color.withOpacity(0.2),
+            _color.withValues(alpha: 0.85),
+            _color.withValues(alpha: 0.2),
           ],
         ),
       ),

@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:amiibo_network/resources/theme_material3_schemes.dart';
+import 'package:amiibo_network/utils/color_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
@@ -194,7 +195,7 @@ class ColorConverter extends JsonConverter<Color, int> {
 
   @override
   int toJson(Color color) {
-    return color.value;
+    return color.colorValue;
   }
 }
 
@@ -206,7 +207,7 @@ class ColorOrNullConverter extends JsonConverter<Color?, int?> {
 
   @override
   int? toJson(Color? color) {
-    return color == null ? null : color.value;
+    return color == null ? null : color.colorValue;
   }
 }
 

@@ -174,7 +174,7 @@ class _CollectionDrawerState extends ConsumerState<CollectionDrawer> {
                                 ),
                                 selectedTileColor: preferencesExtension
                                     .ownContainer
-                                    .withOpacity(0.54),
+                                    .withValues(alpha: 0.54),
                                 selectedColor:
                                     preferencesExtension.onOwnContainer,
                                 selected: isOwned,
@@ -193,7 +193,7 @@ class _CollectionDrawerState extends ConsumerState<CollectionDrawer> {
                                 ),
                                 selectedTileColor: preferencesExtension
                                     .wishContainer
-                                    .withOpacity(0.54),
+                                    .withValues(alpha: 0.54),
                                 selectedColor:
                                     preferencesExtension.onWishContainer,
                                 selected: isWishlist,
