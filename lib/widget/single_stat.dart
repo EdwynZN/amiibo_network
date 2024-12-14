@@ -197,7 +197,7 @@ class _StatContainer extends StatelessWidget {
               text: ' $subtitle',
               style: TextStyle(
                 fontSize: 12.0,
-                color: theme.colorScheme.onSurface.withOpacity(0.72),
+                color: theme.colorScheme.onSurface.withValues(alpha: 0.72),
                 fontFeatures: const [
                   FontFeature.tabularFigures(),
                 ],

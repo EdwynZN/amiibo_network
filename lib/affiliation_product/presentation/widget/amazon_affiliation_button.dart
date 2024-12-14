@@ -3,6 +3,7 @@ import 'package:amiibo_network/affiliation_product/presentation/widget/amazon_af
 import 'package:amiibo_network/resources/resources.dart';
 import 'package:amiibo_network/riverpod/amiibo_provider.dart';
 import 'package:amiibo_network/riverpod/preferences_provider.dart';
+import 'package:amiibo_network/utils/color_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:material_color_utilities/material_color_utilities.dart';
@@ -26,8 +27,8 @@ class AmazonAffiliationButton extends HookConsumerWidget {
               ?.resolve(state);
           if (color != null) {
             final int value = Blend.hctHue(
-              color.value,
-              amazonColor.value,
+              color.colorValue,
+              amazonColor.colorValue,
               0.75,
             );
             return Color(value);
@@ -41,8 +42,8 @@ class AmazonAffiliationButton extends HookConsumerWidget {
               ?.resolve(state);
           if (color != null) {
             final int value = Blend.hctHue(
-              color.value,
-              amazonColor.value,
+              color.colorValue,
+              amazonColor.colorValue,
               0.5,
             );
             return Color(value);
@@ -78,8 +79,8 @@ class AmazonAffiliationIconButton extends HookConsumerWidget {
           final color = style?.backgroundColor?.resolve(state);
           if (color != null) {
             final int value = Blend.hctHue(
-              color.value,
-              amazonColor.value,
+              color.colorValue,
+              amazonColor.colorValue,
               0.15,
             );
             return Color(value);
@@ -90,8 +91,8 @@ class AmazonAffiliationIconButton extends HookConsumerWidget {
           final color = style?.foregroundColor?.resolve(state);
           if (color != null) {
             final int value = Blend.hctHue(
-              color.value,
-              amazonColor.value,
+              color.colorValue,
+              amazonColor.colorValue,
               0.25,
             );
             return Color(value);

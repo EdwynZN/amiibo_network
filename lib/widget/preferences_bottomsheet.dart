@@ -54,7 +54,7 @@ class _BottomSheetSort extends StatelessWidget {
           surfaceTintColor: theme.colorScheme.surfaceTint,
           clipBehavior: Clip.antiAlias,
           child: ListTileTheme.merge(
-            //selectedTileColor: theme.selectedRowColor.withOpacity(0.16),
+            //selectedTileColor: theme.selectedRowColor.withValues(alpha: 0.16),
             contentPadding: const EdgeInsets.symmetric(horizontal: 16.0),
             dense: true,
             style: ListTileStyle.drawer,
@@ -84,7 +84,7 @@ class _BottomSheetSort extends StatelessWidget {
                               style: theme.textTheme.bodyLarge,
                             ),
                             inactiveTrackColor:
-                                theme.disabledColor.withOpacity(0.12),
+                                theme.disabledColor.withValues(alpha: 0.12),
                             value: pref.usePercentage,
                             onChanged: (value) async => await ref
                                 .read(personalProvider.notifier)
@@ -99,7 +99,7 @@ class _BottomSheetSort extends StatelessWidget {
                               style: theme.textTheme.bodyLarge,
                             ),
                             inactiveTrackColor:
-                                theme.disabledColor.withOpacity(0.12),
+                                theme.disabledColor.withValues(alpha: 0.12),
                             value: pref.useGrid,
                             onChanged: (value) async => await ref
                                 .read(personalProvider.notifier)
@@ -138,7 +138,7 @@ class _BottomSheetSort extends StatelessWidget {
                                   ),
                                   isThreeLine: true,
                                   inactiveTrackColor:
-                                      theme.disabledColor.withOpacity(0.12),
+                                      theme.disabledColor.withValues(alpha: 0.12),
                                   value: ref.watch(ownTypesCategoryProvider),
                                   onChanged: (value) async => await ref
                                       .read(personalProvider.notifier)

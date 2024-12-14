@@ -318,7 +318,7 @@ class AmiiboTheme3 implements AmiiboTheme {
 
   ThemeData _themeFromScheme(ColorScheme scheme,
       [bool useSurfaceElevation = true]) {
-    final overlay = scheme.primary.withOpacity(0.24);
+    final overlay = scheme.primary.withValues(alpha: 0.24);
     final inverseBrightness = scheme.brightness == Brightness.light
         ? Brightness.dark
         : Brightness.light;
@@ -428,7 +428,7 @@ class AmiiboTheme3 implements AmiiboTheme {
           borderRadius: BorderRadius.all(Radius.circular(8.0)),
         ),
         elevation: !useSurfaceElevation ? 0 : 4.0,
-        shadowColor: scheme.surface.withOpacity(0.12),
+        shadowColor: scheme.surface.withValues(alpha: 0.12),
         surfaceTintColor: scheme.surfaceTint,
       ),
       checkboxTheme: CheckboxThemeData(
@@ -538,7 +538,7 @@ class AmiiboTheme3 implements AmiiboTheme {
       ),
       focusColor: scheme.inversePrimary,
       fontFamily: null,
-      highlightColor: scheme.primaryContainer.withOpacity(0.38),
+      highlightColor: scheme.primaryContainer.withValues(alpha: 0.38),
       hintColor: Colors.black38,
       hoverColor: scheme.primaryContainer,
       iconTheme: IconThemeData(color: scheme.onSurface),
@@ -678,7 +678,7 @@ class AmiiboTheme3 implements AmiiboTheme {
         ),
         behavior: SnackBarBehavior.floating,
       ),
-      splashColor: scheme.tertiaryContainer.withOpacity(0.24),
+      splashColor: scheme.tertiaryContainer.withValues(alpha: 0.24),
       switchTheme: SwitchThemeData(
         thumbColor: WidgetStateProperty.resolveWith<Color?>((states) {
           if (states.contains(WidgetState.disabled)) {
@@ -696,9 +696,9 @@ class AmiiboTheme3 implements AmiiboTheme {
             return null;
           } else if (states.contains(WidgetState.focused) ||
               states.contains(WidgetState.pressed)) {
-            return scheme.onPrimaryContainer.withOpacity(0.24);
+            return scheme.onPrimaryContainer.withValues(alpha: 0.24);
           } else if (states.contains(WidgetState.selected)) {
-            return scheme.primary.withOpacity(0.24);
+            return scheme.primary.withValues(alpha: 0.24);
           }
           return null;
         }),

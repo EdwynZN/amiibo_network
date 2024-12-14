@@ -7,7 +7,6 @@ Color? colorOnThemeMode(ThemeMode mode, Brightness brightness) {
     case ThemeMode.dark:
       return Colors.white54;
     case ThemeMode.system:
-    default:
       return brightness == Brightness.dark ? Colors.white54 : null;
   }
 }

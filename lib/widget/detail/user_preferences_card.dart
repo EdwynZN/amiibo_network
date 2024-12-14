@@ -421,7 +421,7 @@ class ColumnButton extends StatelessWidget {
                     shape: WidgetStatePropertyAll(RoundedRectangleBorder()),
                     visualDensity: const VisualDensity(vertical: -2.0),
                   ),
-                  highlightColor: color?.withOpacity(0.16),
+                  highlightColor: color?.withValues(alpha: 0.16),
                   icon: isDisabled
                       ? const Icon(Icons.remove_circle_sharp)
                       : switch (effect) {

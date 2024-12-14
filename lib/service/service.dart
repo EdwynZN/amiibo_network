@@ -169,7 +169,6 @@ interface class Service {
         where &= Cond.like('amiiboSeries', '%$search%');
         break;
       case AmiiboCategory.All:
-      default:
         where = And();
     }
     if (category != AmiiboCategory.AmiiboSeries && hiddenCategories != null) {
@@ -250,8 +249,6 @@ interface class Service {
         return Cond.like('gameSeries', '%$filter%');
       case SearchCategory.AmiiboSeries:
         return Cond.like('amiiboSeries', '%$filter%');
-      default:
-        return And();
     }
   }
 

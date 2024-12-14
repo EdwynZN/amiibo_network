@@ -75,7 +75,7 @@ class WishedOutlinedButton extends ConsumerWidget {
     final S translate = S.of(context);
     final preferencesPalette =
         Theme.of(context).extension<PreferencesExtension>()!;
-    final color = preferencesPalette.wishContainer.withOpacity(0.24);
+    final color = preferencesPalette.wishContainer.withValues(alpha: 0.24);
     return IconButton.outlined(
       style: const ButtonStyle(
         shape: WidgetStatePropertyAll(
@@ -132,7 +132,7 @@ class OwnedOutlinedButton extends ConsumerWidget {
     final S translate = S.of(context);
     final preferencesPalette =
         Theme.of(context).extension<PreferencesExtension>()!;
-    final color = preferencesPalette.ownContainer.withOpacity(0.24);
+    final color = preferencesPalette.ownContainer.withValues(alpha: 0.24);
     return IconButton.outlined(
       style: const ButtonStyle(
         shape: WidgetStatePropertyAll(
@@ -204,7 +204,7 @@ class WishedButton extends ConsumerWidget {
     final S translate = S.of(context);
     final preferencesPalette =
         Theme.of(context).extension<PreferencesExtension>()!;
-    final color = preferencesPalette.wishContainer.withOpacity(0.24);
+    final color = preferencesPalette.wishContainer.withValues(alpha: 0.24);
     return IconButton(
       style: const ButtonStyle(
         tapTargetSize: MaterialTapTargetSize.shrinkWrap,
@@ -258,7 +258,7 @@ class OwnedButton extends ConsumerWidget {
     final S translate = S.of(context);
     final preferencesPalette =
         Theme.of(context).extension<PreferencesExtension>()!;
-    final color = preferencesPalette.ownContainer.withOpacity(0.24);
+    final color = preferencesPalette.ownContainer.withValues(alpha: 0.24);
     return IconButton(
       style: const ButtonStyle(
         tapTargetSize: MaterialTapTargetSize.shrinkWrap,

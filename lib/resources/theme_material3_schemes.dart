@@ -1,4 +1,5 @@
 import 'package:amiibo_network/resources/material3_schemes.dart';
+import 'package:amiibo_network/utils/color_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:material_color_utilities/material_color_utilities.dart';
 
@@ -8,7 +9,7 @@ ColorScheme blendScheme(
   [double amount = 0.3]
 ) {
   Color _harmonize(Color original, Color destiny) => Color(
-        Blend.hctHue(original.value, destiny.value, amount),
+        Blend.hctHue(original.colorValue, destiny.colorValue, amount),
       );
   return ColorScheme(
     brightness: originalScheme.brightness,
@@ -81,7 +82,7 @@ class TonalColor extends ColorSwatch<int> {
   ///
   /// The `primary` argument should be the 32 bit ARGB value of one of the
   /// values in the swatch, as would be passed to the [Color.new] constructor
-  /// for that same color, and as is exposed by [value]. (This is distinct from
+  /// for that same color, and as is exposed by [colorValue]. (This is distinct from
   /// the specific index of the color in the swatch.)
   const TonalColor(super.primary, super.swatch);
 
@@ -130,22 +131,22 @@ class TonalColor extends ColorSwatch<int> {
   TonalColor blend(Color sourceColor) {
     final blend = Blend.harmonize;
     return TonalColor(
-      blend(value, sourceColor.value),
+      blend(colorValue, sourceColor.colorValue),
       <int, Color>{
-        0: Color(blend(this[0]!.value, sourceColor.value)),
-        10: Color(blend(this[10]!.value, sourceColor.value)),
-        20: Color(blend(this[20]!.value, sourceColor.value)),
-        30: Color(blend(this[30]!.value, sourceColor.value)),
-        40: Color(blend(this[40]!.value, sourceColor.value)),
-        50: Color(blend(this[50]!.value, sourceColor.value)),
-        60: Color(blend(this[60]!.value, sourceColor.value)),
-        70: Color(blend(this[70]!.value, sourceColor.value)),
-        80: Color(blend(this[80]!.value, sourceColor.value)),
-        90: Color(blend(this[90]!.value, sourceColor.value)),
-        95: Color(blend(this[95]!.value, sourceColor.value)),
-        98: Color(blend(this[98]!.value, sourceColor.value)),
-        99: Color(blend(this[99]!.value, sourceColor.value)),
-        100: Color(blend(this[100]!.value, sourceColor.value)),
+        0: Color(blend(this[0]!.colorValue, sourceColor.colorValue)),
+        10: Color(blend(this[10]!.colorValue, sourceColor.colorValue)),
+        20: Color(blend(this[20]!.colorValue, sourceColor.colorValue)),
+        30: Color(blend(this[30]!.colorValue, sourceColor.colorValue)),
+        40: Color(blend(this[40]!.colorValue, sourceColor.colorValue)),
+        50: Color(blend(this[50]!.colorValue, sourceColor.colorValue)),
+        60: Color(blend(this[60]!.colorValue, sourceColor.colorValue)),
+        70: Color(blend(this[70]!.colorValue, sourceColor.colorValue)),
+        80: Color(blend(this[80]!.colorValue, sourceColor.colorValue)),
+        90: Color(blend(this[90]!.colorValue, sourceColor.colorValue)),
+        95: Color(blend(this[95]!.colorValue, sourceColor.colorValue)),
+        98: Color(blend(this[98]!.colorValue, sourceColor.colorValue)),
+        99: Color(blend(this[99]!.colorValue, sourceColor.colorValue)),
+        100: Color(blend(this[100]!.colorValue, sourceColor.colorValue)),
       },
     );
   }
@@ -154,7 +155,7 @@ class TonalColor extends ColorSwatch<int> {
     final swatch = ColorSwatch.lerp(a, b, t);
     if (swatch == null) return null;
     return TonalColor(
-      swatch.value,
+      swatch.colorValue,
       <int, Color>{
         0: swatch[0]!,
         10: swatch[10]!,

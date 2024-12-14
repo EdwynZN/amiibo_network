@@ -45,8 +45,8 @@ class SliverStatsHeader extends SliverPersistentHeaderDelegate {
         stops: const [0.20, 0.50, 1.0],
         colors: [
           _color,
-          _color.withOpacity(0.75),
-          _color.withOpacity(0.25),
+          _color.withValues(alpha: 0.75),
+          _color.withValues(alpha: 0.25),
         ],
       ),
     );
