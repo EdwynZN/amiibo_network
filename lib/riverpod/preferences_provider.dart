@@ -140,12 +140,11 @@ class UserPreferencessNotifier extends StateNotifier<Preferences> {
     if (newValue != state.amazonCountryCode) {
       final SharedPreferences preferences = ref.read(preferencesProvider);
       if (newValue == null) {
-        await preferences.remove(sharedInAppBrowser);
+        await preferences.remove(sharedAmazonCountryCode);
       } else {
-        await preferences.setString(sharedInAppBrowser, newValue);
+        await preferences.setString(sharedAmazonCountryCode, newValue);
       }
       state = state.copyWith(amazonCountryCode: newValue);
     }
   }
-
 }
