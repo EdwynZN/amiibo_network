@@ -129,9 +129,9 @@ jobs:
       - name: Set new version number
         id: update_version_number
         run: |
-          if [ ${{ inputs.flavor }} == "patch" ]; then
+          if [ ${{ inputs.version_update }} == "patch" ]; then
             N_VERSION_NUMBER=${{ steps.semvers.outputs.patch }}
-          elif [ ${{ inputs.flavor }} == "minor" ]; then
+          elif [ ${{ inputs.version_update }} == "minor" ]; then
             N_VERSION_NUMBER=${{ steps.semvers.outputs.minor }}
           else
             N_VERSION_NUMBER=${{ steps.semvers.outputs.major }}
