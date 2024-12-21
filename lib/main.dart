@@ -8,6 +8,7 @@ import 'package:amiibo_network/riverpod/provider_observer.dart';
 import 'package:amiibo_network/riverpod/router_provider.dart';
 import 'package:amiibo_network/service/info_package.dart';
 import 'package:amiibo_network/service/update_service.dart';
+import 'package:amiibo_network/utils/migration.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:firebase_remote_config/firebase_remote_config.dart';
@@ -83,6 +84,7 @@ Future<void> main() async {
       }
 
       final preferences = await SharedPreferences.getInstance();
+      await sharedPreferencesMigration(preferences);
       await updateOldTheme();
       final store = await newHiveDefaultCacheStore(
         path: cacheDir.path,
