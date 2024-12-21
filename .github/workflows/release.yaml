@@ -6,6 +6,16 @@ on:
       - master
     tags:        
       - v*
+  workflow_dispatch:
+    inputs:
+      version_update:
+        type: choice
+        description: What version should be used
+        default: patch
+        options: 
+        - patch
+        - minor
+        - major
 
 env:
   java_version: '17'
@@ -24,7 +34,7 @@ jobs:
           fetch-depth: 0
       
       - name: Read YAML Data
-        uses: RCSandberg/dart-read-package-semantic-version-action@v2
+        uses: altive/pubspec-metadata@v1
         id: pubspec
 
       - name: Setup ruby
@@ -102,13 +112,41 @@ jobs:
             echo Firebase .dart file
             echo "$FIREBASE_OPTIONS_DART" > FIREBASE_OPTIONS_DART.dart.b64
             base64 -d -i FIREBASE_OPTIONS_DART.dart.b64 > lib/firebase_options.dart
-
+      
+      - name: Play Store Build Number
+        id: versioning
+        uses: lukasa1993/android-version-code-update@v2.1.0
+        with:
+          serviceAccountJson: android/api-play-store-key.json
+          packageName: com.dartz.amiibo_network
+      
+      - name: 'Get next version'
+        id: semvers
+        uses: "WyriHaximus/github-action-next-semvers@v1"
+        with:
+          version: ${{ steps.pubspec.outputs.version-number }}
+      
+      - name: Set new version number
+        id: update_version_number
+        run: |
+          if [ ${{ inputs.flavor }} == "patch" ]; then
+            N_VERSION_NUMBER=${{ steps.semvers.outputs.patch }}
+          elif [ ${{ inputs.flavor }} == "minor" ]; then
+            N_VERSION_NUMBER=${{ steps.semvers.outputs.minor }}
+          else
+            N_VERSION_NUMBER=${{ steps.semvers.outputs.major }}
+          fi
+          echo "next_version_number=$N_VERSION_NUMBER" >> $GITHUB_ENV
+          echo "version=$N_VERSION_NUMBER+${{ steps.versioning.outputs.next_version }}" >> $GITHUB_ENV
+      
       - name: Build apk and appbundle
         env:
           AMAZON_TAG: ${{ secrets.AMAZON_TAG }}
+          build_number: ${{ steps.versioning.outputs.next_version }}
+          version_number: ${{ env.next_version_number }}
         run: |
-          flutter build apk --no-pub --release --obfuscate --split-debug-info=build/app/outputs/apk-symbols/symbols --dart-define=amazon_tag=$AMAZON_TAG
-          flutter build appbundle --no-pub --obfuscate --split-debug-info=build/app/outputs/aab-symbols/symbols --dart-define=amazon_tag=$AMAZON_TAG
+          flutter build apk --build-number=$build_number --build-name=$version_number --no-pub --release --obfuscate --split-debug-info=build/app/outputs/apk-symbols/symbols --dart-define=amazon_tag=$AMAZON_TAG
+          flutter build appbundle --build-number=$build_number --build-name=$version_number --no-pub --obfuscate --split-debug-info=build/app/outputs/aab-symbols/symbols --dart-define=amazon_tag=$AMAZON_TAG
 
       - name: Upload aab symbols to firebase
         uses: w9jds/firebase-action@8354b09806f3107c9a27e22ec444f60452608104
@@ -119,12 +157,24 @@ jobs:
 
       - name: Build appbundle and upload to google play
         run: bundle exec fastlane android internal
+
+      - uses: rmeneely/update-yaml@v1
+        with:
+          infile: pubspec.yaml
+          varlist: 'version=${{ env.version }}'
+      
+      - name: Update version in pubspec
+        run: |
+          git config --global user.name '${{ secrets.USERNAME }}'
+          git config --global user.email '${{ secrets.EMAIL }}'
+          git commit -am "[skip ci] Automated new version: ${{ env.version }}"
+          git push
       
       - name: Create Github Release
         uses: softprops/action-gh-release@v2
         with:
           token: "${{ secrets.GITHUB_TOKEN }}"
-          tag_name: "${{ steps.pubspec.outputs.version }}"
+          tag_name: "${{ env.version }}"
           draft: true
           prerelease: true
           files: build/app/outputs/flutter-apk/app-release.apk
