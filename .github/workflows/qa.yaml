@@ -94,10 +94,32 @@ jobs:
           echo "storePassword=$KEYSTORE_STORE_PASSWORD" >> android/key.properties
           echo "keyPassword=$KEYSTORE_KEY_PASSWORD" >> android/key.properties
 
+          - name: Play Store Build Number
+          id: versioning
+          uses: lukasa1993/android-version-code-update@v2.0.0
+          with:
+            serviceAccountJson: ${{ secrets.PLAY_STORE_KEY }}
+            packageName: com.dartz.amiibo_network
+        
+      - name: 'Get next version'
+        id: semvers
+        uses: "WyriHaximus/github-action-next-semvers@v1"
+        with:
+          version: ${{ steps.pubspec.outputs.version-number }}
+      
+      - name: Set new version number
+        id: update_version_number
+        run: |
+          N_VERSION_NUMBER=${{ steps.semvers.outputs.patch }}
+          echo "next_version_number=$N_VERSION_NUMBER" >> $GITHUB_ENV
+          echo "version=$N_VERSION_NUMBER+${{ steps.versioning.outputs.next_version }}" >> $GITHUB_ENV
+      
       - name: Build release version for testing purpose
         env:
           AMAZON_TAG: ${{ secrets.AMAZON_TAG }}
-        run: flutter build apk --split-per-abi --no-pub --verbose --release --dart-define=amazon_tag=$AMAZON_TAG
+          build_number: ${{ steps.versioning.outputs.next_version }}
+          version_number: ${{ env.next_version_number }}
+        run: flutter build apk --build-number=$build_number --build-name=$version_number --split-per-abi --no-pub --verbose --release --dart-define=amazon_tag=$AMAZON_TAG
       
       - name: Upload APK
         uses: actions/upload-artifact@v4
