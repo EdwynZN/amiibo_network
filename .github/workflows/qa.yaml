@@ -94,12 +94,12 @@ jobs:
           echo "storePassword=$KEYSTORE_STORE_PASSWORD" >> android/key.properties
           echo "keyPassword=$KEYSTORE_KEY_PASSWORD" >> android/key.properties
 
-          - name: Play Store Build Number
-          id: versioning
-          uses: lukasa1993/android-version-code-update@v2.0.0
-          with:
-            serviceAccountJson: ${{ secrets.PLAY_STORE_KEY }}
-            packageName: com.dartz.amiibo_network
+      - name: Play Store Build Number
+        id: versioning
+        uses: lukasa1993/android-version-code-update@v2.0.0
+        with:
+          serviceAccountJson: ${{ secrets.PLAY_STORE_KEY }}
+          packageName: com.dartz.amiibo_network
         
       - name: 'Get next version'
         id: semvers
