@@ -104,7 +104,7 @@ jobs:
 
       - name: Play Store Build Number
         id: versioning
-        uses: lukasa1993/android-version-code-update@v2.0.0
+        uses: lukasa1993/android-version-code-update@v2.1.0
         with:
           serviceAccountJson: android/api-play-store-key.json
           packageName: com.dartz.amiibo_network
