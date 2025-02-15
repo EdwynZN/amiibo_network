@@ -9,7 +9,6 @@ on:
 env:
   java_version: '17'
   ruby_version: '2.7.2'
-  flutter_version: '3.27.0'
   
 jobs:
   android-QA:
@@ -39,20 +38,10 @@ jobs:
           java-version: ${{ env.java_version }}
           cache: 'gradle'
 
-      - name: Cache Flutter dependencies
-        uses: actions/cache@v3
-        with:
-          path: |
-            ~/.gradle/caches
-            ~/.gradle/wrapper
-            ~/.android/build-cache
-            /opt/hostedtoolcache/flutter
-          key: ${{ runner.OS }}-flutter-install-cache-${{ env.flutter_version }}
-
       - uses: subosito/flutter-action@v2
         with:
           channel: stable
-          flutter-version: ${{ env.flutter_version }}
+          flutter-version-file: pubspec.yaml
           
       - name: Flutter pub dependencies
         run: flutter pub get
