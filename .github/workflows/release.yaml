@@ -146,18 +146,6 @@ jobs:
 
       - name: Build appbundle and upload to google play
         run: bundle exec fastlane android internal
-
-      - uses: rmeneely/update-yaml@v1
-        with:
-          infile: pubspec.yaml
-          varlist: 'version=${{ env.version }}'
-      
-      - name: Update version in pubspec
-        run: |
-          git config --global user.name '${{ secrets.USERNAME }}'
-          git config --global user.email '${{ secrets.EMAIL }}'
-          git commit -am "[skip ci] Automated new version: ${{ env.version }}"
-          git push
       
       - name: update semvar variable
         shell: bash
