@@ -4,7 +4,7 @@ part 'stat.freezed.dart';
 part 'stat.g.dart';
 
 @freezed
-class Stat with _$Stat {
+abstract class Stat with _$Stat {
   const factory Stat({
     @Default('Amiibo Network') @JsonKey(name: 'amiiboSeries', includeIfNull: true) String name,
     @Default(0) @JsonKey(name: 'Total', includeIfNull: true) int total,

@@ -40,8 +40,6 @@ class _AmazonSiteDraggableSheet extends ConsumerWidget {
   final List<AffiliationLinkReadModel>? affiliations;
 
   const _AmazonSiteDraggableSheet({
-    // ignore: unused_element
-    super.key,
     required this.controller,
     required this.showSelected,
     this.affiliations,

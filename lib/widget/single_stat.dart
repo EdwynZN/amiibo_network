@@ -161,7 +161,6 @@ class _StatContainer extends StatelessWidget {
 
   const _StatContainer({
     // ignore: unused_element
-    super.key,
     required this.indicatorColor,
     required this.title,
     required this.subtitle,

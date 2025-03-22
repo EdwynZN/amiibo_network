@@ -267,7 +267,6 @@ class _ListAmiiboAsset extends StatelessWidget {
 
   const _ListAmiiboAsset({
     // ignore: unused_element
-    super.key,
     required this.amiiboKey,
     required this.name,
   });
@@ -320,23 +319,14 @@ class _AmiiboListInfo extends StatelessWidget {
   final bool useSerie;
 
   const _AmiiboListInfo({
-    // ignore: unused_element
-    super.key,
     required this.name,
     required this.game,
     required this.serie,
     required this.useSerie,
-    // ignore: unused_element
-    this.cardNumber,
-    // ignore: unused_element
-    this.type,
-    // ignore: unused_element
-    this.style,
-  });
+  }) : cardNumber = null, type = null, style = null;
 
   _AmiiboListInfo.fromAmiibo({
     // ignore: unused_element
-    super.key,
     required AmiiboDetails amiibo,
     required this.useSerie,
     this.style,

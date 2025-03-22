@@ -9,7 +9,7 @@ List<Amiibo> entityFromMapToDomain(Map<String, dynamic> amiibo) =>
         amiibo["amiibo"].map((x) => AmiiboLocalFile.fromJson(x).toDomain()));
 
 @freezed
-class AmiiboLocalFile with _$AmiiboLocalFile {
+abstract class AmiiboLocalFile with _$AmiiboLocalFile {
   const AmiiboLocalFile._();
 
   const factory AmiiboLocalFile({

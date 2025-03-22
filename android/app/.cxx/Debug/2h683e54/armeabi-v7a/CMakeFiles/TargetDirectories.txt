@@ -1,0 +1,2 @@
+D:/Workspace/Amiibo Network/android/app/.cxx/Debug/2h683e54/armeabi-v7a/CMakeFiles/edit_cache.dir
+D:/Workspace/Amiibo Network/android/app/.cxx/Debug/2h683e54/armeabi-v7a/CMakeFiles/rebuild_cache.dir

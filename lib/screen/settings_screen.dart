@@ -70,8 +70,7 @@ class SettingsPage extends StatelessWidget {
 }
 
 class _AppearanceListWidget extends ConsumerWidget {
-  // ignore: unused_element
-  const _AppearanceListWidget({super.key});
+  const _AppearanceListWidget();
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -145,8 +144,7 @@ class _AppearanceListWidget extends ConsumerWidget {
 }
 
 class _FeatureListWidget extends ConsumerStatefulWidget {
-  // ignore: unused_element
-  const _FeatureListWidget({super.key});
+  const _FeatureListWidget();
 
   @override
   ConsumerState<_FeatureListWidget> createState() => _FeatureListWidgetState();
@@ -372,8 +370,7 @@ class _FeatureListWidgetState extends ConsumerState<_FeatureListWidget> {
 }
 
 class _AboutListWidget extends StatelessWidget {
-  // ignore: unused_element
-  const _AboutListWidget({super.key});
+  const _AboutListWidget();
 
   @override
   Widget build(BuildContext context) {
@@ -429,8 +426,7 @@ class _AboutListWidget extends StatelessWidget {
 }
 
 class _SupportListWidget extends ConsumerWidget {
-  // ignore: unused_element
-  const _SupportListWidget({super.key});
+  const _SupportListWidget();
 
   Future<void> _launchURL(String url, BuildContext context) async {
     final uri = Uri.parse(url);
@@ -661,8 +657,6 @@ class _SwitchListSettings extends StatelessWidget {
   final ValueChanged<bool>? onChanged;
 
   _SwitchListSettings({
-    // ignore: unused_element
-    super.key,
     required this.title,
     required this.value,
     this.subtitle,
@@ -713,8 +707,6 @@ class _ListSettings extends StatelessWidget {
   final VoidCallback? onTap;
 
   _ListSettings({
-    // ignore: unused_element
-    super.key,
     required this.title,
     this.subtitle,
     this.icon,
@@ -755,8 +747,7 @@ class _ListSettings extends StatelessWidget {
 class _TitleSetting extends StatelessWidget {
   final String title;
 
-  // ignore: unused_element
-  const _TitleSetting({super.key, required this.title});
+  const _TitleSetting({required this.title});
 
   @override
   Widget build(BuildContext context) {

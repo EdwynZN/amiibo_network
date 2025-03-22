@@ -81,10 +81,7 @@ class SliverStatsHeader extends SliverPersistentHeaderDelegate {
 }
 
 class _LinearStat extends ConsumerWidget {
-  const _LinearStat({
-    // ignore: unused_element
-    super.key,
-  });
+  const _LinearStat();
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {

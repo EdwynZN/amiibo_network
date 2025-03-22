@@ -5,7 +5,7 @@ part 'game.freezed.dart';
 part 'game.g.dart';
 
 @freezed
-class NintendoPlatform with _$NintendoPlatform {
+abstract class NintendoPlatform with _$NintendoPlatform {
   const factory NintendoPlatform({
     @JsonKey(name: 'games3DS') List<Game>? games3DS,
     @JsonKey(name: 'gamesSwitch') List<Game>? gamesSwitch,
@@ -17,7 +17,7 @@ class NintendoPlatform with _$NintendoPlatform {
 }
 
 @freezed
-class Game with _$Game {
+abstract class Game with _$Game {
   const factory Game({
     @JsonKey(name: 'gameID', required: true, disallowNullValue: true) required List<String> ids,
     @JsonKey(name: 'gameName', required: true, disallowNullValue: true) required String name,
@@ -29,7 +29,7 @@ class Game with _$Game {
 }
 
 @freezed
-class AmiiboUsage with _$AmiiboUsage {
+abstract class AmiiboUsage with _$AmiiboUsage {
   const factory AmiiboUsage({
     @JsonKey(name: 'Usage', required: true, disallowNullValue: true) required String use,
     @JsonKey(name: 'write') bool? write,

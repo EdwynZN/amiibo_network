@@ -365,8 +365,6 @@ class _AmiiboTile extends StatelessWidget {
   final Widget? icon;
 
   const _AmiiboTile({
-    // ignore: unused_element
-    super.key,
     required this.name,
     required this.isSelected,
     this.onTap,

@@ -471,9 +471,6 @@ class AmiiboTheme3 implements AmiiboTheme {
           backgroundColor: WidgetStatePropertyAll(_darkScheme.surface),
         ),
       ),
-
-      /// Deprecated in the future
-      dialogBackgroundColor: scheme.surface,
       dialogTheme: DialogTheme(
         elevation: !useSurfaceElevation ? 0 : 2.0,
         titleTextStyle:

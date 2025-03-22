@@ -20,7 +20,7 @@ on:
 env:
   java_version: '17'
   ruby_version: '2.7.2'
-  flutter_version: '3.27.0'
+  version_update: ${{ inputs.version_update != '' && inputs.version_update || 'patch'  }}
   
 jobs:
   android-internal:
@@ -32,10 +32,6 @@ jobs:
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
-      
-      - name: Read YAML Data
-        uses: altive/pubspec-metadata@v1
-        id: pubspec
 
       - name: Setup ruby
         uses: ruby/setup-ruby@v1
@@ -50,20 +46,10 @@ jobs:
           java-version: ${{ env.java_version }}
           cache: 'gradle'
 
-      - name: Cache Flutter dependencies
-        uses: actions/cache@v3
-        with:
-          path: |
-            ~/.gradle/caches
-            ~/.gradle/wrapper
-            ~/.android/build-cache
-            /opt/hostedtoolcache/flutter
-          key: ${{ runner.OS }}-flutter-install-cache-${{ env.flutter_version }}
-
       - uses: subosito/flutter-action@v2
         with:
           channel: stable
-          flutter-version: ${{ env.flutter_version }}
+          flutter-version-file: pubspec.yaml
           
       - name: Flutter pub dependencies
         run: flutter pub get
@@ -124,14 +110,17 @@ jobs:
         id: semvers
         uses: "WyriHaximus/github-action-next-semvers@v1"
         with:
-          version: ${{ steps.pubspec.outputs.version-number }}
+          version: ${{ vars.BUILD_VERSION }}
       
       - name: Set new version number
         id: update_version_number
+        shell: bash
+        env:
+          VERSION: ${{ env.version_update }}
         run: |
-          if [ ${{ inputs.flavor }} == "patch" ]; then
+          if [[ $VERSION == 'patch' ]]; then
             N_VERSION_NUMBER=${{ steps.semvers.outputs.patch }}
-          elif [ ${{ inputs.flavor }} == "minor" ]; then
+          elif [[ $VERSION == 'minor' ]]; then
             N_VERSION_NUMBER=${{ steps.semvers.outputs.minor }}
           else
             N_VERSION_NUMBER=${{ steps.semvers.outputs.major }}
@@ -169,6 +158,13 @@ jobs:
           git config --global user.email '${{ secrets.EMAIL }}'
           git commit -am "[skip ci] Automated new version: ${{ env.version }}"
           git push
+      
+      - name: update semvar variable
+        shell: bash
+        env:
+          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
+          version_number: ${{ env.next_version_number }}
+        run: gh variable set BUILD_VERSION -b "$version_number"
       
       - name: Create Github Release
         uses: softprops/action-gh-release@v2

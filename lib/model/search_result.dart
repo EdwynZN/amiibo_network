@@ -6,7 +6,7 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 part 'search_result.freezed.dart';
 
 @freezed
-class Query with _$Query {
+abstract class Query with _$Query {
   const Query._();
 
   const factory Query.search({
@@ -19,7 +19,7 @@ class Query with _$Query {
 }
 
 @freezed
-class CategoryAttributes with _$CategoryAttributes {
+abstract class CategoryAttributes with _$CategoryAttributes {
 
   const factory CategoryAttributes({
     @Default([]) List<String> figures,
@@ -30,7 +30,7 @@ class CategoryAttributes with _$CategoryAttributes {
 }
 
 @freezed
-class SearchAttributes with _$SearchAttributes {
+abstract class SearchAttributes with _$SearchAttributes {
 
   const factory SearchAttributes({
     required String search,
@@ -40,7 +40,7 @@ class SearchAttributes with _$SearchAttributes {
 }
 
 @freezed
-class Filter with _$Filter {
+abstract class Filter with _$Filter {
 
   const factory Filter({
     @Default(CategoryAttributes(category: AmiiboCategory.All)) CategoryAttributes categoryAttributes,
