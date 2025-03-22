@@ -194,7 +194,6 @@ class _AppBar extends StatefulWidget implements PreferredSizeWidget {
 
   _AppBar({
     // ignore: unused_element
-    super.key,
     this.backgroundColor,
     this.elevation,
     this.leading,

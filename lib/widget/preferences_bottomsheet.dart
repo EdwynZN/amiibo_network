@@ -214,7 +214,7 @@ class _CategoryTitle extends StatelessWidget {
   final String title;
 
   // ignore: unused_element
-  const _CategoryTitle({super.key, required this.title});
+  const _CategoryTitle({required this.title});
 
   @override
   Widget build(BuildContext context) {

@@ -149,7 +149,6 @@ class _InnerUserCaterogies extends HookConsumerWidget {
 
   const _InnerUserCaterogies({
     // ignore: unused_element
-    super.key,
     required this.amiiboKey,
     required this.isDisable,
     required this.userAttributes,
@@ -263,7 +262,6 @@ class _OutlinedColumnButton extends StatelessWidget {
 
   const _OutlinedColumnButton({
     // ignore: unused_element
-    super.key,
     required this.title,
     required this.isSelected,
     required this.onPressed,
@@ -456,8 +454,6 @@ class ColumnButton extends StatelessWidget {
 class _ColumnCardWrapper extends Card {
   _ColumnCardWrapper({
     required Color borderColor,
-    // ignore: unused_element
-    super.key,
     super.color,
     super.surfaceTintColor,
     super.elevation = 2.0,
@@ -479,7 +475,6 @@ class _ContainerTitle extends StatelessWidget {
 
   const _ContainerTitle({
     // ignore: unused_element
-    super.key,
     required this.title,
     required this.background,
     required this.foreground,

@@ -103,7 +103,7 @@ class GameListWidget extends ConsumerWidget {
 }
 
 class _EmptyGames extends StatelessWidget {
-  const _EmptyGames({super.key});
+  const _EmptyGames();
 
   @override
   Widget build(BuildContext context) {
@@ -269,6 +269,7 @@ class _SliverAnimatedPersistentHeader extends SliverPersistentHeaderDelegate {
   final String asset;
 
   const _SliverAnimatedPersistentHeader({
+    // ignore: unused_element_parameter
     this.vsync,
     required this.title,
     required this.asset,

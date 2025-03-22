@@ -89,7 +89,7 @@ class ThemeButton extends ConsumerWidget {
 
 class _DialogTheme extends ConsumerWidget {
   // ignore: unused_element
-  const _DialogTheme({super.key});
+  const _DialogTheme();
 
   static const double _circleSize = 55.0; // diameter of the CircleAvatar
   //Maximum width of the dialog minus the internal horizontal Padding
@@ -289,7 +289,6 @@ class _ColorCircleAvatar extends ConsumerWidget {
 
   const _ColorCircleAvatar({
     // ignore: unused_element
-    super.key,
     required this.color,
     required this.size,
     required this.side,
@@ -317,7 +316,6 @@ class _WallpaperTile extends ConsumerWidget {
 
   const _WallpaperTile({
     // ignore: unused_element
-    super.key,
     this.size,
   });
 
@@ -369,7 +367,6 @@ class _WallpaperTile extends ConsumerWidget {
 class _SelectedMaterialAvatar extends StatelessWidget {
   const _SelectedMaterialAvatar({
     // ignore: unused_element
-    super.key,
     this.color,
     required this.size,
     required this.side,

@@ -105,8 +105,7 @@ class DetailPage extends ConsumerWidget {
 }
 
 class _AmiiboCard extends ConsumerWidget {
-  // ignore: unused_element
-  const _AmiiboCard({super.key});
+  const _AmiiboCard();
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {

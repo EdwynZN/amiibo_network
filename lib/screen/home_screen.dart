@@ -540,8 +540,6 @@ class _Leading extends HookConsumerWidget {
   final VoidCallback onClose;
 
   const _Leading({
-    // ignore: unused_element
-    super.key,
     required this.isClose,
     required this.onClose,
   });
@@ -772,8 +770,6 @@ class _FAB extends ConsumerWidget {
   final Animation<Offset> slide;
 
   _FAB({
-    // ignore: unused_element
-    super.key,
     required Animation<double> animation,
     required this.isAmiibo,
   })  : scale = Tween<double>(begin: 0.25, end: 1.0).animate(CurvedAnimation(
