@@ -16,7 +16,7 @@ List<Amiibo> entityFromMapToDomain(Map<String, dynamic> amiibo) =>
         amiibo["amiibo"].map((x) => AmiiboDriftModel.fromJson(x).toDomain()));
 
 @freezed
-class AmiiboDriftModel with _$AmiiboDriftModel {
+abstract class AmiiboDriftModel with _$AmiiboDriftModel {
   const AmiiboDriftModel._();
 
   const factory AmiiboDriftModel({

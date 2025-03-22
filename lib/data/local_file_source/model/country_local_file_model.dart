@@ -8,7 +8,7 @@ List<CountryLocalFileModel> fileCountryToModel(List<Map<String, dynamic>> list) 
 
 
 @freezed
-class CountryLocalFileModel with _$CountryLocalFileModel {
+abstract class CountryLocalFileModel with _$CountryLocalFileModel {
   const factory CountryLocalFileModel({
     required String countryCode,
     required String amazonLink,
@@ -20,7 +20,7 @@ class CountryLocalFileModel with _$CountryLocalFileModel {
 }
 
 @freezed
-class CountryTranslateFileModel with _$CountryTranslateFileModel {
+abstract class CountryTranslateFileModel with _$CountryTranslateFileModel {
   const factory CountryTranslateFileModel({
       required String en,
       required String es,

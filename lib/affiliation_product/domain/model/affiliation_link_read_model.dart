@@ -4,7 +4,7 @@ part 'affiliation_link_read_model.freezed.dart';
 part 'affiliation_link_read_model.g.dart';
 
 @freezed
-class AffiliationLinkReadModel with _$AffiliationLinkReadModel {
+abstract class AffiliationLinkReadModel with _$AffiliationLinkReadModel {
   const factory AffiliationLinkReadModel({
     required Uri link,
     required String countryCode,
@@ -29,7 +29,7 @@ class AffiliationLinkReadModel with _$AffiliationLinkReadModel {
 }
 
 @freezed
-class CountryNameReadModel with _$CountryNameReadModel {
+abstract class CountryNameReadModel with _$CountryNameReadModel {
   const CountryNameReadModel._();
 
   const factory CountryNameReadModel({

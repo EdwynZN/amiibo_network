@@ -10,7 +10,7 @@ List<Amiibo> entityFromMap(Map<String, dynamic> amiibo) =>
     List<Amiibo>.from(amiibo["amiibo"].map((x) => Amiibo.fromJson(x)));
 
 @freezed
-class Amiibo with _$Amiibo {
+abstract class Amiibo with _$Amiibo {
 
   const factory Amiibo({
     required int key,
@@ -26,7 +26,7 @@ class Amiibo with _$Amiibo {
 }
 
 @freezed
-class AmiiboDetails with _$AmiiboDetails {
+abstract class AmiiboDetails with _$AmiiboDetails {
   const factory AmiiboDetails({
     @JsonKey(includeIfNull: true) String? id,
     @JsonKey(required: true) required String amiiboSeries,

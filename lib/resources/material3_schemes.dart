@@ -9,7 +9,7 @@ part 'material3_schemes.freezed.dart';
 part 'material3_schemes.g.dart';
 
 @freezed
-class Material3Schemes with _$Material3Schemes {
+abstract class Material3Schemes with _$Material3Schemes {
   const factory Material3Schemes({
     @ColorSchemeConverter() required final ColorScheme light,
     @ColorSchemeConverter() required final ColorScheme dark,
@@ -30,7 +30,7 @@ class Material3Schemes with _$Material3Schemes {
 }
 
 @Freezed(copyWith: false)
-class CustomScheme with _$CustomScheme {
+abstract class CustomScheme with _$CustomScheme {
   const CustomScheme._();
 
   const factory CustomScheme({

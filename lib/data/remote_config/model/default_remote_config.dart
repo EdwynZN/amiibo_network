@@ -5,7 +5,7 @@ part 'default_remote_config.freezed.dart';
 part 'default_remote_config.g.dart';
 
 @freezed
-class DefaultRemoteConfig with _$DefaultRemoteConfig {
+abstract class DefaultRemoteConfig with _$DefaultRemoteConfig {
   const factory DefaultRemoteConfig({
     @Default(false) @JsonKey(name: RemoteKey.ownedCategories) bool ownedCategories, 
   }) = _DefaultRemoteConfig;

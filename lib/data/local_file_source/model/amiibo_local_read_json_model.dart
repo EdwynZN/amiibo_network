@@ -27,7 +27,7 @@ Object? _unwrapIntToBool(
 }
 
 @freezed
-class AmiiboLocalReadJsonModel with _$AmiiboLocalReadJsonModel {
+abstract class AmiiboLocalReadJsonModel with _$AmiiboLocalReadJsonModel {
   const AmiiboLocalReadJsonModel._();
 
   factory AmiiboLocalReadJsonModel({
