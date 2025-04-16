@@ -1,3 +1,8 @@
+## Version 3.0.4
+- Amiibos Tears of the Kingdom Agregados: Minero, Yunobo, Riju, Tureli y Sidon
+- Amiibos de Street Fighter 6 agregados
+- Serie de tarjetas de Street Fighter 6 agregados
+
 ## Version 2.1.92
 - Splatoon 3 alterna amiibos añadidos (Marie, Callie, Pearl & Marina)
 

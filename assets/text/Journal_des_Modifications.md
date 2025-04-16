@@ -1,3 +1,8 @@
+## Version 3.0.4
+- Ajout des figurines de la série TLOZ Tears of the Kingdom: Minero, Yunobo, Riju, Tureli et Sidon
+- Ajout des figurines de la série Street Fighter 6
+- Ajout des cartes de la série Street Fighter 6
+
 ## Version 2.1.92
 - Splatoon 3 alterner amiibos (Marie, Callie, Pearl & Marina)
 
