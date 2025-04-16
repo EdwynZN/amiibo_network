@@ -15,7 +15,7 @@ description: An Amiibo collection app designed to allow you to keep track of
 version: 3.0.1+97
 
 environment:
-  flutter: 3.29.2
+  flutter: 3.29.3
   sdk: ^3.7.0
 
 publish_to: none
