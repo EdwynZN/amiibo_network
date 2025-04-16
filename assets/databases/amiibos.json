@@ -11454,7 +11454,7 @@
     {
       "key": 842,
       "id": "0100000004180902",
-      "amiiboSeries": "The Legend of Zelda",
+      "amiiboSeries": "TLOZ: Tears of the Kingdom",
       "character": "Link",
       "gameSeries": "The Legend of Zelda",
       "name": "Link - Tears of the Kingdom",
@@ -11506,7 +11506,7 @@
     {
       "key": 846,
       "id": "0101000004190902",
-      "amiiboSeries": "The Legend of Zelda",
+      "amiiboSeries": "TLOZ: Tears of the Kingdom",
       "character": "Zelda",
       "gameSeries": "The Legend of Zelda",
       "name": "Zelda - Tears of the Kingdom",
@@ -11519,7 +11519,7 @@
     {
       "key": 847,
       "id": "01020100041A0902",
-      "amiiboSeries": "The Legend of Zelda",
+      "amiiboSeries": "TLOZ: Tears of the Kingdom",
       "character": "Ganondorf",
       "gameSeries": "The Legend of Zelda",
       "name": "Ganondorf - Tears of the Kingdom",
@@ -11658,7 +11658,72 @@
       "jp": "20240905",
       "na": "20240905",
       "type": "Figure"
+    },
+    {
+      "key": 858,
+      "id": null,
+      "amiiboSeries": "TLOZ: Tears of the Kingdom",
+      "character": "Tureli",
+      "gameSeries": "The Legend of Zelda",
+      "name": "Tureli",
+      "au": "20250605",
+      "eu": "20250605",
+      "jp": "20250605",
+      "na": "20250605",
+      "type": "Figure"
+    },
+    {
+      "key": 859,
+      "id": null,
+      "amiiboSeries": "TLOZ: Tears of the Kingdom",
+      "character": "Sidon",
+      "gameSeries": "The Legend of Zelda",
+      "name": "Sidon",
+      "au": "20250605",
+      "eu": "20250605",
+      "jp": "20250605",
+      "na": "20250605",
+      "type": "Figure"
+    },
+    {
+      "key": 860,
+      "id": null,
+      "amiiboSeries": "TLOZ: Tears of the Kingdom",
+      "character": "Riju",
+      "gameSeries": "The Legend of Zelda",
+      "name": "Riju",
+      "au": "20250605",
+      "eu": "20250605",
+      "jp": "20250605",
+      "na": "20250605",
+      "type": "Figure"
+    },
+    {
+      "key": 861,
+      "id": null,
+      "amiiboSeries": "TLOZ: Tears of the Kingdom",
+      "character": "Yunobo",
+      "gameSeries": "The Legend of Zelda",
+      "name": "Yunobo",
+      "au": "20250605",
+      "eu": "20250605",
+      "jp": "20250605",
+      "na": "20250605",
+      "type": "Figure"
+    },
+    {
+      "key": 862,
+      "id": null,
+      "amiiboSeries": "TLOZ: Tears of the Kingdom",
+      "character": "Mineru's Construct",
+      "gameSeries": "The Legend of Zelda",
+      "name": "Mineru's Construct",
+      "au": "soon",
+      "eu": "soon",
+      "jp": "soon",
+      "na": "soon",
+      "type": "Figure"
     }
   ],
-  "lastUpdated": "2024-11-30T14:00:00.000"
+  "lastUpdated": "2025-04-14T14:00:00.000"
 }
