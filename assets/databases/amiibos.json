@@ -11848,7 +11848,7 @@
       "cardNumber": 6
     },
     {
-      "key": 871,
+      "key": 872,
       "id": null,
       "amiiboSeries": "Street Fighter 6 Starter Set",
       "character": "JP",
@@ -11862,7 +11862,7 @@
       "cardNumber": 7
     },
     {
-      "key": 872,
+      "key": 873,
       "id": null,
       "amiiboSeries": "Street Fighter 6 Starter Set",
       "character": "Juri",
@@ -11876,7 +11876,7 @@
       "cardNumber": 8
     },
     {
-      "key": 873,
+      "key": 874,
       "id": null,
       "amiiboSeries": "Street Fighter 6 Starter Set",
       "character": "Dee Jay",
@@ -11890,7 +11890,7 @@
       "cardNumber": 9
     },
     {
-      "key": 874,
+      "key": 875,
       "id": null,
       "amiiboSeries": "Street Fighter 6 Starter Set",
       "character": "Cammy",
@@ -11904,7 +11904,7 @@
       "cardNumber": 10
     },
     {
-      "key": 875,
+      "key": 876,
       "id": null,
       "amiiboSeries": "Street Fighter 6 Starter Set",
       "character": "Ryu",
@@ -11918,7 +11918,7 @@
       "cardNumber": 11
     },
     {
-      "key": 876,
+      "key": 877,
       "id": null,
       "amiiboSeries": "Street Fighter 6 Starter Set",
       "character": "E. Honda",
@@ -11932,7 +11932,7 @@
       "cardNumber": 12
     },
     {
-      "key": 877,
+      "key": 878,
       "id": null,
       "amiiboSeries": "Street Fighter 6 Starter Set",
       "character": "Blanka",
@@ -11946,7 +11946,7 @@
       "cardNumber": 13
     },
     {
-      "key": 878,
+      "key": 879,
       "id": null,
       "amiiboSeries": "Street Fighter 6 Starter Set",
       "character": "Guile",
@@ -11960,7 +11960,7 @@
       "cardNumber": 14
     },
     {
-      "key": 879,
+      "key": 880,
       "id": null,
       "amiiboSeries": "Street Fighter 6 Starter Set",
       "character": "Ken",
@@ -11974,7 +11974,7 @@
       "cardNumber": 15
     },
     {
-      "key": 880,
+      "key": 881,
       "id": null,
       "amiiboSeries": "Street Fighter 6 Starter Set",
       "character": "Chun-Li",
@@ -11988,7 +11988,7 @@
       "cardNumber": 16
     },
     {
-      "key": 881,
+      "key": 882,
       "id": null,
       "amiiboSeries": "Street Fighter 6 Starter Set",
       "character": "Zangief",
@@ -12002,7 +12002,7 @@
       "cardNumber": 17
     },
     {
-      "key": 882,
+      "key": 883,
       "id": null,
       "amiiboSeries": "Street Fighter 6 Starter Set",
       "character": "Dhalsim",
@@ -12016,7 +12016,7 @@
       "cardNumber": 18
     },
     {
-      "key": 883,
+      "key": 884,
       "id": null,
       "amiiboSeries": "Street Fighter 6 Starter Set",
       "character": "Rashid",
@@ -12030,7 +12030,7 @@
       "cardNumber": 19
     },
     {
-      "key": 884,
+      "key": 885,
       "id": null,
       "amiiboSeries": "Street Fighter 6 Starter Set",
       "character": "A.K.I.",
@@ -12044,7 +12044,7 @@
       "cardNumber": 20
     },
     {
-      "key": 885,
+      "key": 886,
       "id": null,
       "amiiboSeries": "Street Fighter 6 Starter Set",
       "character": "Ed",
@@ -12058,7 +12058,7 @@
       "cardNumber": 21
     },
     {
-      "key": 886,
+      "key": 887,
       "id": null,
       "amiiboSeries": "Street Fighter 6 Starter Set",
       "character": "Akuma",
@@ -12072,5 +12072,5 @@
       "cardNumber": 22
     }
   ],
-  "lastUpdated": "2025-04-15T14:00:00.000"
+  "lastUpdated": "2025-04-15T14:13:00.000"
 }
