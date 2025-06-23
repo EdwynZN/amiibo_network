@@ -11661,11 +11661,11 @@
     },
     {
       "key": 858,
-      "id": null,
+      "id": "010B000004A50902",
       "amiiboSeries": "TLOZ: Tears of the Kingdom",
-      "character": "Tureli",
+      "character": "Tulin",
       "gameSeries": "The Legend of Zelda",
-      "name": "Tureli",
+      "name": "Tulin",
       "au": "20250605",
       "eu": "20250605",
       "jp": "20250605",
@@ -11674,7 +11674,7 @@
     },
     {
       "key": 859,
-      "id": null,
+      "id": "010A000004A40902",
       "amiiboSeries": "TLOZ: Tears of the Kingdom",
       "character": "Sidon",
       "gameSeries": "The Legend of Zelda",
@@ -11687,7 +11687,7 @@
     },
     {
       "key": 860,
-      "id": null,
+      "id": "0109000004A30902",
       "amiiboSeries": "TLOZ: Tears of the Kingdom",
       "character": "Riju",
       "gameSeries": "The Legend of Zelda",
@@ -11700,7 +11700,7 @@
     },
     {
       "key": 861,
-      "id": null,
+      "id": "010C000004A60902",
       "amiiboSeries": "TLOZ: Tears of the Kingdom",
       "character": "Yunobo",
       "gameSeries": "The Legend of Zelda",
@@ -11726,7 +11726,7 @@
     },
     {
       "key": 863,
-      "id": null,
+      "id": "34C4000004AE1D02",
       "amiiboSeries": "Street Fighter",
       "character": "Kimberly",
       "gameSeries": "Street Fighter",
@@ -11739,7 +11739,7 @@
     },
     {
       "key": 864,
-      "id": null,
+      "id": "34C3000004AC1D02",
       "amiiboSeries": "Street Fighter",
       "character": "Jamie",
       "gameSeries": "Street Fighter",
@@ -11752,7 +11752,7 @@
     },
     {
       "key": 865,
-      "id": null,
+      "id": "34C2000004AA1D02",
       "amiiboSeries": "Street Fighter",
       "character": "Luke",
       "gameSeries": "Street Fighter",
@@ -11765,7 +11765,7 @@
     },
     {
       "key": 866,
-      "id": null,
+      "id": "34C2000104AB1D02",
       "amiiboSeries": "Street Fighter 6 Starter Set",
       "character": "Luke",
       "gameSeries": "Street Fighter",
@@ -11779,7 +11779,7 @@
     },
     {
       "key": 867,
-      "id": null,
+      "id": "34C3000104AD1D02",
       "amiiboSeries": "Street Fighter 6 Starter Set",
       "character": "Jamie",
       "gameSeries": "Street Fighter",
@@ -11793,7 +11793,7 @@
     },
     {
       "key": 868,
-      "id": null,
+      "id": "34CC000104B71D02",
       "amiiboSeries": "Street Fighter 6 Starter Set",
       "character": "Manon",
       "gameSeries": "Street Fighter",
@@ -11807,7 +11807,7 @@
     },
     {
       "key": 869,
-      "id": null,
+      "id": "34C4000104AF1D02",
       "amiiboSeries": "Street Fighter 6 Starter Set",
       "character": "Kimberly",
       "gameSeries": "Street Fighter",
@@ -11821,7 +11821,7 @@
     },
     {
       "key": 870,
-      "id": null,
+      "id": "34CD000104B81D02",
       "amiiboSeries": "Street Fighter 6 Starter Set",
       "character": "Marisa",
       "gameSeries": "Street Fighter",
@@ -11835,7 +11835,7 @@
     },
     {
       "key": 871,
-      "id": null,
+      "id": "34D0000104BB1D02",
       "amiiboSeries": "Street Fighter 6 Starter Set",
       "character": "Lily",
       "gameSeries": "Street Fighter",
@@ -11849,7 +11849,7 @@
     },
     {
       "key": 872,
-      "id": null,
+      "id": "34CE000104B91D02",
       "amiiboSeries": "Street Fighter 6 Starter Set",
       "character": "JP",
       "gameSeries": "Street Fighter",
@@ -11863,7 +11863,7 @@
     },
     {
       "key": 873,
-      "id": null,
+      "id": "34C7000104B21D02",
       "amiiboSeries": "Street Fighter 6 Starter Set",
       "character": "Juri",
       "gameSeries": "Street Fighter",
@@ -11877,7 +11877,7 @@
     },
     {
       "key": 874,
-      "id": null,
+      "id": "34CB000104B61D02",
       "amiiboSeries": "Street Fighter 6 Starter Set",
       "character": "Dee Jay",
       "gameSeries": "Street Fighter",
@@ -11891,7 +11891,7 @@
     },
     {
       "key": 875,
-      "id": null,
+      "id": "34D1000104BC1D02",
       "amiiboSeries": "Street Fighter 6 Starter Set",
       "character": "Cammy",
       "gameSeries": "Street Fighter",
@@ -11905,7 +11905,7 @@
     },
     {
       "key": 876,
-      "id": null,
+      "id": "34C0000104A81D02",
       "amiiboSeries": "Street Fighter 6 Starter Set",
       "character": "Ryu",
       "gameSeries": "Street Fighter",
@@ -11919,7 +11919,7 @@
     },
     {
       "key": 877,
-      "id": null,
+      "id": "34CA000104B51D02",
       "amiiboSeries": "Street Fighter 6 Starter Set",
       "character": "E. Honda",
       "gameSeries": "Street Fighter",
@@ -11933,7 +11933,7 @@
     },
     {
       "key": 878,
-      "id": null,
+      "id": "34C8000104B31D02",
       "amiiboSeries": "Street Fighter 6 Starter Set",
       "character": "Blanka",
       "gameSeries": "Street Fighter",
@@ -11947,7 +11947,7 @@
     },
     {
       "key": 879,
-      "id": null,
+      "id": "34C6000104B11D02",
       "amiiboSeries": "Street Fighter 6 Starter Set",
       "character": "Guile",
       "gameSeries": "Street Fighter",
@@ -11961,7 +11961,7 @@
     },
     {
       "key": 880,
-      "id": null,
+      "id": "34C1000104A91D02",
       "amiiboSeries": "Street Fighter 6 Starter Set",
       "character": "Ken",
       "gameSeries": "Street Fighter",
@@ -11975,7 +11975,7 @@
     },
     {
       "key": 881,
-      "id": null,
+      "id": "34C5000104B01D02",
       "amiiboSeries": "Street Fighter 6 Starter Set",
       "character": "Chun-Li",
       "gameSeries": "Street Fighter",
@@ -11989,7 +11989,7 @@
     },
     {
       "key": 882,
-      "id": null,
+      "id": "34CF000104BA1D02",
       "amiiboSeries": "Street Fighter 6 Starter Set",
       "character": "Zangief",
       "gameSeries": "Street Fighter",
@@ -12003,7 +12003,7 @@
     },
     {
       "key": 883,
-      "id": null,
+      "id": "34C9000104B41D02",
       "amiiboSeries": "Street Fighter 6 Starter Set",
       "character": "Dhalsim",
       "gameSeries": "Street Fighter",
@@ -12017,7 +12017,7 @@
     },
     {
       "key": 884,
-      "id": null,
+      "id": "34D2000104BD1D02",
       "amiiboSeries": "Street Fighter 6 Starter Set",
       "character": "Rashid",
       "gameSeries": "Street Fighter",
@@ -12031,7 +12031,7 @@
     },
     {
       "key": 885,
-      "id": null,
+      "id": "34D3000104BE1D02",
       "amiiboSeries": "Street Fighter 6 Starter Set",
       "character": "A.K.I.",
       "gameSeries": "Street Fighter",
@@ -12045,7 +12045,7 @@
     },
     {
       "key": 886,
-      "id": null,
+      "id": "34D4000104BF1D02",
       "amiiboSeries": "Street Fighter 6 Starter Set",
       "character": "Ed",
       "gameSeries": "Street Fighter",
@@ -12059,7 +12059,7 @@
     },
     {
       "key": 887,
-      "id": null,
+      "id": "34D5000104C01D02",
       "amiiboSeries": "Street Fighter 6 Starter Set",
       "character": "Akuma",
       "gameSeries": "Street Fighter",
@@ -12070,7 +12070,20 @@
       "na": "20250605",
       "type": "Card",
       "cardNumber": 22
+    },
+    {
+      "key": 888,
+      "id": null,
+      "amiiboSeries": "Donkey Kong Bananza",
+      "character": "Donkey Kong & Pauline",
+      "gameSeries": "Donkey Kong",
+      "name": "Donkey Kong & Pauline",
+      "au": "20250717",
+      "eu": "20250717",
+      "jp": "20250717",
+      "na": "20250717",
+      "type": "Figure"
     }
   ],
-  "lastUpdated": "2025-04-15T14:13:00.000"
+  "lastUpdated": "2025-06-22T20:13:00.000"
 }
