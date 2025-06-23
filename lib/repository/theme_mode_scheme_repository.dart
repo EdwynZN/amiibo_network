@@ -421,7 +421,7 @@ class AmiiboTheme3 implements AmiiboTheme {
       ),
       canvasColor: scheme.secondaryContainer,
       cardColor: scheme.secondaryContainer,
-      cardTheme: CardTheme(
+      cardTheme: CardThemeData(
         color: scheme.secondaryContainer,
         margin: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
         shape: const RoundedRectangleBorder(
@@ -471,7 +471,7 @@ class AmiiboTheme3 implements AmiiboTheme {
           backgroundColor: WidgetStatePropertyAll(_darkScheme.surface),
         ),
       ),
-      dialogTheme: DialogTheme(
+      dialogTheme: DialogThemeData(
         elevation: !useSurfaceElevation ? 0 : 2.0,
         titleTextStyle:
             _textTheme.titleLarge!.copyWith(color: scheme.onSurface),
@@ -541,7 +541,6 @@ class AmiiboTheme3 implements AmiiboTheme {
       iconTheme: IconThemeData(color: scheme.onSurface),
 
       /// Deprecated in the future
-      indicatorColor: scheme.primaryContainer,
       listTileTheme: ListTileThemeData(
         iconColor: scheme.onSurface,
         selectedTileColor: scheme.secondaryContainer,
@@ -701,7 +700,7 @@ class AmiiboTheme3 implements AmiiboTheme {
         }),
         trackOutlineWidth: WidgetStatePropertyAll(2.0),
       ),
-      tabBarTheme: const TabBarTheme(),
+      tabBarTheme: TabBarThemeData(indicatorColor: scheme.primaryContainer),
       textButtonTheme: TextButtonThemeData(
         style: ButtonStyle(
           mouseCursor: WidgetStateProperty.all<MouseCursor>(
@@ -802,7 +801,7 @@ class AmiiboTheme3 implements AmiiboTheme {
           ),
           canvasColor: Colors.black,
           cardColor: Colors.black,
-          cardTheme: CardTheme(
+          cardTheme: CardThemeData(
             surfaceTintColor: null,
             color: Colors.black,
             margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
