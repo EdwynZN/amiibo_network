@@ -376,7 +376,7 @@ class AmiiboTheme3 implements AmiiboTheme {
         contentTextStyle: _textTheme.titleMedium,
         elevation: !useSurfaceElevation ? 0 : 4.0,
       ),
-      bottomAppBarTheme: BottomAppBarTheme(
+      bottomAppBarTheme: BottomAppBarThemeData(
         color: scheme.surface,
         elevation: !useSurfaceElevation ? 0 : 0.0,
         height: kBottomNavigationBarHeight,
