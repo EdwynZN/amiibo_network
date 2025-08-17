@@ -43,7 +43,7 @@ dependencies:
   flutter_markdown: ^0.7.7+1
   freezed_annotation: ^3.1.0
   gap: ^3.0.1
-  go_router: ^14.6.1
+  go_router: ^16.1.0
   hive_flutter: ^1.1.0
   hooks_riverpod: ^2.6.1
   intl_utils: ^2.8.11
