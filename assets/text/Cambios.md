@@ -1,3 +1,6 @@
+## Version 3.0.8
+- Amiibos anunciados en el Direct de Septiembre: Metroid Prime 4, Super Mario Galaxy y Kirby Air Riders
+
 ## Version 3.0.4
 - Amiibos Tears of the Kingdom Agregados: Minero, Yunobo, Riju, Tureli y Sidon
 - Amiibos de Street Fighter 6 agregados

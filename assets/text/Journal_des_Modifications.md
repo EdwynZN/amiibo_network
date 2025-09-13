@@ -1,3 +1,6 @@
+## Version 3.0.8
+- Nouvelle Amiibo figurines: Metroid Prime 4, Super Mario Galaxy et Kirby Air Riders
+
 ## Version 3.0.4
 - Ajout des figurines de la série TLOZ Tears of the Kingdom: Minero, Yunobo, Riju, Tureli et Sidon
 - Ajout des figurines de la série Street Fighter 6
