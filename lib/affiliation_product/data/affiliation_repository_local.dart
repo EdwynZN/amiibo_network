@@ -3,7 +3,6 @@ import 'package:amiibo_network/affiliation_product/domain/model/affiliation_link
 import 'package:amiibo_network/data/drift_sqlite/source/affiliation_link_dao.dart';
 import 'package:amiibo_network/data/drift_sqlite/source/drift_database.dart'
     as db;
-import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'affiliation_repository_local.g.dart';

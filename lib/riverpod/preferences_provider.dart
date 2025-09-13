@@ -6,6 +6,7 @@ import 'package:amiibo_network/riverpod/repository_provider.dart';
 import 'package:amiibo_network/riverpod/stat_ui_remote_config_provider.dart';
 import 'package:amiibo_network/utils/preferences_constants.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:hooks_riverpod/legacy.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 final hiddenCategoryProvider = Provider<HiddenType?>(

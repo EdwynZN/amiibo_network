@@ -3,6 +3,7 @@ import 'package:amiibo_network/routes/routes.dart';
 import 'package:flutter/foundation.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:hooks_riverpod/legacy.dart';
 
 final initialScreen = StateProvider<String>((_) => '/splash');
 
