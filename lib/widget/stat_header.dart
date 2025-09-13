@@ -15,9 +15,8 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 class SliverStatsHeader extends SliverPersistentHeaderDelegate {
   final double topPadding;
 
-  const SliverStatsHeader({
-    required this.topPadding,
-  }) : assert(topPadding >= 0.0);
+  const SliverStatsHeader({required this.topPadding})
+    : assert(topPadding >= 0.0);
 
   @override
   Widget build(
@@ -27,16 +26,15 @@ class SliverStatsHeader extends SliverPersistentHeaderDelegate {
   ) {
     final appbarTheme = AppBarTheme.of(context);
     final _elevation = appbarTheme.elevation ?? 0.0;
-    final firstColor = appbarTheme.backgroundColor ?? Theme.of(context).canvasColor;
+    final firstColor =
+        appbarTheme.backgroundColor ?? Theme.of(context).canvasColor;
     final bool isScrolledUnder =
         overlapsContent || shrinkOffset > maxExtent - minExtent;
     final BoxDecoration decoration;
     final Color _color = ElevationOverlay.applySurfaceTint(
       firstColor,
       appbarTheme.surfaceTintColor,
-      isScrolledUnder
-          ? (_elevation * 2.0).clamp(0.0, 4.0)
-          : _elevation,
+      isScrolledUnder ? (_elevation * 2.0).clamp(0.0, 4.0) : _elevation,
     );
     decoration = BoxDecoration(
       gradient: LinearGradient(
@@ -85,7 +83,7 @@ class _LinearStat extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final statList = ref.watch(statHomeProvider.select((s) => s.valueOrNull));
+    final statList = ref.watch(statHomeProvider.select((s) => s.value));
     if (statList == null || statList == const Stat()) {
       return const SizedBox();
     }
@@ -98,15 +96,22 @@ class _LinearStat extends ConsumerWidget {
     final category = ref.watch(
       queryProvider.select((value) => value.categoryAttributes.category),
     );
-    final usePercentage =
-        ref.watch(personalProvider.select((p) => p.usePercentage));
+    final usePercentage = ref.watch(
+      personalProvider.select((p) => p.usePercentage),
+    );
     final String ownedStat;
     final String wishedStat;
     if (usePercentage) {
-      ownedStat =
-          StatUtils.parseStat(owned, total, usePercentage: usePercentage);
-      wishedStat =
-          StatUtils.parseStat(wished, total, usePercentage: usePercentage);
+      ownedStat = StatUtils.parseStat(
+        owned,
+        total,
+        usePercentage: usePercentage,
+      );
+      wishedStat = StatUtils.parseStat(
+        wished,
+        total,
+        usePercentage: usePercentage,
+      );
     } else {
       ownedStat = owned.toString();
       wishedStat = wished.toString();

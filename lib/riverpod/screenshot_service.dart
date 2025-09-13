@@ -10,6 +10,7 @@ import 'package:amiibo_network/service/screenshot.dart';
 import 'package:amiibo_network/service/storage.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:hooks_riverpod/legacy.dart';
 
 final _screenshotServiceProvider = Provider((ref) => Screenshot());
 

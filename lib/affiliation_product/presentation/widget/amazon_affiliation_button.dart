@@ -21,10 +21,9 @@ class AmazonAffiliationButton extends HookConsumerWidget {
     return ElevatedButton.icon(
       style: ButtonStyle(
         backgroundColor: WidgetStateProperty.resolveWith((state) {
-          final color = ElevatedButtonTheme.of(context)
-              .style
-              ?.backgroundColor
-              ?.resolve(state);
+          final color = ElevatedButtonTheme.of(
+            context,
+          ).style?.backgroundColor?.resolve(state);
           if (color != null) {
             final int value = Blend.hctHue(
               color.colorValue,
@@ -36,10 +35,9 @@ class AmazonAffiliationButton extends HookConsumerWidget {
           return color;
         }),
         foregroundColor: WidgetStateProperty.resolveWith((state) {
-          final color = ElevatedButtonTheme.of(context)
-              .style
-              ?.foregroundColor
-              ?.resolve(state);
+          final color = ElevatedButtonTheme.of(
+            context,
+          ).style?.foregroundColor?.resolve(state);
           if (color != null) {
             final int value = Blend.hctHue(
               color.colorValue,
@@ -67,7 +65,7 @@ class AmazonAffiliationIconButton extends HookConsumerWidget {
     final asyncSelected = ref.watch(
       selectedAmazonAffiliationDetailProvider(key: id),
     );
-    final list = asyncSelected.valueOrNull;
+    final list = asyncSelected.value;
     final hide = list == null || list.isEmpty;
     if (hide) {
       return const SizedBox();

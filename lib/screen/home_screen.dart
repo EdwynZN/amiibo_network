@@ -41,7 +41,7 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:amiibo_network/widget/stat_header.dart';
 import 'package:amiibo_network/model/search_result.dart';
 
-final AutoDisposeProvider<TitleSearch> _titleProvider =
+final Provider<TitleSearch> _titleProvider =
     Provider.autoDispose<TitleSearch>((ref) {
   final count = ref.watch(selectProvider);
   final query = ref.watch(queryProvider);
@@ -74,7 +74,7 @@ final AutoDisposeProvider<TitleSearch> _titleProvider =
   );
 });
 
-final AutoDisposeProvider<bool> _canPopProvider = Provider.autoDispose<bool>(
+final Provider<bool> _canPopProvider = Provider.autoDispose<bool>(
   (ref) {
     final selected = ref.watch(selectProvider);
     ref.watch(queryProvider);

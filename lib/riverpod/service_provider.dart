@@ -10,7 +10,7 @@ import 'package:amiibo_network/model/stat.dart';
 import 'package:amiibo_network/model/update_amiibo_user_attributes.dart';
 import 'package:amiibo_network/service/service.dart';
 import 'package:flutter/material.dart';
-import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:hooks_riverpod/legacy.dart';
 
 final serviceProvider = ChangeNotifierProvider<ServiceNotifer>(
   (ref) => DriftServiceNotifier(database: ref.watch(db.databaseProvider)),

@@ -3,7 +3,7 @@ import 'package:amiibo_network/model/update_amiibo_user_attributes.dart';
 import 'package:amiibo_network/riverpod/service_provider.dart';
 import 'package:amiibo_network/service/service.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:hooks_riverpod/legacy.dart';
 
 final selectProvider = ChangeNotifierProvider.autoDispose<SelectProvider>(
   (ref) {
