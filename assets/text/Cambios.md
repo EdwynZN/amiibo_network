@@ -1,4 +1,4 @@
-## Version 3.0.5
+## Version 3.0.8
 - Amiibos anunciados en el Direct de Septiembre: Metroid Prime 4, Super Mario Galaxy y Kirby Air Riders
 
 ## Version 3.0.4

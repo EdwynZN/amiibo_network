@@ -1,4 +1,4 @@
-## Version 3.0.5
+## Version 3.0.8
 - Nouvelle Amiibo figurines: Metroid Prime 4, Super Mario Galaxy et Kirby Air Riders
 
 ## Version 3.0.4
