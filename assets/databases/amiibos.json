@@ -12758,7 +12758,46 @@
       "jp": "20251204",
       "na": "20251204",
       "type": "Figure"
+    },
+    {
+      "key": 938,
+      "id": null,
+      "amiiboSeries": "Monster Hunter Stories 3",
+      "character": "Ratha",
+      "gameSeries": "Monster Hunter",
+      "name": "Ratha",
+      "au": "20260313",
+      "eu": "20260313",
+      "jp": "20260313",
+      "na": "20260313",
+      "type": "Figure"
+    },
+    {
+      "key": 939,
+      "id": null,
+      "amiiboSeries": "Monster Hunter Stories 3",
+      "character": "Ratha",
+      "gameSeries": "Monster Hunter",
+      "name": "Ratha V",
+      "au": "20260313",
+      "eu": "20260313",
+      "jp": "20260313",
+      "na": "20260313",
+      "type": "Figure"
+    },
+    {
+      "key": 940,
+      "id": null,
+      "amiiboSeries": "Monster Hunter Stories 3",
+      "character": "Rudy",
+      "gameSeries": "Monster Hunter",
+      "name": "Rudy",
+      "au": "20260313",
+      "eu": "20260313",
+      "jp": "20260313",
+      "na": "20260313",
+      "type": "Figure"
     }
   ],
-  "lastUpdated": "2025-09-12T12:30:00.000"
+  "lastUpdated": "2025-09-27T12:00:00.000"
 }
