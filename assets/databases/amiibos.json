@@ -12849,7 +12849,20 @@
       "jp": "2026",
       "na": "2026",
       "type": "Figure"
+    },
+    {
+      "key": 945,
+      "id": null,
+      "amiiboSeries": "Pragmata",
+      "character": "Diana",
+      "gameSeries": "Pragmata",
+      "name": "Diana",
+      "au": "2026",
+      "eu": "2026",
+      "jp": "2026",
+      "na": "2026",
+      "type": "Figure"
     }
   ],
-  "lastUpdated": "2025-10-30T12:00:00.000"
+  "lastUpdated": "2025-12-13T05:00:00.000Z"
 }
