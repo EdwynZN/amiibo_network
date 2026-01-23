@@ -12862,7 +12862,46 @@
       "jp": "2026",
       "na": "2026",
       "type": "Figure"
+    },
+    {
+      "key": 946,
+      "id": null,
+      "amiiboSeries": "Super Mario Bros. Wonder",
+      "character": "Mario",
+      "gameSeries": "Super Mario",
+      "name": "Elephant Mario",
+      "au": "20260326",
+      "eu": "20260326",
+      "jp": "20260326",
+      "na": "20260326",
+      "type": "Figure"
+    },
+    {
+      "key": 947,
+      "id": null,
+      "amiiboSeries": "Super Mario Bros. Wonder",
+      "character": "Poplin & Prince Florian",
+      "gameSeries": "Super Mario",
+      "name": "Poplin & Prince Florian",
+      "au": "20260326",
+      "eu": "20260326",
+      "jp": "20260326",
+      "na": "20260326",
+      "type": "Figure"
+    },
+    {
+      "key": 948,
+      "id": null,
+      "amiiboSeries": "Super Mario Bros. Wonder",
+      "character": "Captain Toad & Talking Flower",
+      "gameSeries": "Super Mario",
+      "name": "Captain Toad & Talking Flower",
+      "au": "20260326",
+      "eu": "20260326",
+      "jp": "20260326",
+      "na": "20260326",
+      "type": "Figure"
     }
   ],
-  "lastUpdated": "2025-12-13T06:00:00.000Z"
+  "lastUpdated": "2026-01-23T06:00:00.000Z"
 }
