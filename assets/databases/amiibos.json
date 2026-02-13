@@ -12901,7 +12901,20 @@
       "jp": "20260326",
       "na": "20260326",
       "type": "Figure"
+    },
+    {
+      "key": 949,
+      "id": null,
+      "amiiboSeries": "Resident Evil Requiem",
+      "character": "Leon Scott Kennedy",
+      "gameSeries": "Resident Evil",
+      "name": "Leon Scott Kennedy",
+      "au": "2026",
+      "eu": "2026",
+      "jp": "2026",
+      "na": "2026",
+      "type": "Figure"
     }
   ],
-  "lastUpdated": "2026-01-23T06:00:00.000Z"
+  "lastUpdated": "2026-02-12T06:00:00.000Z"
 }
