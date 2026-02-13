@@ -101,6 +101,12 @@ Future<void> main() async {
           if (!kDebugMode)
             FirebaseProviderObserver(FirebaseCrashlytics.instance),
         ],
+        retry: (retryCount, error) {
+          if (error is TimeoutException) {
+            return ProviderContainer.defaultRetry(retryCount, error);
+          }
+          return null;
+        },
         overrides: [
           cacheProvider.overrideWithValue(cache),
           preferencesProvider.overrideWithValue(preferences),
