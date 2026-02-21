@@ -1,14 +1,13 @@
+import 'package:amiibo_network/repository/theme_mode_scheme_repository.dart';
 import 'package:amiibo_network/repository/theme_repository.dart';
 import 'package:amiibo_network/resources/material3_schemes.dart';
 import 'package:amiibo_network/resources/theme_material3_schemes.dart';
+import 'package:amiibo_network/riverpod/repository_provider.dart';
 import 'package:amiibo_network/utils/preferences_constants.dart';
 import 'package:dynamic_color/dynamic_color.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:amiibo_network/repository/theme_mode_scheme_repository.dart';
-import 'package:amiibo_network/riverpod/repository_provider.dart';
 import 'package:hooks_riverpod/legacy.dart';
-import 'package:material_color_utilities/palettes/core_palette.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 Future<void> updateOldTheme() async {
@@ -39,7 +38,7 @@ final themeRepositoryProvider = Provider<ThemeRepository>((ref) {
 final dynamicSchemeProvider = FutureProvider<Material3Schemes?>((ref) async {
   ColorScheme? light;
   ColorScheme? dark;
-  final CorePalette? corePalette = await DynamicColorPlugin.getCorePalette();
+  final corePalette = await DynamicColorPlugin.getCorePalette();
   if (corePalette != null) {
     light = corePalette.toColorScheme();
     dark = corePalette.toColorScheme(brightness: Brightness.dark);
