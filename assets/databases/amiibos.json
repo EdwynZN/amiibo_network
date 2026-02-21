@@ -12914,7 +12914,20 @@
       "jp": "2026",
       "na": "2026",
       "type": "Figure"
+    },
+    {
+      "key": 950,
+      "id": null,
+      "amiiboSeries": "Super Nintendo World",
+      "character": "Mario",
+      "gameSeries": "Super Mario",
+      "name": "Invincible Mario Power-Up Band",
+      "au": null,
+      "eu": null,
+      "jp": "20253018",
+      "na": "20253018",
+      "type": "Band"
     }
   ],
-  "lastUpdated": "2026-02-12T06:00:00.000Z"
+  "lastUpdated": "2026-02-20T06:00:00.000Z"
 }
