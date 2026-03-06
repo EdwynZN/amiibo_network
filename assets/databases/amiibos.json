@@ -12805,10 +12805,10 @@
       "character": "Meta Knight",
       "gameSeries": "Kirby",
       "name": "Meta Knight & Shadow Star",
-      "au": null,
-      "eu": null,
+      "au": "20260305",
+      "eu": "20260305",
       "jp": "20260305",
-      "na": null,
+      "na": "20260305",
       "type": "Figure"
     },
     {
@@ -12818,10 +12818,10 @@
       "character": "King Dedede",
       "gameSeries": "Kirby",
       "name": "King Dedede & Tank Star",
-      "au": null,
-      "eu": null,
-      "jp": "20260305",
-      "na": null,
+      "au": "20260702",
+      "eu": "20260702",
+      "jp": "20260702",
+      "na": "20260702",
       "type": "Figure"
     },
     {
@@ -12831,10 +12831,10 @@
       "character": "Chef Kawasaki",
       "gameSeries": "Kirby",
       "name": "Chef Kawasaki & Hop Star",
-      "au": null,
-      "eu": null,
-      "jp": "20260305",
-      "na": null,
+      "au": "2026",
+      "eu": "2026",
+      "jp": "2026",
+      "na": "2026",
       "type": "Figure"
     },
     {
@@ -12927,7 +12927,33 @@
       "jp": "20253018",
       "na": "20253018",
       "type": "Band"
+    },
+    {
+      "key": 951,
+      "id": null,
+      "amiiboSeries": "Kirby Air Riders",
+      "character": "Kirby",
+      "gameSeries": "Kirby",
+      "name": "Sword Kirby & Dragoon",
+      "au": "2026",
+      "eu": "2026",
+      "jp": "2026",
+      "na": "2026",
+      "type": "Figure"
+    },
+    {
+      "key": 952,
+      "id": null,
+      "amiiboSeries": "Kirby Air Riders",
+      "character": "King Dedede",
+      "gameSeries": "Kirby",
+      "name": "Noir Dedede & Hydra",
+      "au": "2026",
+      "eu": "2026",
+      "jp": "2026",
+      "na": "2026",
+      "type": "Figure"
     }
   ],
-  "lastUpdated": "2026-02-20T06:00:00.000Z"
+  "lastUpdated": "2026-03-05T08:00:00.000Z"
 }
