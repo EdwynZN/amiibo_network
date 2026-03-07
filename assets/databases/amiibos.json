@@ -12857,10 +12857,10 @@
       "character": "Diana",
       "gameSeries": "Pragmata",
       "name": "Diana",
-      "au": "2026",
-      "eu": "2026",
-      "jp": "2026",
-      "na": "2026",
+      "au": "20260424",
+      "eu": "20260424",
+      "jp": "20260424",
+      "na": "20260424",
       "type": "Figure"
     },
     {
@@ -12955,5 +12955,5 @@
       "type": "Figure"
     }
   ],
-  "lastUpdated": "2026-03-05T08:00:00.000Z"
+  "lastUpdated": "2026-03-06T08:00:00.000Z"
 }
