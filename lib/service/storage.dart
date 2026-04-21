@@ -45,10 +45,9 @@ String get dateTaken {
 Future<bool> permissionGranted(ScaffoldMessengerState? scaffoldState) async {
   S translate = S.current;
   final versionCode = InfoPackage.instance.androidVersionCode;
-  if (versionCode == AndroidCode.Unknown)
-    return false;
-  else if (versionCode.code < AndroidCode.Q.code &&
-      versionCode.code > AndroidCode.Lollipop_MR1.code) {
+  if (versionCode.isUnknown) return false;
+  if (versionCode < AndroidSdkCode.Q &&
+      versionCode > AndroidSdkCode.Lollipop_MR1) {
     final permissionStatus = await Permission.storage.request();
     if (!permissionStatus.isGranted) {
       if (permissionStatus.isPermanentlyDenied &&

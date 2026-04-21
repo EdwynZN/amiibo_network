@@ -1,46 +1,55 @@
 import 'package:flutter/services.dart';
 
-enum AndroidCode {
-  Unknown(-1),
-  JellyBean(16),
-  JellyBean_MR1(17),
-  JellyBean_MR2(18),
-  Kitkat(19),
-  Kitkat_Watch(20),
-  Lollipop(21),
-  Lollipop_MR1(22),
-  M(23),
-  N(24),
-  N_MR1(25),
-  O(26),
-  O_MR1(27),
-  P(28),
-  Q(29),
-  R(30),
-  S1(31),
-  S2(32),
-  T(33),
-  U(34),
-  New(35);
+abstract class AndroidSdkCode {
+  const AndroidSdkCode._();
 
-  const AndroidCode(this.code);
+  static const AndroidCode JellyBean = AndroidCode._(16);
+  static const AndroidCode JellyBean_MR1 = AndroidCode._(17);
+  static const AndroidCode JellyBean_MR2 = AndroidCode._(18);
+  static const AndroidCode Kitkat = AndroidCode._(19);
+  static const AndroidCode Kitkat_Watch = AndroidCode._(20);
+  static const AndroidCode Lollipop = AndroidCode._(21);
+  static const AndroidCode Lollipop_MR1 = AndroidCode._(22);
+  static const AndroidCode M = AndroidCode._(23);
+  static const AndroidCode N = AndroidCode._(24);
+  static const AndroidCode N_MR1 = AndroidCode._(25);
+  static const AndroidCode O = AndroidCode._(26);
+  static const AndroidCode O_MNR1 = AndroidCode._(27);
+  static const AndroidCode P = AndroidCode._(28);
+  static const AndroidCode Q = AndroidCode._(29);
+  static const AndroidCode R = AndroidCode._(30);
+  static const AndroidCode S1 = AndroidCode._(31);
+  static const AndroidCode S2 = AndroidCode._(32);
+  static const AndroidCode T = AndroidCode._(33);
+  static const AndroidCode U = AndroidCode._(34);
+  static const AndroidCode V = AndroidCode._(35);
+  static const AndroidCode A16 = AndroidCode._(36);
+  static const AndroidCode A17 = AndroidCode._(37);
+}
 
-  final int code;
+extension type const AndroidCode._(int code) {
+  static const unknown = AndroidCode._(-1);
 
   factory AndroidCode.fromCode(int code) {
-    if (code < JellyBean.code) {
-      return AndroidCode.Unknown;
-    } else if (code >= AndroidCode.New.code) {
-      return AndroidCode.New;
-    }
-    return AndroidCode.values[code - JellyBean.code + 1];
+    return switch (code) {
+      < 16 => unknown,
+      _ => AndroidCode._(code),
+    };
   }
+
+  operator <(AndroidCode other) => code < other.code;
+  operator <=(AndroidCode other) => code <= other.code;
+  operator >(AndroidCode other) => code > other.code;
+  operator >=(AndroidCode other) => code >= other.code;
+
+  bool get isUnknown => this == unknown;
 }
 
 class InfoPackage {
-  static const _channel =
-      MethodChannel("com.dartz.amiibo_network/info_package");
-  AndroidCode _version = AndroidCode.Unknown;
+  static const _channel = MethodChannel(
+    "com.dartz.amiibo_network/info_package",
+  );
+  AndroidCode _version = AndroidCode.unknown;
   AndroidCode get androidVersionCode => _version;
 
   InfoPackage._();
@@ -49,12 +58,11 @@ class InfoPackage {
 
   // Font feature is supported in Android 5 and above
   bool get isFontFeatureEnable =>
-      androidVersionCode.code >= AndroidCode.Lollipop.code;
+      androidVersionCode >= AndroidSdkCode.Lollipop;
 
   // upsert feature is supported in Android API 30 (SQLite >= 3.24.0) and above
   bool get isUpsertFeatureAvailable =>
-      androidVersionCode == AndroidCode.Unknown ||
-      androidVersionCode.code >= AndroidCode.R.code;
+      androidVersionCode >= AndroidSdkCode.R;
 
   Future<void> versionCode() async {
     //TODO IOS Platform Channel
@@ -64,7 +72,7 @@ class InfoPackage {
         _version = AndroidCode.fromCode(version);
       }
     } on PlatformException catch (_) {
-      _version = AndroidCode.Unknown;
+      _version = AndroidCode.unknown;
     }
   }
 }
