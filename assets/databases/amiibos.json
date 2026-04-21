@@ -12953,6 +12953,45 @@
       "jp": "2026",
       "na": "2026",
       "type": "Figure"
+    },
+    {
+      "key": 953,
+      "id": null,
+      "amiiboSeries": "Splatoon Raiders",
+      "character": "Big Man",
+      "gameSeries": "Splatoon",
+      "name": "Big Man",
+      "au": "20260723",
+      "eu": "20260723",
+      "jp": "20260723",
+      "na": "20260723",
+      "type": "Figure"
+    },
+    {
+      "key": 954,
+      "id": null,
+      "amiiboSeries": "Splatoon Raiders",
+      "character": "Shiver",
+      "gameSeries": "Splatoon",
+      "name": "Shiver",
+      "au": "20260723",
+      "eu": "20260723",
+      "jp": "20260723",
+      "na": "20260723",
+      "type": "Figure"
+    },
+    {
+      "key": 955,
+      "id": null,
+      "amiiboSeries": "Splatoon Raiders",
+      "character": "Frye",
+      "gameSeries": "Splatoon",
+      "name": "Frye",
+      "au": "20260723",
+      "eu": "20260723",
+      "jp": "20260723",
+      "na": "20260723",
+      "type": "Figure"
     }
   ],
   "lastUpdated": "2026-04-21T08:00:00.000Z"
