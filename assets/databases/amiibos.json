@@ -12696,7 +12696,7 @@
     },
     {
       "key": 933,
-      "id": null,
+      "id": "0000050004E90102",
       "amiiboSeries": "Super Mario Galaxy",
       "character": "Mario",
       "gameSeries": "Super Mario",
@@ -12709,7 +12709,7 @@
     },
     {
       "key": 934,
-      "id": null,
+      "id": "0004010004EA0102",
       "amiiboSeries": "Super Mario Galaxy",
       "character": "Rosalina",
       "gameSeries": "Super Mario",
@@ -12761,7 +12761,7 @@
     },
     {
       "key": 938,
-      "id": null,
+      "id": "350C000004FA0F02",
       "amiiboSeries": "Monster Hunter Stories 3",
       "character": "Ratha",
       "gameSeries": "Monster Hunter",
@@ -12774,7 +12774,7 @@
     },
     {
       "key": 939,
-      "id": null,
+      "id": "350D000004FB0F02",
       "amiiboSeries": "Monster Hunter Stories 3",
       "character": "Ratha",
       "gameSeries": "Monster Hunter",
@@ -12787,7 +12787,7 @@
     },
     {
       "key": 940,
-      "id": null,
+      "id": "350E000004FC0F02",
       "amiiboSeries": "Monster Hunter Stories 3",
       "character": "Rudy",
       "gameSeries": "Monster Hunter",
@@ -12800,7 +12800,7 @@
     },
     {
       "key": 941,
-      "id": null,
+      "id": "1F01000004C61E03",
       "amiiboSeries": "Kirby Air Riders",
       "character": "Meta Knight",
       "gameSeries": "Kirby",
@@ -12865,7 +12865,7 @@
     },
     {
       "key": 946,
-      "id": null,
+      "id": "00000400043F1C02",
       "amiiboSeries": "Super Mario Bros. Wonder",
       "character": "Mario",
       "gameSeries": "Super Mario",
@@ -12878,7 +12878,7 @@
     },
     {
       "key": 947,
-      "id": null,
+      "id": "0025010004C30102",
       "amiiboSeries": "Super Mario Bros. Wonder",
       "character": "Poplin & Prince Florian",
       "gameSeries": "Super Mario",
@@ -12891,7 +12891,7 @@
     },
     {
       "key": 948,
-      "id": null,
+      "id": "000A010004C20102",
       "amiiboSeries": "Super Mario Bros. Wonder",
       "character": "Captain Toad & Talking Flower",
       "gameSeries": "Super Mario",
@@ -12917,7 +12917,7 @@
     },
     {
       "key": 950,
-      "id": null,
+      "id": "00000003039BFF02",
       "amiiboSeries": "Super Nintendo World",
       "character": "Mario",
       "gameSeries": "Super Mario",
@@ -12930,7 +12930,7 @@
     },
     {
       "key": 951,
-      "id": null,
+      "id": "1F00000004C41E03",
       "amiiboSeries": "Kirby Air Riders",
       "character": "Kirby",
       "gameSeries": "Kirby",
@@ -12955,5 +12955,5 @@
       "type": "Figure"
     }
   ],
-  "lastUpdated": "2026-03-23T08:00:00.000Z"
+  "lastUpdated": "2026-04-21T08:00:00.000Z"
 }
