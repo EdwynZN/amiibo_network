@@ -1,5 +1,5 @@
 import 'package:amiibo_network/riverpod/analytics._provider.dart';
-import 'package:amiibo_network/routes/routes.dart';
+import 'package:amiibo_network/shared/routes/routes.dart';
 import 'package:flutter/foundation.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';

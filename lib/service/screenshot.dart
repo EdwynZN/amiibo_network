@@ -1,18 +1,18 @@
 import 'dart:ui' as ui;
 
 import 'package:amiibo_network/enum/hidden_types.dart';
-import 'package:amiibo_network/generated/l10n.dart';
+import 'package:amiibo_network/shared/generated/l10n.dart';
 import 'package:amiibo_network/model/amiibo.dart';
 import 'package:amiibo_network/model/preferences.dart';
 import 'package:amiibo_network/model/search_result.dart';
 import 'package:amiibo_network/model/stat.dart';
 import 'package:amiibo_network/repository/theme_mode_scheme_repository.dart';
-import 'package:amiibo_network/resources/resources.dart';
+import 'package:amiibo_network/shared/resources/resources.dart';
 import 'package:amiibo_network/service/info_package.dart';
 import 'package:amiibo_network/service/service.dart';
-import 'package:amiibo_network/utils/format_color_on_theme.dart';
-import 'package:amiibo_network/utils/stat_utils.dart';
-import 'package:amiibo_network/utils/theme_extensions.dart';
+import 'package:amiibo_network/shared/utils/format_color_on_theme.dart';
+import 'package:amiibo_network/shared/utils/stat_utils.dart';
+import 'package:amiibo_network/shared/utils/theme_extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -76,7 +76,8 @@ class Screenshot {
     _service = service;
     final mediaBrightness = MediaQuery.of(context).platformBrightness;
     final theme = Theme.of(context);
-    final preferencesTheme = theme.extension<PreferencesExtension>() ??
+    final preferencesTheme =
+        theme.extension<PreferencesExtension>() ??
         PreferencesExtension.brigthness(theme.brightness);
     this
       .._showOwnedTypes = showOwnedTypes
@@ -110,21 +111,22 @@ class Screenshot {
       categoryAttributes: search.categoryAttributes,
       searchAttributes: null,
       hiddenCategories: hiddenType,
-    ))
-        .first;
+    )).first;
     if (isRecording || amiibos.isEmpty) return null;
 
     final double maxSize = 60.0;
-    final double width =
-        (amiibos.length / 25.0).ceilToDouble().clamp(15.0, 30.0);
+    final double width = (amiibos.length / 25.0).ceilToDouble().clamp(
+      15.0,
+      30.0,
+    );
     final double maxX =
         (width * (1 + space) - space) * (maxSize + 2 * padding) + 2 * margin;
     final double maxY =
         ((amiibos.length / width).ceilToDouble() * (1 + 0.5 * space) -
-                    0.5 * space) *
-                (1.5 * maxSize + 2 * padding) +
-            banner +
-            2 * margin;
+                0.5 * space) *
+            (1.5 * maxSize + 2 * padding) +
+        banner +
+        2 * margin;
     double xOffset = margin;
     double yOffset = margin;
     _startRecording(Rect.fromPoints(Offset.zero, Offset(maxX, maxY)));
@@ -137,11 +139,12 @@ class Screenshot {
       final String strImage = 'assets/collection/icon_${amiibo.key}.webp';
       final Offset _offset = Offset(xOffset, yOffset);
       final RRect cardPath = RRect.fromRectAndRadius(
-          Rect.fromPoints(
-              _offset,
-              _offset.translate(
-                  maxSize + 2 * padding, 1.5 * maxSize + 2 * padding)),
-          Radius.circular(8.0));
+        Rect.fromPoints(
+          _offset,
+          _offset.translate(maxSize + 2 * padding, 1.5 * maxSize + 2 * padding),
+        ),
+        Radius.circular(8.0),
+      );
       final ByteData imageAsset = await rootBundle.load(strImage);
 
       final userAttributes = amiibo.userAttributes;
@@ -164,20 +167,21 @@ class Screenshot {
 
       final bool taller = _image.width > 1.3 * _image.height;
       _canvas!.drawImageNine(
-          _image,
-          Rect.fromCenter(
-              center: Offset.zero,
-              width: _image.height.toDouble() * 1.5,
-              height: _image.width.toDouble()),
-          Rect.fromLTRB(
-              _offset.dx + padding,
-              (taller
-                      ? _offset.dy + 1.4 * maxSize - _image.height
-                      : _offset.dy) +
-                  padding,
-              _offset.dx + maxSize + padding,
-              _offset.dy + 1.5 * maxSize + padding),
-          paint);
+        _image,
+        Rect.fromCenter(
+          center: Offset.zero,
+          width: _image.height.toDouble() * 1.5,
+          height: _image.width.toDouble(),
+        ),
+        Rect.fromLTRB(
+          _offset.dx + padding,
+          (taller ? _offset.dy + 1.4 * maxSize - _image.height : _offset.dy) +
+              padding,
+          _offset.dx + maxSize + padding,
+          _offset.dy + 1.5 * maxSize + padding,
+        ),
+        paint,
+      );
       _image.dispose();
 
       xOffset += (1 + space) * (maxSize + 2 * padding);
@@ -209,28 +213,30 @@ class Screenshot {
     if (isRecording || stats.isEmpty || general.isEmpty) return null;
 
     final String? longestWord = owned.length > wished.length ? owned : wished;
-    final bool fontFeatureStyle = !userPreferences.usePercentage &&
+    final bool fontFeatureStyle =
+        !userPreferences.usePercentage &&
         InfoPackage.instance.isFontFeatureEnable;
 
     /// Activate fontFeature only if StatMode is Ratio and isFontFeatureEnable is true for this device
     TextSpan longestParagraphTest = TextSpan(
-        style: TextStyle(
-          fontSize: fontFeatureStyle ? 35 : 30,
-          height: fontFeatureStyle ? 1 : null,
-          fontFeatures: [
-            if (fontFeatureStyle) ui.FontFeature.enable('frac'),
-            if (!fontFeatureStyle) ui.FontFeature.tabularFigures()
-          ],
-        ),
-        text: userPreferences.usePercentage ? '99.99%' : '99/100',
-        children: [
-          TextSpan(style: TextStyle(fontSize: 30), text: ' $longestWord')
-        ]);
+      style: TextStyle(
+        fontSize: fontFeatureStyle ? 35 : 30,
+        height: fontFeatureStyle ? 1 : null,
+        fontFeatures: [
+          if (fontFeatureStyle) ui.FontFeature.enable('frac'),
+          if (!fontFeatureStyle) ui.FontFeature.tabularFigures(),
+        ],
+      ),
+      text: userPreferences.usePercentage ? '99.99%' : '99/100',
+      children: [
+        TextSpan(style: TextStyle(fontSize: 30), text: ' $longestWord'),
+      ],
+    );
     TextPainter _textPainter = TextPainter(
-        text: longestParagraphTest,
-        textDirection: TextDirection.ltr,
-        maxLines: 1)
-      ..layout(minWidth: 200, maxWidth: double.infinity);
+      text: longestParagraphTest,
+      textDirection: TextDirection.ltr,
+      maxLines: 1,
+    )..layout(minWidth: 200, maxWidth: double.infinity);
 
     final double internalPadding = padding;
     final double cardSizeX = (2 * internalPadding + 75 + _textPainter.width)
@@ -241,10 +247,10 @@ class Screenshot {
         (width * (1 + space) - space) * (cardSizeX + 2 * padding) + 2 * margin;
     final double maxY =
         ((stats.length / width).ceilToDouble() * (1 + 0.5 * space) -
-                    0.5 * space) *
-                (cardSizeY + 2 * padding) +
-            banner +
-            2 * margin;
+                0.5 * space) *
+            (cardSizeY + 2 * padding) +
+        banner +
+        2 * margin;
     double xOffset = margin;
     double yOffset = margin;
     _startRecording(Rect.fromPoints(Offset.zero, Offset(maxX, maxY)));
@@ -287,9 +293,9 @@ class Screenshot {
       final Offset _offset = Offset(xOffset, yOffset);
       final RRect cardPath = RRect.fromRectAndRadius(
         Rect.fromPoints(
-            _offset,
-            _offset.translate(
-                cardSizeX + 2 * padding, cardSizeY + 2 * padding)),
+          _offset,
+          _offset.translate(cardSizeX + 2 * padding, cardSizeY + 2 * padding),
+        ),
         Radius.circular(8.0),
       );
       final double? ownedPercent =
@@ -317,77 +323,90 @@ class Screenshot {
           textDirection: TextDirection.ltr,
           ellipsis: '\u2026',
           textAlign: TextAlign.center,
-          maxLines: 1)
+          maxLines: 1,
+        )
         ..layout(minWidth: cardSizeX, maxWidth: cardSizeX)
         ..paint(_canvas!, Offset(xOffset + padding, yOffset + padding));
 
-      _canvas!
-        ..drawLine(_offset.translate(padding, 40 + padding),
-            _offset.translate(cardSizeX + padding, 40 + padding), divider);
+      _canvas!..drawLine(
+        _offset.translate(padding, 40 + padding),
+        _offset.translate(cardSizeX + padding, 40 + padding),
+        divider,
+      );
 
       TextSpan ownedText = TextSpan(
-          style: TextStyle(
-            color: textColor,
-            fontSize: fontFeatureStyle ? 35 : 30,
-            height: fontFeatureStyle ? 1 : null,
-            fontFeatures: [
-              if (fontFeatureStyle) ui.FontFeature.enable('frac'),
-              if (!fontFeatureStyle) ui.FontFeature.tabularFigures()
-            ],
+        style: TextStyle(
+          color: textColor,
+          fontSize: fontFeatureStyle ? 35 : 30,
+          height: fontFeatureStyle ? 1 : null,
+          fontFeatures: [
+            if (fontFeatureStyle) ui.FontFeature.enable('frac'),
+            if (!fontFeatureStyle) ui.FontFeature.tabularFigures(),
+          ],
+        ),
+        text: ownedStat,
+        children: [
+          TextSpan(
+            style: TextStyle(color: textColor, fontSize: 30),
+            text: ' $owned',
           ),
-          text: ownedStat,
-          children: [
-            TextSpan(
-                style: TextStyle(
-                  color: textColor,
-                  fontSize: 30,
-                ),
-                text: ' $owned')
-          ]);
+        ],
+      );
       TextPainter(
-          text: ownedText, textDirection: TextDirection.ltr, maxLines: 1)
+          text: ownedText,
+          textDirection: TextDirection.ltr,
+          maxLines: 1,
+        )
         ..layout(
-            minWidth: cardSizeX - 2 * internalPadding - 75,
-            maxWidth: cardSizeX - 2 * internalPadding - 75)
+          minWidth: cardSizeX - 2 * internalPadding - 75,
+          maxWidth: cardSizeX - 2 * internalPadding - 75,
+        )
         ..paint(_canvas!, _offset.translate(padding + 75, 62.5 + padding + 25));
 
       TextSpan wishedText = TextSpan(
-          style: TextStyle(
-            color: textColor,
-            fontSize: fontFeatureStyle ? 35 : 30,
-            height: fontFeatureStyle ? 1 : null,
-            fontFeatures: [
-              if (fontFeatureStyle) ui.FontFeature.enable('frac'),
-              if (!fontFeatureStyle) ui.FontFeature.tabularFigures()
-            ],
+        style: TextStyle(
+          color: textColor,
+          fontSize: fontFeatureStyle ? 35 : 30,
+          height: fontFeatureStyle ? 1 : null,
+          fontFeatures: [
+            if (fontFeatureStyle) ui.FontFeature.enable('frac'),
+            if (!fontFeatureStyle) ui.FontFeature.tabularFigures(),
+          ],
+        ),
+        text: wishedStat,
+        children: [
+          TextSpan(
+            style: TextStyle(color: textColor, fontSize: 30),
+            text: ' $wished',
           ),
-          text: wishedStat,
-          children: [
-            TextSpan(
-                style: TextStyle(
-                  color: textColor,
-                  fontSize: 30,
-                ),
-                text: ' $wished')
-          ]);
+        ],
+      );
       TextPainter(
-          text: wishedText, textDirection: TextDirection.ltr, maxLines: 1)
+          text: wishedText,
+          textDirection: TextDirection.ltr,
+          maxLines: 1,
+        )
         ..layout(
-            minWidth: cardSizeX - 2 * internalPadding - 75,
-            maxWidth: cardSizeX - 2 * internalPadding - 75)
+          minWidth: cardSizeX - 2 * internalPadding - 75,
+          maxWidth: cardSizeX - 2 * internalPadding - 75,
+        )
         ..paint(
-            _canvas!, _offset.translate(padding + 75, 142.5 + padding + 25));
+          _canvas!,
+          _offset.translate(padding + 75, 142.5 + padding + 25),
+        );
 
       _paintSquareStat(
-          _offset.translate(padding, 50 + padding + 25),
-          _offset.translate(cardSizeX + padding, 110 + padding + 25),
-          ownedPercent,
-          ownedIcon);
+        _offset.translate(padding, 50 + padding + 25),
+        _offset.translate(cardSizeX + padding, 110 + padding + 25),
+        ownedPercent,
+        ownedIcon,
+      );
       _paintSquareStat(
-          _offset.translate(padding, 130 + padding + 25),
-          _offset.translate(cardSizeX + padding, 190 + padding + 25),
-          wishedPercent,
-          wishedIcon);
+        _offset.translate(padding, 130 + padding + 25),
+        _offset.translate(cardSizeX + padding, 190 + padding + 25),
+        wishedPercent,
+        wishedIcon,
+      );
 
       xOffset += (1 + space) * (cardSizeX + 2 * padding);
       if (xOffset >= maxX - margin) {
@@ -404,19 +423,21 @@ class Screenshot {
       ..color = percent == 0
           ? const Color(0xFF2B2922)
           : percent! <= 0.25
-              ? Colors.red[300]!
-              : percent <= 0.50
-                  ? Colors.yellow[300]!
-                  : percent <= 0.75
-                      ? Colors.amber[300]!
-                      : percent <= 0.99
-                          ? Colors.lightGreen[300]!
-                          : Colors.green[800]!
+          ? Colors.red[300]!
+          : percent <= 0.50
+          ? Colors.yellow[300]!
+          : percent <= 0.75
+          ? Colors.amber[300]!
+          : percent <= 0.99
+          ? Colors.lightGreen[300]!
+          : Colors.green[800]!
       ..style = PaintingStyle.stroke
       ..strokeWidth = 3;
 
-    final RRect rect =
-        RRect.fromRectAndRadius(Rect.fromPoints(a, b), Radius.circular(8.0));
+    final RRect rect = RRect.fromRectAndRadius(
+      Rect.fromPoints(a, b),
+      Radius.circular(8.0),
+    );
 
     _canvas!..drawRRect(rect, progressLine);
 
@@ -459,7 +480,7 @@ class Screenshot {
             background: wishedCardPaint,
             fontFeatures: [
               if (fontFeatureStyle) ui.FontFeature.enable('frac'),
-              if (!fontFeatureStyle) ui.FontFeature.tabularFigures()
+              if (!fontFeatureStyle) ui.FontFeature.tabularFigures(),
             ],
           ),
           text:
@@ -486,7 +507,9 @@ class Screenshot {
               text:
                   ' ${StatUtils.parseStat(stats.owned, stats.total, usePercentage: usePercentage)} ',
               style: TextStyle(
-                decoration: _showOwnedTypes ? TextDecoration.underline : TextDecoration.none,
+                decoration: _showOwnedTypes
+                    ? TextDecoration.underline
+                    : TextDecoration.none,
                 decorationStyle: TextDecorationStyle.double,
                 fontFeatures: [
                   if (fontFeatureStyle) ui.FontFeature.enable('frac'),
@@ -519,19 +542,20 @@ class Screenshot {
       ..paint(_canvas!, Offset(125, maxY - margin - 90));
 
     TextSpan createdDate = TextSpan(
-        style: TextStyle(color: textColor, fontSize: 25),
-        text: '$createdOn $date');
-    TextPainter(
-      text: createdDate,
-      textDirection: TextDirection.rtl,
-    )
+      style: TextStyle(color: textColor, fontSize: 25),
+      text: '$createdOn $date',
+    );
+    TextPainter(text: createdDate, textDirection: TextDirection.rtl)
       ..layout(minWidth: maxX - 125 - margin)
       ..paint(_canvas!, Offset(125, maxY - margin - 30));
 
     final _ima = await rootBundle.load(NetworkIcons.iconApp);
     final ui.Image? appIcon = await ui
-        .instantiateImageCodec(_ima.buffer.asUint8List(),
-            targetWidth: iconSize.toInt(), targetHeight: iconSize.toInt())
+        .instantiateImageCodec(
+          _ima.buffer.asUint8List(),
+          targetWidth: iconSize.toInt(),
+          targetHeight: iconSize.toInt(),
+        )
         .then((codec) => codec.getNextFrame())
         .then((frame) => frame.image)
         // ignore: invalid_return_type_for_catch_error

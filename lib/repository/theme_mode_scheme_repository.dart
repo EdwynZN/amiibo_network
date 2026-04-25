@@ -1,6 +1,6 @@
-import 'package:amiibo_network/resources/material3_schemes.dart';
-import 'package:amiibo_network/resources/theme_material3_schemes.dart';
-import 'package:amiibo_network/utils/theme_extensions.dart';
+import 'package:amiibo_network/shared/resources/material3_schemes.dart';
+import 'package:amiibo_network/shared/resources/theme_material3_schemes.dart';
+import 'package:amiibo_network/shared/utils/theme_extensions.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';

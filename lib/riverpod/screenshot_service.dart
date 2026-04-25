@@ -1,5 +1,5 @@
 import 'package:amiibo_network/enum/amiibo_category_enum.dart';
-import 'package:amiibo_network/generated/l10n.dart';
+import 'package:amiibo_network/shared/generated/l10n.dart';
 import 'package:amiibo_network/model/search_result.dart';
 import 'package:amiibo_network/riverpod/preferences_provider.dart';
 import 'package:amiibo_network/riverpod/query_provider.dart';
@@ -15,20 +15,18 @@ import 'package:hooks_riverpod/legacy.dart';
 final _screenshotServiceProvider = Provider((ref) => Screenshot());
 
 final screenshotProvider =
-    StateNotifierProvider<ScreenshotNotifier, AsyncValue<bool>>(
-  (ref) {
-    ref.watch(queryProvider.notifier);
-    final localPreferences = ref.watch(personalProvider.notifier);
-    final themeNotifier = ref.watch(themeProvider.notifier);
-    final screenshotService = ref.watch(_screenshotServiceProvider);
-    return ScreenshotNotifier(
-      ref: ref,
-      localPreferences: localPreferences,
-      themeProvider: themeNotifier,
-      screenshot: screenshotService,
-    );
-  },
-);
+    StateNotifierProvider<ScreenshotNotifier, AsyncValue<bool>>((ref) {
+      ref.watch(queryProvider.notifier);
+      final localPreferences = ref.watch(personalProvider.notifier);
+      final themeNotifier = ref.watch(themeProvider.notifier);
+      final screenshotService = ref.watch(_screenshotServiceProvider);
+      return ScreenshotNotifier(
+        ref: ref,
+        localPreferences: localPreferences,
+        themeProvider: themeNotifier,
+        screenshot: screenshotService,
+      );
+    });
 
 class ScreenshotNotifier extends StateNotifier<AsyncValue<bool>> {
   final Screenshot _screenshot;
@@ -42,8 +40,8 @@ class ScreenshotNotifier extends StateNotifier<AsyncValue<bool>> {
     required this.localPreferences,
     required this.themeProvider,
     required Screenshot screenshot,
-  })  : _screenshot = screenshot,
-        super(const AsyncData(true));
+  }) : _screenshot = screenshot,
+       super(const AsyncData(true));
 
   Future<void> saveStats(
     BuildContext context, {
@@ -64,8 +62,9 @@ class ScreenshotNotifier extends StateNotifier<AsyncValue<bool>> {
     state = const AsyncValue.loading();
     state = await AsyncValue.guard(() async {
       final Search query = search ?? ref.read(queryProvider);
-      final hiddenTypeProvider =
-          useHidden ? ref.read(hiddenCategoryProvider) : null;
+      final hiddenTypeProvider = useHidden
+          ? ref.read(hiddenCategoryProvider)
+          : null;
       final category = query.categoryAttributes.category;
       final buffer = await _screenshot.saveStats(
         search: query,
@@ -98,7 +97,7 @@ class ScreenshotNotifier extends StateNotifier<AsyncValue<bool>> {
           'actionTitle': translate.actionText,
           'id': id,
           'buffer': buffer,
-          'name': '${name}_$dateTaken'
+          'name': '${name}_$dateTaken',
         };
         return await NotificationService.saveImage(notificationArgs);
       }
@@ -125,8 +124,9 @@ class ScreenshotNotifier extends StateNotifier<AsyncValue<bool>> {
     state = const AsyncValue.loading();
     state = await AsyncValue.guard(() async {
       final Search query = search ?? ref.read(queryProvider);
-      final hiddenTypeProvider =
-          useHidden ? ref.read(hiddenCategoryProvider) : null;
+      final hiddenTypeProvider = useHidden
+          ? ref.read(hiddenCategoryProvider)
+          : null;
       final category = query.categoryAttributes.category;
       String name;
       int id;
@@ -149,15 +149,17 @@ class ScreenshotNotifier extends StateNotifier<AsyncValue<bool>> {
           id = 9;
           break;
       }
-      final buffer =
-          await _screenshot.saveCollection(query, hiddenTypeProvider);
+      final buffer = await _screenshot.saveCollection(
+        query,
+        hiddenTypeProvider,
+      );
       if (buffer != null) {
         final Map<String, dynamic> notificationArgs = <String, dynamic>{
           'title': translate.notificationTitle,
           'actionTitle': translate.actionText,
           'id': id,
           'buffer': buffer,
-          'name': '${name}_$dateTaken'
+          'name': '${name}_$dateTaken',
         };
         await NotificationService.saveImage(notificationArgs);
       }

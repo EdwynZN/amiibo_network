@@ -1,7 +1,7 @@
 import 'package:amiibo_network/model/amiibo.dart';
 import 'package:amiibo_network/model/game.dart';
 import 'package:amiibo_network/riverpod/amiibo_provider.dart';
-import 'package:amiibo_network/utils/urls_constants.dart' show apiUrl;
+import 'package:amiibo_network/shared/utils/urls_constants.dart' show apiUrl;
 import 'package:dio/dio.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:riverpod/riverpod.dart';

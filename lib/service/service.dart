@@ -1,6 +1,6 @@
-import 'package:amiibo_network/data/common.dart';
-import 'package:amiibo_network/data/sqlite/dao/SQLite/amiibo_sqlite.dart';
-import 'package:amiibo_network/data/sqlite/model/expression.dart';
+import 'package:amiibo_network/shared/data/common.dart';
+import 'package:amiibo_network/shared/data/sqlite/dao/SQLite/amiibo_sqlite.dart';
+import 'package:amiibo_network/shared/data/sqlite/model/expression.dart';
 import 'package:amiibo_network/enum/amiibo_category_enum.dart';
 import 'package:amiibo_network/enum/hidden_types.dart';
 import 'package:amiibo_network/enum/sort_enum.dart';

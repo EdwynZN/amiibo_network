@@ -1,8 +1,8 @@
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:amiibo_network/data/local_file_source/model/amiibo_local_read_json_model.dart';
-import 'package:amiibo_network/generated/l10n.dart';
+import 'package:amiibo_network/shared/data/local_file_source/model/amiibo_local_read_json_model.dart';
+import 'package:amiibo_network/shared/generated/l10n.dart';
 import 'package:amiibo_network/model/update_amiibo_user_attributes.dart';
 import 'package:amiibo_network/service/info_package.dart';
 import 'package:flutter/material.dart';
@@ -53,13 +53,15 @@ Future<bool> permissionGranted(ScaffoldMessengerState? scaffoldState) async {
       if (permissionStatus.isPermanentlyDenied &&
           (scaffoldState?.mounted ?? false)) {
         scaffoldState?.hideCurrentSnackBar();
-        scaffoldState?.showSnackBar(SnackBar(
-          content: Text(translate.storagePermission(permissionStatus.name)),
-          action: SnackBarAction(
-            label: translate.openAppSettings,
-            onPressed: () => openAppSettings(),
+        scaffoldState?.showSnackBar(
+          SnackBar(
+            content: Text(translate.storagePermission(permissionStatus.name)),
+            action: SnackBarAction(
+              label: translate.openAppSettings,
+              onPressed: () => openAppSettings(),
+            ),
           ),
-        ));
+        );
       }
       return false;
     }

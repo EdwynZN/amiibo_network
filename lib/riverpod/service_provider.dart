@@ -1,5 +1,5 @@
-import 'package:amiibo_network/data/drift_sqlite/source/amiibo_dao.dart';
-import 'package:amiibo_network/data/drift_sqlite/source/drift_database.dart'
+import 'package:amiibo_network/shared/data/drift_sqlite/source/amiibo_dao.dart';
+import 'package:amiibo_network/shared/data/drift_sqlite/source/drift_database.dart'
     as db;
 import 'package:amiibo_network/enum/amiibo_category_enum.dart';
 import 'package:amiibo_network/enum/hidden_types.dart';

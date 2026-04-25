@@ -13,7 +13,7 @@ export: true
 use_part_of: true
 
 # Location where all the generated references will be stored
-package: resources
+package: shared/resources
 
 groups:
   - paths:

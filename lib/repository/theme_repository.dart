@@ -1,8 +1,8 @@
 import 'dart:async';
 import 'dart:convert';
 
-import 'package:amiibo_network/resources/material3_schemes.dart';
-import 'package:amiibo_network/utils/preferences_constants.dart';
+import 'package:amiibo_network/shared/resources/material3_schemes.dart';
+import 'package:amiibo_network/shared/utils/preferences_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 

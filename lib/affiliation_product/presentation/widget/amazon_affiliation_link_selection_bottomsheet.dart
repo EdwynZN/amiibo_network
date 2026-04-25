@@ -1,8 +1,8 @@
 import 'package:amiibo_network/affiliation_product/domain/model/affiliation_link_read_model.dart';
 import 'package:amiibo_network/affiliation_product/presentation/controller/amazon_afilliation_provider.dart';
-import 'package:amiibo_network/generated/l10n.dart';
+import 'package:amiibo_network/shared/generated/l10n.dart';
 import 'package:amiibo_network/riverpod/preferences_provider.dart';
-import 'package:amiibo_network/utils/result_wrapper.dart';
+import 'package:amiibo_network/shared/utils/result_wrapper.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -55,9 +55,7 @@ class _AmazonSiteDraggableSheet extends ConsumerWidget {
       side: BorderSide(color: borderColor),
     );
     final selected = showSelected
-        ? ref.watch(
-            personalProvider.select((p) => p.amazonCountryCode),
-          )
+        ? ref.watch(personalProvider.select((p) => p.amazonCountryCode))
         : null;
 
     return CustomScrollView(
@@ -92,10 +90,7 @@ class _AmazonSiteDraggableSheet extends ConsumerWidget {
           ),
         ],
         SliverPadding(
-          padding: const EdgeInsets.symmetric(
-            vertical: 8.0,
-            horizontal: 16.0,
-          ),
+          padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
           sliver: Consumer(
             builder: (context, ref, _) {
               final code = Localizations.localeOf(context).languageCode;
@@ -123,9 +118,7 @@ class _AmazonSiteDraggableSheet extends ConsumerWidget {
                           ),
                           title: Text(
                             affiliation.countryName.localization(code),
-                            style: const TextStyle(
-                              fontWeight: FontWeight.w600,
-                            ),
+                            style: const TextStyle(fontWeight: FontWeight.w600),
                           ),
                           subtitle: Text(
                             Uri(

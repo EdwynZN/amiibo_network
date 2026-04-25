@@ -1,6 +1,6 @@
 import 'package:amiibo_network/riverpod/preferences_provider.dart';
 import 'package:amiibo_network/riverpod/service_provider.dart';
-import 'package:amiibo_network/utils/preferences_constants.dart';
+import 'package:amiibo_network/shared/utils/preferences_constants.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:hooks_riverpod/legacy.dart';
 import 'package:riverpod/riverpod.dart';

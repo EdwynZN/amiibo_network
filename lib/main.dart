@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:amiibo_network/data/remote_config/model/default_remote_config.dart';
+import 'package:amiibo_network/shared/data/remote_config/model/default_remote_config.dart';
 import 'package:amiibo_network/firebase_options.dart';
 import 'package:amiibo_network/riverpod/game_provider.dart';
 import 'package:amiibo_network/riverpod/preferences_provider.dart';
@@ -8,7 +8,7 @@ import 'package:amiibo_network/riverpod/provider_observer.dart';
 import 'package:amiibo_network/riverpod/router_provider.dart';
 import 'package:amiibo_network/service/info_package.dart';
 import 'package:amiibo_network/service/update_service.dart';
-import 'package:amiibo_network/utils/migration.dart';
+import 'package:amiibo_network/shared/utils/migration.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:firebase_remote_config/firebase_remote_config.dart';
@@ -17,7 +17,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
-import 'package:amiibo_network/generated/l10n.dart';
+import 'package:amiibo_network/shared/generated/l10n.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 //import 'package:flutter/gestures.dart';
@@ -48,26 +48,31 @@ Future<void> main() async {
       ///
       /// - Change ErrorWidget to show a grey Container
       if (!kDebugMode) {
-        await FirebaseCrashlytics.instance
-            .setCrashlyticsCollectionEnabled(true);
+        await FirebaseCrashlytics.instance.setCrashlyticsCollectionEnabled(
+          true,
+        );
         FlutterError.onError = (details) {
           FlutterError.presentError(details);
           unawaited(FirebaseCrashlytics.instance.recordFlutterError(details));
         };
         ErrorWidget.builder = (_) => Container(color: Colors.grey.shade300);
       } else {
-        await FirebaseCrashlytics.instance
-            .setCrashlyticsCollectionEnabled(false);
+        await FirebaseCrashlytics.instance.setCrashlyticsCollectionEnabled(
+          false,
+        );
       }
 
       /// Firebase Remote config
       final remoteConfig = FirebaseRemoteConfig.instance;
       await remoteConfig.ensureInitialized();
-      await remoteConfig.setConfigSettings(RemoteConfigSettings(
-        fetchTimeout: const Duration(minutes: 1),
-        minimumFetchInterval:
-            kDebugMode ? const Duration(minutes: 5) : const Duration(days: 1),
-      ));
+      await remoteConfig.setConfigSettings(
+        RemoteConfigSettings(
+          fetchTimeout: const Duration(minutes: 1),
+          minimumFetchInterval: kDebugMode
+              ? const Duration(minutes: 5)
+              : const Duration(days: 1),
+        ),
+      );
       await remoteConfig.setDefaults(const DefaultRemoteConfig().toJson());
       if (remoteConfig.lastFetchStatus == RemoteConfigFetchStatus.success) {
         await remoteConfig.activate();
