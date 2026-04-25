@@ -1,5 +1,5 @@
 import 'package:amiibo_network/shared/generated/l10n.dart';
-import 'package:amiibo_network/model/amiibo.dart';
+import 'package:amiibo_network/entity/amiibo_info/model/amiibo.dart';
 import 'package:amiibo_network/shared/utils/string_extensions.dart';
 import 'package:amiibo_network/page/detail/widget/user_preferences_card.dart';
 import 'package:flutter/material.dart';

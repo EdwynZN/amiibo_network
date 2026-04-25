@@ -1,6 +1,6 @@
-import 'package:amiibo_network/affiliation_product/data/affiliation_repository_local.dart';
-import 'package:amiibo_network/affiliation_product/domain/failure/affiliation_failure.dart';
-import 'package:amiibo_network/affiliation_product/domain/model/affiliation_link_read_model.dart';
+import 'package:amiibo_network/entity/affiliation_product/data/affiliation_repository_local.dart';
+import 'package:amiibo_network/entity/affiliation_product/domain/failure/affiliation_failure.dart';
+import 'package:amiibo_network/entity/affiliation_product/domain/model/affiliation_link_read_model.dart';
 import 'package:amiibo_network/riverpod/amiibo_provider.dart';
 import 'package:amiibo_network/riverpod/preferences_provider.dart';
 import 'package:collection/collection.dart';

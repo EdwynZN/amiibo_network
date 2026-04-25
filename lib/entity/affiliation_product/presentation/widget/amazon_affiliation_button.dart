@@ -1,5 +1,5 @@
-import 'package:amiibo_network/affiliation_product/presentation/controller/amazon_afilliation_provider.dart';
-import 'package:amiibo_network/affiliation_product/presentation/widget/amazon_affiliation_link_selection_bottomsheet.dart';
+import 'package:amiibo_network/entity/affiliation_product/presentation/controller/amazon_afilliation_provider.dart';
+import 'package:amiibo_network/entity/affiliation_product/presentation/widget/amazon_affiliation_link_selection_bottomsheet.dart';
 import 'package:amiibo_network/shared/resources/resources.dart';
 import 'package:amiibo_network/riverpod/amiibo_provider.dart';
 import 'package:amiibo_network/riverpod/preferences_provider.dart';

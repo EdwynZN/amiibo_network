@@ -1,4 +1,4 @@
-import 'package:amiibo_network/model/amiibo.dart';
+import 'package:amiibo_network/entity/amiibo_info/model/amiibo.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'amiibo_local_json_model.freezed.dart';

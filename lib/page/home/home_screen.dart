@@ -1,6 +1,6 @@
 import 'package:amiibo_network/enum/amiibo_category_enum.dart';
-import 'package:amiibo_network/model/amiibo.dart';
-import 'package:amiibo_network/model/title_search.dart';
+import 'package:amiibo_network/entity/amiibo_info/model/amiibo.dart';
+import 'package:amiibo_network/page/home/model/title_search.dart';
 import 'package:amiibo_network/repository/theme_mode_scheme_repository.dart';
 import 'package:amiibo_network/shared/resources/resources.dart';
 import 'package:amiibo_network/riverpod/amiibo_provider.dart';
@@ -23,7 +23,7 @@ import 'package:amiibo_network/shared/widget/lock_icon.dart';
 import 'package:amiibo_network/shared/widget/preferences_bottomsheet.dart';
 import 'package:amiibo_network/shared/widget/route_transitions.dart';
 import 'package:amiibo_network/shared/widget/selected_chip.dart';
-import 'package:amiibo_network/shared/widget/selected_widget.dart';
+import 'package:amiibo_network/page/home/widget/selected_widget.dart';
 import 'package:amiibo_network/shared/widget/sort_bottomsheet.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';

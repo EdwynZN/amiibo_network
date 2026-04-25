@@ -1,7 +1,6 @@
-import 'package:amiibo_network/affiliation_product/presentation/controller/amazon_afilliation_provider.dart';
-import 'package:amiibo_network/affiliation_product/presentation/widget/amazon_affiliation_link_selection_bottomsheet.dart';
+import 'package:amiibo_network/entity/affiliation_product/presentation/controller/amazon_afilliation_provider.dart';
+import 'package:amiibo_network/entity/affiliation_product/presentation/widget/amazon_affiliation_link_selection_bottomsheet.dart';
 import 'package:amiibo_network/enum/hidden_types.dart';
-import 'package:amiibo_network/model/result.dart';
 import 'package:amiibo_network/shared/resources/resources.dart';
 import 'package:amiibo_network/riverpod/preferences_provider.dart';
 import 'package:amiibo_network/riverpod/query_provider.dart';
@@ -11,6 +10,7 @@ import 'package:amiibo_network/riverpod/stat_ui_remote_config_provider.dart';
 import 'package:amiibo_network/riverpod/theme_provider.dart';
 import 'package:amiibo_network/enum/amiibo_category_enum.dart';
 import 'package:amiibo_network/shared/utils/format_color_on_theme.dart';
+import 'package:amiibo_network/shared/utils/result_type.dart';
 import 'package:amiibo_network/shared/widget/feature_disable_message_card.dart';
 import 'package:amiibo_network/shared/widget/locale_selection_dialog.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
@@ -108,7 +108,7 @@ class _AppearanceListWidget extends ConsumerWidget {
                 subtitle: subtitle,
                 icon: const Icon(Icons.language),
                 onTap: () async {
-                  final localeResult = await showDialog<Result<String?>>(
+                  final localeResult = await showDialog<ResultType<String?>>(
                     context: context,
                     builder: (context) => const LocaleDialog(),
                   );

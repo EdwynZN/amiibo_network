@@ -1,10 +1,10 @@
 import 'dart:async';
 import 'package:amiibo_network/model/search_result.dart';
-import 'package:amiibo_network/model/stat.dart';
+import 'package:amiibo_network/entity/amiibo_info/model/stat.dart';
 import 'package:amiibo_network/riverpod/service_provider.dart';
 import 'package:riverpod/riverpod.dart';
 import 'package:amiibo_network/riverpod/query_provider.dart';
-import 'package:amiibo_network/model/amiibo.dart';
+import 'package:amiibo_network/entity/amiibo_info/model/amiibo.dart';
 
 final keyAmiiboProvider = Provider<int>((_) => throw UnimplementedError());
 

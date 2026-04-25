@@ -4,9 +4,9 @@ import 'package:amiibo_network/shared/data/drift_sqlite/source/drift_database.da
 import 'package:amiibo_network/enum/amiibo_category_enum.dart';
 import 'package:amiibo_network/enum/hidden_types.dart';
 import 'package:amiibo_network/enum/sort_enum.dart';
-import 'package:amiibo_network/model/amiibo.dart';
+import 'package:amiibo_network/entity/amiibo_info/model/amiibo.dart';
 import 'package:amiibo_network/model/search_result.dart';
-import 'package:amiibo_network/model/stat.dart';
+import 'package:amiibo_network/entity/amiibo_info/model/stat.dart';
 import 'package:amiibo_network/model/update_amiibo_user_attributes.dart';
 import 'package:amiibo_network/service/service.dart';
 import 'package:flutter/material.dart';

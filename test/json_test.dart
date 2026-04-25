@@ -1,6 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'dart:convert';
-import 'package:amiibo_network/model/amiibo.dart';
+import 'package:amiibo_network/entity/amiibo_info/model/amiibo.dart';
 import 'dart:io';
 
 main() {

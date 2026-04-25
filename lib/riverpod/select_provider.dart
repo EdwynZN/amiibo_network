@@ -1,4 +1,4 @@
-import 'package:amiibo_network/model/amiibo.dart';
+import 'package:amiibo_network/entity/amiibo_info/model/amiibo.dart';
 import 'package:amiibo_network/model/update_amiibo_user_attributes.dart';
 import 'package:amiibo_network/riverpod/service_provider.dart';
 import 'package:amiibo_network/service/service.dart';

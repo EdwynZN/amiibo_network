@@ -4,7 +4,7 @@ import 'package:amiibo_network/model/update_amiibo_user_attributes.dart';
 import '../dao.dart';
 import '../../database.dart';
 import 'package:sqflite/sqflite.dart';
-import 'package:amiibo_network/model/amiibo.dart';
+import 'package:amiibo_network/entity/amiibo_info/model/amiibo.dart';
 
 class AmiiboSQLite implements Dao<Amiibo?, int> {
   static const String _amiiboTable = 'amiibo';

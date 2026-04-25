@@ -1,5 +1,5 @@
 import 'package:amiibo_network/shared/generated/l10n.dart';
-import 'package:amiibo_network/model/amiibo.dart';
+import 'package:amiibo_network/entity/amiibo_info/model/amiibo.dart';
 import 'package:amiibo_network/model/update_amiibo_user_attributes.dart';
 import 'package:amiibo_network/repository/theme_mode_scheme_repository.dart';
 import 'package:amiibo_network/riverpod/amiibo_provider.dart';

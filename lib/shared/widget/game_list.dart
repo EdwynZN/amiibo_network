@@ -2,7 +2,7 @@
 
 import 'dart:io';
 import 'package:amiibo_network/shared/generated/l10n.dart';
-import 'package:amiibo_network/model/game.dart';
+import 'package:amiibo_network/entity/game/model/game.dart';
 import 'package:amiibo_network/shared/resources/resources.dart';
 import 'package:amiibo_network/riverpod/amiibo_provider.dart';
 import 'package:amiibo_network/riverpod/game_provider.dart';

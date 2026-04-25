@@ -1,0 +1,1 @@
+extension type const ResultType<T>(T data) {}

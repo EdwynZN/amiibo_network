@@ -1,6 +1,6 @@
 import 'package:amiibo_network/shared/generated/l10n.dart';
-import 'package:amiibo_network/model/result.dart';
 import 'package:amiibo_network/riverpod/preferences_provider.dart';
+import 'package:amiibo_network/shared/utils/result_type.dart';
 import 'package:amiibo_network/shared/utils/string_extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
@@ -41,7 +41,7 @@ class LocaleDialog extends HookConsumerWidget {
         ElevatedButton(
           child: Text(localizations.saveButtonLabel.capitalize()),
           onPressed: () async =>
-              Navigator.of(context).pop(Result<String?>(state.value)),
+              Navigator.of(context).pop(ResultType<String?>(state.value)),
         ),
       ],
     );

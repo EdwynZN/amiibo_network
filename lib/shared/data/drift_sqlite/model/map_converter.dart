@@ -1,5 +1,5 @@
 import 'package:amiibo_network/shared/data/drift_sqlite/source/drift_database.dart';
-import 'package:amiibo_network/model/amiibo.dart' as d;
+import 'package:amiibo_network/entity/amiibo_info/model/amiibo.dart' as d;
 import 'package:drift/drift.dart';
 
 AmiiboTable dataFromDomain(d.Amiibo amiibo) {

@@ -1,7 +1,7 @@
 import 'dart:ui';
 
 import 'package:amiibo_network/enum/hidden_types.dart';
-import 'package:amiibo_network/model/preferences.dart';
+import 'package:amiibo_network/entity/preferences/model/preferences.dart';
 import 'package:amiibo_network/riverpod/repository_provider.dart';
 import 'package:amiibo_network/riverpod/stat_ui_remote_config_provider.dart';
 import 'package:amiibo_network/shared/utils/preferences_constants.dart';

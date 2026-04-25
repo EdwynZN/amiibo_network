@@ -2,10 +2,10 @@ import 'dart:ui' as ui;
 
 import 'package:amiibo_network/enum/hidden_types.dart';
 import 'package:amiibo_network/shared/generated/l10n.dart';
-import 'package:amiibo_network/model/amiibo.dart';
-import 'package:amiibo_network/model/preferences.dart';
+import 'package:amiibo_network/entity/amiibo_info/model/amiibo.dart';
+import 'package:amiibo_network/entity/preferences/model/preferences.dart';
 import 'package:amiibo_network/model/search_result.dart';
-import 'package:amiibo_network/model/stat.dart';
+import 'package:amiibo_network/entity/amiibo_info/model/stat.dart';
 import 'package:amiibo_network/repository/theme_mode_scheme_repository.dart';
 import 'package:amiibo_network/shared/resources/resources.dart';
 import 'package:amiibo_network/service/info_package.dart';
