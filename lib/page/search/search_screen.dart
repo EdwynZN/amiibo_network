@@ -1,11 +1,11 @@
 import 'dart:async';
-import 'package:amiibo_network/model/search_result.dart';
+import 'package:amiibo_network/app/configuration/model/search_result.dart';
 import 'package:amiibo_network/app/configuration/query_provider.dart';
 import 'package:amiibo_network/app/configuration/search_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:amiibo_network/shared/widget/floating_bar.dart';
-import 'package:amiibo_network/enum/amiibo_category_enum.dart';
+import 'package:amiibo_network/app/configuration/model/amiibo_category_enum.dart';
 import 'package:amiibo_network/shared/generated/l10n.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';

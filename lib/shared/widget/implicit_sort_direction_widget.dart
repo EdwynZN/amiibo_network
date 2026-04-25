@@ -1,4 +1,4 @@
-import 'package:amiibo_network/enum/sort_enum.dart';
+import 'package:amiibo_network/app/configuration/model/sort_enum.dart';
 import 'package:flutter/material.dart';
 
 class ImplicitDirectionIconButton extends ImplicitlyAnimatedWidget {

@@ -1,4 +1,4 @@
-import 'package:amiibo_network/enum/hidden_types.dart';
+import 'package:amiibo_network/app/configuration/model/hidden_types.dart';
 import 'package:amiibo_network/app/state/theme/service/theme_mode_scheme_repository.dart';
 import 'package:amiibo_network/shared/resources/resources.dart';
 import 'package:amiibo_network/app/state/preferences_provider.dart';
@@ -8,7 +8,7 @@ import 'package:amiibo_network/shared/utils/format_color_on_theme.dart';
 import 'package:amiibo_network/shared/utils/theme_extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:amiibo_network/shared/widget/theme_widget.dart';
-import 'package:amiibo_network/enum/amiibo_category_enum.dart';
+import 'package:amiibo_network/app/configuration/model/amiibo_category_enum.dart';
 import 'package:amiibo_network/shared/generated/l10n.dart';
 import 'package:flutter/services.dart';
 import 'package:gap/gap.dart';
@@ -16,7 +16,7 @@ import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:amiibo_network/shared/widget/selected_chip.dart';
 import 'package:amiibo_network/shared/utils/routes_constants.dart';
-import 'package:amiibo_network/model/search_result.dart';
+import 'package:amiibo_network/app/configuration/model/search_result.dart';
 
 class CollectionDrawer extends ConsumerStatefulWidget {
   final VoidCallback? restart;

@@ -1,4 +1,4 @@
-import 'package:amiibo_network/enum/hidden_types.dart';
+import 'package:amiibo_network/app/configuration/model/hidden_types.dart';
 import 'package:amiibo_network/shared/generated/l10n.dart';
 import 'package:amiibo_network/app/state/preferences_provider.dart';
 import 'package:amiibo_network/app/configuration/stat_ui_remote_config_provider.dart';

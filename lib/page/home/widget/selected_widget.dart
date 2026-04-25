@@ -1,4 +1,4 @@
-import 'package:amiibo_network/enum/amiibo_category_enum.dart';
+import 'package:amiibo_network/app/configuration/model/amiibo_category_enum.dart';
 import 'package:amiibo_network/entity/amiibo_info/model/amiibo.dart';
 import 'package:amiibo_network/app/configuration/query_provider.dart';
 import 'package:amiibo_network/page/home/controller/select_provider.dart';

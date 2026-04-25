@@ -4,11 +4,11 @@ import 'package:amiibo_network/shared/utils/preferences_constants.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:hooks_riverpod/legacy.dart';
 import 'package:riverpod/riverpod.dart';
-import 'package:amiibo_network/enum/amiibo_category_enum.dart';
-import 'package:amiibo_network/enum/sort_enum.dart';
+import 'package:amiibo_network/app/configuration/model/amiibo_category_enum.dart';
+import 'package:amiibo_network/app/configuration/model/sort_enum.dart';
 import 'package:amiibo_network/app/configuration/preferences_provider.dart';
 import 'package:collection/collection.dart';
-import 'package:amiibo_network/model/search_result.dart';
+import 'package:amiibo_network/app/configuration/model/search_result.dart';
 
 final orderCategoryProvider =
     Provider.autoDispose<OrderBy>((ref) => ref.watch(queryProvider).orderBy);

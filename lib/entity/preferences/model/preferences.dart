@@ -1,4 +1,4 @@
-import 'package:amiibo_network/enum/hidden_types.dart';
+import 'package:amiibo_network/app/configuration/model/hidden_types.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'preferences.freezed.dart';

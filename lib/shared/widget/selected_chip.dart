@@ -1,4 +1,4 @@
-import 'package:amiibo_network/enum/hidden_types.dart';
+import 'package:amiibo_network/app/configuration/model/hidden_types.dart';
 import 'package:amiibo_network/app/state/preferences_provider.dart';
 import 'package:amiibo_network/app/configuration/query_provider.dart';
 import 'package:flutter/material.dart';

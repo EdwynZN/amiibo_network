@@ -1,5 +1,5 @@
 import 'package:amiibo_network/entity/amiibo_info/model/amiibo.dart';
-import 'package:amiibo_network/model/update_amiibo_user_attributes.dart';
+import 'package:amiibo_network/feature/amiibo/application/input/update_amiibo_user_attributes.dart';
 import 'package:amiibo_network/app/configuration/service_provider.dart';
 import 'package:amiibo_network/shared/service/service.dart';
 import 'package:flutter/material.dart';

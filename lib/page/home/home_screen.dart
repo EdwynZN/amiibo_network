@@ -1,4 +1,4 @@
-import 'package:amiibo_network/enum/amiibo_category_enum.dart';
+import 'package:amiibo_network/app/configuration/model/amiibo_category_enum.dart';
 import 'package:amiibo_network/entity/amiibo_info/model/amiibo.dart';
 import 'package:amiibo_network/page/home/model/title_search.dart';
 import 'package:amiibo_network/app/state/theme/service/theme_mode_scheme_repository.dart';
@@ -39,7 +39,7 @@ import 'package:amiibo_network/shared/widget/markdown_widget.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:amiibo_network/shared/widget/stat_header.dart';
-import 'package:amiibo_network/model/search_result.dart';
+import 'package:amiibo_network/app/configuration/model/search_result.dart';
 
 final Provider<TitleSearch> _titleProvider = Provider.autoDispose<TitleSearch>((
   ref,

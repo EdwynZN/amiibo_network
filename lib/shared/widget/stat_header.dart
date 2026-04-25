@@ -1,7 +1,7 @@
 import 'dart:math' as math;
 import 'dart:ui';
 
-import 'package:amiibo_network/enum/amiibo_category_enum.dart';
+import 'package:amiibo_network/app/configuration/model/amiibo_category_enum.dart';
 import 'package:amiibo_network/shared/generated/l10n.dart';
 import 'package:amiibo_network/entity/amiibo_info/model/stat.dart';
 import 'package:amiibo_network/entity/amiibo_info/infrastructure/amiibo_provider.dart';

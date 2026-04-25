@@ -1,6 +1,6 @@
 import 'package:amiibo_network/entity/affiliation_product/presentation/controller/amazon_afilliation_provider.dart';
 import 'package:amiibo_network/entity/affiliation_product/presentation/widget/amazon_affiliation_link_selection_bottomsheet.dart';
-import 'package:amiibo_network/enum/hidden_types.dart';
+import 'package:amiibo_network/app/configuration/model/hidden_types.dart';
 import 'package:amiibo_network/shared/resources/resources.dart';
 import 'package:amiibo_network/app/state/preferences_provider.dart';
 import 'package:amiibo_network/app/configuration/query_provider.dart';
@@ -8,7 +8,7 @@ import 'package:amiibo_network/app/configuration/screenshot_service.dart';
 import 'package:amiibo_network/app/configuration/service_provider.dart';
 import 'package:amiibo_network/app/configuration/stat_ui_remote_config_provider.dart';
 import 'package:amiibo_network/app/state/theme/theme_provider.dart';
-import 'package:amiibo_network/enum/amiibo_category_enum.dart';
+import 'package:amiibo_network/app/configuration/model/amiibo_category_enum.dart';
 import 'package:amiibo_network/shared/utils/format_color_on_theme.dart';
 import 'package:amiibo_network/shared/utils/result_type.dart';
 import 'package:amiibo_network/shared/widget/feature_disable_message_card.dart';
@@ -28,7 +28,7 @@ import 'package:amiibo_network/shared/widget/markdown_widget.dart';
 import 'package:amiibo_network/shared/generated/l10n.dart';
 import 'package:amiibo_network/shared/utils/urls_constants.dart';
 import 'package:amiibo_network/shared/service/notification_service.dart';
-import 'package:amiibo_network/model/search_result.dart';
+import 'package:amiibo_network/app/configuration/model/search_result.dart';
 import 'package:amiibo_network/shared/widget/selected_chip.dart';
 
 class SettingsPage extends StatelessWidget {

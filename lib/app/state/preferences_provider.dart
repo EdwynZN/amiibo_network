@@ -1,6 +1,6 @@
 import 'dart:ui';
 
-import 'package:amiibo_network/enum/hidden_types.dart';
+import 'package:amiibo_network/app/configuration/model/hidden_types.dart';
 import 'package:amiibo_network/entity/preferences/model/preferences.dart';
 import 'package:amiibo_network/app/configuration/preferences_provider.dart';
 import 'package:amiibo_network/app/configuration/stat_ui_remote_config_provider.dart';

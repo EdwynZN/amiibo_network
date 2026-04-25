@@ -1,5 +1,5 @@
 import 'package:amiibo_network/shared/data/sqlite/model/amiibo_sqlite_model.dart';
-import 'package:amiibo_network/model/update_amiibo_user_attributes.dart';
+import 'package:amiibo_network/feature/amiibo/application/input/update_amiibo_user_attributes.dart';
 
 import '../dao.dart';
 import '../../database.dart';

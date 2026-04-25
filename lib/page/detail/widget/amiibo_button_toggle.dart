@@ -1,6 +1,6 @@
 import 'package:amiibo_network/shared/generated/l10n.dart';
 import 'package:amiibo_network/entity/amiibo_info/model/amiibo.dart';
-import 'package:amiibo_network/model/update_amiibo_user_attributes.dart';
+import 'package:amiibo_network/feature/amiibo/application/input/update_amiibo_user_attributes.dart';
 import 'package:amiibo_network/app/state/theme/service/theme_mode_scheme_repository.dart';
 import 'package:amiibo_network/entity/amiibo_info/infrastructure/amiibo_provider.dart';
 import 'package:amiibo_network/app/state/lock_provider.dart';

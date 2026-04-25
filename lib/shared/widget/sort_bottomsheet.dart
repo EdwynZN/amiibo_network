@@ -1,6 +1,6 @@
-import 'package:amiibo_network/enum/amiibo_category_enum.dart';
-import 'package:amiibo_network/enum/hidden_types.dart';
-import 'package:amiibo_network/enum/sort_enum.dart';
+import 'package:amiibo_network/app/configuration/model/amiibo_category_enum.dart';
+import 'package:amiibo_network/app/configuration/model/hidden_types.dart';
+import 'package:amiibo_network/app/configuration/model/sort_enum.dart';
 import 'package:amiibo_network/shared/generated/l10n.dart';
 import 'package:amiibo_network/shared/resources/resources.dart';
 import 'package:amiibo_network/app/state/preferences_provider.dart';

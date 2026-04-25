@@ -10,7 +10,7 @@ import 'package:amiibo_network/shared/data/drift_sqlite/source/drift_database.da
 import 'package:amiibo_network/shared/data/local_file_source/model/amiibo_local_json_model.dart'
     as dataModel;
 import 'package:amiibo_network/shared/data/local_file_source/model/country_local_file_model.dart';
-import 'package:amiibo_network/enum/sort_enum.dart';
+import 'package:amiibo_network/app/configuration/model/sort_enum.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/foundation.dart';
 import 'dart:convert';
