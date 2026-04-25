@@ -4,7 +4,7 @@ import 'package:amiibo_network/shared/resources/resources.dart';
 import 'package:amiibo_network/app/state/preferences_provider.dart';
 import 'package:amiibo_network/shared/utils/stat_utils.dart';
 import 'package:amiibo_network/shared/utils/theme_extensions.dart';
-import 'package:amiibo_network/shared/widget/linear_stat_widget.dart';
+import 'package:amiibo_network/page/home/widget/linear_stat_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:gap/gap.dart';

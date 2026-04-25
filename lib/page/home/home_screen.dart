@@ -19,12 +19,12 @@ import 'package:amiibo_network/shared/widget/dash_menu.dart';
 import 'package:amiibo_network/page/detail/widget/owned_bottom_sheet.dart';
 import 'package:amiibo_network/page/home/widget/list_stats.dart';
 import 'package:amiibo_network/shared/widget/loading_grid_shimmer.dart';
-import 'package:amiibo_network/shared/widget/lock_icon.dart';
-import 'package:amiibo_network/shared/widget/preferences_bottomsheet.dart';
-import 'package:amiibo_network/shared/widget/route_transitions.dart';
-import 'package:amiibo_network/shared/widget/selected_chip.dart';
+import 'package:amiibo_network/page/home/widget/lock_icon.dart';
+import 'package:amiibo_network/page/home/widget/preferences_bottomsheet.dart';
+import 'package:amiibo_network/shared/routes/route_transitions.dart';
+import 'package:amiibo_network/template/selected_chip.dart';
 import 'package:amiibo_network/page/home/widget/selected_widget.dart';
-import 'package:amiibo_network/shared/widget/sort_bottomsheet.dart';
+import 'package:amiibo_network/page/home/widget/sort_bottomsheet.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:amiibo_network/page/home/widget/drawer.dart';
@@ -38,7 +38,7 @@ import 'package:amiibo_network/shared/utils/preferences_constants.dart';
 import 'package:amiibo_network/shared/widget/markdown_widget.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:amiibo_network/shared/widget/stat_header.dart';
+import 'package:amiibo_network/page/home/widget/stat_header.dart';
 import 'package:amiibo_network/app/configuration/model/search_result.dart';
 
 final Provider<TitleSearch> _titleProvider = Provider.autoDispose<TitleSearch>((

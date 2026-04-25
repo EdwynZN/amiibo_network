@@ -12,7 +12,7 @@ import 'package:amiibo_network/app/configuration/model/amiibo_category_enum.dart
 import 'package:amiibo_network/shared/utils/format_color_on_theme.dart';
 import 'package:amiibo_network/shared/utils/result_type.dart';
 import 'package:amiibo_network/shared/widget/feature_disable_message_card.dart';
-import 'package:amiibo_network/shared/widget/locale_selection_dialog.dart';
+import 'package:amiibo_network/page/settings/widget/locale_selection_dialog.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -23,13 +23,13 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gap/gap.dart';
 import 'package:launch_app_store/launch_app_store.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:amiibo_network/shared/widget/theme_widget.dart';
+import 'package:amiibo_network/template/theme_widget.dart';
 import 'package:amiibo_network/shared/widget/markdown_widget.dart';
 import 'package:amiibo_network/shared/generated/l10n.dart';
 import 'package:amiibo_network/shared/utils/urls_constants.dart';
 import 'package:amiibo_network/shared/service/notification_service.dart';
 import 'package:amiibo_network/app/configuration/model/search_result.dart';
-import 'package:amiibo_network/shared/widget/selected_chip.dart';
+import 'package:amiibo_network/template/selected_chip.dart';
 
 class SettingsPage extends StatelessWidget {
   const SettingsPage({Key? key}) : super(key: key);
