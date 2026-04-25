@@ -1,5 +1,5 @@
 import 'package:amiibo_network/shared/data/drift_sqlite/source/drift_database.dart';
-import 'package:amiibo_network/service/info_package.dart';
+import 'package:amiibo_network/shared/service/info_package.dart';
 import 'package:drift/drift.dart';
 import 'package:amiibo_network/entity/affiliation_product/domain/model/affiliation_link_read_model.dart'
     as model;

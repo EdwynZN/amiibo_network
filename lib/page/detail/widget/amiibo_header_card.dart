@@ -1,6 +1,6 @@
 import 'package:amiibo_network/shared/generated/l10n.dart';
 import 'package:amiibo_network/shared/resources/resources.dart';
-import 'package:amiibo_network/riverpod/amiibo_provider.dart';
+import 'package:amiibo_network/entity/amiibo_info/infrastructure/amiibo_provider.dart';
 import 'package:amiibo_network/page/detail/widget/card_details.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';

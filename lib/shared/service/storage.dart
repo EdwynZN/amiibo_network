@@ -4,7 +4,7 @@ import 'dart:io';
 import 'package:amiibo_network/shared/data/local_file_source/model/amiibo_local_read_json_model.dart';
 import 'package:amiibo_network/shared/generated/l10n.dart';
 import 'package:amiibo_network/model/update_amiibo_user_attributes.dart';
-import 'package:amiibo_network/service/info_package.dart';
+import 'package:amiibo_network/shared/service/info_package.dart';
 import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';

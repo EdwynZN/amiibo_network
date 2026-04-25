@@ -7,7 +7,7 @@ import 'package:amiibo_network/enum/sort_enum.dart' as s;
 import 'package:amiibo_network/entity/amiibo_info/model/amiibo.dart' hide Amiibo;
 import 'package:amiibo_network/model/search_result.dart';
 import 'package:amiibo_network/model/update_amiibo_user_attributes.dart';
-import 'package:amiibo_network/service/info_package.dart';
+import 'package:amiibo_network/shared/service/info_package.dart';
 import 'package:drift/drift.dart';
 
 part 'amiibo_dao.g.dart';

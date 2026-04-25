@@ -1,9 +1,9 @@
 import 'package:amiibo_network/enum/hidden_types.dart';
-import 'package:amiibo_network/repository/theme_mode_scheme_repository.dart';
+import 'package:amiibo_network/app/state/theme/service/theme_mode_scheme_repository.dart';
 import 'package:amiibo_network/shared/resources/resources.dart';
-import 'package:amiibo_network/riverpod/preferences_provider.dart';
-import 'package:amiibo_network/riverpod/query_provider.dart';
-import 'package:amiibo_network/riverpod/theme_provider.dart';
+import 'package:amiibo_network/app/state/preferences_provider.dart';
+import 'package:amiibo_network/app/configuration/query_provider.dart';
+import 'package:amiibo_network/app/state/theme/theme_provider.dart';
 import 'package:amiibo_network/shared/utils/format_color_on_theme.dart';
 import 'package:amiibo_network/shared/utils/theme_extensions.dart';
 import 'package:flutter/material.dart';

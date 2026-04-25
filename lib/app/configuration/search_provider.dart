@@ -1,7 +1,7 @@
 import 'package:amiibo_network/enum/amiibo_category_enum.dart';
 import 'package:amiibo_network/model/search_result.dart';
-import 'package:amiibo_network/riverpod/preferences_provider.dart';
-import 'package:amiibo_network/riverpod/service_provider.dart';
+import 'package:amiibo_network/app/state/preferences_provider.dart';
+import 'package:amiibo_network/app/configuration/service_provider.dart';
 import 'package:hooks_riverpod/legacy.dart';
 import 'package:riverpod/riverpod.dart';
 

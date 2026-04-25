@@ -1,4 +1,4 @@
-import 'package:amiibo_network/riverpod/amiibo_provider.dart';
+import 'package:amiibo_network/entity/amiibo_info/infrastructure/amiibo_provider.dart';
 import 'package:amiibo_network/page/detail/detail_screen.dart';
 import 'package:amiibo_network/page/home/home_screen.dart';
 import 'package:amiibo_network/page/settings/settings_screen.dart';

@@ -1,7 +1,7 @@
 import 'package:amiibo_network/entity/affiliation_product/domain/model/affiliation_link_read_model.dart';
 import 'package:amiibo_network/entity/affiliation_product/presentation/controller/amazon_afilliation_provider.dart';
 import 'package:amiibo_network/shared/generated/l10n.dart';
-import 'package:amiibo_network/riverpod/preferences_provider.dart';
+import 'package:amiibo_network/app/state/preferences_provider.dart';
 import 'package:amiibo_network/shared/utils/result_wrapper.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';

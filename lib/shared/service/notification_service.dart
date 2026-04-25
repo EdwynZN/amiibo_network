@@ -2,7 +2,7 @@ import 'dart:convert';
 
 import 'package:amiibo_network/shared/data/local_file_source/model/amiibo_local_read_json_model.dart';
 import 'package:amiibo_network/entity/amiibo_info/model/amiibo.dart';
-import 'package:amiibo_network/service/storage.dart';
+import 'package:amiibo_network/shared/service/storage.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';

@@ -1,7 +1,7 @@
 import 'package:amiibo_network/entity/affiliation_product/presentation/widget/amazon_affiliation_button.dart';
 import 'package:amiibo_network/shared/resources/resources.dart';
-import 'package:amiibo_network/riverpod/amiibo_provider.dart';
-import 'package:amiibo_network/riverpod/preferences_provider.dart';
+import 'package:amiibo_network/entity/amiibo_info/infrastructure/amiibo_provider.dart';
+import 'package:amiibo_network/app/state/preferences_provider.dart';
 import 'package:amiibo_network/shared/utils/tablet_utils.dart';
 import 'package:amiibo_network/page/detail/widget/amiibo_button_toggle.dart';
 import 'package:amiibo_network/page/detail/widget/card_details.dart';

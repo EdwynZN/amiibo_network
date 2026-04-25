@@ -1,5 +1,5 @@
 import 'package:amiibo_network/shared/generated/l10n.dart';
-import 'package:amiibo_network/riverpod/preferences_provider.dart';
+import 'package:amiibo_network/app/state/preferences_provider.dart';
 import 'package:amiibo_network/shared/utils/result_type.dart';
 import 'package:amiibo_network/shared/utils/string_extensions.dart';
 import 'package:flutter/material.dart';

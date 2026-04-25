@@ -1,10 +1,10 @@
 import 'dart:async';
 import 'package:amiibo_network/shared/resources/resources.dart';
-import 'package:amiibo_network/riverpod/theme_provider.dart';
+import 'package:amiibo_network/app/state/theme/theme_provider.dart';
 import 'package:amiibo_network/shared/utils/format_color_on_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:amiibo_network/shared/widget/switch_joycon.dart';
-import 'package:amiibo_network/service/update_service.dart';
+import 'package:amiibo_network/shared/service/update_service.dart';
 import 'package:amiibo_network/shared/generated/l10n.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';

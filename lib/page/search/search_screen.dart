@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'package:amiibo_network/model/search_result.dart';
-import 'package:amiibo_network/riverpod/query_provider.dart';
-import 'package:amiibo_network/riverpod/search_provider.dart';
+import 'package:amiibo_network/app/configuration/query_provider.dart';
+import 'package:amiibo_network/app/configuration/search_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:amiibo_network/shared/widget/floating_bar.dart';

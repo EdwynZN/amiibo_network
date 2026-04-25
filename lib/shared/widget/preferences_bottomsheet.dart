@@ -1,7 +1,7 @@
 import 'package:amiibo_network/enum/hidden_types.dart';
 import 'package:amiibo_network/shared/generated/l10n.dart';
-import 'package:amiibo_network/riverpod/preferences_provider.dart';
-import 'package:amiibo_network/riverpod/stat_ui_remote_config_provider.dart';
+import 'package:amiibo_network/app/state/preferences_provider.dart';
+import 'package:amiibo_network/app/configuration/stat_ui_remote_config_provider.dart';
 import 'package:amiibo_network/shared/widget/feature_disable_message_card.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';

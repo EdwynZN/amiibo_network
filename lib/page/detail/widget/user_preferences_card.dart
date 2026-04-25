@@ -1,11 +1,11 @@
 import 'package:amiibo_network/shared/generated/l10n.dart';
 import 'package:amiibo_network/entity/amiibo_info/model/amiibo.dart';
 import 'package:amiibo_network/model/update_amiibo_user_attributes.dart';
-import 'package:amiibo_network/repository/theme_mode_scheme_repository.dart';
-import 'package:amiibo_network/riverpod/amiibo_provider.dart';
-import 'package:amiibo_network/riverpod/lock_provider.dart';
-import 'package:amiibo_network/riverpod/preferences_provider.dart';
-import 'package:amiibo_network/riverpod/service_provider.dart';
+import 'package:amiibo_network/app/state/theme/service/theme_mode_scheme_repository.dart';
+import 'package:amiibo_network/entity/amiibo_info/infrastructure/amiibo_provider.dart';
+import 'package:amiibo_network/app/state/lock_provider.dart';
+import 'package:amiibo_network/app/state/preferences_provider.dart';
+import 'package:amiibo_network/app/configuration/service_provider.dart';
 import 'package:amiibo_network/shared/utils/number_text_input_formatters.dart';
 import 'package:amiibo_network/shared/utils/theme_extensions.dart';
 import 'package:amiibo_network/page/detail/widget/amiibo_button_toggle.dart';

@@ -1,5 +1,5 @@
 import 'package:amiibo_network/entity/amiibo_info/model/stat.dart';
-import 'package:amiibo_network/riverpod/stats_amiibo_provider.dart';
+import 'package:amiibo_network/page/home/controller/stats_amiibo_provider.dart';
 import 'package:amiibo_network/shared/widget/single_stat.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';

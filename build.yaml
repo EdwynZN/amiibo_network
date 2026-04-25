@@ -2,13 +2,13 @@ targets:
   $default:
     builders:
       freezed:freezed:
-        generate_for:
-          include:
-            - lib/model/**.dart
-            - lib/data/**/model/**.dart
-            - lib/**/data/model/**.dart
-            - lib/**/domain/model/**.dart
-            - lib/resources/**.dart
+        # generate_for:
+        #   include:
+        #     - lib/**/model/**.dart
+        #     - lib/data/**/model/**.dart
+        #     - lib/**/data/model/**.dart
+        #     - lib/**/domain/model/**.dart
+        #     - lib/resources/**.dart
       json_serializable:
         options:
           # Options configure how source code is generated for every

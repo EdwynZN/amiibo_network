@@ -1,4 +1,4 @@
-import 'package:amiibo_network/riverpod/theme_provider.dart';
+import 'package:amiibo_network/app/state/theme/theme_provider.dart';
 import 'package:amiibo_network/shared/utils/tablet_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:amiibo_network/shared/generated/l10n.dart';

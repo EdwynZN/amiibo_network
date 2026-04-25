@@ -17,7 +17,7 @@ import 'dart:convert';
 import 'package:flutter/services.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import '../shared/utils/preferences_constants.dart';
+import '../utils/preferences_constants.dart';
 import 'package:amiibo_network/entity/amiibo_info/model/amiibo.dart';
 
 final updateServiceProvider = Provider(

@@ -1,7 +1,7 @@
 import 'package:amiibo_network/shared/generated/l10n.dart';
 import 'package:amiibo_network/entity/amiibo_info/model/stat.dart';
 import 'package:amiibo_network/shared/resources/resources.dart';
-import 'package:amiibo_network/riverpod/preferences_provider.dart';
+import 'package:amiibo_network/app/state/preferences_provider.dart';
 import 'package:amiibo_network/shared/utils/stat_utils.dart';
 import 'package:amiibo_network/shared/utils/theme_extensions.dart';
 import 'package:amiibo_network/shared/widget/linear_stat_widget.dart';

@@ -1,7 +1,7 @@
 import 'package:amiibo_network/enum/amiibo_category_enum.dart';
 import 'package:amiibo_network/entity/amiibo_info/model/amiibo.dart';
-import 'package:amiibo_network/riverpod/query_provider.dart';
-import 'package:amiibo_network/riverpod/select_provider.dart';
+import 'package:amiibo_network/app/configuration/query_provider.dart';
+import 'package:amiibo_network/page/home/controller/select_provider.dart';
 import 'package:amiibo_network/page/detail/widget/amiibo_button_toggle.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
