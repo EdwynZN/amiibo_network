@@ -12844,15 +12844,15 @@
       "character": "Grace Ashcroft",
       "gameSeries": "Resident Evil",
       "name": "Grace Ashcroft",
-      "au": "2026",
-      "eu": "2026",
-      "jp": "2026",
-      "na": "2026",
+      "au": "20260730",
+      "eu": "20260730",
+      "jp": "20260730",
+      "na": "20260730",
       "type": "Figure"
     },
     {
       "key": 945,
-      "id": null,
+      "id": "3580000005062102",
       "amiiboSeries": "Pragmata",
       "character": "Diana",
       "gameSeries": "Pragmata",
@@ -12909,10 +12909,10 @@
       "character": "Leon Scott Kennedy",
       "gameSeries": "Resident Evil",
       "name": "Leon Scott Kennedy",
-      "au": "2026",
-      "eu": "2026",
-      "jp": "2026",
-      "na": "2026",
+      "au": "20260730",
+      "eu": "20260730",
+      "jp": "20260730",
+      "na": "20260730",
       "type": "Figure"
     },
     {
@@ -12994,5 +12994,5 @@
       "type": "Figure"
     }
   ],
-  "lastUpdated": "2026-04-21T08:00:00.000Z"
+  "lastUpdated": "2026-05-15T04:00:00.000Z"
 }
