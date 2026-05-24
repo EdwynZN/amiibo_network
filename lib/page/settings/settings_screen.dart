@@ -174,7 +174,7 @@ class _FeatureListWidgetState extends ConsumerState<_FeatureListWidget> {
   Future<void> _openFileExplorer() async {
     try {
       final service = ref.read(serviceProvider.notifier);
-      final file = await FilePicker.platform.pickFiles(
+      final file = await FilePicker.pickFiles(
         type: FileType.any,
         //allowedExtensions: ['json'],
       );
@@ -199,7 +199,7 @@ class _FeatureListWidgetState extends ConsumerState<_FeatureListWidget> {
         );
         openSnackBar(translate.successImport);
       }
-      await FilePicker.platform.clearTemporaryFiles();
+      await FilePicker.clearTemporaryFiles();
     } on PlatformException catch (e, s) {
       FirebaseCrashlytics.instance.recordError(e, s);
       debugPrint(e.message);
