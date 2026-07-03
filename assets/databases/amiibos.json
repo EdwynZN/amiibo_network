@@ -12831,10 +12831,10 @@
       "character": "Chef Kawasaki",
       "gameSeries": "Kirby",
       "name": "Chef Kawasaki & Hop Star",
-      "au": "2026",
-      "eu": "2026",
-      "jp": "2026",
-      "na": "2026",
+      "au": "20260903",
+      "eu": "20260903",
+      "jp": "20260903",
+      "na": "20260903",
       "type": "Figure"
     },
     {
@@ -12994,5 +12994,5 @@
       "type": "Figure"
     }
   ],
-  "lastUpdated": "2026-05-15T04:00:00.000Z"
+  "lastUpdated": "2026-07-01T04:00:00.000Z"
 }
