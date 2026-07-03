@@ -21,16 +21,16 @@ environment:
 publish_to: none
 dependencies:
   collection: ^1.19.1
-  dio: ^5.9.2
-  drift: ^2.31.0
+  dio: ^5.10.0
+  drift: ^2.34.0
   drift_sqflite: ^2.0.1
   dynamic_color: ^1.8.1
   equatable: ^2.0.8
   file_picker: ^11.0.2
-  firebase_analytics: ^12.4.1
-  firebase_core: ^4.9.0
-  firebase_crashlytics: ^5.2.2
-  firebase_remote_config: ^6.5.1
+  firebase_analytics: ^12.4.3
+  firebase_core: ^4.11.0
+  firebase_crashlytics: ^5.2.4
+  firebase_remote_config: ^6.5.3
   flutter:
     sdk: flutter
   flutter_hooks: ^0.21.3+1
@@ -39,21 +39,21 @@ dependencies:
   flutter_markdown_plus: ^1.0.7
   freezed_annotation: ^3.1.0
   gap: ^3.0.1
-  go_router: ^17.2.3
+  go_router: ^17.3.0
   hive_flutter: ^1.1.0
-  hooks_riverpod: ^3.3.1
-  intl_utils: ^2.8.14
-  json_annotation: ^4.11.0
+  hooks_riverpod: ^3.3.2
+  intl_utils: ^2.8.15
+  json_annotation: ^4.12.0
   launch_app_store: ^1.1.4
   loading_animation_widget: ^1.3.0
   material_color_utilities: ^0.13.0
-  path_provider: ^2.1.5
-  permission_handler: ^12.0.1
-  riverpod_annotation: ^4.0.2
+  path_provider: ^2.1.6
+  permission_handler: ^12.0.3
+  riverpod_annotation: ^4.0.3
   shared_preferences: ^2.5.5
   sliver_tools: ^0.2.12
-  sqflite: ^2.4.2
-  sqlite3_flutter_libs: ^0.5.41
+  sqflite: ^2.4.3
+  sqlite3_flutter_libs: ^0.6.0+eol
   stash: ^5.2.0
   stash_dio: ^5.2.0
   stash_hive: ^5.2.0
@@ -66,8 +66,8 @@ dev_dependencies:
     sdk: flutter
   freezed: ^3.2.5
   json_serializable: ^6.13.0
-  riverpod_generator: ^4.0.3
-  riverpod_lint: 3.1.3
+  riverpod_generator: ^4.0.4
+  riverpod_lint: 3.1.4
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
