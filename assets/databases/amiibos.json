@@ -9846,7 +9846,7 @@
     {
       "key": 722,
       "id": "3500010002e10f02",
-      "amiiboSeries": "Monster Hunter",
+      "amiiboSeries": "Monster Hunter Stories",
       "character": "One-Eyed Rathalos",
       "gameSeries": "Monster Hunter",
       "name": "One-Eyed Rathalos and Rider (Male)",
@@ -9859,7 +9859,7 @@
     {
       "key": 723,
       "id": "3500020002e20f02",
-      "amiiboSeries": "Monster Hunter",
+      "amiiboSeries": "Monster Hunter Stories",
       "character": "One-Eyed Rathalos",
       "gameSeries": "Monster Hunter",
       "name": "One-Eyed Rathalos and Rider (Female)",
@@ -9872,7 +9872,7 @@
     {
       "key": 724,
       "id": "3501000002e30f02",
-      "amiiboSeries": "Monster Hunter",
+      "amiiboSeries": "Monster Hunter Stories",
       "character": "Nabiru",
       "gameSeries": "Monster Hunter",
       "name": "Nabiru",
@@ -9885,7 +9885,7 @@
     {
       "key": 725,
       "id": "3502010002e40f02",
-      "amiiboSeries": "Monster Hunter",
+      "amiiboSeries": "Monster Hunter Stories",
       "character": "Rathian",
       "gameSeries": "Monster Hunter",
       "name": "Rathian and Cheval",
@@ -9898,7 +9898,7 @@
     {
       "key": 726,
       "id": "3503010002e50f02",
-      "amiiboSeries": "Monster Hunter",
+      "amiiboSeries": "Monster Hunter Stories",
       "character": "Barioth",
       "gameSeries": "Monster Hunter",
       "name": "Barioth and Ayuria",
@@ -9911,7 +9911,7 @@
     {
       "key": 727,
       "id": "3504010002e60f02",
-      "amiiboSeries": "Monster Hunter",
+      "amiiboSeries": "Monster Hunter Stories",
       "character": "Qurupeco",
       "gameSeries": "Monster Hunter",
       "name": "Qurupeco and Dan",
@@ -10444,7 +10444,7 @@
     {
       "key": 768,
       "id": "35070000040E0F02",
-      "amiiboSeries": "Monster Hunter Stories",
+      "amiiboSeries": "Monster Hunter Stories 2",
       "character": "Tsukino",
       "gameSeries": "Monster Hunter",
       "name": "Tsukino",
@@ -10457,7 +10457,7 @@
     {
       "key": 769,
       "id": "35050000040C0F02",
-      "amiiboSeries": "Monster Hunter Stories",
+      "amiiboSeries": "Monster Hunter Stories 2",
       "character": "Razewing Ratha",
       "gameSeries": "Monster Hunter",
       "name": "Razewing Ratha",
@@ -10470,7 +10470,7 @@
     {
       "key": 770,
       "id": "35060000040D0F02",
-      "amiiboSeries": "Monster Hunter Stories",
+      "amiiboSeries": "Monster Hunter Stories 2",
       "character": "Ena",
       "gameSeries": "Monster Hunter",
       "name": "Ena",
@@ -12994,5 +12994,5 @@
       "type": "Figure"
     }
   ],
-  "lastUpdated": "2026-07-01T04:00:00.000Z"
+  "lastUpdated": "2026-07-14T04:00:00.000Z"
 }
