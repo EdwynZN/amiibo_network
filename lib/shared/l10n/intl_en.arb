@@ -1,120 +1,551 @@
 {
   "@@locale": "en",
   "splashMessage": "Just a second . . .",
+  "@splashMessage": {
+    "description": "Splash screen loading message"
+  },
   "splashWelcome": "WELCOME",
+  "@splashWelcome": {
+    "description": "Splash screen welcome title"
+  },
   "splashError": "Couldn't Update \u2639",
+  "@splashError": {
+    "description": "Splash screen error message when update fails"
+  },
   "showPercentage": "Show percentage",
+  "@showPercentage": {
+    "description": "Setting option label to display stats as percentages"
+  },
   "showOwnerCategories": "Show owner categories",
+  "@showOwnerCategories": {
+    "description": "Setting option label to show boxed/unboxed categories"
+  },
   "showOwnerCategoriesDetails": "Allow to visualize owned amiibos by boxed/unboxed",
+  "@showOwnerCategoriesDetails": {
+    "description": "Detailed description for showOwnerCategories setting"
+  },
   "category": "{choice, select, All {All} Owned {Owned} Wishlist {Wishlist} Name {Name} Game {Game} Figures {All Figures} Cards {All Cards} AmiiboSeries {Custom} other {{choice}}}",
+  "@category": {
+    "description": "Category filter selection options",
+    "placeholders": {
+      "choice": {
+        "type": "Object"
+      }
+    }
+  },
   "searchCategory": "{choice, select, Game {Game} Name {Name} AmiiboSeries {Serie} other {{choice}}}",
+  "@searchCategory": {
+    "description": "Search category filter options",
+    "placeholders": {
+      "choice": {
+        "type": "Object"
+      }
+    }
+  },
   "all": "All",
+  "@all": {
+    "description": "Label for all item category"
+  },
   "total": "Total",
+  "@total": {
+    "description": "Label for total count in stats"
+  },
   "remaining": "Remaining",
+  "@remaining": {
+    "description": "Label for remaining item count"
+  },
   "owned": "Owned",
+  "@owned": {
+    "description": "Label for owned amiibos category"
+  },
   "boxed": "Boxed",
+  "@boxed": {
+    "description": "Label for boxed amiibos status"
+  },
   "unboxed": "Unboxed",
+  "@unboxed": {
+    "description": "Label for unboxed amiibos status"
+  },
   "wished": "Wished",
+  "@wished": {
+    "description": "Label for wished amiibos category"
+  },
   "stats": "Stats",
+  "@stats": {
+    "description": "Title or label for statistics"
+  },
   "types": "{choice, select, Figure {Figure} Card {Card} Yarn {Yarn} Band {Band} other {Other}}",
+  "@types": {
+    "description": "Amiibo item types",
+    "placeholders": {
+      "choice": {
+        "type": "String"
+      }
+    }
+  },
   "figures": "Figures",
+  "@figures": {
+    "description": "Label for figures type group"
+  },
   "cards": "Cards",
+  "@cards": {
+    "description": "Label for cards type group"
+  },
   "name": "Name: {name}",
+  "@name": {
+    "description": "Label displaying amiibo name",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
   "character": "Character: {character}",
+  "@character": {
+    "description": "Label displaying character name",
+    "placeholders": {
+      "character": {
+        "type": "String"
+      }
+    }
+  },
   "serie": "Serie: {serie}",
+  "@serie": {
+    "description": "Label displaying amiibo series",
+    "placeholders": {
+      "serie": {
+        "type": "String"
+      }
+    }
+  },
   "game": "Game: {game}",
+  "@game": {
+    "description": "Label displaying game name",
+    "placeholders": {
+      "game": {
+        "type": "String"
+      }
+    }
+  },
   "type": "Type: {type}",
+  "@type": {
+    "description": "Label displaying amiibo type",
+    "placeholders": {
+      "type": {
+        "type": "String"
+      }
+    }
+  },
   "asc": "Ascending (A-Z)",
+  "@asc": {
+    "description": "Sorting option for ascending order"
+  },
   "desc": "Descending (Z-A)",
+  "@desc": {
+    "description": "Sorting option for descending order"
+  },
   "sortName": "Name",
+  "@sortName": {
+    "description": "Sorting criteria name"
+  },
   "au": "Australia",
+  "@au": {
+    "description": "Region name for Australia"
+  },
   "eu": "Europe",
+  "@eu": {
+    "description": "Region name for Europe"
+  },
   "na": "North America",
+  "@na": {
+    "description": "Region name for North America"
+  },
   "jp": "Japan",
+  "@jp": {
+    "description": "Region name for Japan"
+  },
   "cardNumber": "Card number",
+  "@cardNumber": {
+    "description": "Label for card number field"
+  },
   "settings": "Settings",
+  "@settings": {
+    "description": "Title for settings page or menu"
+  },
   "sort": "Sort By",
+  "@sort": {
+    "description": "Label or header for sort options"
+  },
   "done": "Done",
+  "@done": {
+    "description": "Button label for completing action"
+  },
   "sure": "Sure",
+  "@sure": {
+    "description": "Confirmation button label"
+  },
   "light": "Light",
+  "@light": {
+    "description": "Light theme mode option label"
+  },
   "dark": "Dark",
+  "@dark": {
+    "description": "Dark theme mode option label"
+  },
   "auto": "System",
+  "@auto": {
+    "description": "System default theme mode option label"
+  },
   "themeMode": "{choice, select, system {System} light {Light} dark {Dark} other {Auto}}",
+  "@themeMode": {
+    "description": "Theme selection mode options",
+    "placeholders": {
+      "choice": {
+        "type": "Object"
+      }
+    }
+  },
   "mode": "Theme Mode",
+  "@mode": {
+    "description": "Theme mode settings header"
+  },
   "lightTheme": "Light Theme",
+  "@lightTheme": {
+    "description": "Label for light theme option"
+  },
   "darkTheme": "Dark Theme",
+  "@darkTheme": {
+    "description": "Label for dark theme option"
+  },
   "removeTooltip": "Remove",
+  "@removeTooltip": {
+    "description": "Tooltip for removing item"
+  },
   "ownTooltip": "Own",
+  "@ownTooltip": {
+    "description": "Tooltip for marking item as owned"
+  },
   "wishTooltip": "Wish",
+  "@wishTooltip": {
+    "description": "Tooltip for marking item on wishlist"
+  },
   "saveStatsTooltip": "Save Stats",
+  "@saveStatsTooltip": {
+    "description": "Tooltip for saving statistics"
+  },
   "upToolTip": "Up",
+  "@upToolTip": {
+    "description": "Tooltip for scroll to top action"
+  },
   "emptyPage": "Nothing to see here. . .yet",
+  "@emptyPage": {
+    "description": "Empty state display text"
+  },
   "emptyPageAction": "Create a collection",
+  "@emptyPageAction": {
+    "description": "Action button text on empty state page"
+  },
   "export": "Export",
+  "@export": {
+    "description": "Button or menu item for data export"
+  },
   "import": "Import",
+  "@import": {
+    "description": "Button or menu item for data import"
+  },
   "appearance": "Appearance",
+  "@appearance": {
+    "description": "Settings section title for app appearance"
+  },
   "features": "Features",
+  "@features": {
+    "description": "Settings section title for app features"
+  },
   "appearanceSubtitle": "More personalization",
+  "@appearanceSubtitle": {
+    "description": "Subtitle for appearance settings section"
+  },
   "credits": "Credits",
+  "@credits": {
+    "description": "Credits page title or menu item"
+  },
   "creditsSubtitle": "Those who make it possible",
+  "@creditsSubtitle": {
+    "description": "Subtitle for credits section"
+  },
   "privacyPolicy": "Privacy Policy",
+  "@privacyPolicy": {
+    "description": "Privacy policy link or title"
+  },
   "privacySubtitle": "Terms and conditions",
+  "@privacySubtitle": {
+    "description": "Subtitle for privacy policy section"
+  },
   "reset": "Reset",
+  "@reset": {
+    "description": "Reset action title"
+  },
   "resetSubtitle": "Reset your wishlist and collection",
+  "@resetSubtitle": {
+    "description": "Subtitle explaining reset functionality"
+  },
   "resetTitleDialog": "Reset your collection",
+  "@resetTitleDialog": {
+    "description": "Title of reset confirmation dialog"
+  },
   "resetContent": "Are you sure? This action can't be undone",
+  "@resetContent": {
+    "description": "Confirmation prompt text in reset dialog"
+  },
   "cancel": "Wait no!",
+  "@cancel": {
+    "description": "Cancel button text in dialogs"
+  },
   "saveCollection": "Save Collection",
+  "@saveCollection": {
+    "description": "Button text for saving collection image"
+  },
   "saveCollectionSubtitle": "Create a picture of your collection",
+  "@saveCollectionSubtitle": {
+    "description": "Subtitle for saving collection option"
+  },
   "saveCollectionTitleDialog": "Select your collection",
+  "@saveCollectionTitleDialog": {
+    "description": "Title for collection selection dialog when saving"
+  },
   "couldNotLaunchUrl": "Could not launch {url}",
+  "@couldNotLaunchUrl": {
+    "description": "Error message when URL launcher fails",
+    "placeholders": {
+      "url": {
+        "type": "String"
+      }
+    }
+  },
   "reportBug": "Report bug",
+  "@reportBug": {
+    "description": "Button or link to report a bug"
+  },
   "rate": "Rate me",
+  "@rate": {
+    "description": "Button or link to rate the app"
+  },
   "changelogSubtitle": "What's new",
+  "@changelogSubtitle": {
+    "description": "Subtitle for changelog section"
+  },
   "changelog": "Changelog",
+  "@changelog": {
+    "description": "Title for changelog section or page"
+  },
   "markdownError": "There was an error loading the file",
+  "@markdownError": {
+    "description": "Error text when markdown file fails to render"
+  },
   "storagePermission": "{choice, select, granted {Storage permission granted} denied {Storage permission denied} permanentlyDenied {Storage permission denied} restricted {Storage permission restricted} other {Unknown permission access}}",
+  "@storagePermission": {
+    "description": "Storage permission status messages",
+    "placeholders": {
+      "choice": {
+        "type": "Object"
+      }
+    }
+  },
   "createdOn": "Created on",
+  "@createdOn": {
+    "description": "Prefix for creation date"
+  },
   "collectionReset": "Collection reset",
+  "@collectionReset": {
+    "description": "Toast or message after resetting collection"
+  },
   "openAppSettings": "Change",
+  "@openAppSettings": {
+    "description": "Button label to navigate to app settings"
+  },
   "recordMessage": "Still processing your last file",
+  "@recordMessage": {
+    "description": "Status message while background file processing is active"
+  },
   "savingCollectionMessage": "Saving your file. This could take a while depending on your device",
+  "@savingCollectionMessage": {
+    "description": "Status message while saving collection image"
+  },
   "errorImporting": "This isn't an Amiibo List",
+  "@errorImporting": {
+    "description": "Error message for invalid imported file format"
+  },
   "successImport": "Amiibo List updated",
+  "@successImport": {
+    "description": "Success message after completing import"
+  },
   "notificationTitle": "Export complete",
+  "@notificationTitle": {
+    "description": "Notification title when export finishes"
+  },
   "actionText": "Share",
+  "@actionText": {
+    "description": "Generic share action button label"
+  },
   "donate": "Donate",
+  "@donate": {
+    "description": "Donate button or link label"
+  },
   "lockTooltip": "{choice, select, true {Locked} false {Unlocked} other {Unknown}}",
+  "@lockTooltip": {
+    "description": "Tooltip for lock status",
+    "placeholders": {
+      "choice": {
+        "type": "Object"
+      }
+    }
+  },
   "language": "Language",
+  "@language": {
+    "description": "Title for language settings section"
+  },
   "languageSubtitle": "Choose a language or use it from the system",
+  "@languageSubtitle": {
+    "description": "Subtitle for language settings"
+  },
   "system": "System",
-  "localization": "{choice, select, en {English} es {Spanish} fr {French} other {Unknown}}",
+  "@system": {
+    "description": "System language option label"
+  },
+  "localization": "{choice, select, en {English} es {Spanish} fr {French} de {German} other {Unknown}}",
+  "@localization": {
+    "description": "Language name options",
+    "placeholders": {
+      "choice": {
+        "type": "Object"
+      }
+    }
+  },
   "statTooltip": "{choice, select, true {Percentage} false {Fraction} other {Unknown}}",
+  "@statTooltip": {
+    "description": "Tooltip for stat display format toggle",
+    "placeholders": {
+      "choice": {
+        "type": "Object"
+      }
+    }
+  },
   "switch_platform": "Switch",
+  "@switch_platform": {
+    "description": "Nintendo Switch console platform name"
+  },
   "wiiu_platform": "WiiU",
+  "@wiiu_platform": {
+    "description": "Wii U console platform name"
+  },
   "console_3DS_platform": "3DS",
+  "@console_3DS_platform": {
+    "description": "Nintendo 3DS console platform name"
+  },
   "amiibo_usage_count": "{count, plural, one{+ 1 more} two{+ 2 more} few{+ {count} more} other{+ many more}}",
+  "@amiibo_usage_count": {
+    "description": "Plural representation of additional amiibo usages in games",
+    "placeholders": {
+      "count": {
+        "type": "num"
+      }
+    }
+  },
   "invalid_amiibo": "Invalid amiibo data",
+  "@invalid_amiibo": {
+    "description": "Error text for malformed amiibo item"
+  },
   "socket_exception": "Check your network",
+  "@socket_exception": {
+    "description": "Network connection error message"
+  },
   "no_games_found": "No games found for this amiibo yet",
+  "@no_games_found": {
+    "description": "Message shown when no compatible games are listed for an amiibo"
+  },
   "no_date": "To be announced",
+  "@no_date": {
+    "description": "Placeholder for unknown or unannounced release date"
+  },
   "showGrid": "Grid",
+  "@showGrid": {
+    "description": "Label for grid view toggle option"
+  },
   "hide_caution": "Caution, disabling a feature will hide it from all aspects of the app",
+  "@hide_caution": {
+    "description": "Warning message when turning off feature flags"
+  },
   "export_complete": "Export completed!",
+  "@export_complete": {
+    "description": "Message shown upon successful export"
+  },
   "select_user_attribute": "Select a category",
+  "@select_user_attribute": {
+    "description": "Instruction label to select user category attribute"
+  },
   "emptyMessageType": "{choice, select, pokemon {Gotta collect 'em all} pokeball {Gotta collect 'em all} mario {Your collection is in another castle} mushroom {1UP Collection this way} pacman {Hungry for amiibos} pacmanGhost {Hungry for amiibos?} link {Hyaaa!! (No amiibos here)} other {Nothing to see here. . .yet}}",
+  "@emptyMessageType": {
+    "description": "Fun empty state text variants based on theme choice",
+    "placeholders": {
+      "choice": {
+        "type": "Object"
+      }
+    }
+  },
   "about": "About",
+  "@about": {
+    "description": "Title or label for About app section"
+  },
   "support": "Support",
+  "@support": {
+    "description": "Label for support section"
+  },
   "color_mode": "Look and feel",
+  "@color_mode": {
+    "description": "Settings title for visual theme preferences"
+  },
   "amiibo_type": "Amiibo type",
+  "@amiibo_type": {
+    "description": "Header or label for amiibo product types"
+  },
   "export_subtitle": "Save a file of your collection",
+  "@export_subtitle": {
+    "description": "Subtitle describing export feature"
+  },
   "import_subtitle": "Restore your collection from a file",
+  "@import_subtitle": {
+    "description": "Subtitle describing import feature"
+  },
   "use_wallpaper": "Dynamic Color",
+  "@use_wallpaper": {
+    "description": "Setting title for wallpaper-based dynamic accent colors"
+  },
   "use_wallpaper_subtitle": "Use your wallpaper as a palette of colors",
+  "@use_wallpaper_subtitle": {
+    "description": "Subtitle explaining dynamic color feature"
+  },
   "use_in_app_browser": "Open affiliate web pages in app",
+  "@use_in_app_browser": {
+    "description": "Setting title for in-app browser preference"
+  },
   "use_in_app_browser_subtitle": "Allow affiliate links to open inside the app",
+  "@use_in_app_browser_subtitle": {
+    "description": "Subtitle for in-app browser preference"
+  },
   "amazon_link_setting": "Amazon site",
+  "@amazon_link_setting": {
+    "description": "Setting title for Amazon region selection"
+  },
   "amazon_link_setting_subtitle": "Choose your country-specific Amazon site",
+  "@amazon_link_setting_subtitle": {
+    "description": "Subtitle for Amazon region selection"
+  },
   "no_link_selected": "No preference",
-  "no_link_selected_subtitle": "Will be asked each time"
+  "@no_link_selected": {
+    "description": "Option label when no specific regional link is selected"
+  },
+  "no_link_selected_subtitle": "Will be asked each time",
+  "@no_link_selected_subtitle": {
+    "description": "Subtitle explaining no preference behavior"
+  }
 }

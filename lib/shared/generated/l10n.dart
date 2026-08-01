@@ -59,14 +59,19 @@ class S {
     return Intl.message(
       'Just a second . . .',
       name: 'splashMessage',
-      desc: '',
+      desc: 'Splash screen loading message',
       args: [],
     );
   }
 
   /// `WELCOME`
   String get splashWelcome {
-    return Intl.message('WELCOME', name: 'splashWelcome', desc: '', args: []);
+    return Intl.message(
+      'WELCOME',
+      name: 'splashWelcome',
+      desc: 'Splash screen welcome title',
+      args: [],
+    );
   }
 
   /// `Couldn't Update ☹`
@@ -74,7 +79,7 @@ class S {
     return Intl.message(
       'Couldn\'t Update ☹',
       name: 'splashError',
-      desc: '',
+      desc: 'Splash screen error message when update fails',
       args: [],
     );
   }
@@ -84,7 +89,7 @@ class S {
     return Intl.message(
       'Show percentage',
       name: 'showPercentage',
-      desc: '',
+      desc: 'Setting option label to display stats as percentages',
       args: [],
     );
   }
@@ -94,7 +99,7 @@ class S {
     return Intl.message(
       'Show owner categories',
       name: 'showOwnerCategories',
-      desc: '',
+      desc: 'Setting option label to show boxed/unboxed categories',
       args: [],
     );
   }
@@ -104,7 +109,7 @@ class S {
     return Intl.message(
       'Allow to visualize owned amiibos by boxed/unboxed',
       name: 'showOwnerCategoriesDetails',
-      desc: '',
+      desc: 'Detailed description for showOwnerCategories setting',
       args: [],
     );
   }
@@ -125,7 +130,7 @@ class S {
         'other': '$choice',
       },
       name: 'category',
-      desc: '',
+      desc: 'Category filter selection options',
       args: [choice],
     );
   }
@@ -141,53 +146,93 @@ class S {
         'other': '$choice',
       },
       name: 'searchCategory',
-      desc: '',
+      desc: 'Search category filter options',
       args: [choice],
     );
   }
 
   /// `All`
   String get all {
-    return Intl.message('All', name: 'all', desc: '', args: []);
+    return Intl.message(
+      'All',
+      name: 'all',
+      desc: 'Label for all item category',
+      args: [],
+    );
   }
 
   /// `Total`
   String get total {
-    return Intl.message('Total', name: 'total', desc: '', args: []);
+    return Intl.message(
+      'Total',
+      name: 'total',
+      desc: 'Label for total count in stats',
+      args: [],
+    );
   }
 
   /// `Remaining`
   String get remaining {
-    return Intl.message('Remaining', name: 'remaining', desc: '', args: []);
+    return Intl.message(
+      'Remaining',
+      name: 'remaining',
+      desc: 'Label for remaining item count',
+      args: [],
+    );
   }
 
   /// `Owned`
   String get owned {
-    return Intl.message('Owned', name: 'owned', desc: '', args: []);
+    return Intl.message(
+      'Owned',
+      name: 'owned',
+      desc: 'Label for owned amiibos category',
+      args: [],
+    );
   }
 
   /// `Boxed`
   String get boxed {
-    return Intl.message('Boxed', name: 'boxed', desc: '', args: []);
+    return Intl.message(
+      'Boxed',
+      name: 'boxed',
+      desc: 'Label for boxed amiibos status',
+      args: [],
+    );
   }
 
   /// `Unboxed`
   String get unboxed {
-    return Intl.message('Unboxed', name: 'unboxed', desc: '', args: []);
+    return Intl.message(
+      'Unboxed',
+      name: 'unboxed',
+      desc: 'Label for unboxed amiibos status',
+      args: [],
+    );
   }
 
   /// `Wished`
   String get wished {
-    return Intl.message('Wished', name: 'wished', desc: '', args: []);
+    return Intl.message(
+      'Wished',
+      name: 'wished',
+      desc: 'Label for wished amiibos category',
+      args: [],
+    );
   }
 
   /// `Stats`
   String get stats {
-    return Intl.message('Stats', name: 'stats', desc: '', args: []);
+    return Intl.message(
+      'Stats',
+      name: 'stats',
+      desc: 'Title or label for statistics',
+      args: [],
+    );
   }
 
   /// `{choice, select, Figure {Figure} Card {Card} Yarn {Yarn} Band {Band} other {Other}}`
-  String types(Object choice) {
+  String types(String choice) {
     return Intl.select(
       choice,
       {
@@ -198,129 +243,229 @@ class S {
         'other': 'Other',
       },
       name: 'types',
-      desc: '',
+      desc: 'Amiibo item types',
       args: [choice],
     );
   }
 
   /// `Figures`
   String get figures {
-    return Intl.message('Figures', name: 'figures', desc: '', args: []);
+    return Intl.message(
+      'Figures',
+      name: 'figures',
+      desc: 'Label for figures type group',
+      args: [],
+    );
   }
 
   /// `Cards`
   String get cards {
-    return Intl.message('Cards', name: 'cards', desc: '', args: []);
+    return Intl.message(
+      'Cards',
+      name: 'cards',
+      desc: 'Label for cards type group',
+      args: [],
+    );
   }
 
   /// `Name: {name}`
-  String name(Object name) {
-    return Intl.message('Name: $name', name: 'name', desc: '', args: [name]);
+  String name(String name) {
+    return Intl.message(
+      'Name: $name',
+      name: 'name',
+      desc: 'Label displaying amiibo name',
+      args: [name],
+    );
   }
 
   /// `Character: {character}`
-  String character(Object character) {
+  String character(String character) {
     return Intl.message(
       'Character: $character',
       name: 'character',
-      desc: '',
+      desc: 'Label displaying character name',
       args: [character],
     );
   }
 
   /// `Serie: {serie}`
-  String serie(Object serie) {
+  String serie(String serie) {
     return Intl.message(
       'Serie: $serie',
       name: 'serie',
-      desc: '',
+      desc: 'Label displaying amiibo series',
       args: [serie],
     );
   }
 
   /// `Game: {game}`
-  String game(Object game) {
-    return Intl.message('Game: $game', name: 'game', desc: '', args: [game]);
+  String game(String game) {
+    return Intl.message(
+      'Game: $game',
+      name: 'game',
+      desc: 'Label displaying game name',
+      args: [game],
+    );
   }
 
   /// `Type: {type}`
-  String type(Object type) {
-    return Intl.message('Type: $type', name: 'type', desc: '', args: [type]);
+  String type(String type) {
+    return Intl.message(
+      'Type: $type',
+      name: 'type',
+      desc: 'Label displaying amiibo type',
+      args: [type],
+    );
   }
 
   /// `Ascending (A-Z)`
   String get asc {
-    return Intl.message('Ascending (A-Z)', name: 'asc', desc: '', args: []);
+    return Intl.message(
+      'Ascending (A-Z)',
+      name: 'asc',
+      desc: 'Sorting option for ascending order',
+      args: [],
+    );
   }
 
   /// `Descending (Z-A)`
   String get desc {
-    return Intl.message('Descending (Z-A)', name: 'desc', desc: '', args: []);
+    return Intl.message(
+      'Descending (Z-A)',
+      name: 'desc',
+      desc: 'Sorting option for descending order',
+      args: [],
+    );
   }
 
   /// `Name`
   String get sortName {
-    return Intl.message('Name', name: 'sortName', desc: '', args: []);
+    return Intl.message(
+      'Name',
+      name: 'sortName',
+      desc: 'Sorting criteria name',
+      args: [],
+    );
   }
 
   /// `Australia`
   String get au {
-    return Intl.message('Australia', name: 'au', desc: '', args: []);
+    return Intl.message(
+      'Australia',
+      name: 'au',
+      desc: 'Region name for Australia',
+      args: [],
+    );
   }
 
   /// `Europe`
   String get eu {
-    return Intl.message('Europe', name: 'eu', desc: '', args: []);
+    return Intl.message(
+      'Europe',
+      name: 'eu',
+      desc: 'Region name for Europe',
+      args: [],
+    );
   }
 
   /// `North America`
   String get na {
-    return Intl.message('North America', name: 'na', desc: '', args: []);
+    return Intl.message(
+      'North America',
+      name: 'na',
+      desc: 'Region name for North America',
+      args: [],
+    );
   }
 
   /// `Japan`
   String get jp {
-    return Intl.message('Japan', name: 'jp', desc: '', args: []);
+    return Intl.message(
+      'Japan',
+      name: 'jp',
+      desc: 'Region name for Japan',
+      args: [],
+    );
   }
 
   /// `Card number`
   String get cardNumber {
-    return Intl.message('Card number', name: 'cardNumber', desc: '', args: []);
+    return Intl.message(
+      'Card number',
+      name: 'cardNumber',
+      desc: 'Label for card number field',
+      args: [],
+    );
   }
 
   /// `Settings`
   String get settings {
-    return Intl.message('Settings', name: 'settings', desc: '', args: []);
+    return Intl.message(
+      'Settings',
+      name: 'settings',
+      desc: 'Title for settings page or menu',
+      args: [],
+    );
   }
 
   /// `Sort By`
   String get sort {
-    return Intl.message('Sort By', name: 'sort', desc: '', args: []);
+    return Intl.message(
+      'Sort By',
+      name: 'sort',
+      desc: 'Label or header for sort options',
+      args: [],
+    );
   }
 
   /// `Done`
   String get done {
-    return Intl.message('Done', name: 'done', desc: '', args: []);
+    return Intl.message(
+      'Done',
+      name: 'done',
+      desc: 'Button label for completing action',
+      args: [],
+    );
   }
 
   /// `Sure`
   String get sure {
-    return Intl.message('Sure', name: 'sure', desc: '', args: []);
+    return Intl.message(
+      'Sure',
+      name: 'sure',
+      desc: 'Confirmation button label',
+      args: [],
+    );
   }
 
   /// `Light`
   String get light {
-    return Intl.message('Light', name: 'light', desc: '', args: []);
+    return Intl.message(
+      'Light',
+      name: 'light',
+      desc: 'Light theme mode option label',
+      args: [],
+    );
   }
 
   /// `Dark`
   String get dark {
-    return Intl.message('Dark', name: 'dark', desc: '', args: []);
+    return Intl.message(
+      'Dark',
+      name: 'dark',
+      desc: 'Dark theme mode option label',
+      args: [],
+    );
   }
 
   /// `System`
   String get auto {
-    return Intl.message('System', name: 'auto', desc: '', args: []);
+    return Intl.message(
+      'System',
+      name: 'auto',
+      desc: 'System default theme mode option label',
+      args: [],
+    );
   }
 
   /// `{choice, select, system {System} light {Light} dark {Dark} other {Auto}}`
@@ -329,39 +474,69 @@ class S {
       choice,
       {'system': 'System', 'light': 'Light', 'dark': 'Dark', 'other': 'Auto'},
       name: 'themeMode',
-      desc: '',
+      desc: 'Theme selection mode options',
       args: [choice],
     );
   }
 
   /// `Theme Mode`
   String get mode {
-    return Intl.message('Theme Mode', name: 'mode', desc: '', args: []);
+    return Intl.message(
+      'Theme Mode',
+      name: 'mode',
+      desc: 'Theme mode settings header',
+      args: [],
+    );
   }
 
   /// `Light Theme`
   String get lightTheme {
-    return Intl.message('Light Theme', name: 'lightTheme', desc: '', args: []);
+    return Intl.message(
+      'Light Theme',
+      name: 'lightTheme',
+      desc: 'Label for light theme option',
+      args: [],
+    );
   }
 
   /// `Dark Theme`
   String get darkTheme {
-    return Intl.message('Dark Theme', name: 'darkTheme', desc: '', args: []);
+    return Intl.message(
+      'Dark Theme',
+      name: 'darkTheme',
+      desc: 'Label for dark theme option',
+      args: [],
+    );
   }
 
   /// `Remove`
   String get removeTooltip {
-    return Intl.message('Remove', name: 'removeTooltip', desc: '', args: []);
+    return Intl.message(
+      'Remove',
+      name: 'removeTooltip',
+      desc: 'Tooltip for removing item',
+      args: [],
+    );
   }
 
   /// `Own`
   String get ownTooltip {
-    return Intl.message('Own', name: 'ownTooltip', desc: '', args: []);
+    return Intl.message(
+      'Own',
+      name: 'ownTooltip',
+      desc: 'Tooltip for marking item as owned',
+      args: [],
+    );
   }
 
   /// `Wish`
   String get wishTooltip {
-    return Intl.message('Wish', name: 'wishTooltip', desc: '', args: []);
+    return Intl.message(
+      'Wish',
+      name: 'wishTooltip',
+      desc: 'Tooltip for marking item on wishlist',
+      args: [],
+    );
   }
 
   /// `Save Stats`
@@ -369,14 +544,19 @@ class S {
     return Intl.message(
       'Save Stats',
       name: 'saveStatsTooltip',
-      desc: '',
+      desc: 'Tooltip for saving statistics',
       args: [],
     );
   }
 
   /// `Up`
   String get upToolTip {
-    return Intl.message('Up', name: 'upToolTip', desc: '', args: []);
+    return Intl.message(
+      'Up',
+      name: 'upToolTip',
+      desc: 'Tooltip for scroll to top action',
+      args: [],
+    );
   }
 
   /// `Nothing to see here. . .yet`
@@ -384,7 +564,7 @@ class S {
     return Intl.message(
       'Nothing to see here. . .yet',
       name: 'emptyPage',
-      desc: '',
+      desc: 'Empty state display text',
       args: [],
     );
   }
@@ -394,29 +574,49 @@ class S {
     return Intl.message(
       'Create a collection',
       name: 'emptyPageAction',
-      desc: '',
+      desc: 'Action button text on empty state page',
       args: [],
     );
   }
 
   /// `Export`
   String get export {
-    return Intl.message('Export', name: 'export', desc: '', args: []);
+    return Intl.message(
+      'Export',
+      name: 'export',
+      desc: 'Button or menu item for data export',
+      args: [],
+    );
   }
 
   /// `Import`
   String get import {
-    return Intl.message('Import', name: 'import', desc: '', args: []);
+    return Intl.message(
+      'Import',
+      name: 'import',
+      desc: 'Button or menu item for data import',
+      args: [],
+    );
   }
 
   /// `Appearance`
   String get appearance {
-    return Intl.message('Appearance', name: 'appearance', desc: '', args: []);
+    return Intl.message(
+      'Appearance',
+      name: 'appearance',
+      desc: 'Settings section title for app appearance',
+      args: [],
+    );
   }
 
   /// `Features`
   String get features {
-    return Intl.message('Features', name: 'features', desc: '', args: []);
+    return Intl.message(
+      'Features',
+      name: 'features',
+      desc: 'Settings section title for app features',
+      args: [],
+    );
   }
 
   /// `More personalization`
@@ -424,14 +624,19 @@ class S {
     return Intl.message(
       'More personalization',
       name: 'appearanceSubtitle',
-      desc: '',
+      desc: 'Subtitle for appearance settings section',
       args: [],
     );
   }
 
   /// `Credits`
   String get credits {
-    return Intl.message('Credits', name: 'credits', desc: '', args: []);
+    return Intl.message(
+      'Credits',
+      name: 'credits',
+      desc: 'Credits page title or menu item',
+      args: [],
+    );
   }
 
   /// `Those who make it possible`
@@ -439,7 +644,7 @@ class S {
     return Intl.message(
       'Those who make it possible',
       name: 'creditsSubtitle',
-      desc: '',
+      desc: 'Subtitle for credits section',
       args: [],
     );
   }
@@ -449,7 +654,7 @@ class S {
     return Intl.message(
       'Privacy Policy',
       name: 'privacyPolicy',
-      desc: '',
+      desc: 'Privacy policy link or title',
       args: [],
     );
   }
@@ -459,14 +664,19 @@ class S {
     return Intl.message(
       'Terms and conditions',
       name: 'privacySubtitle',
-      desc: '',
+      desc: 'Subtitle for privacy policy section',
       args: [],
     );
   }
 
   /// `Reset`
   String get reset {
-    return Intl.message('Reset', name: 'reset', desc: '', args: []);
+    return Intl.message(
+      'Reset',
+      name: 'reset',
+      desc: 'Reset action title',
+      args: [],
+    );
   }
 
   /// `Reset your wishlist and collection`
@@ -474,7 +684,7 @@ class S {
     return Intl.message(
       'Reset your wishlist and collection',
       name: 'resetSubtitle',
-      desc: '',
+      desc: 'Subtitle explaining reset functionality',
       args: [],
     );
   }
@@ -484,7 +694,7 @@ class S {
     return Intl.message(
       'Reset your collection',
       name: 'resetTitleDialog',
-      desc: '',
+      desc: 'Title of reset confirmation dialog',
       args: [],
     );
   }
@@ -494,14 +704,19 @@ class S {
     return Intl.message(
       'Are you sure? This action can\'t be undone',
       name: 'resetContent',
-      desc: '',
+      desc: 'Confirmation prompt text in reset dialog',
       args: [],
     );
   }
 
   /// `Wait no!`
   String get cancel {
-    return Intl.message('Wait no!', name: 'cancel', desc: '', args: []);
+    return Intl.message(
+      'Wait no!',
+      name: 'cancel',
+      desc: 'Cancel button text in dialogs',
+      args: [],
+    );
   }
 
   /// `Save Collection`
@@ -509,7 +724,7 @@ class S {
     return Intl.message(
       'Save Collection',
       name: 'saveCollection',
-      desc: '',
+      desc: 'Button text for saving collection image',
       args: [],
     );
   }
@@ -519,7 +734,7 @@ class S {
     return Intl.message(
       'Create a picture of your collection',
       name: 'saveCollectionSubtitle',
-      desc: '',
+      desc: 'Subtitle for saving collection option',
       args: [],
     );
   }
@@ -529,29 +744,39 @@ class S {
     return Intl.message(
       'Select your collection',
       name: 'saveCollectionTitleDialog',
-      desc: '',
+      desc: 'Title for collection selection dialog when saving',
       args: [],
     );
   }
 
   /// `Could not launch {url}`
-  String couldNotLaunchUrl(Object url) {
+  String couldNotLaunchUrl(String url) {
     return Intl.message(
       'Could not launch $url',
       name: 'couldNotLaunchUrl',
-      desc: '',
+      desc: 'Error message when URL launcher fails',
       args: [url],
     );
   }
 
   /// `Report bug`
   String get reportBug {
-    return Intl.message('Report bug', name: 'reportBug', desc: '', args: []);
+    return Intl.message(
+      'Report bug',
+      name: 'reportBug',
+      desc: 'Button or link to report a bug',
+      args: [],
+    );
   }
 
   /// `Rate me`
   String get rate {
-    return Intl.message('Rate me', name: 'rate', desc: '', args: []);
+    return Intl.message(
+      'Rate me',
+      name: 'rate',
+      desc: 'Button or link to rate the app',
+      args: [],
+    );
   }
 
   /// `What's new`
@@ -559,14 +784,19 @@ class S {
     return Intl.message(
       'What\'s new',
       name: 'changelogSubtitle',
-      desc: '',
+      desc: 'Subtitle for changelog section',
       args: [],
     );
   }
 
   /// `Changelog`
   String get changelog {
-    return Intl.message('Changelog', name: 'changelog', desc: '', args: []);
+    return Intl.message(
+      'Changelog',
+      name: 'changelog',
+      desc: 'Title for changelog section or page',
+      args: [],
+    );
   }
 
   /// `There was an error loading the file`
@@ -574,7 +804,7 @@ class S {
     return Intl.message(
       'There was an error loading the file',
       name: 'markdownError',
-      desc: '',
+      desc: 'Error text when markdown file fails to render',
       args: [],
     );
   }
@@ -591,14 +821,19 @@ class S {
         'other': 'Unknown permission access',
       },
       name: 'storagePermission',
-      desc: '',
+      desc: 'Storage permission status messages',
       args: [choice],
     );
   }
 
   /// `Created on`
   String get createdOn {
-    return Intl.message('Created on', name: 'createdOn', desc: '', args: []);
+    return Intl.message(
+      'Created on',
+      name: 'createdOn',
+      desc: 'Prefix for creation date',
+      args: [],
+    );
   }
 
   /// `Collection reset`
@@ -606,14 +841,19 @@ class S {
     return Intl.message(
       'Collection reset',
       name: 'collectionReset',
-      desc: '',
+      desc: 'Toast or message after resetting collection',
       args: [],
     );
   }
 
   /// `Change`
   String get openAppSettings {
-    return Intl.message('Change', name: 'openAppSettings', desc: '', args: []);
+    return Intl.message(
+      'Change',
+      name: 'openAppSettings',
+      desc: 'Button label to navigate to app settings',
+      args: [],
+    );
   }
 
   /// `Still processing your last file`
@@ -621,7 +861,7 @@ class S {
     return Intl.message(
       'Still processing your last file',
       name: 'recordMessage',
-      desc: '',
+      desc: 'Status message while background file processing is active',
       args: [],
     );
   }
@@ -631,7 +871,7 @@ class S {
     return Intl.message(
       'Saving your file. This could take a while depending on your device',
       name: 'savingCollectionMessage',
-      desc: '',
+      desc: 'Status message while saving collection image',
       args: [],
     );
   }
@@ -641,7 +881,7 @@ class S {
     return Intl.message(
       'This isn\'t an Amiibo List',
       name: 'errorImporting',
-      desc: '',
+      desc: 'Error message for invalid imported file format',
       args: [],
     );
   }
@@ -651,7 +891,7 @@ class S {
     return Intl.message(
       'Amiibo List updated',
       name: 'successImport',
-      desc: '',
+      desc: 'Success message after completing import',
       args: [],
     );
   }
@@ -661,19 +901,29 @@ class S {
     return Intl.message(
       'Export complete',
       name: 'notificationTitle',
-      desc: '',
+      desc: 'Notification title when export finishes',
       args: [],
     );
   }
 
   /// `Share`
   String get actionText {
-    return Intl.message('Share', name: 'actionText', desc: '', args: []);
+    return Intl.message(
+      'Share',
+      name: 'actionText',
+      desc: 'Generic share action button label',
+      args: [],
+    );
   }
 
   /// `Donate`
   String get donate {
-    return Intl.message('Donate', name: 'donate', desc: '', args: []);
+    return Intl.message(
+      'Donate',
+      name: 'donate',
+      desc: 'Donate button or link label',
+      args: [],
+    );
   }
 
   /// `{choice, select, true {Locked} false {Unlocked} other {Unknown}}`
@@ -682,14 +932,19 @@ class S {
       choice,
       {'true': 'Locked', 'false': 'Unlocked', 'other': 'Unknown'},
       name: 'lockTooltip',
-      desc: '',
+      desc: 'Tooltip for lock status',
       args: [choice],
     );
   }
 
   /// `Language`
   String get language {
-    return Intl.message('Language', name: 'language', desc: '', args: []);
+    return Intl.message(
+      'Language',
+      name: 'language',
+      desc: 'Title for language settings section',
+      args: [],
+    );
   }
 
   /// `Choose a language or use it from the system`
@@ -697,23 +952,34 @@ class S {
     return Intl.message(
       'Choose a language or use it from the system',
       name: 'languageSubtitle',
-      desc: '',
+      desc: 'Subtitle for language settings',
       args: [],
     );
   }
 
   /// `System`
   String get system {
-    return Intl.message('System', name: 'system', desc: '', args: []);
+    return Intl.message(
+      'System',
+      name: 'system',
+      desc: 'System language option label',
+      args: [],
+    );
   }
 
-  /// `{choice, select, en {English} es {Spanish} fr {French} other {Unknown}}`
+  /// `{choice, select, en {English} es {Spanish} fr {French} de {German} other {Unknown}}`
   String localization(Object choice) {
     return Intl.select(
       choice,
-      {'en': 'English', 'es': 'Spanish', 'fr': 'French', 'other': 'Unknown'},
+      {
+        'en': 'English',
+        'es': 'Spanish',
+        'fr': 'French',
+        'de': 'German',
+        'other': 'Unknown',
+      },
       name: 'localization',
-      desc: '',
+      desc: 'Language name options',
       args: [choice],
     );
   }
@@ -724,19 +990,29 @@ class S {
       choice,
       {'true': 'Percentage', 'false': 'Fraction', 'other': 'Unknown'},
       name: 'statTooltip',
-      desc: '',
+      desc: 'Tooltip for stat display format toggle',
       args: [choice],
     );
   }
 
   /// `Switch`
   String get switch_platform {
-    return Intl.message('Switch', name: 'switch_platform', desc: '', args: []);
+    return Intl.message(
+      'Switch',
+      name: 'switch_platform',
+      desc: 'Nintendo Switch console platform name',
+      args: [],
+    );
   }
 
   /// `WiiU`
   String get wiiu_platform {
-    return Intl.message('WiiU', name: 'wiiu_platform', desc: '', args: []);
+    return Intl.message(
+      'WiiU',
+      name: 'wiiu_platform',
+      desc: 'Wii U console platform name',
+      args: [],
+    );
   }
 
   /// `3DS`
@@ -744,7 +1020,7 @@ class S {
     return Intl.message(
       '3DS',
       name: 'console_3DS_platform',
-      desc: '',
+      desc: 'Nintendo 3DS console platform name',
       args: [],
     );
   }
@@ -758,7 +1034,7 @@ class S {
       few: '+ $count more',
       other: '+ many more',
       name: 'amiibo_usage_count',
-      desc: '',
+      desc: 'Plural representation of additional amiibo usages in games',
       args: [count],
     );
   }
@@ -768,7 +1044,7 @@ class S {
     return Intl.message(
       'Invalid amiibo data',
       name: 'invalid_amiibo',
-      desc: '',
+      desc: 'Error text for malformed amiibo item',
       args: [],
     );
   }
@@ -778,7 +1054,7 @@ class S {
     return Intl.message(
       'Check your network',
       name: 'socket_exception',
-      desc: '',
+      desc: 'Network connection error message',
       args: [],
     );
   }
@@ -788,19 +1064,29 @@ class S {
     return Intl.message(
       'No games found for this amiibo yet',
       name: 'no_games_found',
-      desc: '',
+      desc: 'Message shown when no compatible games are listed for an amiibo',
       args: [],
     );
   }
 
   /// `To be announced`
   String get no_date {
-    return Intl.message('To be announced', name: 'no_date', desc: '', args: []);
+    return Intl.message(
+      'To be announced',
+      name: 'no_date',
+      desc: 'Placeholder for unknown or unannounced release date',
+      args: [],
+    );
   }
 
   /// `Grid`
   String get showGrid {
-    return Intl.message('Grid', name: 'showGrid', desc: '', args: []);
+    return Intl.message(
+      'Grid',
+      name: 'showGrid',
+      desc: 'Label for grid view toggle option',
+      args: [],
+    );
   }
 
   /// `Caution, disabling a feature will hide it from all aspects of the app`
@@ -808,7 +1094,7 @@ class S {
     return Intl.message(
       'Caution, disabling a feature will hide it from all aspects of the app',
       name: 'hide_caution',
-      desc: '',
+      desc: 'Warning message when turning off feature flags',
       args: [],
     );
   }
@@ -818,7 +1104,7 @@ class S {
     return Intl.message(
       'Export completed!',
       name: 'export_complete',
-      desc: '',
+      desc: 'Message shown upon successful export',
       args: [],
     );
   }
@@ -828,7 +1114,7 @@ class S {
     return Intl.message(
       'Select a category',
       name: 'select_user_attribute',
-      desc: '',
+      desc: 'Instruction label to select user category attribute',
       args: [],
     );
   }
@@ -848,19 +1134,29 @@ class S {
         'other': 'Nothing to see here. . .yet',
       },
       name: 'emptyMessageType',
-      desc: '',
+      desc: 'Fun empty state text variants based on theme choice',
       args: [choice],
     );
   }
 
   /// `About`
   String get about {
-    return Intl.message('About', name: 'about', desc: '', args: []);
+    return Intl.message(
+      'About',
+      name: 'about',
+      desc: 'Title or label for About app section',
+      args: [],
+    );
   }
 
   /// `Support`
   String get support {
-    return Intl.message('Support', name: 'support', desc: '', args: []);
+    return Intl.message(
+      'Support',
+      name: 'support',
+      desc: 'Label for support section',
+      args: [],
+    );
   }
 
   /// `Look and feel`
@@ -868,14 +1164,19 @@ class S {
     return Intl.message(
       'Look and feel',
       name: 'color_mode',
-      desc: '',
+      desc: 'Settings title for visual theme preferences',
       args: [],
     );
   }
 
   /// `Amiibo type`
   String get amiibo_type {
-    return Intl.message('Amiibo type', name: 'amiibo_type', desc: '', args: []);
+    return Intl.message(
+      'Amiibo type',
+      name: 'amiibo_type',
+      desc: 'Header or label for amiibo product types',
+      args: [],
+    );
   }
 
   /// `Save a file of your collection`
@@ -883,7 +1184,7 @@ class S {
     return Intl.message(
       'Save a file of your collection',
       name: 'export_subtitle',
-      desc: '',
+      desc: 'Subtitle describing export feature',
       args: [],
     );
   }
@@ -893,7 +1194,7 @@ class S {
     return Intl.message(
       'Restore your collection from a file',
       name: 'import_subtitle',
-      desc: '',
+      desc: 'Subtitle describing import feature',
       args: [],
     );
   }
@@ -903,7 +1204,7 @@ class S {
     return Intl.message(
       'Dynamic Color',
       name: 'use_wallpaper',
-      desc: '',
+      desc: 'Setting title for wallpaper-based dynamic accent colors',
       args: [],
     );
   }
@@ -913,7 +1214,7 @@ class S {
     return Intl.message(
       'Use your wallpaper as a palette of colors',
       name: 'use_wallpaper_subtitle',
-      desc: '',
+      desc: 'Subtitle explaining dynamic color feature',
       args: [],
     );
   }
@@ -923,7 +1224,7 @@ class S {
     return Intl.message(
       'Open affiliate web pages in app',
       name: 'use_in_app_browser',
-      desc: '',
+      desc: 'Setting title for in-app browser preference',
       args: [],
     );
   }
@@ -933,7 +1234,7 @@ class S {
     return Intl.message(
       'Allow affiliate links to open inside the app',
       name: 'use_in_app_browser_subtitle',
-      desc: '',
+      desc: 'Subtitle for in-app browser preference',
       args: [],
     );
   }
@@ -943,7 +1244,7 @@ class S {
     return Intl.message(
       'Amazon site',
       name: 'amazon_link_setting',
-      desc: '',
+      desc: 'Setting title for Amazon region selection',
       args: [],
     );
   }
@@ -953,7 +1254,7 @@ class S {
     return Intl.message(
       'Choose your country-specific Amazon site',
       name: 'amazon_link_setting_subtitle',
-      desc: '',
+      desc: 'Subtitle for Amazon region selection',
       args: [],
     );
   }
@@ -963,7 +1264,7 @@ class S {
     return Intl.message(
       'No preference',
       name: 'no_link_selected',
-      desc: '',
+      desc: 'Option label when no specific regional link is selected',
       args: [],
     );
   }
@@ -973,7 +1274,7 @@ class S {
     return Intl.message(
       'Will be asked each time',
       name: 'no_link_selected_subtitle',
-      desc: '',
+      desc: 'Subtitle explaining no preference behavior',
       args: [],
     );
   }
@@ -985,6 +1286,7 @@ class AppLocalizationDelegate extends LocalizationsDelegate<S> {
   List<Locale> get supportedLocales {
     return const <Locale>[
       Locale.fromSubtags(languageCode: 'en'),
+      Locale.fromSubtags(languageCode: 'de'),
       Locale.fromSubtags(languageCode: 'es'),
       Locale.fromSubtags(languageCode: 'fr'),
     ];

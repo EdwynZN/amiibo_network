@@ -36,7 +36,7 @@ class MessageLookup extends MessageLookupByLibrary {
   static String m5(game) => "Jeux: ${game}";
 
   static String m6(choice) =>
-      "${Intl.select(choice, {'en': 'Anglais', 'es': 'Espagnol', 'fr': 'Français', 'other': 'Inconnu'})}";
+      "${Intl.select(choice, {'en': 'Anglais', 'es': 'Espagnol', 'fr': 'Français', 'de': 'Allemand', 'other': 'Inconnu'})}";
 
   static String m7(choice) =>
       "${Intl.select(choice, {'true': 'Fermé à clé', 'false': 'Déverrouillé', 'other': 'inconnue'})}";
@@ -52,7 +52,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "${Intl.select(choice, {'true': 'Pourcentage', 'false': 'Fraction', 'other': 'inconnue'})}";
 
   static String m12(choice) =>
-      "{choix, sélectionnez, accordé {autorisation de stockage accordée} refusée {autorisation de stockage refusée} définitivementDenied {autorisation de stockage refusée} restreinte {autorisation de stockage restreinte} autre {accès d\'autorisation inconnu}}";
+      "${Intl.select(choice, {'granted': 'autorisation de stockage accordée', 'denied': 'autorisation de stockage refusée', 'permanentlyDenied': 'autorisation de stockage refusée', 'restricted': 'autorisation de stockage restreinte', 'other': 'accès d\'autorisation inconnu'})}";
 
   static String m13(choice) =>
       "${Intl.select(choice, {'system': 'Défaut', 'light': 'Clair', 'dark': 'Sombre', 'other': 'Défaut'})}";
@@ -202,6 +202,9 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "saveStatsTooltip": MessageLookupByLibrary.simpleMessage(
       "Enregistrer les statistiques",
+    ),
+    "savingCollectionMessage": MessageLookupByLibrary.simpleMessage(
+      "Enregistrement de votre fichier. Cela peut prendre un certain temps selon votre appareil",
     ),
     "searchCategory": m9,
     "select_user_attribute": MessageLookupByLibrary.simpleMessage(

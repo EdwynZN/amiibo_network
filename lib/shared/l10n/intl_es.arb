@@ -1,120 +1,551 @@
 {
   "@@locale": "es",
   "splashMessage": "Espere un momento...",
+  "@splashMessage": {
+    "description": "Mensaje de carga en pantalla de inicio"
+  },
   "splashWelcome": "Bienvenido",
+  "@splashWelcome": {
+    "description": "Título de bienvenida en pantalla de inicio"
+  },
   "splashError": "Error al actualizar \u2639",
+  "@splashError": {
+    "description": "Mensaje de error cuando falla la actualización"
+  },
   "showPercentage": "Mostrar porcentaje",
+  "@showPercentage": {
+    "description": "Etiqueta para mostrar estadísticas en porcentaje"
+  },
   "showOwnerCategories": "Mostrar categorías de propietario",
+  "@showOwnerCategories": {
+    "description": "Etiqueta para mostrar categorías en caja / sin caja"
+  },
   "showOwnerCategoriesDetails": "Permite visualizar los amiibos adquiridos en caja y sin caja",
+  "@showOwnerCategoriesDetails": {
+    "description": "Descripción detallada de la opción showOwnerCategories"
+  },
   "category": "{choice, select, All {Todos} Owned {Adquiridos} Wishlist {Lista de deseos} Name {Nombre} Game {Juego} Figures {Todas las Figuras} Cards {Todas las Tarjetas} AmiiboSeries {Personal} other {{choice}}}",
+  "@category": {
+    "description": "Opciones de filtro por categoría",
+    "placeholders": {
+      "choice": {
+        "type": "Object"
+      }
+    }
+  },
   "searchCategory": "{choice, select, Game {Juego} Name {Nombre} AmiiboSeries {Serie} other {{choice}}}",
+  "@searchCategory": {
+    "description": "Opciones de filtro de búsqueda",
+    "placeholders": {
+      "choice": {
+        "type": "Object"
+      }
+    }
+  },
   "all": "Todos",
+  "@all": {
+    "description": "Etiqueta para todos los elementos"
+  },
   "total": "Total",
+  "@total": {
+    "description": "Etiqueta para recuento total"
+  },
   "remaining": "Restante",
+  "@remaining": {
+    "description": "Etiqueta para elementos restantes"
+  },
   "owned": "Adquiridos",
+  "@owned": {
+    "description": "Etiqueta para amiibos adquiridos"
+  },
   "boxed": "En caja",
+  "@boxed": {
+    "description": "Etiqueta para estado en caja"
+  },
   "unboxed": "Abiertos",
+  "@unboxed": {
+    "description": "Etiqueta para estado sin caja / abierto"
+  },
   "wished": "Deseados",
+  "@wished": {
+    "description": "Etiqueta para amiibos deseados"
+  },
   "stats": "Estadísticas",
+  "@stats": {
+    "description": "Título o etiqueta para estadísticas"
+  },
   "types": "{choice, select, Figure {Figura} Card {Tarjeta} Yarn {Lana} Band {Type: Pulsera} other {Otro}}",
+  "@types": {
+    "description": "Tipos de amiibo",
+    "placeholders": {
+      "choice": {
+        "type": "String"
+      }
+    }
+  },
   "figures": "Figuras",
+  "@figures": {
+    "description": "Etiqueta para el grupo de figuras"
+  },
   "cards": "Tarjetas",
+  "@cards": {
+    "description": "Etiqueta para el grupo de tarjetas"
+  },
   "name": "Nombre: {name}",
+  "@name": {
+    "description": "Etiqueta que muestra el nombre del amiibo",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
   "character": "Personaje: {character}",
+  "@character": {
+    "description": "Etiqueta que muestra el personaje",
+    "placeholders": {
+      "character": {
+        "type": "String"
+      }
+    }
+  },
   "serie": "Serie: {serie}",
+  "@serie": {
+    "description": "Etiqueta que muestra la serie del amiibo",
+    "placeholders": {
+      "serie": {
+        "type": "String"
+      }
+    }
+  },
   "game": "Juego: {game}",
+  "@game": {
+    "description": "Etiqueta que muestra el juego asociado",
+    "placeholders": {
+      "game": {
+        "type": "String"
+      }
+    }
+  },
   "type": "Tipo: {type}",
+  "@type": {
+    "description": "Etiqueta que muestra el tipo de amiibo",
+    "placeholders": {
+      "type": {
+        "type": "String"
+      }
+    }
+  },
   "asc": "Ascendente (A-Z)",
+  "@asc": {
+    "description": "Opción de orden ascendente"
+  },
   "desc": "Descendente (Z-A)",
+  "@desc": {
+    "description": "Opción de orden descendente"
+  },
   "sortName": "Nombre",
+  "@sortName": {
+    "description": "Criterio de ordenamiento por nombre"
+  },
   "au": "Australia",
+  "@au": {
+    "description": "Nombre de región Australia"
+  },
   "eu": "Europa",
+  "@eu": {
+    "description": "Nombre de región Europa"
+  },
   "na": "Norteamérica",
+  "@na": {
+    "description": "Nombre de región Norteamérica"
+  },
   "jp": "Japón",
+  "@jp": {
+    "description": "Nombre de región Japón"
+  },
   "cardNumber": "N° de tarjeta",
+  "@cardNumber": {
+    "description": "Etiqueta para número de tarjeta"
+  },
   "settings": "Opciones",
+  "@settings": {
+    "description": "Título de menú o página de opciones"
+  },
   "sort": "Ordenar por",
+  "@sort": {
+    "description": "Etiqueta para ordenar"
+  },
   "done": "Listo",
+  "@done": {
+    "description": "Boton de confirmación o finalización"
+  },
   "sure": "Seguro",
+  "@sure": {
+    "description": "Texto de confirmación"
+  },
   "light": "Claro",
+  "@light": {
+    "description": "Opción de tema claro"
+  },
   "dark": "Oscuro",
+  "@dark": {
+    "description": "Opción de tema oscuro"
+  },
   "auto": "Sistema",
+  "@auto": {
+    "description": "Opción de tema por defecto del sistema"
+  },
   "themeMode": "{choice, select, system {Sistema} light {Claro} dark {Oscuro} other {Autom.}}",
+  "@themeMode": {
+    "description": "Modos de tema disponibles",
+    "placeholders": {
+      "choice": {
+        "type": "Object"
+      }
+    }
+  },
   "mode": "Modo",
+  "@mode": {
+    "description": "Encabezado de modo de tema"
+  },
   "lightTheme": "Tema Claro",
+  "@lightTheme": {
+    "description": "Etiqueta para tema claro"
+  },
   "darkTheme": "Tema Oscuro",
+  "@darkTheme": {
+    "description": "Etiqueta para tema oscuro"
+  },
   "removeTooltip": "Remover",
+  "@removeTooltip": {
+    "description": "Sugerencia para eliminar elemento"
+  },
   "ownTooltip": "Adquirir",
+  "@ownTooltip": {
+    "description": "Sugerencia para marcar como adquirido"
+  },
   "wishTooltip": "Desear",
+  "@wishTooltip": {
+    "description": "Sugerencia para agregar a lista de deseos"
+  },
   "saveStatsTooltip": "Guardar Estadísticas",
+  "@saveStatsTooltip": {
+    "description": "Sugerencia para guardar estadísticas"
+  },
   "upToolTip": "Arriba",
+  "@upToolTip": {
+    "description": "Sugerencia para ir arriba"
+  },
   "emptyPage": "No hay nada que mostrar . . . aún",
+  "@emptyPage": {
+    "description": "Texto para pantalla vacía"
+  },
   "emptyPageAction": "Crea tu colección",
+  "@emptyPageAction": {
+    "description": "Botón de acción en pantalla vacía"
+  },
   "export": "Exportar",
+  "@export": {
+    "description": "Botón de exportar"
+  },
   "import": "Importar",
+  "@import": {
+    "description": "Botón de importar"
+  },
   "appearance": "Apariencia",
+  "@appearance": {
+    "description": "Sección de opciones de apariencia"
+  },
   "features": "Funcionalidades",
+  "@features": {
+    "description": "Sección de opciones de funcionalidades"
+  },
   "appearanceSubtitle": "Más personalización",
+  "@appearanceSubtitle": {
+    "description": "Subtítulo para sección de apariencia"
+  },
   "credits": "Créditos",
+  "@credits": {
+    "description": "Sección de créditos"
+  },
   "creditsSubtitle": "Los que hicieron todo posible",
+  "@creditsSubtitle": {
+    "description": "Subtítulo para la sección de créditos"
+  },
   "privacyPolicy": "Política de Privacidad",
+  "@privacyPolicy": {
+    "description": "Enlace a política de privacidad"
+  },
   "privacySubtitle": "Términos y condiciones",
+  "@privacySubtitle": {
+    "description": "Subtítulo para términos y condiciones"
+  },
   "reset": "Restablecer",
+  "@reset": {
+    "description": "Acción de restablecer"
+  },
   "resetSubtitle": "borrar tu colección y lista de deseos",
+  "@resetSubtitle": {
+    "description": "Subtítulo explicativo de restablecer"
+  },
   "resetTitleDialog": "Borrar tu colección",
+  "@resetTitleDialog": {
+    "description": "Título del diálogo de restablecimiento"
+  },
   "resetContent": "¿Estás seguro? Esta acción no se puede deshacer",
+  "@resetContent": {
+    "description": "Mensaje de confirmación de restablecimiento"
+  },
   "cancel": "¡Espera no!",
+  "@cancel": {
+    "description": "Botón de cancelar acción"
+  },
   "saveCollection": "Guardar Colección",
+  "@saveCollection": {
+    "description": "Botón para guardar imagen de colección"
+  },
   "saveCollectionSubtitle": "Guarda una imagen de tu colección",
+  "@saveCollectionSubtitle": {
+    "description": "Subtítulo de opción para guardar imagen"
+  },
   "saveCollectionTitleDialog": "Selecciona tu colección",
+  "@saveCollectionTitleDialog": {
+    "description": "Título del diálogo al guardar colección"
+  },
   "couldNotLaunchUrl": "No se pudo ejecutar {url}",
+  "@couldNotLaunchUrl": {
+    "description": "Mensaje de error al no poder abrir un enlace",
+    "placeholders": {
+      "url": {
+        "type": "String"
+      }
+    }
+  },
   "reportBug": "Reportar error",
+  "@reportBug": {
+    "description": "Enlace o botón para reportar un error"
+  },
   "rate": "Califícame",
+  "@rate": {
+    "description": "Enlace o botón para calificar la aplicación"
+  },
   "changelogSubtitle": "Novedades",
+  "@changelogSubtitle": {
+    "description": "Subtítulo del registro de cambios"
+  },
   "changelog": "Cambios",
+  "@changelog": {
+    "description": "Título del registro de cambios"
+  },
   "markdownError": "Hubo un error al cargar el archivo",
+  "@markdownError": {
+    "description": "Error al cargar documento markdown"
+  },
   "storagePermission": "{choice, select, granted {Almacenamiento concedido} denied {Almacenamiento denegado} permanentlyDenied {Almacenamiento denegado} restricted {Almacenamiento restringido} other {Permiso de almacenamiento en estado desconocido}}",
+  "@storagePermission": {
+    "description": "Estados de permisos de almacenamiento",
+    "placeholders": {
+      "choice": {
+        "type": "Object"
+      }
+    }
+  },
   "createdOn": "Creado el",
+  "@createdOn": {
+    "description": "Prefijo para fecha de creación"
+  },
   "collectionReset": "Colleccción borrada",
+  "@collectionReset": {
+    "description": "Mensaje tras restablecer la colección"
+  },
   "openAppSettings": "Cambiar",
+  "@openAppSettings": {
+    "description": "Botón para abrir configuración"
+  },
   "recordMessage": "Espera por favor, aún se está procesando tu petición anterior",
+  "@recordMessage": {
+    "description": "Mensaje de estado durante procesamiento de archivo"
+  },
   "savingCollectionMessage": "Guardando tu colección, esto podría demorar dependiendo de tu dispositivo",
+  "@savingCollectionMessage": {
+    "description": "Mensaje de estado mientras se guarda imagen de colección"
+  },
   "errorImporting": "Este archivo no contiene una colección",
+  "@errorImporting": {
+    "description": "Mensaje de error cuando el archivo de importación no es válido"
+  },
   "successImport": "Colección actualizada",
+  "@successImport": {
+    "description": "Mensaje de éxito tras completar la importación"
+  },
   "notificationTitle": "Archivo generado",
+  "@notificationTitle": {
+    "description": "Título de notificación al finalizar exportación"
+  },
   "actionText": "Compartir",
+  "@actionText": {
+    "description": "Etiqueta para botón de compartir"
+  },
   "donate": "Donaciones",
+  "@donate": {
+    "description": "Etiqueta para botón de donación"
+  },
   "lockTooltip": "{choice, select, true {Bloqueado} false {Desbloqueado} other {Desconocido}}",
+  "@lockTooltip": {
+    "description": "Sugerencia de estado de bloqueo",
+    "placeholders": {
+      "choice": {
+        "type": "Object"
+      }
+    }
+  },
   "language": "Idioma",
+  "@language": {
+    "description": "Título de configuración de idioma"
+  },
   "languageSubtitle": "Escoja un idioma o use el del sistema",
+  "@languageSubtitle": {
+    "description": "Subtítulo para selección de idioma"
+  },
   "system": "Sistema",
-  "localization": "{choice, select, en {Inglés} es {Español} fr {Francés} other {Desconocido}}",
+  "@system": {
+    "description": "Opción de idioma del sistema"
+  },
+  "localization": "{choice, select, en {Inglés} es {Español} fr {Francés} de {Alemán} other {Desconocido}}",
+  "@localization": {
+    "description": "Opciones de nombre de idioma",
+    "placeholders": {
+      "choice": {
+        "type": "Object"
+      }
+    }
+  },
   "statTooltip": "{choice, select, true {Porcentaje} false {Fracción} other {Unknown}}",
+  "@statTooltip": {
+    "description": "Sugerencia para cambiar modo de visualización de estadísticas",
+    "placeholders": {
+      "choice": {
+        "type": "Object"
+      }
+    }
+  },
   "switch_platform": "Switch",
+  "@switch_platform": {
+    "description": "Nombre de la consola Nintendo Switch"
+  },
   "wiiu_platform": "WiiU",
+  "@wiiu_platform": {
+    "description": "Nombre de la consola Wii U"
+  },
   "console_3DS_platform": "3DS",
+  "@console_3DS_platform": {
+    "description": "Nombre de la consola Nintendo 3DS"
+  },
   "amiibo_usage_count": "{count, plural, one{+ 1 más} two{+ 2 más} few{+ {count} más} other{+ muchos más}}",
+  "@amiibo_usage_count": {
+    "description": "Representación en plural de uso de amiibos en juegos",
+    "placeholders": {
+      "count": {
+        "type": "num"
+      }
+    }
+  },
   "invalid_amiibo": "Información no válida",
+  "@invalid_amiibo": {
+    "description": "Texto de error para datos de amiibo no válidos"
+  },
   "socket_exception": "Revisa tu conexión",
+  "@socket_exception": {
+    "description": "Mensaje de error de conexión de red"
+  },
   "no_games_found": "No existe una lista de juegos para este amiibo aún",
+  "@no_games_found": {
+    "description": "Mensaje mostrado cuando no hay juegos compatibles"
+  },
   "no_date": "Próximamente",
+  "@no_date": {
+    "description": "Texto para fecha de lanzamiento no confirmada"
+  },
   "showGrid": "Cuadrícula",
+  "@showGrid": {
+    "description": "Etiqueta para alternar vista en cuadrícula"
+  },
   "hide_caution": "Precaución, deshabilitar una funcionalidad la escondera en toda la app",
+  "@hide_caution": {
+    "description": "Advertencia al desactivar funcionalidades"
+  },
   "export_complete": "Archivo guardado",
+  "@export_complete": {
+    "description": "Mensaje de confirmación al terminar la exportación"
+  },
   "select_user_attribute": "Seleccione una categoría",
+  "@select_user_attribute": {
+    "description": "Etiqueta para seleccionar categoría de usuario"
+  },
   "emptyMessageType": "{choice, select, pokemon {Tengo que atraparlos!} pokeball {Tengo que atraparlos!} mario {Lo lamento, pero tu colección parece estar en otro castillo} mushroom {1 colección extra aquí} pacman {Habmre por amiibos} pacmanGhost {¿Hambre por amiibos?} link {Hyaaa!! (No hay amiibos aquí)} other {No hay nada que mostrar . . . aún}}",
+  "@emptyMessageType": {
+    "description": "Variantes de mensajes según el tema cuando la lista está vacía",
+    "placeholders": {
+      "choice": {
+        "type": "Object"
+      }
+    }
+  },
   "about": "Acerca de",
+  "@about": {
+    "description": "Título o etiqueta de información de la aplicación"
+  },
   "support": "Soporte",
+  "@support": {
+    "description": "Etiqueta de sección de soporte"
+  },
   "color_mode": "Aspecto",
+  "@color_mode": {
+    "description": "Configuración del aspecto visual"
+  },
   "amiibo_type": "Tipo de Amiibo",
+  "@amiibo_type": {
+    "description": "Etiqueta para los tipos de amiibo"
+  },
   "export_subtitle": "Guarda un archivo de tu colección",
+  "@export_subtitle": {
+    "description": "Subtítulo explicativo de exportación"
+  },
   "import_subtitle": "Restaura tu colección a partir de un archivo",
+  "@import_subtitle": {
+    "description": "Subtítulo explicativo de importación"
+  },
   "use_wallpaper": "Color dinámico",
+  "@use_wallpaper": {
+    "description": "Título para activación de color dinámico del fondo de pantalla"
+  },
   "use_wallpaper_subtitle": "Use tu fondo de pantalla como tema de color",
+  "@use_wallpaper_subtitle": {
+    "description": "Subtítulo explicativo de color dinámico"
+  },
   "use_in_app_browser": "Abrir links de afiliación dentro de la app",
+  "@use_in_app_browser": {
+    "description": "Opción para abrir enlaces dentro de la app"
+  },
   "use_in_app_browser_subtitle": "Los links se abriran de manera interna",
+  "@use_in_app_browser_subtitle": {
+    "description": "Subtítulo para apertura interna de enlaces"
+  },
   "amazon_link_setting": "Sitio de Amazon",
+  "@amazon_link_setting": {
+    "description": "Opción de selección de sitio regional de Amazon"
+  },
   "amazon_link_setting_subtitle": "Escoge la tienda Amazon de tu país",
+  "@amazon_link_setting_subtitle": {
+    "description": "Subtítulo para sitio de Amazon"
+  },
   "no_link_selected": "Sin preferencia",
-  "no_link_selected_subtitle": "Se preguntará cuando se necesite"
+  "@no_link_selected": {
+    "description": "Etiqueta cuando no hay tienda preferida"
+  },
+  "no_link_selected_subtitle": "Se preguntará cuando se necesite",
+  "@no_link_selected_subtitle": {
+    "description": "Subtítulo explicativo si no hay tienda seleccionada"
+  }
 }
