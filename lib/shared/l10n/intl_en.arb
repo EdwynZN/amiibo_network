@@ -347,7 +347,7 @@
     "description": "Storage permission status messages",
     "placeholders": {
       "choice": {
-        "type": "Object"
+        "type": "String"
       }
     }
   },
@@ -417,7 +417,7 @@
     "description": "Language name options",
     "placeholders": {
       "choice": {
-        "type": "Object"
+        "type": "String"
       }
     }
   },

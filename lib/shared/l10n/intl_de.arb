@@ -347,7 +347,7 @@
     "description": "Speicherberechtigungsstatus-Meldungen",
     "placeholders": {
       "choice": {
-        "type": "Object"
+        "type": "String"
       }
     }
   },
@@ -417,7 +417,7 @@
     "description": "Sprachnamen-Optionen",
     "placeholders": {
       "choice": {
-        "type": "Object"
+        "type": "String"
       }
     }
   },

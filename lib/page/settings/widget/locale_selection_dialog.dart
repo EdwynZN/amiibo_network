@@ -18,8 +18,8 @@ class LocaleDialog extends HookConsumerWidget {
     return AlertDialog(
       title: Text(translate.language),
       scrollable: true,
-      alignment: Alignment.center,
-      content: RadioGroup(
+      alignment: .center,
+      content: RadioGroup<String?>(
         groupValue: state.value,
         onChanged: (value) => state.value = value,
         child: ListBody(

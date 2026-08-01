@@ -409,13 +409,13 @@ class _AmiiboListWidget extends HookConsumerWidget {
                   children: [
                     ImageIcon(
                       AssetImage(switch (messageType) {
-                        EmptyMessageType.pokemon => GameIcons.pokemon,
-                        EmptyMessageType.pokeball => GameIcons.pokeball,
-                        EmptyMessageType.mario => GameIcons.superMario,
-                        EmptyMessageType.mushroom => GameIcons.superMarioToad,
-                        EmptyMessageType.pacman => GameIcons.pacman,
-                        EmptyMessageType.pacmanGhost => GameIcons.pacmanGhost,
-                        EmptyMessageType.link => GameIcons.tlozSword,
+                        .pokemon => GameIcons.pokemon,
+                        .pokeball => GameIcons.pokeball,
+                        .mario => GameIcons.superMario,
+                        .mushroom => GameIcons.superMarioToad,
+                        .pacman => GameIcons.pacman,
+                        .pacmanGhost => GameIcons.pacmanGhost,
+                        .link => GameIcons.tlozSword,
                       }),
                       size: 196,
                     ),
