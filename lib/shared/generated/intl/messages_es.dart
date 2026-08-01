@@ -36,7 +36,7 @@ class MessageLookup extends MessageLookupByLibrary {
   static String m5(game) => "Juego: ${game}";
 
   static String m6(choice) =>
-      "${Intl.select(choice, {'en': 'Inglés', 'es': 'Español', 'fr': 'Francés', 'other': 'Desconocido'})}";
+      "${Intl.select(choice, {'en': 'Inglés', 'es': 'Español', 'fr': 'Francés', 'de': 'Alemán', 'other': 'Desconocido'})}";
 
   static String m7(choice) =>
       "${Intl.select(choice, {'true': 'Bloqueado', 'false': 'Desbloqueado', 'other': 'Desconocido'})}";

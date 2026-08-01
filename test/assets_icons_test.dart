@@ -1,7 +1,7 @@
 import 'dart:io';
 
-import 'package:flutter_test/flutter_test.dart';
 import 'package:amiibo_network/shared/resources/resources.dart';
+import 'package:flutter_test/flutter_test.dart';
 
 void main() {
   test('assets_icons assets test', () {
