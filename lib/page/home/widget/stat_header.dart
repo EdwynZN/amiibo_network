@@ -53,7 +53,7 @@ class SliverStatsHeader extends SliverPersistentHeaderDelegate {
       padding: const EdgeInsets.fromLTRB(6.0, 6.0, 6.0, 0.0),
       alignment: Alignment.bottomCenter,
       decoration: decoration,
-      child: const _LinearStat(),
+      child: const LinearStat(),
     );
     final double sigma = 5.0 * (shrinkOffset / minExtent).clamp(0.15, 1.0);
     return ClipRect(
@@ -78,20 +78,22 @@ class SliverStatsHeader extends SliverPersistentHeaderDelegate {
   bool shouldRebuild(SliverStatsHeader oldDelegate) => true;
 }
 
-class _LinearStat extends ConsumerWidget {
-  const _LinearStat();
+class LinearStat extends ConsumerWidget {
+  const LinearStat([this.maxHeigth]);
+
+  final double? maxHeigth;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final statList = ref.watch(statHomeProvider.select((s) => s.value));
     if (statList == null || statList == const Stat()) {
-      return const SizedBox();
+      return SizedBox(height: maxHeigth);
     }
     final int total = statList.total;
     final int owned = statList.owned;
     final int wished = statList.wished;
     if (total == 0 && owned == 0 && wished == 0) {
-      return const SizedBox();
+      return SizedBox(height: maxHeigth);
     }
     final category = ref.watch(
       queryProvider.select((value) => value.categoryAttributes.category),
@@ -128,51 +130,54 @@ class _LinearStat extends ConsumerWidget {
       title = Text(
         isWishlist ? wishedText : ownedText,
         style: style,
-        textAlign: TextAlign.center,
+        textAlign: .center,
         maxLines: 1,
-        overflow: TextOverflow.clip,
+        overflow: .clip,
       );
     } else {
       title = Row(
-        mainAxisSize: MainAxisSize.min,
+        mainAxisSize: .min,
         children: <Widget>[
           Expanded(
             child: Text(
               ownedText,
               style: style,
-              textAlign: TextAlign.center,
+              textAlign: .center,
               maxLines: 1,
-              overflow: TextOverflow.clip,
+              overflow: .clip,
             ),
           ),
           Expanded(
             child: Text(
               statList.total.toString(),
               style: style,
-              textAlign: TextAlign.center,
+              textAlign: .center,
               maxLines: 1,
-              overflow: TextOverflow.clip,
+              overflow: .clip,
             ),
           ),
           Expanded(
             child: Text(
               wishedText,
               style: style,
-              textAlign: TextAlign.center,
+              textAlign: .center,
               maxLines: 1,
-              overflow: TextOverflow.clip,
+              overflow: .clip,
             ),
           ),
         ],
       );
     }
     return Container(
-      constraints: BoxConstraints.loose(const Size.fromWidth(360.0)),
-      alignment: Alignment.bottomCenter,
+      constraints: BoxConstraints(
+        maxWidth: 360,
+        maxHeight: maxHeigth ?? double.infinity,
+      ),
+      alignment: .bottomCenter,
       child: Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        mainAxisAlignment: MainAxisAlignment.end,
+        mainAxisSize: .min,
+        crossAxisAlignment: .stretch,
+        mainAxisAlignment: .end,
         children: [
           title,
           const SizedBox(height: 2.0),

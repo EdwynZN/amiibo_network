@@ -303,6 +303,7 @@ class HomeScreenState extends ConsumerState<HomeScreen>
                 controller: _controller,
                 slivers: <Widget>[
                   SliverFloatingBar(
+                    pinned: true,
                     floating: true,
                     forward: _multipleSelection,
                     snap: true,
@@ -319,18 +320,13 @@ class HomeScreenState extends ConsumerState<HomeScreen>
                           ? const _SelectedOptions()
                           : _DefaultOptions(hasDrawer: !isTablet),
                     ),
-                  ),
-                  if (!isTablet)
-                    Builder(
-                      builder: (context) {
-                        return SliverPersistentHeader(
-                          delegate: SliverStatsHeader(
-                            topPadding: MediaQuery.of(context).padding.top,
+                    bottom: isTablet
+                        ? null
+                        : PreferredSize(
+                            preferredSize: Size.fromHeight(32),
+                            child: LinearStat(32),
                           ),
-                          pinned: true,
-                        );
-                      },
-                    ),
+                  ),
                   const SliverPadding(
                     padding: EdgeInsets.symmetric(
                       vertical: 12.0,
