@@ -810,7 +810,7 @@ class S {
   }
 
   /// `{choice, select, granted {Storage permission granted} denied {Storage permission denied} permanentlyDenied {Storage permission denied} restricted {Storage permission restricted} other {Unknown permission access}}`
-  String storagePermission(Object choice) {
+  String storagePermission(String choice) {
     return Intl.select(
       choice,
       {
@@ -968,7 +968,7 @@ class S {
   }
 
   /// `{choice, select, en {English} es {Spanish} fr {French} de {German} other {Unknown}}`
-  String localization(Object choice) {
+  String localization(String choice) {
     return Intl.select(
       choice,
       {

@@ -347,7 +347,7 @@
     "description": "Estados de permisos de almacenamiento",
     "placeholders": {
       "choice": {
-        "type": "Object"
+        "type": "String"
       }
     }
   },
@@ -417,7 +417,7 @@
     "description": "Opciones de nombre de idioma",
     "placeholders": {
       "choice": {
-        "type": "Object"
+        "type": "String"
       }
     }
   },

@@ -347,7 +347,7 @@
     "description": "Statuts des autorisations de stockage",
     "placeholders": {
       "choice": {
-        "type": "Object"
+        "type": "String"
       }
     }
   },
@@ -417,7 +417,7 @@
     "description": "Options des noms de langues",
     "placeholders": {
       "choice": {
-        "type": "Object"
+        "type": "String"
       }
     }
   },
