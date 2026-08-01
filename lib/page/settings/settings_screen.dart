@@ -108,16 +108,14 @@ class _AppearanceListWidget extends ConsumerWidget {
                 subtitle: subtitle,
                 icon: const Icon(Icons.language),
                 onTap: () async {
-                  final localeResult = await showDialog<ResultType<String?>>(
+                  final result = await showDialog<ResultType<String?>>(
                     context: context,
                     builder: (context) => const LocaleDialog(),
                   );
-                  if (localeResult == null) {
-                    return;
-                  }
+                  if (result == null) return;
                   ref
                       .read(personalProvider.notifier)
-                      .forceLocale(localeResult.data);
+                      .forceLocale(result.data);
                 },
               );
             },

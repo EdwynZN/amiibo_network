@@ -1,4 +1,5 @@
 import 'dart:math' as math;
+import 'dart:ui';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -16,6 +17,7 @@ class SliverFloatingBar extends StatefulWidget {
   final double? elevation;
   final VoidCallback? onTap;
   final Color? backgroundColor;
+  final PreferredSizeWidget? bottom;
 
   const SliverFloatingBar({
     Key? key,
@@ -29,6 +31,7 @@ class SliverFloatingBar extends StatefulWidget {
     this.trailing,
     this.onTap,
     this.backgroundColor,
+    this.bottom,
   }) : super(key: key);
 
   @override
@@ -40,13 +43,9 @@ class _SliverFloatingBarState extends State<SliverFloatingBar>
   FloatingHeaderSnapConfiguration? _snapConfiguration;
 
   void _updateSnapConfiguration() {
-    if (widget.snap)
-      _snapConfiguration = FloatingHeaderSnapConfiguration(
-        curve: Curves.easeOut,
-        duration: const Duration(milliseconds: 200),
-      );
-    else
-      _snapConfiguration = null;
+    _snapConfiguration = widget.snap
+        ? FloatingHeaderSnapConfiguration(curve: Easing.standardDecelerate)
+        : null;
   }
 
   @override
@@ -64,7 +63,11 @@ class _SliverFloatingBarState extends State<SliverFloatingBar>
   @override
   Widget build(BuildContext context) {
     final double topPadding = MediaQuery.of(context).viewPadding.top;
-    final double collapsedHeight = kToolbarHeight + topPadding + 4.0;
+    final bottomHeight = widget.bottom?.preferredSize.height ?? 0.0;
+    var collapsedHeight = bottomHeight + topPadding + 4;
+    if (!widget.pinned || !widget.floating || widget.bottom == null) {
+      collapsedHeight += kToolbarHeight;
+    }
     return MediaQuery.removePadding(
       context: context,
       removeBottom: true,
@@ -81,10 +84,12 @@ class _SliverFloatingBarState extends State<SliverFloatingBar>
           snapConfiguration: _snapConfiguration,
           leading: widget.leading,
           title: widget.title,
+          bottom: widget.bottom,
           trailing: widget.trailing,
           onTap: widget.onTap,
           elevation: widget.elevation,
-          backgroundColor: widget.backgroundColor ??
+          backgroundColor:
+              widget.backgroundColor ??
               Theme.of(context).appBarTheme.backgroundColor,
         ),
       ),
@@ -104,13 +109,16 @@ class _SliverFloatingPersistentHeader extends SliverPersistentHeaderDelegate {
   final Widget? title;
   final VoidCallback? onTap;
   final Color? backgroundColor;
+  final PreferredSizeWidget? bottom;
+  final double _bottomHeight;
 
-  const _SliverFloatingPersistentHeader({
+  _SliverFloatingPersistentHeader({
     required this.topPadding,
     required this.collapsedHeight,
     required this.elevation,
     required this.pinned,
     required this.floating,
+    this.bottom,
     this.vsync,
     this.snap = false,
     this.snapConfiguration,
@@ -119,7 +127,7 @@ class _SliverFloatingPersistentHeader extends SliverPersistentHeaderDelegate {
     this.title,
     this.onTap,
     this.backgroundColor,
-  }) : super();
+  }) : _bottomHeight = bottom?.preferredSize.height ?? 0.0;
 
   @override
   Widget build(
@@ -127,8 +135,10 @@ class _SliverFloatingPersistentHeader extends SliverPersistentHeaderDelegate {
     double shrinkOffset,
     bool overlapsContent,
   ) {
-    final double extraToolbarHeight =
-        math.max(minExtent - topPadding - kToolbarHeight, 0.0);
+    final double extraToolbarHeight = math.max(
+      minExtent - topPadding - kToolbarHeight,
+      0.0,
+    );
     final double visibleMainHeight = maxExtent - shrinkOffset;
     final bool isPinnedWithOpacityFade = false;
     final double visibleToolbarHeight = visibleMainHeight - extraToolbarHeight;
@@ -152,6 +162,7 @@ class _SliverFloatingPersistentHeader extends SliverPersistentHeaderDelegate {
           title: title,
           onTap: onTap,
           trailing: trailing,
+          bottom: bottom,
         ),
       ),
     );
@@ -167,7 +178,8 @@ class _SliverFloatingPersistentHeader extends SliverPersistentHeaderDelegate {
   double get minExtent => collapsedHeight;
 
   @override
-  double get maxExtent => math.max(collapsedHeight, minExtent);
+  double get maxExtent =>
+      math.max(topPadding + (kToolbarHeight + _bottomHeight) + 4, minExtent);
 
   @override
   bool shouldRebuild(_SliverFloatingPersistentHeader oldDelegate) {
@@ -178,6 +190,7 @@ class _SliverFloatingPersistentHeader extends SliverPersistentHeaderDelegate {
         snap != oldDelegate.snap ||
         snapConfiguration != oldDelegate.snapConfiguration ||
         trailing != oldDelegate.trailing ||
+        bottom != oldDelegate.bottom ||
         leading != oldDelegate.leading ||
         title != oldDelegate.title ||
         backgroundColor != oldDelegate.backgroundColor;
@@ -191,6 +204,7 @@ class _AppBar extends StatefulWidget implements PreferredSizeWidget {
   final Widget? trailing;
   final Widget? title;
   final VoidCallback? onTap;
+  final PreferredSizeWidget? bottom;
 
   _AppBar({
     // ignore: unused_element
@@ -200,6 +214,7 @@ class _AppBar extends StatefulWidget implements PreferredSizeWidget {
     this.onTap,
     this.title,
     this.trailing,
+    this.bottom,
   });
 
   @override
@@ -261,8 +276,10 @@ class _AppBarState extends State<_AppBar> {
     }
   }
 
-  SystemUiOverlayStyle _systemOverlayStyleForBrightness(Brightness brightness,
-      [Color? backgroundColor]) {
+  SystemUiOverlayStyle _systemOverlayStyleForBrightness(
+    Brightness brightness, [
+    Color? backgroundColor,
+  ]) {
     final SystemUiOverlayStyle style = brightness == Brightness.dark
         ? SystemUiOverlayStyle.light
         : SystemUiOverlayStyle.dark;
@@ -271,8 +288,8 @@ class _AppBarState extends State<_AppBar> {
 
   @override
   Widget build(BuildContext context) {
-    final FlexibleSpaceBarSettings? settings =
-        context.dependOnInheritedWidgetOfExactType<FlexibleSpaceBarSettings>();
+    final FlexibleSpaceBarSettings? settings = context
+        .dependOnInheritedWidgetOfExactType<FlexibleSpaceBarSettings>();
     final Set<WidgetState> states = <WidgetState>{
       if (settings?.isScrolledUnder ?? _scrolledUnder)
         WidgetState.scrolledUnder,
@@ -281,7 +298,8 @@ class _AppBarState extends State<_AppBar> {
     final ModalRoute<dynamic>? parentRoute = ModalRoute.of(context);
     final theme = Theme.of(context);
     final appbarTheme = theme.appBarTheme;
-    final _background = widget.backgroundColor ??
+    final _background =
+        widget.backgroundColor ??
         appbarTheme.backgroundColor ??
         theme.canvasColor;
     final _elevation = widget.elevation ?? appbarTheme.elevation ?? 0.0;
@@ -289,7 +307,8 @@ class _AppBarState extends State<_AppBar> {
         parentRoute is PageRoute<dynamic> && parentRoute.fullscreenDialog;
     final double effectiveElevation;
     final double innerElevation;
-    if (states.contains(WidgetState.scrolledUnder)) {
+    final isScrollUnder = states.contains(WidgetState.scrolledUnder);
+    if (isScrollUnder) {
       final _possible = _elevation * 2.0;
       effectiveElevation = _possible.clamp(0.0, 4.0);
       innerElevation = 2.0;
@@ -298,64 +317,108 @@ class _AppBarState extends State<_AppBar> {
       innerElevation = 0.0;
     }
 
-    return AnnotatedRegion<SystemUiOverlayStyle>(
-      value: appbarTheme.systemOverlayStyle ??
+    final Color _color = ElevationOverlay.applySurfaceTint(
+      _background,
+      appbarTheme.surfaceTintColor,
+      effectiveElevation,
+    );
+    final BoxDecoration decoration = BoxDecoration(
+      gradient: LinearGradient(
+        begin: .topCenter,
+        end: .bottomCenter,
+        stops: const [0.20, 0.50, 1.0],
+        colors: [
+          _color,
+          _color.withValues(alpha: 0.75),
+          _color.withValues(alpha: 0.25),
+        ],
+      ),
+    );
+
+    Widget child = ListTileTheme(
+      contentPadding: EdgeInsets.zero,
+      horizontalTitleGap: 0.0,
+      iconColor: theme.iconTheme.color,
+      textColor: theme.textTheme.titleLarge!.color,
+      dense: true,
+      child: Material(
+        type: .card,
+        surfaceTintColor: theme.cardTheme.surfaceTintColor,
+        elevation: innerElevation,
+        shape: const StadiumBorder(),
+        clipBehavior: .hardEdge,
+        child: ListTile(
+          contentPadding: const EdgeInsets.symmetric(horizontal: 8.0),
+          leading:
+              widget.leading ?? (useCloseButton ? CloseButton() : BackButton()),
+          title: widget.title == null
+              ? null
+              : DefaultTextStyle.merge(
+                  textAlign: .left,
+                  style: appbarTheme.titleTextStyle,
+                  softWrap: false,
+                  overflow: .fade,
+                  child: widget.title!,
+                ),
+          trailing: widget.trailing,
+          onTap: widget.onTap,
+        ),
+      ),
+    );
+
+    if (widget.bottom != null) {
+      child = Column(
+        mainAxisAlignment: .spaceBetween,
+        children: [
+          Flexible(
+            child: ConstrainedBox(
+              constraints: BoxConstraints(maxHeight: kToolbarHeight),
+              child: child,
+            ),
+          ),
+          widget.bottom!,
+        ],
+      );
+    }
+
+    child = AnnotatedRegion<SystemUiOverlayStyle>(
+      value:
+          appbarTheme.systemOverlayStyle ??
           _systemOverlayStyleForBrightness(
             ThemeData.estimateBrightnessForColor(_background),
             theme.useMaterial3 ? const Color(0x00000000) : null,
           ),
       child: Material(
-        color: ElevationOverlay.applySurfaceTint(
-          _background,
-          appbarTheme.surfaceTintColor,
-          effectiveElevation,
-        ),
-        elevation: 0,
-        surfaceTintColor: appbarTheme.surfaceTintColor,
-        type: MaterialType.canvas,
-        child: SafeArea(
-          bottom: false,
-          child: Align(
-            alignment: Alignment.center,
-            child: Padding(
-              padding: const EdgeInsets.symmetric(
-                horizontal: 12.0,
-                vertical: 2.0,
-              ),
-              child: ListTileTheme(
-                contentPadding: EdgeInsets.zero,
-                horizontalTitleGap: 0.0,
-                iconColor: theme.iconTheme.color,
-                textColor: theme.textTheme.titleLarge!.color,
-                dense: true,
-                child: Material(
-                  type: MaterialType.card,
-                  surfaceTintColor: theme.cardTheme.surfaceTintColor,
-                  elevation: innerElevation,
-                  shape: const StadiumBorder(),
-                  //borderRadius: BorderRadius.circular(32.0),
-                  clipBehavior: Clip.hardEdge,
-                  child: ListTile(
-                    contentPadding: const EdgeInsets.symmetric(horizontal: 8.0),
-                    leading: widget.leading ??
-                        (useCloseButton ? CloseButton() : BackButton()),
-                    title: widget.title == null
-                        ? null
-                        : DefaultTextStyle.merge(
-                            textAlign: TextAlign.left,
-                            style: appbarTheme.titleTextStyle,
-                            softWrap: false,
-                            overflow: TextOverflow.fade,
-                            child: widget.title!,
-                          ),
-                    trailing: widget.trailing,
-                    onTap: widget.onTap,
-                  ),
+        type: .transparency,
+        child: DecoratedBox(
+          decoration: decoration,
+          child: SafeArea(
+            bottom: false,
+            child: Align(
+              alignment: .center,
+              child: Padding(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 12.0,
+                  vertical: 2.0,
                 ),
+                child: child,
               ),
             ),
           ),
         ),
+      ),
+    );
+
+    final double sigma = 1.25 * effectiveElevation.clamp(0.15, 1.0);
+
+    return ClipRRect(
+      child: BackdropFilter(
+        filter: ImageFilter.blur(
+          sigmaX: sigma,
+          sigmaY: sigma,
+          tileMode: .decal,
+        ),
+        child: child,
       ),
     );
   }
