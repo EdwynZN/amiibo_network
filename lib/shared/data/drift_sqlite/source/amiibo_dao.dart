@@ -4,7 +4,8 @@ import 'package:amiibo_network/shared/data/drift_sqlite/source/drift_database.da
 import 'package:amiibo_network/app/configuration/model/amiibo_category_enum.dart';
 import 'package:amiibo_network/app/configuration/model/hidden_types.dart';
 import 'package:amiibo_network/app/configuration/model/sort_enum.dart' as s;
-import 'package:amiibo_network/entity/amiibo_info/model/amiibo.dart' hide Amiibo;
+import 'package:amiibo_network/entity/amiibo_info/model/amiibo.dart'
+    hide Amiibo;
 import 'package:amiibo_network/app/configuration/model/search_result.dart';
 import 'package:amiibo_network/feature/amiibo/application/input/update_amiibo_user_attributes.dart';
 import 'package:amiibo_network/shared/service/info_package.dart';
@@ -26,14 +27,12 @@ class AmiiboDao extends DatabaseAccessor<AppDatabase>
     List<String> cards = const [],
     HiddenType? hiddenCategories,
   }) async {
-    final query = select(amiibo).join(
-      [
-        leftOuterJoin(
-          amiiboUserPreferences,
-          amiiboUserPreferences.amiiboKey.equalsExp(amiibo.key),
-        ),
-      ],
-    )..orderBy(_orderExpression(orderBy, sortBy));
+    final query = select(amiibo).join([
+      leftOuterJoin(
+        amiiboUserPreferences,
+        amiiboUserPreferences.amiiboKey.equalsExp(amiibo.key),
+      ),
+    ])..orderBy(_orderExpression(orderBy, sortBy));
     _updateQueryWhere(
       query,
       categoryAttributes,
@@ -58,14 +57,12 @@ class AmiiboDao extends DatabaseAccessor<AppDatabase>
   }
 
   Future<AmiiboDriftModel?> fetchByKey(int key) async {
-    final query = select(amiibo).join(
-      [
-        leftOuterJoin(
-          amiiboUserPreferences,
-          amiibo.key.equalsExp(amiiboUserPreferences.amiiboKey),
-        ),
-      ],
-    )..where(amiibo.key.equals(key));
+    final query = select(amiibo).join([
+      leftOuterJoin(
+        amiiboUserPreferences,
+        amiibo.key.equalsExp(amiiboUserPreferences.amiiboKey),
+      ),
+    ])..where(amiibo.key.equals(key));
 
     final result = await query
         .map((p0) => AmiiboDriftModel.fromJson(p0.rawData.data))
@@ -75,23 +72,19 @@ class AmiiboDao extends DatabaseAccessor<AppDatabase>
 
   Future<void> insertAll({
     required List<AmiiboTable> amiibosData,
+    required List<AmiiboImagesCompanion> amiiboImagesData,
     required List<AmiiboUserPreferencesCompanion> preferences,
   }) async {
     await batch((batch) {
       if (InfoPackage.instance.isUpsertFeatureAvailable) {
         batch.insertAllOnConflictUpdate(amiibo, amiibosData);
       } else {
-        batch.insertAll(
-          amiibo,
-          amiibosData,
-          mode: InsertMode.insertOrReplace,
-        );
+        batch.insertAll(amiibo, amiibosData, mode: .insertOrReplace);
       }
-      batch.insertAll(
-        amiiboUserPreferences,
-        preferences,
-        mode: InsertMode.insertOrIgnore,
-      );
+      batch
+        ..insertAll(amiiboUserPreferences, preferences, mode: .insertOrIgnore)
+        ..deleteAll(amiiboImages)
+        ..insertAll(amiiboImages, amiiboImagesData, mode: .insertOrIgnore);
     });
   }
 
@@ -206,11 +199,13 @@ class AmiiboDao extends DatabaseAccessor<AppDatabase>
   }
 
   Future<void> clear() async {
-    await update(amiiboUserPreferences).write(AmiiboUserPreferencesCompanion(
-      boxed: const Value(0),
-      opened: const Value(0),
-      wishlist: const Value(false),
-    ));
+    await update(amiiboUserPreferences).write(
+      AmiiboUserPreferencesCompanion(
+        boxed: const Value(0),
+        opened: const Value(0),
+        wishlist: const Value(false),
+      ),
+    );
   }
 
   Future<void> updatePreferences(
@@ -220,18 +215,18 @@ class AmiiboDao extends DatabaseAccessor<AppDatabase>
       for (final query in amiibos) {
         final ({int boxed, int opened, bool wished}) args =
             switch (query.attributes) {
-          const UserAttributes.wished() => const (
-              opened: 0,
-              boxed: 0,
-              wished: true
-            ),
-          OwnedUserAttributes(
-            opened: final opened,
-            boxed: final boxed,
-          ) =>
-            (opened: opened, boxed: boxed, wished: false),
-          _ => const (opened: 0, boxed: 0, wished: false),
-        };
+              const UserAttributes.wished() => const (
+                opened: 0,
+                boxed: 0,
+                wished: true,
+              ),
+              OwnedUserAttributes(opened: final opened, boxed: final boxed) => (
+                opened: opened,
+                boxed: boxed,
+                wished: false,
+              ),
+              _ => const (opened: 0, boxed: 0, wished: false),
+            };
         batch.update(
           amiiboUserPreferences,
           AmiiboUserPreferencesCompanion(
@@ -256,13 +251,11 @@ class AmiiboDao extends DatabaseAccessor<AppDatabase>
   ]) {
     if (searchAttributes != null) {
       final search = '%${searchAttributes.search}%';
-      query.where(
-        switch (searchAttributes.category) {
-          SearchCategory.Game => amiibo.gameSeries.like(search),
-          SearchCategory.AmiiboSeries => amiibo.amiiboSeries.like(search),
-          _ => amiibo.name.like(search) | amiibo.character.like(search),
-        },
-      );
+      query.where(switch (searchAttributes.category) {
+        SearchCategory.Game => amiibo.gameSeries.like(search),
+        SearchCategory.AmiiboSeries => amiibo.amiiboSeries.like(search),
+        _ => amiibo.name.like(search) | amiibo.character.like(search),
+      });
     }
 
     final whereExpression = _updateExpression(
@@ -383,8 +376,8 @@ mixin _ExpressionBuilder on _$AmiiboDaoMixin {
     where = where == null
         ? seriesExpression
         : seriesExpression == null
-            ? where
-            : where & seriesExpression;
+        ? where
+        : where & seriesExpression;
     return where;
   }
 }

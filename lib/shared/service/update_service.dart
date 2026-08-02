@@ -5,8 +5,6 @@ import 'package:amiibo_network/shared/data/drift_sqlite/source/affiliation_link_
 import 'package:amiibo_network/shared/data/drift_sqlite/source/amiibo_dao.dart';
 import 'package:amiibo_network/shared/data/drift_sqlite/source/drift_database.dart'
     as db;
-import 'package:amiibo_network/shared/data/drift_sqlite/source/drift_database.dart'
-    show AmiiboUserPreferencesCompanion;
 import 'package:amiibo_network/shared/data/local_file_source/model/amiibo_local_json_model.dart'
     as dataModel;
 import 'package:amiibo_network/shared/data/local_file_source/model/country_local_file_model.dart';
@@ -21,9 +19,7 @@ import '../utils/preferences_constants.dart';
 import 'package:amiibo_network/entity/amiibo_info/model/amiibo.dart';
 
 final updateServiceProvider = Provider(
-  (ref) => UpdateService(
-    database: ref.watch(db.databaseProvider),
-  ),
+  (ref) => UpdateService(database: ref.watch(db.databaseProvider)),
 );
 
 class UpdateService {
@@ -39,10 +35,9 @@ class UpdateService {
   factory UpdateService() => _instance;
   UpdateService._(); */
 
-  UpdateService({
-    required db.AppDatabase database,
-  })  : _dao = database.amiiboDao,
-        _affiliationLinkDao = database.affiliationLinkDao;
+  UpdateService({required db.AppDatabase database})
+    : _dao = database.amiiboDao,
+      _affiliationLinkDao = database.affiliationLinkDao;
 
   Future<void> updateSort(SharedPreferences preferences) async {
     late final OrderBy order;
@@ -92,16 +87,22 @@ class UpdateService {
 
   Future<Map<String, dynamic>?> get jsonFile async {
     return _jsonFile ??= jsonDecode(
-        await rootBundle.loadString('assets/databases/amiibos.json'));
+      await rootBundle.loadString('assets/databases/amiibos.json'),
+    );
   }
 
   Future<List<Amiibo>> _fetchAllAmiibo() async =>
       compute(dataModel.entityFromMapToDomain, (await jsonFile)!);
 
   Future<List<Map<String, dynamic>>> get _countryJsonFile async {
-    return _affiliationJsonFile ??= (jsonDecode(
-      await rootBundle.loadString('assets/databases/affiliation.json'),
-    ) as List).cast<Map<String, dynamic>>();
+    return _affiliationJsonFile ??=
+        (jsonDecode(
+                  await rootBundle.loadString(
+                    'assets/databases/affiliation.json',
+                  ),
+                )
+                as List)
+            .cast<Map<String, dynamic>>();
   }
 
   Future<List<CountryLocalFileModel>> _modelCountries() async =>
@@ -109,40 +110,58 @@ class UpdateService {
 
   Future<DateTime?> get lastUpdateDB async {
     final SharedPreferences preferences = await SharedPreferences.getInstance();
-    return _lastUpdateDB ??=
-        DateTime.tryParse(preferences.getString(sharedDateDB) ?? '');
+    return _lastUpdateDB ??= DateTime.tryParse(
+      preferences.getString(sharedDateDB) ?? '',
+    );
   }
 
   Future<DateTime?> get lastUpdate async {
-    return _lastUpdate ??=
-        DateTime.tryParse((await jsonFile)!['lastUpdated'] ?? '');
+    return _lastUpdate ??= DateTime.tryParse(
+      (await jsonFile)!['lastUpdated'] ?? '',
+    );
   }
 
   Future<bool> createDB() async {
-    return upToDate.then((sameDate) async {
-      //if (sameDate == null) throw Exception("Couldn't fetch last update");
-      if (!sameDate) {
-        await _updateDB();
-      }
-      return await Future.value(true);
-    }).catchError((e, s) {
-      unawaited(
-          FirebaseCrashlytics.instance.recordError(e, s, reason: 'createDB'));
-      return false;
-    });
+    return upToDate
+        .then((sameDate) async {
+          //if (sameDate == null) throw Exception("Couldn't fetch last update");
+          if (!sameDate) {
+            await _updateDB();
+          }
+          return await Future.value(true);
+        })
+        .catchError((e, s) {
+          unawaited(
+            FirebaseCrashlytics.instance.recordError(e, s, reason: 'createDB'),
+          );
+          return false;
+        });
   }
 
   _updateDB() async {
     final amiibos = await _fetchAllAmiibo();
     final List<db.AmiiboTable> amiibosData = [];
-    final List<AmiiboUserPreferencesCompanion> preferences = [];
+    final List<db.AmiiboImagesCompanion> amiiboImages = [];
+    final List<db.AmiiboUserPreferencesCompanion> preferences = [];
     for (final a in amiibos) {
+      final id = a.key;
       amiibosData.add(dataFromDomain(a));
+      amiiboImages.add(
+        db.AmiiboImagesCompanion.insert(
+          amiiboKey: id,
+          filePath: 'assets/collection/icon_$id.webp',
+          createAt: DateTime.now().millisecondsSinceEpoch,
+        ),
+      );
       preferences.add(
-        AmiiboUserPreferencesCompanion.insert(amiiboKey: a.key),
+        db.AmiiboUserPreferencesCompanion.insert(amiiboKey: id),
       );
     }
-    await _dao.insertAll(amiibosData: amiibosData, preferences: preferences);
+    await _dao.insertAll(
+      amiibosData: amiibosData,
+      preferences: preferences,
+      amiiboImagesData: amiiboImages,
+    );
     final countries = await _modelCountries();
     final List<db.CountryTable> contryTableList = [];
     final List<db.AffiliationLinkCompanion> links = [];
