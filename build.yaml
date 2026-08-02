@@ -26,3 +26,15 @@ targets:
           generic_argument_factories: false
           ignore_unannotated: false
           include_if_null: false
+      drift_dev:
+        options:
+          databases:
+            app_database: lib\shared\data\drift_sqlite\source\drift_database.dart
+          test_dir: test/drift/ # (default)
+          schema_dir: drift_schemas/  # (default)
+
+global_options:
+  freezed:
+    runs_before: 
+      - json_serializable
+      - riverpod_generator

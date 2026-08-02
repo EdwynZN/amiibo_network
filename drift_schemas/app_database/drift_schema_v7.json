@@ -1,0 +1,373 @@
+{
+  "_meta": {
+    "description": "This file contains a serialized version of schema entities for drift.",
+    "version": "1.3.0"
+  },
+  "options": {
+    "store_date_time_values_as_text": false
+  },
+  "entities": [
+    {
+      "id": 0,
+      "references": [],
+      "type": "table",
+      "data": {
+        "name": "country",
+        "was_declared_in_moor": true,
+        "columns": [
+          {
+            "name": "code",
+            "getter_name": "code",
+            "moor_type": "string",
+            "nullable": false,
+            "customConstraints": "NOT NULL PRIMARY KEY",
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": [
+              "primary-key"
+            ]
+          },
+          {
+            "name": "en",
+            "getter_name": "en",
+            "moor_type": "string",
+            "nullable": false,
+            "customConstraints": "NOT NULL",
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "es",
+            "getter_name": "es",
+            "moor_type": "string",
+            "nullable": false,
+            "customConstraints": "NOT NULL",
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "fr",
+            "getter_name": "fr",
+            "moor_type": "string",
+            "nullable": false,
+            "customConstraints": "NOT NULL",
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          }
+        ],
+        "is_virtual": false,
+        "without_rowid": false,
+        "constraints": []
+      }
+    },
+    {
+      "id": 1,
+      "references": [
+        0
+      ],
+      "type": "table",
+      "data": {
+        "name": "affiliation_link",
+        "was_declared_in_moor": true,
+        "columns": [
+          {
+            "name": "id",
+            "getter_name": "id",
+            "moor_type": "int",
+            "nullable": false,
+            "customConstraints": "NOT NULL PRIMARY KEY AUTOINCREMENT",
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": [
+              "auto-increment"
+            ]
+          },
+          {
+            "name": "country_code",
+            "getter_name": "countryCode",
+            "moor_type": "string",
+            "nullable": false,
+            "customConstraints": "NOT NULL",
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "amazon",
+            "getter_name": "amazon",
+            "moor_type": "string",
+            "nullable": false,
+            "customConstraints": "NOT NULL",
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          }
+        ],
+        "is_virtual": false,
+        "without_rowid": false,
+        "constraints": [
+          "FOREIGN KEY(country_code)REFERENCES country(code)",
+          "UNIQUE(country_code)"
+        ],
+        "unique_keys": [
+          [
+            "country_code"
+          ]
+        ]
+      }
+    },
+    {
+      "id": 2,
+      "references": [],
+      "type": "table",
+      "data": {
+        "name": "amiibo",
+        "was_declared_in_moor": true,
+        "columns": [
+          {
+            "name": "key",
+            "getter_name": "key",
+            "moor_type": "int",
+            "nullable": false,
+            "customConstraints": "NOT NULL PRIMARY KEY",
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": [
+              "primary-key"
+            ]
+          },
+          {
+            "name": "id",
+            "getter_name": "id",
+            "moor_type": "string",
+            "nullable": true,
+            "customConstraints": "",
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "amiiboSeries",
+            "getter_name": "amiiboSeries",
+            "moor_type": "string",
+            "nullable": false,
+            "customConstraints": "NOT NULL",
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "character",
+            "getter_name": "character",
+            "moor_type": "string",
+            "nullable": false,
+            "customConstraints": "NOT NULL",
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "gameSeries",
+            "getter_name": "gameSeries",
+            "moor_type": "string",
+            "nullable": false,
+            "customConstraints": "NOT NULL",
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "name",
+            "getter_name": "name",
+            "moor_type": "string",
+            "nullable": false,
+            "customConstraints": "NOT NULL",
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "au",
+            "getter_name": "au",
+            "moor_type": "string",
+            "nullable": true,
+            "customConstraints": "",
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "eu",
+            "getter_name": "eu",
+            "moor_type": "string",
+            "nullable": true,
+            "customConstraints": "",
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "jp",
+            "getter_name": "jp",
+            "moor_type": "string",
+            "nullable": true,
+            "customConstraints": "",
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "na",
+            "getter_name": "na",
+            "moor_type": "string",
+            "nullable": true,
+            "customConstraints": "",
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "type",
+            "getter_name": "type",
+            "moor_type": "string",
+            "nullable": false,
+            "customConstraints": "NOT NULL",
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "cardNumber",
+            "getter_name": "cardNumber",
+            "moor_type": "int",
+            "nullable": true,
+            "customConstraints": "",
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          }
+        ],
+        "is_virtual": false,
+        "without_rowid": false,
+        "constraints": []
+      }
+    },
+    {
+      "id": 3,
+      "references": [
+        2
+      ],
+      "type": "table",
+      "data": {
+        "name": "amiibo_user_preferences",
+        "was_declared_in_moor": true,
+        "columns": [
+          {
+            "name": "key",
+            "getter_name": "key",
+            "moor_type": "int",
+            "nullable": false,
+            "customConstraints": "NOT NULL PRIMARY KEY AUTOINCREMENT",
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": [
+              "auto-increment"
+            ]
+          },
+          {
+            "name": "amiibo_key",
+            "getter_name": "amiiboKey",
+            "moor_type": "int",
+            "nullable": false,
+            "customConstraints": "NOT NULL",
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "boxed",
+            "getter_name": "boxed",
+            "moor_type": "int",
+            "nullable": false,
+            "customConstraints": "NOT NULL DEFAULT 0",
+            "default_dart": "const CustomExpression('0')",
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "opened",
+            "getter_name": "opened",
+            "moor_type": "int",
+            "nullable": false,
+            "customConstraints": "NOT NULL DEFAULT 0",
+            "default_dart": "const CustomExpression('0')",
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "wishlist",
+            "getter_name": "wishlist",
+            "moor_type": "bool",
+            "nullable": false,
+            "customConstraints": "NOT NULL DEFAULT 0",
+            "default_dart": "const CustomExpression('0')",
+            "default_client_dart": null,
+            "dsl_features": []
+          }
+        ],
+        "is_virtual": false,
+        "without_rowid": false,
+        "constraints": [
+          "FOREIGN KEY(amiibo_key)REFERENCES amiibo(\"key\")",
+          "UNIQUE(amiibo_key)"
+        ],
+        "unique_keys": [
+          [
+            "amiibo_key"
+          ]
+        ]
+      }
+    }
+  ],
+  "fixed_sql": [
+    {
+      "name": "country",
+      "sql": [
+        {
+          "dialect": "sqlite",
+          "sql": "CREATE TABLE IF NOT EXISTS \"country\" (\"code\" TEXT NOT NULL PRIMARY KEY, \"en\" TEXT NOT NULL, \"es\" TEXT NOT NULL, \"fr\" TEXT NOT NULL);"
+        }
+      ]
+    },
+    {
+      "name": "affiliation_link",
+      "sql": [
+        {
+          "dialect": "sqlite",
+          "sql": "CREATE TABLE IF NOT EXISTS \"affiliation_link\" (\"id\" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, \"country_code\" TEXT NOT NULL, \"amazon\" TEXT NOT NULL, FOREIGN KEY(country_code)REFERENCES country(code), UNIQUE(country_code));"
+        }
+      ]
+    },
+    {
+      "name": "amiibo",
+      "sql": [
+        {
+          "dialect": "sqlite",
+          "sql": "CREATE TABLE IF NOT EXISTS \"amiibo\" (\"key\" INTEGER NOT NULL PRIMARY KEY, \"id\" TEXT, \"amiiboSeries\" TEXT NOT NULL, \"character\" TEXT NOT NULL, \"gameSeries\" TEXT NOT NULL, \"name\" TEXT NOT NULL, \"au\" TEXT, \"eu\" TEXT, \"jp\" TEXT, \"na\" TEXT, \"type\" TEXT NOT NULL, \"cardNumber\" INTEGER);"
+        }
+      ]
+    },
+    {
+      "name": "amiibo_user_preferences",
+      "sql": [
+        {
+          "dialect": "sqlite",
+          "sql": "CREATE TABLE IF NOT EXISTS \"amiibo_user_preferences\" (\"key\" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, \"amiibo_key\" INTEGER NOT NULL, \"boxed\" INTEGER NOT NULL DEFAULT 0, \"opened\" INTEGER NOT NULL DEFAULT 0, \"wishlist\" INTEGER NOT NULL DEFAULT 0, FOREIGN KEY(amiibo_key)REFERENCES amiibo(\"key\"), UNIQUE(amiibo_key));"
+        }
+      ]
+    }
+  ]
+}

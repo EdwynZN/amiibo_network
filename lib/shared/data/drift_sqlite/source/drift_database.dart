@@ -1,5 +1,6 @@
 import 'package:amiibo_network/shared/data/drift_sqlite/source/affiliation_link_dao.dart';
 import 'package:amiibo_network/shared/data/drift_sqlite/source/amiibo_dao.dart';
+import 'package:amiibo_network/shared/data/drift_sqlite/source/drift_database.steps.dart';
 import 'package:amiibo_network/shared/utils/preferences_constants.dart';
 import 'package:drift/drift.dart';
 import 'package:drift_dev/api/migrations_native.dart';
@@ -20,10 +21,11 @@ final databaseProvider = Provider((ref) => AppDatabase());
 class AppDatabase extends _$AppDatabase {
   static const String _databaseName = "Amiibo.db";
 
-  AppDatabase() : super(_openExecuter(AppDatabase._databaseName));
+  AppDatabase([QueryExecutor? e])
+    : super(e ?? _openExecuter(AppDatabase._databaseName));
 
   @override
-  int get schemaVersion => 7;
+  int get schemaVersion => 8;
 
   @override
   MigrationStrategy get migration {
@@ -33,11 +35,9 @@ class AppDatabase extends _$AppDatabase {
       },
       beforeOpen: (details) async {
         await customStatement('PRAGMA foreign_keys = ON');
-        if (kDebugMode) {
-          // This check pulls in a fair amount of code that's not needed
-          // anywhere else, so we recommend only doing it in debug builds.
-          await validateDatabaseSchema();
-        }
+        // This check pulls in a fair amount of code that's not needed
+        // anywhere else, so we recommend only doing it in debug builds.
+        if (kDebugMode) await validateDatabaseSchema();
       },
       onUpgrade: (Migrator m, int from, int to) async {
         await customStatement('PRAGMA foreign_keys = OFF');
@@ -78,9 +78,9 @@ class AppDatabase extends _$AppDatabase {
           final SharedPreferences prefs = await SharedPreferences.getInstance();
           List<Map<String, dynamic>> table;
           await transaction(() async {
-            table = await customSelect('SELECT * FROM date;')
-                .map((p0) => p0.data)
-                .get();
+            table = await customSelect(
+              'SELECT * FROM date;',
+            ).map((p0) => p0.data).get();
             table.forEach((date) {
               if (date['id'] == '1')
                 prefs.setString(sharedDateDB, date['lastUpdated']);
@@ -142,7 +142,8 @@ class AppDatabase extends _$AppDatabase {
         if (from == 5 && to == 6) {
           await transaction(() async {
             await customStatement(
-                'ALTER TABLE amiibo_user_preferences RENAME TO _amiibo_user_preferences_old;');
+              'ALTER TABLE amiibo_user_preferences RENAME TO _amiibo_user_preferences_old;',
+            );
             await m.createAll();
             await customStatement('''INSERT OR REPLACE INTO 
                 amiibo_user_preferences(key, amiibo_key, opened, boxed, wishlist)
@@ -164,6 +165,15 @@ class AppDatabase extends _$AppDatabase {
           await m.createTable(country);
           await m.createTable(affiliationLink);
         }
+
+        return stepByStep(
+          from7To8: (m, schema) async {
+            await m.createTable(schema.amiiboImages);
+            await m.createTable(schema.amiiboBundle);
+            await m.createTable(schema.amiiboBundleUserPreferences);
+            await m.createTable(schema.amiiboBundleImages);
+          },
+        ).call(m, from, to);
       },
     );
   }
