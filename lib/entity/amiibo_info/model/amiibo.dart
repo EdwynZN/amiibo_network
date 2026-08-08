@@ -26,7 +26,7 @@ abstract class AmiiboDetails with _$AmiiboDetails {
     @JsonKey(required: true) required String character,
     @JsonKey(required: true) required String gameSeries,
     @JsonKey(required: true) required String name,
-    @JsonKey(includeIfNull: true) String? imagePath,
+    @JsonKey(includeIfNull: true) String? image,
     @JsonKey(includeIfNull: true) String? au,
     @JsonKey(includeIfNull: true) String? eu,
     @JsonKey(includeIfNull: true) String? jp,

@@ -112,8 +112,8 @@ class _Service implements Service {
   Future<List<Amiibo>> fetchByCategory({
     required CategoryAttributes categoryAttributes,
     required SearchAttributes? searchAttributes,
-    OrderBy orderBy = OrderBy.NA,
-    SortBy sortBy = SortBy.DESC,
+    OrderBy orderBy = .NA,
+    SortBy sortBy = .DESC,
     List<String> figures = const [],
     List<String> cards = const [],
     HiddenType? hiddenCategories,
@@ -126,10 +126,9 @@ class _Service implements Service {
       cards: cards,
       hiddenCategories: hiddenCategories,
     );
-    if (orderBy == OrderBy.CardNumber &&
-        (hiddenCategories == HiddenType.Cards ||
-            category == AmiiboCategory.Figures)) {
-      orderBy = OrderBy.NA;
+    if (orderBy == .CardNumber &&
+        (hiddenCategories == .Cards || category == .Figures)) {
+      orderBy = .NA;
     }
     final order = _order(orderBy, sortBy);
     String? where = expression.toString();
@@ -143,22 +142,22 @@ class _Service implements Service {
     StringBuffer orderBuffer = StringBuffer();
     final String sort = sortBy.name;
     switch (orderBy) {
-      case OrderBy.NA:
-      case OrderBy.JP:
-      case OrderBy.AU:
-      case OrderBy.EU:
-      case OrderBy.CardNumber:
+      case .NA:
+      case .JP:
+      case .AU:
+      case .EU:
+      case .CardNumber:
         orderBuffer.write('$order IS NULL, $order $sort');
         break;
-      case OrderBy.Type:
+      case .Type:
         orderBuffer.write(
           'CASE WHEN type = "Figure" THEN 1 '
           'WHEN type = "Yarn" OR type = "Band" THEN 2 ELSE 3 END, amiiboSeries, key',
         );
         break;
-      case OrderBy.Owned:
-      case OrderBy.Wishlist:
-        final bool asc = sortBy == SortBy.ASC;
+      case .Owned:
+      case .Wishlist:
+        final bool asc = sortBy == .ASC;
         final int _then = asc ? 1 : 0;
         final int _else = asc ? 0 : 1;
         orderBuffer.write(

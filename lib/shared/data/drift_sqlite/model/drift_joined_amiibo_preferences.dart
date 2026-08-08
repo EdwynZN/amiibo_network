@@ -66,6 +66,7 @@ abstract class AmiiboDriftModel with _$AmiiboDriftModel {
         na: na,
         type: type,
         cardNumber: cardNumber,
+        image: image,
       ),
     );
   }

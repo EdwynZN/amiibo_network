@@ -43,6 +43,7 @@ abstract class AmiiboLocalFile with _$AmiiboLocalFile {
         na: na,
         type: type,
         cardNumber: cardNumber,
+        image: null,
       ),
     );
   }
