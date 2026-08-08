@@ -232,7 +232,7 @@ class _CollectionDrawerState extends ConsumerState<CollectionDrawer> {
                                       child: ExpansionTile(
                                         leading: const ImageIcon(
                                           AssetImage(
-                                            'assets/collection/icon_1.webp',
+                                            NetworkIcons.amiiboImageUnavailable,
                                           ),
                                         ),
                                         title: Text(translate.figures),

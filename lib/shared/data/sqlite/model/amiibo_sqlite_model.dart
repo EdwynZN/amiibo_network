@@ -63,6 +63,7 @@ abstract class AmiiboSqlite with _$AmiiboSqlite {
         na: na,
         type: type,
         cardNumber: cardNumber,
+        image: null,
       ),
     );
   }

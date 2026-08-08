@@ -2,6 +2,7 @@ import 'package:amiibo_network/app/configuration/model/hidden_types.dart';
 import 'package:amiibo_network/shared/generated/l10n.dart';
 import 'package:amiibo_network/app/state/preferences_provider.dart';
 import 'package:amiibo_network/app/configuration/stat_ui_remote_config_provider.dart';
+import 'package:amiibo_network/shared/resources/resources.dart';
 import 'package:amiibo_network/shared/widget/feature_disable_message_card.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
@@ -171,7 +172,7 @@ class _BottomSheetSort extends StatelessWidget {
                                       label: Text(translate.figures),
                                       icon: const ImageIcon(
                                         AssetImage(
-                                          'assets/collection/icon_1.webp',
+                                          NetworkIcons.amiiboImageUnavailable,
                                         ),
                                       ),
                                     ),

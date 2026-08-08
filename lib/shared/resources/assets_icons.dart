@@ -3,6 +3,8 @@ part of 'resources.dart';
 class NetworkIcons {
   NetworkIcons._();
 
+  static const String amiiboImageUnavailable =
+      'assets/images/amiibo_image_unavailable.webp';
   static const String au = 'assets/images/au.webp';
   static const String dsPlatform = 'assets/images/ds_platform.webp';
   static const String eu = 'assets/images/eu.webp';

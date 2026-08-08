@@ -21,7 +21,5 @@ AmiiboTable dataFromDomain(d.Amiibo amiibo) {
 }
 
 AmiiboUserPreferencesCompanion preferencesFromDomain(d.Amiibo amiibo) {
-  return AmiiboUserPreferencesCompanion(
-    amiiboKey: Value(amiibo.key),
-  );
+  return AmiiboUserPreferencesCompanion(amiiboKey: Value(amiibo.key));
 }

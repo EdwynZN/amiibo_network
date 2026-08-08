@@ -7,14 +7,6 @@ part 'drift_joined_amiibo_preferences.g.dart';
 int boolToInt(bool? value) => value ?? false ? 1 : 0;
 bool intToBool(int? value) => value == 1;
 
-List<AmiiboDriftModel> entityFromMap(Map<String, dynamic> amiibo) =>
-    List<AmiiboDriftModel>.from(
-        amiibo["amiibo"].map((x) => AmiiboDriftModel.fromJson(x)));
-
-List<Amiibo> entityFromMapToDomain(Map<String, dynamic> amiibo) =>
-    List<Amiibo>.from(
-        amiibo["amiibo"].map((x) => AmiiboDriftModel.fromJson(x).toDomain()));
-
 @freezed
 abstract class AmiiboDriftModel with _$AmiiboDriftModel {
   const AmiiboDriftModel._();
@@ -22,10 +14,15 @@ abstract class AmiiboDriftModel with _$AmiiboDriftModel {
   const factory AmiiboDriftModel({
     @JsonKey(required: true, name: 'amiibo.key') required int key,
     @JsonKey(includeIfNull: true, name: 'amiibo.id') String? id,
-    @JsonKey(name: 'amiibo.amiiboSeries', required: true) required String amiiboSeries,
-    @JsonKey(name: 'amiibo.character', required: true) required String character,
-    @JsonKey(name: 'amiibo.gameSeries', required: true) required String gameSeries,
+    @JsonKey(name: 'amiibo.amiiboSeries', required: true)
+    required String amiiboSeries,
+    @JsonKey(name: 'amiibo.character', required: true)
+    required String character,
+    @JsonKey(name: 'amiibo.gameSeries', required: true)
+    required String gameSeries,
     @JsonKey(name: 'amiibo.name', required: true) required String name,
+    @JsonKey(includeIfNull: true, name: 'amiibo_images.file_path')
+    String? image,
     @JsonKey(includeIfNull: true, name: 'amiibo.au') String? au,
     @JsonKey(includeIfNull: true, name: 'amiibo.eu') String? eu,
     @JsonKey(includeIfNull: true, name: 'amiibo.jp') String? jp,
@@ -33,9 +30,15 @@ abstract class AmiiboDriftModel with _$AmiiboDriftModel {
     @JsonKey(required: true, name: 'amiibo.type') required String type,
     @JsonKey(name: 'amiibo.cardNumber') int? cardNumber,
     @Default(0) @JsonKey(name: 'amiibo_user_preferences.boxed') final int boxed,
-    @Default(0) @JsonKey(name: 'amiibo_user_preferences.opened') final int opened,
+    @Default(0)
+    @JsonKey(name: 'amiibo_user_preferences.opened')
+    final int opened,
     @Default(false)
-    @JsonKey(fromJson: intToBool, toJson: boolToInt, name: 'amiibo_user_preferences.wishlist')
+    @JsonKey(
+      fromJson: intToBool,
+      toJson: boolToInt,
+      name: 'amiibo_user_preferences.wishlist',
+    )
     bool wishlist,
   }) = _AmiiboDriftModel;
 
@@ -63,6 +66,7 @@ abstract class AmiiboDriftModel with _$AmiiboDriftModel {
         na: na,
         type: type,
         cardNumber: cardNumber,
+        image: image,
       ),
     );
   }

@@ -1,11 +1,10 @@
 import 'dart:math';
+import 'package:amiibo_network/shared/utils/amiibo_asset_util.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 
 class _SlidingGradientTransform extends GradientTransform {
-  const _SlidingGradientTransform({
-    required this.slidePercent,
-  });
+  const _SlidingGradientTransform({required this.slidePercent});
 
   final double slidePercent;
 
@@ -20,17 +19,14 @@ class ShimmerCard extends HookWidget {
   final bool isGrid;
   static final Random random = Random();
 
-  ShimmerCard({
-    Key? key,
-    required this.listenable,
-    this.isGrid = true,
-  }) : super(key: key);
+  ShimmerCard({Key? key, required this.listenable, this.isGrid = true})
+    : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final Color color = theme.colorScheme.primaryContainer;
-    final int id = useMemoized(() => random.nextInt(70));
+    final int id = useMemoized(() => random.nextInt(70) + 1);
     final Widget child;
     if (isGrid) {
       child = Column(
@@ -41,10 +37,7 @@ class ShimmerCard extends HookWidget {
             child: Center(
               child: Padding(
                 padding: const EdgeInsets.all(4.0),
-                child: Image.asset(
-                  'assets/collection/icon_${id + 1}.webp',
-                  fit: BoxFit.contain,
-                ),
+                child: Image.asset(amiiboAssetFromIndex(id), fit: .contain),
               ),
             ),
           ),
@@ -52,12 +45,10 @@ class ShimmerCard extends HookWidget {
             decoration: ShapeDecoration(
               color: Theme.of(context).primaryColorLight,
               shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.vertical(
-                  bottom: Radius.circular(8),
-                ),
+                borderRadius: BorderRadius.vertical(bottom: Radius.circular(8)),
               ),
             ),
-            alignment: Alignment.center,
+            alignment: .center,
             padding: EdgeInsets.symmetric(horizontal: 5),
             child: const Text(''),
           ),
@@ -73,21 +64,13 @@ class ShimmerCard extends HookWidget {
         animation: listenable,
         builder: (context, child) {
           return ShaderMask(
-            blendMode: BlendMode.srcIn,
+            blendMode: .srcIn,
             shaderCallback: (bounds) => LinearGradient(
-              colors: [
-                color,
-                theme.cardColor,
-                color,
-              ],
-              stops: [
-                0.1,
-                0.2,
-                0.4,
-              ],
+              colors: [color, theme.cardColor, color],
+              stops: [0.1, 0.2, 0.4],
               begin: Alignment.centerLeft,
               end: const Alignment(1.0, 0.3),
-              tileMode: TileMode.repeated,
+              tileMode: .repeated,
               transform: _SlidingGradientTransform(
                 slidePercent: listenable.value,
               ),

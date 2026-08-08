@@ -33,7 +33,7 @@ class SingleStat extends HookConsumerWidget {
             style: const TextStyle(fontWeight: FontWeight.w600),
           ),
           avatar: const ImageIcon(
-            AssetImage('assets/collection/icon_1.webp'),
+            AssetImage(NetworkIcons.amiiboImageUnavailable),
             size: 16.0,
           ),
           padding: const EdgeInsets.symmetric(horizontal: 6.0, vertical: 4.0),
