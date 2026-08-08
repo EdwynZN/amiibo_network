@@ -1,0 +1,4780 @@
+{
+  "bundles": [],
+  "amiibos": [
+    {
+      "amiibo_key": 1,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_1.webp"
+    },
+    {
+      "amiibo_key": 2,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_2.webp"
+    },
+    {
+      "amiibo_key": 3,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_3.webp"
+    },
+    {
+      "amiibo_key": 4,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_4.webp"
+    },
+    {
+      "amiibo_key": 5,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_5.webp"
+    },
+    {
+      "amiibo_key": 6,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_6.webp"
+    },
+    {
+      "amiibo_key": 7,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_7.webp"
+    },
+    {
+      "amiibo_key": 8,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_8.webp"
+    },
+    {
+      "amiibo_key": 9,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_9.webp"
+    },
+    {
+      "amiibo_key": 10,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_10.webp"
+    },
+    {
+      "amiibo_key": 11,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_11.webp"
+    },
+    {
+      "amiibo_key": 12,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_12.webp"
+    },
+    {
+      "amiibo_key": 13,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_13.webp"
+    },
+    {
+      "amiibo_key": 14,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_14.webp"
+    },
+    {
+      "amiibo_key": 15,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_15.webp"
+    },
+    {
+      "amiibo_key": 16,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_16.webp"
+    },
+    {
+      "amiibo_key": 17,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_17.webp"
+    },
+    {
+      "amiibo_key": 18,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_18.webp"
+    },
+    {
+      "amiibo_key": 19,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_19.webp"
+    },
+    {
+      "amiibo_key": 20,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_20.webp"
+    },
+    {
+      "amiibo_key": 21,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_21.webp"
+    },
+    {
+      "amiibo_key": 22,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_22.webp"
+    },
+    {
+      "amiibo_key": 23,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_23.webp"
+    },
+    {
+      "amiibo_key": 24,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_24.webp"
+    },
+    {
+      "amiibo_key": 25,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_25.webp"
+    },
+    {
+      "amiibo_key": 26,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_26.webp"
+    },
+    {
+      "amiibo_key": 27,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_27.webp"
+    },
+    {
+      "amiibo_key": 28,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_28.webp"
+    },
+    {
+      "amiibo_key": 29,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_29.webp"
+    },
+    {
+      "amiibo_key": 30,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_30.webp"
+    },
+    {
+      "amiibo_key": 31,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_31.webp"
+    },
+    {
+      "amiibo_key": 32,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_32.webp"
+    },
+    {
+      "amiibo_key": 33,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_33.webp"
+    },
+    {
+      "amiibo_key": 34,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_34.webp"
+    },
+    {
+      "amiibo_key": 35,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_35.webp"
+    },
+    {
+      "amiibo_key": 36,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_36.webp"
+    },
+    {
+      "amiibo_key": 37,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_37.webp"
+    },
+    {
+      "amiibo_key": 38,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_38.webp"
+    },
+    {
+      "amiibo_key": 39,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_39.webp"
+    },
+    {
+      "amiibo_key": 40,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_40.webp"
+    },
+    {
+      "amiibo_key": 41,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_41.webp"
+    },
+    {
+      "amiibo_key": 42,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_42.webp"
+    },
+    {
+      "amiibo_key": 43,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_43.webp"
+    },
+    {
+      "amiibo_key": 44,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_44.webp"
+    },
+    {
+      "amiibo_key": 45,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_45.webp"
+    },
+    {
+      "amiibo_key": 46,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_46.webp"
+    },
+    {
+      "amiibo_key": 47,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_47.webp"
+    },
+    {
+      "amiibo_key": 48,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_48.webp"
+    },
+    {
+      "amiibo_key": 49,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_49.webp"
+    },
+    {
+      "amiibo_key": 50,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_50.webp"
+    },
+    {
+      "amiibo_key": 51,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_51.webp"
+    },
+    {
+      "amiibo_key": 52,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_52.webp"
+    },
+    {
+      "amiibo_key": 53,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_53.webp"
+    },
+    {
+      "amiibo_key": 54,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_54.webp"
+    },
+    {
+      "amiibo_key": 55,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_55.webp"
+    },
+    {
+      "amiibo_key": 56,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_56.webp"
+    },
+    {
+      "amiibo_key": 57,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_57.webp"
+    },
+    {
+      "amiibo_key": 58,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_58.webp"
+    },
+    {
+      "amiibo_key": 59,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_59.webp"
+    },
+    {
+      "amiibo_key": 60,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_60.webp"
+    },
+    {
+      "amiibo_key": 61,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_61.webp"
+    },
+    {
+      "amiibo_key": 62,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_62.webp"
+    },
+    {
+      "amiibo_key": 63,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_63.webp"
+    },
+    {
+      "amiibo_key": 64,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_64.webp"
+    },
+    {
+      "amiibo_key": 65,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_65.webp"
+    },
+    {
+      "amiibo_key": 66,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_66.webp"
+    },
+    {
+      "amiibo_key": 67,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_67.webp"
+    },
+    {
+      "amiibo_key": 68,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_68.webp"
+    },
+    {
+      "amiibo_key": 69,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_69.webp"
+    },
+    {
+      "amiibo_key": 70,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_70.webp"
+    },
+    {
+      "amiibo_key": 71,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_71.webp"
+    },
+    {
+      "amiibo_key": 72,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_72.webp"
+    },
+    {
+      "amiibo_key": 73,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_73.webp"
+    },
+    {
+      "amiibo_key": 74,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_74.webp"
+    },
+    {
+      "amiibo_key": 75,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_75.webp"
+    },
+    {
+      "amiibo_key": 76,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_76.webp"
+    },
+    {
+      "amiibo_key": 77,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_77.webp"
+    },
+    {
+      "amiibo_key": 78,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_78.webp"
+    },
+    {
+      "amiibo_key": 79,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_79.webp"
+    },
+    {
+      "amiibo_key": 80,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_80.webp"
+    },
+    {
+      "amiibo_key": 81,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_81.webp"
+    },
+    {
+      "amiibo_key": 82,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_82.webp"
+    },
+    {
+      "amiibo_key": 83,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_83.webp"
+    },
+    {
+      "amiibo_key": 84,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_84.webp"
+    },
+    {
+      "amiibo_key": 85,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_85.webp"
+    },
+    {
+      "amiibo_key": 86,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_86.webp"
+    },
+    {
+      "amiibo_key": 87,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_87.webp"
+    },
+    {
+      "amiibo_key": 88,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_88.webp"
+    },
+    {
+      "amiibo_key": 89,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_89.webp"
+    },
+    {
+      "amiibo_key": 90,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_90.webp"
+    },
+    {
+      "amiibo_key": 91,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_91.webp"
+    },
+    {
+      "amiibo_key": 92,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_92.webp"
+    },
+    {
+      "amiibo_key": 93,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_93.webp"
+    },
+    {
+      "amiibo_key": 94,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_94.webp"
+    },
+    {
+      "amiibo_key": 95,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_95.webp"
+    },
+    {
+      "amiibo_key": 96,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_96.webp"
+    },
+    {
+      "amiibo_key": 97,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_97.webp"
+    },
+    {
+      "amiibo_key": 98,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_98.webp"
+    },
+    {
+      "amiibo_key": 99,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_99.webp"
+    },
+    {
+      "amiibo_key": 100,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_100.webp"
+    },
+    {
+      "amiibo_key": 101,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_101.webp"
+    },
+    {
+      "amiibo_key": 102,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_102.webp"
+    },
+    {
+      "amiibo_key": 103,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_103.webp"
+    },
+    {
+      "amiibo_key": 104,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_104.webp"
+    },
+    {
+      "amiibo_key": 105,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_105.webp"
+    },
+    {
+      "amiibo_key": 106,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_106.webp"
+    },
+    {
+      "amiibo_key": 107,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_107.webp"
+    },
+    {
+      "amiibo_key": 108,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_108.webp"
+    },
+    {
+      "amiibo_key": 109,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_109.webp"
+    },
+    {
+      "amiibo_key": 110,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_110.webp"
+    },
+    {
+      "amiibo_key": 111,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_111.webp"
+    },
+    {
+      "amiibo_key": 112,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_112.webp"
+    },
+    {
+      "amiibo_key": 113,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_113.webp"
+    },
+    {
+      "amiibo_key": 114,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_114.webp"
+    },
+    {
+      "amiibo_key": 115,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_115.webp"
+    },
+    {
+      "amiibo_key": 116,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_116.webp"
+    },
+    {
+      "amiibo_key": 117,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_117.webp"
+    },
+    {
+      "amiibo_key": 118,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_118.webp"
+    },
+    {
+      "amiibo_key": 119,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_119.webp"
+    },
+    {
+      "amiibo_key": 120,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_120.webp"
+    },
+    {
+      "amiibo_key": 121,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_121.webp"
+    },
+    {
+      "amiibo_key": 122,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_122.webp"
+    },
+    {
+      "amiibo_key": 123,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_123.webp"
+    },
+    {
+      "amiibo_key": 124,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_124.webp"
+    },
+    {
+      "amiibo_key": 125,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_125.webp"
+    },
+    {
+      "amiibo_key": 126,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_126.webp"
+    },
+    {
+      "amiibo_key": 127,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_127.webp"
+    },
+    {
+      "amiibo_key": 128,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_128.webp"
+    },
+    {
+      "amiibo_key": 129,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_129.webp"
+    },
+    {
+      "amiibo_key": 130,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_130.webp"
+    },
+    {
+      "amiibo_key": 131,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_131.webp"
+    },
+    {
+      "amiibo_key": 132,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_132.webp"
+    },
+    {
+      "amiibo_key": 133,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_133.webp"
+    },
+    {
+      "amiibo_key": 134,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_134.webp"
+    },
+    {
+      "amiibo_key": 135,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_135.webp"
+    },
+    {
+      "amiibo_key": 136,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_136.webp"
+    },
+    {
+      "amiibo_key": 137,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_137.webp"
+    },
+    {
+      "amiibo_key": 138,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_138.webp"
+    },
+    {
+      "amiibo_key": 139,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_139.webp"
+    },
+    {
+      "amiibo_key": 140,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_140.webp"
+    },
+    {
+      "amiibo_key": 141,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_141.webp"
+    },
+    {
+      "amiibo_key": 142,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_142.webp"
+    },
+    {
+      "amiibo_key": 143,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_143.webp"
+    },
+    {
+      "amiibo_key": 144,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_144.webp"
+    },
+    {
+      "amiibo_key": 145,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_145.webp"
+    },
+    {
+      "amiibo_key": 146,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_146.webp"
+    },
+    {
+      "amiibo_key": 147,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_147.webp"
+    },
+    {
+      "amiibo_key": 148,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_148.webp"
+    },
+    {
+      "amiibo_key": 149,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_149.webp"
+    },
+    {
+      "amiibo_key": 150,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_150.webp"
+    },
+    {
+      "amiibo_key": 151,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_151.webp"
+    },
+    {
+      "amiibo_key": 152,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_152.webp"
+    },
+    {
+      "amiibo_key": 153,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_153.webp"
+    },
+    {
+      "amiibo_key": 154,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_154.webp"
+    },
+    {
+      "amiibo_key": 155,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_155.webp"
+    },
+    {
+      "amiibo_key": 156,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_156.webp"
+    },
+    {
+      "amiibo_key": 157,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_157.webp"
+    },
+    {
+      "amiibo_key": 158,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_158.webp"
+    },
+    {
+      "amiibo_key": 159,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_159.webp"
+    },
+    {
+      "amiibo_key": 160,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_160.webp"
+    },
+    {
+      "amiibo_key": 161,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_161.webp"
+    },
+    {
+      "amiibo_key": 162,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_162.webp"
+    },
+    {
+      "amiibo_key": 163,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_163.webp"
+    },
+    {
+      "amiibo_key": 164,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_164.webp"
+    },
+    {
+      "amiibo_key": 165,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_165.webp"
+    },
+    {
+      "amiibo_key": 166,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_166.webp"
+    },
+    {
+      "amiibo_key": 167,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_167.webp"
+    },
+    {
+      "amiibo_key": 168,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_168.webp"
+    },
+    {
+      "amiibo_key": 169,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_169.webp"
+    },
+    {
+      "amiibo_key": 170,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_170.webp"
+    },
+    {
+      "amiibo_key": 171,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_171.webp"
+    },
+    {
+      "amiibo_key": 172,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_172.webp"
+    },
+    {
+      "amiibo_key": 173,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_173.webp"
+    },
+    {
+      "amiibo_key": 174,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_174.webp"
+    },
+    {
+      "amiibo_key": 175,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_175.webp"
+    },
+    {
+      "amiibo_key": 176,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_176.webp"
+    },
+    {
+      "amiibo_key": 177,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_177.webp"
+    },
+    {
+      "amiibo_key": 178,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_178.webp"
+    },
+    {
+      "amiibo_key": 179,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_179.webp"
+    },
+    {
+      "amiibo_key": 180,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_180.webp"
+    },
+    {
+      "amiibo_key": 181,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_181.webp"
+    },
+    {
+      "amiibo_key": 182,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_182.webp"
+    },
+    {
+      "amiibo_key": 183,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_183.webp"
+    },
+    {
+      "amiibo_key": 184,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_184.webp"
+    },
+    {
+      "amiibo_key": 185,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_185.webp"
+    },
+    {
+      "amiibo_key": 186,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_186.webp"
+    },
+    {
+      "amiibo_key": 187,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_187.webp"
+    },
+    {
+      "amiibo_key": 188,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_188.webp"
+    },
+    {
+      "amiibo_key": 189,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_189.webp"
+    },
+    {
+      "amiibo_key": 190,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_190.webp"
+    },
+    {
+      "amiibo_key": 191,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_191.webp"
+    },
+    {
+      "amiibo_key": 192,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_192.webp"
+    },
+    {
+      "amiibo_key": 193,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_193.webp"
+    },
+    {
+      "amiibo_key": 194,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_194.webp"
+    },
+    {
+      "amiibo_key": 195,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_195.webp"
+    },
+    {
+      "amiibo_key": 196,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_196.webp"
+    },
+    {
+      "amiibo_key": 197,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_197.webp"
+    },
+    {
+      "amiibo_key": 198,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_198.webp"
+    },
+    {
+      "amiibo_key": 199,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_199.webp"
+    },
+    {
+      "amiibo_key": 200,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_200.webp"
+    },
+    {
+      "amiibo_key": 201,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_201.webp"
+    },
+    {
+      "amiibo_key": 202,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_202.webp"
+    },
+    {
+      "amiibo_key": 203,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_203.webp"
+    },
+    {
+      "amiibo_key": 204,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_204.webp"
+    },
+    {
+      "amiibo_key": 205,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_205.webp"
+    },
+    {
+      "amiibo_key": 206,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_206.webp"
+    },
+    {
+      "amiibo_key": 207,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_207.webp"
+    },
+    {
+      "amiibo_key": 208,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_208.webp"
+    },
+    {
+      "amiibo_key": 209,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_209.webp"
+    },
+    {
+      "amiibo_key": 210,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_210.webp"
+    },
+    {
+      "amiibo_key": 211,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_211.webp"
+    },
+    {
+      "amiibo_key": 212,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_212.webp"
+    },
+    {
+      "amiibo_key": 213,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_213.webp"
+    },
+    {
+      "amiibo_key": 214,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_214.webp"
+    },
+    {
+      "amiibo_key": 215,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_215.webp"
+    },
+    {
+      "amiibo_key": 216,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_216.webp"
+    },
+    {
+      "amiibo_key": 217,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_217.webp"
+    },
+    {
+      "amiibo_key": 218,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_218.webp"
+    },
+    {
+      "amiibo_key": 219,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_219.webp"
+    },
+    {
+      "amiibo_key": 220,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_220.webp"
+    },
+    {
+      "amiibo_key": 221,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_221.webp"
+    },
+    {
+      "amiibo_key": 222,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_222.webp"
+    },
+    {
+      "amiibo_key": 223,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_223.webp"
+    },
+    {
+      "amiibo_key": 224,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_224.webp"
+    },
+    {
+      "amiibo_key": 225,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_225.webp"
+    },
+    {
+      "amiibo_key": 226,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_226.webp"
+    },
+    {
+      "amiibo_key": 227,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_227.webp"
+    },
+    {
+      "amiibo_key": 228,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_228.webp"
+    },
+    {
+      "amiibo_key": 229,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_229.webp"
+    },
+    {
+      "amiibo_key": 230,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_230.webp"
+    },
+    {
+      "amiibo_key": 231,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_231.webp"
+    },
+    {
+      "amiibo_key": 232,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_232.webp"
+    },
+    {
+      "amiibo_key": 233,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_233.webp"
+    },
+    {
+      "amiibo_key": 234,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_234.webp"
+    },
+    {
+      "amiibo_key": 235,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_235.webp"
+    },
+    {
+      "amiibo_key": 236,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_236.webp"
+    },
+    {
+      "amiibo_key": 237,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_237.webp"
+    },
+    {
+      "amiibo_key": 238,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_238.webp"
+    },
+    {
+      "amiibo_key": 239,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_239.webp"
+    },
+    {
+      "amiibo_key": 240,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_240.webp"
+    },
+    {
+      "amiibo_key": 241,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_241.webp"
+    },
+    {
+      "amiibo_key": 242,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_242.webp"
+    },
+    {
+      "amiibo_key": 243,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_243.webp"
+    },
+    {
+      "amiibo_key": 244,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_244.webp"
+    },
+    {
+      "amiibo_key": 245,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_245.webp"
+    },
+    {
+      "amiibo_key": 246,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_246.webp"
+    },
+    {
+      "amiibo_key": 247,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_247.webp"
+    },
+    {
+      "amiibo_key": 248,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_248.webp"
+    },
+    {
+      "amiibo_key": 249,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_249.webp"
+    },
+    {
+      "amiibo_key": 250,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_250.webp"
+    },
+    {
+      "amiibo_key": 251,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_251.webp"
+    },
+    {
+      "amiibo_key": 252,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_252.webp"
+    },
+    {
+      "amiibo_key": 253,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_253.webp"
+    },
+    {
+      "amiibo_key": 254,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_254.webp"
+    },
+    {
+      "amiibo_key": 255,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_255.webp"
+    },
+    {
+      "amiibo_key": 256,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_256.webp"
+    },
+    {
+      "amiibo_key": 257,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_257.webp"
+    },
+    {
+      "amiibo_key": 258,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_258.webp"
+    },
+    {
+      "amiibo_key": 259,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_259.webp"
+    },
+    {
+      "amiibo_key": 260,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_260.webp"
+    },
+    {
+      "amiibo_key": 261,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_261.webp"
+    },
+    {
+      "amiibo_key": 262,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_262.webp"
+    },
+    {
+      "amiibo_key": 263,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_263.webp"
+    },
+    {
+      "amiibo_key": 264,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_264.webp"
+    },
+    {
+      "amiibo_key": 265,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_265.webp"
+    },
+    {
+      "amiibo_key": 266,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_266.webp"
+    },
+    {
+      "amiibo_key": 267,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_267.webp"
+    },
+    {
+      "amiibo_key": 268,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_268.webp"
+    },
+    {
+      "amiibo_key": 269,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_269.webp"
+    },
+    {
+      "amiibo_key": 270,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_270.webp"
+    },
+    {
+      "amiibo_key": 271,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_271.webp"
+    },
+    {
+      "amiibo_key": 272,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_272.webp"
+    },
+    {
+      "amiibo_key": 273,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_273.webp"
+    },
+    {
+      "amiibo_key": 274,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_274.webp"
+    },
+    {
+      "amiibo_key": 275,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_275.webp"
+    },
+    {
+      "amiibo_key": 276,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_276.webp"
+    },
+    {
+      "amiibo_key": 277,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_277.webp"
+    },
+    {
+      "amiibo_key": 278,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_278.webp"
+    },
+    {
+      "amiibo_key": 279,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_279.webp"
+    },
+    {
+      "amiibo_key": 280,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_280.webp"
+    },
+    {
+      "amiibo_key": 281,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_281.webp"
+    },
+    {
+      "amiibo_key": 282,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_282.webp"
+    },
+    {
+      "amiibo_key": 283,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_283.webp"
+    },
+    {
+      "amiibo_key": 284,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_284.webp"
+    },
+    {
+      "amiibo_key": 285,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_285.webp"
+    },
+    {
+      "amiibo_key": 286,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_286.webp"
+    },
+    {
+      "amiibo_key": 287,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_287.webp"
+    },
+    {
+      "amiibo_key": 288,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_288.webp"
+    },
+    {
+      "amiibo_key": 289,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_289.webp"
+    },
+    {
+      "amiibo_key": 290,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_290.webp"
+    },
+    {
+      "amiibo_key": 291,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_291.webp"
+    },
+    {
+      "amiibo_key": 292,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_292.webp"
+    },
+    {
+      "amiibo_key": 293,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_293.webp"
+    },
+    {
+      "amiibo_key": 294,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_294.webp"
+    },
+    {
+      "amiibo_key": 295,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_295.webp"
+    },
+    {
+      "amiibo_key": 296,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_296.webp"
+    },
+    {
+      "amiibo_key": 297,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_297.webp"
+    },
+    {
+      "amiibo_key": 298,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_298.webp"
+    },
+    {
+      "amiibo_key": 299,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_299.webp"
+    },
+    {
+      "amiibo_key": 300,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_300.webp"
+    },
+    {
+      "amiibo_key": 301,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_301.webp"
+    },
+    {
+      "amiibo_key": 302,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_302.webp"
+    },
+    {
+      "amiibo_key": 303,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_303.webp"
+    },
+    {
+      "amiibo_key": 304,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_304.webp"
+    },
+    {
+      "amiibo_key": 305,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_305.webp"
+    },
+    {
+      "amiibo_key": 306,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_306.webp"
+    },
+    {
+      "amiibo_key": 307,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_307.webp"
+    },
+    {
+      "amiibo_key": 308,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_308.webp"
+    },
+    {
+      "amiibo_key": 309,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_309.webp"
+    },
+    {
+      "amiibo_key": 310,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_310.webp"
+    },
+    {
+      "amiibo_key": 311,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_311.webp"
+    },
+    {
+      "amiibo_key": 312,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_312.webp"
+    },
+    {
+      "amiibo_key": 313,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_313.webp"
+    },
+    {
+      "amiibo_key": 314,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_314.webp"
+    },
+    {
+      "amiibo_key": 315,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_315.webp"
+    },
+    {
+      "amiibo_key": 316,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_316.webp"
+    },
+    {
+      "amiibo_key": 317,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_317.webp"
+    },
+    {
+      "amiibo_key": 318,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_318.webp"
+    },
+    {
+      "amiibo_key": 319,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_319.webp"
+    },
+    {
+      "amiibo_key": 320,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_320.webp"
+    },
+    {
+      "amiibo_key": 321,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_321.webp"
+    },
+    {
+      "amiibo_key": 322,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_322.webp"
+    },
+    {
+      "amiibo_key": 323,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_323.webp"
+    },
+    {
+      "amiibo_key": 324,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_324.webp"
+    },
+    {
+      "amiibo_key": 325,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_325.webp"
+    },
+    {
+      "amiibo_key": 326,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_326.webp"
+    },
+    {
+      "amiibo_key": 327,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_327.webp"
+    },
+    {
+      "amiibo_key": 328,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_328.webp"
+    },
+    {
+      "amiibo_key": 329,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_329.webp"
+    },
+    {
+      "amiibo_key": 330,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_330.webp"
+    },
+    {
+      "amiibo_key": 331,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_331.webp"
+    },
+    {
+      "amiibo_key": 332,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_332.webp"
+    },
+    {
+      "amiibo_key": 333,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_333.webp"
+    },
+    {
+      "amiibo_key": 334,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_334.webp"
+    },
+    {
+      "amiibo_key": 335,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_335.webp"
+    },
+    {
+      "amiibo_key": 336,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_336.webp"
+    },
+    {
+      "amiibo_key": 337,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_337.webp"
+    },
+    {
+      "amiibo_key": 338,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_338.webp"
+    },
+    {
+      "amiibo_key": 339,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_339.webp"
+    },
+    {
+      "amiibo_key": 340,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_340.webp"
+    },
+    {
+      "amiibo_key": 341,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_341.webp"
+    },
+    {
+      "amiibo_key": 342,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_342.webp"
+    },
+    {
+      "amiibo_key": 343,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_343.webp"
+    },
+    {
+      "amiibo_key": 344,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_344.webp"
+    },
+    {
+      "amiibo_key": 345,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_345.webp"
+    },
+    {
+      "amiibo_key": 346,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_346.webp"
+    },
+    {
+      "amiibo_key": 347,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_347.webp"
+    },
+    {
+      "amiibo_key": 348,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_348.webp"
+    },
+    {
+      "amiibo_key": 349,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_349.webp"
+    },
+    {
+      "amiibo_key": 350,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_350.webp"
+    },
+    {
+      "amiibo_key": 351,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_351.webp"
+    },
+    {
+      "amiibo_key": 352,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_352.webp"
+    },
+    {
+      "amiibo_key": 353,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_353.webp"
+    },
+    {
+      "amiibo_key": 354,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_354.webp"
+    },
+    {
+      "amiibo_key": 355,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_355.webp"
+    },
+    {
+      "amiibo_key": 356,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_356.webp"
+    },
+    {
+      "amiibo_key": 357,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_357.webp"
+    },
+    {
+      "amiibo_key": 358,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_358.webp"
+    },
+    {
+      "amiibo_key": 359,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_359.webp"
+    },
+    {
+      "amiibo_key": 360,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_360.webp"
+    },
+    {
+      "amiibo_key": 361,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_361.webp"
+    },
+    {
+      "amiibo_key": 362,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_362.webp"
+    },
+    {
+      "amiibo_key": 363,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_363.webp"
+    },
+    {
+      "amiibo_key": 364,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_364.webp"
+    },
+    {
+      "amiibo_key": 365,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_365.webp"
+    },
+    {
+      "amiibo_key": 366,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_366.webp"
+    },
+    {
+      "amiibo_key": 367,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_367.webp"
+    },
+    {
+      "amiibo_key": 368,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_368.webp"
+    },
+    {
+      "amiibo_key": 369,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_369.webp"
+    },
+    {
+      "amiibo_key": 370,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_370.webp"
+    },
+    {
+      "amiibo_key": 371,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_371.webp"
+    },
+    {
+      "amiibo_key": 372,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_372.webp"
+    },
+    {
+      "amiibo_key": 373,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_373.webp"
+    },
+    {
+      "amiibo_key": 374,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_374.webp"
+    },
+    {
+      "amiibo_key": 375,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_375.webp"
+    },
+    {
+      "amiibo_key": 376,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_376.webp"
+    },
+    {
+      "amiibo_key": 377,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_377.webp"
+    },
+    {
+      "amiibo_key": 378,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_378.webp"
+    },
+    {
+      "amiibo_key": 379,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_379.webp"
+    },
+    {
+      "amiibo_key": 380,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_380.webp"
+    },
+    {
+      "amiibo_key": 381,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_381.webp"
+    },
+    {
+      "amiibo_key": 382,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_382.webp"
+    },
+    {
+      "amiibo_key": 383,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_383.webp"
+    },
+    {
+      "amiibo_key": 384,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_384.webp"
+    },
+    {
+      "amiibo_key": 385,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_385.webp"
+    },
+    {
+      "amiibo_key": 386,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_386.webp"
+    },
+    {
+      "amiibo_key": 387,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_387.webp"
+    },
+    {
+      "amiibo_key": 388,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_388.webp"
+    },
+    {
+      "amiibo_key": 389,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_389.webp"
+    },
+    {
+      "amiibo_key": 390,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_390.webp"
+    },
+    {
+      "amiibo_key": 391,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_391.webp"
+    },
+    {
+      "amiibo_key": 392,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_392.webp"
+    },
+    {
+      "amiibo_key": 393,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_393.webp"
+    },
+    {
+      "amiibo_key": 394,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_394.webp"
+    },
+    {
+      "amiibo_key": 395,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_395.webp"
+    },
+    {
+      "amiibo_key": 396,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_396.webp"
+    },
+    {
+      "amiibo_key": 397,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_397.webp"
+    },
+    {
+      "amiibo_key": 398,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_398.webp"
+    },
+    {
+      "amiibo_key": 399,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_399.webp"
+    },
+    {
+      "amiibo_key": 400,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_400.webp"
+    },
+    {
+      "amiibo_key": 401,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_401.webp"
+    },
+    {
+      "amiibo_key": 402,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_402.webp"
+    },
+    {
+      "amiibo_key": 403,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_403.webp"
+    },
+    {
+      "amiibo_key": 404,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_404.webp"
+    },
+    {
+      "amiibo_key": 405,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_405.webp"
+    },
+    {
+      "amiibo_key": 406,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_406.webp"
+    },
+    {
+      "amiibo_key": 407,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_407.webp"
+    },
+    {
+      "amiibo_key": 408,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_408.webp"
+    },
+    {
+      "amiibo_key": 409,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_409.webp"
+    },
+    {
+      "amiibo_key": 410,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_410.webp"
+    },
+    {
+      "amiibo_key": 411,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_411.webp"
+    },
+    {
+      "amiibo_key": 412,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_412.webp"
+    },
+    {
+      "amiibo_key": 413,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_413.webp"
+    },
+    {
+      "amiibo_key": 414,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_414.webp"
+    },
+    {
+      "amiibo_key": 415,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_415.webp"
+    },
+    {
+      "amiibo_key": 416,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_416.webp"
+    },
+    {
+      "amiibo_key": 417,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_417.webp"
+    },
+    {
+      "amiibo_key": 418,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_418.webp"
+    },
+    {
+      "amiibo_key": 419,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_419.webp"
+    },
+    {
+      "amiibo_key": 420,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_420.webp"
+    },
+    {
+      "amiibo_key": 421,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_421.webp"
+    },
+    {
+      "amiibo_key": 422,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_422.webp"
+    },
+    {
+      "amiibo_key": 423,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_423.webp"
+    },
+    {
+      "amiibo_key": 424,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_424.webp"
+    },
+    {
+      "amiibo_key": 425,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_425.webp"
+    },
+    {
+      "amiibo_key": 426,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_426.webp"
+    },
+    {
+      "amiibo_key": 427,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_427.webp"
+    },
+    {
+      "amiibo_key": 428,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_428.webp"
+    },
+    {
+      "amiibo_key": 429,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_429.webp"
+    },
+    {
+      "amiibo_key": 430,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_430.webp"
+    },
+    {
+      "amiibo_key": 431,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_431.webp"
+    },
+    {
+      "amiibo_key": 432,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_432.webp"
+    },
+    {
+      "amiibo_key": 433,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_433.webp"
+    },
+    {
+      "amiibo_key": 434,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_434.webp"
+    },
+    {
+      "amiibo_key": 435,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_435.webp"
+    },
+    {
+      "amiibo_key": 436,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_436.webp"
+    },
+    {
+      "amiibo_key": 437,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_437.webp"
+    },
+    {
+      "amiibo_key": 438,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_438.webp"
+    },
+    {
+      "amiibo_key": 439,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_439.webp"
+    },
+    {
+      "amiibo_key": 440,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_440.webp"
+    },
+    {
+      "amiibo_key": 441,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_441.webp"
+    },
+    {
+      "amiibo_key": 442,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_442.webp"
+    },
+    {
+      "amiibo_key": 443,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_443.webp"
+    },
+    {
+      "amiibo_key": 444,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_444.webp"
+    },
+    {
+      "amiibo_key": 445,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_445.webp"
+    },
+    {
+      "amiibo_key": 446,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_446.webp"
+    },
+    {
+      "amiibo_key": 447,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_447.webp"
+    },
+    {
+      "amiibo_key": 448,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_448.webp"
+    },
+    {
+      "amiibo_key": 449,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_449.webp"
+    },
+    {
+      "amiibo_key": 450,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_450.webp"
+    },
+    {
+      "amiibo_key": 451,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_451.webp"
+    },
+    {
+      "amiibo_key": 452,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_452.webp"
+    },
+    {
+      "amiibo_key": 453,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_453.webp"
+    },
+    {
+      "amiibo_key": 454,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_454.webp"
+    },
+    {
+      "amiibo_key": 455,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_455.webp"
+    },
+    {
+      "amiibo_key": 456,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_456.webp"
+    },
+    {
+      "amiibo_key": 457,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_457.webp"
+    },
+    {
+      "amiibo_key": 458,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_458.webp"
+    },
+    {
+      "amiibo_key": 459,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_459.webp"
+    },
+    {
+      "amiibo_key": 460,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_460.webp"
+    },
+    {
+      "amiibo_key": 461,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_461.webp"
+    },
+    {
+      "amiibo_key": 462,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_462.webp"
+    },
+    {
+      "amiibo_key": 463,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_463.webp"
+    },
+    {
+      "amiibo_key": 464,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_464.webp"
+    },
+    {
+      "amiibo_key": 465,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_465.webp"
+    },
+    {
+      "amiibo_key": 466,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_466.webp"
+    },
+    {
+      "amiibo_key": 467,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_467.webp"
+    },
+    {
+      "amiibo_key": 468,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_468.webp"
+    },
+    {
+      "amiibo_key": 469,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_469.webp"
+    },
+    {
+      "amiibo_key": 470,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_470.webp"
+    },
+    {
+      "amiibo_key": 471,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_471.webp"
+    },
+    {
+      "amiibo_key": 472,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_472.webp"
+    },
+    {
+      "amiibo_key": 473,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_473.webp"
+    },
+    {
+      "amiibo_key": 474,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_474.webp"
+    },
+    {
+      "amiibo_key": 475,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_475.webp"
+    },
+    {
+      "amiibo_key": 476,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_476.webp"
+    },
+    {
+      "amiibo_key": 477,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_477.webp"
+    },
+    {
+      "amiibo_key": 478,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_478.webp"
+    },
+    {
+      "amiibo_key": 479,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_479.webp"
+    },
+    {
+      "amiibo_key": 480,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_480.webp"
+    },
+    {
+      "amiibo_key": 481,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_481.webp"
+    },
+    {
+      "amiibo_key": 482,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_482.webp"
+    },
+    {
+      "amiibo_key": 483,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_483.webp"
+    },
+    {
+      "amiibo_key": 484,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_484.webp"
+    },
+    {
+      "amiibo_key": 485,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_485.webp"
+    },
+    {
+      "amiibo_key": 486,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_486.webp"
+    },
+    {
+      "amiibo_key": 487,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_487.webp"
+    },
+    {
+      "amiibo_key": 488,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_488.webp"
+    },
+    {
+      "amiibo_key": 489,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_489.webp"
+    },
+    {
+      "amiibo_key": 490,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_490.webp"
+    },
+    {
+      "amiibo_key": 491,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_491.webp"
+    },
+    {
+      "amiibo_key": 492,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_492.webp"
+    },
+    {
+      "amiibo_key": 493,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_493.webp"
+    },
+    {
+      "amiibo_key": 494,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_494.webp"
+    },
+    {
+      "amiibo_key": 495,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_495.webp"
+    },
+    {
+      "amiibo_key": 496,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_496.webp"
+    },
+    {
+      "amiibo_key": 497,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_497.webp"
+    },
+    {
+      "amiibo_key": 498,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_498.webp"
+    },
+    {
+      "amiibo_key": 499,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_499.webp"
+    },
+    {
+      "amiibo_key": 500,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_500.webp"
+    },
+    {
+      "amiibo_key": 501,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_501.webp"
+    },
+    {
+      "amiibo_key": 502,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_502.webp"
+    },
+    {
+      "amiibo_key": 503,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_503.webp"
+    },
+    {
+      "amiibo_key": 504,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_504.webp"
+    },
+    {
+      "amiibo_key": 505,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_505.webp"
+    },
+    {
+      "amiibo_key": 506,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_506.webp"
+    },
+    {
+      "amiibo_key": 507,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_507.webp"
+    },
+    {
+      "amiibo_key": 508,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_508.webp"
+    },
+    {
+      "amiibo_key": 509,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_509.webp"
+    },
+    {
+      "amiibo_key": 510,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_510.webp"
+    },
+    {
+      "amiibo_key": 511,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_511.webp"
+    },
+    {
+      "amiibo_key": 512,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_512.webp"
+    },
+    {
+      "amiibo_key": 513,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_513.webp"
+    },
+    {
+      "amiibo_key": 514,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_514.webp"
+    },
+    {
+      "amiibo_key": 515,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_515.webp"
+    },
+    {
+      "amiibo_key": 516,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_516.webp"
+    },
+    {
+      "amiibo_key": 517,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_517.webp"
+    },
+    {
+      "amiibo_key": 518,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_518.webp"
+    },
+    {
+      "amiibo_key": 519,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_519.webp"
+    },
+    {
+      "amiibo_key": 520,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_520.webp"
+    },
+    {
+      "amiibo_key": 521,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_521.webp"
+    },
+    {
+      "amiibo_key": 522,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_522.webp"
+    },
+    {
+      "amiibo_key": 523,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_523.webp"
+    },
+    {
+      "amiibo_key": 524,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_524.webp"
+    },
+    {
+      "amiibo_key": 525,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_525.webp"
+    },
+    {
+      "amiibo_key": 526,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_526.webp"
+    },
+    {
+      "amiibo_key": 527,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_527.webp"
+    },
+    {
+      "amiibo_key": 528,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_528.webp"
+    },
+    {
+      "amiibo_key": 529,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_529.webp"
+    },
+    {
+      "amiibo_key": 530,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_530.webp"
+    },
+    {
+      "amiibo_key": 531,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_531.webp"
+    },
+    {
+      "amiibo_key": 532,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_532.webp"
+    },
+    {
+      "amiibo_key": 533,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_533.webp"
+    },
+    {
+      "amiibo_key": 534,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_534.webp"
+    },
+    {
+      "amiibo_key": 535,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_535.webp"
+    },
+    {
+      "amiibo_key": 536,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_536.webp"
+    },
+    {
+      "amiibo_key": 537,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_537.webp"
+    },
+    {
+      "amiibo_key": 538,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_538.webp"
+    },
+    {
+      "amiibo_key": 539,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_539.webp"
+    },
+    {
+      "amiibo_key": 540,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_540.webp"
+    },
+    {
+      "amiibo_key": 541,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_541.webp"
+    },
+    {
+      "amiibo_key": 542,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_542.webp"
+    },
+    {
+      "amiibo_key": 543,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_543.webp"
+    },
+    {
+      "amiibo_key": 544,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_544.webp"
+    },
+    {
+      "amiibo_key": 545,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_545.webp"
+    },
+    {
+      "amiibo_key": 546,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_546.webp"
+    },
+    {
+      "amiibo_key": 547,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_547.webp"
+    },
+    {
+      "amiibo_key": 548,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_548.webp"
+    },
+    {
+      "amiibo_key": 549,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_549.webp"
+    },
+    {
+      "amiibo_key": 550,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_550.webp"
+    },
+    {
+      "amiibo_key": 551,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_551.webp"
+    },
+    {
+      "amiibo_key": 552,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_552.webp"
+    },
+    {
+      "amiibo_key": 553,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_553.webp"
+    },
+    {
+      "amiibo_key": 554,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_554.webp"
+    },
+    {
+      "amiibo_key": 555,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_555.webp"
+    },
+    {
+      "amiibo_key": 556,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_556.webp"
+    },
+    {
+      "amiibo_key": 557,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_557.webp"
+    },
+    {
+      "amiibo_key": 558,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_558.webp"
+    },
+    {
+      "amiibo_key": 559,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_559.webp"
+    },
+    {
+      "amiibo_key": 560,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_560.webp"
+    },
+    {
+      "amiibo_key": 561,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_561.webp"
+    },
+    {
+      "amiibo_key": 562,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_562.webp"
+    },
+    {
+      "amiibo_key": 563,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_563.webp"
+    },
+    {
+      "amiibo_key": 564,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_564.webp"
+    },
+    {
+      "amiibo_key": 565,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_565.webp"
+    },
+    {
+      "amiibo_key": 566,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_566.webp"
+    },
+    {
+      "amiibo_key": 567,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_567.webp"
+    },
+    {
+      "amiibo_key": 568,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_568.webp"
+    },
+    {
+      "amiibo_key": 569,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_569.webp"
+    },
+    {
+      "amiibo_key": 570,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_570.webp"
+    },
+    {
+      "amiibo_key": 571,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_571.webp"
+    },
+    {
+      "amiibo_key": 572,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_572.webp"
+    },
+    {
+      "amiibo_key": 573,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_573.webp"
+    },
+    {
+      "amiibo_key": 574,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_574.webp"
+    },
+    {
+      "amiibo_key": 575,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_575.webp"
+    },
+    {
+      "amiibo_key": 576,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_576.webp"
+    },
+    {
+      "amiibo_key": 577,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_577.webp"
+    },
+    {
+      "amiibo_key": 578,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_578.webp"
+    },
+    {
+      "amiibo_key": 579,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_579.webp"
+    },
+    {
+      "amiibo_key": 580,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_580.webp"
+    },
+    {
+      "amiibo_key": 581,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_581.webp"
+    },
+    {
+      "amiibo_key": 582,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_582.webp"
+    },
+    {
+      "amiibo_key": 583,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_583.webp"
+    },
+    {
+      "amiibo_key": 584,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_584.webp"
+    },
+    {
+      "amiibo_key": 585,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_585.webp"
+    },
+    {
+      "amiibo_key": 586,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_586.webp"
+    },
+    {
+      "amiibo_key": 587,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_587.webp"
+    },
+    {
+      "amiibo_key": 588,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_588.webp"
+    },
+    {
+      "amiibo_key": 589,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_589.webp"
+    },
+    {
+      "amiibo_key": 590,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_590.webp"
+    },
+    {
+      "amiibo_key": 591,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_591.webp"
+    },
+    {
+      "amiibo_key": 592,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_592.webp"
+    },
+    {
+      "amiibo_key": 593,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_593.webp"
+    },
+    {
+      "amiibo_key": 594,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_594.webp"
+    },
+    {
+      "amiibo_key": 595,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_595.webp"
+    },
+    {
+      "amiibo_key": 596,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_596.webp"
+    },
+    {
+      "amiibo_key": 597,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_597.webp"
+    },
+    {
+      "amiibo_key": 598,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_598.webp"
+    },
+    {
+      "amiibo_key": 599,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_599.webp"
+    },
+    {
+      "amiibo_key": 600,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_600.webp"
+    },
+    {
+      "amiibo_key": 601,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_601.webp"
+    },
+    {
+      "amiibo_key": 602,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_602.webp"
+    },
+    {
+      "amiibo_key": 603,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_603.webp"
+    },
+    {
+      "amiibo_key": 604,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_604.webp"
+    },
+    {
+      "amiibo_key": 605,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_605.webp"
+    },
+    {
+      "amiibo_key": 606,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_606.webp"
+    },
+    {
+      "amiibo_key": 607,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_607.webp"
+    },
+    {
+      "amiibo_key": 608,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_608.webp"
+    },
+    {
+      "amiibo_key": 609,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_609.webp"
+    },
+    {
+      "amiibo_key": 610,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_610.webp"
+    },
+    {
+      "amiibo_key": 611,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_611.webp"
+    },
+    {
+      "amiibo_key": 612,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_612.webp"
+    },
+    {
+      "amiibo_key": 613,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_613.webp"
+    },
+    {
+      "amiibo_key": 614,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_614.webp"
+    },
+    {
+      "amiibo_key": 615,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_615.webp"
+    },
+    {
+      "amiibo_key": 616,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_616.webp"
+    },
+    {
+      "amiibo_key": 617,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_617.webp"
+    },
+    {
+      "amiibo_key": 618,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_618.webp"
+    },
+    {
+      "amiibo_key": 619,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_619.webp"
+    },
+    {
+      "amiibo_key": 620,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_620.webp"
+    },
+    {
+      "amiibo_key": 621,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_621.webp"
+    },
+    {
+      "amiibo_key": 622,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_622.webp"
+    },
+    {
+      "amiibo_key": 623,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_623.webp"
+    },
+    {
+      "amiibo_key": 624,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_624.webp"
+    },
+    {
+      "amiibo_key": 625,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_625.webp"
+    },
+    {
+      "amiibo_key": 626,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_626.webp"
+    },
+    {
+      "amiibo_key": 627,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_627.webp"
+    },
+    {
+      "amiibo_key": 628,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_628.webp"
+    },
+    {
+      "amiibo_key": 629,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_629.webp"
+    },
+    {
+      "amiibo_key": 630,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_630.webp"
+    },
+    {
+      "amiibo_key": 631,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_631.webp"
+    },
+    {
+      "amiibo_key": 632,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_632.webp"
+    },
+    {
+      "amiibo_key": 633,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_633.webp"
+    },
+    {
+      "amiibo_key": 634,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_634.webp"
+    },
+    {
+      "amiibo_key": 635,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_635.webp"
+    },
+    {
+      "amiibo_key": 636,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_636.webp"
+    },
+    {
+      "amiibo_key": 637,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_637.webp"
+    },
+    {
+      "amiibo_key": 638,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_638.webp"
+    },
+    {
+      "amiibo_key": 639,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_639.webp"
+    },
+    {
+      "amiibo_key": 640,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_640.webp"
+    },
+    {
+      "amiibo_key": 641,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_641.webp"
+    },
+    {
+      "amiibo_key": 642,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_642.webp"
+    },
+    {
+      "amiibo_key": 643,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_643.webp"
+    },
+    {
+      "amiibo_key": 644,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_644.webp"
+    },
+    {
+      "amiibo_key": 645,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_645.webp"
+    },
+    {
+      "amiibo_key": 646,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_646.webp"
+    },
+    {
+      "amiibo_key": 647,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_647.webp"
+    },
+    {
+      "amiibo_key": 648,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_648.webp"
+    },
+    {
+      "amiibo_key": 649,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_649.webp"
+    },
+    {
+      "amiibo_key": 650,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_650.webp"
+    },
+    {
+      "amiibo_key": 651,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_651.webp"
+    },
+    {
+      "amiibo_key": 652,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_652.webp"
+    },
+    {
+      "amiibo_key": 653,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_653.webp"
+    },
+    {
+      "amiibo_key": 654,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_654.webp"
+    },
+    {
+      "amiibo_key": 655,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_655.webp"
+    },
+    {
+      "amiibo_key": 656,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_656.webp"
+    },
+    {
+      "amiibo_key": 657,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_657.webp"
+    },
+    {
+      "amiibo_key": 658,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_658.webp"
+    },
+    {
+      "amiibo_key": 659,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_659.webp"
+    },
+    {
+      "amiibo_key": 660,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_660.webp"
+    },
+    {
+      "amiibo_key": 661,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_661.webp"
+    },
+    {
+      "amiibo_key": 662,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_662.webp"
+    },
+    {
+      "amiibo_key": 663,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_663.webp"
+    },
+    {
+      "amiibo_key": 664,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_664.webp"
+    },
+    {
+      "amiibo_key": 665,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_665.webp"
+    },
+    {
+      "amiibo_key": 666,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_666.webp"
+    },
+    {
+      "amiibo_key": 667,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_667.webp"
+    },
+    {
+      "amiibo_key": 668,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_668.webp"
+    },
+    {
+      "amiibo_key": 669,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_669.webp"
+    },
+    {
+      "amiibo_key": 670,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_670.webp"
+    },
+    {
+      "amiibo_key": 671,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_671.webp"
+    },
+    {
+      "amiibo_key": 672,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_672.webp"
+    },
+    {
+      "amiibo_key": 673,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_673.webp"
+    },
+    {
+      "amiibo_key": 674,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_674.webp"
+    },
+    {
+      "amiibo_key": 675,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_675.webp"
+    },
+    {
+      "amiibo_key": 676,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_676.webp"
+    },
+    {
+      "amiibo_key": 677,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_677.webp"
+    },
+    {
+      "amiibo_key": 678,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_678.webp"
+    },
+    {
+      "amiibo_key": 679,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_679.webp"
+    },
+    {
+      "amiibo_key": 680,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_680.webp"
+    },
+    {
+      "amiibo_key": 681,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_681.webp"
+    },
+    {
+      "amiibo_key": 682,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_682.webp"
+    },
+    {
+      "amiibo_key": 683,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_683.webp"
+    },
+    {
+      "amiibo_key": 684,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_684.webp"
+    },
+    {
+      "amiibo_key": 685,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_685.webp"
+    },
+    {
+      "amiibo_key": 686,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_686.webp"
+    },
+    {
+      "amiibo_key": 687,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_687.webp"
+    },
+    {
+      "amiibo_key": 688,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_688.webp"
+    },
+    {
+      "amiibo_key": 689,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_689.webp"
+    },
+    {
+      "amiibo_key": 690,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_690.webp"
+    },
+    {
+      "amiibo_key": 691,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_691.webp"
+    },
+    {
+      "amiibo_key": 692,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_692.webp"
+    },
+    {
+      "amiibo_key": 693,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_693.webp"
+    },
+    {
+      "amiibo_key": 694,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_694.webp"
+    },
+    {
+      "amiibo_key": 695,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_695.webp"
+    },
+    {
+      "amiibo_key": 696,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_696.webp"
+    },
+    {
+      "amiibo_key": 697,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_697.webp"
+    },
+    {
+      "amiibo_key": 698,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_698.webp"
+    },
+    {
+      "amiibo_key": 699,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_699.webp"
+    },
+    {
+      "amiibo_key": 700,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_700.webp"
+    },
+    {
+      "amiibo_key": 701,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_701.webp"
+    },
+    {
+      "amiibo_key": 702,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_702.webp"
+    },
+    {
+      "amiibo_key": 703,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_703.webp"
+    },
+    {
+      "amiibo_key": 704,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_704.webp"
+    },
+    {
+      "amiibo_key": 705,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_705.webp"
+    },
+    {
+      "amiibo_key": 706,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_706.webp"
+    },
+    {
+      "amiibo_key": 707,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_707.webp"
+    },
+    {
+      "amiibo_key": 708,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_708.webp"
+    },
+    {
+      "amiibo_key": 709,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_709.webp"
+    },
+    {
+      "amiibo_key": 710,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_710.webp"
+    },
+    {
+      "amiibo_key": 711,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_711.webp"
+    },
+    {
+      "amiibo_key": 712,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_712.webp"
+    },
+    {
+      "amiibo_key": 713,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_713.webp"
+    },
+    {
+      "amiibo_key": 714,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_714.webp"
+    },
+    {
+      "amiibo_key": 715,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_715.webp"
+    },
+    {
+      "amiibo_key": 716,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_716.webp"
+    },
+    {
+      "amiibo_key": 717,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_717.webp"
+    },
+    {
+      "amiibo_key": 718,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_718.webp"
+    },
+    {
+      "amiibo_key": 719,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_719.webp"
+    },
+    {
+      "amiibo_key": 720,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_720.webp"
+    },
+    {
+      "amiibo_key": 721,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_721.webp"
+    },
+    {
+      "amiibo_key": 722,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_722.webp"
+    },
+    {
+      "amiibo_key": 723,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_723.webp"
+    },
+    {
+      "amiibo_key": 724,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_724.webp"
+    },
+    {
+      "amiibo_key": 725,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_725.webp"
+    },
+    {
+      "amiibo_key": 726,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_726.webp"
+    },
+    {
+      "amiibo_key": 727,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_727.webp"
+    },
+    {
+      "amiibo_key": 728,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_728.webp"
+    },
+    {
+      "amiibo_key": 729,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_729.webp"
+    },
+    {
+      "amiibo_key": 730,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_730.webp"
+    },
+    {
+      "amiibo_key": 731,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_731.webp"
+    },
+    {
+      "amiibo_key": 732,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_732.webp"
+    },
+    {
+      "amiibo_key": 733,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_733.webp"
+    },
+    {
+      "amiibo_key": 734,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_734.webp"
+    },
+    {
+      "amiibo_key": 735,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_735.webp"
+    },
+    {
+      "amiibo_key": 736,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_736.webp"
+    },
+    {
+      "amiibo_key": 737,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_737.webp"
+    },
+    {
+      "amiibo_key": 738,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_738.webp"
+    },
+    {
+      "amiibo_key": 739,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_739.webp"
+    },
+    {
+      "amiibo_key": 740,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_740.webp"
+    },
+    {
+      "amiibo_key": 741,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_741.webp"
+    },
+    {
+      "amiibo_key": 742,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_742.webp"
+    },
+    {
+      "amiibo_key": 743,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_743.webp"
+    },
+    {
+      "amiibo_key": 744,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_744.webp"
+    },
+    {
+      "amiibo_key": 745,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_745.webp"
+    },
+    {
+      "amiibo_key": 746,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_746.webp"
+    },
+    {
+      "amiibo_key": 747,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_747.webp"
+    },
+    {
+      "amiibo_key": 748,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_748.webp"
+    },
+    {
+      "amiibo_key": 749,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_749.webp"
+    },
+    {
+      "amiibo_key": 750,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_750.webp"
+    },
+    {
+      "amiibo_key": 751,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_751.webp"
+    },
+    {
+      "amiibo_key": 752,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_752.webp"
+    },
+    {
+      "amiibo_key": 753,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_753.webp"
+    },
+    {
+      "amiibo_key": 754,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_754.webp"
+    },
+    {
+      "amiibo_key": 755,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_755.webp"
+    },
+    {
+      "amiibo_key": 756,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_756.webp"
+    },
+    {
+      "amiibo_key": 757,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_757.webp"
+    },
+    {
+      "amiibo_key": 758,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_758.webp"
+    },
+    {
+      "amiibo_key": 759,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_759.webp"
+    },
+    {
+      "amiibo_key": 760,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_760.webp"
+    },
+    {
+      "amiibo_key": 761,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_761.webp"
+    },
+    {
+      "amiibo_key": 762,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_762.webp"
+    },
+    {
+      "amiibo_key": 763,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_763.webp"
+    },
+    {
+      "amiibo_key": 764,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_764.webp"
+    },
+    {
+      "amiibo_key": 765,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_765.webp"
+    },
+    {
+      "amiibo_key": 766,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_766.webp"
+    },
+    {
+      "amiibo_key": 767,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_767.webp"
+    },
+    {
+      "amiibo_key": 768,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_768.webp"
+    },
+    {
+      "amiibo_key": 769,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_769.webp"
+    },
+    {
+      "amiibo_key": 770,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_770.webp"
+    },
+    {
+      "amiibo_key": 771,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_771.webp"
+    },
+    {
+      "amiibo_key": 772,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_772.webp"
+    },
+    {
+      "amiibo_key": 773,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_773.webp"
+    },
+    {
+      "amiibo_key": 774,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_774.webp"
+    },
+    {
+      "amiibo_key": 775,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_775.webp"
+    },
+    {
+      "amiibo_key": 776,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_776.webp"
+    },
+    {
+      "amiibo_key": 777,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_777.webp"
+    },
+    {
+      "amiibo_key": 778,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_778.webp"
+    },
+    {
+      "amiibo_key": 779,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_779.webp"
+    },
+    {
+      "amiibo_key": 780,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_780.webp"
+    },
+    {
+      "amiibo_key": 781,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_781.webp"
+    },
+    {
+      "amiibo_key": 782,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_782.webp"
+    },
+    {
+      "amiibo_key": 783,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_783.webp"
+    },
+    {
+      "amiibo_key": 784,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_784.webp"
+    },
+    {
+      "amiibo_key": 785,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_785.webp"
+    },
+    {
+      "amiibo_key": 786,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_786.webp"
+    },
+    {
+      "amiibo_key": 787,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_787.webp"
+    },
+    {
+      "amiibo_key": 788,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_788.webp"
+    },
+    {
+      "amiibo_key": 789,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_789.webp"
+    },
+    {
+      "amiibo_key": 790,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_790.webp"
+    },
+    {
+      "amiibo_key": 791,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_791.webp"
+    },
+    {
+      "amiibo_key": 792,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_792.webp"
+    },
+    {
+      "amiibo_key": 793,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_793.webp"
+    },
+    {
+      "amiibo_key": 794,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_794.webp"
+    },
+    {
+      "amiibo_key": 795,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_795.webp"
+    },
+    {
+      "amiibo_key": 796,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_796.webp"
+    },
+    {
+      "amiibo_key": 797,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_797.webp"
+    },
+    {
+      "amiibo_key": 798,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_798.webp"
+    },
+    {
+      "amiibo_key": 799,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_799.webp"
+    },
+    {
+      "amiibo_key": 800,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_800.webp"
+    },
+    {
+      "amiibo_key": 801,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_801.webp"
+    },
+    {
+      "amiibo_key": 802,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_802.webp"
+    },
+    {
+      "amiibo_key": 803,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_803.webp"
+    },
+    {
+      "amiibo_key": 804,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_804.webp"
+    },
+    {
+      "amiibo_key": 805,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_805.webp"
+    },
+    {
+      "amiibo_key": 806,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_806.webp"
+    },
+    {
+      "amiibo_key": 807,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_807.webp"
+    },
+    {
+      "amiibo_key": 808,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_808.webp"
+    },
+    {
+      "amiibo_key": 809,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_809.webp"
+    },
+    {
+      "amiibo_key": 810,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_810.webp"
+    },
+    {
+      "amiibo_key": 811,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_811.webp"
+    },
+    {
+      "amiibo_key": 812,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_812.webp"
+    },
+    {
+      "amiibo_key": 813,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_813.webp"
+    },
+    {
+      "amiibo_key": 814,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_814.webp"
+    },
+    {
+      "amiibo_key": 815,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_815.webp"
+    },
+    {
+      "amiibo_key": 816,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_816.webp"
+    },
+    {
+      "amiibo_key": 817,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_817.webp"
+    },
+    {
+      "amiibo_key": 818,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_818.webp"
+    },
+    {
+      "amiibo_key": 819,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_819.webp"
+    },
+    {
+      "amiibo_key": 820,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_820.webp"
+    },
+    {
+      "amiibo_key": 821,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_821.webp"
+    },
+    {
+      "amiibo_key": 822,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_822.webp"
+    },
+    {
+      "amiibo_key": 823,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_823.webp"
+    },
+    {
+      "amiibo_key": 824,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_824.webp"
+    },
+    {
+      "amiibo_key": 825,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_825.webp"
+    },
+    {
+      "amiibo_key": 826,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_826.webp"
+    },
+    {
+      "amiibo_key": 827,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_827.webp"
+    },
+    {
+      "amiibo_key": 828,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_828.webp"
+    },
+    {
+      "amiibo_key": 829,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_829.webp"
+    },
+    {
+      "amiibo_key": 830,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_830.webp"
+    },
+    {
+      "amiibo_key": 831,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_831.webp"
+    },
+    {
+      "amiibo_key": 832,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_832.webp"
+    },
+    {
+      "amiibo_key": 833,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_833.webp"
+    },
+    {
+      "amiibo_key": 834,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_834.webp"
+    },
+    {
+      "amiibo_key": 835,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_835.webp"
+    },
+    {
+      "amiibo_key": 836,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_836.webp"
+    },
+    {
+      "amiibo_key": 837,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_837.webp"
+    },
+    {
+      "amiibo_key": 838,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_838.webp"
+    },
+    {
+      "amiibo_key": 839,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_839.webp"
+    },
+    {
+      "amiibo_key": 840,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_840.webp"
+    },
+    {
+      "amiibo_key": 841,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_841.webp"
+    },
+    {
+      "amiibo_key": 842,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_842.webp"
+    },
+    {
+      "amiibo_key": 843,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_843.webp"
+    },
+    {
+      "amiibo_key": 844,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_844.webp"
+    },
+    {
+      "amiibo_key": 845,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_845.webp"
+    },
+    {
+      "amiibo_key": 846,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_846.webp"
+    },
+    {
+      "amiibo_key": 847,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_847.webp"
+    },
+    {
+      "amiibo_key": 848,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_848.webp"
+    },
+    {
+      "amiibo_key": 849,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_849.webp"
+    },
+    {
+      "amiibo_key": 850,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_850.webp"
+    },
+    {
+      "amiibo_key": 851,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_851.webp"
+    },
+    {
+      "amiibo_key": 852,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_852.webp"
+    },
+    {
+      "amiibo_key": 853,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_853.webp"
+    },
+    {
+      "amiibo_key": 854,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_854.webp"
+    },
+    {
+      "amiibo_key": 855,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_855.webp"
+    },
+    {
+      "amiibo_key": 856,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_856.webp"
+    },
+    {
+      "amiibo_key": 857,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_857.webp"
+    },
+    {
+      "amiibo_key": 858,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_858.webp"
+    },
+    {
+      "amiibo_key": 859,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_859.webp"
+    },
+    {
+      "amiibo_key": 860,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_860.webp"
+    },
+    {
+      "amiibo_key": 861,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_861.webp"
+    },
+    {
+      "amiibo_key": 862,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_862.webp"
+    },
+    {
+      "amiibo_key": 863,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_863.webp"
+    },
+    {
+      "amiibo_key": 864,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_864.webp"
+    },
+    {
+      "amiibo_key": 865,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_865.webp"
+    },
+    {
+      "amiibo_key": 866,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_866.webp"
+    },
+    {
+      "amiibo_key": 867,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_867.webp"
+    },
+    {
+      "amiibo_key": 868,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_868.webp"
+    },
+    {
+      "amiibo_key": 869,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_869.webp"
+    },
+    {
+      "amiibo_key": 870,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_870.webp"
+    },
+    {
+      "amiibo_key": 871,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_871.webp"
+    },
+    {
+      "amiibo_key": 872,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_872.webp"
+    },
+    {
+      "amiibo_key": 873,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_873.webp"
+    },
+    {
+      "amiibo_key": 874,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_874.webp"
+    },
+    {
+      "amiibo_key": 875,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_875.webp"
+    },
+    {
+      "amiibo_key": 876,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_876.webp"
+    },
+    {
+      "amiibo_key": 877,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_877.webp"
+    },
+    {
+      "amiibo_key": 878,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_878.webp"
+    },
+    {
+      "amiibo_key": 879,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_879.webp"
+    },
+    {
+      "amiibo_key": 880,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_880.webp"
+    },
+    {
+      "amiibo_key": 881,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_881.webp"
+    },
+    {
+      "amiibo_key": 882,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_882.webp"
+    },
+    {
+      "amiibo_key": 883,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_883.webp"
+    },
+    {
+      "amiibo_key": 884,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_884.webp"
+    },
+    {
+      "amiibo_key": 885,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_885.webp"
+    },
+    {
+      "amiibo_key": 886,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_886.webp"
+    },
+    {
+      "amiibo_key": 887,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_887.webp"
+    },
+    {
+      "amiibo_key": 888,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_888.webp"
+    },
+    {
+      "amiibo_key": 889,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_889.webp"
+    },
+    {
+      "amiibo_key": 890,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_890.webp"
+    },
+    {
+      "amiibo_key": 891,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_891.webp"
+    },
+    {
+      "amiibo_key": 892,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_892.webp"
+    },
+    {
+      "amiibo_key": 893,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_893.webp"
+    },
+    {
+      "amiibo_key": 894,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_894.webp"
+    },
+    {
+      "amiibo_key": 895,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_895.webp"
+    },
+    {
+      "amiibo_key": 896,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_896.webp"
+    },
+    {
+      "amiibo_key": 897,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_897.webp"
+    },
+    {
+      "amiibo_key": 898,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_898.webp"
+    },
+    {
+      "amiibo_key": 899,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_899.webp"
+    },
+    {
+      "amiibo_key": 900,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_900.webp"
+    },
+    {
+      "amiibo_key": 901,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_901.webp"
+    },
+    {
+      "amiibo_key": 902,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_902.webp"
+    },
+    {
+      "amiibo_key": 903,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_903.webp"
+    },
+    {
+      "amiibo_key": 904,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_904.webp"
+    },
+    {
+      "amiibo_key": 905,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_905.webp"
+    },
+    {
+      "amiibo_key": 906,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_906.webp"
+    },
+    {
+      "amiibo_key": 907,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_907.webp"
+    },
+    {
+      "amiibo_key": 908,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_908.webp"
+    },
+    {
+      "amiibo_key": 909,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_909.webp"
+    },
+    {
+      "amiibo_key": 910,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_910.webp"
+    },
+    {
+      "amiibo_key": 911,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_911.webp"
+    },
+    {
+      "amiibo_key": 912,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_912.webp"
+    },
+    {
+      "amiibo_key": 913,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_913.webp"
+    },
+    {
+      "amiibo_key": 914,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_914.webp"
+    },
+    {
+      "amiibo_key": 915,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_915.webp"
+    },
+    {
+      "amiibo_key": 916,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_916.webp"
+    },
+    {
+      "amiibo_key": 917,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_917.webp"
+    },
+    {
+      "amiibo_key": 918,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_918.webp"
+    },
+    {
+      "amiibo_key": 919,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_919.webp"
+    },
+    {
+      "amiibo_key": 920,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_920.webp"
+    },
+    {
+      "amiibo_key": 921,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_921.webp"
+    },
+    {
+      "amiibo_key": 922,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_922.webp"
+    },
+    {
+      "amiibo_key": 923,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_923.webp"
+    },
+    {
+      "amiibo_key": 924,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_924.webp"
+    },
+    {
+      "amiibo_key": 925,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_925.webp"
+    },
+    {
+      "amiibo_key": 926,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_926.webp"
+    },
+    {
+      "amiibo_key": 927,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_927.webp"
+    },
+    {
+      "amiibo_key": 928,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_928.webp"
+    },
+    {
+      "amiibo_key": 929,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_929.webp"
+    },
+    {
+      "amiibo_key": 930,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_930.webp"
+    },
+    {
+      "amiibo_key": 931,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_931.webp"
+    },
+    {
+      "amiibo_key": 932,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_932.webp"
+    },
+    {
+      "amiibo_key": 933,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_933.webp"
+    },
+    {
+      "amiibo_key": 934,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_934.webp"
+    },
+    {
+      "amiibo_key": 935,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_935.webp"
+    },
+    {
+      "amiibo_key": 936,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_936.webp"
+    },
+    {
+      "amiibo_key": 937,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_937.webp"
+    },
+    {
+      "amiibo_key": 938,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_938.webp"
+    },
+    {
+      "amiibo_key": 939,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_939.webp"
+    },
+    {
+      "amiibo_key": 940,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_940.webp"
+    },
+    {
+      "amiibo_key": 941,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_941.webp"
+    },
+    {
+      "amiibo_key": 942,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_942.webp"
+    },
+    {
+      "amiibo_key": 943,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_943.webp"
+    },
+    {
+      "amiibo_key": 944,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_944.webp"
+    },
+    {
+      "amiibo_key": 945,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_945.webp"
+    },
+    {
+      "amiibo_key": 946,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_946.webp"
+    },
+    {
+      "amiibo_key": 947,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_947.webp"
+    },
+    {
+      "amiibo_key": 948,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_948.webp"
+    },
+    {
+      "amiibo_key": 949,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_949.webp"
+    },
+    {
+      "amiibo_key": 950,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_950.webp"
+    },
+    {
+      "amiibo_key": 951,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_951.webp"
+    },
+    {
+      "amiibo_key": 952,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_952.webp"
+    },
+    {
+      "amiibo_key": 953,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_953.webp"
+    },
+    {
+      "amiibo_key": 954,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_954.webp"
+    },
+    {
+      "amiibo_key": 955,
+      "created_at": 1786207135846,
+      "file_path": "assets/collection/icon_955.webp"
+    }
+  ]
+}

@@ -77,6 +77,7 @@ class AmiiboDao extends DatabaseAccessor<AppDatabase>
   Future<void> insertAll({
     required List<AmiiboTable> amiibosData,
     required List<AmiiboImagesCompanion> amiiboImagesData,
+    required List<AmiiboBundleImagesCompanion> amiiboBundleImagesData,
     required List<AmiiboUserPreferencesCompanion> preferences,
   }) async {
     await batch((batch) {
@@ -87,6 +88,12 @@ class AmiiboDao extends DatabaseAccessor<AppDatabase>
       }
       batch
         ..insertAll(amiiboUserPreferences, preferences, mode: .insertOrIgnore)
+        ..deleteAll(amiiboBundleImages)
+        ..insertAll(
+          amiiboBundleImages,
+          amiiboBundleImagesData,
+          mode: .insertOrIgnore,
+        )
         ..deleteAll(amiiboImages)
         ..insertAll(amiiboImages, amiiboImagesData, mode: .insertOrIgnore);
     });
