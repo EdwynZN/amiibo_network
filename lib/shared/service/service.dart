@@ -8,8 +8,52 @@ import 'package:amiibo_network/app/configuration/model/search_result.dart';
 import 'package:amiibo_network/entity/amiibo_info/model/amiibo.dart';
 import 'package:amiibo_network/entity/amiibo_info/model/stat.dart';
 import 'package:amiibo_network/feature/amiibo/application/input/update_amiibo_user_attributes.dart';
+import 'package:flutter/foundation.dart';
 
-interface class Service {
+abstract interface class Service {
+  @visibleForTesting
+  factory Service.test() => _Service();
+
+  Future<Amiibo?> fetchOne(int key);
+
+  Future<List<Amiibo>> fetchAllAmiibo();
+
+  Future<List<Stat>> fetchStats({
+    required CategoryAttributes categoryAttributes,
+    required SearchAttributes? searchAttributes,
+    HiddenType? hiddenCategories,
+    bool group = false,
+  });
+
+  Future<List<Amiibo>> fetchByCategory({
+    required CategoryAttributes categoryAttributes,
+    required SearchAttributes? searchAttributes,
+    OrderBy orderBy = OrderBy.NA,
+    SortBy sortBy = SortBy.DESC,
+    List<String> figures = const [],
+    List<String> cards = const [],
+    HiddenType? hiddenCategories,
+  });
+
+  Future<void> update(List<UpdateAmiiboUserAttributes> amiibos);
+
+  Future<List<String>> fetchDistinct({
+    required CategoryAttributes categoryAttributes,
+    required SearchAttributes? searchAttributes,
+    OrderBy orderBy = OrderBy.NA,
+    SortBy sortBy = SortBy.DESC,
+    HiddenType? hiddenCategories,
+  });
+
+  Future<List<String>> search({
+    required SearchAttributes searchAttributes,
+    HiddenType? hidden,
+  });
+
+  Future<void> resetCollection();
+}
+
+class _Service implements Service {
   final AmiiboSQLite _dao = AmiiboSQLite();
 
   Future<Amiibo?> fetchOne(int key) {
@@ -33,10 +77,14 @@ interface class Service {
         expression = And();
         break;
       case AmiiboCategory.AmiiboSeries:
-        expression = Bracket(InCond.inn('type', figureType) &
-                InCond.inn('amiiboSeries', figures)) |
+        expression =
             Bracket(
-                Cond.eq('type', 'Card') & InCond.inn('amiiboSeries', cards));
+              InCond.inn('type', figureType) &
+                  InCond.inn('amiiboSeries', figures),
+            ) |
+            Bracket(
+              Cond.eq('type', 'Card') & InCond.inn('amiiboSeries', cards),
+            );
         break;
       case AmiiboCategory.Figures:
         expression = InCond.inn('type', figureType);
@@ -48,7 +96,8 @@ interface class Service {
         break;
     }
     if (hiddenCategories != null) {
-      expression = (hiddenCategories == HiddenType.Figures
+      expression =
+          (hiddenCategories == HiddenType.Figures
               ? InCond.notInn('type', figureType)
               : Cond.ne('type', 'Card')) &
           expression;
@@ -102,8 +151,10 @@ interface class Service {
         orderBuffer.write('$order IS NULL, $order $sort');
         break;
       case OrderBy.Type:
-        orderBuffer.write('CASE WHEN type = "Figure" THEN 1 '
-            'WHEN type = "Yarn" OR type = "Band" THEN 2 ELSE 3 END, amiiboSeries, key');
+        orderBuffer.write(
+          'CASE WHEN type = "Figure" THEN 1 '
+          'WHEN type = "Yarn" OR type = "Band" THEN 2 ELSE 3 END, amiiboSeries, key',
+        );
         break;
       case OrderBy.Owned:
       case OrderBy.Wishlist:
@@ -111,7 +162,8 @@ interface class Service {
         final int _then = asc ? 1 : 0;
         final int _else = asc ? 0 : 1;
         orderBuffer.write(
-            'CASE WHEN ($order IS NULL OR $order = 0) THEN $_then ELSE $_else END, key $sort');
+          'CASE WHEN ($order IS NULL OR $order = 0) THEN $_then ELSE $_else END, key $sort',
+        );
         break;
       default:
         orderBuffer.write('$order $sort');
@@ -155,10 +207,12 @@ interface class Service {
         }
         break;
       case AmiiboCategory.AmiiboSeries:
-        final figuresWhere = Bracket(InCond.inn('type', figureType) &
-            InCond.inn('amiiboSeries', figures));
+        final figuresWhere = Bracket(
+          InCond.inn('type', figureType) & InCond.inn('amiiboSeries', figures),
+        );
         final cardsWhere = Bracket(
-            Cond.eq('type', 'Card') & InCond.inn('amiiboSeries', cards));
+          Cond.eq('type', 'Card') & InCond.inn('amiiboSeries', cards),
+        );
         if (hiddenCategories != null) {
           where = hiddenCategories == HiddenType.Figures
               ? cardsWhere
@@ -174,7 +228,8 @@ interface class Service {
     if (category != AmiiboCategory.AmiiboSeries && hiddenCategories != null) {
       final figuresIgnore = InCond.notInn('type', figureType);
       final cardsIgnore = Cond.ne('type', 'Card');
-      where = (hiddenCategories == HiddenType.Figures
+      where =
+          (hiddenCategories == HiddenType.Figures
               ? figuresIgnore
               : cardsIgnore) &
           (where.args.isEmpty ? where : Bracket(where));
@@ -188,7 +243,6 @@ interface class Service {
     if (where.isEmpty || args.isEmpty) where = args = null;
     return dao.fetchByColumn(where, args, orderBy);
   } */
-
 
   Future<void> update(List<UpdateAmiiboUserAttributes> amiibos) =>
       _dao.insertImport(amiibos);
@@ -228,7 +282,8 @@ interface class Service {
     );
     if (exp == null) return const [];
     if (hidden != null) {
-      exp = (hidden == HiddenType.Cards
+      exp =
+          (hidden == HiddenType.Cards
               ? Cond.ne('type', 'Card')
               : InCond.notInn('type', figureType)) &
           Bracket(exp);

@@ -180,7 +180,10 @@ class AppDatabase extends _$AppDatabase {
 }
 
 QueryExecutor _openExecuter(String databaseName) {
-  return SqfliteQueryExecutor.inDatabaseFolder(path: databaseName);
+  return SqfliteQueryExecutor.inDatabaseFolder(
+    path: databaseName,
+    logStatements: kDebugMode,
+  );
   // the LazyDatabase util lets us find the right location for the file async.
   /* return LazyDatabase(() async {
     // put the database file, called db.sqlite here, into the documents folder

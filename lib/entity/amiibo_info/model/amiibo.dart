@@ -3,9 +3,6 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 part 'amiibo.freezed.dart';
 part 'amiibo.g.dart';
 
-int boolToInt(bool? value) => value ?? false ? 1 : 0;
-bool intToBool(int? value) => value == 1;
-
 List<Amiibo> entityFromMap(Map<String, dynamic> amiibo) =>
     List<Amiibo>.from(amiibo["amiibo"].map((x) => Amiibo.fromJson(x)));
 
@@ -15,10 +12,6 @@ abstract class Amiibo with _$Amiibo {
   const factory Amiibo({
     required int key,
     required final AmiiboDetails details,
-    /* @Default(false)
-    @JsonKey(fromJson: intToBool, toJson: boolToInt)
-    bool wishlist, */
-    //@Default(false) @JsonKey(fromJson: intToBool, toJson: boolToInt) bool owned,
     @Default(UserAttributes.none()) UserAttributes userAttributes,
   }) = _Amiibo;
 
@@ -33,6 +26,7 @@ abstract class AmiiboDetails with _$AmiiboDetails {
     @JsonKey(required: true) required String character,
     @JsonKey(required: true) required String gameSeries,
     @JsonKey(required: true) required String name,
+    @JsonKey(includeIfNull: true) String? imagePath,
     @JsonKey(includeIfNull: true) String? au,
     @JsonKey(includeIfNull: true) String? eu,
     @JsonKey(includeIfNull: true) String? jp,

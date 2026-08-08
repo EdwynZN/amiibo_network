@@ -5,6 +5,7 @@ import 'package:flutter_test/flutter_test.dart';
 
 void main() {
   test('assets_icons assets test', () {
+    expect(File(NetworkIcons.amiiboImageUnavailable).existsSync(), isTrue);
     expect(File(NetworkIcons.au).existsSync(), isTrue);
     expect(File(NetworkIcons.dsPlatform).existsSync(), isTrue);
     expect(File(NetworkIcons.eu).existsSync(), isTrue);

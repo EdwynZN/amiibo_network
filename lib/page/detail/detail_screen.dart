@@ -105,9 +105,9 @@ class _AmiiboCard extends ConsumerWidget {
     final cardColor = theme.colorScheme.surface;
 
     final Widget letf = Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      mainAxisAlignment: MainAxisAlignment.start,
-      mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: .start,
+      mainAxisAlignment: .start,
+      mainAxisSize: .min,
       children: <Widget>[
         Card(
           margin: EdgeInsets.zero,
@@ -122,8 +122,8 @@ class _AmiiboCard extends ConsumerWidget {
                 tag: key,
                 child: Image.asset(
                   'assets/collection/icon_$key.webp',
-                  filterQuality: FilterQuality.high,
-                  fit: BoxFit.scaleDown,
+                  filterQuality: .high,
+                  fit: .scaleDown,
                   height: 200.0,
                   cacheHeight: 200,
                 ),
@@ -159,7 +159,7 @@ class _AmiiboCard extends ConsumerWidget {
                 return Text(
                   text,
                   maxLines: 1,
-                  overflow: TextOverflow.fade,
+                  overflow: .fade,
                   style: theme.textTheme.bodySmall?.copyWith(
                     color: theme.colorScheme.onPrimaryContainer,
                   ),
