@@ -113,9 +113,7 @@ class _AppearanceListWidget extends ConsumerWidget {
                     builder: (context) => const LocaleDialog(),
                   );
                   if (result == null) return;
-                  ref
-                      .read(personalProvider.notifier)
-                      .forceLocale(result.data);
+                  ref.read(personalProvider.notifier).forceLocale(result.data);
                 },
               );
             },
@@ -325,7 +323,9 @@ class _FeatureListWidgetState extends ConsumerState<_FeatureListWidget> {
                                 value: HiddenType.Figures,
                                 label: Text(translate.figures),
                                 icon: const ImageIcon(
-                                  AssetImage('assets/collection/icon_1.webp'),
+                                  AssetImage(
+                                    NetworkIcons.amiiboImageUnavailable,
+                                  ),
                                 ),
                               ),
                               ButtonSegment<HiddenType>(
