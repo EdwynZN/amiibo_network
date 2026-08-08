@@ -2,6 +2,7 @@ import 'package:amiibo_network/entity/affiliation_product/presentation/widget/am
 import 'package:amiibo_network/shared/resources/resources.dart';
 import 'package:amiibo_network/entity/amiibo_info/infrastructure/amiibo_provider.dart';
 import 'package:amiibo_network/app/state/preferences_provider.dart';
+import 'package:amiibo_network/shared/utils/amiibo_asset_util.dart';
 import 'package:amiibo_network/shared/utils/tablet_utils.dart';
 import 'package:amiibo_network/page/detail/widget/amiibo_button_toggle.dart';
 import 'package:amiibo_network/page/detail/widget/card_details.dart';
@@ -104,6 +105,13 @@ class _AmiiboCard extends ConsumerWidget {
     final theme = Theme.of(context);
     final cardColor = theme.colorScheme.surface;
 
+    final image = ref.watch(
+      detailAmiiboProvider(key).select((s) {
+        return s.whenOrNull(data: (data) => data?.details.image) ??
+            amiiboAssetFromIndex(key);
+      }),
+    );
+
     final Widget letf = Column(
       crossAxisAlignment: .start,
       mainAxisAlignment: .start,
@@ -121,7 +129,7 @@ class _AmiiboCard extends ConsumerWidget {
                 transitionOnUserGestures: true,
                 tag: key,
                 child: Image.asset(
-                  'assets/collection/icon_$key.webp',
+                  image,
                   filterQuality: .high,
                   fit: .scaleDown,
                   height: 200.0,

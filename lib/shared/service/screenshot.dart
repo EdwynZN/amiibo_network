@@ -10,6 +10,7 @@ import 'package:amiibo_network/app/state/theme/service/theme_mode_scheme_reposit
 import 'package:amiibo_network/shared/resources/resources.dart';
 import 'package:amiibo_network/shared/service/info_package.dart';
 import 'package:amiibo_network/shared/service/service.dart';
+import 'package:amiibo_network/shared/utils/amiibo_asset_util.dart';
 import 'package:amiibo_network/shared/utils/format_color_on_theme.dart';
 import 'package:amiibo_network/shared/utils/stat_utils.dart';
 import 'package:amiibo_network/shared/utils/theme_extensions.dart';
@@ -136,8 +137,7 @@ class Screenshot {
     await _paintBanner(Size(maxX, maxY), _listStat);
 
     for (Amiibo amiibo in amiibos) {
-      final String strImage =
-          amiibo.details.image ?? NetworkIcons.amiiboImageUnavailable;
+      final String strImage = amiiboAsset(amiibo.details.image);
       final Offset _offset = Offset(xOffset, yOffset);
       final RRect cardPath = RRect.fromRectAndRadius(
         Rect.fromPoints(

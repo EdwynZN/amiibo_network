@@ -8,10 +8,6 @@ import 'package:amiibo_network/entity/amiibo_info/model/amiibo.dart';
 
 final keyAmiiboProvider = Provider<int>((_) => throw UnimplementedError());
 
-final indexAmiiboProvider = Provider<int>(
-  (_) => throw UnsupportedError('No amiibo id selected'),
-);
-
 final statHomeProvider = Provider.autoDispose<AsyncValue<Stat>>(
   (ref) => ref.watch(amiiboHomeListProvider).whenData((value) {
     final total = value.length;

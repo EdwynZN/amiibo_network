@@ -2,6 +2,7 @@ import 'package:amiibo_network/shared/generated/l10n.dart';
 import 'package:amiibo_network/shared/resources/resources.dart';
 import 'package:amiibo_network/entity/amiibo_info/infrastructure/amiibo_provider.dart';
 import 'package:amiibo_network/page/detail/widget/card_details.dart';
+import 'package:amiibo_network/shared/utils/amiibo_asset_util.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -15,16 +16,19 @@ class AmiiboCard extends ConsumerWidget {
     final theme = Theme.of(context);
     final cardColor = theme.colorScheme.surface;
 
+    final image = ref.watch(
+      detailAmiiboProvider(key).select((s) {
+        return s.whenOrNull(data: (data) => data?.details.image) ??
+            amiiboAssetFromIndex(key);
+      }),
+    );
+
     final Widget asset = SizedBox(
       width: double.infinity,
       child: Hero(
         transitionOnUserGestures: true,
         tag: key,
-        child: Image.asset(
-          'assets/collection/icon_$key.webp',
-          filterQuality: FilterQuality.high,
-          fit: BoxFit.contain,
-        ),
+        child: Image.asset(image, filterQuality: .high, fit: .contain),
       ),
     );
 
