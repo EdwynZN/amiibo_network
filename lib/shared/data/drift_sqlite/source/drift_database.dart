@@ -6,12 +6,13 @@ import 'package:drift/drift.dart';
 import 'package:drift_dev/api/migrations_native.dart';
 import 'package:drift_sqflite/drift_sqflite.dart';
 import 'package:flutter/foundation.dart';
-import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 part 'drift_database.g.dart';
 
-final databaseProvider = Provider((ref) => AppDatabase());
+@Riverpod(keepAlive: true)
+AppDatabase database(Ref ref) => AppDatabase();
 
 @DriftDatabase(
   //tables: [AmiiboTable, AmiiboUserPreferencesTable],

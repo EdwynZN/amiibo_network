@@ -4,9 +4,12 @@ import 'package:amiibo_network/app/configuration/model/search_result.dart';
 import 'package:amiibo_network/entity/amiibo_info/model/stat.dart';
 import 'package:amiibo_network/app/configuration/query_provider.dart';
 import 'package:amiibo_network/app/configuration/service_provider.dart';
-import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-final statsProvider = StreamProvider.autoDispose<List<Stat>>((ref) async* {
+part 'stats_amiibo_provider.g.dart';
+
+@riverpod
+Stream<List<Stat>> stats(Ref ref) async* {
   final service = ref.watch(serviceProvider.notifier);
   final streamController = StreamController<Filter>();
 
@@ -19,9 +22,7 @@ final statsProvider = StreamProvider.autoDispose<List<Stat>>((ref) async* {
   final subscription = ref.listen(
     filterProvider,
     (previous, next) {
-      if (next != previous) {
-        streamController.sink.add(next);
-      }
+      if (next != previous) streamController.sink.add(next);
     },
     fireImmediately: true,
   );
@@ -46,4 +47,4 @@ final statsProvider = StreamProvider.autoDispose<List<Stat>>((ref) async* {
       ),
     ],
   );
-});
+}

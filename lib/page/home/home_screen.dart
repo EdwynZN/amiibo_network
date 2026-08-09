@@ -41,49 +41,6 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:amiibo_network/page/home/widget/stat_header.dart';
 import 'package:amiibo_network/app/configuration/model/search_result.dart';
 
-final Provider<TitleSearch> _titleProvider = Provider.autoDispose<TitleSearch>((
-  ref,
-) {
-  final count = ref.watch(selectProvider);
-  final query = ref.watch(queryProvider);
-  final category = query.categoryAttributes.category;
-  if (count.multipleSelected) {
-    return TitleSearch.count(
-      title: count.length.toString(),
-      category: category,
-    );
-  }
-  final provider = ref.watch(queryProvider.notifier);
-  if (provider.isSearch) {
-    return TitleSearch.search(
-      title: query.searchAttributes!.search,
-      searchCategory: query.searchAttributes!.category,
-      category: category,
-    );
-  }
-  return TitleSearch(
-    title: switch (category) {
-      AmiiboCategory.Cards
-          when query.categoryAttributes.cards.firstOrNull != null =>
-        query.categoryAttributes.cards.first,
-      AmiiboCategory.Figures
-          when query.categoryAttributes.figures.firstOrNull != null =>
-        query.categoryAttributes.figures.first,
-      _ => category.name,
-    },
-    category: category,
-  );
-});
-
-final Provider<bool> _canPopProvider = Provider.autoDispose<bool>((ref) {
-  final selected = ref.watch(selectProvider);
-  ref.watch(queryProvider);
-  final isSearch = ref.watch(
-    queryProvider.notifier.select((provider) => provider.isSearch),
-  );
-  return !(selected.multipleSelected || isSearch);
-});
-
 class HomeScreen extends ConsumerStatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
 
@@ -111,10 +68,10 @@ class HomeScreenState extends ConsumerState<HomeScreen>
     if (!_controller.hasClients) return;
     _controller.jumpTo(0);
     _animationController.forward();
-    ref.read(selectProvider).clearSelected();
+    ref.read(selectProvider.notifier).clearSelected();
   }
 
-  void _cancelSelection() => ref.read(selectProvider).clearSelected();
+  void _cancelSelection() => ref.read(selectProvider.notifier).clearSelected();
 
   @override
   void initState() {
@@ -194,9 +151,10 @@ class HomeScreenState extends ConsumerState<HomeScreen>
   Future<void> _exitApp(bool canPop, dynamic _) async {
     if (!canPop) {
       final selected = ref.read(selectProvider);
+      final selectedNotif = ref.read(selectProvider.notifier);
       final query = ref.read(queryProvider.notifier);
-      if (selected.multipleSelected) {
-        selected.clearSelected();
+      if (selected.isNotEmpty) {
+        selectedNotif.clearSelected();
       } else if (query.isSearch) {
         query.restart();
       }
@@ -209,7 +167,7 @@ class HomeScreenState extends ConsumerState<HomeScreen>
     final route = ModalRoute.of(context);
     final canPopModalRoute =
         route != null && route.isCurrent && route.willHandlePopInternally;
-    final canPop = canPopModalRoute || ref.watch(_canPopProvider);
+    final canPop = canPopModalRoute || ref.watch(canPopProvider);
 
     final Widget statWidget = Material(
       key: const ValueKey<String>('ColumnStats'),
@@ -294,7 +252,7 @@ class HomeScreenState extends ConsumerState<HomeScreen>
         child: HookBuilder(
           builder: (context) {
             final _multipleSelection = ref.watch(
-              selectProvider.select<bool>((value) => value.multipleSelected),
+              selectProvider.select<bool>((value) => value.isNotEmpty),
             );
             return Scrollbar(
               controller: _controller,
@@ -364,7 +322,7 @@ class _AmiiboListWidget extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final ignore = ref.watch(lockProvider).lock;
+    final ignore = ref.watch(lockProvider);
     final amiiboList = ref.watch(amiiboHomeListProvider);
     final isCustom = ref.watch(
       queryProvider.select<bool>(
@@ -634,7 +592,7 @@ class _TitleAppBar extends ConsumerWidget {
       context,
     );
     final S translate = S.of(context);
-    final searchTitle = ref.watch(_titleProvider);
+    final searchTitle = ref.watch(titleProvider);
     final Widget child;
     final InlineSpan title = TextSpan(
       text: translate.category(searchTitle.title),
@@ -700,7 +658,7 @@ class _SelectedOptions extends ConsumerWidget {
         IconButton(
           icon: const Icon(Icons.remove),
           onPressed: () => ref
-              .read(selectProvider)
+              .read(selectProvider.notifier)
               .updateAmiibos(const UserAttributes.none()),
           tooltip: translate.removeTooltip,
         ),
@@ -735,7 +693,7 @@ class _SelectedOptions extends ConsumerWidget {
         IconButton(
           icon: const Icon(iconWished),
           onPressed: () => ref
-              .read(selectProvider)
+              .read(selectProvider.notifier)
               .updateAmiibos(const UserAttributes.wished()),
           tooltip: translate.wishTooltip,
         ),

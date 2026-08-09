@@ -46,7 +46,7 @@ class Buttons extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final key = ref.watch(keyAmiiboProvider);
     final asyncAmiibo = ref.watch(detailAmiiboProvider(key));
-    final isLock = ref.watch(lockProvider.select((value) => value.lock));
+    final isLock = ref.watch(lockProvider);
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: <Widget>[

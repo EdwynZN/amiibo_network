@@ -1,14 +1,16 @@
+import 'package:amiibo_network/app/configuration/preferences_provider.dart';
 import 'package:amiibo_network/app/state/theme/service/theme_mode_scheme_repository.dart';
 import 'package:amiibo_network/app/state/theme/service/theme_repository.dart';
 import 'package:amiibo_network/shared/resources/material3_schemes.dart';
 import 'package:amiibo_network/shared/resources/theme_material3_schemes.dart';
-import 'package:amiibo_network/app/configuration/preferences_provider.dart';
 import 'package:amiibo_network/shared/utils/preferences_constants.dart';
 import 'package:dynamic_color/dynamic_color.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hooks_riverpod/legacy.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
+part 'theme_provider.g.dart';
 
 Future<void> updateOldTheme() async {
   final SharedPreferences preferences = await SharedPreferences.getInstance();
@@ -30,40 +32,25 @@ Future<void> updateOldTheme() async {
   }
 }
 
-final themeRepositoryProvider = Provider<ThemeRepository>((ref) {
+@riverpod
+ThemeRepository themeRepository(Ref ref) {
   final preferences = ref.watch(preferencesProvider);
   return ThemeRepository(preferences);
-});
+}
 
-final dynamicSchemeProvider = FutureProvider<Material3Schemes?>((ref) async {
-  ColorScheme? light;
-  ColorScheme? dark;
+@riverpod
+Future<Material3Schemes?> dynamicScheme(Ref ref) async {
   final corePalette = await DynamicColorPlugin.getCorePalette();
-  if (corePalette != null) {
-    light = corePalette.toColorScheme();
-    dark = corePalette.toColorScheme(brightness: Brightness.dark);
-  } else {
-    return null;
-  }
+  if (corePalette == null) return null;
 
+  final light = corePalette.toColorScheme();
+  final dark = corePalette.toColorScheme(brightness: .dark);
   return Material3Schemes(light: light, dark: dark);
+}
 
-  /* final Color? accentColor = await DynamicColorPlugin.getAccentColor();
-    if (accentColor != null) {
-      light = ColorScheme.fromSeed(
-        seedColor: accentColor,
-        brightness: Brightness.light,
-      );
-      dark = ColorScheme.fromSeed(
-        seedColor: accentColor,
-        brightness: Brightness.dark,
-      );
-    } */
-});
-
-final customSchemesProvider = Provider<Material3Schemes?>(
-  (ref) => ref.watch(dynamicSchemeProvider).value,
-);
+@riverpod
+Material3Schemes? customSchemes(Ref ref) =>
+    ref.watch(dynamicSchemeProvider).value;
 
 final themeProvider = ChangeNotifierProvider<ThemeProvider>((ref) {
   final repository = ref.watch(themeRepositoryProvider);

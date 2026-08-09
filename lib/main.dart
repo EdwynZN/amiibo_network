@@ -84,7 +84,7 @@ Future<void> main() async {
       final cacheDir = await getTemporaryDirectory();
 
       /// Check Android version
-      if (!kIsWeb && defaultTargetPlatform == TargetPlatform.android) {
+      if (!kIsWeb && defaultTargetPlatform == .android) {
         await InfoPackage.instance.versionCode();
       }
 
@@ -123,7 +123,7 @@ Future<void> main() async {
       final UpdateService updateService = container.read(updateServiceProvider);
       final bool notUpdateRequired = await updateService.upToDate;
       if (notUpdateRequired) {
-        container.read(initialScreen.notifier).state = '/home';
+        container.read(initialScreenProvider.notifier).change = '/home';
       }
 
       runApp(

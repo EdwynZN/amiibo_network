@@ -38,7 +38,7 @@ class UserPreferenceCard extends HookConsumerWidget {
         amiiboKey,
       ).select((value) => value.value?.userAttributes),
     );
-    final isLock = ref.watch(lockProvider.select((value) => value.lock));
+    final isLock = ref.watch(lockProvider);
     final isDisable = useMemoized(() => isLock || userAttributes == null, [
       isLock,
       userAttributes == null,

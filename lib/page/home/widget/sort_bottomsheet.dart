@@ -1,27 +1,13 @@
-import 'package:amiibo_network/app/configuration/model/amiibo_category_enum.dart';
-import 'package:amiibo_network/app/configuration/model/hidden_types.dart';
 import 'package:amiibo_network/app/configuration/model/sort_enum.dart';
+import 'package:amiibo_network/app/configuration/query_provider.dart';
+import 'package:amiibo_network/app/state/preferences_provider.dart';
 import 'package:amiibo_network/shared/generated/l10n.dart';
 import 'package:amiibo_network/shared/resources/resources.dart';
-import 'package:amiibo_network/app/state/preferences_provider.dart';
-import 'package:amiibo_network/app/configuration/query_provider.dart';
 import 'package:amiibo_network/shared/widget/implicit_sort_direction_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:sliver_tools/sliver_tools.dart';
-
-final _canSortCardProvider = Provider.autoDispose<bool>((ref) {
-  final isCardsHidden = ref.watch(
-    hiddenCategoryProvider.select((h) => h == HiddenType.Cards),
-  );
-  if (isCardsHidden) return false;
-  return ref.watch(
-    queryProvider.select(
-      (value) => value.categoryAttributes.category == AmiiboCategory.Figures,
-    ),
-  );
-});
 
 class SortCollection extends StatelessWidget {
   const SortCollection({Key? key}) : super(key: key);
@@ -126,7 +112,7 @@ class _BottomSheetSort extends StatelessWidget {
                   sliver: Consumer(
                     builder: (context, ref, child) {
                       final order = ref.watch(orderCategoryProvider);
-                      final canUseCardNumber = ref.watch(_canSortCardProvider);
+                      final canUseCardNumber = ref.watch(canSortCardProvider);
                       return SliverList(
                         delegate: SliverChildListDelegate([
                           _SortListTile(

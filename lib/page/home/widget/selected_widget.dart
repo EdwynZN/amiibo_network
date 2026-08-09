@@ -28,13 +28,13 @@ class _AnimatedSelectionState<T extends AnimatedSelection>
     extends ConsumerState<T> {
   void _onTap(int key, bool isLongPress) {
     if (isLongPress) {
-      ref.read(selectProvider).onLongPress(key);
+      ref.read(selectProvider.notifier).onLongPress(key);
     } else {
       context.push('/amiibo/$key');
     }
   }
 
-  void _onLongPress(int key) => ref.read(selectProvider).onLongPress(key);
+  void _onLongPress(int key) => ref.read(selectProvider.notifier).onLongPress(key);
 
   @override
   Widget build(BuildContext context) {
@@ -43,8 +43,8 @@ class _AnimatedSelectionState<T extends AnimatedSelection>
     final select = ref.watch(
       selectProvider.select<Selection>(
         (cb) => Selection(
-          activated: cb.multipleSelected,
-          selected: cb.isSelected(key),
+          activated: cb.isNotEmpty,
+          selected: cb.contains(key),
         ),
       ),
     );
@@ -184,8 +184,8 @@ class _AnimatedSelectedListTileState
     final select = ref.watch(
       selectProvider.select<Selection>(
         (cb) => Selection(
-          activated: cb.multipleSelected,
-          selected: cb.isSelected(key),
+          activated: cb.isNotEmpty,
+          selected: cb.contains(key),
         ),
       ),
     );
