@@ -5,8 +5,7 @@ import 'package:amiibo_network/entity/amiibo_info/model/amiibo.dart';
 import 'package:amiibo_network/entity/amiibo_info/model/stat.dart';
 import 'package:amiibo_network/feature/amiibo/application/input/update_amiibo_user_attributes.dart';
 
-abstract interface class Service {
-
+abstract interface class AmiiboService {
   Future<Amiibo?> fetchOne(int key);
 
   Future<List<Amiibo>> fetchAllAmiibo();

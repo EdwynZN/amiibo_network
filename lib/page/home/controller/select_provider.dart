@@ -5,15 +5,15 @@ import 'package:amiibo_network/shared/service/service.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/legacy.dart';
 
-final selectProvider = ChangeNotifierProvider.autoDispose<SelectProvider>(
-  (ref) {
-    final service = ref.watch(serviceProvider.notifier);
-    return SelectProvider(service);
-  },
-);
+final selectProvider = ChangeNotifierProvider.autoDispose<SelectProvider>((
+  ref,
+) {
+  final service = ref.watch(serviceProvider.notifier);
+  return SelectProvider(service);
+});
 
 class SelectProvider extends ChangeNotifier {
-  final Service provider;
+  final AmiiboService provider;
   final Set<int> _set = Set<int>();
 
   SelectProvider(this.provider);
@@ -25,12 +25,9 @@ class SelectProvider extends ChangeNotifier {
   bool isSelected(int? value) => _set.contains(value);
 
   void updateAmiibos(UserAttributes attributes) {
-    final amiibos = _set.map(
-      (cb) => UpdateAmiiboUserAttributes(
-        id: cb,
-        attributes: attributes,
-      ),      
-    ).toList();
+    final amiibos = _set
+        .map((cb) => UpdateAmiiboUserAttributes(id: cb, attributes: attributes))
+        .toList();
     provider.update(amiibos);
     clearSelected();
   }

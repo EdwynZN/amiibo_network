@@ -12,24 +12,29 @@ import 'package:amiibo_network/shared/service/service.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/legacy.dart';
 
-final serviceProvider = ChangeNotifierProvider<ServiceNotifer>(
+final serviceProvider = ChangeNotifierProvider<AmiiboServiceNotifer>(
   (ref) => DriftServiceNotifier(database: ref.watch(db.databaseProvider)),
 );
 
-abstract class ServiceNotifer extends ChangeNotifier implements Service {
+abstract class AmiiboServiceNotifer extends ChangeNotifier
+    implements AmiiboService {
   Future<void> updateFromAmiibos(List<Amiibo> amiibos) async {
-    await update(amiibos
-        .map(
-          (a) => UpdateAmiiboUserAttributes(
-              id: a.key, attributes: a.userAttributes),
-        )
-        .toList());
+    await update(
+      amiibos
+          .map(
+            (a) => UpdateAmiiboUserAttributes(
+              id: a.key,
+              attributes: a.userAttributes,
+            ),
+          )
+          .toList(),
+    );
   }
 }
 
-class ProxyServiceNotifier extends ServiceNotifer {
-  final Service service;
-  ProxyServiceNotifier(this.service);
+class ProxyAmiiboServiceNotifier extends AmiiboServiceNotifer {
+  final AmiiboService service;
+  ProxyAmiiboServiceNotifier(this.service);
 
   Future<void> shift(int key) async {
     final Amiibo? amiibo = await fetchOne(key);
@@ -53,13 +58,12 @@ class ProxyServiceNotifier extends ServiceNotifer {
     required SearchAttributes? searchAttributes,
     HiddenType? hiddenCategories,
     bool group = false,
-  }) =>
-      service.fetchStats(
-        categoryAttributes: categoryAttributes,
-        searchAttributes: searchAttributes,
-        hiddenCategories: hiddenCategories,
-        group: group,
-      );
+  }) => service.fetchStats(
+    categoryAttributes: categoryAttributes,
+    searchAttributes: searchAttributes,
+    hiddenCategories: hiddenCategories,
+    group: group,
+  );
 
   @override
   Future<List<Amiibo>> fetchByCategory({
@@ -70,16 +74,15 @@ class ProxyServiceNotifier extends ServiceNotifer {
     List<String> figures = const [],
     List<String> cards = const [],
     HiddenType? hiddenCategories,
-  }) =>
-      service.fetchByCategory(
-        categoryAttributes: categoryAttributes,
-        searchAttributes: searchAttributes,
-        orderBy: orderBy,
-        sortBy: sortBy,
-        figures: figures,
-        cards: cards,
-        hiddenCategories: hiddenCategories,
-      );
+  }) => service.fetchByCategory(
+    categoryAttributes: categoryAttributes,
+    searchAttributes: searchAttributes,
+    orderBy: orderBy,
+    sortBy: sortBy,
+    figures: figures,
+    cards: cards,
+    hiddenCategories: hiddenCategories,
+  );
 
   @override
   Future<void> update(List<UpdateAmiiboUserAttributes> amiibos) async {
@@ -94,24 +97,19 @@ class ProxyServiceNotifier extends ServiceNotifer {
     OrderBy orderBy = OrderBy.NA,
     SortBy sortBy = SortBy.DESC,
     HiddenType? hiddenCategories,
-  }) =>
-      service.fetchDistinct(
-        categoryAttributes: categoryAttributes,
-        searchAttributes: searchAttributes,
-        hiddenCategories: hiddenCategories,
-        orderBy: orderBy,
-        sortBy: sortBy,
-      );
+  }) => service.fetchDistinct(
+    categoryAttributes: categoryAttributes,
+    searchAttributes: searchAttributes,
+    hiddenCategories: hiddenCategories,
+    orderBy: orderBy,
+    sortBy: sortBy,
+  );
 
   @override
   Future<List<String>> search({
     required SearchAttributes searchAttributes,
     HiddenType? hidden,
-  }) =>
-      service.search(
-        searchAttributes: searchAttributes,
-        hidden: hidden,
-      );
+  }) => service.search(searchAttributes: searchAttributes, hidden: hidden);
 
   @override
   Future<void> resetCollection() async {
@@ -123,18 +121,18 @@ class ProxyServiceNotifier extends ServiceNotifer {
   Future<Amiibo?> fetchOne(int key) => service.fetchOne(key);
 }
 
-class DriftServiceNotifier extends ServiceNotifer {
+class DriftServiceNotifier extends AmiiboServiceNotifer {
   final AmiiboDao _dao;
 
-  DriftServiceNotifier({
-    required db.AppDatabase database,
-  }) : _dao = database.amiiboDao;
+  DriftServiceNotifier({required db.AppDatabase database})
+    : _dao = database.amiiboDao;
 
   @override
   Future<List<Amiibo>> fetchAllAmiibo() async {
     final result = await _dao.fetchAll(
-      categoryAttributes:
-          const CategoryAttributes(category: AmiiboCategory.All),
+      categoryAttributes: const CategoryAttributes(
+        category: AmiiboCategory.All,
+      ),
     );
     return result.map((e) => e.toDomain()).toList();
   }
