@@ -1,5 +1,5 @@
 import 'package:amiibo_network/shared/utils/format_date.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 class RegionDetail extends StatelessWidget {
   final String asset;

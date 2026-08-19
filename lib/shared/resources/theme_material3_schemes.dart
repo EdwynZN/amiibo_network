@@ -1,6 +1,6 @@
 import 'package:amiibo_network/shared/resources/material3_schemes.dart';
 import 'package:amiibo_network/shared/utils/color_utils.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:material_color_utilities/material_color_utilities.dart';
 
 ColorScheme blendScheme(

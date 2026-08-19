@@ -9,7 +9,7 @@ import 'package:amiibo_network/page/detail/widget/card_details.dart';
 import 'package:amiibo_network/page/detail/widget/amiibo_header_card.dart';
 import 'package:amiibo_network/page/detail/widget/user_preferences_card.dart';
 import 'package:amiibo_network/page/detail/widget/game_list.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:amiibo_network/shared/generated/l10n.dart';
 import 'package:gap/gap.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';

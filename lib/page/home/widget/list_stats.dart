@@ -1,7 +1,7 @@
 import 'package:amiibo_network/entity/amiibo_info/model/stat.dart';
 import 'package:amiibo_network/page/home/controller/stats_amiibo_provider.dart';
 import 'package:amiibo_network/page/home/widget/single_stat.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:sliver_tools/sliver_tools.dart';
 

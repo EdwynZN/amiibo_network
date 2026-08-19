@@ -1,7 +1,7 @@
 import 'package:amiibo_network/app/configuration/model/hidden_types.dart';
 import 'package:amiibo_network/app/state/preferences_provider.dart';
 import 'package:amiibo_network/app/configuration/query_provider.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:amiibo_network/shared/generated/l10n.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 

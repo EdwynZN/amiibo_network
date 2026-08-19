@@ -14,7 +14,7 @@ import 'package:amiibo_network/shared/utils/amiibo_asset_util.dart';
 import 'package:amiibo_network/shared/utils/format_color_on_theme.dart';
 import 'package:amiibo_network/shared/utils/stat_utils.dart';
 import 'package:amiibo_network/shared/utils/theme_extensions.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter/services.dart';
 
 class Screenshot {

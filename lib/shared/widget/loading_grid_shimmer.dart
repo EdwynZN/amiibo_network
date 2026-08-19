@@ -1,6 +1,6 @@
 import 'dart:math';
 import 'package:amiibo_network/shared/utils/amiibo_asset_util.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 
 class _SlidingGradientTransform extends GradientTransform {

@@ -4,7 +4,7 @@ import 'package:amiibo_network/page/home/home_screen.dart';
 import 'package:amiibo_network/page/settings/settings_screen.dart';
 import 'package:amiibo_network/page/splash_screen.dart';
 import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 

@@ -3,7 +3,7 @@ import 'dart:convert';
 
 import 'package:amiibo_network/shared/resources/material3_schemes.dart';
 import 'package:amiibo_network/shared/utils/preferences_constants.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 abstract interface class ThemeRepository {

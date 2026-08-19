@@ -6,10 +6,11 @@ import 'package:amiibo_network/app/state/theme/service/theme_mode_scheme_reposit
 import 'package:amiibo_network/app/state/theme/service/theme_repository.dart';
 import 'package:amiibo_network/shared/resources/material3_schemes.dart';
 import 'package:amiibo_network/shared/resources/theme_material3_schemes.dart';
+import 'package:amiibo_network/shared/utils/corepalette_to_color_scheme.dart';
 import 'package:amiibo_network/shared/utils/preferences_constants.dart';
 import 'package:collection/collection.dart';
-import 'package:dynamic_color/dynamic_color.dart';
-import 'package:flutter/material.dart';
+import 'package:dynamic_color/dynamic_color.dart' hide CorePaletteToColorScheme;
+import 'package:material_ui/material_ui.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 

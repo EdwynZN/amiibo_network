@@ -6,7 +6,7 @@ import 'package:amiibo_network/app/configuration/query_provider.dart';
 import 'package:amiibo_network/app/state/theme/theme_provider.dart';
 import 'package:amiibo_network/shared/utils/format_color_on_theme.dart';
 import 'package:amiibo_network/shared/utils/theme_extensions.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:amiibo_network/template/theme_widget.dart';
 import 'package:amiibo_network/app/configuration/model/amiibo_category_enum.dart';
 import 'package:amiibo_network/shared/generated/l10n.dart';

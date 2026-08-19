@@ -15,7 +15,7 @@ import 'package:amiibo_network/shared/widget/feature_disable_message_card.dart';
 import 'package:amiibo_network/page/settings/widget/locale_selection_dialog.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter/services.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:amiibo_network/shared/service/storage.dart';
@@ -170,14 +170,10 @@ class _FeatureListWidgetState extends ConsumerState<_FeatureListWidget> {
   Future<void> _openFileExplorer() async {
     try {
       final service = ref.read(amiiboServiceProvider);
-      final file = await FilePicker.pickFiles(
-        type: FileType.any,
-        //allowedExtensions: ['json'],
-      );
-      final String? _path = file?.files.single.path;
-      if (_path == null)
-        return;
-      else if (file?.files.single.extension != 'json') {
+      final file = await FilePicker.pickFile(type: .any);
+      final String? _path = file?.path;
+      if (_path == null) return;
+      if (_path.split('.').last != 'json') {
         openSnackBar(translate.errorImporting);
       } else {
         //final Uint8List data = file!.files.single.bytes!;
@@ -469,7 +465,7 @@ class _SupportListWidget extends ConsumerWidget {
               colorBlendMode: BlendMode.srcATop,
               color: color,
             ),
-            onTap: LaunchReview.launch,
+            onTap: LaunchAppStore.launch,
           ),
           _ListSettings(
             title: translate.donate,

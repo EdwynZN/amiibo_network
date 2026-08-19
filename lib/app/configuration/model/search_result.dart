@@ -6,43 +6,60 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 part 'search_result.freezed.dart';
 
 @freezed
-abstract class Query with _$Query {
-  const Query._();
-
-  const factory Query.search({
+abstract class Search with _$Search {
+  const factory Search({
     @Default(CategoryAttributes(category: AmiiboCategory.All))
     CategoryAttributes categoryAttributes,
     SearchAttributes? searchAttributes,
     @Default(OrderBy.NA) OrderBy orderBy,
     @Default(SortBy.DESC) SortBy sortBy,
-  }) = Search;
+  }) = _Search;
 }
 
 @freezed
-abstract class CategoryAttributes with _$CategoryAttributes {
-  const factory CategoryAttributes({
-    @Default([]) List<String> figures,
-    @Default([]) List<String> cards,
-    required AmiiboCategory category,
-  }) = _CategoryAttributes;
+class CategoryAttributes with _$CategoryAttributes {
+  const CategoryAttributes({
+    required this.category,
+    this.figures = const [],
+    this.cards = const [],
+  });
+
+  @override
+  final List<String> figures;
+  @override
+  final List<String> cards;
+  @override
+  final AmiiboCategory category;
 }
 
 @freezed
-abstract class SearchAttributes with _$SearchAttributes {
-  const factory SearchAttributes({
-    required String search,
-    required SearchCategory category,
-  }) = _SearchAttributes;
+class SearchAttributes with _$SearchAttributes {
+  const SearchAttributes({required this.search, required this.category});
+
+  @override
+  final String search;
+  @override
+  final SearchCategory category;
 }
 
 @freezed
-abstract class Filter with _$Filter {
-  const factory Filter({
-    @Default(CategoryAttributes(category: AmiiboCategory.All))
-    CategoryAttributes categoryAttributes,
-    SearchAttributes? searchAttributes,
-    @Default(OrderBy.NA) OrderBy orderBy,
-    @Default(SortBy.DESC) SortBy sortBy,
-    HiddenType? hiddenType,
-  }) = _Filter;
+class Filter with _$Filter {
+  const Filter({
+    this.categoryAttributes = const CategoryAttributes(category: .All),
+    this.searchAttributes,
+    this.orderBy = .NA,
+    this.sortBy = .DESC,
+    this.hiddenType,
+  });
+
+  @override
+  final CategoryAttributes categoryAttributes;
+  @override
+  final SearchAttributes? searchAttributes;
+  @override
+  final OrderBy orderBy;
+  @override
+  final SortBy sortBy;
+  @override
+  final HiddenType? hiddenType;
 }
