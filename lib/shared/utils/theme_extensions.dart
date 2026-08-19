@@ -4,7 +4,7 @@ import 'package:material_ui/material_ui.dart';
 
 @immutable
 class PreferencesExtension extends ThemeExtension<PreferencesExtension>
-    with EquatableMixin {
+    with Equatable {
   final TonalColor ownPalette;
   final TonalColor wishPalette;
   final Brightness brightness;

@@ -170,14 +170,10 @@ class _FeatureListWidgetState extends ConsumerState<_FeatureListWidget> {
   Future<void> _openFileExplorer() async {
     try {
       final service = ref.read(amiiboServiceProvider);
-      final file = await FilePicker.pickFiles(
-        type: FileType.any,
-        //allowedExtensions: ['json'],
-      );
-      final String? _path = file?.files.single.path;
-      if (_path == null)
-        return;
-      else if (file?.files.single.extension != 'json') {
+      final file = await FilePicker.pickFile(type: .any);
+      final String? _path = file?.path;
+      if (_path == null) return;
+      if (_path.split('.').last != 'json') {
         openSnackBar(translate.errorImporting);
       } else {
         //final Uint8List data = file!.files.single.bytes!;
@@ -469,7 +465,7 @@ class _SupportListWidget extends ConsumerWidget {
               colorBlendMode: BlendMode.srcATop,
               color: color,
             ),
-            onTap: LaunchReview.launch,
+            onTap: LaunchAppStore.launch,
           ),
           _ListSettings(
             title: translate.donate,
