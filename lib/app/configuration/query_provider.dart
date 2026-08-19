@@ -32,7 +32,7 @@ Filter filter(Ref ref) {
 
 @riverpod
 FutureOr<List<String>> figures(Ref ref) async {
-  final service = ref.watch(serviceProvider.notifier);
+  final service = ref.watch(serviceProvider);
   final list = await service.fetchDistinct(
     categoryAttributes: const CategoryAttributes(category: .Figures),
     searchAttributes: null,
@@ -45,7 +45,7 @@ FutureOr<List<String>> figures(Ref ref) async {
 
 @riverpod
 FutureOr<List<String>> cards(Ref ref) async {
-  final service = ref.watch(serviceProvider.notifier);
+  final service = ref.watch(serviceProvider);
   final list = await service.fetchDistinct(
     searchAttributes: null,
     categoryAttributes: const CategoryAttributes(category: .Cards),

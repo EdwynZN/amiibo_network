@@ -104,7 +104,7 @@ class UserPreferenceCard extends HookConsumerWidget {
                       alignment: Alignment.centerRight,
                       child: IconButton.filledTonal(
                         onPressed: () {
-                          ref.read(serviceProvider.notifier).update([
+                          ref.read(serviceProvider).update([
                             UpdateAmiiboUserAttributes(
                               id: amiiboKey,
                               attributes: const EmptyUserAttributes(),
@@ -192,7 +192,7 @@ class _InnerUserCaterogies extends HookConsumerWidget {
       } else {
         return null;
       }
-      return ref.read(serviceProvider.notifier).update([
+      return ref.read(serviceProvider).update([
         UpdateAmiiboUserAttributes(id: amiiboKey, attributes: newAttributes),
       ]);
     }, [openedTextController, boxedTextController, ref, amiiboKey]);
@@ -221,7 +221,7 @@ class _InnerUserCaterogies extends HookConsumerWidget {
               : () {
                   if (userAttributes == null) return;
                   final bool newValue = userAttributes is! WishedUserAttributes;
-                  ref.read(serviceProvider.notifier).update([
+                  ref.read(serviceProvider).update([
                     UpdateAmiiboUserAttributes(
                       id: amiiboKey,
                       attributes: newValue

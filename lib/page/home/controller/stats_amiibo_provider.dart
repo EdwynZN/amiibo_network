@@ -10,7 +10,7 @@ part 'stats_amiibo_provider.g.dart';
 
 @riverpod
 Stream<List<Stat>> stats(Ref ref) async* {
-  final service = ref.watch(serviceProvider.notifier);
+  final service = ref.watch(serviceProvider);
   final streamController = StreamController<Filter>();
 
   void listen() {
@@ -19,13 +19,9 @@ Stream<List<Stat>> stats(Ref ref) async* {
 
   service.addListener(listen);
 
-  final subscription = ref.listen(
-    filterProvider,
-    (previous, next) {
-      if (next != previous) streamController.sink.add(next);
-    },
-    fireImmediately: true,
-  );
+  final subscription = ref.listen(filterProvider, (previous, next) {
+    if (next != previous) streamController.sink.add(next);
+  }, fireImmediately: true);
 
   ref.onDispose(() {
     subscription.close();
@@ -33,7 +29,8 @@ Stream<List<Stat>> stats(Ref ref) async* {
     streamController.close();
   });
 
-  yield* streamController.stream.asyncMap((filter) async => <Stat>[
+  yield* streamController.stream.asyncMap(
+    (filter) async => <Stat>[
       ...await service.fetchStats(
         categoryAttributes: filter.categoryAttributes,
         searchAttributes: filter.searchAttributes,

@@ -30,11 +30,9 @@ TitleSearch title(Ref ref) {
   }
   return TitleSearch(
     title: switch (category) {
-      .Cards
-          when query.categoryAttributes.cards.firstOrNull != null =>
+      .Cards when query.categoryAttributes.cards.firstOrNull != null =>
         query.categoryAttributes.cards.first,
-      .Figures
-          when query.categoryAttributes.figures.firstOrNull != null =>
+      .Figures when query.categoryAttributes.figures.firstOrNull != null =>
         query.categoryAttributes.figures.first,
       _ => category.name,
     },
@@ -55,7 +53,7 @@ class SelectNotifier extends _$SelectNotifier {
   late AmiiboService _service;
   @override
   Set<int> build() {
-    _service = ref.watch(serviceProvider.notifier);
+    _service = ref.watch(serviceProvider);
     return const UnmodifiableSetView.empty();
   }
 

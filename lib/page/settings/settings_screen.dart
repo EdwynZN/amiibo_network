@@ -169,7 +169,7 @@ class _FeatureListWidgetState extends ConsumerState<_FeatureListWidget> {
 
   Future<void> _openFileExplorer() async {
     try {
-      final service = ref.read(serviceProvider.notifier);
+      final service = ref.read(serviceProvider);
       final file = await FilePicker.pickFiles(
         type: FileType.any,
         //allowedExtensions: ['json'],
@@ -209,7 +209,7 @@ class _FeatureListWidgetState extends ConsumerState<_FeatureListWidget> {
   Future<void> _writePermission() async {
     try {
       if (!(await permissionGranted(scaffoldState))) return;
-      final _service = ref.read(serviceProvider.notifier);
+      final _service = ref.read(serviceProvider);
       final amiibos = await _service.fetchAllAmiibo();
       openSnackBar(translate.savingCollectionMessage);
       await NotificationService.saveJsonFile(
@@ -573,10 +573,7 @@ class __SaveCollectionState extends ConsumerState<_SaveCollection> {
           final listOfFigures = await ref.read(figuresProvider.future);
           final listOfCards = await ref.read(cardsProvider.future);
           if (figures.isNotEmpty) {
-            equalFigures = QueryNotifier.checkEquality(
-              figures,
-              listOfFigures,
-            );
+            equalFigures = QueryNotifier.checkEquality(figures, listOfFigures);
           }
           if (cards.isNotEmpty) {
             equalCards = QueryNotifier.checkEquality(cards, listOfCards);
@@ -642,7 +639,7 @@ class _ResetCollection extends ConsumerWidget {
           final ScaffoldMessengerState? scaffoldState =
               ScaffoldMessenger.maybeOf(context)!;
           try {
-            await ref.read(serviceProvider.notifier).resetCollection();
+            await ref.read(serviceProvider).resetCollection();
             _message(scaffoldState, translate.collectionReset);
           } catch (e) {
             _message(scaffoldState, translate.splashError);

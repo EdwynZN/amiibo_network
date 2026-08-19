@@ -10,11 +10,18 @@ import 'package:amiibo_network/entity/amiibo_info/model/stat.dart';
 import 'package:amiibo_network/feature/amiibo/application/input/update_amiibo_user_attributes.dart';
 import 'package:amiibo_network/shared/service/service.dart';
 import 'package:flutter/material.dart';
-import 'package:hooks_riverpod/legacy.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-final serviceProvider = ChangeNotifierProvider<AmiiboServiceNotifer>(
-  (ref) => DriftServiceNotifier(database: ref.watch(db.databaseProvider)),
-);
+part 'service_provider.g.dart';
+
+@riverpod
+AmiiboServiceNotifer service(Ref ref) {
+  final database = ref.watch(db.databaseProvider);
+  final notifier = DriftServiceNotifier(database: database);
+
+  ref.onDispose(notifier.dispose);
+  return notifier;
+}
 
 abstract class AmiiboServiceNotifer extends ChangeNotifier
     implements AmiiboService {
