@@ -15,7 +15,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 part 'service_provider.g.dart';
 
 @riverpod
-AmiiboServiceNotifer service(Ref ref) {
+AmiiboServiceNotifer amiiboService(Ref ref) {
   final database = ref.watch(db.databaseProvider);
   final notifier = DriftServiceNotifier(database: database);
 

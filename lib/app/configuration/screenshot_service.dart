@@ -42,7 +42,7 @@ class ScreenshotNotifier extends _$ScreenshotNotifier {
       _themeMode.preferredMode,
       context,
       _localPreferences.value,
-      ref.read(serviceProvider),
+      ref.read(amiiboServiceProvider),
       ref.read(ownTypesCategoryProvider),
     );
     state = const AsyncValue.loading();
@@ -104,7 +104,7 @@ class ScreenshotNotifier extends _$ScreenshotNotifier {
       _themeMode.preferredMode,
       context,
       _localPreferences.value,
-      ref.read(serviceProvider),
+      ref.read(amiiboServiceProvider),
       ref.read(ownTypesCategoryProvider),
     );
     state = const AsyncValue.loading();

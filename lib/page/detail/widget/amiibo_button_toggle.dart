@@ -98,7 +98,7 @@ class WishedOutlinedButton extends ConsumerWidget {
           : () {
               if (amiibo == null) return;
               final bool newValue = !isActive;
-              ref.read(serviceProvider).updateFromAmiibos([
+              ref.read(amiiboServiceProvider).updateFromAmiibos([
                 amiibo!.copyWith(
                   userAttributes: newValue
                       ? const WishedUserAttributes()
@@ -167,7 +167,7 @@ class OwnedOutlinedButton extends ConsumerWidget {
               if (newAttributes == null) {
                 return;
               }
-              ref.read(serviceProvider).update([
+              ref.read(amiiboServiceProvider).update([
                 UpdateAmiiboUserAttributes(
                   id: amiibo!.key,
                   attributes: newAttributes,
@@ -217,7 +217,7 @@ class WishedButton extends ConsumerWidget {
           : () {
               if (amiibo == null) return;
               final bool newValue = !isActive;
-              ref.read(serviceProvider).updateFromAmiibos([
+              ref.read(amiiboServiceProvider).updateFromAmiibos([
                 amiibo!.copyWith(
                   userAttributes: newValue
                       ? const WishedUserAttributes()
@@ -285,7 +285,7 @@ class OwnedButton extends ConsumerWidget {
               if (newAttributes == null) {
                 return;
               }
-              ref.read(serviceProvider).update([
+              ref.read(amiiboServiceProvider).update([
                 UpdateAmiiboUserAttributes(
                   id: amiibo!.key,
                   attributes: newAttributes,

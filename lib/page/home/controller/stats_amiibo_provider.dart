@@ -10,7 +10,7 @@ part 'stats_amiibo_provider.g.dart';
 
 @riverpod
 Stream<List<Stat>> stats(Ref ref) async* {
-  final service = ref.watch(serviceProvider);
+  final service = ref.watch(amiiboServiceProvider);
   final streamController = StreamController<Filter>();
 
   void listen() {

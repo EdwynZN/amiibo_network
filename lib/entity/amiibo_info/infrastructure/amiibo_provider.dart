@@ -27,7 +27,7 @@ AsyncValue<Stat> statHome(Ref ref) =>
 
 @riverpod
 Stream<Amiibo?> detailAmiibo(Ref ref, int key) async* {
-  final service = ref.watch(serviceProvider);
+  final service = ref.watch(amiiboServiceProvider);
   final streamController = StreamController<int>();
 
   void listen() => streamController.sink.add(key);
@@ -45,7 +45,7 @@ Stream<Amiibo?> detailAmiibo(Ref ref, int key) async* {
 
 @riverpod
 Stream<List<Amiibo>> amiiboHomeList(Ref ref) async* {
-  final service = ref.watch(serviceProvider);
+  final service = ref.watch(amiiboServiceProvider);
   final streamController = StreamController<Filter>();
 
   void listen() => streamController.sink.add(ref.read(filterProvider));

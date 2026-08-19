@@ -8,7 +8,7 @@ part 'search_provider.g.dart';
 
 @riverpod
 Future<List<String>> search(Ref ref, String search) {
-  final service = ref.watch(serviceProvider);
+  final service = ref.watch(amiiboServiceProvider);
   final category = ref.watch(categorySearchProvider);
   final hiddenCategory = ref.watch(hiddenCategoryProvider);
 

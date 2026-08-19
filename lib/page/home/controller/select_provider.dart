@@ -53,7 +53,7 @@ class SelectNotifier extends _$SelectNotifier {
   late AmiiboService _service;
   @override
   Set<int> build() {
-    _service = ref.watch(serviceProvider);
+    _service = ref.watch(amiiboServiceProvider);
     return const UnmodifiableSetView.empty();
   }
 

@@ -169,7 +169,7 @@ class _FeatureListWidgetState extends ConsumerState<_FeatureListWidget> {
 
   Future<void> _openFileExplorer() async {
     try {
-      final service = ref.read(serviceProvider);
+      final service = ref.read(amiiboServiceProvider);
       final file = await FilePicker.pickFiles(
         type: FileType.any,
         //allowedExtensions: ['json'],
@@ -209,7 +209,7 @@ class _FeatureListWidgetState extends ConsumerState<_FeatureListWidget> {
   Future<void> _writePermission() async {
     try {
       if (!(await permissionGranted(scaffoldState))) return;
-      final _service = ref.read(serviceProvider);
+      final _service = ref.read(amiiboServiceProvider);
       final amiibos = await _service.fetchAllAmiibo();
       openSnackBar(translate.savingCollectionMessage);
       await NotificationService.saveJsonFile(
@@ -639,7 +639,7 @@ class _ResetCollection extends ConsumerWidget {
           final ScaffoldMessengerState? scaffoldState =
               ScaffoldMessenger.maybeOf(context)!;
           try {
-            await ref.read(serviceProvider).resetCollection();
+            await ref.read(amiiboServiceProvider).resetCollection();
             _message(scaffoldState, translate.collectionReset);
           } catch (e) {
             _message(scaffoldState, translate.splashError);
