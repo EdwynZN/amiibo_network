@@ -1,6 +1,6 @@
 import 'package:amiibo_network/shared/resources/theme_material3_schemes.dart';
 import 'package:equatable/equatable.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 @immutable
 class PreferencesExtension extends ThemeExtension<PreferencesExtension>

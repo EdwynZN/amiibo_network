@@ -1,6 +1,6 @@
 import 'package:amiibo_network/app/state/theme/theme_provider.dart';
 import 'package:amiibo_network/shared/utils/tablet_utils.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:amiibo_network/shared/generated/l10n.dart';
 import 'package:gap/gap.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';

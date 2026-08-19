@@ -15,7 +15,7 @@ import 'package:amiibo_network/shared/widget/feature_disable_message_card.dart';
 import 'package:amiibo_network/page/settings/widget/locale_selection_dialog.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter/services.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:amiibo_network/shared/service/storage.dart';

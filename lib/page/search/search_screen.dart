@@ -2,7 +2,7 @@ import 'dart:async';
 import 'package:amiibo_network/app/configuration/model/search_result.dart';
 import 'package:amiibo_network/app/configuration/query_provider.dart';
 import 'package:amiibo_network/app/configuration/search_provider.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter/services.dart';
 import 'package:amiibo_network/shared/widget/floating_bar.dart';
 import 'package:amiibo_network/app/configuration/model/amiibo_category_enum.dart';

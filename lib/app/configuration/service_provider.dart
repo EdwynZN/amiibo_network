@@ -9,7 +9,7 @@ import 'package:amiibo_network/app/configuration/model/search_result.dart';
 import 'package:amiibo_network/entity/amiibo_info/model/stat.dart';
 import 'package:amiibo_network/feature/amiibo/application/input/update_amiibo_user_attributes.dart';
 import 'package:amiibo_network/shared/service/service.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'service_provider.g.dart';

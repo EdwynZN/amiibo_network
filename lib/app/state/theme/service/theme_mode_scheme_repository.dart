@@ -1,8 +1,8 @@
 import 'package:amiibo_network/shared/resources/material3_schemes.dart';
 import 'package:amiibo_network/shared/resources/theme_material3_schemes.dart';
 import 'package:amiibo_network/shared/utils/theme_extensions.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
+import 'package:cupertino_ui/cupertino_ui.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter/services.dart';
 
 const iconOwned = Icons.bookmark_added_rounded;

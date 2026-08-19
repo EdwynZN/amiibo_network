@@ -7,7 +7,7 @@ import 'package:amiibo_network/shared/generated/l10n.dart';
 import 'package:amiibo_network/shared/service/notification_service.dart';
 import 'package:amiibo_network/shared/service/screenshot.dart';
 import 'package:amiibo_network/shared/service/storage.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'screenshot_service.g.dart';

@@ -8,7 +8,7 @@ import 'package:amiibo_network/app/state/preferences_provider.dart';
 import 'package:amiibo_network/app/configuration/service_provider.dart';
 import 'package:amiibo_network/shared/utils/theme_extensions.dart';
 import 'package:amiibo_network/page/detail/widget/owned_bottom_sheet.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:gap/gap.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 

@@ -2,7 +2,7 @@ import 'dart:convert';
 
 import 'package:amiibo_network/shared/resources/theme_material3_schemes.dart';
 import 'package:amiibo_network/shared/utils/color_utils.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'material3_schemes.freezed.dart';

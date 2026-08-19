@@ -4,7 +4,7 @@ import 'package:amiibo_network/app/configuration/query_provider.dart';
 import 'package:amiibo_network/page/home/controller/select_provider.dart';
 import 'package:amiibo_network/page/detail/widget/amiibo_button_toggle.dart';
 import 'package:amiibo_network/shared/utils/amiibo_asset_util.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:gap/gap.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';

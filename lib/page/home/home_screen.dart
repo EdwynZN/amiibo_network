@@ -25,7 +25,7 @@ import 'package:amiibo_network/shared/routes/route_transitions.dart';
 import 'package:amiibo_network/template/selected_chip.dart';
 import 'package:amiibo_network/page/home/widget/selected_widget.dart';
 import 'package:amiibo_network/page/home/widget/sort_bottomsheet.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter/rendering.dart';
 import 'package:amiibo_network/page/home/widget/drawer.dart';
 import 'package:amiibo_network/shared/widget/animated_widgets.dart';
