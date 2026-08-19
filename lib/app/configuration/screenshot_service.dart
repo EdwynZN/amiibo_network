@@ -18,14 +18,14 @@ Screenshot _screenshotService(Ref ref) => Screenshot();
 @Riverpod(keepAlive: true)
 class ScreenshotNotifier extends _$ScreenshotNotifier {
   late Screenshot _screenshot;
-  late ThemeProvider _themeProvider;
+  late ThemeModeNotifier _themeMode;
   late UserPreferencessNotifier _localPreferences;
 
   @override
   Future<bool> build() async {
     ref.watch(queryProvider.notifier);
     _localPreferences = ref.watch(personalProvider.notifier);
-    _themeProvider = ref.watch(themeProvider.notifier);
+    _themeMode = ref.watch(themeModeProvider.notifier);
     _screenshot = ref.watch(_screenshotServiceProvider);
 
     return true;
@@ -39,7 +39,7 @@ class ScreenshotNotifier extends _$ScreenshotNotifier {
     if (isLoading) return;
     final S translate = S.current;
     _screenshot.customData(
-      _themeProvider.preferredMode,
+      _themeMode.preferredMode,
       context,
       _localPreferences.value,
       ref.read(serviceProvider),
@@ -101,7 +101,7 @@ class ScreenshotNotifier extends _$ScreenshotNotifier {
     }
     final S translate = S.current;
     _screenshot.customData(
-      _themeProvider.preferredMode,
+      _themeMode.preferredMode,
       context,
       _localPreferences.value,
       ref.read(serviceProvider),

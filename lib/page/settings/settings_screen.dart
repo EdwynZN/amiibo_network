@@ -84,7 +84,7 @@ class _AppearanceListWidget extends ConsumerWidget {
           const Gap(4.0),
           Consumer(
             builder: (context, ref, _) {
-              final mode = ref.watch(themeProvider).preferredMode;
+              final mode = ref.watch(themeModeProvider);
               return _ListSettings(
                 title: translate.appearance,
                 subtitle: translate.themeMode(mode),
@@ -441,7 +441,7 @@ class _SupportListWidget extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final translate = S.of(context);
     final mediaBrightness = MediaQuery.of(context).platformBrightness;
-    final themeMode = ref.watch(themeProvider.select((t) => t.preferredMode));
+    final themeMode = ref.watch(themeModeProvider);
     final color = colorOnThemeMode(themeMode, mediaBrightness);
     return SliverPadding(
       padding: const EdgeInsets.symmetric(horizontal: 16.0),

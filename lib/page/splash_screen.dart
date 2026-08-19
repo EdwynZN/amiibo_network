@@ -35,7 +35,7 @@ class SplashScreenState extends ConsumerState<SplashScreen>
   @override
   void initState() {
     super.initState();
-    themeMode = ref.read(themeProvider).preferredMode;
+    themeMode = ref.read(themeModeProvider);
     _animationController = AnimationController(
       duration: Duration(seconds: 3),
       vsync: this,

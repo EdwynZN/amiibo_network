@@ -41,9 +41,7 @@ class ThemeButton extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final themeData = Theme.of(context);
-    final ThemeMode? themeMode = ref.watch(
-      themeProvider.select<ThemeMode?>((value) => value.preferredMode),
-    );
+    final themeMode = ref.watch(themeModeProvider);
     return DecoratedBox(
       decoration: ShapeDecoration(
         shape: const CircleBorder(),
@@ -74,7 +72,7 @@ class ThemeButton extends ConsumerWidget {
           ),
         ),
         onLongPress: openDialog ? () => dialog(context) : null,
-        onTap: () async => ref.read(themeProvider).toggleThemeMode(),
+        onTap: ref.read(themeModeProvider.notifier).toggleThemeMode,
       ),
     );
   }
@@ -117,35 +115,6 @@ class _DialogTheme extends ConsumerWidget {
     final double spacing = _spacing(MediaQuery.of(context).size.width);
     final S translate = S.of(context);
     final theme = Theme.of(context);
-    final ThemeMode themeMode = ref.watch(
-      themeProvider.select<ThemeMode>((value) => value.preferredMode),
-    );
-    final segmentedModes = SegmentedButton<ThemeMode>(
-      emptySelectionAllowed: false,
-      multiSelectionEnabled: false,
-      showSelectedIcon: false,
-      segments: <ButtonSegment<ThemeMode>>[
-        ButtonSegment<ThemeMode>(
-          value: ThemeMode.light,
-          label: Text(translate.themeMode(ThemeMode.light)),
-          icon: const Icon(Icons.wb_sunny),
-        ),
-        ButtonSegment<ThemeMode>(
-          value: ThemeMode.dark,
-          label: Text(translate.themeMode(ThemeMode.dark)),
-          icon: const Icon(Icons.brightness_3),
-        ),
-        ButtonSegment<ThemeMode>(
-          value: ThemeMode.system,
-          label: Text(translate.themeMode(ThemeMode.system)),
-          icon: const Icon(Icons.brightness_auto),
-        ),
-      ],
-      selected: <ThemeMode>{themeMode},
-      onSelectionChanged: (newSelection) {
-        ref.read(themeProvider).selectMode(newSelection.first);
-      },
-    );
     final child = IntrinsicWidth(
       stepWidth: 56.0,
       child: ConstrainedBox(
@@ -176,51 +145,16 @@ class _DialogTheme extends ConsumerWidget {
                 child: SingleChildScrollView(
                   child: ListBody(
                     children: [
-                      segmentedModes,
+                      const _SegmentedThemeModes(),
                       const _WallpaperTile(size: _circleSize),
                       Padding(
                         padding: const EdgeInsets.symmetric(vertical: 16),
                         child: ConstrainedBox(
                           constraints: _constraint,
-                          child: Consumer(
-                            builder: (context, ref, child) {
-                              final themeRef = ref.watch(themeProvider);
-                              return Wrap(
-                                runSpacing: 10.0,
-                                spacing: spacing,
-                                children: <Widget>[
-                                  for (Color color in themeRef.lightColors)
-                                    GestureDetector(
-                                      onTap: () => themeRef.lightTheme(
-                                        themeRef.lightColors.indexOf(color),
-                                      ),
-                                      child: _ColorCircleAvatar(
-                                        color: color,
-                                        size: _circleSize,
-                                        isDynamic: false,
-                                        side: BorderSide(
-                                          strokeAlign: -1.0,
-                                          width: 5.0,
-                                          color:
-                                              theme.brightness ==
-                                                  Brightness.light
-                                              ? theme.colorScheme.tertiary
-                                              : theme
-                                                    .colorScheme
-                                                    .inversePrimary,
-                                          style:
-                                              themeRef.lightOption ==
-                                                  themeRef.lightColors.indexOf(
-                                                    color,
-                                                  )
-                                              ? BorderStyle.solid
-                                              : BorderStyle.none,
-                                        ),
-                                      ),
-                                    ),
-                                ],
-                              );
-                            },
+                          child: _ThemeColorOptions(
+                            diameter: _circleSize,
+                            spacing: spacing,
+                            .light,
                           ),
                         ),
                       ),
@@ -230,43 +164,10 @@ class _DialogTheme extends ConsumerWidget {
                       ),
                       Padding(
                         padding: const EdgeInsets.fromLTRB(0, 16, 0, 0),
-                        child: Consumer(
-                          builder: (context, ref, child) {
-                            final themeRef = ref.watch(themeProvider);
-                            final isDynamic = themeRef.useCustom;
-                            return Wrap(
-                              spacing: spacing,
-                              runSpacing: 10.0,
-                              children: <Widget>[
-                                for (Color color in themeRef.darkColors)
-                                  GestureDetector(
-                                    onTap: () => themeRef.darkTheme(
-                                      themeRef.darkColors.indexOf(color),
-                                    ),
-                                    child: _ColorCircleAvatar(
-                                      color: color,
-                                      size: _circleSize,
-                                      isDynamic: isDynamic,
-                                      side: BorderSide(
-                                        strokeAlign: -1.0,
-                                        width: 5.0,
-                                        color:
-                                            theme.brightness == Brightness.dark
-                                            ? theme.colorScheme.inversePrimary
-                                            : theme.colorScheme.primary,
-                                        style:
-                                            themeRef.darkOption ==
-                                                themeRef.darkColors.indexOf(
-                                                  color,
-                                                )
-                                            ? BorderStyle.solid
-                                            : BorderStyle.none,
-                                      ),
-                                    ),
-                                  ),
-                              ],
-                            );
-                          },
+                        child: _ThemeColorOptions(
+                          diameter: _circleSize,
+                          spacing: spacing,
+                          .dark,
                         ),
                       ),
                     ],
@@ -281,6 +182,108 @@ class _DialogTheme extends ConsumerWidget {
     final isTablet = isHorizontalTablet(MediaQuery.of(context).size);
 
     return isTablet ? Dialog(child: child) : Dialog.fullscreen(child: child);
+  }
+}
+
+class _ThemeColorOptions extends ConsumerWidget {
+  const _ThemeColorOptions(
+    this.brightness, {
+    required this.diameter,
+    required this.spacing,
+  });
+
+  final Brightness brightness;
+  final double diameter;
+  final double spacing;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final theme = Theme.of(context);
+    final themeRef = ref.watch(themeProvider);
+    final themeNotifier = ref.watch(themeProvider.notifier);
+    final colors = brightness == .light
+        ? themeRef.lightColors
+        : themeRef.darkColors;
+    final bool isDynamic;
+    final Color borderColor;
+    final int? styleOption;
+    switch (brightness) {
+      case .dark:
+        styleOption = themeNotifier.darkOption;
+        isDynamic = themeRef.isCustom;
+        borderColor = theme.brightness == .dark
+            ? theme.colorScheme.inversePrimary
+            : theme.colorScheme.primary;
+      case .light:
+        styleOption = themeNotifier.lightOption;
+        isDynamic = false;
+        borderColor = theme.brightness == .light
+            ? theme.colorScheme.tertiary
+            : theme.colorScheme.inversePrimary;
+    }
+    return Wrap(
+      spacing: spacing,
+      runSpacing: 10.0,
+      children: <Widget>[
+        for (Color color in colors)
+          GestureDetector(
+            onTap: () {
+              if (brightness == .dark) {
+                themeNotifier.darkTheme(colors.indexOf(color));
+              } else if (brightness == .light) {
+                themeNotifier.lightTheme(colors.indexOf(color));
+              }
+            },
+            child: _ColorCircleAvatar(
+              color: color,
+              size: diameter,
+              isDynamic: isDynamic,
+              side: BorderSide(
+                strokeAlign: -1.0,
+                width: 5.0,
+                color: borderColor,
+                style: styleOption == colors.indexOf(color) ? .solid : .none,
+              ),
+            ),
+          ),
+      ],
+    );
+  }
+}
+
+class _SegmentedThemeModes extends ConsumerWidget {
+  const _SegmentedThemeModes();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final S translate = S.of(context);
+    final themeMode = ref.watch(themeModeProvider);
+    return SegmentedButton<ThemeMode>(
+      emptySelectionAllowed: false,
+      multiSelectionEnabled: false,
+      showSelectedIcon: false,
+      segments: <ButtonSegment<ThemeMode>>[
+        ButtonSegment<ThemeMode>(
+          value: .light,
+          label: Text(translate.themeMode(ThemeMode.light)),
+          icon: const Icon(Icons.wb_sunny),
+        ),
+        ButtonSegment<ThemeMode>(
+          value: ThemeMode.dark,
+          label: Text(translate.themeMode(ThemeMode.dark)),
+          icon: const Icon(Icons.brightness_3),
+        ),
+        ButtonSegment<ThemeMode>(
+          value: ThemeMode.system,
+          label: Text(translate.themeMode(ThemeMode.system)),
+          icon: const Icon(Icons.brightness_auto),
+        ),
+      ],
+      selected: <ThemeMode>{themeMode},
+      onSelectionChanged: (newSelection) {
+        ref.read(themeModeProvider.notifier).selectMode(newSelection.first);
+      },
+    );
   }
 }
 
@@ -329,16 +332,17 @@ class _WallpaperTile extends ConsumerWidget {
       return const SizedBox();
     }
     final themeRef = ref.watch(themeProvider);
+    final themeNotifier = ref.watch(themeProvider.notifier);
     final theme = Theme.of(context);
     final S translate = S.of(context);
-    final bool isSelected = themeRef.useCustom;
+    final bool isSelected = themeRef.isCustom;
     return Padding(
       padding: const EdgeInsets.only(top: 16),
       child: ListTile(
         style: ListTileStyle.list,
         dense: false,
         selected: isSelected,
-        onTap: () => themeRef.useCustomScheme(wallpaperTheme),
+        onTap: () => themeNotifier.useCustomScheme(wallpaperTheme),
         minVerticalPadding: 16.0,
         minTileHeight: 84.0,
         leading: _SelectedMaterialAvatar(
@@ -348,7 +352,7 @@ class _WallpaperTile extends ConsumerWidget {
             strokeAlign: -1.0,
             width: 5.0,
             color: theme.colorScheme.secondary,
-            style: themeRef.useCustom ? BorderStyle.solid : BorderStyle.none,
+            style: themeRef.isCustom ? BorderStyle.solid : BorderStyle.none,
           ),
         ),
         shape: RoundedRectangleBorder(

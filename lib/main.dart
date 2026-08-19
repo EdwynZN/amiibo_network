@@ -148,7 +148,8 @@ class AmiiboNetwork extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final ThemeProvider themeMode = ref.watch(themeProvider);
+    final theme = ref.watch(themeProvider);
+    final themeMode = ref.watch(themeModeProvider);
     final router = ref.watch(routerProvider);
     final Locale? locale = ref.watch(localeProvider);
     return MaterialApp.router(
@@ -161,9 +162,9 @@ class AmiiboNetwork extends ConsumerWidget {
       supportedLocales: S.delegate.supportedLocales,
       debugShowCheckedModeBanner: false,
       locale: locale,
-      theme: themeMode.light,
-      darkTheme: themeMode.dark,
-      themeMode: themeMode.preferredMode,
+      theme: theme.light,
+      darkTheme: theme.dark,
+      themeMode: themeMode,
       routerDelegate: router.routerDelegate,
       routeInformationParser: router.routeInformationParser,
       routeInformationProvider: router.routeInformationProvider,
