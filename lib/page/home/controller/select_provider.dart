@@ -5,7 +5,6 @@ import 'package:amiibo_network/feature/amiibo/application/input/update_amiibo_us
 import 'package:amiibo_network/page/home/model/title_search.dart';
 import 'package:amiibo_network/shared/service/service.dart';
 import 'package:collection/collection.dart';
-import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'select_provider.g.dart';
@@ -21,8 +20,8 @@ TitleSearch title(Ref ref) {
       category: category,
     );
   }
-  final provider = ref.watch(queryProvider.notifier);
-  if (provider.isSearch) {
+  final isSearch = ref.watch(isSearchProvider);
+  if (isSearch) {
     return TitleSearch.search(
       title: query.searchAttributes!.search,
       searchCategory: query.searchAttributes!.category,
@@ -47,9 +46,7 @@ TitleSearch title(Ref ref) {
 bool canPop(Ref ref) {
   final selected = ref.watch(selectProvider);
   ref.watch(queryProvider);
-  final isSearch = ref.watch(
-    queryProvider.notifier.select((provider) => provider.isSearch),
-  );
+  final isSearch = ref.watch(isSearchProvider);
   return !(selected.isNotEmpty || isSearch);
 }
 

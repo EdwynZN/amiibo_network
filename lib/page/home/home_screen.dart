@@ -155,7 +155,7 @@ class HomeScreenState extends ConsumerState<HomeScreen>
       final query = ref.read(queryProvider.notifier);
       if (selected.isNotEmpty) {
         selectedNotif.clearSelected();
-      } else if (query.isSearch) {
+      } else if (ref.read(isSearchProvider)) {
         query.restart();
       }
     }

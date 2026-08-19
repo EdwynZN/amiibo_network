@@ -573,13 +573,13 @@ class __SaveCollectionState extends ConsumerState<_SaveCollection> {
           final listOfFigures = await ref.read(figuresProvider.future);
           final listOfCards = await ref.read(cardsProvider.future);
           if (figures.isNotEmpty) {
-            equalFigures = QueryBuilderProvider.checkEquality(
+            equalFigures = QueryNotifier.checkEquality(
               figures,
               listOfFigures,
             );
           }
           if (cards.isNotEmpty) {
-            equalCards = QueryBuilderProvider.checkEquality(cards, listOfCards);
+            equalCards = QueryNotifier.checkEquality(cards, listOfCards);
           }
           if (equalFigures && cards.isEmpty) {
             category = AmiiboCategory.Figures;
