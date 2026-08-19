@@ -68,9 +68,7 @@ class InfoPackage {
     //TODO IOS Platform Channel
     try {
       final version = await _channel.invokeMethod<int?>('version');
-      if (version != null) {
-        _version = AndroidCode.fromCode(version);
-      }
+      if (version != null) _version = AndroidCode.fromCode(version);
     } on PlatformException catch (_) {
       _version = AndroidCode.unknown;
     }

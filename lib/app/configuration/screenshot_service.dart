@@ -1,62 +1,48 @@
-import 'package:amiibo_network/app/configuration/model/amiibo_category_enum.dart';
-import 'package:amiibo_network/shared/generated/l10n.dart';
 import 'package:amiibo_network/app/configuration/model/search_result.dart';
-import 'package:amiibo_network/app/state/preferences_provider.dart';
 import 'package:amiibo_network/app/configuration/query_provider.dart';
 import 'package:amiibo_network/app/configuration/service_provider.dart';
+import 'package:amiibo_network/app/state/preferences_provider.dart';
 import 'package:amiibo_network/app/state/theme/theme_provider.dart';
+import 'package:amiibo_network/shared/generated/l10n.dart';
 import 'package:amiibo_network/shared/service/notification_service.dart';
 import 'package:amiibo_network/shared/service/screenshot.dart';
 import 'package:amiibo_network/shared/service/storage.dart';
 import 'package:flutter/material.dart';
-import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:hooks_riverpod/legacy.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-final _screenshotServiceProvider = Provider((ref) => Screenshot());
+part 'screenshot_service.g.dart';
 
-final screenshotProvider =
-    StateNotifierProvider<ScreenshotNotifier, AsyncValue<bool>>((ref) {
-      ref.watch(queryProvider.notifier);
-      final localPreferences = ref.watch(personalProvider.notifier);
-      final themeNotifier = ref.watch(themeProvider.notifier);
-      final screenshotService = ref.watch(_screenshotServiceProvider);
-      return ScreenshotNotifier(
-        ref: ref,
-        localPreferences: localPreferences,
-        themeProvider: themeNotifier,
-        screenshot: screenshotService,
-      );
-    });
+@riverpod
+Screenshot _screenshotService(Ref ref) => Screenshot();
 
-class ScreenshotNotifier extends StateNotifier<AsyncValue<bool>> {
-  final Screenshot _screenshot;
-  final NotificationService notificationService = NotificationService();
-  final ThemeProvider themeProvider;
-  final UserPreferencessNotifier localPreferences;
-  final Ref ref;
+@Riverpod(keepAlive: true)
+class ScreenshotNotifier extends _$ScreenshotNotifier {
+  late Screenshot _screenshot;
+  late ThemeModeNotifier _themeMode;
+  late UserPreferencesNotifier _localPreferences;
 
-  ScreenshotNotifier({
-    required this.ref,
-    required this.localPreferences,
-    required this.themeProvider,
-    required Screenshot screenshot,
-  }) : _screenshot = screenshot,
-       super(const AsyncData(true));
+  @override
+  Future<bool> build() async {
+    ref.watch(queryProvider.notifier);
+    _localPreferences = ref.watch(personalProvider.notifier);
+    _themeMode = ref.watch(themeModeProvider.notifier);
+    _screenshot = ref.watch(_screenshotServiceProvider);
+
+    return true;
+  }
 
   Future<void> saveStats(
     BuildContext context, {
     Search? search,
     bool useHidden = true,
   }) async {
-    if (isLoading) {
-      return;
-    }
+    if (isLoading) return;
     final S translate = S.current;
     _screenshot.customData(
-      themeProvider.preferredMode,
+      _themeMode.preferredMode,
       context,
-      localPreferences.state,
-      ref.read(serviceProvider),
+      _localPreferences.value,
+      ref.read(amiiboServiceProvider),
       ref.read(ownTypesCategoryProvider),
     );
     state = const AsyncValue.loading();
@@ -74,19 +60,19 @@ class ScreenshotNotifier extends StateNotifier<AsyncValue<bool>> {
         String name;
         int id;
         switch (category) {
-          case AmiiboCategory.Cards:
+          case .Cards:
             name = 'MyCardStats';
             id = 2;
             break;
-          case AmiiboCategory.Figures:
+          case .Figures:
             name = 'MyFigureStats';
             id = 3;
             break;
-          case AmiiboCategory.AmiiboSeries:
+          case .AmiiboSeries:
             name = 'MyCustomStats';
             id = 7;
             break;
-          case AmiiboCategory.All:
+          case .All:
           default:
             name = 'MyAmiiboStats';
             id = 1;
@@ -115,10 +101,10 @@ class ScreenshotNotifier extends StateNotifier<AsyncValue<bool>> {
     }
     final S translate = S.current;
     _screenshot.customData(
-      themeProvider.preferredMode,
+      _themeMode.preferredMode,
       context,
-      localPreferences.state,
-      ref.read(serviceProvider),
+      _localPreferences.value,
+      ref.read(amiiboServiceProvider),
       ref.read(ownTypesCategoryProvider),
     );
     state = const AsyncValue.loading();
@@ -131,19 +117,19 @@ class ScreenshotNotifier extends StateNotifier<AsyncValue<bool>> {
       String name;
       int id;
       switch (category) {
-        case AmiiboCategory.Cards:
+        case .Cards:
           name = 'MyCardCollection';
           id = 4;
           break;
-        case AmiiboCategory.Figures:
+        case .Figures:
           name = 'MyFigureCollection';
           id = 5;
           break;
-        case AmiiboCategory.AmiiboSeries:
+        case .AmiiboSeries:
           name = 'MyCustomCollection';
           id = 8;
           break;
-        case AmiiboCategory.All:
+        case .All:
         default:
           name = 'MyAmiiboCollection';
           id = 9;
@@ -167,6 +153,5 @@ class ScreenshotNotifier extends StateNotifier<AsyncValue<bool>> {
     });
   }
 
-  bool get isLoading =>
-      _screenshot.isRecording || state is AsyncLoading<AsyncValue<bool>>;
+  bool get isLoading => _screenshot.isRecording || state.isLoading;
 }

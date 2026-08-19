@@ -3,12 +3,16 @@ import 'dart:async';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
-import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-final analyticsProvider = Provider<Analytics>((ref) {
+part 'analytics_provider.g.dart';
+
+@riverpod
+Analytics analytics(Ref ref) {
   if (kDebugMode) return const Analytics._debug();
   return Analytics();
-});
+}
+
 
 class Analytics {
   const Analytics._debug();

@@ -32,7 +32,7 @@ class Screenshot {
   Color? onWished;
 
   final S _translate = S.current;
-  late Service _service;
+  late AmiiboService _service;
   final Paint ownedCardPaint = Paint();
   final Paint wishedCardPaint = Paint();
   final double margin = 20.0;
@@ -71,7 +71,7 @@ class Screenshot {
     ThemeMode themeMode,
     BuildContext context,
     Preferences preferences,
-    Service service,
+    AmiiboService service,
     bool showOwnedTypes,
   ) {
     _service = service;

@@ -1,4 +1,3 @@
-import 'package:amiibo_network/shared/data/common.dart';
 import 'package:amiibo_network/shared/data/drift_sqlite/model/drift_joined_amiibo_preferences.dart';
 import 'package:amiibo_network/shared/data/drift_sqlite/source/drift_database.dart';
 import 'package:amiibo_network/app/configuration/model/amiibo_category_enum.dart';
@@ -12,6 +11,8 @@ import 'package:amiibo_network/shared/service/info_package.dart';
 import 'package:drift/drift.dart';
 
 part 'amiibo_dao.g.dart';
+
+const _figureType = ['Figure', 'Yarn', 'Band'];
 
 @DriftAccessor(include: const {'amiibo_tables.drift'})
 class AmiiboDao extends DatabaseAccessor<AppDatabase>
@@ -340,7 +341,7 @@ mixin _ExpressionBuilder on _$AmiiboDaoMixin {
     final figures = categoryAttributes.figures;
     final category = categoryAttributes.category;
     final cardFilter = amiibo.type.equals('Card');
-    final figureFilter = amiibo.type.isIn(figureType);
+    final figureFilter = amiibo.type.isIn(_figureType);
     switch (category) {
       case AmiiboCategory.Cards:
         if (hiddenCategories == HiddenType.Cards) {

@@ -1,48 +1,90 @@
+import 'package:amiibo_network/app/configuration/query_provider.dart';
+import 'package:amiibo_network/app/configuration/service_provider.dart';
 import 'package:amiibo_network/entity/amiibo_info/model/amiibo.dart';
 import 'package:amiibo_network/feature/amiibo/application/input/update_amiibo_user_attributes.dart';
-import 'package:amiibo_network/app/configuration/service_provider.dart';
+import 'package:amiibo_network/page/home/model/title_search.dart';
 import 'package:amiibo_network/shared/service/service.dart';
-import 'package:flutter/material.dart';
-import 'package:hooks_riverpod/legacy.dart';
+import 'package:collection/collection.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-final selectProvider = ChangeNotifierProvider.autoDispose<SelectProvider>(
-  (ref) {
-    final service = ref.watch(serviceProvider.notifier);
-    return SelectProvider(service);
-  },
-);
+part 'select_provider.g.dart';
 
-class SelectProvider extends ChangeNotifier {
-  final Service provider;
-  final Set<int> _set = Set<int>();
+@riverpod
+TitleSearch title(Ref ref) {
+  final count = ref.watch(selectProvider);
+  final query = ref.watch(queryProvider);
+  final category = query.categoryAttributes.category;
+  if (count.isNotEmpty) {
+    return TitleSearch.count(
+      title: count.length.toString(),
+      category: category,
+    );
+  }
+  final isSearch = ref.watch(isSearchProvider);
+  if (isSearch) {
+    return TitleSearch.search(
+      title: query.searchAttributes!.search,
+      searchCategory: query.searchAttributes!.category,
+      category: category,
+    );
+  }
+  return TitleSearch(
+    title: switch (category) {
+      .Cards when query.categoryAttributes.cards.firstOrNull != null =>
+        query.categoryAttributes.cards.first,
+      .Figures when query.categoryAttributes.figures.firstOrNull != null =>
+        query.categoryAttributes.figures.first,
+      _ => category.name,
+    },
+    category: category,
+  );
+}
 
-  SelectProvider(this.provider);
+@riverpod
+bool canPop(Ref ref) {
+  final selected = ref.watch(selectProvider);
+  ref.watch(queryProvider);
+  final isSearch = ref.watch(isSearchProvider);
+  return !(selected.isNotEmpty || isSearch);
+}
 
-  bool get multipleSelected => _set.isNotEmpty;
-  int get length => _set.length;
-  bool addSelected(int value) => _set.add(value);
-  bool removeSelected(int? value) => _set.remove(value);
-  bool isSelected(int? value) => _set.contains(value);
+@riverpod
+class SelectNotifier extends _$SelectNotifier {
+  late AmiiboService _service;
+  @override
+  Set<int> build() {
+    _service = ref.watch(amiiboServiceProvider);
+    return const UnmodifiableSetView.empty();
+  }
+
+  bool addSelected(int value) {
+    final newSet = Set.of(state);
+    final result = newSet.add(value);
+    if (result) state = UnmodifiableSetView(newSet);
+    return result;
+  }
+
+  bool removeSelected(int? value) {
+    final newSet = Set.of(state);
+    final result = newSet.remove(value);
+    if (result) state = UnmodifiableSetView(newSet);
+    return result;
+  }
 
   void updateAmiibos(UserAttributes attributes) {
-    final amiibos = _set.map(
-      (cb) => UpdateAmiiboUserAttributes(
-        id: cb,
-        attributes: attributes,
-      ),      
-    ).toList();
-    provider.update(amiibos);
+    final amiibos = state
+        .map((cb) => UpdateAmiiboUserAttributes(id: cb, attributes: attributes))
+        .toList();
+    _service.update(amiibos);
     clearSelected();
   }
 
   void onLongPress(int key) {
     if (!addSelected(key)) removeSelected(key);
-    notifyListeners();
   }
 
   void clearSelected() {
-    if (_set.isEmpty) return;
-    _set.clear();
-    notifyListeners();
+    if (state.isEmpty) return;
+    state = const UnmodifiableSetView.empty();
   }
 }

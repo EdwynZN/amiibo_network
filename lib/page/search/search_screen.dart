@@ -53,8 +53,7 @@ class SearchScreen extends HookConsumerWidget {
                     : SearchAttributes(
                         search: text,
                         category: ref
-                            .read(categorySearchProvider.notifier)
-                            .state,
+                            .read(categorySearchProvider),
                       ),
               ),
               style: style,
@@ -169,7 +168,7 @@ class _Suggestions extends HookConsumerWidget {
               onTap: () => Navigator.of(context).pop(
                 SearchAttributes(
                   search: data[index],
-                  category: ref.read(categorySearchProvider.notifier).state,
+                  category: ref.read(categorySearchProvider),
                 ),
               ),
               title: Text('${data[index]}'),
@@ -256,9 +255,9 @@ class _CategoryControlState extends ConsumerState<CategoryControl> {
   }
 
   void _selectCategory(WidgetRef ref, SearchCategory category) {
-    final _search = ref.read(categorySearchProvider.notifier);
-    if (_search.state == category) return;
-    _search.state = category;
+    final _search = ref.read(categorySearchProvider);
+    if (_search == category) return;
+    ref.read(categorySearchProvider.notifier).change = category;
   }
 
   @override

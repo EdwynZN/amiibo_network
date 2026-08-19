@@ -84,7 +84,7 @@ class _AppearanceListWidget extends ConsumerWidget {
           const Gap(4.0),
           Consumer(
             builder: (context, ref, _) {
-              final mode = ref.watch(themeProvider).preferredMode;
+              final mode = ref.watch(themeModeProvider);
               return _ListSettings(
                 title: translate.appearance,
                 subtitle: translate.themeMode(mode),
@@ -169,7 +169,7 @@ class _FeatureListWidgetState extends ConsumerState<_FeatureListWidget> {
 
   Future<void> _openFileExplorer() async {
     try {
-      final service = ref.read(serviceProvider.notifier);
+      final service = ref.read(amiiboServiceProvider);
       final file = await FilePicker.pickFiles(
         type: FileType.any,
         //allowedExtensions: ['json'],
@@ -209,7 +209,7 @@ class _FeatureListWidgetState extends ConsumerState<_FeatureListWidget> {
   Future<void> _writePermission() async {
     try {
       if (!(await permissionGranted(scaffoldState))) return;
-      final _service = ref.read(serviceProvider.notifier);
+      final _service = ref.read(amiiboServiceProvider);
       final amiibos = await _service.fetchAllAmiibo();
       openSnackBar(translate.savingCollectionMessage);
       await NotificationService.saveJsonFile(
@@ -441,7 +441,7 @@ class _SupportListWidget extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final translate = S.of(context);
     final mediaBrightness = MediaQuery.of(context).platformBrightness;
-    final themeMode = ref.watch(themeProvider.select((t) => t.preferredMode));
+    final themeMode = ref.watch(themeModeProvider);
     final color = colorOnThemeMode(themeMode, mediaBrightness);
     return SliverPadding(
       padding: const EdgeInsets.symmetric(horizontal: 16.0),
@@ -573,13 +573,10 @@ class __SaveCollectionState extends ConsumerState<_SaveCollection> {
           final listOfFigures = await ref.read(figuresProvider.future);
           final listOfCards = await ref.read(cardsProvider.future);
           if (figures.isNotEmpty) {
-            equalFigures = QueryBuilderProvider.checkEquality(
-              figures,
-              listOfFigures,
-            );
+            equalFigures = QueryNotifier.checkEquality(figures, listOfFigures);
           }
           if (cards.isNotEmpty) {
-            equalCards = QueryBuilderProvider.checkEquality(cards, listOfCards);
+            equalCards = QueryNotifier.checkEquality(cards, listOfCards);
           }
           if (equalFigures && cards.isEmpty) {
             category = AmiiboCategory.Figures;
@@ -642,7 +639,7 @@ class _ResetCollection extends ConsumerWidget {
           final ScaffoldMessengerState? scaffoldState =
               ScaffoldMessenger.maybeOf(context)!;
           try {
-            await ref.read(serviceProvider.notifier).resetCollection();
+            await ref.read(amiiboServiceProvider).resetCollection();
             _message(scaffoldState, translate.collectionReset);
           } catch (e) {
             _message(scaffoldState, translate.splashError);

@@ -1,14 +1,19 @@
+import 'dart:async';
+
+import 'package:amiibo_network/app/configuration/preferences_provider.dart';
+import 'package:amiibo_network/app/state/model/theme_state.dart';
 import 'package:amiibo_network/app/state/theme/service/theme_mode_scheme_repository.dart';
 import 'package:amiibo_network/app/state/theme/service/theme_repository.dart';
 import 'package:amiibo_network/shared/resources/material3_schemes.dart';
 import 'package:amiibo_network/shared/resources/theme_material3_schemes.dart';
-import 'package:amiibo_network/app/configuration/preferences_provider.dart';
 import 'package:amiibo_network/shared/utils/preferences_constants.dart';
+import 'package:collection/collection.dart';
 import 'package:dynamic_color/dynamic_color.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:hooks_riverpod/legacy.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
+part 'theme_provider.g.dart';
 
 Future<void> updateOldTheme() async {
   final SharedPreferences preferences = await SharedPreferences.getInstance();
@@ -30,67 +35,84 @@ Future<void> updateOldTheme() async {
   }
 }
 
-final themeRepositoryProvider = Provider<ThemeRepository>((ref) {
+@riverpod
+ThemeRepository themeRepository(Ref ref) {
   final preferences = ref.watch(preferencesProvider);
   return ThemeRepository(preferences);
-});
+}
 
-final dynamicSchemeProvider = FutureProvider<Material3Schemes?>((ref) async {
-  ColorScheme? light;
-  ColorScheme? dark;
+@riverpod
+Future<Material3Schemes?> dynamicScheme(Ref ref) async {
   final corePalette = await DynamicColorPlugin.getCorePalette();
-  if (corePalette != null) {
-    light = corePalette.toColorScheme();
-    dark = corePalette.toColorScheme(brightness: Brightness.dark);
-  } else {
-    return null;
+  if (corePalette == null) return null;
+
+  final light = corePalette.toColorScheme();
+  final dark = corePalette.toColorScheme(brightness: .dark);
+  return Material3Schemes(light: light, dark: dark);
+}
+
+@riverpod
+Material3Schemes? customSchemes(Ref ref) =>
+    ref.watch(dynamicSchemeProvider).value;
+
+@riverpod
+class ThemeModeNotifier extends _$ThemeModeNotifier {
+  @override
+  ThemeMode build() {
+    final repo = ref.watch(themeRepositoryProvider);
+    listenSelf((previous, next) {
+      if (next == previous) return;
+      unawaited(repo.saveMode(next));
+    });
+    return repo.mode;
   }
 
-  return Material3Schemes(light: light, dark: dark);
+  ThemeMode get preferredMode => state;
 
-  /* final Color? accentColor = await DynamicColorPlugin.getAccentColor();
-    if (accentColor != null) {
-      light = ColorScheme.fromSeed(
-        seedColor: accentColor,
-        brightness: Brightness.light,
-      );
-      dark = ColorScheme.fromSeed(
-        seedColor: accentColor,
-        brightness: Brightness.dark,
-      );
-    } */
-});
+  Future<void> selectMode(ThemeMode value) async {
+    if (value == state) return;
+    state = value;
+  }
 
-final customSchemesProvider = Provider<Material3Schemes?>(
-  (ref) => ref.watch(dynamicSchemeProvider).value,
-);
+  Future<void> toggleThemeMode() async {
+    final ThemeMode nextMode = switch (state) {
+      .system => .light,
+      .light => .dark,
+      .dark => .system,
+    };
+    await selectMode(nextMode);
+  }
+}
 
-final themeProvider = ChangeNotifierProvider<ThemeProvider>((ref) {
-  final repository = ref.watch(themeRepositoryProvider);
-  final provider = ThemeProvider(repository);
-  ref.listen(customSchemesProvider, (previous, next) {
-    if (next != null && previous != next && provider.useCustom) {
-      provider.useCustomScheme(next);
-    }
-  }, fireImmediately: true);
+@riverpod
+class ThemeNotifier extends _$ThemeNotifier {
+  late ThemeRepository _themeRepository;
+  late AmiiboTheme _theme;
 
-  return provider;
-});
+  ThemeState _fromTheme() {
+    return ThemeState(
+      light: _theme.light,
+      dark: _theme.dark,
+      lightColors: UnmodifiableListView(_theme.lightColors),
+      darkColors: UnmodifiableListView(_theme.darkColors),
+      isCustom: useCustom,
+    );
+  }
 
-class ThemeProvider extends ChangeNotifier {
-  final ThemeRepository _themeRepository;
-  final AmiiboTheme _theme;
-  ThemeMode _preferredMode;
+  @override
+  ThemeState build() {
+    _themeRepository = ref.watch(themeRepositoryProvider);
+    _theme = AmiiboTheme3(
+      light: _themeRepository.lightType,
+      dark: _themeRepository.darkType,
+      dynamicScheme: _themeRepository.customSchemes,
+    );
+    ref.listen(customSchemesProvider, (previous, next) {
+      if (next != null && previous != next && useCustom) _useCustomScheme(next);
+    }, fireImmediately: true);
 
-  ThemeProvider(this._themeRepository)
-    : _preferredMode = _themeRepository.mode,
-      _theme = AmiiboTheme3(
-        light: _themeRepository.lightType,
-        dark: _themeRepository.darkType,
-        dynamicScheme: _themeRepository.customSchemes,
-      );
-
-  ThemeMode get preferredMode => _preferredMode;
+    return _fromTheme();
+  }
 
   Material3Schemes? get _customScheme => _themeRepository.customSchemes;
   bool get useCustom => _customScheme != null;
@@ -107,12 +129,14 @@ class ThemeProvider extends ChangeNotifier {
   ThemeData? get dark => _theme.dark;
 
   Future<void> useCustomScheme(Material3Schemes schemes) async {
-    if (schemes == _customScheme) {
-      return;
-    }
+    if (schemes == _customScheme) return;
+    await _useCustomScheme(schemes);
+    state = _fromTheme();
+  }
+
+  Future<void> _useCustomScheme(Material3Schemes schemes) async {
     await _themeRepository.saveCustomSchemes(schemes);
     _theme.customScheme = schemes;
-    notifyListeners();
   }
 
   Future<void> lightTheme(int light) async {
@@ -121,7 +145,7 @@ class ThemeProvider extends ChangeNotifier {
       await _themeRepository.deleteCustomSchemes();
       await _themeRepository.saveLightType(light);
       _theme.setLight = light;
-      notifyListeners();
+      state = _fromTheme();
     }
   }
 
@@ -130,25 +154,7 @@ class ThemeProvider extends ChangeNotifier {
     if (dark != darkOption) {
       await _themeRepository.saveDarkType(dark);
       _theme.setDark = dark;
-      notifyListeners();
+      state = _fromTheme();
     }
-  }
-
-  Future<void> selectMode(ThemeMode value) async {
-    if (value == _preferredMode) {
-      return;
-    }
-    _preferredMode = value;
-    await _themeRepository.saveMode(value);
-    notifyListeners();
-  }
-
-  Future<void> toggleThemeMode() async {
-    final nextMode = switch (_preferredMode) {
-      ThemeMode.system => ThemeMode.light,
-      ThemeMode.light => ThemeMode.dark,
-      ThemeMode.dark => ThemeMode.system,
-    };
-    await selectMode(nextMode);
   }
 }

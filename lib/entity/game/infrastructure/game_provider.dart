@@ -1,41 +1,38 @@
+import 'package:amiibo_network/entity/amiibo_info/infrastructure/amiibo_provider.dart';
 import 'package:amiibo_network/entity/amiibo_info/model/amiibo.dart';
 import 'package:amiibo_network/entity/game/model/game.dart';
-import 'package:amiibo_network/entity/amiibo_info/infrastructure/amiibo_provider.dart';
 import 'package:amiibo_network/shared/utils/urls_constants.dart' show apiUrl;
 import 'package:dio/dio.dart';
-import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:riverpod/riverpod.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:stash/stash_api.dart';
 import 'package:stash_dio/stash_dio.dart';
 
-final cacheProvider = Provider<Cache>((_) => throw UnimplementedError());
+part 'game_provider.g.dart';
 
-final _dioProvider = Provider<Dio>((ref) {
+@Riverpod(keepAlive: true)
+Cache cache(Ref ref) => throw UnimplementedError();
+
+@Riverpod(keepAlive: true)
+Dio _dio(Ref ref) {
   final hiveCache = ref.watch(cacheProvider);
   final stashOptions = hiveCache.interceptor('amiibo');
 
   final dio = Dio(
-    BaseOptions(
-      baseUrl: apiUrl,
-      connectTimeout: const Duration(seconds: 5),
-    ),
+    BaseOptions(baseUrl: apiUrl, connectTimeout: const Duration(seconds: 5)),
   );
 
   return dio..interceptors.add(stashOptions);
-});
+}
 
-final _characterProvider = Provider.autoDispose.family<AmiiboDetails?, int>(
-  (ref, key) {
-    return ref.watch(detailAmiiboProvider(key)).maybeWhen(
-          data: (cb) => cb?.details,
-          orElse: () => null,
-        );
-  },
-  name: 'Character Provider',
-);
+@riverpod
+AmiiboDetails? _character(Ref ref, int key) {
+  return ref
+      .watch(detailAmiiboProvider(key))
+      .maybeWhen(data: (cb) => cb?.details, orElse: () => null);
+}
 
-final gameProvider =
-    FutureProvider.autoDispose.family<NintendoPlatform, int>((ref, key) async {
+@riverpod
+Future<NintendoPlatform> game(Ref ref, int key) async {
   final amiibo = await ref.watch(_characterProvider(key));
   if (amiibo == null) return const NintendoPlatform();
   final dio = ref.watch(_dioProvider);
@@ -52,11 +49,11 @@ final gameProvider =
     query = 'character=${amiibo.character}';
   }
 
-  final Response<Map<String, dynamic>> result =
-      await dio.get<Map<String, dynamic>>(
-    'amiibo/?$query&showusage',
-    cancelToken: token,
-  );
+  final Response<Map<String, dynamic>> result = await dio
+      .get<Map<String, dynamic>>(
+        'amiibo/?$query&showusage',
+        cancelToken: token,
+      );
 
   if (result.data == null) throw ArgumentError();
   final data = result.data!['amiibo'];
@@ -65,4 +62,4 @@ final gameProvider =
   final NintendoPlatform platform = NintendoPlatform.fromJson(single);
   ref.keepAlive();
   return platform;
-}, name: 'Games Provider');
+}

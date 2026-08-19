@@ -1,43 +1,53 @@
 import 'dart:ui';
 
 import 'package:amiibo_network/app/configuration/model/hidden_types.dart';
+import 'package:amiibo_network/app/configuration/query_provider.dart';
 import 'package:amiibo_network/entity/preferences/model/preferences.dart';
 import 'package:amiibo_network/app/configuration/preferences_provider.dart';
 import 'package:amiibo_network/app/configuration/stat_ui_remote_config_provider.dart';
 import 'package:amiibo_network/shared/utils/preferences_constants.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:hooks_riverpod/legacy.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-final hiddenCategoryProvider = Provider<HiddenType?>(
-  (ref) => ref.watch(personalProvider).ignored,
-  name: 'hiddenCategoriesProvider',
-);
+part 'preferences_provider.g.dart';
 
-final ownTypesCategoryProvider = Provider<bool>(
-  (ref) {
-    final ownedCategories = ref.watch(remoteOwnedCategoryProvider);
-    return ownedCategories &&
-        ref.watch(personalProvider.select((value) => value.ownTypes));
-  },
-  name: 'OwnerCategoriesFlagProvider',
-);
+@Riverpod(keepAlive: true)
+HiddenType? hiddenCategory(Ref ref) => ref.watch(personalProvider).ignored;
 
-final localeProvider = Provider<Locale?>(
-  (ref) {
-    final languageCode =
-        ref.watch(personalProvider.select((value) => value.languageCode));
-    if (languageCode == null || languageCode.isEmpty) {
-      return null;
-    }
-    return Locale.fromSubtags(languageCode: languageCode);
-  },
-  name: 'LocaleProvider',
-);
+@Riverpod(keepAlive: true)
+bool ownTypesCategory(Ref ref) {
+  final ownedCategories = ref.watch(remoteOwnedCategoryProvider);
+  return ownedCategories &&
+      ref.watch(personalProvider.select((value) => value.ownTypes));
+}
 
-final personalProvider =
-    StateNotifierProvider<UserPreferencessNotifier, Preferences>(
-  (ref) {
+@Riverpod(keepAlive: true)
+Locale? locale(Ref ref) {
+  final languageCode = ref.watch(
+    personalProvider.select((value) => value.languageCode),
+  );
+  if (languageCode == null || languageCode.isEmpty) return null;
+  return Locale.fromSubtags(languageCode: languageCode);
+}
+
+@riverpod
+bool canSortCard(Ref ref) {
+  final isCardsHidden = ref.watch(
+    hiddenCategoryProvider.select((h) => h == .Cards),
+  );
+  if (isCardsHidden) return false;
+  return ref.watch(
+    queryProvider.select(
+      (value) => value.categoryAttributes.category == .Figures,
+    ),
+  );
+}
+
+@Riverpod(keepAlive: true, name: 'personalProvider')
+class UserPreferencesNotifier extends _$UserPreferencesNotifier {
+  @override
+  Preferences build() {
     final sharedProvider = ref.watch(preferencesProvider);
     final percent = sharedProvider.getBool(sharedStatMode) ?? false;
     final grid = sharedProvider.getBool(sharedGridMode) ?? true;
@@ -45,14 +55,16 @@ final personalProvider =
     final languageCode = sharedProvider.getString(sharedLanguageCode);
     final ownType = sharedProvider.getBool(sharedOwnType) ?? false;
     final HiddenType? categoryIgnored = switch (ignored) {
-      1 => HiddenType.Figures,
-      2 => HiddenType.Cards,
+      1 => .Figures,
+      2 => .Cards,
       _ => null,
     };
     final inAppBrowser = sharedProvider.getBool(sharedInAppBrowser) ?? false;
-    final amazonCountryCode = sharedProvider.getString(sharedAmazonCountryCode);
+    final amazonCountryCode = sharedProvider.getString(
+      sharedAmazonCountryCode,
+    );
 
-    final initial = Preferences(
+    return Preferences(
       usePercentage: percent,
       useGrid: grid,
       ownTypes: ownType,
@@ -61,17 +73,9 @@ final personalProvider =
       inAppBrowser: inAppBrowser,
       amazonCountryCode: amazonCountryCode,
     );
-    return UserPreferencessNotifier(initial, ref);
-  },
-  name: 'PreferencesProvider',
-);
+  }
 
-class UserPreferencessNotifier extends StateNotifier<Preferences> {
-  final Ref ref;
-
-  UserPreferencessNotifier(super._state, this.ref);
-
-  bool get isPercentage => state.usePercentage;
+  Preferences get value => state;
 
   Future<void> forceLocale(String? newLanguageCode) async {
     if (newLanguageCode != state.languageCode) {
@@ -94,7 +98,7 @@ class UserPreferencessNotifier extends StateNotifier<Preferences> {
   }
 
   Future<void> toggleStat(bool newValue) async {
-    if (newValue != isPercentage) {
+    if (newValue != state.usePercentage) {
       final SharedPreferences preferences = ref.read(preferencesProvider);
       await preferences.setBool(sharedStatMode, newValue);
       state = state.copyWith(usePercentage: newValue);

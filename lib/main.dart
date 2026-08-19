@@ -84,7 +84,7 @@ Future<void> main() async {
       final cacheDir = await getTemporaryDirectory();
 
       /// Check Android version
-      if (!kIsWeb && defaultTargetPlatform == TargetPlatform.android) {
+      if (!kIsWeb && defaultTargetPlatform == .android) {
         await InfoPackage.instance.versionCode();
       }
 
@@ -123,7 +123,7 @@ Future<void> main() async {
       final UpdateService updateService = container.read(updateServiceProvider);
       final bool notUpdateRequired = await updateService.upToDate;
       if (notUpdateRequired) {
-        container.read(initialScreen.notifier).state = '/home';
+        container.read(initialScreenProvider.notifier).change = '/home';
       }
 
       runApp(
@@ -148,7 +148,8 @@ class AmiiboNetwork extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final ThemeProvider themeMode = ref.watch(themeProvider);
+    final theme = ref.watch(themeProvider);
+    final themeMode = ref.watch(themeModeProvider);
     final router = ref.watch(routerProvider);
     final Locale? locale = ref.watch(localeProvider);
     return MaterialApp.router(
@@ -161,9 +162,9 @@ class AmiiboNetwork extends ConsumerWidget {
       supportedLocales: S.delegate.supportedLocales,
       debugShowCheckedModeBanner: false,
       locale: locale,
-      theme: themeMode.light,
-      darkTheme: themeMode.dark,
-      themeMode: themeMode.preferredMode,
+      theme: theme.light,
+      darkTheme: theme.dark,
+      themeMode: themeMode,
       routerDelegate: router.routerDelegate,
       routeInformationParser: router.routeInformationParser,
       routeInformationProvider: router.routeInformationProvider,

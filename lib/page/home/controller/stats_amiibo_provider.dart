@@ -4,10 +4,13 @@ import 'package:amiibo_network/app/configuration/model/search_result.dart';
 import 'package:amiibo_network/entity/amiibo_info/model/stat.dart';
 import 'package:amiibo_network/app/configuration/query_provider.dart';
 import 'package:amiibo_network/app/configuration/service_provider.dart';
-import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-final statsProvider = StreamProvider.autoDispose<List<Stat>>((ref) async* {
-  final service = ref.watch(serviceProvider.notifier);
+part 'stats_amiibo_provider.g.dart';
+
+@riverpod
+Stream<List<Stat>> stats(Ref ref) async* {
+  final service = ref.watch(amiiboServiceProvider);
   final streamController = StreamController<Filter>();
 
   void listen() {
@@ -16,15 +19,9 @@ final statsProvider = StreamProvider.autoDispose<List<Stat>>((ref) async* {
 
   service.addListener(listen);
 
-  final subscription = ref.listen(
-    filterProvider,
-    (previous, next) {
-      if (next != previous) {
-        streamController.sink.add(next);
-      }
-    },
-    fireImmediately: true,
-  );
+  final subscription = ref.listen(filterProvider, (previous, next) {
+    if (next != previous) streamController.sink.add(next);
+  }, fireImmediately: true);
 
   ref.onDispose(() {
     subscription.close();
@@ -32,7 +29,8 @@ final statsProvider = StreamProvider.autoDispose<List<Stat>>((ref) async* {
     streamController.close();
   });
 
-  yield* streamController.stream.asyncMap((filter) async => <Stat>[
+  yield* streamController.stream.asyncMap(
+    (filter) async => <Stat>[
       ...await service.fetchStats(
         categoryAttributes: filter.categoryAttributes,
         searchAttributes: filter.searchAttributes,
@@ -46,4 +44,4 @@ final statsProvider = StreamProvider.autoDispose<List<Stat>>((ref) async* {
       ),
     ],
   );
-});
+}

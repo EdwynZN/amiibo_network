@@ -14,13 +14,6 @@ import 'package:amiibo_network/shared/generated/l10n.dart';
 import 'package:gap/gap.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-final _nameAmiiboProvider = Provider.autoDispose
-    .family<AsyncValue<String?>, int>(
-      (ref, key) => ref
-          .watch(detailAmiiboProvider(key))
-          .whenData((cb) => cb?.details.name),
-    );
-
 class DetailScreen extends ConsumerWidget {
   const DetailScreen({Key? key}) : super(key: key);
 
@@ -83,7 +76,11 @@ class DetailScreen extends ConsumerWidget {
         ),
         title: Consumer(
           builder: (context, ref, _) => ref
-              .watch(_nameAmiiboProvider(id))
+              .watch(
+                detailAmiiboProvider(
+                  id,
+                ).select((s) => s.whenData((cb) => cb?.details.name)),
+              )
               .maybeWhen(
                 data: (name) => name != null ? Text(name) : const SizedBox(),
                 orElse: () => const SizedBox(),

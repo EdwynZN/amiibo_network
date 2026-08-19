@@ -1,31 +1,25 @@
-import 'package:amiibo_network/shared/utils/preferences_constants.dart';
-import 'package:flutter/material.dart';
-import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:amiibo_network/app/configuration/preferences_provider.dart';
-import 'package:hooks_riverpod/legacy.dart';
+import 'package:amiibo_network/shared/utils/preferences_constants.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-final lockProvider = ChangeNotifierProvider<LockNotifier>((ref) => LockNotifier(ref));
+part 'lock_provider.g.dart';
 
-class LockNotifier extends ValueNotifier<bool>{
-  final Ref ref;
+@riverpod
+class LockNotifier extends _$LockNotifier {
+  @override
+  bool build() => ref.watch(preferencesProvider).getBool(sharedLock) ?? false;
 
-  LockNotifier(this.ref)
-    : super((ref.read(preferencesProvider).getBool(sharedLock) ?? false));
-
-  bool get lock => value;
-
-  Future<void> update(bool newValue) async{
-    if(newValue == value) return;
+  Future<void> update(bool newValue) async {
+    if (newValue == state) return;
     final SharedPreferences preferences = ref.read(preferencesProvider);
     await preferences.setBool(sharedLock, newValue);
-    value = newValue;
+    state = newValue;
   }
 
-  Future<void> toggle() async{
-    value = !value;
+  Future<void> toggle() async {
+    state = !state;
     final SharedPreferences preferences = ref.read(preferencesProvider);
-    await preferences.setBool(sharedLock, value);
+    await preferences.setBool(sharedLock, state);
   }
-
 }

@@ -9,11 +9,10 @@ class LockButton extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final lockValue = ref.watch(lockProvider);
-    final lock = lockValue.lock;
     return IconButton(
-      icon: lock ? const Icon(Icons.lock) : const Icon(Icons.lock_open),
-      onPressed: () async => await lockValue.toggle(),
-      tooltip: S.of(context).lockTooltip(lock),
+      icon: lockValue ? const Icon(Icons.lock) : const Icon(Icons.lock_open),
+      onPressed: ref.read(lockProvider.notifier).toggle,
+      tooltip: S.of(context).lockTooltip(lockValue),
     );
   }
 }

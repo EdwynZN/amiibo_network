@@ -1,5 +1,8 @@
 import 'dart:async';
+import 'dart:convert';
 
+import 'package:amiibo_network/app/configuration/model/sort_enum.dart';
+import 'package:amiibo_network/entity/amiibo_info/model/amiibo.dart';
 import 'package:amiibo_network/shared/data/drift_sqlite/model/map_converter.dart';
 import 'package:amiibo_network/shared/data/drift_sqlite/source/affiliation_link_dao.dart';
 import 'package:amiibo_network/shared/data/drift_sqlite/source/amiibo_dao.dart';
@@ -8,19 +11,18 @@ import 'package:amiibo_network/shared/data/drift_sqlite/source/drift_database.da
 import 'package:amiibo_network/shared/data/local_file_source/model/amiibo_local_json_model.dart'
     as dataModel;
 import 'package:amiibo_network/shared/data/local_file_source/model/country_local_file_model.dart';
-import 'package:amiibo_network/app/configuration/model/sort_enum.dart';
 import 'package:amiibo_network/shared/utils/preferences_constants.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/foundation.dart';
-import 'dart:convert';
 import 'package:flutter/services.dart';
-import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:amiibo_network/entity/amiibo_info/model/amiibo.dart';
 
-final updateServiceProvider = Provider(
-  (ref) => UpdateService(database: ref.watch(db.databaseProvider)),
-);
+part 'update_service.g.dart';
+
+@riverpod
+UpdateService updateService(Ref ref) =>
+    UpdateService(database: ref.watch(db.databaseProvider));
 
 typedef _Images = ({
   List<db.AmiiboImagesCompanion> images,

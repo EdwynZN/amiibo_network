@@ -113,10 +113,7 @@ class _SelectedWrapState extends State<SelectedWrap> {
             widget.mySeries.clear();
             if (isSelected) widget.mySeries.addAll(widget.series);
           }),
-          selected: QueryBuilderProvider.checkEquality(
-            widget.mySeries,
-            widget.series,
-          ),
+          selected: QueryNotifier.checkEquality(widget.mySeries, widget.series),
         ),
         for (String series in widget.series)
           FilterChip(
