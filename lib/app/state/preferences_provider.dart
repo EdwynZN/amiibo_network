@@ -7,7 +7,6 @@ import 'package:amiibo_network/app/configuration/preferences_provider.dart';
 import 'package:amiibo_network/app/configuration/stat_ui_remote_config_provider.dart';
 import 'package:amiibo_network/shared/utils/preferences_constants.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:hooks_riverpod/legacy.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -45,42 +44,36 @@ bool canSortCard(Ref ref) {
   );
 }
 
-final personalProvider =
-    StateNotifierProvider<UserPreferencessNotifier, Preferences>((ref) {
-      final sharedProvider = ref.watch(preferencesProvider);
-      final percent = sharedProvider.getBool(sharedStatMode) ?? false;
-      final grid = sharedProvider.getBool(sharedGridMode) ?? true;
-      final ignored = sharedProvider.getInt(sharedIgnored) ?? 0;
-      final languageCode = sharedProvider.getString(sharedLanguageCode);
-      final ownType = sharedProvider.getBool(sharedOwnType) ?? false;
-      final HiddenType? categoryIgnored = switch (ignored) {
-        1 => HiddenType.Figures,
-        2 => HiddenType.Cards,
-        _ => null,
-      };
-      final inAppBrowser = sharedProvider.getBool(sharedInAppBrowser) ?? false;
-      final amazonCountryCode = sharedProvider.getString(
-        sharedAmazonCountryCode,
-      );
+@Riverpod(keepAlive: true, name: 'personalProvider')
+class UserPreferencesNotifier extends _$UserPreferencesNotifier {
+  @override
+  Preferences build() {
+    final sharedProvider = ref.watch(preferencesProvider);
+    final percent = sharedProvider.getBool(sharedStatMode) ?? false;
+    final grid = sharedProvider.getBool(sharedGridMode) ?? true;
+    final ignored = sharedProvider.getInt(sharedIgnored) ?? 0;
+    final languageCode = sharedProvider.getString(sharedLanguageCode);
+    final ownType = sharedProvider.getBool(sharedOwnType) ?? false;
+    final HiddenType? categoryIgnored = switch (ignored) {
+      1 => .Figures,
+      2 => .Cards,
+      _ => null,
+    };
+    final inAppBrowser = sharedProvider.getBool(sharedInAppBrowser) ?? false;
+    final amazonCountryCode = sharedProvider.getString(
+      sharedAmazonCountryCode,
+    );
 
-      final initial = Preferences(
-        usePercentage: percent,
-        useGrid: grid,
-        ownTypes: ownType,
-        ignored: categoryIgnored,
-        languageCode: languageCode,
-        inAppBrowser: inAppBrowser,
-        amazonCountryCode: amazonCountryCode,
-      );
-      return UserPreferencessNotifier(initial, ref);
-    }, name: 'PreferencesProvider');
-
-class UserPreferencessNotifier extends StateNotifier<Preferences> {
-  final Ref ref;
-
-  UserPreferencessNotifier(super._state, this.ref);
-
-  bool get isPercentage => state.usePercentage;
+    return Preferences(
+      usePercentage: percent,
+      useGrid: grid,
+      ownTypes: ownType,
+      ignored: categoryIgnored,
+      languageCode: languageCode,
+      inAppBrowser: inAppBrowser,
+      amazonCountryCode: amazonCountryCode,
+    );
+  }
 
   Preferences get value => state;
 
@@ -105,7 +98,7 @@ class UserPreferencessNotifier extends StateNotifier<Preferences> {
   }
 
   Future<void> toggleStat(bool newValue) async {
-    if (newValue != isPercentage) {
+    if (newValue != state.usePercentage) {
       final SharedPreferences preferences = ref.read(preferencesProvider);
       await preferences.setBool(sharedStatMode, newValue);
       state = state.copyWith(usePercentage: newValue);

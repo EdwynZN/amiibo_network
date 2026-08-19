@@ -19,7 +19,7 @@ Screenshot _screenshotService(Ref ref) => Screenshot();
 class ScreenshotNotifier extends _$ScreenshotNotifier {
   late Screenshot _screenshot;
   late ThemeModeNotifier _themeMode;
-  late UserPreferencessNotifier _localPreferences;
+  late UserPreferencesNotifier _localPreferences;
 
   @override
   Future<bool> build() async {
