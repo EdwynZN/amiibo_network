@@ -24,7 +24,18 @@ GoRouter createRouter({
       GoRoute(
         name: 'splash',
         path: '/splash',
-        builder: (_, __) => const SplashScreen(),
+        pageBuilder: (context, state) {
+          return MaterialPage<void>(
+            key: state.pageKey,
+            name: state.name ?? state.path,
+            arguments: <String, String>{
+              ...state.pathParameters,
+              ...state.uri.queryParameters,
+            },
+            restorationId: state.pageKey.value,
+            child: const SplashScreen(),
+          );
+        },
       ),
       GoRoute(
         name: 'home',
@@ -41,19 +52,42 @@ GoRouter createRouter({
       GoRoute(
         name: 'amiibo_details',
         path: '/amiibo/:id',
-        builder: (context, state) => ProviderScope(
-          overrides: [
-            keyAmiiboProvider.overrideWithValue(
-              int.parse(state.pathParameters['id']!),
+        /// FIx until migration to material_ui
+        pageBuilder: (context, state) {
+          return MaterialPage<void>(
+            key: state.pageKey,
+            name: state.name ?? state.path,
+            arguments: <String, String>{
+              ...state.pathParameters,
+              ...state.uri.queryParameters,
+            },
+            restorationId: state.pageKey.value,
+            child: ProviderScope(
+              overrides: [
+                keyAmiiboProvider.overrideWithValue(
+                  int.parse(state.pathParameters['id']!),
+                ),
+              ],
+              child: const DetailScreen(),
             ),
-          ],
-          child: const DetailScreen(),
-        ),
+          );
+        },
       ),
       GoRoute(
         name: 'settings',
         path: '/settings',
-        builder: (context, state) => const SettingsPage(),
+        pageBuilder: (context, state) {
+          return MaterialPage<void>(
+            key: state.pageKey,
+            name: state.name ?? state.path,
+            arguments: <String, String>{
+              ...state.pathParameters,
+              ...state.uri.queryParameters,
+            },
+            restorationId: state.pageKey.value,
+            child: const SettingsPage(),
+          );
+        },
       ),
     ],
   );
