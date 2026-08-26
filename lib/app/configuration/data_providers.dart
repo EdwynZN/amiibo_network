@@ -5,7 +5,11 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 part 'data_providers.g.dart';
 
 @Riverpod(keepAlive: true)
-AppDatabase database(Ref ref) => AppDatabase();
+AppDatabase database(Ref ref) {
+  final db = AppDatabase();
+  ref.onDispose(db.close);
+  return db;
+}
 
 @riverpod
 UpdateService updateService(Ref ref) =>
