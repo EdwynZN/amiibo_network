@@ -1,5 +1,86 @@
 {
-  "bundles": [],
+  "bundles": [
+    {
+      "amiibo_bundle_id": 1,
+      "created_at": 1787717875092,
+      "file_path": "assets/bundle_collection/bundle_1.webp"
+    },
+    {
+      "amiibo_bundle_id": 2,
+      "created_at": 1787717875092,
+      "file_path": "assets/bundle_collection/bundle_2.webp"
+    },
+    {
+      "amiibo_bundle_id": 3,
+      "created_at": 1787717875092,
+      "file_path": "assets/bundle_collection/bundle_3.webp"
+    },
+    {
+      "amiibo_bundle_id": 4,
+      "created_at": 1787717875092,
+      "file_path": "assets/bundle_collection/bundle_4.webp"
+    },
+    {
+      "amiibo_bundle_id": 5,
+      "created_at": 1787717875092,
+      "file_path": "assets/bundle_collection/bundle_5.webp"
+    },
+    {
+      "amiibo_bundle_id": 6,
+      "created_at": 1787717875092,
+      "file_path": "assets/bundle_collection/bundle_6.webp"
+    },
+    {
+      "amiibo_bundle_id": 7,
+      "created_at": 1787717875092,
+      "file_path": "assets/bundle_collection/bundle_7.webp"
+    },
+    {
+      "amiibo_bundle_id": 8,
+      "created_at": 1787717875092,
+      "file_path": "assets/bundle_collection/bundle_8.webp"
+    },
+    {
+      "amiibo_bundle_id": 9,
+      "created_at": 1787717875092,
+      "file_path": "assets/bundle_collection/bundle_9.webp"
+    },
+    {
+      "amiibo_bundle_id": 10,
+      "created_at": 1787717875092,
+      "file_path": "assets/bundle_collection/bundle_10.webp"
+    },
+    {
+      "amiibo_bundle_id": 11,
+      "created_at": 1787717875092,
+      "file_path": "assets/bundle_collection/bundle_11.webp"
+    },
+    {
+      "amiibo_bundle_id": 12,
+      "created_at": 1787717875092,
+      "file_path": "assets/bundle_collection/bundle_12.webp"
+    },
+    {
+      "amiibo_bundle_id": 13,
+      "created_at": 1787717875092,
+      "file_path": "assets/bundle_collection/bundle_13.webp"
+    },
+    {
+      "amiibo_bundle_id": 14,
+      "created_at": 1787717875092,
+      "file_path": "assets/bundle_collection/bundle_14.webp"
+    },
+    {
+      "amiibo_bundle_id": 15,
+      "created_at": 1787717875092,
+      "file_path": "assets/bundle_collection/bundle_15.webp"
+    },
+    {
+      "amiibo_bundle_id": 16,
+      "created_at": 1787717875092,
+      "file_path": "assets/bundle_collection/bundle_16.webp"
+    }
+  ],
   "amiibos": [
     {
       "amiibo_key": 1,

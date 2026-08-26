@@ -493,8 +493,173 @@ class Shape7 extends i0.VersionedTable {
       columnsByName['file_path']! as i1.GeneratedColumn<String>;
 }
 
+final class Schema9 extends i0.VersionedSchema {
+  Schema9({required super.database}) : super(version: 9);
+  @override
+  late final List<i1.DatabaseSchemaEntity> entities = [
+    country,
+    affiliationLink,
+    amiibo,
+    amiiboUserPreferences,
+    amiiboImages,
+    amiiboBundle,
+    amiiboBundleUserPreferences,
+    amiiboBundleImages,
+    amiiboBundleRelation,
+  ];
+  late final Shape0 country = Shape0(
+    source: i0.VersionedTable(
+      entityName: 'country',
+      withoutRowId: false,
+      isStrict: false,
+      tableConstraints: [],
+      columns: [_column_0, _column_1, _column_2, _column_3],
+      attachedDatabase: database,
+    ),
+    alias: null,
+  );
+  late final Shape1 affiliationLink = Shape1(
+    source: i0.VersionedTable(
+      entityName: 'affiliation_link',
+      withoutRowId: false,
+      isStrict: false,
+      tableConstraints: [
+        'FOREIGN KEY(country_code)REFERENCES country(code)',
+        'UNIQUE(country_code)',
+      ],
+      columns: [_column_4, _column_5, _column_6],
+      attachedDatabase: database,
+    ),
+    alias: null,
+  );
+  late final Shape2 amiibo = Shape2(
+    source: i0.VersionedTable(
+      entityName: 'amiibo',
+      withoutRowId: false,
+      isStrict: false,
+      tableConstraints: [],
+      columns: [
+        _column_7,
+        _column_8,
+        _column_9,
+        _column_10,
+        _column_11,
+        _column_12,
+        _column_13,
+        _column_14,
+        _column_15,
+        _column_16,
+        _column_17,
+        _column_18,
+      ],
+      attachedDatabase: database,
+    ),
+    alias: null,
+  );
+  late final Shape3 amiiboUserPreferences = Shape3(
+    source: i0.VersionedTable(
+      entityName: 'amiibo_user_preferences',
+      withoutRowId: false,
+      isStrict: false,
+      tableConstraints: [
+        'FOREIGN KEY(amiibo_key)REFERENCES amiibo("key")',
+        'UNIQUE(amiibo_key)',
+      ],
+      columns: [_column_19, _column_20, _column_21, _column_22, _column_23],
+      attachedDatabase: database,
+    ),
+    alias: null,
+  );
+  late final Shape4 amiiboImages = Shape4(
+    source: i0.VersionedTable(
+      entityName: 'amiibo_images',
+      withoutRowId: false,
+      isStrict: false,
+      tableConstraints: [
+        'FOREIGN KEY(amiibo_key)REFERENCES amiibo("key")ON DELETE CASCADE',
+      ],
+      columns: [_column_4, _column_20, _column_24, _column_25],
+      attachedDatabase: database,
+    ),
+    alias: null,
+  );
+  late final Shape8 amiiboBundle = Shape8(
+    source: i0.VersionedTable(
+      entityName: 'amiibo_bundle',
+      withoutRowId: false,
+      isStrict: false,
+      tableConstraints: [],
+      columns: [_column_26, _column_12],
+      attachedDatabase: database,
+    ),
+    alias: null,
+  );
+  late final Shape6 amiiboBundleUserPreferences = Shape6(
+    source: i0.VersionedTable(
+      entityName: 'amiibo_bundle_user_preferences',
+      withoutRowId: false,
+      isStrict: false,
+      tableConstraints: [
+        'FOREIGN KEY(amiibo_bundle_id)REFERENCES amiibo_bundle(id)',
+        'UNIQUE(amiibo_bundle_id)',
+      ],
+      columns: [_column_4, _column_28, _column_21, _column_22],
+      attachedDatabase: database,
+    ),
+    alias: null,
+  );
+  late final Shape7 amiiboBundleImages = Shape7(
+    source: i0.VersionedTable(
+      entityName: 'amiibo_bundle_images',
+      withoutRowId: false,
+      isStrict: false,
+      tableConstraints: [
+        'FOREIGN KEY(amiibo_bundle_id)REFERENCES amiibo_bundle(id)ON DELETE CASCADE',
+      ],
+      columns: [_column_4, _column_28, _column_24, _column_25],
+      attachedDatabase: database,
+    ),
+    alias: null,
+  );
+  late final Shape9 amiiboBundleRelation = Shape9(
+    source: i0.VersionedTable(
+      entityName: 'amiibo_bundle_relation',
+      withoutRowId: false,
+      isStrict: false,
+      tableConstraints: [
+        'FOREIGN KEY(amiibo_key)REFERENCES amiibo("key")ON DELETE CASCADE',
+        'FOREIGN KEY(amiibo_bundle_id)REFERENCES amiibo_bundle(id)ON DELETE CASCADE',
+      ],
+      columns: [_column_26, _column_20, _column_28, _column_27],
+      attachedDatabase: database,
+    ),
+    alias: null,
+  );
+}
+
+class Shape8 extends i0.VersionedTable {
+  Shape8({required super.source, required super.alias}) : super.aliased();
+  i1.GeneratedColumn<int> get id =>
+      columnsByName['id']! as i1.GeneratedColumn<int>;
+  i1.GeneratedColumn<String> get name =>
+      columnsByName['name']! as i1.GeneratedColumn<String>;
+}
+
+class Shape9 extends i0.VersionedTable {
+  Shape9({required super.source, required super.alias}) : super.aliased();
+  i1.GeneratedColumn<int> get id =>
+      columnsByName['id']! as i1.GeneratedColumn<int>;
+  i1.GeneratedColumn<int> get amiiboKey =>
+      columnsByName['amiibo_key']! as i1.GeneratedColumn<int>;
+  i1.GeneratedColumn<int> get amiiboBundleId =>
+      columnsByName['amiibo_bundle_id']! as i1.GeneratedColumn<int>;
+  i1.GeneratedColumn<int> get quantity =>
+      columnsByName['quantity']! as i1.GeneratedColumn<int>;
+}
+
 i0.MigrationStepWithVersion migrationSteps({
   required Future<void> Function(i1.Migrator m, Schema8 schema) from7To8,
+  required Future<void> Function(i1.Migrator m, Schema9 schema) from8To9,
 }) {
   return (currentVersion, database) async {
     switch (currentVersion) {
@@ -503,6 +668,11 @@ i0.MigrationStepWithVersion migrationSteps({
         final migrator = i1.Migrator(database, schema);
         await from7To8(migrator, schema);
         return 8;
+      case 8:
+        final schema = Schema9(database: database);
+        final migrator = i1.Migrator(database, schema);
+        await from8To9(migrator, schema);
+        return 9;
       default:
         throw ArgumentError.value('Unknown migration from $currentVersion');
     }
@@ -511,6 +681,7 @@ i0.MigrationStepWithVersion migrationSteps({
 
 i1.OnUpgrade stepByStep({
   required Future<void> Function(i1.Migrator m, Schema8 schema) from7To8,
+  required Future<void> Function(i1.Migrator m, Schema9 schema) from8To9,
 }) => i0.VersionedSchema.stepByStepHelper(
-  step: migrationSteps(from7To8: from7To8),
+  step: migrationSteps(from7To8: from7To8, from8To9: from8To9),
 );

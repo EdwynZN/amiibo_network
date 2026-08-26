@@ -26,7 +26,7 @@ class AppDatabase extends _$AppDatabase {
     : super(e ?? _openExecuter(AppDatabase._databaseName));
 
   @override
-  int get schemaVersion => 8;
+  int get schemaVersion => 9;
 
   @override
   MigrationStrategy get migration {
@@ -173,6 +173,11 @@ class AppDatabase extends _$AppDatabase {
             await m.createTable(schema.amiiboBundle);
             await m.createTable(schema.amiiboBundleUserPreferences);
             await m.createTable(schema.amiiboBundleImages);
+          },
+          from8To9: (m, schema) async {
+            await schema.amiiboBundle.deleteAll();
+            await m.alterTable(TableMigration(schema.amiiboBundle));
+            await m.createTable(schema.amiiboBundleRelation);
           },
         ).call(m, from, to);
       },
