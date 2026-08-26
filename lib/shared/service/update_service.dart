@@ -15,14 +15,7 @@ import 'package:amiibo_network/shared/utils/preferences_constants.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
-import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
-part 'update_service.g.dart';
-
-@riverpod
-UpdateService updateService(Ref ref) =>
-    UpdateService(database: ref.watch(db.databaseProvider));
 
 typedef _Images = ({
   List<db.AmiiboImagesCompanion> images,

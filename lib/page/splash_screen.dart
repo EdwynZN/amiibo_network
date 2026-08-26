@@ -1,14 +1,15 @@
 import 'dart:async';
-import 'package:amiibo_network/shared/resources/resources.dart';
+
+import 'package:amiibo_network/app/configuration/data_providers.dart';
 import 'package:amiibo_network/app/state/theme/theme_provider.dart';
-import 'package:amiibo_network/shared/utils/format_color_on_theme.dart';
-import 'package:material_ui/material_ui.dart';
-import 'package:amiibo_network/shared/widget/switch_joycon.dart';
-import 'package:amiibo_network/shared/service/update_service.dart';
 import 'package:amiibo_network/shared/generated/l10n.dart';
+import 'package:amiibo_network/shared/resources/resources.dart';
+import 'package:amiibo_network/shared/utils/format_color_on_theme.dart';
+import 'package:amiibo_network/shared/widget/switch_joycon.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:material_ui/material_ui.dart';
 
 class SplashScreen extends ConsumerStatefulWidget {
   const SplashScreen({Key? key}) : super(key: key);
@@ -24,7 +25,7 @@ class SplashScreenState extends ConsumerState<SplashScreen>
   late final ThemeMode themeMode;
 
   Future<bool> get updateDB async {
-    final UpdateService updateService = ref.read(updateServiceProvider);
+    final updateService = ref.read(updateServiceProvider);
     bool result = await updateService.createDB();
     await _animationController.forward().whenComplete(
       () => _animationController.value = 0,

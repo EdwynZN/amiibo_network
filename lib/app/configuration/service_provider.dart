@@ -1,3 +1,4 @@
+import 'package:amiibo_network/app/configuration/data_providers.dart';
 import 'package:amiibo_network/shared/data/drift_sqlite/source/amiibo_dao.dart';
 import 'package:amiibo_network/shared/data/drift_sqlite/source/drift_database.dart'
     as db;
@@ -16,7 +17,7 @@ part 'service_provider.g.dart';
 
 @riverpod
 AmiiboServiceNotifer amiiboService(Ref ref) {
-  final database = ref.watch(db.databaseProvider);
+  final database = ref.watch(databaseProvider);
   final notifier = DriftServiceNotifier(database: database);
 
   ref.onDispose(notifier.dispose);

@@ -1,6 +1,7 @@
 import 'dart:async';
 
 //import 'package:flutter/gestures.dart';
+import 'package:amiibo_network/app/configuration/data_providers.dart';
 import 'package:amiibo_network/app/configuration/preferences_provider.dart';
 import 'package:amiibo_network/app/configuration/provider_observer.dart';
 import 'package:amiibo_network/app/configuration/router_provider.dart';
@@ -11,7 +12,6 @@ import 'package:amiibo_network/firebase_options.dart';
 import 'package:amiibo_network/shared/data/remote_config/model/default_remote_config.dart';
 import 'package:amiibo_network/shared/generated/l10n.dart';
 import 'package:amiibo_network/shared/service/info_package.dart';
-import 'package:amiibo_network/shared/service/update_service.dart';
 import 'package:amiibo_network/shared/utils/migration.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
@@ -118,7 +118,7 @@ Future<void> main() async {
         ],
       );
 
-      final UpdateService updateService = container.read(updateServiceProvider);
+      final updateService = container.read(updateServiceProvider);
       final bool notUpdateRequired = await updateService.upToDate;
       if (notUpdateRequired) {
         container.read(initialScreenProvider.notifier).change = '/home';
