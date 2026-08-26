@@ -77,18 +77,42 @@ class AmiiboDao extends DatabaseAccessor<AppDatabase>
 
   Future<void> insertAll({
     required List<AmiiboTable> amiibosData,
+    required List<AmiiboBundleTable> amiiboBundlesData,
     required List<AmiiboImagesCompanion> amiiboImagesData,
     required List<AmiiboBundleImagesCompanion> amiiboBundleImagesData,
-    required List<AmiiboUserPreferencesCompanion> preferences,
+    required List<AmiiboBundleUserPreferencesCompanion> amiiboBundlePreferences,
+    required List<AmiiboBundleRelationCompanion> amiiboBundleRelationData,
+    required List<AmiiboUserPreferencesCompanion> amiiboPreferences,
   }) async {
     await batch((batch) {
       if (InfoPackage.instance.isUpsertFeatureAvailable) {
         batch.insertAllOnConflictUpdate(amiibo, amiibosData);
+        batch.insertAllOnConflictUpdate(amiiboBundle, amiiboBundlesData);
       } else {
         batch.insertAll(amiibo, amiibosData, mode: .insertOrReplace);
+        batch.insertAll(
+          amiiboBundle,
+          amiiboBundlesData,
+          mode: .insertOrReplace,
+        );
       }
       batch
-        ..insertAll(amiiboUserPreferences, preferences, mode: .insertOrIgnore)
+        ..insertAll(
+          amiiboUserPreferences,
+          amiiboPreferences,
+          mode: .insertOrIgnore,
+        )
+        ..insertAll(
+          amiiboBundleUserPreferences,
+          amiiboBundlePreferences,
+          mode: .insertOrIgnore,
+        )
+        ..deleteAll(amiiboBundleRelation)
+        ..insertAll(
+          amiiboBundleRelation,
+          amiiboBundleRelationData,
+          mode: .insertOrIgnore,
+        )
         ..deleteAll(amiiboBundleImages)
         ..insertAll(
           amiiboBundleImages,

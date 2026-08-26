@@ -1,5 +1,6 @@
 import 'package:amiibo_network/shared/data/drift_sqlite/source/drift_database.dart';
 import 'package:amiibo_network/entity/amiibo_info/model/amiibo.dart' as d;
+import 'package:amiibo_network/shared/data/local_file_source/model/amiibo_bundle_local_json_model.dart';
 import 'package:drift/drift.dart';
 
 AmiiboTable dataFromDomain(d.Amiibo amiibo) {
@@ -22,4 +23,20 @@ AmiiboTable dataFromDomain(d.Amiibo amiibo) {
 
 AmiiboUserPreferencesCompanion preferencesFromDomain(d.Amiibo amiibo) {
   return AmiiboUserPreferencesCompanion(amiiboKey: Value(amiibo.key));
+}
+
+AmiiboBundleTable dataFromBundleLocal(AmiiboBundleLocalFile file) {
+  return AmiiboBundleTable(id: file.id, name: file.name);
+}
+
+List<AmiiboBundleRelationCompanion> relationFromBundleLocal(
+  AmiiboBundleLocalFile file,
+) {
+  return file.amiibos.map((e) {
+    return AmiiboBundleRelationCompanion.insert(
+      amiiboKey: e.amiiboId,
+      amiiboBundleId: file.id,
+      quantity: Value(e.quantity),
+    );
+  }).toList();
 }

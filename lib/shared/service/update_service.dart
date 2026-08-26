@@ -1,8 +1,8 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:amiibo_network/app/configuration/model/sort_enum.dart';
-import 'package:amiibo_network/entity/amiibo_info/model/amiibo.dart';
 import 'package:amiibo_network/shared/data/drift_sqlite/model/map_converter.dart';
 import 'package:amiibo_network/shared/data/drift_sqlite/source/affiliation_link_dao.dart';
 import 'package:amiibo_network/shared/data/drift_sqlite/source/amiibo_dao.dart';
@@ -10,6 +10,8 @@ import 'package:amiibo_network/shared/data/drift_sqlite/source/drift_database.da
     as db;
 import 'package:amiibo_network/shared/data/local_file_source/model/amiibo_local_json_model.dart'
     as dataModel;
+import 'package:amiibo_network/shared/data/local_file_source/model/amiibo_bundle_local_json_model.dart'
+    as bundleDataModel;
 import 'package:amiibo_network/shared/data/local_file_source/model/country_local_file_model.dart';
 import 'package:amiibo_network/shared/utils/preferences_constants.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
@@ -45,10 +47,52 @@ _Images _imagesFromJson(Map<String, dynamic> amiibo) {
   );
 }
 
+typedef _AmiiboData = ({
+  List<db.AmiiboTable> data,
+  List<db.AmiiboUserPreferencesCompanion> preferences,
+});
+
+_AmiiboData _amiibosFromJson(Map<String, dynamic> json) {
+  final amiibos = dataModel.entityFromMapToDomain(json);
+  final List<db.AmiiboTable> amiibosData = [];
+  final List<db.AmiiboUserPreferencesCompanion> preferences = [];
+  for (final a in amiibos) {
+    final id = a.key;
+    amiibosData.add(dataFromDomain(a));
+    preferences.add(db.AmiiboUserPreferencesCompanion.insert(amiiboKey: id));
+  }
+
+  return (data: amiibosData, preferences: preferences);
+}
+
+typedef _AmiiboBundleData = ({
+  List<db.AmiiboBundleTable> data,
+  List<db.AmiiboBundleRelationCompanion> relation,
+  List<db.AmiiboBundleUserPreferencesCompanion> preferences,
+});
+
+_AmiiboBundleData _amiiboBundleFromJson(Map<String, dynamic> json) {
+  final bundles = bundleDataModel.entityFromMapToDomain(json);
+  final List<db.AmiiboBundleTable> amiibosData = [];
+  final List<db.AmiiboBundleRelationCompanion> relation = [];
+  final List<db.AmiiboBundleUserPreferencesCompanion> preferences = [];
+  for (final a in bundles) {
+    final id = a.id;
+    amiibosData.add(dataFromBundleLocal(a));
+    relation.addAll(relationFromBundleLocal(a));
+    preferences.add(
+      db.AmiiboBundleUserPreferencesCompanion.insert(amiiboBundleId: id),
+    );
+  }
+
+  return (data: amiibosData, relation: relation, preferences: preferences);
+}
+
 class UpdateService {
-  static Map<String, dynamic>? _jsonFile;
-  static Map<String, dynamic>? _imagesJsonFile;
-  static List<Map<String, dynamic>>? _affiliationJsonFile;
+  Map<String, dynamic>? _jsonFile;
+  Map<String, dynamic>? _imagesJsonFile;
+  Map<String, dynamic>? _bundleJsonFile;
+  List<Map<String, dynamic>>? _affiliationJsonFile;
   static DateTime? _lastUpdate;
   static DateTime? _lastUpdateDB;
   final AmiiboDao _dao;
@@ -102,8 +146,17 @@ class UpdateService {
     );
   }
 
-  Future<List<Amiibo>> _fetchAllAmiibo() async =>
-      compute(dataModel.entityFromMapToDomain, await jsonFile);
+  Future<_AmiiboData> _fetchAllAmiibo() async =>
+      compute(_amiibosFromJson, await jsonFile);
+
+  Future<_AmiiboBundleData> _fetchAllBundles() async =>
+      compute(_amiiboBundleFromJson, await _amiiboBundleJsonFile);
+
+  Future<Map<String, dynamic>> get _amiiboBundleJsonFile async {
+    return _bundleJsonFile ??= jsonDecode(
+      await rootBundle.loadString('assets/databases/bundles.json'),
+    );
+  }
 
   Future<_Images> _fetchAmiiboImages() async =>
       compute(_imagesFromJson, await _amiiboImagesJsonFile);
@@ -147,6 +200,9 @@ class UpdateService {
           return await Future.value(true);
         })
         .catchError((e, s) {
+          if (Platform.environment.containsKey('FLUTTER_TEST')) {
+            throw Error.throwWithStackTrace(e, s);
+          }
           unawaited(
             FirebaseCrashlytics.instance.recordError(e, s, reason: 'createDB'),
           );
@@ -168,19 +224,16 @@ class UpdateService {
 
   Future<void> _updateAmiibosDb() async {
     final amiibos = await _fetchAllAmiibo();
+    final bundles = await _fetchAllBundles();
     final images = await _fetchAmiiboImages();
-    final List<db.AmiiboTable> amiibosData = [];
-    final List<db.AmiiboUserPreferencesCompanion> preferences = [];
-    for (final a in amiibos) {
-      final id = a.key;
-      amiibosData.add(dataFromDomain(a));
-      preferences.add(db.AmiiboUserPreferencesCompanion.insert(amiiboKey: id));
-    }
     await _dao.insertAll(
-      amiibosData: amiibosData,
-      preferences: preferences,
+      amiibosData: amiibos.data,
+      amiiboPreferences: amiibos.preferences,
       amiiboImagesData: images.images,
       amiiboBundleImagesData: images.bundles,
+      amiiboBundlesData: bundles.data,
+      amiiboBundlePreferences: bundles.preferences,
+      amiiboBundleRelationData: bundles.relation,
     );
   }
 
