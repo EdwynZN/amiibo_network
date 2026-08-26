@@ -1,0 +1,140 @@
+{
+    "bundles": [
+        {
+            "id": 1,
+            "name": "Side Order Set (Splatoon Collection)",
+            "amiibos": [
+                {"amiibo_key": 856, "quantity": 1},
+                {"amiibo_key": 857, "quantity": 1}
+            ]
+        },
+        {
+            "id": 2,
+            "name": "Splatoon Raiders Triple pack",
+            "amiibos": [
+                {"amiibo_key": 953, "quantity": 1},
+                {"amiibo_key": 954, "quantity": 1},
+                {"amiibo_key": 955, "quantity": 1}
+            ]
+        },
+        {
+            "id": 3,
+            "name": "Alterna Set (Splatoon Collection)",
+            "amiibos": [
+                {"amiibo_key": 854, "quantity": 1},
+                {"amiibo_key": 855, "quantity": 1}
+            ]
+        },
+        {
+            "id": 4,
+            "name": "Noah and Mio Double Pack",
+            "amiibos": [
+                {"amiibo_key": 844, "quantity": 1},
+                {"amiibo_key": 845, "quantity": 1}
+            ]
+        },
+        {
+            "id": 5,
+            "name": "Splatoon 3 Triple Pack",
+            "amiibos": [
+                {"amiibo_key": 848, "quantity": 1},
+                {"amiibo_key": 849, "quantity": 1},
+                {"amiibo_key": 850, "quantity": 1}
+            ]
+        },
+        {
+            "id": 6,
+            "name": "Pyra & Mythra Double Pack",
+            "amiibos": [
+                {"amiibo_key": 785, "quantity": 1},
+                {"amiibo_key": 786, "quantity": 1}
+            ]
+        },
+        {
+            "id": 7,
+            "name": "Splatoon 3 Triple Pack: Octoling",
+            "amiibos": [
+                {"amiibo_key": 839, "quantity": 1},
+                {"amiibo_key": 740, "quantity": 1},
+                {"amiibo_key": 741, "quantity": 1}
+            ]
+        },
+        {
+            "id": 8,
+            "name": "Steve & Alex Double Pack",
+            "amiibos": [
+                {"amiibo_key": 782, "quantity": 1},
+                {"amiibo_key": 783, "quantity": 1}
+            ]
+        },
+        {
+            "id": 9,
+            "name": "Samus & E.M.M.I Double Pack",
+            "amiibos": [
+                {"amiibo_key": 772, "quantity": 1},
+                {"amiibo_key": 773, "quantity": 1}
+            ]
+        },
+        {
+            "id": 10,
+            "name": "Cat Mario & Cat Peach Double Pack",
+            "amiibos": [
+                {"amiibo_key": 754, "quantity": 1},
+                {"amiibo_key": 755, "quantity": 1}
+            ]
+        },
+        {
+            "id": 11,
+            "name": "Shovel Knight Triple Pack",
+            "amiibos": [
+                {"amiibo_key": 746, "quantity": 1},
+                {"amiibo_key": 747, "quantity": 1},
+                {"amiibo_key": 748, "quantity": 1}
+            ]
+        },
+        {
+            "id": 12,
+            "name": "Octoling Triple Pack",
+            "amiibos": [
+                {"amiibo_key": 586, "quantity": 1},
+                {"amiibo_key": 587, "quantity": 1},
+                {"amiibo_key": 588, "quantity": 1}
+            ]
+        },
+        {
+            "id": 13,
+            "name": "Off the Hook Set",
+            "amiibos": [
+                {"amiibo_key": 584, "quantity": 1},
+                {"amiibo_key": 585, "quantity": 1}
+            ]
+        },
+        {
+            "id": 14,
+            "name": "The Legend of Zelda Collection",
+            "amiibos": [
+                {"amiibo_key": 63, "quantity": 1},
+                {"amiibo_key": 64, "quantity": 1},
+                {"amiibo_key": 65, "quantity": 1},
+                {"amiibo_key": 66, "quantity": 1}
+            ]
+        },
+        {
+            "id": 15,
+            "name": "Wedding Outfit Super Mario Collection",
+            "amiibos": [
+                {"amiibo_key": 7, "quantity": 1},
+                {"amiibo_key": 13, "quantity": 1},
+                {"amiibo_key": 24, "quantity": 1}
+            ]
+        },
+        {
+            "id": 16,
+            "name": "Squid Sisters Set",
+            "amiibos": [
+                {"amiibo_key": 582, "quantity": 1},
+                {"amiibo_key": 583, "quantity": 1}
+            ]
+        }
+    ]
+}

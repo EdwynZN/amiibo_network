@@ -29,7 +29,7 @@ targets:
       drift_dev:
         options:
           databases:
-            app_database: lib\shared\data\drift_sqlite\source\drift_database.dart
+            app_database: lib/shared/data/drift_sqlite/source/drift_database.dart
           test_dir: test/drift/ # (default)
           schema_dir: drift_schemas/  # (default)
 
