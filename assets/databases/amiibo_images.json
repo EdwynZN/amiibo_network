@@ -4775,6 +4775,26 @@
       "amiibo_key": 955,
       "created_at": 1786207135846,
       "file_path": "assets/collection/icon_955.webp"
+    },
+    {
+      "amiibo_key": 956,
+      "created_at": 1789098839000,
+      "file_path": "assets/collection/icon_956.webp"
+    },
+    {
+      "amiibo_key": 957,
+      "created_at": 1789098839000,
+      "file_path": "assets/collection/icon_957.webp"
+    },
+    {
+      "amiibo_key": 958,
+      "created_at": 1789098839000,
+      "file_path": "assets/collection/icon_958.webp"
+    },
+    {
+      "amiibo_key": 959,
+      "created_at": 1789098839000,
+      "file_path": "assets/collection/icon_959.webp"
     }
   ]
 }
