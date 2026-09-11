@@ -1,14 +1,13 @@
-import 'package:amiibo_network/app/configuration/model/amiibo_category_enum.dart';
-import 'package:amiibo_network/entity/amiibo_info/model/amiibo.dart';
 import 'package:amiibo_network/app/configuration/query_provider.dart';
-import 'package:amiibo_network/page/home/controller/select_provider.dart';
+import 'package:amiibo_network/entity/amiibo_info/model/amiibo.dart';
 import 'package:amiibo_network/page/detail/widget/amiibo_button_toggle.dart';
+import 'package:amiibo_network/page/home/controller/select_provider.dart';
+import 'package:amiibo_network/page/home/model/selection.dart';
 import 'package:amiibo_network/shared/utils/amiibo_asset_util.dart';
-import 'package:material_ui/material_ui.dart';
 import 'package:gap/gap.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:amiibo_network/page/home/model/selection.dart';
+import 'package:material_ui/material_ui.dart';
 
 class AnimatedSelection extends StatefulHookConsumerWidget {
   final Amiibo amiibo;
@@ -26,15 +25,16 @@ class AnimatedSelection extends StatefulHookConsumerWidget {
 
 class _AnimatedSelectionState<T extends AnimatedSelection>
     extends ConsumerState<T> {
-  void _onTap(int key, bool isLongPress) {
+  void _onTap(int key, bool isLongPress, String? assetPath) {
     if (isLongPress) {
       ref.read(selectProvider.notifier).onLongPress(key);
     } else {
-      context.push('/amiibo/$key');
+      context.push('/amiibo/$key', extra: assetPath);
     }
   }
 
-  void _onLongPress(int key) => ref.read(selectProvider.notifier).onLongPress(key);
+  void _onLongPress(int key) =>
+      ref.read(selectProvider.notifier).onLongPress(key);
 
   @override
   Widget build(BuildContext context) {
@@ -42,10 +42,7 @@ class _AnimatedSelectionState<T extends AnimatedSelection>
     final key = widget.amiibo.key;
     final select = ref.watch(
       selectProvider.select<Selection>(
-        (cb) => Selection(
-          activated: cb.isNotEmpty,
-          selected: cb.contains(key),
-        ),
+        (cb) => Selection(activated: cb.isNotEmpty, selected: cb.contains(key)),
       ),
     );
     final theme = Theme.of(context);
@@ -67,11 +64,11 @@ class _AnimatedSelectionState<T extends AnimatedSelection>
     final bool disable = widget.ignore || select.activated;
     const size = Size.square(48.0);
     final buttons = Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 4.0),
+      padding: const .symmetric(horizontal: 4.0),
       child: Row(
-        mainAxisSize: MainAxisSize.max,
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.stretch,
+        mainAxisSize: .max,
+        mainAxisAlignment: .center,
+        crossAxisAlignment: .stretch,
         children: [
           WishedButton(amiibo: widget.amiibo, isLock: disable, size: size),
           const Gap(4.0),
@@ -87,33 +84,33 @@ class _AnimatedSelectionState<T extends AnimatedSelection>
       color: theme.scaffoldBackgroundColor,
       shadowColor: Colors.black12,
       borderOnForeground: true,
-      clipBehavior: Clip.antiAlias,
+      clipBehavior: .antiAlias,
       shape: cardShape,
       child: InkWell(
         splashColor: theme.colorScheme.tertiaryContainer,
         splashFactory: InkSparkle.constantTurbulenceSeedSplashFactory,
-        onTap: () => _onTap(key, select.activated),
+        onTap: () => _onTap(key, select.activated, asset),
         onLongPress: widget.ignore ? null : () => _onLongPress(key),
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.end,
-          textBaseline: TextBaseline.alphabetic,
+          mainAxisAlignment: .end,
+          textBaseline: .alphabetic,
           children: <Widget>[
             Flexible(
               child: Center(
                 child: Padding(
-                  padding: const EdgeInsets.fromLTRB(8.0, 8.0, 8.0, 0.0),
+                  padding: const .fromLTRB(8.0, 8.0, 8.0, 0.0),
                   child: Hero(
                     placeholderBuilder: (context, size, child) {
-                      final Color color = theme.brightness == Brightness.dark
+                      final Color color = theme.brightness == .dark
                           ? Colors.white24
                           : Colors.black54;
                       return ColorFiltered(
-                        colorFilter: ColorFilter.mode(color, BlendMode.srcIn),
+                        colorFilter: .mode(color, .srcIn),
                         child: child,
                       );
                     },
                     transitionOnUserGestures: true,
-                    tag: amiibo.key,
+                    tag: asset,
                     child: Image.asset(asset, fit: .contain),
                   ),
                 ),
@@ -123,26 +120,23 @@ class _AnimatedSelectionState<T extends AnimatedSelection>
             SizedBox(height: 40.0, child: buttons),
             Card(
               borderOnForeground: true,
-              margin: EdgeInsets.zero,
+              margin: .zero,
               color: select.selected
                   ? theme.colorScheme.secondary
                   : theme.colorScheme.surfaceContainerHighest,
               elevation: 12.0,
               shape: const RoundedRectangleBorder(
-                borderRadius: BorderRadius.vertical(bottom: Radius.circular(8)),
+                borderRadius: .vertical(bottom: .circular(8)),
               ),
               child: Container(
-                alignment: Alignment.center,
-                padding: const EdgeInsets.symmetric(
-                  vertical: 4.0,
-                  horizontal: 6.0,
-                ),
+                alignment: .center,
+                padding: const .symmetric(vertical: 4.0, horizontal: 6.0),
                 child: Text(
                   amiibo.details.name,
                   softWrap: false,
-                  overflow: TextOverflow.fade,
+                  overflow: .fade,
                   style: theme.primaryTextTheme.bodySmall?.copyWith(
-                    fontWeight: FontWeight.bold,
+                    fontWeight: .bold,
                     color: select.selected
                         ? theme.colorScheme.onSecondary
                         : theme.colorScheme.onSurfaceVariant,
@@ -176,17 +170,13 @@ class _AnimatedSelectedListTileState
     final useSerie = ref.watch(
       queryProvider.select((q) {
         final category = q.categoryAttributes.category;
-        return category != AmiiboCategory.Figures &&
-            category != AmiiboCategory.Cards;
+        return category != .Figures && category != .Cards;
       }),
     );
     final key = widget.amiibo.key;
     final select = ref.watch(
       selectProvider.select<Selection>(
-        (cb) => Selection(
-          activated: cb.isNotEmpty,
-          selected: cb.contains(key),
-        ),
+        (cb) => Selection(activated: cb.isNotEmpty, selected: cb.contains(key)),
       ),
     );
     final theme = Theme.of(context);
@@ -246,7 +236,7 @@ class _AnimatedSelectedListTileState
       ),
       child: InkWell(
         splashFactory: InkSparkle.constantTurbulenceSeedSplashFactory,
-        onTap: () => _onTap(key, select.activated),
+        onTap: () => _onTap(key, select.activated, image),
         onLongPress: widget.ignore ? null : () => _onLongPress(key),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.start,
@@ -297,7 +287,7 @@ class _ListAmiiboAsset extends StatelessWidget {
           );
         },
         transitionOnUserGestures: true,
-        tag: amiiboKey,
+        tag: asset,
         child: Image.asset(
           asset,
           fit: .contain,

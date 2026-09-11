@@ -1,3 +1,4 @@
+import 'package:amiibo_network/page/detail/provider/asset_id_provider.dart';
 import 'package:amiibo_network/shared/generated/l10n.dart';
 import 'package:amiibo_network/shared/resources/resources.dart';
 import 'package:amiibo_network/entity/amiibo_info/infrastructure/amiibo_provider.dart';
@@ -16,8 +17,10 @@ class AmiiboCard extends ConsumerWidget {
     final theme = Theme.of(context);
     final cardColor = theme.colorScheme.surface;
 
+    final initialAsset = ref.watch(assetAmiiboProvider);
     final image = ref.watch(
       detailAmiiboProvider(key).select((s) {
+        if (!s.hasValue) return amiiboAsset(initialAsset);
         return amiiboAsset(s.whenOrNull(data: (data) => data?.details.image));
       }),
     );
@@ -26,7 +29,7 @@ class AmiiboCard extends ConsumerWidget {
       width: double.infinity,
       child: Hero(
         transitionOnUserGestures: true,
-        tag: key,
+        tag: image,
         child: Image.asset(image, filterQuality: .high, fit: .contain),
       ),
     );
@@ -92,19 +95,19 @@ class AmiiboCard extends ConsumerWidget {
     );
 
     return Card(
-      margin: EdgeInsets.zero,
+      margin: .zero,
       borderOnForeground: true,
       color: cardColor,
       elevation: 2.0,
       shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(bottom: Radius.circular(24.0)),
+        borderRadius: .vertical(bottom: .circular(24.0)),
       ),
       child: Padding(
-        padding: const EdgeInsets.all(12.0),
+        padding: const .all(12.0),
         child: DefaultTextStyle.merge(
           style: TextStyle(color: theme.colorScheme.onSecondaryContainer),
           child: Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
+            crossAxisAlignment: .start,
             children: [
               letf,
               const Expanded(child: _AmiiboInfo()),
@@ -137,15 +140,15 @@ class _AmiiboInfo extends ConsumerWidget {
               displayColor: theme.colorScheme.onPrimaryContainer,
             );
             return Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: .start,
+              mainAxisAlignment: .start,
               children: [
                 Text(
                   amiibo.gameSeries,
                   maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
+                  overflow: .ellipsis,
                   style: primaryTextTheme.titleLarge?.copyWith(
-                    fontWeight: FontWeight.bold,
+                    fontWeight: .bold,
                     fontSize: 22.0,
                     height: 1.25,
                     letterSpacing: -0.15,
@@ -156,7 +159,7 @@ class _AmiiboInfo extends ConsumerWidget {
                   Text(
                     amiibo.amiiboSeries,
                     maxLines: 2,
-                    overflow: TextOverflow.ellipsis,
+                    overflow: .ellipsis,
                     style: primaryTextTheme.titleMedium?.copyWith(
                       fontSize: 18.0,
                       height: 1.15,
@@ -207,11 +210,11 @@ class _AmiiboInfo extends ConsumerWidget {
           orElse: () => const SizedBox(),
         );
     return Card(
-      margin: const EdgeInsets.only(left: 12.0),
+      margin: const .only(left: 12.0),
       color: cardColor,
       elevation: 6.0,
       child: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 4.0, horizontal: 12.0),
+        padding: const .symmetric(vertical: 4.0, horizontal: 12.0),
         child: info,
       ),
     );
