@@ -13023,9 +13023,9 @@
       "key": 958,
       "id": null,
       "amiiboSeries": "Metroid Ravenous",
-      "character": "Samus Metroid Suit",
+      "character": "Samus Aran",
       "gameSeries": "Metroid",
-      "name": "Samus Aran",
+      "name": "Samus Metroid Suit",
       "au": "20270128",
       "eu": "20270128",
       "jp": "20270128",
@@ -13059,5 +13059,5 @@
       "type": "Figure"
     }
   ],
-  "lastUpdated": "2026-08-10T05:00:00.000Z"
+  "lastUpdated": "2026-08-10T08:00:00.000Z"
 }

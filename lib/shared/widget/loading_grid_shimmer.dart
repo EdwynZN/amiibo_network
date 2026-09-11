@@ -30,13 +30,13 @@ class ShimmerCard extends HookWidget {
     final Widget child;
     if (isGrid) {
       child = Column(
-        mainAxisAlignment: MainAxisAlignment.end,
-        textBaseline: TextBaseline.alphabetic,
+        mainAxisAlignment: .end,
+        textBaseline: .alphabetic,
         children: <Widget>[
           Flexible(
             child: Center(
               child: Padding(
-                padding: const EdgeInsets.all(4.0),
+                padding: const .all(4.0),
                 child: Image.asset(amiiboAssetFromIndex(id), fit: .contain),
               ),
             ),
@@ -45,11 +45,11 @@ class ShimmerCard extends HookWidget {
             decoration: ShapeDecoration(
               color: Theme.of(context).primaryColorLight,
               shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.vertical(bottom: Radius.circular(8)),
+                borderRadius: .vertical(bottom: .circular(8)),
               ),
             ),
             alignment: .center,
-            padding: EdgeInsets.symmetric(horizontal: 5),
+            padding: .symmetric(horizontal: 5),
             child: const Text(''),
           ),
         ],

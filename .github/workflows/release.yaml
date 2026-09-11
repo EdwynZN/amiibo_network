@@ -18,8 +18,8 @@ on:
         - major
 
 env:
-  java_version: '17'
-  ruby_version: '2.7.2'
+  java_version: '21'
+  ruby_version: '4.0.1'
   version_update: ${{ inputs.version_update != '' && inputs.version_update || 'patch'  }}
   
 jobs:
@@ -38,6 +38,7 @@ jobs:
         with:
           ruby-version: ${{ env.ruby_version }}
           bundler-cache: true
+          cache-version: 1
 
       - name: Setup Java
         uses: actions/setup-java@v4

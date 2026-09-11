@@ -1,5 +1,6 @@
 import 'package:amiibo_network/entity/amiibo_info/infrastructure/amiibo_provider.dart';
 import 'package:amiibo_network/page/detail/detail_screen.dart';
+import 'package:amiibo_network/page/detail/provider/asset_id_provider.dart';
 import 'package:amiibo_network/page/home/home_screen.dart';
 import 'package:amiibo_network/page/settings/settings_screen.dart';
 import 'package:amiibo_network/page/splash_screen.dart';
@@ -52,8 +53,12 @@ GoRouter createRouter({
       GoRoute(
         name: 'amiibo_details',
         path: '/amiibo/:id',
+
         /// FIx until migration to material_ui
         pageBuilder: (context, state) {
+          String? asset;
+          if (state.extra case String value) asset = value;
+          final keyAmiibo = int.parse(state.pathParameters['id']!);
           return MaterialPage<void>(
             key: state.pageKey,
             name: state.name ?? state.path,
@@ -64,9 +69,8 @@ GoRouter createRouter({
             restorationId: state.pageKey.value,
             child: ProviderScope(
               overrides: [
-                keyAmiiboProvider.overrideWithValue(
-                  int.parse(state.pathParameters['id']!),
-                ),
+                keyAmiiboProvider.overrideWithValue(keyAmiibo),
+                assetAmiiboProvider.overrideWithValue(asset),
               ],
               child: const DetailScreen(),
             ),
