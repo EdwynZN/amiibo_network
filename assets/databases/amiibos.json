@@ -13031,7 +13031,33 @@
       "jp": "20270128",
       "na": "20270128",
       "type": "Figure"
+    },
+    {
+      "key": 959,
+      "id": null,
+      "amiiboSeries": "TLOZ: Ocarina of Time",
+      "character": "Link",
+      "gameSeries": "The Legend of Zelda",
+      "name": "Young Link",
+      "au": "2027",
+      "eu": "2027",
+      "jp": "2027",
+      "na": "2027",
+      "type": "Figure"
+    },
+    {
+      "key": 960,
+      "id": null,
+      "amiiboSeries": "TLOZ: Ocarina of Time",
+      "character": "Zelda",
+      "gameSeries": "The Legend of Zelda",
+      "name": "Young Zelda",
+      "au": "2027",
+      "eu": "2027",
+      "jp": "2027",
+      "na": "2027",
+      "type": "Figure"
     }
   ],
-  "lastUpdated": "2026-07-28T05:00:00.000Z"
+  "lastUpdated": "2026-08-10T05:00:00.000Z"
 }
