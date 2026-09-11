@@ -18,8 +18,7 @@ class AmiiboCard extends ConsumerWidget {
 
     final image = ref.watch(
       detailAmiiboProvider(key).select((s) {
-        return s.whenOrNull(data: (data) => data?.details.image) ??
-            amiiboAssetFromIndex(key);
+        return amiiboAsset(s.whenOrNull(data: (data) => data?.details.image));
       }),
     );
 
