@@ -4795,6 +4795,11 @@
       "amiibo_key": 959,
       "created_at": 1789098839000,
       "file_path": "assets/collection/icon_959.webp"
+    },
+    {
+      "amiibo_key": 960,
+      "created_at": 1789098839000,
+      "file_path": "assets/collection/icon_960.webp"
     }
   ]
 }
