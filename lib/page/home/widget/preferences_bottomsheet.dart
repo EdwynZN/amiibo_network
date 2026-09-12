@@ -233,7 +233,7 @@ class _CategoryTitle extends StatelessWidget {
         title,
         maxLines: 1,
         style: theme.textTheme.titleLarge?.copyWith(
-          fontWeight: FontWeight.bold,
+          fontWeight: .bold,
           color: theme.colorScheme.onSurface,
           letterSpacing: -0.5,
         ),

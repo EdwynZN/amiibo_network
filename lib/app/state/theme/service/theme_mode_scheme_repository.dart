@@ -45,79 +45,59 @@ class AmiiboTheme3 implements AmiiboTheme {
     onSecondaryContainer: Color(0xFFE7F0F5),
   );
   static const TextTheme _textTheme = TextTheme(
-    titleLarge: TextStyle(
-      fontSize: 18,
-      fontWeight: FontWeight.w500,
-      letterSpacing: 0.15,
-    ),
+    titleLarge: TextStyle(fontSize: 18, fontWeight: .w500, letterSpacing: 0.15),
     titleMedium: TextStyle(
       fontSize: 16,
-      fontWeight: FontWeight.normal,
+      fontWeight: .normal,
       letterSpacing: 0.15,
     ),
-    titleSmall: TextStyle(
-      fontSize: 14,
-      fontWeight: FontWeight.w500,
-      letterSpacing: 0.1,
-    ),
-    bodyLarge: TextStyle(
-      fontSize: 16,
-      fontWeight: FontWeight.normal,
-      letterSpacing: 0.5,
-    ),
+    titleSmall: TextStyle(fontSize: 14, fontWeight: .w500, letterSpacing: 0.1),
+    bodyLarge: TextStyle(fontSize: 16, fontWeight: .normal, letterSpacing: 0.5),
     bodyMedium: TextStyle(
       fontSize: 14,
-      fontWeight: FontWeight.normal,
+      fontWeight: .normal,
       letterSpacing: 0.25,
     ),
-    bodySmall: TextStyle(
-      fontSize: 12,
-      fontWeight: FontWeight.normal,
-      letterSpacing: 0.4,
-    ),
-    labelLarge: TextStyle(
-      fontSize: 14,
-      fontWeight: FontWeight.w500,
-      letterSpacing: 1.25,
-    ),
+    bodySmall: TextStyle(fontSize: 12, fontWeight: .normal, letterSpacing: 0.4),
+    labelLarge: TextStyle(fontSize: 14, fontWeight: .w500, letterSpacing: 1.25),
     labelMedium: TextStyle(
       fontSize: 12,
-      fontWeight: FontWeight.w500,
+      fontWeight: .w500,
       letterSpacing: 1.25,
     ),
     labelSmall: TextStyle(
       fontSize: 10,
-      fontWeight: FontWeight.normal,
+      fontWeight: .normal,
       letterSpacing: 1.5,
     ),
     displayLarge: TextStyle(
       fontSize: 20,
-      fontWeight: FontWeight.w300,
+      fontWeight: .w300,
       letterSpacing: -1.5,
     ),
     displayMedium: TextStyle(
       fontSize: 18,
-      fontWeight: FontWeight.w300,
+      fontWeight: .w300,
       letterSpacing: -0.5,
     ),
     displaySmall: TextStyle(
       fontSize: 16,
-      fontWeight: FontWeight.normal,
+      fontWeight: .normal,
       letterSpacing: 0.0,
     ),
     headlineLarge: TextStyle(
       fontSize: 15,
-      fontWeight: FontWeight.normal,
+      fontWeight: .normal,
       letterSpacing: 0.0,
     ),
     headlineMedium: TextStyle(
       fontSize: 18,
-      fontWeight: FontWeight.normal,
+      fontWeight: .normal,
       letterSpacing: 0.25,
     ),
     headlineSmall: TextStyle(
       fontSize: 16,
-      fontWeight: FontWeight.normal,
+      fontWeight: .normal,
       letterSpacing: 0.0,
     ),
   );
@@ -125,91 +105,91 @@ class AmiiboTheme3 implements AmiiboTheme {
   TextTheme __darkAccentTextTheme = const TextTheme(
     titleLarge: TextStyle(
       fontSize: 18,
-      fontWeight: FontWeight.w500,
+      fontWeight: .w500,
       letterSpacing: 0.15,
       color: Colors.black87,
     ),
     titleMedium: TextStyle(
       fontSize: 16,
-      fontWeight: FontWeight.normal,
+      fontWeight: .normal,
       letterSpacing: 0.15,
       color: Colors.black87,
     ),
     titleSmall: TextStyle(
       fontSize: 14,
-      fontWeight: FontWeight.w500,
+      fontWeight: .w500,
       letterSpacing: 0.1,
       color: Colors.black87,
     ),
     bodyLarge: TextStyle(
       fontSize: 16,
-      fontWeight: FontWeight.normal,
+      fontWeight: .normal,
       letterSpacing: 0.5,
       color: Colors.black87,
     ),
     bodyMedium: TextStyle(
       fontSize: 14,
-      fontWeight: FontWeight.normal,
+      fontWeight: .normal,
       letterSpacing: 0.25,
       color: Colors.black87,
     ),
     bodySmall: TextStyle(
       fontSize: 12,
-      fontWeight: FontWeight.normal,
+      fontWeight: .normal,
       letterSpacing: 0.4,
       color: Colors.black87,
     ),
     labelLarge: TextStyle(
       fontSize: 14,
-      fontWeight: FontWeight.w500,
+      fontWeight: .w500,
       letterSpacing: 1.25,
       color: Colors.black87,
     ),
     labelMedium: TextStyle(
       fontSize: 12,
-      fontWeight: FontWeight.w500,
+      fontWeight: .w500,
       letterSpacing: 1.25,
       color: Colors.black87,
     ),
     labelSmall: TextStyle(
       fontSize: 10,
-      fontWeight: FontWeight.normal,
+      fontWeight: .normal,
       letterSpacing: 1.5,
       color: Colors.black87,
     ),
     displayLarge: TextStyle(
       fontSize: 20,
-      fontWeight: FontWeight.w300,
+      fontWeight: .w300,
       letterSpacing: -1.5,
       color: Colors.black87,
     ),
     displayMedium: TextStyle(
       fontSize: 18,
-      fontWeight: FontWeight.w300,
+      fontWeight: .w300,
       letterSpacing: -0.5,
       color: Colors.black87,
     ),
     displaySmall: TextStyle(
       fontSize: 16,
-      fontWeight: FontWeight.normal,
+      fontWeight: .normal,
       letterSpacing: 0.0,
       color: Colors.black87,
     ),
     headlineLarge: TextStyle(
       fontSize: 15,
-      fontWeight: FontWeight.normal,
+      fontWeight: .normal,
       letterSpacing: 0.0,
       color: Colors.black87,
     ),
     headlineMedium: TextStyle(
       fontSize: 18,
-      fontWeight: FontWeight.normal,
+      fontWeight: .normal,
       letterSpacing: 0.25,
       color: Colors.black87,
     ),
     headlineSmall: TextStyle(
       fontSize: 16,
-      fontWeight: FontWeight.normal,
+      fontWeight: .normal,
       letterSpacing: 0.0,
       color: Colors.black87,
     ),
@@ -217,91 +197,91 @@ class AmiiboTheme3 implements AmiiboTheme {
   TextTheme __lightAccentTextTheme = const TextTheme(
     titleLarge: TextStyle(
       fontSize: 18,
-      fontWeight: FontWeight.w500,
+      fontWeight: .w500,
       letterSpacing: 0.15,
       color: Colors.white70,
     ),
     titleMedium: TextStyle(
       fontSize: 16,
-      fontWeight: FontWeight.normal,
+      fontWeight: .normal,
       letterSpacing: 0.15,
       color: Colors.white70,
     ),
     titleSmall: TextStyle(
       fontSize: 14,
-      fontWeight: FontWeight.w500,
+      fontWeight: .w500,
       letterSpacing: 0.1,
       color: Colors.white70,
     ),
     bodyLarge: TextStyle(
       fontSize: 16,
-      fontWeight: FontWeight.normal,
+      fontWeight: .normal,
       letterSpacing: 0.5,
       color: Colors.white70,
     ),
     bodyMedium: TextStyle(
       fontSize: 14,
-      fontWeight: FontWeight.normal,
+      fontWeight: .normal,
       letterSpacing: 0.25,
       color: Colors.white70,
     ),
     bodySmall: TextStyle(
       fontSize: 12,
-      fontWeight: FontWeight.normal,
+      fontWeight: .normal,
       letterSpacing: 0.4,
       color: Colors.white70,
     ),
     labelLarge: TextStyle(
       fontSize: 14,
-      fontWeight: FontWeight.w500,
+      fontWeight: .w500,
       letterSpacing: 1.25,
       color: Colors.white70,
     ),
     labelMedium: TextStyle(
       fontSize: 12,
-      fontWeight: FontWeight.w500,
+      fontWeight: .w500,
       letterSpacing: 1.25,
       color: Colors.white70,
     ),
     labelSmall: TextStyle(
       fontSize: 10,
-      fontWeight: FontWeight.normal,
+      fontWeight: .normal,
       letterSpacing: 1.5,
       color: Colors.white70,
     ),
     displayLarge: TextStyle(
       fontSize: 20,
-      fontWeight: FontWeight.w300,
+      fontWeight: .w300,
       letterSpacing: -1.5,
       color: Colors.white70,
     ),
     displayMedium: TextStyle(
       fontSize: 18,
-      fontWeight: FontWeight.w300,
+      fontWeight: .w300,
       letterSpacing: -0.5,
       color: Colors.white70,
     ),
     displaySmall: TextStyle(
       fontSize: 16,
-      fontWeight: FontWeight.normal,
+      fontWeight: .normal,
       letterSpacing: 0.0,
       color: Colors.white70,
     ),
     headlineLarge: TextStyle(
       fontSize: 15,
-      fontWeight: FontWeight.normal,
+      fontWeight: .normal,
       letterSpacing: 0.0,
       color: Colors.white70,
     ),
     headlineMedium: TextStyle(
       fontSize: 18,
-      fontWeight: FontWeight.normal,
+      fontWeight: .normal,
       letterSpacing: 0.25,
       color: Colors.white70,
     ),
     headlineSmall: TextStyle(
       fontSize: 16,
-      fontWeight: FontWeight.normal,
+      fontWeight: .normal,
       letterSpacing: 0.0,
       color: Colors.white70,
     ),
@@ -316,8 +296,10 @@ class AmiiboTheme3 implements AmiiboTheme {
     }
   }
 
-  ThemeData _themeFromScheme(ColorScheme scheme,
-      [bool useSurfaceElevation = true]) {
+  ThemeData _themeFromScheme(
+    ColorScheme scheme, [
+    bool useSurfaceElevation = true,
+  ]) {
     final overlay = scheme.primary.withValues(alpha: 0.24);
     final inverseBrightness = scheme.brightness == Brightness.light
         ? Brightness.dark
@@ -326,9 +308,7 @@ class AmiiboTheme3 implements AmiiboTheme {
       // GENERAL CONFIGURATION
       applyElevationOverlayColor: true,
       cupertinoOverrideTheme: const NoDefaultCupertinoThemeData(),
-      extensions: [
-        PreferencesExtension.brigthness(scheme.brightness),
-      ],
+      extensions: [PreferencesExtension.brigthness(scheme.brightness)],
       inputDecorationTheme: const InputDecorationTheme(),
       materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
       pageTransitionsTheme: const PageTransitionsTheme(),
@@ -363,10 +343,12 @@ class AmiiboTheme3 implements AmiiboTheme {
           statusBarColor: Colors.transparent,
         ),
         backgroundColor: scheme.surface,
-        titleTextStyle:
-            _textTheme.titleMedium?.copyWith(color: scheme.onSurface),
-        toolbarTextStyle:
-            _textTheme.bodyMedium?.copyWith(color: scheme.onSurface),
+        titleTextStyle: _textTheme.titleMedium?.copyWith(
+          color: scheme.onSurface,
+        ),
+        toolbarTextStyle: _textTheme.bodyMedium?.copyWith(
+          color: scheme.onSurface,
+        ),
         foregroundColor: scheme.onSurface,
         iconTheme: IconThemeData(color: scheme.onSurface),
       ),
@@ -439,7 +421,8 @@ class AmiiboTheme3 implements AmiiboTheme {
         fillColor: WidgetStateProperty.resolveWith<Color?>((states) {
           if (states.contains(WidgetState.disabled)) return null;
           if (states.contains(WidgetState.focused) ||
-              states.contains(WidgetState.pressed)) return scheme.secondary;
+              states.contains(WidgetState.pressed))
+            return scheme.secondary;
           return scheme.tertiaryContainer;
         }),
       ),
@@ -458,8 +441,9 @@ class AmiiboTheme3 implements AmiiboTheme {
         shadowColor: Colors.black12,
         selectedShadowColor: Colors.black38,
         labelStyle: _textTheme.bodySmall!.copyWith(color: scheme.onSurface),
-        secondaryLabelStyle:
-            _textTheme.bodySmall!.copyWith(color: scheme.onSurface),
+        secondaryLabelStyle: _textTheme.bodySmall!.copyWith(
+          color: scheme.onSurface,
+        ),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
         side: _SelectedBorder(scheme.primary, scheme.primary),
         brightness: scheme.brightness,
@@ -473,10 +457,12 @@ class AmiiboTheme3 implements AmiiboTheme {
       ),
       dialogTheme: DialogThemeData(
         elevation: !useSurfaceElevation ? 0 : 2.0,
-        titleTextStyle:
-            _textTheme.titleLarge!.copyWith(color: scheme.onSurface),
-        contentTextStyle:
-            _textTheme.titleMedium!.copyWith(color: scheme.onSurface),
+        titleTextStyle: _textTheme.titleLarge!.copyWith(
+          color: scheme.onSurface,
+        ),
+        contentTextStyle: _textTheme.titleMedium!.copyWith(
+          color: scheme.onSurface,
+        ),
         backgroundColor: scheme.surface,
         actionsPadding: const EdgeInsets.symmetric(
           horizontal: 16.0,
@@ -501,23 +487,24 @@ class AmiiboTheme3 implements AmiiboTheme {
       elevatedButtonTheme: ElevatedButtonThemeData(
         style: ButtonStyle(
           mouseCursor: WidgetStateProperty.all<MouseCursor>(
-              WidgetStateMouseCursor.clickable),
+            WidgetStateMouseCursor.clickable,
+          ),
           //enableFeedback: false,
           surfaceTintColor: WidgetStateProperty.all(scheme.surfaceTint),
           shape: WidgetStateProperty.all<OutlinedBorder>(
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(8))),
+            RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+          ),
           elevation: WidgetStateProperty.resolveWith<double>((states) {
             if (states.contains(WidgetState.pressed)) return 0.0;
             return !useSurfaceElevation ? 0 : 4.0;
           }),
-          backgroundColor:
-              WidgetStateProperty.all<Color?>(scheme.secondaryContainer),
+          backgroundColor: WidgetStateProperty.all<Color?>(
+            scheme.secondaryContainer,
+          ),
           foregroundColor: WidgetStateProperty.all<Color?>(
             scheme.onSecondaryContainer,
           ),
-          textStyle: WidgetStateProperty.all<TextStyle?>(
-            _textTheme.bodyLarge,
-          ),
+          textStyle: WidgetStateProperty.all<TextStyle?>(_textTheme.bodyLarge),
           overlayColor: WidgetStateProperty.all<Color>(overlay),
           visualDensity: const VisualDensity(vertical: 0),
         ),
@@ -554,8 +541,9 @@ class AmiiboTheme3 implements AmiiboTheme {
       menuTheme: const MenuThemeData(),
       navigationBarTheme: NavigationBarThemeData(
         backgroundColor: scheme.surface,
-        iconTheme:
-            WidgetStateProperty.all(IconThemeData(color: scheme.onSurface)),
+        iconTheme: WidgetStateProperty.all(
+          IconThemeData(color: scheme.onSurface),
+        ),
         indicatorColor: scheme.primaryContainer,
         labelBehavior: NavigationDestinationLabelBehavior.alwaysShow,
         labelTextStyle: WidgetStateProperty.all(_textTheme.labelLarge),
@@ -586,10 +574,9 @@ class AmiiboTheme3 implements AmiiboTheme {
           shape: WidgetStateProperty.all<OutlinedBorder>(
             const RoundedRectangleBorder(),
           ),
-          side: WidgetStateProperty.all<BorderSide>(BorderSide(
-            color: scheme.primary,
-            width: 1,
-          )),
+          side: WidgetStateProperty.all<BorderSide>(
+            BorderSide(color: scheme.primary, width: 1),
+          ),
           backgroundColor: WidgetStateProperty.all<Color>(Colors.transparent),
           foregroundColor: WidgetStateProperty.all<Color?>(scheme.primary),
         ),
@@ -658,7 +645,8 @@ class AmiiboTheme3 implements AmiiboTheme {
           }),
           elevation: WidgetStatePropertyAll(0.0),
           side: WidgetStatePropertyAll(
-              BorderSide(color: scheme.primaryContainer)),
+            BorderSide(color: scheme.primaryContainer),
+          ),
         ),
       ),
       shadowColor: scheme.shadow, //Default color
@@ -668,9 +656,7 @@ class AmiiboTheme3 implements AmiiboTheme {
         contentTextStyle: TextStyle(color: scheme.onTertiaryContainer),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(8),
-          side: BorderSide(
-            color: scheme.tertiary,
-          ),
+          side: BorderSide(color: scheme.tertiary),
         ),
         behavior: SnackBarBehavior.floating,
       ),
@@ -704,10 +690,12 @@ class AmiiboTheme3 implements AmiiboTheme {
       textButtonTheme: TextButtonThemeData(
         style: ButtonStyle(
           mouseCursor: WidgetStateProperty.all<MouseCursor>(
-              WidgetStateMouseCursor.clickable),
+            WidgetStateMouseCursor.clickable,
+          ),
           //enableFeedback: false,
           shape: WidgetStateProperty.all<OutlinedBorder>(
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(8))),
+            RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+          ),
           backgroundColor: WidgetStateProperty.all<Color>(Colors.transparent),
           foregroundColor: WidgetStateProperty.all<Color>(scheme.onSurface),
           overlayColor: WidgetStateProperty.all<Color>(overlay),
@@ -865,30 +853,30 @@ class AmiiboTheme3 implements AmiiboTheme {
     _materialScheme = scheme;
     _lightTheme = _themeFromScheme(_materialScheme.light);
     _materialScheme = _materialScheme;
-    _setDark();;
+    _setDark();
+    ;
   }
 
   @override
-  final List<Color> lightColors =
-      ThemeSchemes.styles.map((e) => e.light.primaryContainer).toList();
+  final List<Color> lightColors = ThemeSchemes.styles
+      .map((e) => e.light.primaryContainer)
+      .toList();
 
   @override
   List<Color> get darkColors => [
-        Colors.blueGrey,
-        Colors.grey,
-        Colors.black,
-        _darkScheme.primary,
-      ];
+    Colors.blueGrey,
+    Colors.grey,
+    Colors.black,
+    _darkScheme.primary,
+  ];
 }
 
 class _SelectedBorder extends BorderSide implements WidgetStateBorderSide {
   final Color? selectedColor;
   final Color regularColor;
 
-  const _SelectedBorder(
-    this.selectedColor, [
-    Color? regularColor,
-  ]) : regularColor = regularColor ?? Colors.white54;
+  const _SelectedBorder(this.selectedColor, [Color? regularColor])
+    : regularColor = regularColor ?? Colors.white54;
 
   @override
   BorderSide? resolve(Set<WidgetState> states) {

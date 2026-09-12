@@ -33,7 +33,7 @@ class FeatureDisableMessageCard extends StatelessWidget {
           ),
           softWrap: true,
           style: TextStyle(
-            fontWeight: FontWeight.w600,
+            fontWeight: .w600,
             color: theme.colorScheme.onTertiaryContainer,
             height: 1.5,
           ),

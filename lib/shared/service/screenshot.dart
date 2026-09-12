@@ -477,7 +477,7 @@ class Screenshot {
             color: onWished,
             fontSize: fontFeatureStyle ? 35 : 30,
             height: 1.5,
-            fontWeight: FontWeight.w300,
+            fontWeight: .w300,
             background: wishedCardPaint,
             fontFeatures: [
               if (fontFeatureStyle) ui.FontFeature.enable('frac'),
@@ -499,7 +499,7 @@ class Screenshot {
             color: onOwned,
             fontSize: fontFeatureStyle ? 35 : 30,
             height: 1.5,
-            fontWeight: FontWeight.w300,
+            fontWeight: .w300,
             background: ownedCardPaint,
             textBaseline: TextBaseline.ideographic,
           ),

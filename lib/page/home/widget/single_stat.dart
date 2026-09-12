@@ -30,7 +30,7 @@ class SingleStat extends HookConsumerWidget {
         final total = Chip(
           label: Text(
             stat.total.toString(),
-            style: const TextStyle(fontWeight: FontWeight.w600),
+            style: const TextStyle(fontWeight: .w600),
           ),
           avatar: const ImageIcon(
             AssetImage(NetworkIcons.amiiboImageUnavailable),
@@ -196,7 +196,7 @@ class _StatContainer extends StatelessWidget {
         ),
         style: TextStyle(
           fontSize: 14.0,
-          fontWeight: FontWeight.w600,
+          fontWeight: .w600,
           color: theme.colorScheme.onSurface,
         ),
         maxLines: 1,
@@ -228,7 +228,7 @@ class StatChip extends StatelessWidget {
       surfaceTintColor: backgroundColor,
       labelStyle: TextStyle(
         color: foregroundColor,
-        fontWeight: FontWeight.bold,
+        fontWeight: .bold,
         fontFeatures: [FontFeature.tabularFigures()],
       ),
       padding: const EdgeInsets.symmetric(vertical: 2.0, horizontal: 8.0),

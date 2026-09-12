@@ -130,7 +130,7 @@ class _EmptyGames extends StatelessWidget {
               S.of(context).no_games_found,
               style: theme.textTheme.headlineMedium?.copyWith(
                 fontSize: 24.0,
-                fontWeight: FontWeight.w500,
+                fontWeight: .w500,
                 color: theme.colorScheme.primary,
               ),
               textAlign: TextAlign.center,
@@ -238,7 +238,7 @@ class _Subtitle extends StatelessWidget {
                   text: translate.amiibo_usage_count(count!),
                   style: theme.primaryTextTheme.titleSmall?.copyWith(
                     color: theme.colorScheme.onSurface,
-                    fontWeight: FontWeight.w900,
+                    fontWeight: .w900,
                   ),
                 ),
               ],

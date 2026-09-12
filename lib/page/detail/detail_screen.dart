@@ -71,7 +71,7 @@ class DetailScreen extends ConsumerWidget {
         titleSpacing: 0.0,
         titleTextStyle: AppBarTheme.of(context).titleTextStyle?.copyWith(
           fontSize: 22.0,
-          fontWeight: FontWeight.normal,
+          fontWeight: .normal,
           letterSpacing: -0.25,
           wordSpacing: -0.15,
         ),

@@ -82,7 +82,7 @@ class _AmazonSiteDraggableSheet extends ConsumerWidget {
                 ),
                 title: Text(
                   translate.no_link_selected,
-                  style: const TextStyle(fontWeight: FontWeight.w600),
+                  style: const TextStyle(fontWeight: .w600),
                 ),
                 subtitle: Text(translate.no_link_selected_subtitle),
               ),
@@ -118,7 +118,7 @@ class _AmazonSiteDraggableSheet extends ConsumerWidget {
                           ),
                           title: Text(
                             affiliation.countryName.localization(code),
-                            style: const TextStyle(fontWeight: FontWeight.w600),
+                            style: const TextStyle(fontWeight: .w600),
                           ),
                           subtitle: Text(
                             Uri(

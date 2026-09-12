@@ -378,7 +378,7 @@ class _AmiiboListWidget extends HookConsumerWidget {
                       translate.emptyMessageType(messageType),
                       style: const TextStyle(
                         fontSize: 24.0,
-                        fontWeight: FontWeight.w600,
+                        fontWeight: .w600,
                         height: 1.25,
                       ),
                       textAlign: TextAlign.center,
@@ -393,8 +393,8 @@ class _AmiiboListWidget extends HookConsumerWidget {
                         ),
                         onPressed: () async {
                           final filter = ref.read(queryProvider.notifier);
-                          final List<String> figures = filter.customFigures;
-                          final List<String> cards = filter.customCards;
+                          final figures = filter.customFigures.toList();
+                          final cards = filter.customCards.toList();
                           bool save =
                               await showDialog<bool>(
                                 context: context,
