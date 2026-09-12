@@ -677,7 +677,7 @@ class _SwitchListSettings extends StatelessWidget {
           title,
           style: theme.textTheme.labelLarge?.copyWith(
             letterSpacing: 0.1,
-            fontWeight: FontWeight.w500,
+            fontWeight: .w500,
           ),
         ),
         subtitle: subtitle == null
@@ -688,7 +688,7 @@ class _SwitchListSettings extends StatelessWidget {
                 overflow: TextOverflow.ellipsis,
                 style: theme.textTheme.labelLarge?.copyWith(
                   letterSpacing: -0.1,
-                  fontWeight: FontWeight.normal,
+                  fontWeight: .normal,
                 ),
               ),
         secondary: icon,
@@ -718,7 +718,7 @@ class _ListSettings extends StatelessWidget {
         title,
         style: theme.textTheme.labelLarge?.copyWith(
           letterSpacing: 0.1,
-          fontWeight: FontWeight.w500,
+          fontWeight: .w500,
         ),
       ),
       subtitle: subtitle == null
@@ -729,7 +729,7 @@ class _ListSettings extends StatelessWidget {
               overflow: TextOverflow.ellipsis,
               style: theme.textTheme.labelLarge?.copyWith(
                 letterSpacing: -0.1,
-                fontWeight: FontWeight.normal,
+                fontWeight: .normal,
               ),
             ),
       onTap: onTap,
@@ -751,7 +751,7 @@ class _TitleSetting extends StatelessWidget {
       maxLines: 1,
       style: Theme.of(
         context,
-      ).textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.w500),
+      ).textTheme.bodyMedium?.copyWith(fontWeight: .w500),
     );
   }
 }

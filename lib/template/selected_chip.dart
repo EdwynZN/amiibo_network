@@ -1,4 +1,3 @@
-import 'package:amiibo_network/app/configuration/model/hidden_types.dart';
 import 'package:amiibo_network/app/state/preferences_provider.dart';
 import 'package:amiibo_network/app/configuration/query_provider.dart';
 import 'package:material_ui/material_ui.dart';
@@ -15,9 +14,10 @@ class CustomQueryWidget extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final hidden = ref.watch(hiddenCategoryProvider);
-    final isFiguresShown = hidden == null || hidden != HiddenType.Figures;
-    final isCardsShown = hidden == null || hidden != HiddenType.Cards;
+    final isFiguresShown = hidden == null || hidden != .Figures;
+    final isCardsShown = hidden == null || hidden != .Cards;
     final S translate = S.of(context);
+    final materialLoc = MaterialLocalizations.of(context);
     return AlertDialog(
       titlePadding: const EdgeInsets.fromLTRB(16, 16, 16, 0),
       contentPadding: const EdgeInsets.fromLTRB(16, 16, 16, 0),
@@ -25,8 +25,8 @@ class CustomQueryWidget extends ConsumerWidget {
       title: Text(title),
       content: SingleChildScrollView(
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: .start,
+          mainAxisSize: .min,
           children: <Widget>[
             if (isFiguresShown) ...[
               Padding(
@@ -47,7 +47,7 @@ class CustomQueryWidget extends ConsumerWidget {
             ],
             if (isCardsShown) ...[
               Padding(
-                padding: const EdgeInsets.symmetric(vertical: 16),
+                padding: const .symmetric(vertical: 16),
                 child: Text(translate.cards),
               ),
               ref
@@ -67,11 +67,11 @@ class CustomQueryWidget extends ConsumerWidget {
       ),
       actions: <Widget>[
         TextButton(
-          child: Text(MaterialLocalizations.of(context).cancelButtonLabel),
+          child: Text(materialLoc.cancelButtonLabel),
           onPressed: () async => Navigator.of(context).maybePop(false),
         ),
         TextButton(
-          child: Text(MaterialLocalizations.of(context).okButtonLabel),
+          child: Text(materialLoc.okButtonLabel),
           onPressed: () async => Navigator.of(context).maybePop(true),
         ),
       ],
@@ -106,7 +106,7 @@ class _SelectedWrapState extends State<SelectedWrap> {
       children: <Widget>[
         FilterChip(
           showCheckmark: false,
-          padding: const EdgeInsets.symmetric(vertical: 4.0, horizontal: 12.0),
+          padding: const .symmetric(vertical: 4.0, horizontal: 12.0),
           label: Text(translate.all),
           tooltip: translate.all,
           onSelected: (isSelected) => setState(() {

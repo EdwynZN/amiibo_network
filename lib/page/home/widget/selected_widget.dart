@@ -201,7 +201,7 @@ class _AnimatedSelectedListTileState
       amiibo: widget.amiibo.details,
       useSerie: useSerie,
       style: theme.primaryTextTheme.bodyLarge?.copyWith(
-        fontWeight: FontWeight.bold,
+        fontWeight: .bold,
         color: theme.colorScheme.onSurfaceVariant,
       ),
     );
