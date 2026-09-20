@@ -7,8 +7,8 @@ part 'update_amiibo_user_attributes.g.dart';
 @freezed
 sealed class UpdateAmiiboUserAttributes with _$UpdateAmiiboUserAttributes {
   const factory UpdateAmiiboUserAttributes({
-    required final int id,
-    required final UserAttributes attributes,
+    required int id,
+    required UserAttributes attributes,
   }) = _UpdateAmiiboUserAttributes;
 	
   factory UpdateAmiiboUserAttributes.fromJson(Map<String, dynamic> json) =>

@@ -11,7 +11,7 @@ abstract class Amiibo with _$Amiibo {
 
   const factory Amiibo({
     required int key,
-    required final AmiiboDetails details,
+    required AmiiboDetails details,
     @Default(UserAttributes.none()) UserAttributes userAttributes,
   }) = _Amiibo;
 
