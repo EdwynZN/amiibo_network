@@ -13,14 +13,9 @@ class ThemeState with _$ThemeState {
     required this.isCustom,
   });
 
-  @override
   final ThemeData? light;
-  @override
   final ThemeData? dark;
-  @override
   final bool isCustom;
-  @override
   final List<Color> lightColors;
-  @override
   final List<Color> darkColors;
 }

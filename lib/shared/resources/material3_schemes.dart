@@ -11,8 +11,8 @@ part 'material3_schemes.g.dart';
 @freezed
 abstract class Material3Schemes with _$Material3Schemes {
   const factory Material3Schemes({
-    @ColorSchemeConverter() required final ColorScheme light,
-    @ColorSchemeConverter() required final ColorScheme dark,
+    @ColorSchemeConverter() required ColorScheme light,
+    @ColorSchemeConverter() required ColorScheme dark,
   }) = _Material3Schemes;
 
   factory Material3Schemes.blend(

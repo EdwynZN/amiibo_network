@@ -24,11 +24,8 @@ class CategoryAttributes with _$CategoryAttributes {
     this.cards = const [],
   });
 
-  @override
   final List<String> figures;
-  @override
   final List<String> cards;
-  @override
   final AmiiboCategory category;
 }
 
@@ -36,9 +33,7 @@ class CategoryAttributes with _$CategoryAttributes {
 class SearchAttributes with _$SearchAttributes {
   const SearchAttributes({required this.search, required this.category});
 
-  @override
   final String search;
-  @override
   final SearchCategory category;
 }
 
@@ -52,14 +47,9 @@ class Filter with _$Filter {
     this.hiddenType,
   });
 
-  @override
   final CategoryAttributes categoryAttributes;
-  @override
   final SearchAttributes? searchAttributes;
-  @override
   final OrderBy orderBy;
-  @override
   final SortBy sortBy;
-  @override
   final HiddenType? hiddenType;
 }

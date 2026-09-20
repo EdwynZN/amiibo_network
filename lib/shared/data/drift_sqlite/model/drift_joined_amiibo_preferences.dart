@@ -29,10 +29,8 @@ abstract class AmiiboDriftModel with _$AmiiboDriftModel {
     @JsonKey(includeIfNull: true, name: 'amiibo.na') String? na,
     @JsonKey(required: true, name: 'amiibo.type') required String type,
     @JsonKey(name: 'amiibo.cardNumber') int? cardNumber,
-    @Default(0) @JsonKey(name: 'amiibo_user_preferences.boxed') final int boxed,
-    @Default(0)
-    @JsonKey(name: 'amiibo_user_preferences.opened')
-    final int opened,
+    @Default(0) @JsonKey(name: 'amiibo_user_preferences.boxed') int boxed,
+    @Default(0) @JsonKey(name: 'amiibo_user_preferences.opened') int opened,
     @Default(false)
     @JsonKey(
       fromJson: intToBool,
