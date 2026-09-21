@@ -47,13 +47,13 @@ sealed class UserAttributes with _$UserAttributes {
 
   @Assert('(boxed > 0) || (opened > 0)', 'boxed or opened cannot be both less than 0')
   const factory UserAttributes.owned({
-    @Default(0) final int boxed,
-    @Default(1) final int opened,
+    @Default(0) int boxed,
+    @Default(1) int opened,
   }) = OwnedUserAttributes;
 
   factory UserAttributes.fromOwnedOrEmpty({
-    required final int boxed,
-    required final int opened,
+    required int boxed,
+    required int opened,
   }) => boxed + opened <= 0
     ? const EmptyUserAttributes()
     : OwnedUserAttributes(boxed: boxed, opened: opened);

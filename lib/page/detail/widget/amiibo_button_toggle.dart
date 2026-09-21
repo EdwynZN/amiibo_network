@@ -130,16 +130,14 @@ class OwnedOutlinedButton extends ConsumerWidget {
     return IconButton.outlined(
       style: const ButtonStyle(
         shape: WidgetStatePropertyAll(
-          RoundedRectangleBorder(
-            borderRadius: BorderRadius.all(Radius.circular(16.0)),
-          ),
+          RoundedRectangleBorder(borderRadius: .all(Radius.circular(16.0))),
         ),
       ),
       isSelected: isActive,
       icon: const Icon(Icons.bookmark_outline_outlined),
       selectedIcon: const Icon(iconOwned),
       color: preferencesPalette.ownPalette.shade70,
-      constraints: const BoxConstraints.tightFor(height: 56.0, width: 48.0),
+      constraints: const .tightFor(height: 56.0, width: 48.0),
       iconSize: 24.0,
       splashRadius: 24.0,
       tooltip: translate.ownTooltip,
@@ -164,9 +162,7 @@ class OwnedOutlinedButton extends ConsumerWidget {
                     : const EmptyUserAttributes();
               }
 
-              if (newAttributes == null) {
-                return;
-              }
+              if (newAttributes == null) return;
               ref.read(amiiboServiceProvider).update([
                 UpdateAmiiboUserAttributes(
                   id: amiibo!.key,
