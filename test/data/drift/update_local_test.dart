@@ -13,16 +13,15 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 void main() {
-  group('LocalDB updated and queries', () {
+  group('LocalDB creation and update', () {
     late Directory tempDir;
     late File dbFile;
     late AppDatabase db;
     late ProviderContainer container;
 
     setUp(() async {
-      // 1. Create a real test database file in a temp directory
-      tempDir = Directory.systemTemp.createTempSync('pondo_db_test_');
-      dbFile = File(p.join(tempDir.path, 'pondo_test.db'));
+      tempDir = Directory.systemTemp.createTempSync('db_test_');
+      dbFile = File(p.join(tempDir.path, 'test.db'));
       db = AppDatabase(NativeDatabase(dbFile));
 
       container = ProviderContainer.test(
@@ -50,6 +49,40 @@ void main() {
 
         await db.amiiboDao;
       });
+    });
+  });
+
+  group('LocalDB queries', () {
+    late File dbFile;
+    late AppDatabase db;
+    late ProviderContainer container;
+
+    setUpAll(() {
+      final currDir = Directory.current;
+      dbFile = File(p.join(currDir.path, 'test.db'));
+    });
+
+    setUp(() async {
+      db = AppDatabase(NativeDatabase(dbFile, logStatements: false));
+      container = ProviderContainer.test(
+        overrides: [databaseProvider.overrideWithValue(db)],
+      );
+    });
+
+    tearDown(() {
+      container.dispose();
+    });
+
+    test('read Amiibo DB', () async {
+      final db = container.listen(databaseProvider, (_, _) {}).read();
+
+      final type = await db.amiiboDao.fetchByKeyTest(857);
+      print(
+        Map<String, dynamic>.of(type?.rawData.data ?? {})
+          ..removeWhere((key, value) {
+            return !key.startsWith('b.');
+          }),
+      );
     });
   });
 }
