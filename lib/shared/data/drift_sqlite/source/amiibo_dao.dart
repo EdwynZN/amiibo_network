@@ -9,6 +9,7 @@ import 'package:amiibo_network/app/configuration/model/search_result.dart';
 import 'package:amiibo_network/feature/amiibo/application/input/update_amiibo_user_attributes.dart';
 import 'package:amiibo_network/shared/service/info_package.dart';
 import 'package:drift/drift.dart';
+import 'package:flutter/foundation.dart';
 
 part 'amiibo_dao.g.dart';
 
@@ -29,10 +30,17 @@ class AmiiboDao extends DatabaseAccessor<AppDatabase>
     HiddenType? hiddenCategories,
   }) async {
     final imagesQuery = _imageSubQuery;
+    final bundleSubquery = _bundleSubquery;
     final query = select(amiibo).join([
       leftOuterJoin(
         amiiboUserPreferences,
         amiiboUserPreferences.amiiboKey.equalsExp(amiibo.key),
+      ),
+      leftOuterJoin(
+        bundleSubquery,
+        bundleSubquery
+            .ref(amiiboBundleRelation.amiiboKey)
+            .equalsExp(amiibo.key),
       ),
       leftOuterJoin(
         imagesQuery,
@@ -60,10 +68,17 @@ class AmiiboDao extends DatabaseAccessor<AppDatabase>
 
   Future<AmiiboDriftModel?> fetchByKey(int key) async {
     final imagesQuery = _imageSubQuery;
+    final bundleSubquery = _bundleSubquery;
     final query = select(amiibo).join([
       leftOuterJoin(
         amiiboUserPreferences,
         amiibo.key.equalsExp(amiiboUserPreferences.amiiboKey),
+      ),
+      leftOuterJoin(
+        bundleSubquery,
+        bundleSubquery
+            .ref(amiiboBundleRelation.amiiboKey)
+            .equalsExp(amiibo.key),
       ),
       leftOuterJoin(
         imagesQuery,
@@ -72,6 +87,31 @@ class AmiiboDao extends DatabaseAccessor<AppDatabase>
     ])..where(amiibo.key.equals(key));
 
     final result = await query.map(_toModel).getSingleOrNull();
+    return result;
+  }
+
+  @visibleForTesting
+  Future<TypedResult?> fetchByKeyTest(int key) async {
+    final imagesQuery = _imageSubQuery;
+    final bundleSubquery = _bundleSubquery;
+    final query = select(amiibo).join([
+      leftOuterJoin(
+        amiiboUserPreferences,
+        amiibo.key.equalsExp(amiiboUserPreferences.amiiboKey),
+      ),
+      leftOuterJoin(
+        bundleSubquery,
+        bundleSubquery
+            .ref(amiiboBundleRelation.amiiboKey)
+            .equalsExp(amiibo.key),
+      ),
+      leftOuterJoin(
+        imagesQuery,
+        imagesQuery.ref(amiiboImages.amiiboKey).equalsExp(amiibo.key),
+      ),
+    ])..where(amiibo.key.equals(key));
+
+    final result = await query.getSingleOrNull();
     return result;
   }
 
@@ -283,6 +323,32 @@ class AmiiboDao extends DatabaseAccessor<AppDatabase>
       ..groupBy([amiiboImages.amiiboKey]),
     's',
   );
+
+  Subquery get _bundleSubquery {
+    final boxed =
+        (amiiboBundleRelation.quantity * amiiboBundleUserPreferences.boxed)
+            .sum();
+    final opened =
+        (amiiboBundleRelation.quantity * amiiboBundleUserPreferences.opened)
+            .sum();
+    return Subquery(
+      select(amiiboBundleRelation).join([
+          leftOuterJoin(
+            amiiboBundle,
+            amiiboBundle.id.equalsExp(amiiboBundle.id),
+          ),
+          leftOuterJoin(
+            amiiboBundleUserPreferences,
+            amiiboBundleUserPreferences.amiiboBundleId.equalsExp(
+              amiiboBundle.id,
+            ),
+          ),
+        ])
+        ..addColumns([boxed, opened])
+        ..groupBy([amiiboBundleRelation.amiiboKey]),
+      'b',
+    );
+  }
 
   AmiiboDriftModel _toModel(TypedResult p0) {
     /// remove suffix s from amiibo_images subquery
