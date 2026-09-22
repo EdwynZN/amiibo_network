@@ -41,23 +41,23 @@ abstract class AmiiboDetails with _$AmiiboDetails {
 
 @freezed
 sealed class UserAttributes with _$UserAttributes {
-  const factory UserAttributes.none() = EmptyUserAttributes;
+  const factory none() = EmptyUserAttributes;
 
-  const factory UserAttributes.wished() = WishedUserAttributes;
+  const factory wished() = WishedUserAttributes;
 
   @Assert('(boxed > 0) || (opened > 0)', 'boxed or opened cannot be both less than 0')
-  const factory UserAttributes.owned({
+  const factory owned({
     @Default(0) int boxed,
     @Default(1) int opened,
   }) = OwnedUserAttributes;
 
-  factory UserAttributes.fromOwnedOrEmpty({
+  factory fromOwnedOrEmpty({
     required int boxed,
     required int opened,
   }) => boxed + opened <= 0
     ? const EmptyUserAttributes()
     : OwnedUserAttributes(boxed: boxed, opened: opened);
 
-  factory UserAttributes.fromJson(Map<String, dynamic> json) =>
+  factory fromJson(Map<String, dynamic> json) =>
       _$UserAttributesFromJson(json);
 }

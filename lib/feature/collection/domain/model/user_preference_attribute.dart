@@ -4,8 +4,6 @@ part 'user_preference_attribute.freezed.dart';
 
 @freezed
 sealed class UserPreferenceAttributes with _$UserPreferenceAttributes {
-  const factory none() = EmptyUserPreferenceAttributes;
-
   const factory wished() = WishedUserPreferenceAttributes;
 
   @Assert(

@@ -5,8 +5,8 @@ part 'amiibo_preference_item.freezed.dart';
 
 @freezed
 class const AmiiboPreferenceItem({
-  required final String id,
-  required final UserPreferenceAttributes preferences,
+  required final int id,
+  required final OwnedUserPreferenceAttributes preferences,
 }) with _$AmiiboPreferenceItem;
 
-class const AmiiboWishItem({required final String id});
+class const AmiiboWishItem({required final int id});
