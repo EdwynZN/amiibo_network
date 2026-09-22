@@ -9783,7 +9783,7 @@
       "id": "3480000000310002",
       "amiiboSeries": "Super Smash Bros.",
       "character": "Mega Man",
-      "gameSeries": "Megaman",
+      "gameSeries": "Mega Man",
       "name": "Mega Man",
       "au": "20150129",
       "eu": "20150220",
@@ -9796,7 +9796,7 @@
       "id": "3480000002580002",
       "amiiboSeries": "Super Smash Bros.",
       "character": "Mega Man",
-      "gameSeries": "Megaman",
+      "gameSeries": "Mega Man",
       "name": "Mega Man (Gold Edition)",
       "au": null,
       "eu": null,
@@ -9809,7 +9809,7 @@
       "id": "3480000003791502",
       "amiiboSeries": "Mega Man",
       "character": "Mega Man",
-      "gameSeries": "Megaman",
+      "gameSeries": "Mega Man",
       "name": "Mega Man",
       "au": null,
       "eu": null,
@@ -13057,7 +13057,33 @@
       "jp": "2027",
       "na": "2027",
       "type": "Figure"
+    },
+    {
+      "key": 961,
+      "id": null,
+      "amiiboSeries": "Mega Man: Dual Override",
+      "character": "Mega Man",
+      "gameSeries": "Mega Man",
+      "name": "Mega Man",
+      "au": "2027",
+      "eu": "2027",
+      "jp": "2027",
+      "na": "2027",
+      "type": "Figure"
+    },
+    {
+      "key": 962,
+      "id": null,
+      "amiiboSeries": "Mega Man: Dual Override",
+      "character": "Proto Man",
+      "gameSeries": "Mega Man",
+      "name": "Proto Man",
+      "au": "2027",
+      "eu": "2027",
+      "jp": "2027",
+      "na": "2027",
+      "type": "Figure"
     }
   ],
-  "lastUpdated": "2026-08-10T08:00:00.000Z"
+  "lastUpdated": "2026-08-22T08:00:00.000Z"
 }
