@@ -20,6 +20,27 @@ class AmiiboDao extends DatabaseAccessor<AppDatabase>
     with _$AmiiboDaoMixin, _ExpressionBuilder {
   AmiiboDao(super.db);
 
+  Stream<List<AmiiboDriftModel>> fetchAllStream({
+    required CategoryAttributes categoryAttributes,
+    SearchAttributes? searchAttributes,
+    s.OrderBy orderBy = s.OrderBy.NA,
+    s.SortBy sortBy = s.SortBy.DESC,
+    List<String> figures = const [],
+    List<String> cards = const [],
+    HiddenType? hiddenCategories,
+  }) {
+    final query = _fetchAll(
+      categoryAttributes: categoryAttributes,
+      searchAttributes: searchAttributes,
+      orderBy: orderBy,
+      sortBy: sortBy,
+      figures: figures,
+      cards: cards,
+      hiddenCategories: hiddenCategories,
+    );
+    return query.map(_toModel).watch();
+  }
+
   Future<List<AmiiboDriftModel>> fetchAll({
     required CategoryAttributes categoryAttributes,
     SearchAttributes? searchAttributes,
@@ -29,6 +50,29 @@ class AmiiboDao extends DatabaseAccessor<AppDatabase>
     List<String> cards = const [],
     HiddenType? hiddenCategories,
   }) async {
+    final query = _fetchAll(
+      categoryAttributes: categoryAttributes,
+      searchAttributes: searchAttributes,
+      orderBy: orderBy,
+      sortBy: sortBy,
+      figures: figures,
+      cards: cards,
+      hiddenCategories: hiddenCategories,
+    );
+
+    final result = await query.map(_toModel).get();
+    return result;
+  }
+
+  JoinedSelectStatement<HasResultSet, dynamic> _fetchAll({
+    required CategoryAttributes categoryAttributes,
+    SearchAttributes? searchAttributes,
+    s.OrderBy orderBy = s.OrderBy.NA,
+    s.SortBy sortBy = s.SortBy.DESC,
+    List<String> figures = const [],
+    List<String> cards = const [],
+    HiddenType? hiddenCategories,
+  }) {
     final imagesQuery = _imageSubQuery;
     final bundleSubquery = _bundleSubquery;
     final query = select(amiibo).join([
@@ -62,11 +106,21 @@ class AmiiboDao extends DatabaseAccessor<AppDatabase>
     );
 
     if (whereExpression != null) query.where(whereExpression);
-    final result = await query.map(_toModel).get();
-    return result;
+    return query;
+  }
+
+  Stream<AmiiboDriftModel?> fetchByKeyStream(int key) {
+    final query = _fetchByKeyQuery(key);
+    return query.map(_toModel).watchSingleOrNull();
   }
 
   Future<AmiiboDriftModel?> fetchByKey(int key) async {
+    final query = _fetchByKeyQuery(key);
+    final result = await query.map(_toModel).getSingleOrNull();
+    return result;
+  }
+
+  JoinedSelectStatement<HasResultSet, dynamic> _fetchByKeyQuery(int key) {
     final imagesQuery = _imageSubQuery;
     final bundleSubquery = _bundleSubquery;
     final query = select(amiibo).join([
@@ -85,9 +139,7 @@ class AmiiboDao extends DatabaseAccessor<AppDatabase>
         imagesQuery.ref(amiiboImages.amiiboKey).equalsExp(amiibo.key),
       ),
     ])..where(amiibo.key.equals(key));
-
-    final result = await query.map(_toModel).getSingleOrNull();
-    return result;
+    return query;
   }
 
   @visibleForTesting
