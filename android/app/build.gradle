@@ -41,8 +41,8 @@ android {
     defaultConfig {
         applicationId "com.dartz.amiibo_network"
         minSdkVersion flutter.minSdkVersion
-        targetSdkVersion 36
-        compileSdkVersion 36
+        targetSdkVersion 37
+        compileSdkVersion 37
         multiDexEnabled true
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
