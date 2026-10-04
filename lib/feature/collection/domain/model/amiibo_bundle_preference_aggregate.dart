@@ -3,7 +3,7 @@ import 'package:collection/collection.dart';
 
 class AmiiboBundlePreferenceAggregate({
   required final int id,
-  required final UnmodifiableListView<String> amiibosId,
+  required final UnmodifiableListView<int> amiibosId,
   required this._preferences,
 }) {
   UserPreferenceAttributes? _preferences;

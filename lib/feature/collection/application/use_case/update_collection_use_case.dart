@@ -15,7 +15,7 @@ class const UpdateCollectionUseCase({
     if (bundleIds.isNotEmpty) {
       bundles = await _bundleRepo.getByIds(bundleIds);
 
-      if (bundles.length != bundleIds) {
+      if (bundles.length != bundleIds.length) {
         throw StateError('one of the bundles is incorrect');
       }
       final mapBundle = <int, AmiiboBundlePreferenceAggregate>{
