@@ -19,12 +19,10 @@ import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter/foundation.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:http_cache_hive_store/http_cache_hive_store.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:stash/stash_api.dart';
-import 'package:stash_dio/src/dio/cache_value.dart';
-import 'package:stash_hive/stash_hive.dart';
 
 Future<void> main() async {
   await runZonedGuarded<Future<void>>(
@@ -72,7 +70,7 @@ Future<void> main() async {
         ),
       );
       await remoteConfig.setDefaults(const DefaultRemoteConfig().toJson());
-      if (remoteConfig.lastFetchStatus == RemoteConfigFetchStatus.success) {
+      if (remoteConfig.lastFetchStatus == .success) {
         await remoteConfig.activate();
       }
       remoteConfig.fetch().ignore();
@@ -89,15 +87,9 @@ Future<void> main() async {
       final preferences = await SharedPreferences.getInstance();
       await sharedPreferencesMigration(preferences);
       await updateOldTheme();
-      final store = await newHiveDefaultCacheStore(
-        path: cacheDir.path,
-        crashRecovery: true,
-      );
-      final cache = await store.cache(
-        name: 'HiveCacheMigration',
-        fromEncodable: CacheValue.fromJson,
-        maxEntries: 200,
-        expiryPolicy: const AccessedExpiryPolicy(Duration(days: 7)),
+      final cache = HiveCacheStore(
+        cacheDir.path,
+        hiveBoxName: 'HiveCacheMigration2',
       );
       final container = ProviderContainer(
         observers: [

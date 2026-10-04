@@ -3,25 +3,35 @@ import 'package:amiibo_network/entity/amiibo_info/model/amiibo.dart';
 import 'package:amiibo_network/entity/game/model/game.dart';
 import 'package:amiibo_network/shared/utils/urls_constants.dart' show apiUrl;
 import 'package:dio/dio.dart';
+import 'package:dio_cache_interceptor/dio_cache_interceptor.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
-import 'package:stash/stash_api.dart';
-import 'package:stash_dio/stash_dio.dart';
 
 part 'game_provider.g.dart';
 
 @Riverpod(keepAlive: true)
-Cache cache(Ref ref) => throw UnimplementedError();
+CacheStore cache(Ref ref) => throw UnimplementedError();
 
 @Riverpod(keepAlive: true)
 Dio _dio(Ref ref) {
   final hiveCache = ref.watch(cacheProvider);
-  final stashOptions = hiveCache.interceptor('amiibo');
+  final cacheOptions = CacheOptions(
+    store: hiveCache,
+    policy: .forceCache,
+    hitCacheOnErrorCodes: [],
+    hitCacheOnNetworkFailure: true,
+    maxStale: const Duration(days: 7),
+    priority: .normal,
+    cipher: null,
+    keyBuilder: CacheOptions.defaultCacheKeyBuilder,
+    allowPostMethod: false,
+  );
+  final dioCacheInterceptor = DioCacheInterceptor(options: cacheOptions);
 
   final dio = Dio(
-    BaseOptions(baseUrl: apiUrl, connectTimeout: const Duration(seconds: 5)),
+    .new(baseUrl: apiUrl, connectTimeout: const .new(seconds: 5)),
   );
 
-  return dio..interceptors.add(stashOptions);
+  return dio..interceptors.add(dioCacheInterceptor);
 }
 
 @riverpod
