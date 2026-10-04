@@ -1,45 +1,42 @@
-import 'package:amiibo_network/app/configuration/model/amiibo_category_enum.dart';
-import 'package:amiibo_network/entity/amiibo_info/model/amiibo.dart';
-import 'package:amiibo_network/page/home/model/title_search.dart';
-import 'package:amiibo_network/app/state/theme/service/theme_mode_scheme_repository.dart';
-import 'package:amiibo_network/shared/resources/resources.dart';
-import 'package:amiibo_network/entity/amiibo_info/infrastructure/amiibo_provider.dart';
 import 'package:amiibo_network/app/configuration/analytics_provider.dart';
-import 'package:amiibo_network/app/state/lock_provider.dart';
-import 'package:amiibo_network/app/state/preferences_provider.dart';
+import 'package:amiibo_network/app/configuration/model/search_result.dart';
 import 'package:amiibo_network/app/configuration/query_provider.dart';
 import 'package:amiibo_network/app/configuration/screenshot_service.dart';
+import 'package:amiibo_network/app/state/lock_provider.dart';
+import 'package:amiibo_network/app/state/preferences_provider.dart';
+import 'package:amiibo_network/app/state/theme/service/theme_mode_scheme_repository.dart';
+import 'package:amiibo_network/entity/amiibo_info/infrastructure/amiibo_provider.dart';
+import 'package:amiibo_network/entity/amiibo_info/model/amiibo.dart';
+import 'package:amiibo_network/page/detail/widget/owned_bottom_sheet.dart';
 import 'package:amiibo_network/page/home/controller/select_provider.dart';
 import 'package:amiibo_network/page/home/controller/stats_amiibo_provider.dart';
-import 'package:amiibo_network/page/search/search_screen.dart';
-import 'package:amiibo_network/shared/service/storage.dart';
-import 'package:amiibo_network/shared/utils/empty_page_random.dart';
-import 'package:amiibo_network/shared/utils/tablet_utils.dart';
-import 'package:amiibo_network/shared/widget/dash_menu.dart';
-import 'package:amiibo_network/page/detail/widget/owned_bottom_sheet.dart';
+import 'package:amiibo_network/page/home/model/title_search.dart';
+import 'package:amiibo_network/page/home/widget/drawer.dart';
+import 'package:amiibo_network/page/home/widget/empty_home_widget.dart';
 import 'package:amiibo_network/page/home/widget/list_stats.dart';
-import 'package:amiibo_network/shared/widget/loading_grid_shimmer.dart';
 import 'package:amiibo_network/page/home/widget/lock_icon.dart';
 import 'package:amiibo_network/page/home/widget/preferences_bottomsheet.dart';
-import 'package:amiibo_network/shared/routes/route_transitions.dart';
-import 'package:amiibo_network/template/selected_chip.dart';
 import 'package:amiibo_network/page/home/widget/selected_widget.dart';
 import 'package:amiibo_network/page/home/widget/sort_bottomsheet.dart';
-import 'package:material_ui/material_ui.dart';
-import 'package:flutter/rendering.dart';
-import 'package:amiibo_network/page/home/widget/drawer.dart';
-import 'package:amiibo_network/shared/widget/animated_widgets.dart';
-import 'package:amiibo_network/shared/widget/floating_bar.dart';
-import 'package:gap/gap.dart';
-import 'package:loading_animation_widget/loading_animation_widget.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'package:amiibo_network/shared/generated/l10n.dart';
-import 'package:amiibo_network/shared/utils/preferences_constants.dart';
-import 'package:amiibo_network/shared/widget/markdown_widget.dart';
-import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:amiibo_network/page/home/widget/stat_header.dart';
-import 'package:amiibo_network/app/configuration/model/search_result.dart';
+import 'package:amiibo_network/page/search/search_screen.dart';
+import 'package:amiibo_network/shared/generated/l10n.dart';
+import 'package:amiibo_network/shared/routes/route_transitions.dart';
+import 'package:amiibo_network/shared/service/storage.dart';
+import 'package:amiibo_network/shared/utils/preferences_constants.dart';
+import 'package:amiibo_network/shared/utils/tablet_utils.dart';
+import 'package:amiibo_network/shared/widget/animated_widgets.dart';
+import 'package:amiibo_network/shared/widget/dash_menu.dart';
+import 'package:amiibo_network/shared/widget/floating_bar.dart';
+import 'package:amiibo_network/shared/widget/loading_grid_shimmer.dart';
+import 'package:amiibo_network/shared/widget/markdown_widget.dart';
+import 'package:flutter/rendering.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:gap/gap.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:loading_animation_widget/loading_animation_widget.dart';
+import 'package:material_ui/material_ui.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class HomeScreen extends ConsumerStatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -324,14 +321,9 @@ class _AmiiboListWidget extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final ignore = ref.watch(lockProvider);
     final amiiboList = ref.watch(amiiboHomeListProvider);
-    final isCustom = ref.watch(
-      queryProvider.select<bool>(
-        (cb) => cb.categoryAttributes.category == AmiiboCategory.AmiiboSeries,
-      ),
-    );
     final controller = useAnimationController(
       duration: const Duration(seconds: 1),
-      animationBehavior: AnimationBehavior.preserve,
+      animationBehavior: .preserve,
     );
     useEffect(() {
       if (amiiboList is AsyncLoading<List<Amiibo>>)
@@ -341,94 +333,17 @@ class _AmiiboListWidget extends HookConsumerWidget {
       return null;
     }, [amiiboList]);
     return amiiboList.maybeWhen(
+      skipLoadingOnRefresh: true,
+      skipLoadingOnReload: true,
       error: (_, __) => const SliverToBoxAdapter(),
       orElse: () {
-        late final List<Amiibo>? data = amiiboList is AsyncData<List<Amiibo>>
-            ? amiiboList.value
-            : null;
-        if (data != null && data.isEmpty) {
-          final theme = Theme.of(context);
-          final S translate = S.of(context);
-          final Widget child = HookBuilder(
-            key: const ValueKey('EmptyMessageBuilder'),
-            builder: (context) {
-              final messageType = useMemoized(
-                () => EmptyPageRandomizer.instance.randomeMessage,
-              );
-              return Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    ImageIcon(
-                      AssetImage(switch (messageType) {
-                        .pokemon => GameIcons.pokemon,
-                        .pokeball => GameIcons.pokeball,
-                        .mario => GameIcons.superMario,
-                        .mushroom => GameIcons.superMarioToad,
-                        .pacman => GameIcons.pacman,
-                        .pacmanGhost => GameIcons.pacmanGhost,
-                        .link => GameIcons.tlozSword,
-                      }),
-                      size: 196,
-                    ),
-                    const Gap(12),
-                    Text(
-                      translate.emptyMessageType(messageType),
-                      style: const TextStyle(
-                        fontSize: 24.0,
-                        fontWeight: .w600,
-                        height: 1.25,
-                      ),
-                      textAlign: TextAlign.center,
-                    ),
-                    if (isCustom) ...[
-                      const Gap(24.0),
-                      ElevatedButton.icon(
-                        style: theme.textButtonTheme.style?.copyWith(
-                          textStyle: WidgetStateProperty.all(
-                            theme.textTheme.headlineMedium,
-                          ),
-                        ),
-                        onPressed: () async {
-                          final filter = ref.read(queryProvider.notifier);
-                          final figures = filter.customFigures.toList();
-                          final cards = filter.customCards.toList();
-                          bool save =
-                              await showDialog<bool>(
-                                context: context,
-                                builder: (BuildContext context) =>
-                                    CustomQueryWidget(
-                                      translate.category(
-                                        AmiiboCategory.AmiiboSeries,
-                                      ),
-                                      figures: figures,
-                                      cards: cards,
-                                    ),
-                              ) ??
-                              false;
-                          if (save)
-                            await ref
-                                .read(queryProvider.notifier)
-                                .updateCustom(figures, cards);
-                        },
-                        icon: const Icon(Icons.create_outlined),
-                        label: Text(translate.emptyPageAction),
-                      ),
-                    ],
-                  ],
-                ),
-              );
-            },
-          );
-          return SliverFillRemaining(hasScrollBody: false, child: child);
-        }
+        final data = amiiboList.value;
+        if (data != null && data.isEmpty) return const EmptyHome();
         final useGrid = ref.watch(personalProvider.select((p) => p.useGrid));
         if (!useGrid) {
           return SliverList(
             delegate: SliverChildBuilderDelegate((BuildContext _, int index) {
-              late final Widget child;
+              final Widget child;
               if (data != null) {
                 final amiibo = data[index];
                 child = AnimatedSelectedListTile(
@@ -439,12 +354,9 @@ class _AmiiboListWidget extends HookConsumerWidget {
                 child = ShimmerCard(listenable: controller, isGrid: false);
               }
               return ConstrainedBox(
-                constraints: const BoxConstraints(
-                  maxHeight: 104.0,
-                  minHeight: 72.0,
-                ),
+                constraints: const .new(maxHeight: 104.0, minHeight: 72.0),
                 child: AnimatedSwitcher(
-                  duration: const Duration(seconds: 1),
+                  duration: const .new(seconds: 1),
                   child: child,
                 ),
               );
@@ -472,7 +384,7 @@ class _AmiiboListWidget extends HookConsumerWidget {
               child = ShimmerCard(listenable: controller);
             }
             return AnimatedSwitcher(
-              duration: const Duration(seconds: 1),
+              duration: const .new(seconds: 1),
               child: child,
             );
           }, childCount: data != null ? data.length : null),
