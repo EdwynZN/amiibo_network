@@ -136,9 +136,7 @@ class const CollectorDbRepository({required final AppDatabase _db})
           where: (tl) => tl.amiiboKey.equals(query.id),
         );
       }
-      for (final query in collection.bundlesOwned.values.where(
-        (t) => t.preferences is OwnedUserPreferenceAttributes,
-      )) {
+      for (final query in collection.bundlesOwned.values) {
         final attributes =
             (query.preferences! as OwnedUserPreferenceAttributes);
         final companion = AmiiboBundleUserPreferencesCompanion(
@@ -148,7 +146,7 @@ class const CollectorDbRepository({required final AppDatabase _db})
         b.update(
           _db.amiiboBundleUserPreferences,
           companion,
-          where: (tl) => tl.id.equals(query.id),
+          where: (tl) => tl.amiiboBundleId.equals(query.id),
         );
       }
     });

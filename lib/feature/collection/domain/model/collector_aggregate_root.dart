@@ -17,11 +17,10 @@ class CollectorAggregateRoot {
     Map<int, AmiiboWishItem>? amiibosWished,
     Map<int, AmiiboBundlePreferenceAggregate>? bundlesWished,
     Map<int, AmiiboBundlePreferenceAggregate>? bundlesOwned,
-  }) : 
-    _amiibosOwned = Map.from(amiibosOwned ?? {}),
-    _amiibosWished = Map.from(amiibosWished ?? {}),
-    _bundlesWished = Map.from(bundlesWished ?? {}),
-    _bundlesOwned = Map.from(bundlesOwned ?? {});
+  }) : _amiibosOwned = Map.from(amiibosOwned ?? {}),
+       _amiibosWished = Map.from(amiibosWished ?? {}),
+       _bundlesWished = Map.from(bundlesWished ?? {}),
+       _bundlesOwned = Map.from(bundlesOwned ?? {});
 
   final Map<int, AmiiboPreferenceItem> _amiibosOwned;
   final Map<int, AmiiboWishItem> _amiibosWished;
@@ -31,8 +30,7 @@ class CollectorAggregateRoot {
 
   Map<int, AmiiboPreferenceItem> get amiibosOwned =>
       .unmodifiableOf(_amiibosOwned);
-  Map<int, AmiiboWishItem> get amiibosWished =>
-      .unmodifiableOf(_amiibosWished);
+  Map<int, AmiiboWishItem> get amiibosWished => .unmodifiableOf(_amiibosWished);
 
   Map<int, AmiiboBundlePreferenceAggregate> get bundlesOwned =>
       .unmodifiableOf(_bundlesOwned);
@@ -50,7 +48,6 @@ class CollectorAggregateRoot {
   }
 
   void wishAmiibo(int id) {
-    if (!_amiibosWished.containsKey(id)) return;
     if (_bundlesOwned.values.expand((e) => e.amiibosId).toSet().contains(id)) {
       throw ArgumentError.value(
         id,
@@ -85,13 +82,11 @@ class CollectorAggregateRoot {
 
     if (_bundlesWished.containsKey(id)) _bundlesWished.remove(id);
     bundle.amiibosId.forEach(_amiibosWished.remove);
-
-    if (_amiibosWished.containsKey(id)) _amiibosWished.remove(id);
   }
 
   void _wishBundle(AmiiboBundlePreferenceAggregate bundle) {
     final id = bundle.id;
-    _bundlesOwned[id] = bundle;
+    _bundlesWished[id] = bundle;
     if (_bundlesOwned.containsKey(id)) _bundlesOwned.remove(id);
   }
 

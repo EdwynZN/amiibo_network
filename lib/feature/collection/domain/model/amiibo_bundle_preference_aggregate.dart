@@ -11,6 +11,6 @@ class AmiiboBundlePreferenceAggregate({
   UserPreferenceAttributes? get preferences => _preferences;
 
   set preferences(UserPreferenceAttributes? preferences) {
-    preferences = preferences;
+    _preferences = preferences;
   }
 }
