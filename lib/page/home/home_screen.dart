@@ -2,10 +2,10 @@ import 'package:amiibo_network/app/configuration/analytics_provider.dart';
 import 'package:amiibo_network/app/configuration/model/search_result.dart';
 import 'package:amiibo_network/app/configuration/query_provider.dart';
 import 'package:amiibo_network/app/configuration/screenshot_service.dart';
+import 'package:amiibo_network/app/state/collection/amiibo_user_collection_notifier.dart';
 import 'package:amiibo_network/app/state/lock_provider.dart';
 import 'package:amiibo_network/app/state/preferences_provider.dart';
 import 'package:amiibo_network/app/state/theme/service/theme_mode_scheme_repository.dart';
-import 'package:amiibo_network/entity/amiibo_info/infrastructure/amiibo_provider.dart';
 import 'package:amiibo_network/entity/amiibo_info/model/amiibo.dart';
 import 'package:amiibo_network/page/detail/widget/owned_bottom_sheet.dart';
 import 'package:amiibo_network/page/home/controller/select_provider.dart';
@@ -13,10 +13,10 @@ import 'package:amiibo_network/page/home/controller/stats_amiibo_provider.dart';
 import 'package:amiibo_network/page/home/model/title_search.dart';
 import 'package:amiibo_network/page/home/widget/drawer.dart';
 import 'package:amiibo_network/page/home/widget/empty_home_widget.dart';
+import 'package:amiibo_network/page/home/widget/home_tile_widget.dart';
 import 'package:amiibo_network/page/home/widget/list_stats.dart';
 import 'package:amiibo_network/page/home/widget/lock_icon.dart';
 import 'package:amiibo_network/page/home/widget/preferences_bottomsheet.dart';
-import 'package:amiibo_network/page/home/widget/selected_widget.dart';
 import 'package:amiibo_network/page/home/widget/sort_bottomsheet.dart';
 import 'package:amiibo_network/page/home/widget/stat_header.dart';
 import 'package:amiibo_network/page/search/search_screen.dart';
@@ -226,7 +226,7 @@ class HomeScreenState extends ConsumerState<HomeScreen>
       child: Consumer(
         builder: (context, ref, innerBody) {
           final hasAmiibos = ref.watch(
-            amiiboHomeListProvider.select((amiiboList) {
+            amiiboUserCollectionProvider.select((amiiboList) {
               return amiiboList.maybeWhen(
                 data: (data) => data.isNotEmpty,
                 orElse: () => false,
@@ -320,13 +320,13 @@ class _AmiiboListWidget extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final ignore = ref.watch(lockProvider);
-    final amiiboList = ref.watch(amiiboHomeListProvider);
+    final amiiboList = ref.watch(amiiboUserCollectionProvider);
     final controller = useAnimationController(
       duration: const Duration(seconds: 1),
       animationBehavior: .preserve,
     );
     useEffect(() {
-      if (amiiboList is AsyncLoading<List<Amiibo>>)
+      if (amiiboList.isLoading && amiiboList.value == null)
         controller.repeat();
       else
         controller.forward();
@@ -376,7 +376,7 @@ class _AmiiboListWidget extends HookConsumerWidget {
             if (data != null) {
               final amiibo = data[index];
               child = AnimatedSelection(
-                key: ValueKey<int?>(amiibo.key),
+                key: ValueKey<int?>(amiibo.id),
                 ignore: ignore,
                 amiibo: amiibo,
               );

@@ -1,16 +1,14 @@
 import 'dart:math' as math;
 import 'dart:ui';
 
-import 'package:amiibo_network/app/configuration/model/amiibo_category_enum.dart';
-import 'package:amiibo_network/shared/generated/l10n.dart';
-import 'package:amiibo_network/entity/amiibo_info/model/stat.dart';
-import 'package:amiibo_network/entity/amiibo_info/infrastructure/amiibo_provider.dart';
-import 'package:amiibo_network/app/state/preferences_provider.dart';
 import 'package:amiibo_network/app/configuration/query_provider.dart';
-import 'package:amiibo_network/shared/utils/stat_utils.dart';
+import 'package:amiibo_network/app/state/collection/amiibo_user_collection_notifier.dart';
+import 'package:amiibo_network/app/state/preferences_provider.dart';
 import 'package:amiibo_network/page/home/widget/linear_stat_widget.dart';
-import 'package:material_ui/material_ui.dart';
+import 'package:amiibo_network/shared/generated/l10n.dart';
+import 'package:amiibo_network/shared/utils/stat_utils.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:material_ui/material_ui.dart';
 
 class SliverStatsHeader extends SliverPersistentHeaderDelegate {
   final double topPadding;
@@ -78,21 +76,16 @@ class SliverStatsHeader extends SliverPersistentHeaderDelegate {
   bool shouldRebuild(SliverStatsHeader oldDelegate) => true;
 }
 
-class LinearStat extends ConsumerWidget {
-  const LinearStat([this.maxHeigth]);
-
-  final double? maxHeigth;
+class const LinearStat([final double? maxHeigth]) extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final statList = ref.watch(statHomeProvider.select((s) => s.value));
-    if (statList == null || statList == const Stat()) {
-      return SizedBox(height: maxHeigth);
-    }
+    final statList = ref.watch(collectionStatsProvider);
+    if (statList == null) return SizedBox(height: maxHeigth);
     final int total = statList.total;
     final int owned = statList.owned;
     final int wished = statList.wished;
-    if (total == 0 && owned == 0 && wished == 0) {
+    if ([total, owned, wished].every((t) => t == 0)) {
       return SizedBox(height: maxHeigth);
     }
     final category = ref.watch(
@@ -124,8 +117,8 @@ class LinearStat extends ConsumerWidget {
     final wishedText = '$wishedStat ${translate.wished}';
     final style = theme.textTheme.labelLarge;
     final Widget title;
-    final bool isWishlist = category == AmiiboCategory.Wishlist;
-    final bool isOwn = category == AmiiboCategory.Owned;
+    final bool isWishlist = category == .Wishlist;
+    final bool isOwn = category == .Owned;
     if (isWishlist || isOwn) {
       title = Text(
         isWishlist ? wishedText : ownedText,

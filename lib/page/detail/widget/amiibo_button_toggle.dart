@@ -1,10 +1,8 @@
-import 'package:amiibo_network/app/configuration/service_provider.dart';
 import 'package:amiibo_network/app/state/lock_provider.dart';
 import 'package:amiibo_network/app/state/preferences_provider.dart';
 import 'package:amiibo_network/app/state/theme/service/theme_mode_scheme_repository.dart';
 import 'package:amiibo_network/entity/amiibo_info/infrastructure/amiibo_provider.dart';
 import 'package:amiibo_network/entity/amiibo_info/model/amiibo.dart';
-import 'package:amiibo_network/feature/amiibo/application/input/update_amiibo_user_attributes.dart';
 import 'package:amiibo_network/feature/collection/application/input/update_collection_input.dart';
 import 'package:amiibo_network/feature/collection/infrastructure/configuration/configuration.dart';
 import 'package:amiibo_network/page/detail/widget/owned_bottom_sheet.dart';
@@ -186,122 +184,6 @@ class OwnButton extends ConsumerWidget {
                   bundles: const [],
                 ),
               );
-            },
-    );
-  }
-}
-
-class WishedButton extends ConsumerWidget {
-  WishedButton({
-    Key? key,
-    required this.amiibo,
-    required this.isLock,
-    this.size = const Size.square(40.0),
-  }) : isActive =
-           amiibo != null && amiibo.userAttributes is WishedUserAttributes,
-       super(key: key);
-
-  final bool isLock;
-  final Amiibo? amiibo;
-  final Size size;
-  final bool isActive;
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final S translate = S.of(context);
-    final preferencesPalette = Theme.of(context)
-        .extension<PreferencesExtension>()!;
-    final color = preferencesPalette.wishContainer.withValues(alpha: 0.24);
-    return IconButton(
-      style: const ButtonStyle(tapTargetSize: MaterialTapTargetSize.shrinkWrap),
-      isSelected: isActive,
-      icon: const Icon(Icons.favorite_border_outlined),
-      selectedIcon: const Icon(iconWished),
-      color: preferencesPalette.wishPalette.shade70,
-      constraints: BoxConstraints.tight(size),
-      iconSize: 20.0,
-      splashRadius: 20.0,
-      tooltip: translate.wishTooltip,
-      splashColor: color,
-      highlightColor: color,
-      onPressed: isLock
-          ? null
-          : () {
-              if (amiibo == null) return;
-              final bool newValue = !isActive;
-              ref.read(amiiboServiceProvider).updateFromAmiibos([
-                amiibo!.copyWith(
-                  userAttributes: newValue
-                      ? const WishedUserAttributes()
-                      : const EmptyUserAttributes(),
-                ),
-              ]);
-            },
-    );
-  }
-}
-
-class OwnedButton extends ConsumerWidget {
-  OwnedButton({
-    Key? key,
-    required this.amiibo,
-    required this.isLock,
-    this.size = const Size.square(40.0),
-  }) : isActive =
-           amiibo != null && amiibo.userAttributes is OwnedUserAttributes,
-       super(key: key);
-
-  final bool isLock;
-  final Amiibo? amiibo;
-  final bool isActive;
-  final Size size;
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final S translate = S.of(context);
-    final preferencesPalette = Theme.of(context)
-        .extension<PreferencesExtension>()!;
-    final color = preferencesPalette.ownContainer.withValues(alpha: 0.24);
-    return IconButton(
-      style: const ButtonStyle(tapTargetSize: MaterialTapTargetSize.shrinkWrap),
-      isSelected: isActive,
-      icon: const Icon(Icons.bookmark_outline_outlined),
-      selectedIcon: const Icon(iconOwned),
-      color: preferencesPalette.ownPalette.shade70,
-      constraints: BoxConstraints.tight(size),
-      iconSize: 20.0,
-      splashRadius: 20.0,
-      tooltip: translate.ownTooltip,
-      splashColor: color,
-      highlightColor: color,
-      onPressed: isLock
-          ? null
-          : () async {
-              if (amiibo == null) return;
-              final showOwnerCategories = ref.read(ownTypesCategoryProvider);
-              final UserAttributes? newAttributes;
-              if (showOwnerCategories) {
-                final userAttributes = amiibo!.userAttributes;
-                newAttributes = await _ownedBottomSheet(
-                  context,
-                  userAttributes,
-                );
-              } else {
-                final bool newValue = !isActive;
-                newAttributes = newValue
-                    ? UserAttributes.owned()
-                    : const EmptyUserAttributes();
-              }
-
-              if (newAttributes == null) {
-                return;
-              }
-              ref.read(amiiboServiceProvider).update([
-                UpdateAmiiboUserAttributes(
-                  id: amiibo!.key,
-                  attributes: newAttributes,
-                ),
-              ]);
             },
     );
   }
