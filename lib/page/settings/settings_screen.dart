@@ -1,6 +1,8 @@
 import 'package:amiibo_network/entity/affiliation_product/presentation/controller/amazon_afilliation_provider.dart';
 import 'package:amiibo_network/entity/affiliation_product/presentation/widget/amazon_affiliation_link_selection_bottomsheet.dart';
 import 'package:amiibo_network/app/configuration/model/hidden_types.dart';
+import 'package:amiibo_network/feature/collection/application/input/update_collection_input.dart';
+import 'package:amiibo_network/feature/collection/infrastructure/configuration/configuration.dart';
 import 'package:amiibo_network/shared/resources/resources.dart';
 import 'package:amiibo_network/app/state/preferences_provider.dart';
 import 'package:amiibo_network/app/configuration/query_provider.dart';
@@ -178,17 +180,16 @@ class _FeatureListWidgetState extends ConsumerState<_FeatureListWidget> {
       } else {
         //final Uint8List data = file!.files.single.bytes!;
         final AmiiboFile amiiboFile = await compute(readFile, _path);
-        if (amiiboFile is AmiiboFileError) {
+        if (amiiboFile case AmiiboFileError()) {
           FirebaseCrashlytics.instance.recordError(
             amiiboFile.error,
             amiiboFile.stackTrace,
           );
           openSnackBar(translate.errorImporting);
           return;
+        } else if (amiiboFile case AmiiboFileData()) {
+          await service.update(amiiboFile.amiibosUserAttributes);
         }
-        await service.update(
-          (amiiboFile as AmiiboFileData).amiibosUserAttributes,
-        );
         openSnackBar(translate.successImport);
       }
       await FilePicker.clearTemporaryFiles();
@@ -635,7 +636,9 @@ class _ResetCollection extends ConsumerWidget {
           final ScaffoldMessengerState? scaffoldState =
               ScaffoldMessenger.maybeOf(context)!;
           try {
-            await ref.read(amiiboServiceProvider).resetCollection();
+            await ref
+                .read(updateCollectionUseCaseProvider)
+                .call(clearCollectionInput);
             _message(scaffoldState, translate.collectionReset);
           } catch (e) {
             _message(scaffoldState, translate.splashError);
@@ -749,9 +752,8 @@ class _TitleSetting extends StatelessWidget {
       title,
       textAlign: TextAlign.start,
       maxLines: 1,
-      style: Theme.of(
-        context,
-      ).textTheme.bodyMedium?.copyWith(fontWeight: .w500),
+      style: Theme.of(context).textTheme.bodyMedium
+          ?.copyWith(fontWeight: .w500),
     );
   }
 }

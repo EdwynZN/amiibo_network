@@ -35,10 +35,7 @@ CREATE TABLE IF NOT EXISTS amiibo_images(
 
 CREATE TABLE IF NOT EXISTS amiibo_bundle(
     id INTEGER NOT NULL PRIMARY KEY,
-    amiibo_key INTEGER NOT NULL,
-    name TEXT NOT NULL,
-    quantity INTEGER NOT NULL DEFAULT 1,
-    FOREIGN KEY (amiibo_key) REFERENCES amiibo("key") ON DELETE CASCADE
+    name TEXT NOT NULL
 ) AS AmiiboBundleTable;
 
 CREATE TABLE IF NOT EXISTS amiibo_bundle_user_preferences(
@@ -57,3 +54,13 @@ CREATE TABLE IF NOT EXISTS amiibo_bundle_images(
     file_path VARCHAR(255) NOT NULL,
     FOREIGN KEY (amiibo_bundle_id) REFERENCES amiibo_bundle(id) ON DELETE CASCADE
 ) AS AmiiboBundleImageTable;
+
+-- This table was added in schema version 9
+CREATE TABLE IF NOT EXISTS amiibo_bundle_relation(
+    id INTEGER NOT NULL PRIMARY KEY,
+    amiibo_key INTEGER NOT NULL,
+    amiibo_bundle_id INTEGER NOT NULL,
+    quantity INTEGER NOT NULL DEFAULT 1,
+    FOREIGN KEY (amiibo_key) REFERENCES amiibo("key") ON DELETE CASCADE,
+    FOREIGN KEY (amiibo_bundle_id) REFERENCES amiibo_bundle(id) ON DELETE CASCADE
+) AS AmiiboBundleRelationTable;

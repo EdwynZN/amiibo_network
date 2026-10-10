@@ -1,5 +1,4 @@
-import 'package:amiibo_network/entity/amiibo_info/infrastructure/amiibo_provider.dart';
-import 'package:amiibo_network/entity/amiibo_info/model/amiibo.dart';
+import 'package:amiibo_network/app/configuration/amiibo_info_configuration/configuration.dart';
 import 'package:amiibo_network/entity/game/model/game.dart';
 import 'package:amiibo_network/shared/utils/urls_constants.dart' show apiUrl;
 import 'package:dio/dio.dart';
@@ -35,10 +34,13 @@ Dio _dio(Ref ref) {
 }
 
 @riverpod
-AmiiboDetails? _character(Ref ref, int key) {
+(String? nfc, String character)? _character(Ref ref, int key) {
   return ref
       .watch(detailAmiiboProvider(key))
-      .maybeWhen(data: (cb) => cb?.details, orElse: () => null);
+      .maybeWhen(
+        data: (cb) => cb == null ? null : (cb.details.nfcId, cb.details.character),
+        orElse: () => null,
+      );
 }
 
 @riverpod
@@ -49,14 +51,16 @@ Future<NintendoPlatform> game(Ref ref, int key) async {
   final token = CancelToken();
 
   ref.onDispose(token.cancel);
+  final (nfcId, character) = amiibo;
+
   final String query;
 
-  if (amiibo.id != null) {
-    final String head = amiibo.id!.substring(0, 8);
-    final String tail = amiibo.id!.substring(8);
+  if (nfcId != null) {
+    final String head = nfcId.substring(0, 8);
+    final String tail = nfcId.substring(8);
     query = 'head=$head&tail=$tail';
   } else {
-    query = 'character=${amiibo.character}';
+    query = 'character=$character';
   }
 
   final Response<Map<String, dynamic>> result = await dio

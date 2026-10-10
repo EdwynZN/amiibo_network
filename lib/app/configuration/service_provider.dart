@@ -1,13 +1,13 @@
+import 'package:amiibo_network/app/configuration/data_providers.dart';
+import 'package:amiibo_network/app/configuration/model/hidden_types.dart';
+import 'package:amiibo_network/app/configuration/model/search_result.dart';
+import 'package:amiibo_network/app/configuration/model/sort_enum.dart';
+import 'package:amiibo_network/entity/amiibo_info/model/amiibo.dart';
+import 'package:amiibo_network/entity/amiibo_info/model/stat.dart';
+import 'package:amiibo_network/feature/amiibo/application/input/update_amiibo_user_attributes.dart';
 import 'package:amiibo_network/shared/data/drift_sqlite/source/amiibo_dao.dart';
 import 'package:amiibo_network/shared/data/drift_sqlite/source/drift_database.dart'
     as db;
-import 'package:amiibo_network/app/configuration/model/amiibo_category_enum.dart';
-import 'package:amiibo_network/app/configuration/model/hidden_types.dart';
-import 'package:amiibo_network/app/configuration/model/sort_enum.dart';
-import 'package:amiibo_network/entity/amiibo_info/model/amiibo.dart';
-import 'package:amiibo_network/app/configuration/model/search_result.dart';
-import 'package:amiibo_network/entity/amiibo_info/model/stat.dart';
-import 'package:amiibo_network/feature/amiibo/application/input/update_amiibo_user_attributes.dart';
 import 'package:amiibo_network/shared/service/service.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -16,7 +16,7 @@ part 'service_provider.g.dart';
 
 @riverpod
 AmiiboServiceNotifer amiiboService(Ref ref) {
-  final database = ref.watch(db.databaseProvider);
+  final database = ref.watch(databaseProvider);
   final notifier = DriftServiceNotifier(database: database);
 
   ref.onDispose(notifier.dispose);
@@ -48,25 +48,17 @@ class DriftServiceNotifier extends AmiiboServiceNotifer {
   @override
   Future<List<Amiibo>> fetchAllAmiibo() async {
     final result = await _dao.fetchAll(
-      categoryAttributes: const CategoryAttributes(
-        category: AmiiboCategory.All,
-      ),
+      categoryAttributes: const CategoryAttributes(category: .All),
     );
     return result.map((e) => e.toDomain()).toList();
-  }
-
-  @override
-  Future<Amiibo?> fetchOne(int key) async {
-    final result = await _dao.fetchByKey(key);
-    return result?.toDomain();
   }
 
   @override
   Future<List<Amiibo>> fetchByCategory({
     required CategoryAttributes categoryAttributes,
     required SearchAttributes? searchAttributes,
-    OrderBy orderBy = OrderBy.NA,
-    SortBy sortBy = SortBy.DESC,
+    OrderBy orderBy = .NA,
+    SortBy sortBy = .DESC,
     List<String> figures = const [],
     List<String> cards = const [],
     HiddenType? hiddenCategories,
@@ -81,23 +73,6 @@ class DriftServiceNotifier extends AmiiboServiceNotifer {
       sortBy: sortBy,
     );
     return result.map((e) => e.toDomain()).toList();
-  }
-
-  @override
-  Future<List<String>> fetchDistinct({
-    required CategoryAttributes categoryAttributes,
-    required SearchAttributes? searchAttributes,
-    OrderBy orderBy = OrderBy.NA,
-    SortBy sortBy = SortBy.DESC,
-    HiddenType? hiddenCategories,
-  }) {
-    return _dao.fetchDistincts(
-      categoryAttributes: categoryAttributes,
-      hiddenCategories: hiddenCategories,
-      orderBy: orderBy,
-      sortBy: sortBy,
-      searchAttributes: searchAttributes,
-    );
   }
 
   @override
@@ -117,23 +92,6 @@ class DriftServiceNotifier extends AmiiboServiceNotifer {
       group: group,
     );
     return result.map(Stat.fromJson).toList();
-  }
-
-  @override
-  Future<void> resetCollection() async {
-    await _dao.clear();
-    notifyListeners();
-  }
-
-  @override
-  Future<List<String>> search({
-    required SearchAttributes searchAttributes,
-    HiddenType? hidden,
-  }) {
-    return _dao.searchName(
-      search: searchAttributes.search,
-      category: searchAttributes.category,
-    );
   }
 
   @override

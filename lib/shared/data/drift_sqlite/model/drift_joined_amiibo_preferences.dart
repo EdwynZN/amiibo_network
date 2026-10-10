@@ -1,4 +1,5 @@
 import 'package:amiibo_network/entity/amiibo_info/model/amiibo.dart';
+import 'package:amiibo_network/entity/amiibo_info/model/amiibo_user_collection_attributes.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'drift_joined_amiibo_preferences.freezed.dart';
@@ -71,4 +72,68 @@ abstract class AmiiboDriftModel with _$AmiiboDriftModel {
 
   factory AmiiboDriftModel.fromJson(Map<String, dynamic> json) =>
       _$AmiiboDriftModelFromJson(json);
+}
+
+@freezed
+abstract class AmiiboDetailDriftModel with _$AmiiboDetailDriftModel {
+  const AmiiboDetailDriftModel._();
+
+  const factory AmiiboDetailDriftModel({
+    @JsonKey(required: true, name: 'amiibo.key') required int key,
+    @JsonKey(name: 'amiibo.amiiboSeries', required: true)
+    required String amiiboSeries,
+    @JsonKey(name: 'amiibo.character', required: true)
+    required String character,
+    @JsonKey(name: 'amiibo.gameSeries', required: true)
+    required String gameSeries,
+    @JsonKey(name: 'amiibo.name', required: true) required String name,
+    @JsonKey(includeIfNull: true, name: 'amiibo_images.file_path')
+    @Default(const []) List<String> images,
+    @Default(const []) List<AmiiboBundleDriftModel> bundles,
+    @JsonKey(includeIfNull: true, name: 'amiibo.au') String? au,
+    @JsonKey(includeIfNull: true, name: 'amiibo.eu') String? eu,
+    @JsonKey(includeIfNull: true, name: 'amiibo.jp') String? jp,
+    @JsonKey(includeIfNull: true, name: 'amiibo.na') String? na,
+    @JsonKey(required: true, name: 'amiibo.type') required String type,
+    @JsonKey(name: 'amiibo.cardNumber') int? cardNumber,
+
+    @Default(0) @JsonKey(name: 'amiibo_user_preferences.boxed') int boxed,
+    @Default(0) @JsonKey(name: 'amiibo_user_preferences.opened') int opened,
+    @Default(false)
+    @JsonKey(
+      fromJson: intToBool,
+      toJson: boolToInt,
+      name: 'amiibo_user_preferences.wishlist',
+    )
+    bool wishlist,
+  }) = _AmiiboDetailDriftModel;
+
+  factory fromJson(Map<String, dynamic> json) =>
+      _$AmiiboDetailDriftModelFromJson(json);
+}
+
+@freezed
+abstract class AmiiboBundleDriftModel with _$AmiiboBundleDriftModel {
+  const AmiiboBundleDriftModel._();
+
+  const factory AmiiboBundleDriftModel({
+    @JsonKey(name: 'amiibo.id', required: true) required String id,
+    @JsonKey(name: 'amiibo.name', required: true) required String name,
+    @JsonKey(name: 'amiibo_images.file_path')
+    @Default(const []) List<String> images,
+    @JsonKey(name: 'amiibo.au', required: true) required List<String> amiiboIds,
+  
+    @Default(0) @JsonKey(name: 'amiibo_user_preferences.boxed') int boxed,
+    @Default(0) @JsonKey(name: 'amiibo_user_preferences.opened') int opened,
+    @Default(false)
+    @JsonKey(
+      fromJson: intToBool,
+      toJson: boolToInt,
+      name: 'amiibo_user_preferences.wishlist',
+    )
+    bool wishlist,
+  }) = _AmiiboBundleDriftModel;
+
+  factory fromJson(Map<String, dynamic> json) =>
+      _$AmiiboBundleDriftModelFromJson(json);
 }

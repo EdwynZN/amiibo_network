@@ -1,14 +1,14 @@
-import 'package:amiibo_network/shared/data/drift_sqlite/model/drift_joined_amiibo_preferences.dart';
-import 'package:amiibo_network/shared/data/drift_sqlite/source/drift_database.dart';
 import 'package:amiibo_network/app/configuration/model/amiibo_category_enum.dart';
 import 'package:amiibo_network/app/configuration/model/hidden_types.dart';
-import 'package:amiibo_network/app/configuration/model/sort_enum.dart' as s;
-import 'package:amiibo_network/entity/amiibo_info/model/amiibo.dart'
-    hide Amiibo;
 import 'package:amiibo_network/app/configuration/model/search_result.dart';
+import 'package:amiibo_network/app/configuration/model/sort_enum.dart' as s;
+import 'package:amiibo_network/entity/amiibo_info/model/amiibo_user_collection_attributes.dart';
 import 'package:amiibo_network/feature/amiibo/application/input/update_amiibo_user_attributes.dart';
+import 'package:amiibo_network/shared/data/drift_sqlite/model/drift_joined_amiibo_preferences.dart';
+import 'package:amiibo_network/shared/data/drift_sqlite/source/drift_database.dart';
 import 'package:amiibo_network/shared/service/info_package.dart';
 import 'package:drift/drift.dart';
+import 'package:flutter/foundation.dart';
 
 part 'amiibo_dao.g.dart';
 
@@ -19,6 +19,27 @@ class AmiiboDao extends DatabaseAccessor<AppDatabase>
     with _$AmiiboDaoMixin, _ExpressionBuilder {
   AmiiboDao(super.db);
 
+  Stream<List<AmiiboDriftModel>> fetchAllStream({
+    required CategoryAttributes categoryAttributes,
+    SearchAttributes? searchAttributes,
+    s.OrderBy orderBy = s.OrderBy.NA,
+    s.SortBy sortBy = s.SortBy.DESC,
+    List<String> figures = const [],
+    List<String> cards = const [],
+    HiddenType? hiddenCategories,
+  }) {
+    final query = _fetchAll(
+      categoryAttributes: categoryAttributes,
+      searchAttributes: searchAttributes,
+      orderBy: orderBy,
+      sortBy: sortBy,
+      figures: figures,
+      cards: cards,
+      hiddenCategories: hiddenCategories,
+    );
+    return query.map(_toModel).watch();
+  }
+
   Future<List<AmiiboDriftModel>> fetchAll({
     required CategoryAttributes categoryAttributes,
     SearchAttributes? searchAttributes,
@@ -28,11 +49,41 @@ class AmiiboDao extends DatabaseAccessor<AppDatabase>
     List<String> cards = const [],
     HiddenType? hiddenCategories,
   }) async {
+    final query = _fetchAll(
+      categoryAttributes: categoryAttributes,
+      searchAttributes: searchAttributes,
+      orderBy: orderBy,
+      sortBy: sortBy,
+      figures: figures,
+      cards: cards,
+      hiddenCategories: hiddenCategories,
+    );
+
+    final result = await query.map(_toModel).get();
+    return result;
+  }
+
+  JoinedSelectStatement<HasResultSet, dynamic> _fetchAll({
+    required CategoryAttributes categoryAttributes,
+    SearchAttributes? searchAttributes,
+    s.OrderBy orderBy = s.OrderBy.NA,
+    s.SortBy sortBy = s.SortBy.DESC,
+    List<String> figures = const [],
+    List<String> cards = const [],
+    HiddenType? hiddenCategories,
+  }) {
     final imagesQuery = _imageSubQuery;
+    final bundleSubquery = _bundleSubquery;
     final query = select(amiibo).join([
       leftOuterJoin(
         amiiboUserPreferences,
         amiiboUserPreferences.amiiboKey.equalsExp(amiibo.key),
+      ),
+      leftOuterJoin(
+        bundleSubquery,
+        bundleSubquery
+            .ref(amiiboBundleRelation.amiiboKey)
+            .equalsExp(amiibo.key),
       ),
       leftOuterJoin(
         imagesQuery,
@@ -54,16 +105,276 @@ class AmiiboDao extends DatabaseAccessor<AppDatabase>
     );
 
     if (whereExpression != null) query.where(whereExpression);
-    final result = await query.map(_toModel).get();
+    return query;
+  }
+
+  Stream<AmiiboDetailDriftModel?> fetchByKeyStreamV2(int key) {
+    final query = _fetchByKeyQueryV2(key);
+    return query
+        .map((s) => AmiiboDetailDriftModel.fromJson(s.data))
+        .watchSingleOrNull();
+  }
+
+  Future<AmiiboDetailDriftModel?> fetchByKeyV2(int key) async {
+    final query = _fetchByKeyQueryV2(key);
+    final result = await query
+        .map((s) => AmiiboDetailDriftModel.fromJson(s.data))
+        .getSingleOrNull();
     return result;
   }
 
+  Selectable<QueryRow> _fetchByKeyQueryV2(int key) {
+    /* final amiiboIds = jsonGroupArray(amiiboBundleRelation.amiiboKey);
+    final bundleSubquery = Subquery(
+      selectOnly(amiiboBundleRelation).join([
+          innerJoin(
+            amiiboBundleUserPreferences,
+            amiiboBundleUserPreferences.amiiboBundleId.equalsExp(
+              amiiboBundle.id,
+            ),
+          ),
+          innerJoin(amiiboBundle, amiiboBundle.id.equalsExp(amiiboBundle.id)),
+          innerJoin(
+            amiiboBundleImages,
+            amiiboBundleImages.amiiboBundleId.equalsExp(amiiboBundle.id),
+          ),
+        ])
+        ..addColumns([
+          amiiboBundleRelation.amiiboKey,
+          amiiboBundle.id,
+          amiiboIds,
+          jsonGroupArray(amiiboBundleImages.filePath),
+          amiiboBundleUserPreferences.boxed,
+          amiiboBundleUserPreferences.opened,
+        ])
+        ..orderBy([
+          OrderingTerm.asc(amiiboBundle.id),
+          OrderingTerm.asc(amiiboBundleImages.createAt),
+        ])
+        ..groupBy([amiiboBundle.id])
+        ..where(amiiboBundleRelation.amiiboKey.equals(key)),
+      'b',
+    );
+
+    final amiiboBundlesAlias = alias(amiiboBundleRelation, 'm');
+    final bundles =
+        selectOnly(amiiboBundleRelation).join([
+            innerJoin(
+              amiiboBundlesAlias,
+              amiiboBundlesAlias.amiiboBundleId.equalsExp(
+                amiiboBundleRelation.amiiboBundleId,
+              ),
+            ),
+            innerJoin(
+              amiiboBundle,
+              amiiboBundle.id.equalsExp(amiiboBundleRelation.amiiboBundleId),
+            ),
+            leftOuterJoin(
+              amiiboBundleUserPreferences,
+              amiiboBundleUserPreferences.amiiboBundleId.equalsExp(
+                amiiboBundle.id,
+              ),
+            ),
+            leftOuterJoin(
+              amiiboBundleImages,
+              amiiboBundleImages.amiiboBundleId.equalsExp(amiiboBundle.id),
+            ),
+          ])
+          ..addColumns([
+            amiiboBundle.id,
+            jsonGroupArray(amiiboBundlesAlias.amiiboKey),
+            jsonGroupArray(amiiboBundleImages.filePath),
+            amiiboBundleUserPreferences.boxed,
+            amiiboBundleUserPreferences.opened,
+          ])
+          ..where(amiiboBundleRelation.amiiboKey.equals(key))
+          ..orderBy([
+            OrderingTerm.asc(amiiboBundle.id),
+            OrderingTerm.asc(amiiboBundleImages.createAt),
+          ])
+          ..groupBy([amiiboBundle.id]);
+
+    final subBundleQuery = Subquery(
+      selectOnly(amiiboBundleRelation).join([
+          innerJoin(
+            amiiboBundlesAlias,
+            amiiboBundlesAlias.amiiboBundleId.equalsExp(
+              amiiboBundleRelation.amiiboBundleId,
+            ),
+          ),
+          innerJoin(
+            amiiboBundle,
+            amiiboBundle.id.equalsExp(amiiboBundleRelation.amiiboBundleId),
+          ),
+          leftOuterJoin(
+            amiiboBundleUserPreferences,
+            amiiboBundleUserPreferences.amiiboBundleId.equalsExp(
+              amiiboBundle.id,
+            ),
+          ),
+          leftOuterJoin(
+            amiiboBundleImages,
+            amiiboBundleImages.amiiboBundleId.equalsExp(amiiboBundle.id),
+          ),
+        ])
+        ..addColumns([
+          amiiboBundle.id,
+          jsonGroupArray(amiiboBundlesAlias.amiiboKey),
+          jsonGroupArray(amiiboBundleImages.filePath),
+          amiiboBundleUserPreferences.boxed,
+          amiiboBundleUserPreferences.opened,
+        ])
+        ..orderBy([
+          OrderingTerm.asc(amiiboBundle.id),
+          OrderingTerm.asc(amiiboBundleImages.createAt),
+        ])
+        ..where(amiiboBundleRelation.amiiboKey.equals(key))
+        ..groupBy([amiiboBundle.id]),
+      'bundle',
+    );
+
+    /* final query =
+        selectOnly(amiibo).join([
+            leftOuterJoin(
+              amiiboUserPreferences,
+              amiiboUserPreferences.amiiboKey.equalsExp(amiibo.key),
+            ),
+            leftOuterJoin(
+              amiiboImages,
+              amiiboImages.amiiboKey.equalsExp(amiibo.key),
+              useColumns: false,
+            ),
+          ])
+          ..addColumns([
+            ...amiibo.$columns,
+            ...amiiboUserPreferences.$columns,
+            jsonGroupArray(amiiboImages.filePath),
+            jsonGroupArray(
+              jsonGroupObject({
+                const Constant('id'): subBundleQuery.ref(amiiboBundle.id),
+              }),
+            ),
+          ])
+          ..orderBy([OrderingTerm.desc(amiiboImages.createAt)])
+          ..where(amiibo.key.equals(key))
+          ..groupBy([amiibo.key]); */
+
+    final object = subBundleQuery.columnsByName
+        .map<Expression<String>, Expression<Object>>(
+          (k, v) => MapEntry(Constant(k), v),
+        );
+    final query = selectOnly(amiibo)
+      ..addColumns([
+        ...amiibo.$columns,
+        jsonGroupArray(
+          jsonGroupObject(
+            object,
+            /* const Constant('id'): subBundleQuery.ref(amiiboBundle.id),
+            const Constant('boxed'): subBundleQuery.ref(
+              amiiboBundleUserPreferences.boxed,
+            ),
+            const Constant('opened'): subBundleQuery.ref(
+              amiiboBundleUserPreferences.opened,
+            ), */
+          ),
+        ),
+      ])
+      ..orderBy([OrderingTerm.desc(amiiboImages.createAt)])
+      ..groupBy([amiibo.key]); */
+
+    final query = db.customSelect('''
+      SELECT
+        a.key AS "amiibo.key",
+        a.amiiboSeries AS "amiibo.amiiboSeries",
+        a.character AS "amiibo.character",
+        a.gameSeries AS "amiibo.gameSeries",
+        a.name AS "amiibo.name",
+        a.au AS "amiibo.au",
+        a.eu AS "amiibo.eu",
+        a.jp AS "amiibo.jp",
+        a.na AS "amiibo.na",
+        a.type AS "amiibo.type",
+        a.cardNumber AS "amiibo.cardNumber",
+        "amiibo_user_preferences"."boxed" AS "amiibo_user_preferences.boxed", 
+        "amiibo_user_preferences"."opened" AS "amiibo_user_preferences.opened",
+        "amiibo_user_preferences"."wishlist" AS "amiibo_user_preferences.wishlist",
+        json_array("amiibo_images"."file_path") AS images,
+        (
+          SELECT json_array(
+              json_object(
+                'id', "amiibo_bundle"."id", 
+                'amiiboIds', json_group_array("m"."amiibo_key"), 
+                'images', json_array("amiibo_bundle_images"."file_path"),
+                'boxed', "amiibo_bundle_user_preferences"."boxed", 
+                'opened', "amiibo_bundle_user_preferences"."opened"
+              )
+            )
+            FROM "amiibo_bundle_relation" AS e
+            JOIN "amiibo_bundle_relation" AS m ON "e"."amiibo_bundle_id" = "m"."amiibo_bundle_id" 
+            JOIN "amiibo_bundle" ON "amiibo_bundle"."id" = "e"."amiibo_bundle_id" 
+            LEFT OUTER JOIN "amiibo_bundle_user_preferences" ON "amiibo_bundle_user_preferences"."amiibo_bundle_id" = "amiibo_bundle"."id" 
+            LEFT OUTER JOIN "amiibo_bundle_images" ON "amiibo_bundle_images"."amiibo_bundle_id" = "amiibo_bundle"."id"
+            WHERE "e"."amiibo_key" = a.key
+            GROUP BY "amiibo_bundle"."id"
+            ORDER BY "amiibo_bundle"."id" ASC, "amiibo_bundle_images"."create_at" ASC
+        ) as bundles
+      FROM amiibo a
+      LEFT OUTER JOIN "amiibo_user_preferences" ON "amiibo_user_preferences"."amiibo_key" = "a"."key"
+      LEFT OUTER JOIN "amiibo_images" ON "amiibo_images"."amiibo_key" = "a"."key"
+      WHERE "a"."key" = $key
+      ORDER BY "amiibo_images"."created_at" ASC;
+''');
+
+    return query;
+  }
+
+  Stream<AmiiboDriftModel?> fetchByKeyStream(int key) {
+    final query = _fetchByKeyQuery(key);
+    return query.map(_toModel).watchSingleOrNull();
+  }
+
   Future<AmiiboDriftModel?> fetchByKey(int key) async {
+    final query = _fetchByKeyQuery(key);
+    final result = await query.map(_toModel).getSingleOrNull();
+    return result;
+  }
+
+  JoinedSelectStatement<HasResultSet, dynamic> _fetchByKeyQuery(int key) {
     final imagesQuery = _imageSubQuery;
+    final bundleSubquery = _bundleSubquery;
     final query = select(amiibo).join([
       leftOuterJoin(
         amiiboUserPreferences,
         amiibo.key.equalsExp(amiiboUserPreferences.amiiboKey),
+      ),
+      leftOuterJoin(
+        bundleSubquery,
+        bundleSubquery
+            .ref(amiiboBundleRelation.amiiboKey)
+            .equalsExp(amiibo.key),
+      ),
+      leftOuterJoin(
+        imagesQuery,
+        imagesQuery.ref(amiiboImages.amiiboKey).equalsExp(amiibo.key),
+      ),
+    ])..where(amiibo.key.equals(key));
+    return query;
+  }
+
+  @visibleForTesting
+  Future<TypedResult?> fetchByKeyTest(int key) async {
+    final imagesQuery = _imageSubQuery;
+    final bundleSubquery = _bundleSubquery;
+    final query = select(amiibo).join([
+      leftOuterJoin(
+        amiiboUserPreferences,
+        amiibo.key.equalsExp(amiiboUserPreferences.amiiboKey),
+      ),
+      leftOuterJoin(
+        bundleSubquery,
+        bundleSubquery
+            .ref(amiiboBundleRelation.amiiboKey)
+            .equalsExp(amiibo.key),
       ),
       leftOuterJoin(
         imagesQuery,
@@ -71,24 +382,48 @@ class AmiiboDao extends DatabaseAccessor<AppDatabase>
       ),
     ])..where(amiibo.key.equals(key));
 
-    final result = await query.map(_toModel).getSingleOrNull();
+    final result = await query.getSingleOrNull();
     return result;
   }
 
   Future<void> insertAll({
     required List<AmiiboTable> amiibosData,
+    required List<AmiiboBundleTable> amiiboBundlesData,
     required List<AmiiboImagesCompanion> amiiboImagesData,
     required List<AmiiboBundleImagesCompanion> amiiboBundleImagesData,
-    required List<AmiiboUserPreferencesCompanion> preferences,
+    required List<AmiiboBundleUserPreferencesCompanion> amiiboBundlePreferences,
+    required List<AmiiboBundleRelationCompanion> amiiboBundleRelationData,
+    required List<AmiiboUserPreferencesCompanion> amiiboPreferences,
   }) async {
     await batch((batch) {
       if (InfoPackage.instance.isUpsertFeatureAvailable) {
         batch.insertAllOnConflictUpdate(amiibo, amiibosData);
+        batch.insertAllOnConflictUpdate(amiiboBundle, amiiboBundlesData);
       } else {
         batch.insertAll(amiibo, amiibosData, mode: .insertOrReplace);
+        batch.insertAll(
+          amiiboBundle,
+          amiiboBundlesData,
+          mode: .insertOrReplace,
+        );
       }
       batch
-        ..insertAll(amiiboUserPreferences, preferences, mode: .insertOrIgnore)
+        ..insertAll(
+          amiiboUserPreferences,
+          amiiboPreferences,
+          mode: .insertOrIgnore,
+        )
+        ..insertAll(
+          amiiboBundleUserPreferences,
+          amiiboBundlePreferences,
+          mode: .insertOrIgnore,
+        )
+        ..deleteAll(amiiboBundleRelation)
+        ..insertAll(
+          amiiboBundleRelation,
+          amiiboBundleRelationData,
+          mode: .insertOrIgnore,
+        )
         ..deleteAll(amiiboBundleImages)
         ..insertAll(
           amiiboBundleImages,
@@ -259,6 +594,32 @@ class AmiiboDao extends DatabaseAccessor<AppDatabase>
       ..groupBy([amiiboImages.amiiboKey]),
     's',
   );
+
+  Subquery get _bundleSubquery {
+    final boxed =
+        (amiiboBundleRelation.quantity * amiiboBundleUserPreferences.boxed)
+            .sum();
+    final opened =
+        (amiiboBundleRelation.quantity * amiiboBundleUserPreferences.opened)
+            .sum();
+    return Subquery(
+      select(amiiboBundleRelation).join([
+          leftOuterJoin(
+            amiiboBundle,
+            amiiboBundle.id.equalsExp(amiiboBundle.id),
+          ),
+          leftOuterJoin(
+            amiiboBundleUserPreferences,
+            amiiboBundleUserPreferences.amiiboBundleId.equalsExp(
+              amiiboBundle.id,
+            ),
+          ),
+        ])
+        ..addColumns([boxed, opened])
+        ..groupBy([amiiboBundleRelation.amiiboKey]),
+      'b',
+    );
+  }
 
   AmiiboDriftModel _toModel(TypedResult p0) {
     /// remove suffix s from amiibo_images subquery

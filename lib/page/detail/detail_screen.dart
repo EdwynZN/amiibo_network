@@ -1,7 +1,7 @@
 import 'package:amiibo_network/entity/affiliation_product/presentation/widget/amazon_affiliation_button.dart';
 import 'package:amiibo_network/page/detail/provider/asset_id_provider.dart';
 import 'package:amiibo_network/shared/resources/resources.dart';
-import 'package:amiibo_network/entity/amiibo_info/infrastructure/amiibo_provider.dart';
+import 'package:amiibo_network/app/configuration/amiibo_info_configuration/configuration.dart';
 import 'package:amiibo_network/app/state/preferences_provider.dart';
 import 'package:amiibo_network/shared/utils/amiibo_asset_util.dart';
 import 'package:amiibo_network/shared/utils/tablet_utils.dart';
@@ -78,9 +78,8 @@ class DetailScreen extends ConsumerWidget {
         title: Consumer(
           builder: (context, ref, _) => ref
               .watch(
-                detailAmiiboProvider(
-                  id,
-                ).select((s) => s.whenData((cb) => cb?.details.name)),
+                detailAmiiboProvider(id)
+                    .select((s) => s.whenData((cb) => cb?.details.name)),
               )
               .maybeWhen(
                 data: (name) => name != null ? Text(name) : const SizedBox(),
@@ -107,11 +106,16 @@ class _AmiiboCard extends ConsumerWidget {
     final image = ref.watch(
       detailAmiiboProvider(key).select((s) {
         if (!s.hasValue) return amiiboAsset(initialAsset);
-        return amiiboAsset(s.whenOrNull(data: (data) => data?.details.image));
+        final image = s.whenOrNull(
+          data: (data) {
+            final images = data?.details.images;
+            if (images == null) return null;
+            return images.isEmpty ? null : images.first;
+          },
+        );
+        return amiiboAsset(image);
       }),
     );
-
-    print('image: $image');
 
     final Widget letf = Column(
       crossAxisAlignment: .start,

@@ -1,9 +1,9 @@
 import 'package:amiibo_network/app/configuration/query_provider.dart';
-import 'package:amiibo_network/app/configuration/service_provider.dart';
-import 'package:amiibo_network/entity/amiibo_info/model/amiibo.dart';
-import 'package:amiibo_network/feature/amiibo/application/input/update_amiibo_user_attributes.dart';
+import 'package:amiibo_network/entity/amiibo_info/model/amiibo_user_collection_attributes.dart';
+import 'package:amiibo_network/feature/collection/application/input/update_collection_input.dart';
+import 'package:amiibo_network/feature/collection/application/use_case/update_collection_use_case.dart';
+import 'package:amiibo_network/feature/collection/infrastructure/configuration/configuration.dart';
 import 'package:amiibo_network/page/home/model/title_search.dart';
-import 'package:amiibo_network/shared/service/service.dart';
 import 'package:collection/collection.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -50,10 +50,10 @@ bool canPop(Ref ref) {
 
 @riverpod
 class SelectNotifier extends _$SelectNotifier {
-  late AmiiboService _service;
+  late UpdateCollectionUseCase _service;
   @override
   Set<int> build() {
-    _service = ref.watch(amiiboServiceProvider);
+    _service = ref.watch(updateCollectionUseCaseProvider);
     return const UnmodifiableSetView.empty();
   }
 
@@ -72,10 +72,21 @@ class SelectNotifier extends _$SelectNotifier {
   }
 
   void updateAmiibos(UserAttributes attributes) {
-    final amiibos = state
-        .map((cb) => UpdateAmiiboUserAttributes(id: cb, attributes: attributes))
-        .toList();
-    _service.update(amiibos);
+    final CollectionAttributes collection = switch (attributes) {
+      OwnedUserAttributes(:final boxed, :final opened) => .owned(
+        boxed: boxed,
+        opened: opened,
+      ),
+      WishedUserAttributes() => const .wished(),
+      EmptyUserAttributes() => const .none(),
+    };
+    final input = UpdateCollectionInput(
+      amiibos: state
+          .map((cb) => CollectionAmiibo(id: cb, attributes: collection))
+          .toList(),
+      bundles: const [],
+    );
+    _service(input);
     clearSelected();
   }
 

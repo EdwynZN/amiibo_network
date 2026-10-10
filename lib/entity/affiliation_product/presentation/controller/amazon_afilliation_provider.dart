@@ -1,7 +1,7 @@
 import 'package:amiibo_network/entity/affiliation_product/data/affiliation_repository_local.dart';
 import 'package:amiibo_network/entity/affiliation_product/domain/failure/affiliation_failure.dart';
 import 'package:amiibo_network/entity/affiliation_product/domain/model/affiliation_link_read_model.dart';
-import 'package:amiibo_network/entity/amiibo_info/infrastructure/amiibo_provider.dart';
+import 'package:amiibo_network/app/configuration/amiibo_info_configuration/configuration.dart';
 import 'package:amiibo_network/app/state/preferences_provider.dart';
 import 'package:collection/collection.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -49,17 +49,13 @@ Future<List<AffiliationLinkReadModel>> selectedAmazonAffiliationDetail(
   final String? search = await ref.watch(
     detailAmiiboProvider(key).selectAsync(
       (value) {
-        if (value == null) {
-          return null;
-        }
+        if (value == null) return null;
         final detail = value.details;
         return '${detail.name} Amiibo ${detail.type} ${detail.gameSeries}';
       },
     ),
   );
-  if (search == null) {
-    throw NoAmiiboFound(key);
-  }
+  if (search == null) throw NoAmiiboFound(key);
 
   AffiliationLinkReadModel replaceUri(AffiliationLinkReadModel affiliation) {
     final uri = affiliation.link.replace(
@@ -70,9 +66,7 @@ Future<List<AffiliationLinkReadModel>> selectedAmazonAffiliationDetail(
   }
 
   final selected = ref.watch(selectedAmazonAffiliationProvider);
-  if (selected != null) {
-    return [replaceUri(selected)];
-  }
+  if (selected != null) return [replaceUri(selected)];
 
   final list = await ref.watch(amazonAffiliationProvider.future);
   return list.map(replaceUri).toList();

@@ -16,6 +16,7 @@ import 'package:amiibo_network/shared/utils/stat_utils.dart';
 import 'package:amiibo_network/shared/utils/theme_extensions.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:flutter/services.dart';
+import 'package:amiibo_network/entity/amiibo_info/model/amiibo_user_collection_attributes.dart';
 
 class Screenshot {
   late ThemeData theme;
@@ -587,8 +588,7 @@ class Screenshot {
       if (byteData == null) throw (AssertionError('Couldn\'t make image'));
       Uint8List buffer = byteData.buffer.asUint8List();
       return buffer;
-    } on AssertionError catch (e) {
-      print(e);
+    } on AssertionError catch (_) {
       return null;
     } finally {
       _canvas = null;
