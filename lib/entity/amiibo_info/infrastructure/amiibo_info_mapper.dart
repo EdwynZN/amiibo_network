@@ -2,7 +2,6 @@ import 'package:amiibo_network/entity/amiibo_info/model/amiibo.dart';
 import 'package:amiibo_network/entity/amiibo_info/model/amiibo_detail_info.dart';
 import 'package:amiibo_network/entity/amiibo_info/model/amiibo_info.dart';
 import 'package:amiibo_network/shared/data/drift_sqlite/model/amiibo_collection_drift_dto.dart';
-import 'package:amiibo_network/shared/data/drift_sqlite/model/drift_joined_amiibo_preferences.dart';
 
 extension AmiibroInfoDetailDriftMapper on AmiiboCollectionDetailDriftDto {
   AmiiboDetailInfo toAmiiboInfo() {
@@ -54,13 +53,10 @@ extension AmiibroInfoDetailDriftMapper on AmiiboCollectionDetailDriftDto {
 extension AmiibroInfoDriftMapper on AmiiboCollectionDriftDto {
   AmiiboInfo toAmiiboInfo() {
     UserAttributes userAttributes = const .none();
-    CollectionType type = .none;
     final (int opened, int boxed) = (this.opened, this.boxed);
     if (opened > 0 || boxed > 0) {
-      type = .owned;
       userAttributes = .owned(boxed: boxed, opened: opened);
     } else if (wishlist) {
-      type = .wished;
       userAttributes = .wished();
     }
 
@@ -70,7 +66,6 @@ extension AmiibroInfoDriftMapper on AmiiboCollectionDriftDto {
       image: image,
       series: amiiboSeries,
       userAttributes: userAttributes,
-      collection: type,
     );
   }
 }
