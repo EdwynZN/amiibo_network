@@ -273,6 +273,7 @@ class AmiiboCollectionDao(super.db)
     final query = db.customSelect('''
       SELECT
         a.key AS "amiibo.key",
+        a.id AS "amiibo.nfcId",
         a.amiiboSeries AS "amiibo.amiiboSeries",
         a.character AS "amiibo.character",
         a.gameSeries AS "amiibo.gameSeries",

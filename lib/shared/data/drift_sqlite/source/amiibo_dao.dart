@@ -2,8 +2,7 @@ import 'package:amiibo_network/app/configuration/model/amiibo_category_enum.dart
 import 'package:amiibo_network/app/configuration/model/hidden_types.dart';
 import 'package:amiibo_network/app/configuration/model/search_result.dart';
 import 'package:amiibo_network/app/configuration/model/sort_enum.dart' as s;
-import 'package:amiibo_network/entity/amiibo_info/model/amiibo.dart'
-    hide Amiibo;
+import 'package:amiibo_network/entity/amiibo_info/model/amiibo_user_collection_attributes.dart';
 import 'package:amiibo_network/feature/amiibo/application/input/update_amiibo_user_attributes.dart';
 import 'package:amiibo_network/shared/data/drift_sqlite/model/drift_joined_amiibo_preferences.dart';
 import 'package:amiibo_network/shared/data/drift_sqlite/source/drift_database.dart';

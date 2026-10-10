@@ -1,10 +1,10 @@
-import 'package:amiibo_network/shared/generated/l10n.dart';
-import 'package:amiibo_network/entity/amiibo_info/model/amiibo.dart';
-import 'package:amiibo_network/shared/utils/string_extensions.dart';
+import 'package:amiibo_network/entity/amiibo_info/model/amiibo_user_collection_attributes.dart';
 import 'package:amiibo_network/page/detail/widget/user_preferences_card.dart';
-import 'package:material_ui/material_ui.dart';
+import 'package:amiibo_network/shared/generated/l10n.dart';
+import 'package:amiibo_network/shared/utils/string_extensions.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:gap/gap.dart';
+import 'package:material_ui/material_ui.dart';
 
 class OwnedButtomSheet extends HookWidget {
   final int initialBoxed;

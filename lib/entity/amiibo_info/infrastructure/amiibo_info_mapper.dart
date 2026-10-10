@@ -1,11 +1,11 @@
-import 'package:amiibo_network/entity/amiibo_info/model/amiibo.dart';
 import 'package:amiibo_network/entity/amiibo_info/model/amiibo_detail_info.dart';
 import 'package:amiibo_network/entity/amiibo_info/model/amiibo_info.dart';
+import 'package:amiibo_network/entity/amiibo_info/model/amiibo_user_collection_attributes.dart';
 import 'package:amiibo_network/shared/data/drift_sqlite/model/amiibo_collection_drift_dto.dart';
 
 extension AmiibroInfoDetailDriftMapper on AmiiboCollectionDetailDriftDto {
   AmiiboDetailInfo toAmiiboInfo() {
-    UserCollectionAttributes userAttributes = const .none();
+    UserAttributes userAttributes = const .none();
     final (int opened, int boxed) = (this.opened, this.boxed);
     if (opened > 0 || boxed > 0) {
       userAttributes = .owned(boxed: boxed, opened: opened);
@@ -16,6 +16,7 @@ extension AmiibroInfoDetailDriftMapper on AmiiboCollectionDetailDriftDto {
     return AmiiboDetailInfo(
       id: key,
       details: .new(
+        nfcId: nfcId,
         amiiboSeries: amiiboSeries,
         character: character,
         gameSeries: gameSeries,
@@ -27,10 +28,11 @@ extension AmiibroInfoDetailDriftMapper on AmiiboCollectionDetailDriftDto {
         au: au,
         eu: eu,
         jp: jp,
+        cardNumber: cardNumber,
       ),
       bundles: List.unmodifiableOf(
         bundles.map((e) {
-          UserCollectionAttributes userAttributes = const .none();
+          UserAttributes userAttributes = const .none();
           final (int opened, int boxed) = (e.opened, e.boxed);
           if (opened > 0 || boxed > 0) {
             userAttributes = .owned(boxed: boxed, opened: opened);

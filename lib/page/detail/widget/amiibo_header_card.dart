@@ -21,7 +21,14 @@ class AmiiboCard extends ConsumerWidget {
     final image = ref.watch(
       detailAmiiboProvider(key).select((s) {
         if (!s.hasValue) return amiiboAsset(initialAsset);
-        return amiiboAsset(s.whenOrNull(data: (data) => data?.details.image));
+        final image = s.whenOrNull(
+          data: (data) {
+            final images = data?.details.images;
+            if (images == null) return null;
+            return images.isEmpty ? null : images.first;
+          },
+        );
+        return amiiboAsset(image);
       }),
     );
 

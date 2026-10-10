@@ -1,3 +1,4 @@
+import 'package:amiibo_network/entity/amiibo_info/model/amiibo_user_collection_attributes.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'amiibo.freezed.dart';
@@ -37,27 +38,4 @@ abstract class AmiiboDetails with _$AmiiboDetails {
 
   factory AmiiboDetails.fromJson(Map<String, dynamic> json) =>
       _$AmiiboDetailsFromJson(json);
-}
-
-@freezed
-sealed class UserAttributes with _$UserAttributes {
-  const factory none() = EmptyUserAttributes;
-
-  const factory wished() = WishedUserAttributes;
-
-  @Assert('(boxed > 0) || (opened > 0)', 'boxed or opened cannot be both less than 0')
-  const factory owned({
-    @Default(0) int boxed,
-    @Default(1) int opened,
-  }) = OwnedUserAttributes;
-
-  factory fromOwnedOrEmpty({
-    required int boxed,
-    required int opened,
-  }) => boxed + opened <= 0
-    ? const EmptyUserAttributes()
-    : OwnedUserAttributes(boxed: boxed, opened: opened);
-
-  factory fromJson(Map<String, dynamic> json) =>
-      _$UserAttributesFromJson(json);
 }

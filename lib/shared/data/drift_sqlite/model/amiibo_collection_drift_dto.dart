@@ -44,6 +44,7 @@ abstract class AmiiboCollectionDriftDto with _$AmiiboCollectionDriftDto {
 abstract class AmiiboCollectionDetailDriftDto with _$AmiiboCollectionDetailDriftDto {
   const factory ({
     @JsonKey(required: true, name: 'amiibo.key') required int key,
+    @JsonKey(required: true, name: 'amiibo.nfcId') required String? nfcId,
     @JsonKey(name: 'amiibo.amiiboSeries', required: true)
     required String amiiboSeries,
     @JsonKey(name: 'amiibo.character', required: true)

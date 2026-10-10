@@ -6,7 +6,7 @@ import 'package:amiibo_network/app/state/collection/amiibo_user_collection_notif
 import 'package:amiibo_network/app/state/lock_provider.dart';
 import 'package:amiibo_network/app/state/preferences_provider.dart';
 import 'package:amiibo_network/app/state/theme/service/theme_mode_scheme_repository.dart';
-import 'package:amiibo_network/entity/amiibo_info/model/amiibo.dart';
+import 'package:amiibo_network/entity/amiibo_info/model/amiibo_user_collection_attributes.dart';
 import 'package:amiibo_network/page/detail/widget/owned_bottom_sheet.dart';
 import 'package:amiibo_network/page/home/controller/select_provider.dart';
 import 'package:amiibo_network/page/home/controller/stats_amiibo_provider.dart';

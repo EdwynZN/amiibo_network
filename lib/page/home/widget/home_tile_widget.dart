@@ -1,4 +1,4 @@
-import 'package:amiibo_network/entity/amiibo_info/model/amiibo.dart';
+import 'package:amiibo_network/entity/amiibo_info/model/amiibo_user_collection_attributes.dart';
 import 'package:amiibo_network/entity/amiibo_info/model/amiibo_info.dart';
 import 'package:amiibo_network/page/detail/widget/amiibo_button_toggle.dart';
 import 'package:amiibo_network/page/home/controller/select_provider.dart';

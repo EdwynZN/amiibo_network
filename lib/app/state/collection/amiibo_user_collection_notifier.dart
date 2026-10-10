@@ -1,6 +1,6 @@
 import 'package:amiibo_network/app/configuration/query_provider.dart';
 import 'package:amiibo_network/entity/amiibo_info/infrastructure/amiibo_provider.dart';
-import 'package:amiibo_network/entity/amiibo_info/model/amiibo.dart';
+import 'package:amiibo_network/entity/amiibo_info/model/amiibo_user_collection_attributes.dart';
 import 'package:amiibo_network/entity/amiibo_info/model/amiibo_info.dart';
 import 'package:amiibo_network/entity/amiibo_info/model/stat.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
