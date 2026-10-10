@@ -8,7 +8,9 @@ class const UpdateCollectionUseCase({
   required final BundleRepository _bundleRepo,
 }) {
   Future<void> call(UpdateCollectionInput input) async {
-    if (input.amiibos.isEmpty && input.bundles.isEmpty) return;
+    if (input.amiibos.isEmpty && input.bundles.isEmpty && !input.clearAll) {
+      return;
+    }
 
     final bundleIds = input.bundles.map((b) => b.id);
     List<AmiiboBundlePreferenceAggregate> bundles = [];

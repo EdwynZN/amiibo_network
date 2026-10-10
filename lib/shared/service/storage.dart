@@ -9,9 +9,7 @@ import 'package:material_ui/material_ui.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 
-sealed class AmiiboFile {
-  const AmiiboFile();
-}
+sealed class const AmiiboFile();
 
 class AmiiboFileData extends AmiiboFile {
   final List<UpdateAmiiboUserAttributes> amiibosUserAttributes;

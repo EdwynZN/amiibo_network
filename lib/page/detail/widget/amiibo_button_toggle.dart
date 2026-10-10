@@ -1,7 +1,7 @@
 import 'package:amiibo_network/app/state/lock_provider.dart';
 import 'package:amiibo_network/app/state/preferences_provider.dart';
 import 'package:amiibo_network/app/state/theme/service/theme_mode_scheme_repository.dart';
-import 'package:amiibo_network/entity/amiibo_info/infrastructure/amiibo_provider.dart';
+import 'package:amiibo_network/app/configuration/amiibo_info_configuration/configuration.dart';
 import 'package:amiibo_network/entity/amiibo_info/model/amiibo_user_collection_attributes.dart';
 import 'package:amiibo_network/feature/collection/application/input/update_collection_input.dart';
 import 'package:amiibo_network/feature/collection/infrastructure/configuration/configuration.dart';

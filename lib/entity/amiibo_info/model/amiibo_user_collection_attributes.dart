@@ -1,6 +1,7 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'amiibo_user_collection_attributes.freezed.dart';
+part 'amiibo_user_collection_attributes.g.dart';
 
 @freezed
 sealed class UserAttributes with _$UserAttributes {

@@ -1,8 +1,8 @@
+import 'package:amiibo_network/app/configuration/amiibo_serie_configuration/configuration.dart';
 import 'package:amiibo_network/app/configuration/model/amiibo_category_enum.dart';
 import 'package:amiibo_network/app/configuration/model/search_result.dart';
 import 'package:amiibo_network/app/configuration/model/sort_enum.dart';
 import 'package:amiibo_network/app/configuration/preferences_provider.dart';
-import 'package:amiibo_network/app/configuration/service_provider.dart';
 import 'package:amiibo_network/app/state/preferences_provider.dart';
 import 'package:amiibo_network/shared/utils/preferences_constants.dart';
 import 'package:collection/collection.dart';
@@ -32,26 +32,16 @@ Filter filter(Ref ref) {
 
 @riverpod
 FutureOr<List<String>> figures(Ref ref) async {
-  final service = ref.watch(amiiboServiceProvider);
-  final list = await service.fetchDistinct(
-    categoryAttributes: const CategoryAttributes(category: .Figures),
-    searchAttributes: null,
-    orderBy: .AmiiboSerie,
-    sortBy: .ASC,
-  );
+  final service = ref.watch(amiiboSerieQueryServiceProvider);
+  final list = await service.figures();
   ref.keepAlive();
   return list;
 }
 
 @riverpod
 FutureOr<List<String>> cards(Ref ref) async {
-  final service = ref.watch(amiiboServiceProvider);
-  final list = await service.fetchDistinct(
-    searchAttributes: null,
-    categoryAttributes: const CategoryAttributes(category: .Cards),
-    orderBy: .AmiiboSerie,
-    sortBy: .ASC,
-  );
+  final service = ref.watch(amiiboSerieQueryServiceProvider);
+  final list = await service.cards();
   ref.keepAlive();
   return list;
 }

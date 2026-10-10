@@ -2,6 +2,12 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'update_collection_input.freezed.dart';
 
+const clearCollectionInput = UpdateCollectionInput(
+  amiibos: [],
+  bundles: [],
+  clearAll: true,
+);
+
 @freezed
 class const UpdateCollectionInput({
   required final List<CollectionAmiibo> amiibos,

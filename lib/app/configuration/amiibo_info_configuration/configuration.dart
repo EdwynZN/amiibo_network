@@ -9,7 +9,7 @@ import 'package:amiibo_network/entity/amiibo_info/service/amiibo_collection_quer
 import 'package:amiibo_network/shared/data/drift_sqlite/source/amiibo_collection_dao.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-part 'amiibo_provider.g.dart';
+part 'configuration.g.dart';
 
 @riverpod
 AmiiboCollectionQueryService amiiboColletcionQueryService(Ref ref) {

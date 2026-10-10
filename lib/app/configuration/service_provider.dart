@@ -54,12 +54,6 @@ class DriftServiceNotifier extends AmiiboServiceNotifer {
   }
 
   @override
-  Future<Amiibo?> fetchOne(int key) async {
-    final result = await _dao.fetchByKey(key);
-    return result?.toDomain();
-  }
-
-  @override
   Future<List<Amiibo>> fetchByCategory({
     required CategoryAttributes categoryAttributes,
     required SearchAttributes? searchAttributes,
@@ -82,23 +76,6 @@ class DriftServiceNotifier extends AmiiboServiceNotifer {
   }
 
   @override
-  Future<List<String>> fetchDistinct({
-    required CategoryAttributes categoryAttributes,
-    required SearchAttributes? searchAttributes,
-    OrderBy orderBy = .NA,
-    SortBy sortBy = .DESC,
-    HiddenType? hiddenCategories,
-  }) {
-    return _dao.fetchDistincts(
-      categoryAttributes: categoryAttributes,
-      hiddenCategories: hiddenCategories,
-      orderBy: orderBy,
-      sortBy: sortBy,
-      searchAttributes: searchAttributes,
-    );
-  }
-
-  @override
   Future<List<Stat>> fetchStats({
     required CategoryAttributes categoryAttributes,
     required SearchAttributes? searchAttributes,
@@ -115,23 +92,6 @@ class DriftServiceNotifier extends AmiiboServiceNotifer {
       group: group,
     );
     return result.map(Stat.fromJson).toList();
-  }
-
-  @override
-  Future<void> resetCollection() async {
-    await _dao.clear();
-    notifyListeners();
-  }
-
-  @override
-  Future<List<String>> search({
-    required SearchAttributes searchAttributes,
-    HiddenType? hidden,
-  }) {
-    return _dao.searchName(
-      search: searchAttributes.search,
-      category: searchAttributes.category,
-    );
   }
 
   @override

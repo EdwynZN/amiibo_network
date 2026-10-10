@@ -1,4 +1,4 @@
-import 'package:amiibo_network/entity/amiibo_info/infrastructure/amiibo_provider.dart';
+import 'package:amiibo_network/app/configuration/amiibo_info_configuration/configuration.dart';
 import 'package:amiibo_network/entity/game/model/game.dart';
 import 'package:amiibo_network/shared/utils/urls_constants.dart' show apiUrl;
 import 'package:dio/dio.dart';

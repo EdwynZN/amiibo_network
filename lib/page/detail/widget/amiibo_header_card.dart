@@ -1,7 +1,7 @@
 import 'package:amiibo_network/page/detail/provider/asset_id_provider.dart';
 import 'package:amiibo_network/shared/generated/l10n.dart';
 import 'package:amiibo_network/shared/resources/resources.dart';
-import 'package:amiibo_network/entity/amiibo_info/infrastructure/amiibo_provider.dart';
+import 'package:amiibo_network/app/configuration/amiibo_info_configuration/configuration.dart';
 import 'package:amiibo_network/page/detail/widget/card_details.dart';
 import 'package:amiibo_network/shared/utils/amiibo_asset_util.dart';
 import 'package:material_ui/material_ui.dart';

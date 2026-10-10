@@ -1,4 +1,4 @@
-import 'package:amiibo_network/entity/amiibo_info/infrastructure/amiibo_provider.dart';
+import 'package:amiibo_network/app/configuration/amiibo_info_configuration/configuration.dart';
 import 'package:amiibo_network/page/detail/detail_screen.dart';
 import 'package:amiibo_network/page/detail/provider/asset_id_provider.dart';
 import 'package:amiibo_network/page/home/home_screen.dart';

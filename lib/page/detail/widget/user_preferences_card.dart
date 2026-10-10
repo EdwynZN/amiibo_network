@@ -2,7 +2,7 @@ import 'package:amiibo_network/app/configuration/service_provider.dart';
 import 'package:amiibo_network/app/state/lock_provider.dart';
 import 'package:amiibo_network/app/state/preferences_provider.dart';
 import 'package:amiibo_network/app/state/theme/service/theme_mode_scheme_repository.dart';
-import 'package:amiibo_network/entity/amiibo_info/infrastructure/amiibo_provider.dart';
+import 'package:amiibo_network/app/configuration/amiibo_info_configuration/configuration.dart';
 import 'package:amiibo_network/entity/amiibo_info/model/amiibo_user_collection_attributes.dart';
 import 'package:amiibo_network/feature/amiibo/application/input/update_amiibo_user_attributes.dart';
 import 'package:amiibo_network/page/detail/widget/amiibo_button_toggle.dart';
@@ -107,7 +107,7 @@ class UserPreferenceCard extends HookConsumerWidget {
                           ref.read(amiiboServiceProvider).update([
                             UpdateAmiiboUserAttributes(
                               id: amiiboKey,
-                              attributes: const EmptyUserAttributes(),
+                              attributes: const .none(),
                             ),
                           ]);
                         },
