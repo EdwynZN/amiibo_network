@@ -49,17 +49,13 @@ Future<List<AffiliationLinkReadModel>> selectedAmazonAffiliationDetail(
   final String? search = await ref.watch(
     detailAmiiboProvider(key).selectAsync(
       (value) {
-        if (value == null) {
-          return null;
-        }
+        if (value == null) return null;
         final detail = value.details;
         return '${detail.name} Amiibo ${detail.type} ${detail.gameSeries}';
       },
     ),
   );
-  if (search == null) {
-    throw NoAmiiboFound(key);
-  }
+  if (search == null) throw NoAmiiboFound(key);
 
   AffiliationLinkReadModel replaceUri(AffiliationLinkReadModel affiliation) {
     final uri = affiliation.link.replace(
@@ -70,9 +66,7 @@ Future<List<AffiliationLinkReadModel>> selectedAmazonAffiliationDetail(
   }
 
   final selected = ref.watch(selectedAmazonAffiliationProvider);
-  if (selected != null) {
-    return [replaceUri(selected)];
-  }
+  if (selected != null) return [replaceUri(selected)];
 
   final list = await ref.watch(amazonAffiliationProvider.future);
   return list.map(replaceUri).toList();

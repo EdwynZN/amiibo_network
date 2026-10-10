@@ -2,25 +2,17 @@ import 'package:amiibo_network/app/configuration/model/amiibo_category_enum.dart
 import 'package:amiibo_network/app/configuration/model/hidden_types.dart';
 import 'package:amiibo_network/app/configuration/model/search_result.dart';
 import 'package:amiibo_network/app/configuration/model/sort_enum.dart' as s;
-import 'package:amiibo_network/entity/amiibo_info/model/amiibo.dart'
-    hide Amiibo;
-import 'package:amiibo_network/feature/amiibo/application/input/update_amiibo_user_attributes.dart';
-import 'package:amiibo_network/shared/data/drift_sqlite/model/drift_joined_amiibo_preferences.dart';
+import 'package:amiibo_network/shared/data/drift_sqlite/model/amiibo_collection_drift_dto.dart';
 import 'package:amiibo_network/shared/data/drift_sqlite/source/drift_database.dart';
-import 'package:amiibo_network/shared/service/info_package.dart';
 import 'package:drift/drift.dart';
-import 'package:flutter/foundation.dart';
 
-part 'amiibo_dao.g.dart';
-
-const _figureType = ['Figure', 'Yarn', 'Band'];
+part 'amiibo_collection_dao.g.dart';
 
 @DriftAccessor(include: const {'amiibo_tables.drift'})
-class AmiiboDao extends DatabaseAccessor<AppDatabase>
-    with _$AmiiboDaoMixin, _ExpressionBuilder {
-  AmiiboDao(super.db);
-
-  Stream<List<AmiiboDriftModel>> fetchAllStream({
+class AmiiboCollectionDao(super.db)
+    extends DatabaseAccessor<AppDatabase>
+    with _$AmiiboCollectionDaoMixin, _ExpressionBuilder {
+  Stream<List<AmiiboCollectionDriftDto>> fetchAllStream({
     required CategoryAttributes categoryAttributes,
     SearchAttributes? searchAttributes,
     s.OrderBy orderBy = s.OrderBy.NA,
@@ -29,7 +21,7 @@ class AmiiboDao extends DatabaseAccessor<AppDatabase>
     List<String> cards = const [],
     HiddenType? hiddenCategories,
   }) {
-    final query = _fetchAll(
+    return _fetchAll(
       categoryAttributes: categoryAttributes,
       searchAttributes: searchAttributes,
       orderBy: orderBy,
@@ -37,11 +29,10 @@ class AmiiboDao extends DatabaseAccessor<AppDatabase>
       figures: figures,
       cards: cards,
       hiddenCategories: hiddenCategories,
-    );
-    return query.map(_toModel).watch();
+    ).map((p0) => AmiiboCollectionDriftDto.fromJson(p0.rawData.data)).watch();
   }
 
-  Future<List<AmiiboDriftModel>> fetchAll({
+  Future<List<AmiiboCollectionDriftDto>> fetchAll({
     required CategoryAttributes categoryAttributes,
     SearchAttributes? searchAttributes,
     s.OrderBy orderBy = s.OrderBy.NA,
@@ -50,7 +41,7 @@ class AmiiboDao extends DatabaseAccessor<AppDatabase>
     List<String> cards = const [],
     HiddenType? hiddenCategories,
   }) async {
-    final query = _fetchAll(
+    return await _fetchAll(
       categoryAttributes: categoryAttributes,
       searchAttributes: searchAttributes,
       orderBy: orderBy,
@@ -58,10 +49,7 @@ class AmiiboDao extends DatabaseAccessor<AppDatabase>
       figures: figures,
       cards: cards,
       hiddenCategories: hiddenCategories,
-    );
-
-    final result = await query.map(_toModel).get();
-    return result;
+    ).map((p0) => AmiiboCollectionDriftDto.fromJson(p0.rawData.data)).get();
   }
 
   JoinedSelectStatement<HasResultSet, dynamic> _fetchAll({
@@ -109,22 +97,21 @@ class AmiiboDao extends DatabaseAccessor<AppDatabase>
     return query;
   }
 
-  Stream<AmiiboDetailDriftModel?> fetchByKeyStreamV2(int key) {
-    final query = _fetchByKeyQueryV2(key);
+  Stream<AmiiboCollectionDetailDriftDto?> streamByAmiiboKey(int key) {
+    final query = _queryByAmiiboKey(key);
     return query
-        .map((s) => AmiiboDetailDriftModel.fromJson(s.data))
+        .map((p0) => AmiiboCollectionDetailDriftDto.fromJson(p0.data))
         .watchSingleOrNull();
   }
 
-  Future<AmiiboDetailDriftModel?> fetchByKeyV2(int key) async {
-    final query = _fetchByKeyQueryV2(key);
-    final result = await query
-        .map((s) => AmiiboDetailDriftModel.fromJson(s.data))
+  Future<AmiiboCollectionDetailDriftDto?> queryByAmiiboKey(int key) async {
+    final query = _queryByAmiiboKey(key);
+    return await query
+        .map((p0) => AmiiboCollectionDetailDriftDto.fromJson(p0.data))
         .getSingleOrNull();
-    return result;
   }
 
-  Selectable<QueryRow> _fetchByKeyQueryV2(int key) {
+  Selectable<QueryRow> _queryByAmiiboKey(int key) {
     /* final amiiboIds = jsonGroupArray(amiiboBundleRelation.amiiboKey);
     final bundleSubquery = Subquery(
       selectOnly(amiiboBundleRelation).join([
@@ -329,268 +316,35 @@ class AmiiboDao extends DatabaseAccessor<AppDatabase>
     return query;
   }
 
-  Stream<AmiiboDriftModel?> fetchByKeyStream(int key) {
-    final query = _fetchByKeyQuery(key);
-    return query.map(_toModel).watchSingleOrNull();
-  }
-
-  Future<AmiiboDriftModel?> fetchByKey(int key) async {
-    final query = _fetchByKeyQuery(key);
-    final result = await query.map(_toModel).getSingleOrNull();
-    return result;
-  }
-
-  JoinedSelectStatement<HasResultSet, dynamic> _fetchByKeyQuery(int key) {
-    final imagesQuery = _imageSubQuery;
-    final bundleSubquery = _bundleSubquery;
-    final query = select(amiibo).join([
-      leftOuterJoin(
-        amiiboUserPreferences,
-        amiibo.key.equalsExp(amiiboUserPreferences.amiiboKey),
-      ),
-      leftOuterJoin(
-        bundleSubquery,
-        bundleSubquery
-            .ref(amiiboBundleRelation.amiiboKey)
-            .equalsExp(amiibo.key),
-      ),
-      leftOuterJoin(
-        imagesQuery,
-        imagesQuery.ref(amiiboImages.amiiboKey).equalsExp(amiibo.key),
-      ),
-    ])..where(amiibo.key.equals(key));
-    return query;
-  }
-
-  @visibleForTesting
-  Future<TypedResult?> fetchByKeyTest(int key) async {
-    final imagesQuery = _imageSubQuery;
-    final bundleSubquery = _bundleSubquery;
-    final query = select(amiibo).join([
-      leftOuterJoin(
-        amiiboUserPreferences,
-        amiibo.key.equalsExp(amiiboUserPreferences.amiiboKey),
-      ),
-      leftOuterJoin(
-        bundleSubquery,
-        bundleSubquery
-            .ref(amiiboBundleRelation.amiiboKey)
-            .equalsExp(amiibo.key),
-      ),
-      leftOuterJoin(
-        imagesQuery,
-        imagesQuery.ref(amiiboImages.amiiboKey).equalsExp(amiibo.key),
-      ),
-    ])..where(amiibo.key.equals(key));
-
-    final result = await query.getSingleOrNull();
-    return result;
-  }
-
-  Future<void> insertAll({
-    required List<AmiiboTable> amiibosData,
-    required List<AmiiboBundleTable> amiiboBundlesData,
-    required List<AmiiboImagesCompanion> amiiboImagesData,
-    required List<AmiiboBundleImagesCompanion> amiiboBundleImagesData,
-    required List<AmiiboBundleUserPreferencesCompanion> amiiboBundlePreferences,
-    required List<AmiiboBundleRelationCompanion> amiiboBundleRelationData,
-    required List<AmiiboUserPreferencesCompanion> amiiboPreferences,
-  }) async {
-    await batch((batch) {
-      if (InfoPackage.instance.isUpsertFeatureAvailable) {
-        batch.insertAllOnConflictUpdate(amiibo, amiibosData);
-        batch.insertAllOnConflictUpdate(amiiboBundle, amiiboBundlesData);
-      } else {
-        batch.insertAll(amiibo, amiibosData, mode: .insertOrReplace);
-        batch.insertAll(
-          amiiboBundle,
-          amiiboBundlesData,
-          mode: .insertOrReplace,
-        );
-      }
-      batch
-        ..insertAll(
-          amiiboUserPreferences,
-          amiiboPreferences,
-          mode: .insertOrIgnore,
-        )
-        ..insertAll(
-          amiiboBundleUserPreferences,
-          amiiboBundlePreferences,
-          mode: .insertOrIgnore,
-        )
-        ..deleteAll(amiiboBundleRelation)
-        ..insertAll(
-          amiiboBundleRelation,
-          amiiboBundleRelationData,
-          mode: .insertOrIgnore,
-        )
-        ..deleteAll(amiiboBundleImages)
-        ..insertAll(
-          amiiboBundleImages,
-          amiiboBundleImagesData,
-          mode: .insertOrIgnore,
-        )
-        ..deleteAll(amiiboImages)
-        ..insertAll(amiiboImages, amiiboImagesData, mode: .insertOrIgnore);
-    });
-  }
-
-  Future<List<String>> fetchDistincts({
-    required CategoryAttributes categoryAttributes,
+  void _updateQueryWhere(
+    JoinedSelectStatement query,
+    CategoryAttributes categoryAttributes,
     SearchAttributes? searchAttributes,
-    s.OrderBy orderBy = s.OrderBy.NA,
-    s.SortBy sortBy = s.SortBy.DESC,
+    HiddenType? hiddenCategories, [
     List<String> figures = const [],
     List<String> cards = const [],
-    HiddenType? hiddenCategories,
-  }) async {
-    final query = selectOnly(amiibo, distinct: true)
-      ..addColumns([amiibo.amiiboSeries])
-      ..orderBy(_orderExpression(orderBy, sortBy));
-    _updateQueryWhere(
-      query,
-      categoryAttributes,
-      searchAttributes,
-      hiddenCategories,
-      figures,
-      cards,
-    );
-    final result = await query.map((e) => e.read(amiibo.amiiboSeries)!).get();
-    return result;
-  }
-
-  Future<List<String>> searchName({
-    required SearchCategory category,
-    String search = '',
-    int limit = 10,
-  }) async {
-    if (search.isEmpty) {
-      return const [];
+  ]) {
+    if (searchAttributes != null) {
+      final search = '%${searchAttributes.search}%';
+      query.where(switch (searchAttributes.category) {
+        .Game => amiibo.gameSeries.like(search),
+        .AmiiboSeries => amiibo.amiiboSeries.like(search),
+        _ => amiibo.name.like(search) | amiibo.character.like(search),
+      });
     }
-    final GeneratedColumn<String> column = switch (category) {
-      .AmiiboSeries => amiibo.amiiboSeries,
-      .Name => amiibo.name,
-      .Game => amiibo.gameSeries,
-    };
-    final query = selectOnly(amiibo, distinct: true)
-      ..addColumns([column])
-      ..where(column.like('%$search%'))
-      ..limit(limit);
-    final result = await query.map((e) => e.read(column)!).get();
-    return result;
-  }
 
-  Future<List<Map<String, dynamic>>> fetchSum({
-    required CategoryAttributes categoryAttributes,
-    SearchAttributes? searchAttributes,
-    bool group = false,
-    HiddenType? hiddenCategories,
-  }) async {
-    final query = selectOnly(amiibo).join([
-      innerJoin(
-        amiiboUserPreferences,
-        amiiboUserPreferences.amiiboKey.equalsExp(amiibo.key),
-        useColumns: false,
-      ),
-    ]);
-    query
-      ..addColumns([
-        if (group) amiibo.amiiboSeries,
-        amiibo.amiiboSeries.count(),
-        CaseWhenExpression(
-          cases: [
-            CaseWhen(
-              amiiboUserPreferences.wishlist.isValue(true),
-              then: const Constant(1),
-            ),
-          ],
-        ).count(),
-        CaseWhenExpression(
-          cases: [
-            CaseWhen(
-              amiiboUserPreferences.opened.isBiggerThanValue(0) |
-                  amiiboUserPreferences.boxed.isBiggerThanValue(0),
-              then: const Constant(1),
-            ),
-          ],
-        ).count(),
-        amiiboUserPreferences.opened.sum(),
-        amiiboUserPreferences.boxed.sum(),
-      ])
-      ..orderBy([
-        OrderingTerm(expression: amiibo.amiiboSeries, mode: OrderingMode.asc),
-      ]);
-    if (group) {
-      query.groupBy([amiibo.amiiboSeries]);
+    final whereExpression = _updateExpression(
+      categoryAttributes: categoryAttributes,
+      hiddenCategories: hiddenCategories,
+    );
+
+    if (whereExpression != null) {
+      query.where(whereExpression);
     }
-    _updateQueryWhere(
-      query,
-      categoryAttributes,
-      searchAttributes,
-      hiddenCategories,
-    );
-
-    final result = await query.map((e) {
-      final map = e.rawData.data;
-      int index = group ? 1 : 0;
-      return {
-        if (group) 'amiiboSeries': map['amiibo.amiiboSeries'],
-        'Total': map['c${index++}'],
-        'Wished': map['c${index++}'],
-        'Owned': map['c${index++}'],
-        'Unboxed': map['c${index++}'],
-        'Boxed': map['c${index++}'],
-      };
-    }).get();
-    return result;
-  }
-
-  Future<void> clear() async {
-    await update(amiiboUserPreferences).write(
-      AmiiboUserPreferencesCompanion(
-        boxed: const Value(0),
-        opened: const Value(0),
-        wishlist: const Value(false),
-      ),
-    );
-  }
-
-  Future<void> updatePreferences(
-    List<UpdateAmiiboUserAttributes> amiibos,
-  ) async {
-    await batch((batch) async {
-      for (final query in amiibos) {
-        final ({int boxed, int opened, bool wished}) args =
-            switch (query.attributes) {
-              const UserAttributes.wished() => const (
-                opened: 0,
-                boxed: 0,
-                wished: true,
-              ),
-              OwnedUserAttributes(opened: final opened, boxed: final boxed) => (
-                opened: opened,
-                boxed: boxed,
-                wished: false,
-              ),
-              _ => const (opened: 0, boxed: 0, wished: false),
-            };
-        batch.update(
-          amiiboUserPreferences,
-          AmiiboUserPreferencesCompanion(
-            amiiboKey: Value(query.id),
-            opened: Value(args.opened),
-            boxed: Value(args.boxed),
-            wishlist: Value(args.wished),
-          ),
-          where: (tl) => tl.amiiboKey.equals(query.id),
-        );
-      }
-    });
   }
 
   Subquery get _imageSubQuery => Subquery(
-    select(amiiboImages).join([])
+    select(amiiboImages).join(const [])
       ..orderBy([OrderingTerm.desc(amiiboImages.createAt)])
       ..groupBy([amiiboImages.amiiboKey]),
     's',
@@ -621,47 +375,11 @@ class AmiiboDao extends DatabaseAccessor<AppDatabase>
       'b',
     );
   }
-
-  AmiiboDriftModel _toModel(TypedResult p0) {
-    /// remove suffix s from amiibo_images subquery
-    final data = <String, dynamic>{
-      for (final entry in p0.rawData.data.entries)
-        entry.key.startsWith(r's.') ? entry.key.substring(2) : entry.key:
-            entry.value,
-    };
-
-    return AmiiboDriftModel.fromJson(data);
-  }
-
-  void _updateQueryWhere(
-    JoinedSelectStatement query,
-    CategoryAttributes categoryAttributes,
-    SearchAttributes? searchAttributes,
-    HiddenType? hiddenCategories, [
-    List<String> figures = const [],
-    List<String> cards = const [],
-  ]) {
-    if (searchAttributes != null) {
-      final search = '%${searchAttributes.search}%';
-      query.where(switch (searchAttributes.category) {
-        .Game => amiibo.gameSeries.like(search),
-        .AmiiboSeries => amiibo.amiiboSeries.like(search),
-        _ => amiibo.name.like(search) | amiibo.character.like(search),
-      });
-    }
-
-    final whereExpression = _updateExpression(
-      categoryAttributes: categoryAttributes,
-      hiddenCategories: hiddenCategories,
-    );
-
-    if (whereExpression != null) {
-      query.where(whereExpression);
-    }
-  }
 }
 
-mixin _ExpressionBuilder on _$AmiiboDaoMixin {
+const _figureType = ['Figure', 'Yarn', 'Band'];
+
+mixin _ExpressionBuilder on _$AmiiboCollectionDaoMixin {
   List<OrderingTerm> _orderExpression(s.OrderBy orderBy, s.SortBy sortBy) {
     return [
       OrderingTerm(

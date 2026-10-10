@@ -66,6 +66,57 @@ void main() {
     });
   });
 
+  test('test fetch single', () async {
+    final db = container.listen(databaseProvider, (_, _) {}).read();
+
+    final query = db.customSelect('''
+      SELECT
+        a.key,
+        a.amiiboSeries,
+        a.character,
+        a.character,
+        a.gameSeries,
+        a.name,
+        a.au,
+        a.eu,
+        a.jp,
+        a.na,
+        a.type,
+        a.cardNumber,
+        "amiibo_user_preferences"."boxed" AS boxed, 
+        "amiibo_user_preferences"."opened" AS opened,
+        "amiibo_user_preferences"."wishlist" AS wishlist,
+        json_array("amiibo_images"."file_path") AS images,
+        COALESCE (
+          (
+            SELECT json_array(
+                json_object(
+                  'id', "amiibo_bundle"."id", 
+                  'amiiboIds', json_group_array("m"."amiibo_key"), 
+                  'images', json_array("amiibo_bundle_images"."file_path"),
+                  'boxed', "amiibo_bundle_user_preferences"."boxed", 
+                  'opened', "amiibo_bundle_user_preferences"."opened"
+                )
+              )
+              FROM "amiibo_bundle_relation" AS e
+              JOIN "amiibo_bundle_relation" AS m ON "e"."amiibo_bundle_id" = "m"."amiibo_bundle_id" 
+              JOIN "amiibo_bundle" ON "amiibo_bundle"."id" = "e"."amiibo_bundle_id" 
+              LEFT OUTER JOIN "amiibo_bundle_user_preferences" ON "amiibo_bundle_user_preferences"."amiibo_bundle_id" = "amiibo_bundle"."id" 
+              LEFT OUTER JOIN "amiibo_bundle_images" ON "amiibo_bundle_images"."amiibo_bundle_id" = "amiibo_bundle"."id"
+              WHERE "e"."amiibo_key" = a.key
+              GROUP BY "amiibo_bundle"."id"
+              ORDER BY "amiibo_bundle"."id" ASC, "amiibo_bundle_images"."create_at" ASC
+          ), '[]'
+        ) as bundles
+      FROM amiibo a
+      LEFT OUTER JOIN "amiibo_user_preferences" ON "amiibo_user_preferences"."amiibo_key" = "a"."key"
+      LEFT OUTER JOIN "amiibo_images" ON "amiibo_images"."amiibo_key" = "a"."key"
+      WHERE "a"."key" = 850;
+''');
+    final result = await query.get();
+    print(result.first.data);
+  });
+
   test('read Amiibo DB', () async {
     final db = container.listen(databaseProvider, (_, _) {}).read();
     final useCase = container
@@ -133,7 +184,6 @@ void main() {
       bundles.where((amiibo) => amiibo.boxed <= 0 && amiibo.opened <= 0),
       hasLength(6),
     );
-
 
     await useCase.call(
       UpdateCollectionInput(

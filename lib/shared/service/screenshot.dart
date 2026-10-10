@@ -587,8 +587,7 @@ class Screenshot {
       if (byteData == null) throw (AssertionError('Couldn\'t make image'));
       Uint8List buffer = byteData.buffer.asUint8List();
       return buffer;
-    } on AssertionError catch (e) {
-      print(e);
+    } on AssertionError catch (_) {
       return null;
     } finally {
       _canvas = null;

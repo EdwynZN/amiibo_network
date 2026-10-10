@@ -75,9 +75,9 @@ class AppDatabase extends _$AppDatabase {
           final SharedPreferences prefs = await SharedPreferences.getInstance();
           List<Map<String, dynamic>> table;
           await transaction(() async {
-            table = await customSelect(
-              'SELECT * FROM date;',
-            ).map((p0) => p0.data).get();
+            table = await customSelect('SELECT * FROM date;')
+                .map((p0) => p0.data)
+                .get();
             table.forEach((date) {
               if (date['id'] == '1')
                 prefs.setString(sharedDateDB, date['lastUpdated']);

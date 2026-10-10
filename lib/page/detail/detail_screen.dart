@@ -111,8 +111,6 @@ class _AmiiboCard extends ConsumerWidget {
       }),
     );
 
-    print('image: $image');
-
     final Widget letf = Column(
       crossAxisAlignment: .start,
       mainAxisAlignment: .start,

@@ -1,19 +1,15 @@
-import 'package:amiibo_network/entity/amiibo_info/model/amiibo.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
-part 'drift_joined_amiibo_preferences.freezed.dart';
-part 'drift_joined_amiibo_preferences.g.dart';
+part 'amiibo_collection_drift_dto.freezed.dart';
+part 'amiibo_collection_drift_dto.g.dart';
 
 int boolToInt(bool? value) => value ?? false ? 1 : 0;
 bool intToBool(int? value) => value == 1;
 
 @freezed
-abstract class AmiiboDriftModel with _$AmiiboDriftModel {
-  const AmiiboDriftModel._();
-
-  const factory AmiiboDriftModel({
+abstract class AmiiboCollectionDriftDto with _$AmiiboCollectionDriftDto {
+  const factory ({
     @JsonKey(required: true, name: 'amiibo.key') required int key,
-    @JsonKey(includeIfNull: true, name: 'amiibo.id') String? id,
     @JsonKey(name: 'amiibo.amiiboSeries', required: true)
     required String amiiboSeries,
     @JsonKey(name: 'amiibo.character', required: true)
@@ -21,7 +17,7 @@ abstract class AmiiboDriftModel with _$AmiiboDriftModel {
     @JsonKey(name: 'amiibo.gameSeries', required: true)
     required String gameSeries,
     @JsonKey(name: 'amiibo.name', required: true) required String name,
-    @JsonKey(includeIfNull: true, name: 'amiibo_images.file_path')
+    @JsonKey(includeIfNull: true, name: 's.amiibo_images.file_path')
     String? image,
     @JsonKey(includeIfNull: true, name: 'amiibo.au') String? au,
     @JsonKey(includeIfNull: true, name: 'amiibo.eu') String? eu,
@@ -38,46 +34,15 @@ abstract class AmiiboDriftModel with _$AmiiboDriftModel {
       name: 'amiibo_user_preferences.wishlist',
     )
     bool wishlist,
-  }) = _AmiiboDriftModel;
+  }) = _AmiiboCollectionDriftDto;
 
-  Amiibo toDomain() {
-    final UserAttributes attributes;
-    if (!wishlist && boxed == 0 && opened == 0) {
-      attributes = const UserAttributes.none();
-    } else if (boxed != 0 || opened != 0) {
-      attributes = UserAttributes.owned(opened: opened, boxed: boxed);
-    } else {
-      attributes = const UserAttributes.wished();
-    }
-    return Amiibo(
-      key: key,
-      userAttributes: attributes,
-      details: AmiiboDetails(
-        id: id,
-        name: name,
-        character: character,
-        gameSeries: gameSeries,
-        amiiboSeries: amiiboSeries,
-        au: au,
-        eu: eu,
-        jp: jp,
-        na: na,
-        type: type,
-        cardNumber: cardNumber,
-        image: image,
-      ),
-    );
-  }
-
-  factory AmiiboDriftModel.fromJson(Map<String, dynamic> json) =>
-      _$AmiiboDriftModelFromJson(json);
+  factory fromJson(Map<String, dynamic> json) =>
+      _$AmiiboCollectionDriftDtoFromJson(json);
 }
 
 @freezed
-abstract class AmiiboDetailDriftModel with _$AmiiboDetailDriftModel {
-  const AmiiboDetailDriftModel._();
-
-  const factory AmiiboDetailDriftModel({
+abstract class AmiiboCollectionDetailDriftDto with _$AmiiboCollectionDetailDriftDto {
+  const factory ({
     @JsonKey(required: true, name: 'amiibo.key') required int key,
     @JsonKey(name: 'amiibo.amiiboSeries', required: true)
     required String amiiboSeries,
@@ -105,10 +70,10 @@ abstract class AmiiboDetailDriftModel with _$AmiiboDetailDriftModel {
       name: 'amiibo_user_preferences.wishlist',
     )
     bool wishlist,
-  }) = _AmiiboDetailDriftModel;
+  }) = _AmiiboCollectionDetailDriftDto;
 
   factory fromJson(Map<String, dynamic> json) =>
-      _$AmiiboDetailDriftModelFromJson(json);
+      _$AmiiboCollectionDetailDriftDtoFromJson(json);
 }
 
 @freezed

@@ -3,6 +3,8 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'amiibo_info.freezed.dart';
 
+enum CollectionType { owned, wished, none }
+
 @freezed
 class const AmiiboInfo({
   required final int id,
@@ -10,4 +12,5 @@ class const AmiiboInfo({
   required final String series,
   required final String? image,
   required final UserAttributes userAttributes,
+  required final CollectionType collection,
 }) with _$AmiiboInfo;
