@@ -33,7 +33,7 @@ Filter filter(Ref ref) {
 @riverpod
 FutureOr<List<String>> figures(Ref ref) async {
   final service = ref.watch(amiiboSerieQueryServiceProvider);
-  final list = await service.figures();
+  final list = await service.category(category: .Figures);
   ref.keepAlive();
   return list;
 }
@@ -41,7 +41,7 @@ FutureOr<List<String>> figures(Ref ref) async {
 @riverpod
 FutureOr<List<String>> cards(Ref ref) async {
   final service = ref.watch(amiiboSerieQueryServiceProvider);
-  final list = await service.cards();
+  final list = await service.category(category: .Cards);
   ref.keepAlive();
   return list;
 }

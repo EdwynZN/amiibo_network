@@ -1,7 +1,5 @@
-import 'package:amiibo_network/app/configuration/model/sort_enum.dart';
+import 'package:amiibo_network/app/configuration/model/amiibo_category_enum.dart';
 
 abstract interface class AmiiboSerieQueryService {
-  Future<List<String>> figures({String? filter, SortBy sort});
-
-  Future<List<String>> cards({String? filter, SortBy sort});
+  Future<List<String>> category({required AmiiboCategory category});
 }
