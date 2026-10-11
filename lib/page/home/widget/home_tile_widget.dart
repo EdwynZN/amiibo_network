@@ -50,9 +50,9 @@ class _AnimatedSelectionState<T extends AnimatedSelection>
           theme.cardTheme.surfaceTintColor,
           12.0,
         ),
-        width: 4.0,
+        width: 6.0,
       );
-      border = Border(left: side, right: side, top: side);
+      border = .fromBorderSide(side);
       cardShape = cardShape == null ? cardShape ?? border : border + cardShape;
     }
 
@@ -87,6 +87,7 @@ class _AnimatedSelectionState<T extends AnimatedSelection>
 
     return Card(
       elevation: 6.0,
+      margin: .zero,
       color: theme.scaffoldBackgroundColor,
       shadowColor: Colors.black12,
       borderOnForeground: true,
@@ -100,56 +101,32 @@ class _AnimatedSelectionState<T extends AnimatedSelection>
         child: Column(
           mainAxisAlignment: .end,
           textBaseline: .alphabetic,
-          children: <Widget>[
+          children: [
             Flexible(
-              child: Center(
-                child: Padding(
-                  padding: const .fromLTRB(8.0, 8.0, 8.0, 0.0),
-                  child: Hero(
-                    placeholderBuilder: (context, size, child) {
-                      final Color color = theme.brightness == .dark
-                          ? Colors.white24
-                          : Colors.black54;
-                      return ColorFiltered(
-                        colorFilter: .mode(color, .srcIn),
-                        child: child,
-                      );
-                    },
-                    transitionOnUserGestures: true,
-                    tag: asset,
-                    child: Image.asset(asset, fit: .contain),
+              child: Padding(
+                padding: const .fromLTRB(8, 8, 8, 8),
+                child: Hero(
+                  placeholderBuilder: (context, size, child) {
+                    final Color color = theme.brightness == .dark
+                        ? Colors.white24
+                        : Colors.black54;
+                    return ColorFiltered(
+                      colorFilter: .mode(color, .srcIn),
+                      child: child,
+                    );
+                  },
+                  transitionOnUserGestures: true,
+                  tag: asset,
+                  child: Image.asset(
+                    asset,
+                    fit: .contain,
+                    alignment: .bottomCenter,
                   ),
                 ),
               ),
             ),
-            const Gap(4.0),
-            SizedBox(height: 40.0, child: buttons),
-            Card(
-              borderOnForeground: true,
-              margin: .zero,
-              color: select.selected
-                  ? theme.colorScheme.secondary
-                  : theme.colorScheme.surfaceContainerHighest,
-              elevation: 12.0,
-              shape: const RoundedRectangleBorder(
-                borderRadius: .vertical(bottom: .circular(8)),
-              ),
-              child: Container(
-                alignment: .center,
-                padding: const .symmetric(vertical: 4.0, horizontal: 6.0),
-                child: Text(
-                  amiibo.name,
-                  softWrap: false,
-                  overflow: .fade,
-                  style: theme.primaryTextTheme.bodySmall?.copyWith(
-                    fontWeight: .bold,
-                    color: select.selected
-                        ? theme.colorScheme.onSecondary
-                        : theme.colorScheme.onSurfaceVariant,
-                  ),
-                ),
-              ),
-            ),
+            SizedBox(height: 32, child: buttons),
+            const Gap(4),
           ],
         ),
       ),

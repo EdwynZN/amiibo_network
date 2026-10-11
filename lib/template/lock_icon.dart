@@ -3,9 +3,7 @@ import 'package:amiibo_network/app/state/lock_provider.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:material_ui/material_ui.dart';
 
-class LockButton extends ConsumerWidget {
-  const LockButton({Key? key}) : super(key: key);
-
+class const LockButton({super.key}) extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final lockValue = ref.watch(lockProvider);
