@@ -12,7 +12,7 @@ Object? _decodeList(Map<dynamic, dynamic> map, String key) {
   return jsonDecode(source);
 }
 
-@freezed
+@Freezed(toJson: false)
 abstract class AmiiboCollectionDriftDto with _$AmiiboCollectionDriftDto {
   const factory ({
     @JsonKey(required: true, name: 'amiibo.key') required int key,
@@ -45,7 +45,7 @@ abstract class AmiiboCollectionDriftDto with _$AmiiboCollectionDriftDto {
       _$AmiiboCollectionDriftDtoFromJson(json);
 }
 
-@freezed
+@Freezed(toJson: false)
 abstract class AmiiboCollectionDetailDriftDto with _$AmiiboCollectionDetailDriftDto {
   const factory ({
     @JsonKey(required: true, name: 'amiibo.key') required int key,
@@ -81,7 +81,7 @@ abstract class AmiiboCollectionDetailDriftDto with _$AmiiboCollectionDetailDrift
       _$AmiiboCollectionDetailDriftDtoFromJson(json);
 }
 
-@freezed
+@Freezed(toJson: false)
 abstract class AmiiboBundleDriftModel with _$AmiiboBundleDriftModel {
   const AmiiboBundleDriftModel._();
 
