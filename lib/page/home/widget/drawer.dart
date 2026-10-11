@@ -170,10 +170,10 @@ class _CollectionDrawerState extends ConsumerState<CollectionDrawer> {
                                       : null,
                                 ),
                                 selectedTileColor: preferencesExtension
-                                    .ownContainer
+                                    .ownPrimary
                                     .withValues(alpha: 0.54),
                                 selectedColor:
-                                    preferencesExtension.onOwnContainer,
+                                    preferencesExtension.onOwnPrimary,
                                 selected: isOwned,
                               ),
                               const Gap(4.0),
@@ -187,10 +187,10 @@ class _CollectionDrawerState extends ConsumerState<CollectionDrawer> {
                                       : null,
                                 ),
                                 selectedTileColor: preferencesExtension
-                                    .wishContainer
+                                    .wishPrimary
                                     .withValues(alpha: 0.54),
                                 selectedColor:
-                                    preferencesExtension.onWishContainer,
+                                    preferencesExtension.onWishPrimary,
                                 selected: isWishlist,
                               ),
                               const Gap(4.0),

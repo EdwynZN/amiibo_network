@@ -41,26 +41,23 @@ class _AnimatedSelectionState<T extends AnimatedSelection>
       ),
     );
     final theme = Theme.of(context);
-    ShapeBorder? cardShape = theme.cardTheme.shape;
-    Border? border;
+    Color color = theme.scaffoldBackgroundColor;
+    InteractiveInkFeatureFactory splashFactory =
+        InkSparkle.constantTurbulenceSeedSplashFactory;
     if (select.selected) {
-      final side = BorderSide(
-        color: ElevationOverlay.applySurfaceTint(
-          theme.colorScheme.secondary,
-          theme.cardTheme.surfaceTintColor,
-          12.0,
-        ),
-        width: 6.0,
+      splashFactory = NoSplash.splashFactory;
+      color = ElevationOverlay.applySurfaceTint(
+        theme.colorScheme.secondary,
+        theme.cardTheme.surfaceTintColor,
+        12.0,
       );
-      border = .fromBorderSide(side);
-      cardShape = cardShape == null ? cardShape ?? border : border + cardShape;
     }
 
     final bool disable = widget.ignore || select.activated;
     final isWishActive = amiibo.userAttributes is WishedUserAttributes;
     const size = Size.square(48.0);
     final buttons = Padding(
-      padding: const .symmetric(horizontal: 4.0),
+      padding: const .fromLTRB(4, 0, 4, 4),
       child: Row(
         mainAxisSize: .max,
         mainAxisAlignment: .center,
@@ -88,14 +85,13 @@ class _AnimatedSelectionState<T extends AnimatedSelection>
     return Card(
       elevation: 6.0,
       margin: .zero,
-      color: theme.scaffoldBackgroundColor,
+      color: color,
       shadowColor: Colors.black12,
       borderOnForeground: true,
       clipBehavior: .antiAlias,
-      shape: cardShape,
       child: InkWell(
         splashColor: theme.colorScheme.tertiaryContainer,
-        splashFactory: InkSparkle.constantTurbulenceSeedSplashFactory,
+        splashFactory: splashFactory,
         onTap: () => _onTap(id, select.activated, asset),
         onLongPress: widget.ignore ? null : () => _onLongPress(id),
         child: Column(
@@ -125,8 +121,11 @@ class _AnimatedSelectionState<T extends AnimatedSelection>
                 ),
               ),
             ),
-            SizedBox(height: 32, child: buttons),
-            const Gap(4),
+            AnimatedOpacity(
+              duration: .new(milliseconds: 200),
+              opacity: select.selected ? 0 : 1,
+              child: SizedBox(height: 32, child: buttons),
+            ),
           ],
         ),
       ),

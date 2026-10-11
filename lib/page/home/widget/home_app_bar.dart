@@ -7,7 +7,6 @@ import 'package:amiibo_network/page/home/controller/select_provider.dart';
 import 'package:amiibo_network/page/home/model/title_search.dart';
 import 'package:amiibo_network/page/home/widget/preferences_bottomsheet.dart';
 import 'package:amiibo_network/page/home/widget/sort_bottomsheet.dart';
-import 'package:amiibo_network/page/home/widget/stat_header.dart';
 import 'package:amiibo_network/shared/generated/l10n.dart';
 import 'package:amiibo_network/shared/widget/animated_widgets.dart';
 import 'package:amiibo_network/shared/widget/dash_menu.dart';
@@ -40,9 +39,6 @@ class const SliverHomeAppBar({
     final trailing = _multipleSelection
         ? const _SelectedOptions()
         : _DefaultOptions(hasDrawer: !isTablet);
-    final bottom = isTablet
-        ? null
-        : PreferredSize(preferredSize: .fromHeight(32), child: LinearStat(32));
     return SliverFloatingBar(
       pinned: true,
       floating: true,
@@ -56,7 +52,7 @@ class const SliverHomeAppBar({
         layoutBuilder: _defaultLayoutBuilder,
         child: trailing,
       ),
-      bottom: bottom,
+      bottom: PreferredSize(preferredSize: .zero, child: const SizedBox()),
     );
   }
 }

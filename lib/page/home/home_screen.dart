@@ -237,7 +237,7 @@ class HomeScreenState extends ConsumerState<HomeScreen>
                 onSearch: _search,
               ),
               const SliverPadding(
-                padding: .symmetric(vertical: 12.0, horizontal: 4),
+                padding: .symmetric(vertical: 8, horizontal: 4),
                 sliver: HomeListBody(),
               ),
             ],

@@ -59,10 +59,10 @@ class _AnimatedRadialState
       size: widget.size ?? const Size.fromHeight(8.0),
       painter: LinearProgression(
         emptyColor: widget.showEmptyColor
-          ? theme.disabledColor
+          ? theme.scaffoldBackgroundColor.withValues(alpha: .32)
           : Colors.transparent,
-        ownColor: preferred.ownContainer,
-        wishColor: preferred.wishContainer,
+        ownColor: preferred.ownPrimary,
+        wishColor: preferred.wishPrimary,
         ownPercent: _ownPercent!.evaluate(animation),
         wishPercent: _wishPercent!.evaluate(animation),
       ),
@@ -88,37 +88,39 @@ class LinearProgression extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
-    //print(wishPercent);
     final height = size.height;
     final width = size.width;
-    final wishWidth = wishPercent * width;
-    final ownWidth = ownPercent * width;
+
     final line = Paint()
       ..color = emptyColor
-      ..style = PaintingStyle.stroke
-      ..strokeCap = StrokeCap.round
+      ..style = .fill
+      ..strokeCap = .butt
       ..strokeWidth = height;
-    canvas.drawLine(Offset.zero, Offset(width, 0), line);
+
+    final rect = Offset.zero & size;
+    final radius = Radius.circular(rect.shortestSide / 2);
+    final borderRect = RRect.fromRectAndRadius(rect, radius);
+    canvas
+      ..clipRRect(borderRect)
+      ..save()
+      ..drawRect(rect, line);
+
+    final ownWidth = ownPercent * width;
+    if (ownWidth != 0) {
+      line.color = ownColor;
+      canvas.drawRect(Offset.zero & Size(ownWidth, height), line);
+    }
+
+    final wishWidth = wishPercent * width;
     if (wishWidth != 0) {
-      final progressWishLine = Paint()
-        ..color = wishColor
-        ..style = PaintingStyle.stroke
-        ..strokeCap = StrokeCap.round
-        ..strokeWidth = height;
-      canvas.drawLine(
-        Offset(width, 0),
-        Offset(width - wishWidth, 0),
-        progressWishLine,
+      line.color = wishColor;
+      canvas.drawRect(
+        (Offset.zero & Size(wishWidth, height)).translate(ownWidth, 0),
+        line,
       );
     }
-    if (ownWidth != 0) {
-      final progressOwnLine = Paint()
-        ..color = ownColor
-        ..style = PaintingStyle.stroke
-        ..strokeCap = StrokeCap.round
-        ..strokeWidth = height;
-      canvas.drawLine(Offset.zero, Offset(ownWidth, 0), progressOwnLine);
-    }
+
+    canvas.restore();
   }
 
   @override
