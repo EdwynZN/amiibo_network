@@ -4,9 +4,11 @@ import 'package:amiibo_network/shared/data/drift_sqlite/source/drift_database.st
 import 'package:amiibo_network/shared/utils/preferences_constants.dart';
 import 'package:drift/drift.dart';
 import 'package:drift_dev/api/migrations_native.dart';
-import 'package:drift_sqflite/drift_sqflite.dart';
+import 'package:drift_flutter/drift_flutter.dart';
 import 'package:flutter/foundation.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:sqflite/sqflite.dart';
 
 part 'drift_database.g.dart';
 
@@ -18,8 +20,7 @@ part 'drift_database.g.dart';
 class AppDatabase extends _$AppDatabase {
   static const String _databaseName = "Amiibo.db";
 
-  AppDatabase([QueryExecutor? e])
-    : super(e ?? _openExecuter(AppDatabase._databaseName));
+  AppDatabase([QueryExecutor? e]) : super(e ?? _openExecuter(_databaseName));
 
   @override
   int get schemaVersion => 9;
@@ -182,12 +183,21 @@ class AppDatabase extends _$AppDatabase {
 }
 
 QueryExecutor _openExecuter(String databaseName) {
+  return driftDatabase(
+    name: databaseName,
+    native: .new(
+      isolateDebugLog: true,
+      databasePath: () async => '${(await getDatabasesPath())}/$databaseName',
+      tempDirectoryPath: () async => (await getTemporaryDirectory()).path,
+    ),
+  );
+  // the LazyDatabase util lets us find the right location for the file async.
+  /* 
   return SqfliteQueryExecutor.inDatabaseFolder(
     path: databaseName,
     logStatements: kDebugMode,
   );
-  // the LazyDatabase util lets us find the right location for the file async.
-  /* return LazyDatabase(() async {
+  return LazyDatabase(() async {
     // put the database file, called db.sqlite here, into the documents folder
     // for your app.
     String documentsDir = await getDatabasesPath();

@@ -270,7 +270,8 @@ class AmiiboCollectionDao(super.db)
       ..orderBy([OrderingTerm.desc(amiiboImages.createAt)])
       ..groupBy([amiibo.key]); */
 
-    final query = db.customSelect('''
+    final query = db.customSelect(
+      '''
       SELECT
         a.key AS "amiibo.key",
         a.id AS "amiibo.nfcId",
@@ -303,16 +304,19 @@ class AmiiboCollectionDao(super.db)
             JOIN "amiibo_bundle" ON "amiibo_bundle"."id" = "e"."amiibo_bundle_id" 
             LEFT OUTER JOIN "amiibo_bundle_user_preferences" ON "amiibo_bundle_user_preferences"."amiibo_bundle_id" = "amiibo_bundle"."id" 
             LEFT OUTER JOIN "amiibo_bundle_images" ON "amiibo_bundle_images"."amiibo_bundle_id" = "amiibo_bundle"."id"
-            WHERE "e"."amiibo_key" = a.key
+            WHERE "e"."amiibo_key" = "a"."key"
             GROUP BY "amiibo_bundle"."id"
             ORDER BY "amiibo_bundle"."id" ASC, "amiibo_bundle_images"."create_at" ASC
         ) as bundles
       FROM amiibo a
       LEFT OUTER JOIN "amiibo_user_preferences" ON "amiibo_user_preferences"."amiibo_key" = "a"."key"
       LEFT OUTER JOIN "amiibo_images" ON "amiibo_images"."amiibo_key" = "a"."key"
-      WHERE "a"."key" = $key
-      ORDER BY "amiibo_images"."created_at" ASC;
-''');
+      WHERE "a"."key" = ?
+      ORDER BY "amiibo_images"."create_at" ASC;
+''',
+      variables: [Variable.withInt(key)],
+      readsFrom: {amiiboUserPreferences, amiiboBundleUserPreferences},
+    );
 
     return query;
   }

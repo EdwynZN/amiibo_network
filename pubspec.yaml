@@ -25,7 +25,7 @@ dependencies:
   dio: ^5.11.1
   dio_cache_interceptor: ^4.0.7
   drift: ^2.35.1
-  drift_sqflite: ^2.0.1
+  drift_flutter: ^0.3.1
   dynamic_color: ^2.1.0
   equatable: ^3.0.0
   file_picker: ^13.1.0
@@ -59,7 +59,7 @@ dependencies:
   shared_preferences: ^2.5.5
   sliver_tools: ^0.2.12
   sqflite: ^2.4.4
-  sqlite3 : ^3.7.0
+  sqlite3: ^3.7.0
   url_launcher: ^6.3.3
 
 dev_dependencies:
