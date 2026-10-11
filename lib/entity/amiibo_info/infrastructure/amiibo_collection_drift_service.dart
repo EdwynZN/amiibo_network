@@ -59,6 +59,6 @@ class const DriftAmiiboCollectionQueryService(
   @override
   Stream<AmiiboDetailInfo?> fetchStreamDetail({required int amiiboId}) {
     final amiibo = _amiiboCollectionDao.streamByAmiiboKey(amiiboId);
-    return amiibo.distinct().asyncMap((amiibo) => amiibo?.toAmiiboInfo());
+    return amiibo.distinct().map((amiibo) => amiibo?.toAmiiboInfo());
   }
 }

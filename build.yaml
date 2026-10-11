@@ -32,6 +32,12 @@ targets:
             app_database: lib/shared/data/drift_sqlite/source/drift_database.dart
           test_dir: test/drift/ # (default)
           schema_dir: drift_schemas/  # (default)
+          sql:
+            dialect: sqlite
+            options:
+              modules:
+                - json1
+
 
 global_options:
   freezed:
