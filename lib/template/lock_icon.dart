@@ -8,7 +8,9 @@ class const LockButton({super.key}) extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final lockValue = ref.watch(lockProvider);
     return IconButton(
-      icon: lockValue ? const Icon(Icons.lock) : const Icon(Icons.lock_open),
+      isSelected: lockValue,
+      selectedIcon: const Icon(Icons.lock),
+      icon: const Icon(Icons.lock_open),
       onPressed: ref.read(lockProvider.notifier).toggle,
       tooltip: S.of(context).lockTooltip(lockValue),
     );

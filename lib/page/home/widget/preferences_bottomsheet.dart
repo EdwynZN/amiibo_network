@@ -3,6 +3,7 @@ import 'package:amiibo_network/shared/generated/l10n.dart';
 import 'package:amiibo_network/app/state/preferences_provider.dart';
 import 'package:amiibo_network/app/configuration/stat_ui_remote_config_provider.dart';
 import 'package:amiibo_network/shared/resources/resources.dart';
+import 'package:amiibo_network/shared/utils/gap_helper.dart';
 import 'package:amiibo_network/shared/widget/feature_disable_message_card.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:gap/gap.dart';
@@ -69,53 +70,7 @@ class _BottomSheetSort extends StatelessWidget {
               controller: scrollController,
               slivers: <Widget>[
                 SliverPadding(
-                  padding: const EdgeInsets.all(16.0),
-                  sliver: Consumer(
-                    builder: (context, ref, child) {
-                      final pref = ref.watch(personalProvider);
-                      return SliverList(
-                        delegate: SliverChildListDelegate([
-                          _CategoryTitle(title: translate.appearance),
-                          const Gap(8.0),
-                          SwitchListTile.adaptive(
-                            visualDensity: visualList,
-                            controlAffinity: ListTileControlAffinity.trailing,
-                            title: Text(
-                              translate.showPercentage,
-                              style: theme.textTheme.bodyLarge,
-                            ),
-                            inactiveTrackColor: theme.disabledColor.withValues(
-                              alpha: 0.12,
-                            ),
-                            value: pref.usePercentage,
-                            onChanged: (value) async => await ref
-                                .read(personalProvider.notifier)
-                                .toggleStat(value),
-                          ),
-                          const Gap(4.0),
-                          SwitchListTile.adaptive(
-                            visualDensity: visualList,
-                            controlAffinity: ListTileControlAffinity.trailing,
-                            title: Text(
-                              translate.showGrid,
-                              style: theme.textTheme.bodyLarge,
-                            ),
-                            inactiveTrackColor: theme.disabledColor.withValues(
-                              alpha: 0.12,
-                            ),
-                            value: pref.useGrid,
-                            onChanged: (value) async => await ref
-                                .read(personalProvider.notifier)
-                                .toggleVisualList(value),
-                          ),
-                        ]),
-                      );
-                    },
-                  ),
-                ),
-                SliverGap(16.0, color: theme.colorScheme.surface),
-                SliverPadding(
-                  padding: const EdgeInsets.all(16.0),
+                  padding: allPadding16,
                   sliver: Consumer(
                     child: _CategoryTitle(title: translate.features),
                     builder: (context, ref, child) {

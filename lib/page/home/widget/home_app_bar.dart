@@ -5,7 +5,7 @@ import 'package:amiibo_network/entity/amiibo_info/model/amiibo_user_collection_a
 import 'package:amiibo_network/page/detail/widget/owned_bottom_sheet.dart';
 import 'package:amiibo_network/page/home/controller/select_provider.dart';
 import 'package:amiibo_network/page/home/model/title_search.dart';
-import 'package:amiibo_network/page/home/widget/preferences_bottomsheet.dart';
+import 'package:amiibo_network/page/home/widget/amiibo_view_type_widget.dart';
 import 'package:amiibo_network/page/home/widget/sort_bottomsheet.dart';
 import 'package:amiibo_network/shared/generated/l10n.dart';
 import 'package:amiibo_network/shared/widget/animated_widgets.dart';
@@ -27,7 +27,7 @@ class const SliverHomeAppBar({
     List<Widget> previousChildren,
   ) {
     List<Widget> children = previousChildren;
-    if (currentChild != null) children = children.toList()..add(currentChild);
+    if (currentChild != null) children = [...children, currentChild];
     return Stack(children: children, alignment: Alignment.centerRight);
   }
 
@@ -132,15 +132,15 @@ class _Leading({
 }
 
 class const _DefaultOptions({required final bool hasDrawer})
-    extends ConsumerWidget {
+    extends StatelessWidget {
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget build(BuildContext context) {
     return Row(
-      mainAxisSize: MainAxisSize.min,
-      mainAxisAlignment: MainAxisAlignment.end,
+      mainAxisSize: .min,
+      mainAxisAlignment: .end,
       children: <Widget>[
         const LockButton(),
-        const PreferencesButton(),
+        const AmiiboViewTypeWidget(),
         const SortCollection(),
         if (hasDrawer)
           IconButton(

@@ -121,13 +121,6 @@ class _AppearanceListWidget extends ConsumerWidget {
             },
           ),
           _SwitchListSettings(
-            title: translate.showPercentage,
-            icon: const Icon(Icons.percent),
-            value: pref.usePercentage,
-            onChanged: (value) async =>
-                await ref.read(personalProvider.notifier).toggleStat(value),
-          ),
-          _SwitchListSettings(
             title: translate.showGrid,
             icon: const Icon(Icons.grid_view_outlined),
             value: pref.useGrid,
