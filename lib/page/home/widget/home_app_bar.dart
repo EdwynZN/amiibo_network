@@ -8,6 +8,7 @@ import 'package:amiibo_network/page/home/model/title_search.dart';
 import 'package:amiibo_network/page/home/widget/amiibo_view_type_widget.dart';
 import 'package:amiibo_network/page/home/widget/sort_bottomsheet.dart';
 import 'package:amiibo_network/shared/generated/l10n.dart';
+import 'package:amiibo_network/shared/utils/gap_helper.dart';
 import 'package:amiibo_network/shared/widget/animated_widgets.dart';
 import 'package:amiibo_network/shared/widget/dash_menu.dart';
 import 'package:amiibo_network/shared/widget/floating_bar.dart';
@@ -39,6 +40,10 @@ class const SliverHomeAppBar({
     final trailing = _multipleSelection
         ? const _SelectedOptions()
         : _DefaultOptions(hasDrawer: !isTablet);
+    final bottom = PreferredSize(
+      preferredSize: .fromHeight(44),
+      child: _FilterButtons(),
+    );
     return SliverFloatingBar(
       pinned: true,
       floating: true,
@@ -52,7 +57,22 @@ class const SliverHomeAppBar({
         layoutBuilder: _defaultLayoutBuilder,
         child: trailing,
       ),
-      bottom: PreferredSize(preferredSize: .zero, child: const SizedBox()),
+      bottom: bottom,
+    );
+  }
+}
+
+class const _FilterButtons() extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      height: 44,
+      padding: verticalPadding4,
+      child: const Row(
+        mainAxisAlignment: .end,
+        spacing: 8,
+        children: [const SortCollection(), const AmiiboViewTypeWidget()],
+      ),
     );
   }
 }
@@ -140,8 +160,6 @@ class const _DefaultOptions({required final bool hasDrawer})
       mainAxisAlignment: .end,
       children: <Widget>[
         const LockButton(),
-        const AmiiboViewTypeWidget(),
-        const SortCollection(),
         if (hasDrawer)
           IconButton(
             onPressed: () => DashMenu.of(context).openRightDrawer(),

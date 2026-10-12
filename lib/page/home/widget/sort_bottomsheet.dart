@@ -3,29 +3,79 @@ import 'package:amiibo_network/app/configuration/query_provider.dart';
 import 'package:amiibo_network/app/state/preferences_provider.dart';
 import 'package:amiibo_network/shared/generated/l10n.dart';
 import 'package:amiibo_network/shared/resources/resources.dart';
+import 'package:amiibo_network/shared/utils/gap_helper.dart';
 import 'package:amiibo_network/shared/widget/implicit_sort_direction_widget.dart';
-import 'package:material_ui/material_ui.dart';
 import 'package:gap/gap.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:sliver_tools/sliver_tools.dart';
 
-class SortCollection extends StatelessWidget {
-  const SortCollection({Key? key}) : super(key: key);
-
+class const SortCollection({super.key}) extends ConsumerWidget {
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final sortBy = ref.watch(sortByProvider);
+    final orderBy = ref.watch(orderCategoryProvider);
     final S translate = S.of(context);
-    return IconButton(
-      onPressed: () async {
-        showModalBottomSheet(
-          context: context,
-          isScrollControlled: true,
-          elevation: 0.0,
-          builder: (context) => const _BottomSheetSort(),
-        );
-      },
-      icon: const Icon(Icons.sort_by_alpha),
-      tooltip: translate.sort,
+    final text = switch (orderBy) {
+      .NA => translate.na,
+      .EU => translate.eu,
+      .JP => translate.jp,
+      .AU => translate.au,
+      .Name => translate.sortName,
+      .Owned => translate.owned,
+      .Wishlist => translate.wished,
+      .CardNumber => translate.cardNumber,
+      .Type => translate.amiibo_type,
+      _ => translate.sortName,
+    };
+    return Card(
+      margin: .zero,
+      clipBehavior: .antiAlias,
+      shape: const StadiumBorder(),
+      child: ConstrainedBox(
+        constraints: .new(minHeight: 48),
+        child: Row(
+          crossAxisAlignment: .center,
+          mainAxisAlignment: .center,
+          mainAxisSize: .min,
+          children: [
+            GestureDetector(
+              onTap: () {
+                final queryNotifier = ref.read(queryProvider.notifier);
+                final SortBy sort = sortBy == .ASC ? .DESC : .ASC;
+                queryNotifier.changeSortAndOrder(orderBy, sort);
+              },
+              child: Padding(
+                padding: horizontalPadding12,
+                child: ImplicitDirectionIconButton(direction: sortBy),
+              ),
+            ),
+            ConstrainedBox(
+              constraints: .tightFor(height: 32),
+              child: VerticalDivider(
+                width: 0,
+                thickness: 1,
+                color: Theme.of(context).scaffoldBackgroundColor,
+              ),
+            ),
+            GestureDetector(
+              onTap: () async {
+                showModalBottomSheet(
+                  context: context,
+                  isScrollControlled: true,
+                  elevation: 0.0,
+                  builder: (context) => const _BottomSheetSort(),
+                );
+              },
+              child: Container(
+                constraints: .new(minWidth: 92),
+                padding: horizontalPadding16,
+                child: Text(text, textAlign: .center),
+              ),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }
@@ -79,17 +129,16 @@ class _BottomSheetSort extends StatelessWidget {
                             right: 16,
                           ),
                           child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: <Widget>[
+                            mainAxisAlignment: .spaceBetween,
+                            children: [
                               Text(
                                 translate.sort,
                                 style: Theme.of(context).textTheme.titleLarge,
                               ),
                               TextButton(
                                 style: TextButton.styleFrom(
-                                  tapTargetSize:
-                                      MaterialTapTargetSize.shrinkWrap,
-                                  visualDensity: VisualDensity(vertical: -0.5),
+                                  tapTargetSize: .shrinkWrap,
+                                  visualDensity: .new(vertical: -0.5),
                                 ),
                                 onPressed: () => Navigator.pop(context),
                                 child: Text(translate.done),
@@ -97,7 +146,7 @@ class _BottomSheetSort extends StatelessWidget {
                             ],
                           ),
                         ),
-                        const Gap(8.0),
+                        gap8,
                         const Divider(
                           height: 0.0,
                           indent: 16.0,

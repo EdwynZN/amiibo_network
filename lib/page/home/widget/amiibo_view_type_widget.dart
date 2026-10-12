@@ -8,7 +8,7 @@ class const AmiiboViewTypeWidget() extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final useGrid = ref.watch(personalProvider.select((s) => s.useGrid));
     final translate = S.of(context);
-    return IconButton(
+    return IconButton.filledTonal(
       style: .new(sizeVariant: .small, shapeVariant: .round),
       visualDensity: .compact,
       tooltip: translate.showGrid,
