@@ -305,6 +305,10 @@
   "@saveCollection": {
     "description": "Button text for saving collection image"
   },
+  "collection": "Collection",
+  "@collection": {
+    "description": "Settings section title for app collection"
+  },
   "saveCollectionSubtitle": "Create a picture of your collection",
   "@saveCollectionSubtitle": {
     "description": "Subtitle for saving collection option"

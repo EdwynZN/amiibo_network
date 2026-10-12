@@ -88,6 +88,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "changelog": MessageLookupByLibrary.simpleMessage("Changelog"),
     "changelogSubtitle": MessageLookupByLibrary.simpleMessage("What\'s new"),
     "character": m2,
+    "collection": MessageLookupByLibrary.simpleMessage("Collection"),
     "collectionReset": MessageLookupByLibrary.simpleMessage("Collection reset"),
     "color_mode": MessageLookupByLibrary.simpleMessage("Look and feel"),
     "console_3DS_platform": MessageLookupByLibrary.simpleMessage("3DS"),

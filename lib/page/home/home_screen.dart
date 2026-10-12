@@ -1,40 +1,24 @@
 import 'package:amiibo_network/app/configuration/analytics_provider.dart';
 import 'package:amiibo_network/app/configuration/model/search_result.dart';
 import 'package:amiibo_network/app/configuration/query_provider.dart';
-import 'package:amiibo_network/app/configuration/screenshot_service.dart';
 import 'package:amiibo_network/app/state/collection/amiibo_user_collection_notifier.dart';
-import 'package:amiibo_network/app/state/lock_provider.dart';
-import 'package:amiibo_network/app/state/preferences_provider.dart';
-import 'package:amiibo_network/app/state/theme/service/theme_mode_scheme_repository.dart';
-import 'package:amiibo_network/entity/amiibo_info/model/amiibo_user_collection_attributes.dart';
-import 'package:amiibo_network/page/detail/widget/owned_bottom_sheet.dart';
 import 'package:amiibo_network/page/home/controller/select_provider.dart';
 import 'package:amiibo_network/page/home/controller/stats_amiibo_provider.dart';
-import 'package:amiibo_network/page/home/model/title_search.dart';
 import 'package:amiibo_network/page/home/widget/drawer.dart';
-import 'package:amiibo_network/page/home/widget/empty_home_widget.dart';
-import 'package:amiibo_network/page/home/widget/home_tile_widget.dart';
+import 'package:amiibo_network/page/home/widget/home_app_bar.dart';
+import 'package:amiibo_network/page/home/widget/home_list_body.dart';
 import 'package:amiibo_network/page/home/widget/list_stats.dart';
-import 'package:amiibo_network/page/home/widget/lock_icon.dart';
-import 'package:amiibo_network/page/home/widget/preferences_bottomsheet.dart';
-import 'package:amiibo_network/page/home/widget/sort_bottomsheet.dart';
-import 'package:amiibo_network/page/home/widget/stat_header.dart';
+import 'package:amiibo_network/page/home/widget/screenshot_fab_widget.dart';
 import 'package:amiibo_network/page/search/search_screen.dart';
 import 'package:amiibo_network/shared/generated/l10n.dart';
 import 'package:amiibo_network/shared/routes/route_transitions.dart';
-import 'package:amiibo_network/shared/service/storage.dart';
 import 'package:amiibo_network/shared/utils/preferences_constants.dart';
 import 'package:amiibo_network/shared/utils/tablet_utils.dart';
-import 'package:amiibo_network/shared/widget/animated_widgets.dart';
 import 'package:amiibo_network/shared/widget/dash_menu.dart';
-import 'package:amiibo_network/shared/widget/floating_bar.dart';
-import 'package:amiibo_network/shared/widget/loading_grid_shimmer.dart';
 import 'package:amiibo_network/shared/widget/markdown_widget.dart';
 import 'package:flutter/rendering.dart';
-import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:gap/gap.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -52,14 +36,6 @@ class HomeScreenState extends ConsumerState<HomeScreen>
   late S translate;
   late MaterialLocalizations localizations;
   late bool isTablet;
-  static Widget _defaultLayoutBuilder(
-    Widget? currentChild,
-    List<Widget> previousChildren,
-  ) {
-    List<Widget> children = previousChildren;
-    if (currentChild != null) children = children.toList()..add(currentChild);
-    return Stack(children: children, alignment: Alignment.centerRight);
-  }
 
   void _restartAnimation() {
     if (!_controller.hasClients) return;
@@ -168,7 +144,7 @@ class HomeScreenState extends ConsumerState<HomeScreen>
 
     final Widget statWidget = Material(
       key: const ValueKey<String>('ColumnStats'),
-      type: MaterialType.card,
+      type: .card,
       color: theme.colorScheme.surface,
       surfaceTintColor: theme.colorScheme.surfaceTint,
       elevation: 2.0,
@@ -190,7 +166,7 @@ class HomeScreenState extends ConsumerState<HomeScreen>
             }),
           );
           return Stack(
-            fit: StackFit.passthrough,
+            fit: .passthrough,
             children: [
               child!,
               if (hasStats)
@@ -198,9 +174,9 @@ class HomeScreenState extends ConsumerState<HomeScreen>
                   right: 0.0,
                   bottom: 0.0,
                   child: Container(
-                    margin: const EdgeInsets.only(right: 16.0, bottom: 16.0),
-                    alignment: Alignment.centerRight,
-                    child: _FAB(
+                    margin: const .only(right: 16.0, bottom: 16.0),
+                    alignment: .centerRight,
+                    child: ScreenshotFabWidget(
                       animation: const AlwaysStoppedAnimation(1.0),
                       isAmiibo: false,
                     ),
@@ -240,59 +216,32 @@ class HomeScreenState extends ConsumerState<HomeScreen>
                 ? CollectionDrawer(restart: _restartAnimation)
                 : null,
             body: innerBody,
-            floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
+            floatingActionButtonLocation: .endFloat,
             floatingActionButton: hasAmiibos
-                ? _FAB(animation: _animationController, isAmiibo: true)
+                ? ScreenshotFabWidget(
+                    animation: _animationController,
+                    isAmiibo: true,
+                  )
                 : null,
           );
         },
-        child: HookBuilder(
-          builder: (context) {
-            final _multipleSelection = ref.watch(
-              selectProvider.select<bool>((value) => value.isNotEmpty),
-            );
-            return Scrollbar(
-              controller: _controller,
-              interactive: true,
-              child: CustomScrollView(
-                controller: _controller,
-                slivers: <Widget>[
-                  SliverFloatingBar(
-                    pinned: true,
-                    floating: true,
-                    forward: _multipleSelection,
-                    snap: true,
-                    leading: _Leading(
-                      isClose: _multipleSelection,
-                      onClose: _cancelSelection,
-                    ),
-                    title: const _TitleAppBar(),
-                    onTap: _multipleSelection ? null : _search,
-                    trailing: AnimatedSwitcher(
-                      duration: const Duration(milliseconds: 250),
-                      layoutBuilder: _defaultLayoutBuilder,
-                      child: _multipleSelection
-                          ? const _SelectedOptions()
-                          : _DefaultOptions(hasDrawer: !isTablet),
-                    ),
-                    bottom: isTablet
-                        ? null
-                        : PreferredSize(
-                            preferredSize: Size.fromHeight(32),
-                            child: LinearStat(32),
-                          ),
-                  ),
-                  const SliverPadding(
-                    padding: EdgeInsets.symmetric(
-                      vertical: 12.0,
-                      horizontal: 4,
-                    ),
-                    sliver: _AmiiboListWidget(),
-                  ),
-                ],
+        child: Scrollbar(
+          controller: _controller,
+          interactive: true,
+          child: CustomScrollView(
+            controller: _controller,
+            slivers: [
+              SliverHomeAppBar(
+                isTablet: isTablet,
+                onClose: _cancelSelection,
+                onSearch: _search,
               ),
-            );
-          },
+              const SliverPadding(
+                padding: .symmetric(vertical: 8, horizontal: 4),
+                sliver: HomeListBody(),
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -301,7 +250,7 @@ class HomeScreenState extends ConsumerState<HomeScreen>
       return Row(
         children: [
           Expanded(child: body),
-          SizedBox(width: 350.0, child: statWidget),
+          SizedBox(width: 350, child: statWidget),
         ],
       );
     }
@@ -310,371 +259,6 @@ class HomeScreenState extends ConsumerState<HomeScreen>
       leftDrawer: CollectionDrawer(restart: _restartAnimation),
       rightDrawer: statWidget,
       body: body,
-    );
-  }
-}
-
-class _AmiiboListWidget extends HookConsumerWidget {
-  const _AmiiboListWidget({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final ignore = ref.watch(lockProvider);
-    final amiiboList = ref.watch(amiiboUserCollectionProvider);
-    final controller = useAnimationController(
-      duration: const Duration(seconds: 1),
-      animationBehavior: .preserve,
-    );
-    useEffect(() {
-      if (amiiboList.isLoading && amiiboList.value == null)
-        controller.repeat();
-      else
-        controller.forward();
-      return null;
-    }, [amiiboList]);
-    return amiiboList.maybeWhen(
-      skipLoadingOnRefresh: true,
-      skipLoadingOnReload: true,
-      error: (_, __) => const SliverToBoxAdapter(),
-      orElse: () {
-        final data = amiiboList.value;
-        if (data != null && data.isEmpty) return const EmptyHome();
-        final useGrid = ref.watch(personalProvider.select((p) => p.useGrid));
-        if (!useGrid) {
-          return SliverList(
-            delegate: SliverChildBuilderDelegate((BuildContext _, int index) {
-              final Widget child;
-              if (data != null) {
-                final amiibo = data[index];
-                child = AnimatedSelectedListTile(
-                  amiibo: amiibo,
-                  ignore: ignore,
-                );
-              } else {
-                child = ShimmerCard(listenable: controller, isGrid: false);
-              }
-              return ConstrainedBox(
-                constraints: const .new(maxHeight: 104.0, minHeight: 72.0),
-                child: AnimatedSwitcher(
-                  duration: const .new(seconds: 1),
-                  child: child,
-                ),
-              );
-            }, childCount: data != null ? data.length : null),
-          );
-        }
-
-        const grid = SliverGridDelegateWithMaxCrossAxisExtent(
-          maxCrossAxisExtent: 160.0,
-          childAspectRatio: 0.78,
-          mainAxisSpacing: 8.0,
-        );
-        return SliverGrid(
-          gridDelegate: grid,
-          delegate: SliverChildBuilderDelegate((BuildContext _, int index) {
-            late final Widget child;
-            if (data != null) {
-              final amiibo = data[index];
-              child = AnimatedSelection(
-                key: ValueKey<int?>(amiibo.id),
-                ignore: ignore,
-                amiibo: amiibo,
-              );
-            } else {
-              child = ShimmerCard(listenable: controller);
-            }
-            return AnimatedSwitcher(
-              duration: const .new(seconds: 1),
-              child: child,
-            );
-          }, childCount: data != null ? data.length : null),
-        );
-      },
-    );
-  }
-}
-
-class _Leading extends HookConsumerWidget {
-  final bool isClose;
-  final VoidCallback onClose;
-
-  const _Leading({required this.isClose, required this.onClose});
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final localizations = MaterialLocalizations.of(context);
-    final searchSelect = ref.watch(
-      queryProvider.select<bool>((q) => q.searchAttributes != null),
-    );
-    final isForward = searchSelect || isClose;
-    final effectiveSearch = searchSelect && !isClose;
-    final HeroFlightShuttleBuilder flightShuttleBuilder =
-        useCallback<HeroFlightShuttleBuilder>((
-          BuildContext flightContext,
-          Animation<double> animation,
-          HeroFlightDirection flightDirection,
-          BuildContext fromHeroContext,
-          BuildContext toHeroContext,
-        ) {
-          if (isForward) {
-            return AnimatedBuilder(
-              animation: animation,
-              child: flightDirection == HeroFlightDirection.push
-                  ? const Icon(Icons.arrow_back)
-                  : const Icon(Icons.close),
-              builder: (context, child) {
-                return Opacity(
-                  opacity: flightDirection == HeroFlightDirection.push
-                      ? animation.value
-                      : 1 - animation.value,
-                  child: child,
-                );
-              },
-            );
-          }
-
-          return AnimatedIcon(
-            icon: AnimatedIcons.menu_arrow,
-            progress: animation,
-          );
-        }, [isForward]);
-    final VoidCallback onPressed = useCallback(() {
-      if (effectiveSearch) {
-        ref.read(queryProvider.notifier).restart();
-      } else if (isClose) {
-        onClose();
-      } else {
-        final dashMenu = DashMenu.maybeOf(context);
-        if (dashMenu != null) {
-          dashMenu.openDrawer();
-        } else {
-          Scaffold.of(context).openDrawer();
-        }
-      }
-    }, [effectiveSearch, isClose, onClose]);
-    final icon = ImplicitIcon(key: const Key('Menu'), forward: isForward);
-    return IconButton(
-      icon: Hero(
-        key: const Key('HeroMenu'),
-        flightShuttleBuilder: flightShuttleBuilder,
-        tag: 'MenuButton',
-        child: icon,
-      ),
-      tooltip: effectiveSearch
-          ? localizations.closeButtonTooltip
-          : isClose
-          ? localizations.cancelButtonLabel
-          : localizations.openAppDrawerTooltip,
-      onPressed: onPressed,
-    );
-  }
-}
-
-class _DefaultOptions extends ConsumerWidget {
-  final bool hasDrawer;
-
-  const _DefaultOptions({Key? key, required this.hasDrawer}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    return Row(
-      mainAxisSize: MainAxisSize.min,
-      mainAxisAlignment: MainAxisAlignment.end,
-      children: <Widget>[
-        const LockButton(),
-        const PreferencesButton(),
-        const SortCollection(),
-        if (hasDrawer)
-          IconButton(
-            onPressed: () => DashMenu.of(context).openRightDrawer(),
-            tooltip: S.of(context).stats,
-            icon: const Icon(Icons.auto_graph_outlined),
-          ),
-      ],
-    );
-  }
-}
-
-class _TitleAppBar extends ConsumerWidget {
-  const _TitleAppBar({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final MaterialLocalizations localizations = MaterialLocalizations.of(
-      context,
-    );
-    final S translate = S.of(context);
-    final searchTitle = ref.watch(titleProvider);
-    final Widget child;
-    final InlineSpan title = TextSpan(
-      text: translate.category(searchTitle.title),
-    );
-    InlineSpan? categorySpan;
-    if (searchTitle is TitleSearchCategory) {
-      final theme = Theme.of(context);
-      final size = theme.appBarTheme.toolbarTextStyle?.fontSize;
-      final foreground = theme.colorScheme.onSecondaryContainer;
-      categorySpan = WidgetSpan(
-        alignment: PlaceholderAlignment.middle,
-        baseline: TextBaseline.ideographic,
-        child: Card(
-          elevation: 12.0,
-          margin: const EdgeInsets.only(right: 4.0),
-          shape: RoundedRectangleBorder(
-            borderRadius: const BorderRadius.all(Radius.circular(4.0)),
-            side: BorderSide(color: theme.primaryColor),
-          ),
-          child: Padding(
-            padding: const EdgeInsets.symmetric(vertical: 2.0, horizontal: 4.0),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Icon(Icons.search, size: size, color: foreground),
-                const SizedBox(width: 2.0),
-                Text(
-                  translate.searchCategory(searchTitle.searchCategory),
-                  style: TextStyle(fontSize: size, color: foreground),
-                ),
-              ],
-            ),
-          ),
-        ),
-      );
-    }
-    final message = switch (searchTitle) {
-      TitleCount(title: final title) => localizations.selectedRowCountTitle(
-        num.parse(title) as int,
-      ),
-      TitleSearchCategory() => localizations.searchFieldLabel,
-      TitleCategory(category: final category) => translate.category(category),
-    };
-    child = Text.rich(
-      categorySpan != null ? TextSpan(children: [categorySpan, title]) : title,
-    );
-    return Tooltip(message: message, child: child);
-  }
-}
-
-class _SelectedOptions extends ConsumerWidget {
-  const _SelectedOptions({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final S translate = S.of(context);
-    return Row(
-      mainAxisSize: MainAxisSize.min,
-      mainAxisAlignment: MainAxisAlignment.end,
-      children: <Widget>[
-        IconButton(
-          icon: const Icon(Icons.remove),
-          onPressed: () => ref
-              .read(selectProvider.notifier)
-              .updateAmiibos(const UserAttributes.none()),
-          tooltip: translate.removeTooltip,
-        ),
-        IconButton(
-          icon: const Icon(iconOwned),
-          onPressed: () async {
-            final theme = Theme.of(context);
-            final showOwnerCategories = ref.read(ownTypesCategoryProvider);
-            final UserAttributes? newAttributes;
-            if (showOwnerCategories) {
-              newAttributes = await showModalBottomSheet<UserAttributes>(
-                context: context,
-                backgroundColor: theme.colorScheme.surface,
-                useSafeArea: false,
-                elevation: 4.0,
-                enableDrag: false,
-                constraints: const BoxConstraints(maxWidth: 400.0),
-                isScrollControlled: true,
-                builder: (context) => const OwnedButtomSheet(),
-              );
-            } else {
-              newAttributes = UserAttributes.owned();
-            }
-
-            if (newAttributes == null) {
-              return;
-            }
-            ref.read(selectProvider.notifier).updateAmiibos(newAttributes);
-          },
-          tooltip: translate.ownTooltip,
-        ),
-        IconButton(
-          icon: const Icon(iconWished),
-          onPressed: () => ref
-              .read(selectProvider.notifier)
-              .updateAmiibos(const UserAttributes.wished()),
-          tooltip: translate.wishTooltip,
-        ),
-      ],
-    );
-  }
-}
-
-class _FAB extends ConsumerWidget {
-  final bool isAmiibo;
-  final Animation<double> scale;
-  final Animation<Offset> slide;
-
-  _FAB({required Animation<double> animation, required this.isAmiibo})
-    : scale = Tween<double>(begin: 0.25, end: 1.0).animate(
-        CurvedAnimation(
-          parent: animation,
-          curve: Interval(0.25, 1.0, curve: Curves.decelerate),
-        ),
-      ),
-      slide = Tween<Offset>(
-        begin: const Offset(0.0, 2.0),
-        end: Offset.zero,
-      ).animate(CurvedAnimation(parent: animation, curve: Interval(0.0, 1)));
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final S translate = S.of(context);
-    final theme = Theme.of(context);
-    final isLoading = ref.watch(
-      screenshotProvider.select((value) => value is AsyncLoading),
-    );
-    final fab = FloatingActionButton(
-      elevation: 0.0,
-      child: isLoading
-          ? ConstrainedBox(
-              constraints: BoxConstraints.loose(const Size.square(24.0)),
-              child: LoadingAnimationWidget.inkDrop(
-                color:
-                    theme.floatingActionButtonTheme.foregroundColor ??
-                    theme.colorScheme.onSecondaryContainer,
-                size: 24,
-              ),
-            )
-          : const Icon(Icons.save),
-      tooltip: translate.saveCollection,
-      heroTag: 'MenuFAB${isAmiibo ? 'Amiibo' : 'Stats'}',
-      onPressed: () async {
-        final _screenshotProvider = ref.watch(screenshotProvider.notifier);
-        final scaffoldState = ScaffoldMessenger.of(context);
-        if (!(await permissionGranted(scaffoldState))) return;
-        final isLoading = _screenshotProvider.isLoading;
-        final message = isLoading
-            ? translate.recordMessage
-            : translate.savingCollectionMessage;
-        scaffoldState
-          ..hideCurrentSnackBar()
-          ..showSnackBar(SnackBar(content: Text(message)));
-        if (isLoading) return;
-        if (isAmiibo) {
-          await _screenshotProvider.saveAmiibos(context);
-        } else {
-          await _screenshotProvider.saveStats(context);
-        }
-      },
-    );
-    return SlideTransition(
-      position: slide,
-      child: ScaleTransition(scale: scale, child: fab),
     );
   }
 }

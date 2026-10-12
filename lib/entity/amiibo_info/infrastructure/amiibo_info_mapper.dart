@@ -67,6 +67,7 @@ extension AmiibroInfoDriftMapper on AmiiboCollectionDriftDto {
       name: name,
       image: image,
       series: amiiboSeries,
+      cardNumber: cardNumber,
       userAttributes: userAttributes,
     );
   }

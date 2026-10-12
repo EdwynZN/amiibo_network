@@ -1,8 +1,7 @@
-import 'package:amiibo_network/entity/amiibo_info/model/stat.dart';
 import 'package:amiibo_network/page/home/controller/stats_amiibo_provider.dart';
-import 'package:amiibo_network/page/home/widget/single_stat.dart';
-import 'package:material_ui/material_ui.dart';
+import 'package:amiibo_network/page/home/widget/single_stat_progress_card.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:sliver_tools/sliver_tools.dart';
 
 class HomeBodyStats extends ConsumerWidget {
@@ -11,27 +10,27 @@ class HomeBodyStats extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final snapshot = ref.watch(statsProvider);
-    if (snapshot is AsyncData<List<Stat>>) {
-      if (snapshot.value.length <= 1)
-        return SliverToBoxAdapter();
-      final Stat generalStats = snapshot.value.first;
-      final List<Stat> stats = snapshot.value.sublist(1);
+    if (snapshot case AsyncData(:final value)) {
+      if (value.length <= 1) return SliverToBoxAdapter();
+      final generalStats = value.first;
+      final stats = value.sublist(1);
       return MultiSliver(
         children: [
           if (stats.length > 1)
             SliverToBoxAdapter(
-              key: Key('Amiibo Network'),
-              child: SingleStat(stat: generalStats),
+              key: const Key('Amiibo Network'),
+              child: SingleStatProgressCard(generalStats),
             ),
           SliverLayoutBuilder(
             builder: (context, constraints) {
               return (constraints.crossAxisExtent <= 600)
                   ? SliverList(
                       delegate: SliverChildBuilderDelegate(
-                        (BuildContext context, int index) => SingleStat(
-                          key: ValueKey(index),
-                          stat: stats[index],
-                        ),
+                        (BuildContext context, int index) =>
+                            SingleStatProgressCard(
+                              stats[index],
+                              key: ValueKey(index),
+                            ),
                         semanticIndexOffset: 1,
                         childCount: stats.length,
                       ),
@@ -43,10 +42,11 @@ class HomeBodyStats extends ConsumerWidget {
                         mainAxisExtent: 180,
                       ),
                       delegate: SliverChildBuilderDelegate(
-                        (BuildContext context, int index) => SingleStat(
-                          key: ValueKey(index),
-                          stat: stats[index],
-                        ),
+                        (BuildContext context, int index) =>
+                            SingleStatProgressCard(
+                              stats[index],
+                              key: ValueKey(index),
+                            ),
                         semanticIndexOffset: 1,
                         childCount: stats.length,
                       ),

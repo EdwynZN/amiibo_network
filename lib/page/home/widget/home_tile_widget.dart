@@ -3,7 +3,9 @@ import 'package:amiibo_network/entity/amiibo_info/model/amiibo_info.dart';
 import 'package:amiibo_network/page/detail/widget/amiibo_button_toggle.dart';
 import 'package:amiibo_network/page/home/controller/select_provider.dart';
 import 'package:amiibo_network/page/home/model/selection.dart';
+import 'package:amiibo_network/shared/generated/l10n.dart';
 import 'package:amiibo_network/shared/utils/amiibo_asset_util.dart';
+import 'package:amiibo_network/shared/utils/gap_helper.dart';
 import 'package:gap/gap.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -41,26 +43,23 @@ class _AnimatedSelectionState<T extends AnimatedSelection>
       ),
     );
     final theme = Theme.of(context);
-    ShapeBorder? cardShape = theme.cardTheme.shape;
-    Border? border;
+    Color color = theme.scaffoldBackgroundColor;
+    InteractiveInkFeatureFactory splashFactory =
+        InkSparkle.constantTurbulenceSeedSplashFactory;
     if (select.selected) {
-      final side = BorderSide(
-        color: ElevationOverlay.applySurfaceTint(
-          theme.colorScheme.secondary,
-          theme.cardTheme.surfaceTintColor,
-          12.0,
-        ),
-        width: 4.0,
+      splashFactory = NoSplash.splashFactory;
+      color = ElevationOverlay.applySurfaceTint(
+        theme.colorScheme.secondary,
+        theme.cardTheme.surfaceTintColor,
+        12.0,
       );
-      border = Border(left: side, right: side, top: side);
-      cardShape = cardShape == null ? cardShape ?? border : border + cardShape;
     }
 
     final bool disable = widget.ignore || select.activated;
     final isWishActive = amiibo.userAttributes is WishedUserAttributes;
     const size = Size.square(48.0);
     final buttons = Padding(
-      padding: const .symmetric(horizontal: 4.0),
+      padding: const .fromLTRB(4, 0, 4, 4),
       child: Row(
         mainAxisSize: .max,
         mainAxisAlignment: .center,
@@ -87,24 +86,25 @@ class _AnimatedSelectionState<T extends AnimatedSelection>
 
     return Card(
       elevation: 6.0,
-      color: theme.scaffoldBackgroundColor,
+      margin: .zero,
+      color: color,
       shadowColor: Colors.black12,
       borderOnForeground: true,
       clipBehavior: .antiAlias,
-      shape: cardShape,
       child: InkWell(
         splashColor: theme.colorScheme.tertiaryContainer,
-        splashFactory: InkSparkle.constantTurbulenceSeedSplashFactory,
+        splashFactory: splashFactory,
         onTap: () => _onTap(id, select.activated, asset),
         onLongPress: widget.ignore ? null : () => _onLongPress(id),
-        child: Column(
-          mainAxisAlignment: .end,
-          textBaseline: .alphabetic,
-          children: <Widget>[
-            Flexible(
-              child: Center(
+        child: Padding(
+          padding: verticalPadding8,
+          child: Column(
+            mainAxisAlignment: .end,
+            textBaseline: .alphabetic,
+            children: [
+              Flexible(
                 child: Padding(
-                  padding: const .fromLTRB(8.0, 8.0, 8.0, 0.0),
+                  padding: horizontalPadding8,
                   child: Hero(
                     placeholderBuilder: (context, size, child) {
                       final Color color = theme.brightness == .dark
@@ -117,40 +117,22 @@ class _AnimatedSelectionState<T extends AnimatedSelection>
                     },
                     transitionOnUserGestures: true,
                     tag: asset,
-                    child: Image.asset(asset, fit: .contain),
+                    child: Image.asset(
+                      asset,
+                      fit: .contain,
+                      alignment: .bottomCenter,
+                    ),
                   ),
                 ),
               ),
-            ),
-            const Gap(4.0),
-            SizedBox(height: 40.0, child: buttons),
-            Card(
-              borderOnForeground: true,
-              margin: .zero,
-              color: select.selected
-                  ? theme.colorScheme.secondary
-                  : theme.colorScheme.surfaceContainerHighest,
-              elevation: 12.0,
-              shape: const RoundedRectangleBorder(
-                borderRadius: .vertical(bottom: .circular(8)),
+              gap4,
+              AnimatedOpacity(
+                duration: .new(milliseconds: 200),
+                opacity: select.selected ? 0 : 1,
+                child: SizedBox(height: 32, child: buttons),
               ),
-              child: Container(
-                alignment: .center,
-                padding: const .symmetric(vertical: 4.0, horizontal: 6.0),
-                child: Text(
-                  amiibo.name,
-                  softWrap: false,
-                  overflow: .fade,
-                  style: theme.primaryTextTheme.bodySmall?.copyWith(
-                    fontWeight: .bold,
-                    color: select.selected
-                        ? theme.colorScheme.onSecondary
-                        : theme.colorScheme.onSurfaceVariant,
-                  ),
-                ),
-              ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
@@ -171,6 +153,7 @@ class _AnimatedSelectedListTileState
     extends _AnimatedSelectionState<AnimatedSelectedListTile> {
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     final amiibo = widget.amiibo;
     final id = widget.amiibo.id;
     final select = ref.watch(
@@ -178,75 +161,117 @@ class _AnimatedSelectedListTileState
         (cb) => Selection(activated: cb.isNotEmpty, selected: cb.contains(id)),
       ),
     );
-    final theme = Theme.of(context);
+    Color color = theme.colorScheme.surface;
+    InteractiveInkFeatureFactory splashFactory =
+        InkSparkle.constantTurbulenceSeedSplashFactory;
+    if (select.selected) {
+      splashFactory = NoSplash.splashFactory;
+      color = ElevationOverlay.applySurfaceTint(
+        theme.colorScheme.surface,
+        theme.colorScheme.primary,
+        12.0,
+      );
+    }
+
     final image = amiiboAsset(amiibo.image);
 
-    final asset = Material(
-      elevation: select.selected ? 12.0 : 2.0,
-      color: theme.colorScheme.surface,
-      surfaceTintColor: theme.colorScheme.primary,
-      type: MaterialType.card,
-      child: Padding(
-        padding: const EdgeInsets.fromLTRB(6.0, 12.0, 6.0, 6.0),
-        child: _ListAmiiboAsset(amiiboKey: id, name: amiibo.name, asset: image),
-      ),
-    );
-
-    final info = _AmiiboListInfo(
-      name: amiibo.name,
-      serie: amiibo.series,
-      cardNumber: null,
-      style: theme.primaryTextTheme.bodyLarge?.copyWith(
-        fontWeight: .bold,
-        color: theme.colorScheme.onSurfaceVariant,
-      ),
+    final asset = Padding(
+      padding: allPadding8,
+      child: _ListAmiiboAsset(amiiboKey: id, name: amiibo.name, asset: image),
     );
 
     final bool disable = widget.ignore || select.activated;
 
     final isWishActive = amiibo.userAttributes is WishedUserAttributes;
-    final buttons = Padding(
-      padding: const .all(4.0),
-      child: Column(
-        mainAxisSize: .max,
-        mainAxisAlignment: .center,
-        crossAxisAlignment: .stretch,
-        children: [
-          OwnButton(
+    final buttons = Row(
+      mainAxisSize: .max,
+      mainAxisAlignment: .spaceBetween,
+      crossAxisAlignment: .start,
+      spacing: 8,
+      children: [
+        Expanded(
+          child: OwnButton(
             amiiboId: id,
             isLock: disable,
             attributes: amiibo.userAttributes,
+            title: S.of(context).ownTooltip,
           ),
-          const Gap(4.0),
-          WishButton(amiiboId: id, isLock: disable, isActive: isWishActive),
+        ),
+        WishButton(amiiboId: id, isLock: disable, isActive: isWishActive),
+      ],
+    );
+
+    final style = theme.primaryTextTheme.bodyLarge?.copyWith(
+      fontWeight: .bold,
+      color: theme.colorScheme.onSurfaceVariant,
+    );
+    const subtitleStyle = TextStyle(
+      fontSize: 16,
+      height: 1,
+      letterSpacing: -.25,
+      fontWeight: .w600,
+    );
+    const mergeTitleStyle = TextStyle(
+      letterSpacing: -.5,
+      fontSize: 12,
+      fontWeight: .bold,
+    );
+
+    final name = amiibo.name;
+    final serie = amiibo.series;
+    final cardNumber = amiibo.cardNumber;
+
+    final body = ConstrainedBox(
+      constraints: const .new(maxHeight: 92),
+      child: Column(
+        mainAxisAlignment: .start,
+        crossAxisAlignment: .start,
+        spacing: 2,
+        children: [
+          Text(
+            serie.toUpperCase(),
+            style: style?.merge(mergeTitleStyle) ?? mergeTitleStyle,
+            softWrap: false,
+            overflow: .fade,
+            maxLines: 1,
+          ),
+          Text.rich(
+            TextSpan(
+              text: cardNumber == null ? null : '#${cardNumber} ',
+              children: [TextSpan(text: name)],
+            ),
+            style: style?.merge(subtitleStyle) ?? subtitleStyle,
+            softWrap: false,
+            overflow: .fade,
+            maxLines: 1,
+          ),
+          const Spacer(),
+          buttons,
         ],
       ),
     );
 
     return Card(
       elevation: 0.0,
-      color: Colors.transparent,
       borderOnForeground: true,
       clipBehavior: .hardEdge,
+      color: color,
       shape: RoundedRectangleBorder(
         borderRadius: const .all(.circular(12.0)),
-        side: BorderSide(
-          color: theme.colorScheme.primary,
-          style: .solid,
-          width: select.selected ? 3.0 : 0.75,
-        ),
+        side: .new(color: theme.colorScheme.primary, style: .solid, width: .75),
       ),
       child: InkWell(
-        splashFactory: InkSparkle.constantTurbulenceSeedSplashFactory,
+        splashFactory: splashFactory,
         onTap: () => _onTap(id, select.activated, image),
         onLongPress: widget.ignore ? null : () => _onLongPress(id),
         child: Row(
           mainAxisAlignment: .start,
           textBaseline: .alphabetic,
+          spacing: 0,
           children: [
             Expanded(child: asset),
-            Expanded(flex: 3, child: info),
-            SizedBox(width: 64.0, child: buttons),
+            Expanded(flex: 3, child: body),
+            gap8,
           ],
         ),
       ),
@@ -289,56 +314,9 @@ class const _ListAmiiboAsset({
           fit: .contain,
           alignment: .center,
           semanticLabel: name,
-          height: 104.0,
-          cacheHeight: 104,
+          height: 92,
+          cacheHeight: 92,
         ),
-      ),
-    );
-  }
-}
-
-class _AmiiboListInfo extends StatelessWidget {
-  final TextStyle? style;
-  final String name;
-  final String serie;
-  final String? cardNumber;
-
-  const _AmiiboListInfo({
-    required this.name,
-    required this.serie,
-    this.cardNumber,
-    this.style,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    const subtitleStyle = TextStyle(fontSize: 14.0);
-    return Padding(
-      padding: const EdgeInsets.all(6.0),
-      child: Column(
-        mainAxisAlignment: .start,
-        mainAxisSize: .max,
-        crossAxisAlignment: .start,
-        children: [
-          Text.rich(
-            TextSpan(
-              text: cardNumber == null ? null : '#${cardNumber!} ',
-              children: [TextSpan(text: name)],
-            ),
-            style: style,
-            softWrap: false,
-            overflow: .fade,
-            maxLines: 1,
-          ),
-          const Gap(2.0),
-          Text(
-            serie,
-            style: style?.merge(subtitleStyle) ?? subtitleStyle,
-            softWrap: false,
-            overflow: .fade,
-            maxLines: 1,
-          ),
-        ],
       ),
     );
   }

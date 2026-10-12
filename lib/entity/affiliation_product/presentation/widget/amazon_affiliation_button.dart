@@ -21,9 +21,8 @@ class AmazonAffiliationButton extends HookConsumerWidget {
     return ElevatedButton.icon(
       style: ButtonStyle(
         backgroundColor: WidgetStateProperty.resolveWith((state) {
-          final color = ElevatedButtonTheme.of(
-            context,
-          ).style?.backgroundColor?.resolve(state);
+          final color = ElevatedButtonTheme.of(context).style?.backgroundColor
+              ?.resolve(state);
           if (color != null) {
             final int value = Blend.hctHue(
               color.colorValue,
@@ -35,9 +34,8 @@ class AmazonAffiliationButton extends HookConsumerWidget {
           return color;
         }),
         foregroundColor: WidgetStateProperty.resolveWith((state) {
-          final color = ElevatedButtonTheme.of(
-            context,
-          ).style?.foregroundColor?.resolve(state);
+          final color = ElevatedButtonTheme.of(context).style?.foregroundColor
+              ?.resolve(state);
           if (color != null) {
             final int value = Blend.hctHue(
               color.colorValue,
@@ -56,9 +54,8 @@ class AmazonAffiliationButton extends HookConsumerWidget {
   }
 }
 
-class AmazonAffiliationIconButton extends HookConsumerWidget {
-  const AmazonAffiliationIconButton({super.key});
-
+class const AmazonAffiliationIconButton({super.key})
+    extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final id = ref.watch(keyAmiiboProvider);

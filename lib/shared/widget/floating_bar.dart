@@ -251,18 +251,18 @@ class _AppBarState extends State<_AppBar> {
 
   void _handleScrollNotification(ScrollNotification notification) {
     if (notification is ScrollUpdateNotification && notification.depth == 0) {
-      final bool oldScrolledUnder = _scrolledUnder;
-      final ScrollMetrics metrics = notification.metrics;
+      final oldScrolledUnder = _scrolledUnder;
+      final metrics = notification.metrics;
       switch (metrics.axisDirection) {
-        case AxisDirection.up:
+        case .up:
           // Scroll view is reversed
           _scrolledUnder = metrics.extentAfter > 0;
           break;
-        case AxisDirection.down:
+        case .down:
           _scrolledUnder = metrics.extentBefore > 0;
           break;
-        case AxisDirection.right:
-        case AxisDirection.left:
+        case .right:
+        case .left:
           // Scrolled under is only supported in the vertical axis.
           _scrolledUnder = false;
           break;
@@ -336,7 +336,7 @@ class _AppBarState extends State<_AppBar> {
     );
 
     Widget child = ListTileTheme(
-      contentPadding: EdgeInsets.zero,
+      contentPadding: .zero,
       horizontalTitleGap: 0.0,
       iconColor: theme.iconTheme.color,
       textColor: theme.textTheme.titleLarge!.color,
@@ -348,7 +348,7 @@ class _AppBarState extends State<_AppBar> {
         shape: const StadiumBorder(),
         clipBehavior: .hardEdge,
         child: ListTile(
-          contentPadding: const EdgeInsets.symmetric(horizontal: 8.0),
+          contentPadding: const .symmetric(horizontal: 8),
           leading:
               widget.leading ?? (useCloseButton ? CloseButton() : BackButton()),
           title: widget.title == null
@@ -397,10 +397,7 @@ class _AppBarState extends State<_AppBar> {
             child: Align(
               alignment: .center,
               child: Padding(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 12.0,
-                  vertical: 2.0,
-                ),
+                padding: const .symmetric(horizontal: 12, vertical: 2),
                 child: child,
               ),
             ),
@@ -413,11 +410,7 @@ class _AppBarState extends State<_AppBar> {
 
     return ClipRRect(
       child: BackdropFilter(
-        filter: ImageFilter.blur(
-          sigmaX: sigma,
-          sigmaY: sigma,
-          tileMode: .decal,
-        ),
+        filter: .blur(sigmaX: sigma, sigmaY: sigma, tileMode: .decal),
         child: child,
       ),
     );

@@ -12,6 +12,7 @@ import 'package:amiibo_network/app/configuration/stat_ui_remote_config_provider.
 import 'package:amiibo_network/app/state/theme/theme_provider.dart';
 import 'package:amiibo_network/app/configuration/model/amiibo_category_enum.dart';
 import 'package:amiibo_network/shared/utils/format_color_on_theme.dart';
+import 'package:amiibo_network/shared/utils/gap_helper.dart';
 import 'package:amiibo_network/shared/utils/result_type.dart';
 import 'package:amiibo_network/shared/widget/feature_disable_message_card.dart';
 import 'package:amiibo_network/page/settings/widget/locale_selection_dialog.dart';
@@ -45,6 +46,8 @@ class SettingsPage extends StatelessWidget {
       child: CustomScrollView(
         slivers: <Widget>[
           const SliverGap(16.0),
+          const _CollectionWidget(),
+          divider,
           const _FeatureListWidget(),
           divider,
           const _AppearanceListWidget(),
@@ -83,7 +86,7 @@ class _AppearanceListWidget extends ConsumerWidget {
       sliver: SliverList.list(
         children: [
           _TitleSetting(title: translate.appearance),
-          const Gap(4.0),
+          gap4,
           Consumer(
             builder: (context, ref, _) {
               final mode = ref.watch(themeModeProvider);
@@ -121,13 +124,6 @@ class _AppearanceListWidget extends ConsumerWidget {
             },
           ),
           _SwitchListSettings(
-            title: translate.showPercentage,
-            icon: const Icon(Icons.percent),
-            value: pref.usePercentage,
-            onChanged: (value) async =>
-                await ref.read(personalProvider.notifier).toggleStat(value),
-          ),
-          _SwitchListSettings(
             title: translate.showGrid,
             icon: const Icon(Icons.grid_view_outlined),
             value: pref.useGrid,
@@ -141,15 +137,14 @@ class _AppearanceListWidget extends ConsumerWidget {
   }
 }
 
-class _FeatureListWidget extends ConsumerStatefulWidget {
-  const _FeatureListWidget();
+class _CollectionWidget extends ConsumerStatefulWidget {
+  const _CollectionWidget();
 
   @override
-  ConsumerState<_FeatureListWidget> createState() => _FeatureListWidgetState();
+  ConsumerState<_CollectionWidget> createState() => _CollectionWidgetState();
 }
 
-class _FeatureListWidgetState extends ConsumerState<_FeatureListWidget> {
-  late ThemeData theme;
+class _CollectionWidgetState extends ConsumerState<_CollectionWidget> {
   late S translate;
   ScaffoldMessengerState? scaffoldState;
 
@@ -157,7 +152,6 @@ class _FeatureListWidgetState extends ConsumerState<_FeatureListWidget> {
   void didChangeDependencies() {
     super.didChangeDependencies();
     translate = S.of(context);
-    theme = Theme.of(context);
     scaffoldState = ScaffoldMessenger.maybeOf(context);
   }
 
@@ -223,17 +217,13 @@ class _FeatureListWidgetState extends ConsumerState<_FeatureListWidget> {
 
   @override
   Widget build(BuildContext context) {
-    final ownedCategoriesRemote = ref.watch(remoteOwnedCategoryProvider);
+    final translate = S.of(context);
     return SliverPadding(
-      padding: const EdgeInsets.symmetric(horizontal: 16.0),
+      padding: horizontalPadding16,
       sliver: SliverList.list(
         children: [
-          _TitleSetting(title: S.of(context).features),
-          const Gap(4.0),
-          ConstrainedBox(
-            constraints: const BoxConstraints(minWidth: 400, maxWidth: 450),
-            child: const FeatureDisableMessageCard(),
-          ),
+          _TitleSetting(title: translate.collection),
+          gap4,
           const _ResetCollection(),
           const _SaveCollection(),
           _ListSettings(
@@ -247,6 +237,30 @@ class _FeatureListWidgetState extends ConsumerState<_FeatureListWidget> {
             subtitle: translate.import_subtitle,
             icon: const ImageIcon(AssetImage(NetworkIcons.fileImport)),
             onTap: _openFileExplorer,
+          ),
+          
+        ],
+      ),
+    );
+  }
+}
+
+class _FeatureListWidget extends ConsumerWidget {
+  const _FeatureListWidget();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final translate = S.of(context);
+    final ownedCategoriesRemote = ref.watch(remoteOwnedCategoryProvider);
+    return SliverPadding(
+      padding: const EdgeInsets.symmetric(horizontal: 16.0),
+      sliver: SliverList.list(
+        children: [
+          _TitleSetting(title: S.of(context).features),
+          gap4,
+          ConstrainedBox(
+            constraints: const BoxConstraints(minWidth: 400, maxWidth: 450),
+            child: const FeatureDisableMessageCard(),
           ),
           if (ownedCategoriesRemote)
             _SwitchListSettings(
@@ -290,7 +304,7 @@ class _FeatureListWidgetState extends ConsumerState<_FeatureListWidget> {
               );
             },
           ),
-          const Gap(4.0),
+          gap4,
           Center(
             child: ConstrainedBox(
               constraints: const BoxConstraints(minWidth: 400, maxWidth: 450),
@@ -375,7 +389,7 @@ class _AboutListWidget extends StatelessWidget {
       sliver: SliverList.list(
         children: [
           _TitleSetting(title: translate.about),
-          const Gap(4.0),
+          gap4,
           _ListSettings(
             title: translate.changelog,
             subtitle: translate.changelogSubtitle,
@@ -445,7 +459,7 @@ class _SupportListWidget extends ConsumerWidget {
       sliver: SliverList.list(
         children: [
           _TitleSetting(title: translate.support),
-          const Gap(4.0),
+          gap4,
           _ListSettings(
             title: 'Github',
             icon: const ImageIcon(AssetImage(NetworkIcons.github)),
@@ -538,7 +552,7 @@ class __SaveCollectionState extends ConsumerState<_SaveCollection> {
   @override
   Widget build(BuildContext context) {
     return _ListSettings(
-      title: translate.saveCollection,
+      title: MaterialLocalizations.of(context).saveButtonLabel,
       subtitle: translate.saveCollectionSubtitle,
       icon: const ImageIcon(AssetImage(NetworkIcons.jpg)),
       onTap: () async {

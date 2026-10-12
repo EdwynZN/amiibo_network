@@ -90,6 +90,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "changelog": MessageLookupByLibrary.simpleMessage("Cambios"),
     "changelogSubtitle": MessageLookupByLibrary.simpleMessage("Novedades"),
     "character": m2,
+    "collection": MessageLookupByLibrary.simpleMessage("Colección"),
     "collectionReset": MessageLookupByLibrary.simpleMessage(
       "Colleccción borrada",
     ),

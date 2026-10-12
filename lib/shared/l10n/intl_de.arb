@@ -305,6 +305,10 @@
   "@saveCollection": {
     "description": "Schaltflächentext zum Speichern eines Bildes der Sammlung"
   },
+  "collection": "Kollektion",
+  "@collection": {
+    "description": "Titel des Einstellungsbereichs für die App-Sammlung"
+  },
   "saveCollectionSubtitle": "Erstelle ein Bild deiner Sammlung",
   "@saveCollectionSubtitle": {
     "description": "Untertitel zum Speichern der Sammlung"

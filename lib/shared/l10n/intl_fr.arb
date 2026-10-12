@@ -305,6 +305,10 @@
   "@saveCollection": {
     "description": "Bouton pour sauvegarder l'image de la collection"
   },
+  "collection": "Collection",
+  "@collection": {
+    "description": "Section des paramètres de collection"
+  },
   "saveCollectionSubtitle": "Sauver une image de votre collection",
   "@saveCollectionSubtitle": {
     "description": "Sous-titre de sauvegarde d'image"
