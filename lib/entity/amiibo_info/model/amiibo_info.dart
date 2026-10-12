@@ -9,5 +9,6 @@ class const AmiiboInfo({
   required final String name,
   required final String series,
   required final String? image,
+  required final int? cardNumber,
   required final UserAttributes userAttributes,
 }) with _$AmiiboInfo;

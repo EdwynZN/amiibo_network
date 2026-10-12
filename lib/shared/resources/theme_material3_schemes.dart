@@ -181,7 +181,7 @@ class ThemeSchemes {
 
   static const red = Material3Schemes(
     light: ColorScheme(
-      brightness: Brightness.light,
+      brightness: .light,
       primary: Color(0xFFBB1614),
       onPrimary: Color(0xFFFFFFFF),
       primaryContainer: Color(0xFFFFDAD5),
@@ -200,6 +200,10 @@ class ThemeSchemes {
       onErrorContainer: Color(0xFF410002),
       surface: Color(0xFFFFFBFF),
       onSurface: Color(0xFF201A19),
+      surfaceContainerLowest: Color(0xFFF5DDDA),
+      surfaceContainerLow: Color(0xFFF5DDDA),
+      surfaceContainer: Color(0xFFF5DDDA),
+      surfaceContainerHigh: Color(0xFFF5DDDA),
       surfaceContainerHighest: Color(0xFFF5DDDA),
       onSurfaceVariant: Color(0xFF534341),
       outline: Color(0xFF857370),
@@ -212,7 +216,7 @@ class ThemeSchemes {
       // scrim: Color(0xFF000000),
     ),
     dark: ColorScheme(
-      brightness: Brightness.dark,
+      brightness: .dark,
       primary: Color(0xFFFFB4A9),
       onPrimary: Color(0xFF690002),
       primaryContainer: Color(0xFF930005),
@@ -246,7 +250,7 @@ class ThemeSchemes {
 
   static const pink = Material3Schemes(
     light: ColorScheme(
-      brightness: Brightness.light,
+      brightness: .light,
       primary: Color(0xFFBC004B),
       onPrimary: Color(0xFFFFFFFF),
       primaryContainer: Color(0xFFFFD9DE),
@@ -277,7 +281,7 @@ class ThemeSchemes {
       // scrim: Color(0xFF000000),
     ),
     dark: ColorScheme(
-      brightness: Brightness.dark,
+      brightness: .dark,
       primary: Color(0xFFFFB2BE),
       onPrimary: Color(0xFF660025),
       primaryContainer: Color(0xFF900038),
@@ -311,7 +315,7 @@ class ThemeSchemes {
 
   static const purple = Material3Schemes(
     light: ColorScheme(
-      brightness: Brightness.light,
+      brightness: .light,
       primary: Color(0xFF9A25AE),
       onPrimary: Color(0xFFFFFFFF),
       primaryContainer: Color(0xFFFFD6FE),
@@ -342,7 +346,7 @@ class ThemeSchemes {
       // scrim: Color(0xFF000000),
     ),
     dark: ColorScheme(
-      brightness: Brightness.dark,
+      brightness: .dark,
       primary: Color(0xFFF9ABFF),
       onPrimary: Color(0xFF570066),
       primaryContainer: Color(0xFF7B008F),
@@ -376,7 +380,7 @@ class ThemeSchemes {
 
   static const deepPurple = Material3Schemes(
     light: ColorScheme(
-      brightness: Brightness.light,
+      brightness: .light,
       primary: Color(0xFF6F43C0),
       onPrimary: Color(0xFFFFFFFF),
       primaryContainer: Color(0xFFEBDDFF),
@@ -407,7 +411,7 @@ class ThemeSchemes {
       // scrim: Color(0xFF000000),
     ),
     dark: ColorScheme(
-      brightness: Brightness.dark,
+      brightness: .dark,
       primary: Color(0xFFF9ABFF),
       onPrimary: Color(0xFF570066),
       primaryContainer: Color(0xFF7B008F),
@@ -441,7 +445,7 @@ class ThemeSchemes {
 
   static const indigo = Material3Schemes(
     light: ColorScheme(
-      brightness: Brightness.light,
+      brightness: .light,
       primary: Color(0xFF4355B9),
       onPrimary: Color(0xFFFFFFFF),
       primaryContainer: Color(0xFFDEE0FF),
@@ -472,7 +476,7 @@ class ThemeSchemes {
       // scrim: Color(0xFF000000),
     ),
     dark: ColorScheme(
-      brightness: Brightness.dark,
+      brightness: .dark,
       primary: Color(0xFFBAC3FF),
       onPrimary: Color(0xFF08218A),
       primaryContainer: Color(0xFF293CA0),
@@ -506,7 +510,7 @@ class ThemeSchemes {
 
   static const blue = Material3Schemes(
     light: ColorScheme(
-      brightness: Brightness.light,
+      brightness: .light,
       primary: Color(0xFF0061A4),
       onPrimary: Color(0xFFFFFFFF),
       primaryContainer: Color(0xFFD1E4FF),
@@ -537,7 +541,7 @@ class ThemeSchemes {
       // scrim: Color(0xFF000000),
     ),
     dark: ColorScheme(
-      brightness: Brightness.dark,
+      brightness: .dark,
       primary: Color(0xFF9ECAFF),
       onPrimary: Color(0xFF003258),
       primaryContainer: Color(0xFF00497D),
@@ -571,7 +575,7 @@ class ThemeSchemes {
 
   static const lightBlue = Material3Schemes(
     light: ColorScheme(
-      brightness: Brightness.light,
+      brightness: .light,
       primary: Color(0xFF006493),
       onPrimary: Color(0xFFFFFFFF),
       primaryContainer: Color(0xFFCAE6FF),
@@ -602,7 +606,7 @@ class ThemeSchemes {
       // scrim: Color(0xFF000000),
     ),
     dark: ColorScheme(
-      brightness: Brightness.dark,
+      brightness: .dark,
       primary: Color(0xFF8DCDFF),
       onPrimary: Color(0xFF00344F),
       primaryContainer: Color(0xFF004B70),
@@ -636,7 +640,7 @@ class ThemeSchemes {
 
   static const cyan = Material3Schemes(
     light: ColorScheme(
-      brightness: Brightness.light,
+      brightness: .light,
       primary: Color(0xFF006876),
       onPrimary: Color(0xFFFFFFFF),
       primaryContainer: Color(0xFFA1EFFF),
@@ -667,7 +671,7 @@ class ThemeSchemes {
       // scrim: Color(0xFF000000),
     ),
     dark: ColorScheme(
-      brightness: Brightness.dark,
+      brightness: .dark,
       primary: Color(0xFF44D8F1),
       onPrimary: Color(0xFF00363E),
       primaryContainer: Color(0xFF004E59),
@@ -700,7 +704,7 @@ class ThemeSchemes {
   );
   static const teal = Material3Schemes(
     light: ColorScheme(
-      brightness: Brightness.light,
+      brightness: .light,
       primary: Color(0xFF006A60),
       onPrimary: Color(0xFFFFFFFF),
       primaryContainer: Color(0xFF74F8E5),
@@ -731,7 +735,7 @@ class ThemeSchemes {
       // scrim: Color(0xFF000000),
     ),
     dark: ColorScheme(
-      brightness: Brightness.dark,
+      brightness: .dark,
       primary: Color(0xFF53DBC9),
       onPrimary: Color(0xFF003731),
       primaryContainer: Color(0xFF005048),
@@ -764,7 +768,7 @@ class ThemeSchemes {
   );
   static const green = Material3Schemes(
     light: ColorScheme(
-      brightness: Brightness.light,
+      brightness: .light,
       primary: Color(0xFF006E1C),
       onPrimary: Color(0xFFFFFFFF),
       primaryContainer: Color(0xFF94F990),
@@ -795,7 +799,7 @@ class ThemeSchemes {
       // scrim: Color(0xFF000000),
     ),
     dark: ColorScheme(
-      brightness: Brightness.dark,
+      brightness: .dark,
       primary: Color(0xFF78DC77),
       onPrimary: Color(0xFF00390A),
       primaryContainer: Color(0xFF005313),
@@ -828,7 +832,7 @@ class ThemeSchemes {
   );
   static const lightGreen = Material3Schemes(
     light: ColorScheme(
-      brightness: Brightness.light,
+      brightness: .light,
       primary: Color(0xFF3E6A00),
       onPrimary: Color(0xFFFFFFFF),
       primaryContainer: Color(0xFFB9F474),
@@ -859,7 +863,7 @@ class ThemeSchemes {
       // scrim: Color(0xFF000000),
     ),
     dark: ColorScheme(
-      brightness: Brightness.dark,
+      brightness: .dark,
       primary: Color(0xFF9ED75B),
       onPrimary: Color(0xFF1E3700),
       primaryContainer: Color(0xFF2E4F00),
@@ -892,7 +896,7 @@ class ThemeSchemes {
   );
   static const lime = Material3Schemes(
     light: ColorScheme(
-      brightness: Brightness.light,
+      brightness: .light,
       primary: Color(0xFF5B6300),
       onPrimary: Color(0xFFFFFFFF),
       primaryContainer: Color(0xFFDDED49),
@@ -923,7 +927,7 @@ class ThemeSchemes {
       // scrim: Color(0xFF000000),
     ),
     dark: ColorScheme(
-      brightness: Brightness.dark,
+      brightness: .dark,
       primary: Color(0xFFC1D02C),
       onPrimary: Color(0xFF2F3300),
       primaryContainer: Color(0xFF444B00),
@@ -957,7 +961,7 @@ class ThemeSchemes {
 
   static const yellow = Material3Schemes(
     light: ColorScheme(
-      brightness: Brightness.light,
+      brightness: .light,
       primary: Color(0xFF686000),
       onPrimary: Color(0xFFFFFFFF),
       primaryContainer: Color(0xFFF3E569),
@@ -988,7 +992,7 @@ class ThemeSchemes {
       // scrim: Color(0xFF000000),
     ),
     dark: ColorScheme(
-      brightness: Brightness.dark,
+      brightness: .dark,
       primary: Color(0xFFD6C950),
       onPrimary: Color(0xFF363100),
       primaryContainer: Color(0xFF4E4800),
@@ -1022,7 +1026,7 @@ class ThemeSchemes {
 
   static const amber = Material3Schemes(
     light: ColorScheme(
-      brightness: Brightness.light,
+      brightness: .light,
       primary: Color(0xFF785900),
       onPrimary: Color(0xFFFFFFFF),
       primaryContainer: Color(0xFFFFDF9E),
@@ -1053,7 +1057,7 @@ class ThemeSchemes {
       // scrim: Color(0xFF000000),
     ),
     dark: ColorScheme(
-      brightness: Brightness.dark,
+      brightness: .dark,
       primary: Color(0xFFD6C950),
       onPrimary: Color(0xFF363100),
       primaryContainer: Color(0xFF4E4800),
@@ -1087,7 +1091,7 @@ class ThemeSchemes {
 
   static const orange = Material3Schemes(
     light: ColorScheme(
-      brightness: Brightness.light,
+      brightness: .light,
       primary: Color(0xFF8B5000),
       onPrimary: Color(0xFFFFFFFF),
       primaryContainer: Color(0xFFFFDCBE),
@@ -1118,7 +1122,7 @@ class ThemeSchemes {
       // scrim: Color(0xFF000000),
     ),
     dark: ColorScheme(
-      brightness: Brightness.dark,
+      brightness: .dark,
       primary: Color(0xFFFFB870),
       onPrimary: Color(0xFF4A2800),
       primaryContainer: Color(0xFF693C00),
@@ -1152,7 +1156,7 @@ class ThemeSchemes {
 
   static const deepOrange = Material3Schemes(
     light: ColorScheme(
-      brightness: Brightness.light,
+      brightness: .light,
       primary: Color(0xFFB02F00),
       onPrimary: Color(0xFFFFFFFF),
       primaryContainer: Color(0xFFFFDBD1),
@@ -1183,7 +1187,7 @@ class ThemeSchemes {
       // scrim: Color(0xFF000000),
     ),
     dark: ColorScheme(
-      brightness: Brightness.dark,
+      brightness: .dark,
       primary: Color(0xFFFFB5A0),
       onPrimary: Color(0xFF5F1500),
       primaryContainer: Color(0xFF862200),
@@ -1217,7 +1221,7 @@ class ThemeSchemes {
 
   static const brown = Material3Schemes(
     light: ColorScheme(
-      brightness: Brightness.light,
+      brightness: .light,
       primary: Color(0xFF9A4522),
       onPrimary: Color(0xFFFFFFFF),
       primaryContainer: Color(0xFFFFDBCF),
@@ -1248,7 +1252,7 @@ class ThemeSchemes {
       // scrim: Color(0xFF000000),
     ),
     dark: ColorScheme(
-      brightness: Brightness.dark,
+      brightness: .dark,
       primary: Color(0xFFFFB59A),
       onPrimary: Color(0xFF5B1B00),
       primaryContainer: Color(0xFF7B2E0D),
@@ -1282,7 +1286,7 @@ class ThemeSchemes {
 
   static const blueGrey = Material3Schemes(
     light: ColorScheme(
-      brightness: Brightness.light,
+      brightness: .light,
       primary: Color(0xFF006783),
       onPrimary: Color(0xFFFFFFFF),
       primaryContainer: Color(0xFFBDE9FF),
@@ -1313,7 +1317,7 @@ class ThemeSchemes {
       // scrim: Color(0xFF000000),
     ),
     dark: ColorScheme(
-      brightness: Brightness.dark,
+      brightness: .dark,
       primary: Color(0xFF65D3FF),
       onPrimary: Color(0xFF003546),
       primaryContainer: Color(0xFF004D64),

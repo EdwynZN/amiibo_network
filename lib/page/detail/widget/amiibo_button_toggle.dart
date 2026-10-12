@@ -8,6 +8,7 @@ import 'package:amiibo_network/feature/collection/infrastructure/configuration/c
 import 'package:amiibo_network/page/detail/widget/owned_bottom_sheet.dart';
 import 'package:amiibo_network/shared/generated/l10n.dart';
 import 'package:amiibo_network/shared/utils/theme_extensions.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:gap/gap.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:material_ui/material_ui.dart';
@@ -87,15 +88,15 @@ class WishButton extends ConsumerWidget {
     final preferencesPalette = Theme.of(context)
         .extension<PreferencesExtension>()!;
     final color = preferencesPalette.wishContainer.withValues(alpha: 0.24);
-    return IconButton(
-      style: const ButtonStyle(tapTargetSize: .shrinkWrap),
+    return IconButton.filledTonal(
+      style: const ButtonStyle(tapTargetSize: .padded),
       isSelected: isActive,
       icon: const Icon(Icons.favorite_border_outlined),
       selectedIcon: const Icon(iconWished),
       color: preferencesPalette.wishPalette.shade70,
       constraints: .tight(size),
-      iconSize: 20.0,
-      splashRadius: 20.0,
+      iconSize: 20,
+      splashRadius: 20,
       tooltip: translate.wishTooltip,
       splashColor: color,
       highlightColor: color,
@@ -119,18 +120,20 @@ class WishButton extends ConsumerWidget {
   }
 }
 
-class OwnButton extends ConsumerWidget {
+class OwnButton extends HookConsumerWidget {
   OwnButton({
     required this.amiiboId,
     required this.attributes,
     required bool isLock,
     this.size = const .square(40.0),
+    this.title,
     super.key,
   }) : isLock = isLock || amiiboId == null || attributes == null,
        isActive = attributes != null && attributes is OwnedUserAttributes;
 
   final bool isLock;
   final int? amiiboId;
+  final String? title;
   final Size size;
   final bool isActive;
   final UserAttributes? attributes;
@@ -141,50 +144,77 @@ class OwnButton extends ConsumerWidget {
     final preferencesPalette = Theme.of(context)
         .extension<PreferencesExtension>()!;
     final color = preferencesPalette.ownContainer.withValues(alpha: 0.24);
-    return IconButton(
-      style: const ButtonStyle(tapTargetSize: .shrinkWrap),
+    final onPressed = isLock
+        ? null
+        : () async {
+            final showOwnerCategories = ref.read(ownTypesCategoryProvider);
+            final CollectionAttributes newAttributes;
+            if (showOwnerCategories) {
+              final userAttributes = await _ownedBottomSheet(
+                context,
+                attributes!,
+              );
+              if (userAttributes == null) return;
+              if (userAttributes case OwnedUserAttributes()) {
+                newAttributes = .owned(
+                  boxed: userAttributes.boxed,
+                  opened: userAttributes.opened,
+                );
+              } else {
+                newAttributes = const .none();
+              }
+            } else {
+              final bool newValue = !isActive;
+              newAttributes = newValue ? .owned() : const .none();
+            }
+
+            final useCase = ref.read(updateCollectionUseCaseProvider);
+            useCase(
+              UpdateCollectionInput(
+                amiibos: [.new(id: amiiboId!, attributes: newAttributes)],
+                bundles: const [],
+              ),
+            );
+          };
+    final state = useWidgetStatesController(
+      values: {if (isActive && !isLock) .selected},
+      keys: [isActive, isLock],
+    );
+    if (title != null) {
+      return ElevatedButton.icon(
+        statesController: state,
+        style: ButtonStyle(
+          tapTargetSize: .padded,
+          shape: WidgetStatePropertyAll(StadiumBorder()),
+          backgroundColor: WidgetStateProperty.fromMap({
+            WidgetState.selected: preferencesPalette.ownPalette.shade70,
+          }),
+          foregroundColor: WidgetStateProperty.fromMap({
+            WidgetState.selected: preferencesPalette.onOwnPrimary,
+          }),
+        ),
+        iconAlignment: .start,
+        icon: isActive
+            ? const Icon(iconOwned)
+            : const Icon(Icons.bookmark_outline_outlined),
+        label: Text(title!),
+        onPressed: onPressed,
+      );
+    }
+
+    return IconButton.filledTonal(
+      style: const ButtonStyle(tapTargetSize: .padded),
       isSelected: isActive,
       icon: const Icon(Icons.bookmark_outline_outlined),
       selectedIcon: const Icon(iconOwned),
       color: preferencesPalette.ownPalette.shade70,
-      constraints: BoxConstraints.tight(size),
-      iconSize: 20.0,
-      splashRadius: 20.0,
+      constraints: .tight(size),
+      iconSize: 20,
+      splashRadius: 20,
       tooltip: translate.ownTooltip,
       splashColor: color,
       highlightColor: color,
-      onPressed: isLock
-          ? null
-          : () async {
-              final showOwnerCategories = ref.read(ownTypesCategoryProvider);
-              final CollectionAttributes newAttributes;
-              if (showOwnerCategories) {
-                final userAttributes = await _ownedBottomSheet(
-                  context,
-                  attributes!,
-                );
-                if (userAttributes == null) return;
-                if (userAttributes case OwnedUserAttributes()) {
-                  newAttributes = .owned(
-                    boxed: userAttributes.boxed,
-                    opened: userAttributes.opened,
-                  );
-                } else {
-                  newAttributes = const .none();
-                }
-              } else {
-                final bool newValue = !isActive;
-                newAttributes = newValue ? .owned() : const .none();
-              }
-
-              final useCase = ref.read(updateCollectionUseCaseProvider);
-              useCase(
-                UpdateCollectionInput(
-                  amiibos: [.new(id: amiiboId!, attributes: newAttributes)],
-                  bundles: const [],
-                ),
-              );
-            },
+      onPressed: onPressed,
     );
   }
 }

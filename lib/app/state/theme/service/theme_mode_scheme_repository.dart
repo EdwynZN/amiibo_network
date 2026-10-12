@@ -33,7 +33,7 @@ class AmiiboTheme3 implements AmiiboTheme {
   final _greyScheme = const ColorScheme(
     error: Color(0xFFCF6679),
     onError: Color(0xFF690005),
-    brightness: Brightness.dark,
+    brightness: .dark,
     primary: Color(0xFF424242),
     onPrimary: Colors.white,
     surface: const Color(0xFF191C1E),
@@ -301,16 +301,16 @@ class AmiiboTheme3 implements AmiiboTheme {
     bool useSurfaceElevation = true,
   ]) {
     final overlay = scheme.primary.withValues(alpha: 0.24);
-    final inverseBrightness = scheme.brightness == Brightness.light
-        ? Brightness.dark
-        : Brightness.light;
+    final Brightness inverseBrightness = scheme.brightness == .light
+        ? .dark
+        : .light;
     return ThemeData(
       // GENERAL CONFIGURATION
       applyElevationOverlayColor: true,
       cupertinoOverrideTheme: const NoDefaultCupertinoThemeData(),
       extensions: [PreferencesExtension.brigthness(scheme.brightness)],
       inputDecorationTheme: const InputDecorationTheme(),
-      materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+      materialTapTargetSize: .shrinkWrap,
       pageTransitionsTheme: const PageTransitionsTheme(),
       platform: null,
       scrollbarTheme: ScrollbarThemeData(
@@ -362,14 +362,14 @@ class AmiiboTheme3 implements AmiiboTheme {
         color: scheme.surface,
         elevation: !useSurfaceElevation ? 0 : 0.0,
         height: kBottomNavigationBarHeight,
-        padding: EdgeInsets.zero,
+        padding: .zero,
       ),
       bottomSheetTheme: BottomSheetThemeData(
         elevation: !useSurfaceElevation ? 0 : 0.0,
         backgroundColor: Colors.transparent,
         constraints: const BoxConstraints(maxWidth: 400.0),
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.vertical(top: Radius.circular(8)),
+          borderRadius: .vertical(top: .circular(8)),
         ),
         modalBackgroundColor: Colors.transparent,
         modalElevation: 0.0,
@@ -377,7 +377,7 @@ class AmiiboTheme3 implements AmiiboTheme {
       bottomNavigationBarTheme: BottomNavigationBarThemeData(
         backgroundColor: scheme.secondaryContainer,
         elevation: !useSurfaceElevation ? 0 : 8.0,
-        type: BottomNavigationBarType.fixed,
+        type: .fixed,
         selectedIconTheme: const IconThemeData(),
         selectedItemColor: scheme.onSecondaryContainer,
         selectedLabelStyle: _textTheme.titleSmall!.copyWith(
@@ -388,37 +388,35 @@ class AmiiboTheme3 implements AmiiboTheme {
         unselectedIconTheme: const IconThemeData(),
         unselectedItemColor: scheme.outline,
         unselectedLabelStyle: _textTheme.titleSmall,
-        landscapeLayout: BottomNavigationBarLandscapeLayout.spread,
+        landscapeLayout: .spread,
       ),
 
       /// Deprecated in the future
       brightness: scheme.brightness,
       buttonTheme: ButtonThemeData(
         // Deprecated: Used in old RaisedButton/FlatButton
-        textTheme: ButtonTextTheme.normal,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-        layoutBehavior: ButtonBarLayoutBehavior.constrained,
-        materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+        textTheme: .normal,
+        shape: RoundedRectangleBorder(borderRadius: .circular(8)),
+        layoutBehavior: .constrained,
+        materialTapTargetSize: .shrinkWrap,
         height: 48,
       ),
       canvasColor: scheme.secondaryContainer,
       cardColor: scheme.secondaryContainer,
       cardTheme: CardThemeData(
         color: scheme.secondaryContainer,
-        margin: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
-        shape: const RoundedRectangleBorder(
-          borderRadius: BorderRadius.all(Radius.circular(8.0)),
-        ),
+        margin: const .symmetric(horizontal: 8.0, vertical: 4.0),
+        shape: const RoundedRectangleBorder(borderRadius: .all(.circular(8.0))),
         elevation: !useSurfaceElevation ? 0 : 4.0,
         shadowColor: scheme.surface.withValues(alpha: 0.12),
         surfaceTintColor: scheme.surfaceTint,
       ),
       checkboxTheme: CheckboxThemeData(
-        checkColor: WidgetStateProperty.resolveWith<Color?>((states) {
+        checkColor: .resolveWith<Color?>((states) {
           if (states.contains(WidgetState.disabled)) return null;
           return scheme.onPrimary;
         }),
-        fillColor: WidgetStateProperty.resolveWith<Color?>((states) {
+        fillColor: .resolveWith<Color?>((states) {
           if (states.contains(WidgetState.disabled)) return null;
           if (states.contains(WidgetState.focused) ||
               states.contains(WidgetState.pressed))
@@ -436,15 +434,15 @@ class AmiiboTheme3 implements AmiiboTheme {
         disabledColor: Colors.white.withAlpha(0x0C),
         selectedColor: scheme.primaryContainer,
         secondarySelectedColor: scheme.secondaryContainer,
-        labelPadding: const EdgeInsets.symmetric(horizontal: 4.0),
-        padding: const EdgeInsets.all(4.0),
+        labelPadding: const .symmetric(horizontal: 4.0),
+        padding: const .all(4.0),
         shadowColor: Colors.black12,
         selectedShadowColor: Colors.black38,
         labelStyle: _textTheme.bodySmall!.copyWith(color: scheme.onSurface),
         secondaryLabelStyle: _textTheme.bodySmall!.copyWith(
           color: scheme.onSurface,
         ),
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+        shape: RoundedRectangleBorder(borderRadius: .circular(8)),
         side: _SelectedBorder(scheme.primary, scheme.primary),
         brightness: scheme.brightness,
       ),
@@ -464,11 +462,8 @@ class AmiiboTheme3 implements AmiiboTheme {
           color: scheme.onSurface,
         ),
         backgroundColor: scheme.surface,
-        actionsPadding: const EdgeInsets.symmetric(
-          horizontal: 16.0,
-          vertical: 4.0,
-        ),
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+        actionsPadding: const .symmetric(horizontal: 16.0, vertical: 4.0),
+        shape: RoundedRectangleBorder(borderRadius: .circular(8)),
       ),
       disabledColor: Colors.grey, // Defaults grey
       dividerColor: scheme.outline,
@@ -486,30 +481,34 @@ class AmiiboTheme3 implements AmiiboTheme {
       ),
       elevatedButtonTheme: ElevatedButtonThemeData(
         style: ButtonStyle(
-          mouseCursor: WidgetStateProperty.all<MouseCursor>(
-            WidgetStateMouseCursor.clickable,
-          ),
+          mouseCursor: .all<MouseCursor>(WidgetStateMouseCursor.clickable),
           //enableFeedback: false,
-          surfaceTintColor: WidgetStateProperty.all(scheme.surfaceTint),
-          shape: WidgetStateProperty.all<OutlinedBorder>(
-            RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+          surfaceTintColor: .all(scheme.surfaceTint),
+          shape: .all<OutlinedBorder>(
+            RoundedRectangleBorder(borderRadius: .circular(8)),
           ),
-          elevation: WidgetStateProperty.resolveWith<double>((states) {
+          elevation: .resolveWith<double>((states) {
+            if (states.contains(WidgetState.disabled)) return 0.0;
             if (states.contains(WidgetState.pressed)) return 0.0;
             return !useSurfaceElevation ? 0 : 4.0;
           }),
-          backgroundColor: WidgetStateProperty.all<Color?>(
-            scheme.secondaryContainer,
-          ),
-          foregroundColor: WidgetStateProperty.all<Color?>(
-            scheme.onSecondaryContainer,
-          ),
-          textStyle: WidgetStateProperty.all<TextStyle?>(_textTheme.bodyLarge),
-          overlayColor: WidgetStateProperty.all<Color>(overlay),
+          backgroundColor: .fromMap({
+            WidgetState.disabled: scheme.brightness == .light
+                ? Colors.grey.shade300
+                : Colors.grey.shade700,
+            WidgetState.any: scheme.secondaryContainer,
+          }),
+          foregroundColor: .fromMap({
+            WidgetState.disabled: scheme.brightness == .light
+                ? Colors.black54
+                : Colors.white54,
+            WidgetState.any: scheme.onSecondaryContainer,
+          }),
+          textStyle: .all<TextStyle?>(_textTheme.bodyLarge),
+          overlayColor: .all<Color>(overlay),
           visualDensity: const VisualDensity(vertical: 0),
         ),
       ),
-
       expansionTileTheme: ExpansionTileThemeData(
         collapsedBackgroundColor: Colors.transparent,
         backgroundColor: scheme.surface,
@@ -533,7 +532,7 @@ class AmiiboTheme3 implements AmiiboTheme {
         selectedTileColor: scheme.secondaryContainer,
         selectedColor: scheme.onSecondaryContainer,
         shape: const RoundedRectangleBorder(
-          borderRadius: BorderRadius.all(Radius.circular(16.0)),
+          borderRadius: .all(.circular(16.0)),
         ),
       ),
       menuBarTheme: const MenuBarThemeData(),
@@ -541,12 +540,10 @@ class AmiiboTheme3 implements AmiiboTheme {
       menuTheme: const MenuThemeData(),
       navigationBarTheme: NavigationBarThemeData(
         backgroundColor: scheme.surface,
-        iconTheme: WidgetStateProperty.all(
-          IconThemeData(color: scheme.onSurface),
-        ),
+        iconTheme: .all(IconThemeData(color: scheme.onSurface)),
         indicatorColor: scheme.primaryContainer,
-        labelBehavior: NavigationDestinationLabelBehavior.alwaysShow,
-        labelTextStyle: WidgetStateProperty.all(_textTheme.labelLarge),
+        labelBehavior: .alwaysShow,
+        labelTextStyle: .all(_textTheme.labelLarge),
       ),
       navigationDrawerTheme: NavigationDrawerThemeData(
         elevation: !useSurfaceElevation ? 0 : 4.0,
@@ -554,7 +551,7 @@ class AmiiboTheme3 implements AmiiboTheme {
         backgroundColor: scheme.surface,
       ),
       navigationRailTheme: NavigationRailThemeData(
-        labelType: NavigationRailLabelType.selected,
+        labelType: .selected,
         backgroundColor: scheme.primaryContainer,
         elevation: !useSurfaceElevation ? 0 : 8.0,
         groupAlignment: 1.0,
@@ -567,18 +564,12 @@ class AmiiboTheme3 implements AmiiboTheme {
       ),
       outlinedButtonTheme: OutlinedButtonThemeData(
         style: ButtonStyle(
-          mouseCursor: WidgetStateProperty.all<MouseCursor>(
-            WidgetStateMouseCursor.clickable,
-          ),
+          mouseCursor: .all<MouseCursor>(WidgetStateMouseCursor.clickable),
           //enableFeedback: false,
-          shape: WidgetStateProperty.all<OutlinedBorder>(
-            const RoundedRectangleBorder(),
-          ),
-          side: WidgetStateProperty.all<BorderSide>(
-            BorderSide(color: scheme.primary, width: 1),
-          ),
-          backgroundColor: WidgetStateProperty.all<Color>(Colors.transparent),
-          foregroundColor: WidgetStateProperty.all<Color?>(scheme.primary),
+          shape: .all<OutlinedBorder>(const RoundedRectangleBorder()),
+          side: .all<BorderSide>(BorderSide(color: scheme.primary, width: 1)),
+          backgroundColor: .all<Color>(Colors.transparent),
+          foregroundColor: .all<Color?>(scheme.primary),
         ),
       ),
       popupMenuTheme: PopupMenuThemeData(
@@ -586,7 +577,7 @@ class AmiiboTheme3 implements AmiiboTheme {
         color: scheme.primaryContainer,
         elevation: !useSurfaceElevation ? 0 : 8.0,
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(4.0),
+          borderRadius: .circular(4.0),
           side: BorderSide(color: scheme.secondaryContainer),
         ),
       ),
@@ -611,7 +602,7 @@ class AmiiboTheme3 implements AmiiboTheme {
       secondaryHeaderColor: scheme.secondaryContainer,
       segmentedButtonTheme: SegmentedButtonThemeData(
         style: ButtonStyle(
-          backgroundColor: WidgetStateProperty.resolveWith<Color?>((states) {
+          backgroundColor: .resolveWith<Color?>((states) {
             if (states.contains(WidgetState.disabled))
               return null;
             else if (states.contains(WidgetState.selected))
@@ -622,7 +613,7 @@ class AmiiboTheme3 implements AmiiboTheme {
             return scheme.surface;
           }),
           iconSize: WidgetStatePropertyAll(16.0),
-          iconColor: WidgetStateProperty.resolveWith<Color?>((states) {
+          iconColor: .resolveWith<Color?>((states) {
             if (states.contains(WidgetState.disabled))
               return null;
             else if (states.contains(WidgetState.selected))
@@ -633,7 +624,7 @@ class AmiiboTheme3 implements AmiiboTheme {
             return scheme.onSurface;
           }),
           textStyle: WidgetStatePropertyAll(_textTheme.labelLarge),
-          foregroundColor: WidgetStateProperty.resolveWith<Color?>((states) {
+          foregroundColor: .resolveWith<Color?>((states) {
             if (states.contains(WidgetState.disabled))
               return null;
             else if (states.contains(WidgetState.selected))
@@ -655,14 +646,14 @@ class AmiiboTheme3 implements AmiiboTheme {
         backgroundColor: scheme.tertiaryContainer,
         contentTextStyle: TextStyle(color: scheme.onTertiaryContainer),
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(8),
+          borderRadius: .circular(8),
           side: BorderSide(color: scheme.tertiary),
         ),
-        behavior: SnackBarBehavior.floating,
+        behavior: .floating,
       ),
       splashColor: scheme.tertiaryContainer.withValues(alpha: 0.24),
       switchTheme: SwitchThemeData(
-        thumbColor: WidgetStateProperty.resolveWith<Color?>((states) {
+        thumbColor: .resolveWith<Color?>((states) {
           if (states.contains(WidgetState.disabled)) {
             return null;
           } else if (states.contains(WidgetState.focused) ||
@@ -673,7 +664,7 @@ class AmiiboTheme3 implements AmiiboTheme {
           }
           return null;
         }),
-        trackColor: WidgetStateProperty.resolveWith<Color?>((states) {
+        trackColor: .resolveWith<Color?>((states) {
           if (states.contains(WidgetState.disabled)) {
             return null;
           } else if (states.contains(WidgetState.focused) ||
@@ -689,16 +680,14 @@ class AmiiboTheme3 implements AmiiboTheme {
       tabBarTheme: TabBarThemeData(indicatorColor: scheme.primaryContainer),
       textButtonTheme: TextButtonThemeData(
         style: ButtonStyle(
-          mouseCursor: WidgetStateProperty.all<MouseCursor>(
-            WidgetStateMouseCursor.clickable,
-          ),
+          mouseCursor: .all<MouseCursor>(WidgetStateMouseCursor.clickable),
           //enableFeedback: false,
-          shape: WidgetStateProperty.all<OutlinedBorder>(
-            RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+          shape: .all<OutlinedBorder>(
+            RoundedRectangleBorder(borderRadius: .circular(8)),
           ),
-          backgroundColor: WidgetStateProperty.all<Color>(Colors.transparent),
-          foregroundColor: WidgetStateProperty.all<Color>(scheme.onSurface),
-          overlayColor: WidgetStateProperty.all<Color>(overlay),
+          backgroundColor: .all<Color>(Colors.transparent),
+          foregroundColor: .all<Color>(scheme.onSurface),
+          overlayColor: .all<Color>(overlay),
         ),
       ),
       textSelectionTheme: TextSelectionThemeData(
@@ -712,11 +701,11 @@ class AmiiboTheme3 implements AmiiboTheme {
       tooltipTheme: TooltipThemeData(
         decoration: BoxDecoration(
           color: scheme.tertiaryContainer,
-          borderRadius: BorderRadius.all(Radius.circular(8.0)),
+          borderRadius: .all(.circular(8.0)),
         ),
         textStyle: _textTheme.bodySmall,
       ),
-      typography: Typography.material2021(),
+      typography: .material2021(),
       unselectedWidgetColor: scheme.onSurface,
     );
   }
@@ -752,7 +741,7 @@ class AmiiboTheme3 implements AmiiboTheme {
         final scheme = blendScheme(_darkScheme, _greyScheme, 0.75);
         final theme = _themeFromScheme(scheme, false);
         final shape = RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(8),
+          borderRadius: .circular(8),
           side: BorderSide(color: _darkScheme.primary),
         );
         _darkTheme = theme.copyWith(
@@ -763,9 +752,9 @@ class AmiiboTheme3 implements AmiiboTheme {
             surfaceTintColor: Colors.black,
             backgroundColor: Colors.black,
             systemOverlayStyle: SystemUiOverlayStyle(
-              statusBarBrightness: Brightness.dark,
-              statusBarIconBrightness: Brightness.light,
-              systemNavigationBarIconBrightness: Brightness.dark,
+              statusBarBrightness: .dark,
+              statusBarIconBrightness: .light,
+              systemNavigationBarIconBrightness: .dark,
               statusBarColor: Colors.black,
               systemNavigationBarColor: Colors.black,
             ),
@@ -792,9 +781,9 @@ class AmiiboTheme3 implements AmiiboTheme {
           cardTheme: CardThemeData(
             surfaceTintColor: null,
             color: Colors.black,
-            margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+            margin: const .symmetric(horizontal: 8, vertical: 4),
             shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(8),
+              borderRadius: .circular(8),
               side: BorderSide(
                 color: _darkScheme.secondaryContainer,
                 width: 1.0,
@@ -803,10 +792,7 @@ class AmiiboTheme3 implements AmiiboTheme {
             elevation: 0.0,
           ),
           dialogTheme: theme.dialogTheme.copyWith(
-            actionsPadding: const EdgeInsets.symmetric(
-              horizontal: 16.0,
-              vertical: 4.0,
-            ),
+            actionsPadding: const .symmetric(horizontal: 16.0, vertical: 4.0),
             shape: shape,
             surfaceTintColor: _darkScheme.surfaceTint,
             backgroundColor: Colors.black,
@@ -824,14 +810,14 @@ class AmiiboTheme3 implements AmiiboTheme {
             selectedTileColor: _darkScheme.secondaryContainer,
             selectedColor: _darkScheme.onSecondaryContainer,
             shape: const RoundedRectangleBorder(
-              borderRadius: BorderRadius.all(Radius.circular(16.0)),
+              borderRadius: .all(.circular(16.0)),
             ),
           ),
           snackBarTheme: SnackBarThemeData(
             backgroundColor: const Color(0xFF212121),
             contentTextStyle: const TextStyle(color: Colors.white70),
             shape: shape,
-            behavior: SnackBarBehavior.floating,
+            behavior: .floating,
           ),
         );
         break;

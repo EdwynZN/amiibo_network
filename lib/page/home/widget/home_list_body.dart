@@ -51,7 +51,7 @@ class const HomeListBody({final ScrollController? scrollController, super.key})
 
         const grid = SliverGridDelegateWithMaxCrossAxisExtent(
           maxCrossAxisExtent: 160,
-          childAspectRatio: 0.78,
+          childAspectRatio: .7,
           mainAxisSpacing: 8,
           crossAxisSpacing: 8,
         );
@@ -89,9 +89,9 @@ class const HomeListBody({final ScrollController? scrollController, super.key})
         }
 
         const grid = SliverGridDelegateWithMaxCrossAxisExtent(
-          maxCrossAxisExtent: 160.0,
-          childAspectRatio: 0.78,
-          mainAxisSpacing: 8.0,
+          maxCrossAxisExtent: 160,
+          childAspectRatio: .7,
+          mainAxisSpacing: 8,
           crossAxisSpacing: 8,
         );
         child = SliverPadding(
@@ -121,13 +121,10 @@ class const _AnimatedListTile(
   Widget build(BuildContext context) {
     return AnimatedSwitcher(
       duration: const .new(milliseconds: 600),
-      child: ConstrainedBox(
-        constraints: const .new(maxHeight: 104, minHeight: 72.0),
-        child: AnimatedSelectedListTile(
-          key: ValueKey(amiibo.id),
-          amiibo: amiibo,
-          ignore: ignore,
-        ),
+      child: AnimatedSelectedListTile(
+        key: ValueKey(amiibo.id),
+        amiibo: amiibo,
+        ignore: ignore,
       ),
     );
   }

@@ -61,6 +61,7 @@ class const SingleStatProgressCard(final Stat stat, {super.key})
 
     return Card(
       elevation: 6.0,
+      color: theme.scaffoldBackgroundColor,
       child: Padding(
         padding: allPadding12,
         child: Column(
