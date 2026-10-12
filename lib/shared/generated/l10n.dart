@@ -730,6 +730,16 @@ class S {
     );
   }
 
+  /// `Collection`
+  String get collection {
+    return Intl.message(
+      'Collection',
+      name: 'collection',
+      desc: 'Settings section title for app collection',
+      args: [],
+    );
+  }
+
   /// `Create a picture of your collection`
   String get saveCollectionSubtitle {
     return Intl.message(

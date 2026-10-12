@@ -90,6 +90,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Was gibt es Neues",
     ),
     "character": m2,
+    "collection": MessageLookupByLibrary.simpleMessage("Kollektion"),
     "collectionReset": MessageLookupByLibrary.simpleMessage(
       "Sammlung zurückgesetzt",
     ),

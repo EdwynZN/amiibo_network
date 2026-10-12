@@ -303,7 +303,11 @@
   },
   "saveCollection": "Guardar Colección",
   "@saveCollection": {
-    "description": "Botón para guardar imagen de colección"
+    "description": "Sección de opciones de colección"
+  },
+  "collection": "Colección",
+  "@collection": {
+    "description": "Titel des Einstellungsbereichs für die App-Sammlung"
   },
   "saveCollectionSubtitle": "Guarda una imagen de tu colección",
   "@saveCollectionSubtitle": {

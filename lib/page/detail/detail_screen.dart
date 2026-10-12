@@ -4,6 +4,7 @@ import 'package:amiibo_network/shared/resources/resources.dart';
 import 'package:amiibo_network/app/configuration/amiibo_info_configuration/configuration.dart';
 import 'package:amiibo_network/app/state/preferences_provider.dart';
 import 'package:amiibo_network/shared/utils/amiibo_asset_util.dart';
+import 'package:amiibo_network/shared/utils/gap_helper.dart';
 import 'package:amiibo_network/shared/utils/tablet_utils.dart';
 import 'package:amiibo_network/page/detail/widget/amiibo_button_toggle.dart';
 import 'package:amiibo_network/page/detail/widget/card_details.dart';
@@ -86,7 +87,7 @@ class DetailScreen extends ConsumerWidget {
                 orElse: () => const SizedBox(),
               ),
         ),
-        actions: const [AmazonAffiliationIconButton(), Gap(8.0)],
+        actions: const [AmazonAffiliationIconButton(), gap8],
       ),
       body: body,
     );
