@@ -11713,7 +11713,7 @@
     },
     {
       "key": 862,
-      "id": null,
+      "id": "010D000004A70902",
       "amiiboSeries": "TLOZ: Tears of the Kingdom",
       "character": "Mineru's Construct",
       "gameSeries": "The Legend of Zelda",
@@ -12813,7 +12813,7 @@
     },
     {
       "key": 942,
-      "id": null,
+      "id": "1F02000004C71E03",
       "amiiboSeries": "Kirby Air Riders",
       "character": "King Dedede",
       "gameSeries": "Kirby",
@@ -12826,7 +12826,7 @@
     },
     {
       "key": 943,
-      "id": null,
+      "id": "1F04000004CA1E03",
       "amiiboSeries": "Kirby Air Riders",
       "character": "Chef Kawasaki",
       "gameSeries": "Kirby",
@@ -12839,7 +12839,7 @@
     },
     {
       "key": 944,
-      "id": null,
+      "id": "3540000005032002",
       "amiiboSeries": "Resident Evil Requiem",
       "character": "Grace Ashcroft",
       "gameSeries": "Resident Evil",
@@ -12904,7 +12904,7 @@
     },
     {
       "key": 949,
-      "id": null,
+      "id": "3541000005042002",
       "amiiboSeries": "Resident Evil Requiem",
       "character": "Leon Scott Kennedy",
       "gameSeries": "Resident Evil",
@@ -12956,7 +12956,7 @@
     },
     {
       "key": 953,
-      "id": null,
+      "id": "0809000004F90402",
       "amiiboSeries": "Splatoon Raiders",
       "character": "Big Man",
       "gameSeries": "Splatoon",
@@ -12969,7 +12969,7 @@
     },
     {
       "key": 954,
-      "id": null,
+      "id": "0807000004F70402",
       "amiiboSeries": "Splatoon Raiders",
       "character": "Shiver",
       "gameSeries": "Splatoon",
@@ -12982,7 +12982,7 @@
     },
     {
       "key": 955,
-      "id": null,
+      "id": "0808000004F80402",
       "amiiboSeries": "Splatoon Raiders",
       "character": "Frye",
       "gameSeries": "Splatoon",
@@ -13085,5 +13085,5 @@
       "type": "Figure"
     }
   ],
-  "lastUpdated": "2026-08-22T08:00:00.000Z"
+  "lastUpdated": "2026-08-28T08:00:00.000Z"
 }

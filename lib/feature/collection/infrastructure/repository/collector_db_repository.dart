@@ -104,51 +104,59 @@ class const CollectorDbRepository({required final AppDatabase _db})
 
   @override
   Future<void> save(CollectorAggregateRoot collection) async {
-    await _db.batch((b) {
-      b
-        ..update(
-          _db.amiiboUserPreferences,
-          AmiiboUserPreferencesCompanion(
-            opened: .new(0),
-            boxed: .new(0),
-            wishlist: .new(false),
-          ),
-        )
-        ..update(
-          _db.amiiboBundleUserPreferences,
-          AmiiboBundleUserPreferencesCompanion(opened: .new(0), boxed: .new(0)),
-        );
-      for (final query in collection.amiibosOwned.values) {
-        b.update(
-          _db.amiiboUserPreferences,
-          AmiiboUserPreferencesCompanion(
-            opened: .new(query.preferences.opened),
-            boxed: .new(query.preferences.boxed),
-            wishlist: .new(false),
-          ),
-          where: (tl) => tl.amiiboKey.equals(query.id),
-        );
-      }
-      for (final query in collection.amiibosWished.values) {
-        b.update(
-          _db.amiiboUserPreferences,
-          AmiiboUserPreferencesCompanion(wishlist: .new(true)),
-          where: (tl) => tl.amiiboKey.equals(query.id),
-        );
-      }
-      for (final query in collection.bundlesOwned.values) {
-        final attributes =
-            (query.preferences! as OwnedUserPreferenceAttributes);
-        final companion = AmiiboBundleUserPreferencesCompanion(
-          opened: .new(attributes.opened),
-          boxed: .new(attributes.boxed),
-        );
-        b.update(
-          _db.amiiboBundleUserPreferences,
-          companion,
-          where: (tl) => tl.amiiboBundleId.equals(query.id),
-        );
-      }
-    });
+    await _db.computeWithDatabase(
+      connect: AppDatabase.new,
+      computation: (database) async {
+        await database.batch((b) {
+          b
+            ..update(
+              database.amiiboUserPreferences,
+              AmiiboUserPreferencesCompanion(
+                opened: .new(0),
+                boxed: .new(0),
+                wishlist: .new(false),
+              ),
+            )
+            ..update(
+              database.amiiboBundleUserPreferences,
+              AmiiboBundleUserPreferencesCompanion(
+                opened: .new(0),
+                boxed: .new(0),
+              ),
+            );
+          for (final query in collection.amiibosOwned.values) {
+            b.update(
+              database.amiiboUserPreferences,
+              AmiiboUserPreferencesCompanion(
+                opened: .new(query.preferences.opened),
+                boxed: .new(query.preferences.boxed),
+                wishlist: .new(false),
+              ),
+              where: (tl) => tl.amiiboKey.equals(query.id),
+            );
+          }
+          for (final query in collection.amiibosWished.values) {
+            b.update(
+              database.amiiboUserPreferences,
+              AmiiboUserPreferencesCompanion(wishlist: .new(true)),
+              where: (tl) => tl.amiiboKey.equals(query.id),
+            );
+          }
+          for (final query in collection.bundlesOwned.values) {
+            final attributes =
+                (query.preferences! as OwnedUserPreferenceAttributes);
+            final companion = AmiiboBundleUserPreferencesCompanion(
+              opened: .new(attributes.opened),
+              boxed: .new(attributes.boxed),
+            );
+            b.update(
+              database.amiiboBundleUserPreferences,
+              companion,
+              where: (tl) => tl.amiiboBundleId.equals(query.id),
+            );
+          }
+        });
+      },
+    );
   }
 }
