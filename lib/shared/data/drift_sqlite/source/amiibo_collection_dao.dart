@@ -293,6 +293,7 @@ class AmiiboCollectionDao(super.db)
           SELECT json_array(
               json_object(
                 'id', "amiibo_bundle"."id", 
+                'name', "amiibo_bundle"."name", 
                 'amiiboIds', json_group_array("m"."amiibo_key"), 
                 'images', json_array("amiibo_bundle_images"."file_path"),
                 'boxed', "amiibo_bundle_user_preferences"."boxed", 

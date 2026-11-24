@@ -23,14 +23,14 @@ extension AmiibroInfoDetailDriftMapper on AmiiboCollectionDetailDriftDto {
         name: name,
         userAttributes: userAttributes,
         type: type,
-        images: List.unmodifiableOf(images),
+        images: .unmodifiableOf(images),
         na: na,
         au: au,
         eu: eu,
         jp: jp,
         cardNumber: cardNumber,
       ),
-      bundles: List.unmodifiableOf(
+      bundles: .unmodifiableOf(
         bundles.map((e) {
           UserAttributes userAttributes = const .none();
           final (int opened, int boxed) = (e.opened, e.boxed);
@@ -40,10 +40,10 @@ extension AmiibroInfoDetailDriftMapper on AmiiboCollectionDetailDriftDto {
             userAttributes = .wished();
           }
           return AmiiboBundleMetadata(
-            id: e.id,
+            id: e.id.toString(),
             name: e.name,
-            amiiboIds: List.unmodifiableOf(e.amiiboIds),
-            images: List.unmodifiableOf(e.images),
+            amiiboIds: .unmodifiableOf(e.amiiboIds.map((id) => id.toString())),
+            images: .unmodifiableOf(e.images),
             userAttributes: userAttributes,
           );
         }),
