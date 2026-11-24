@@ -14,7 +14,7 @@ Object? _decodeList(Map<dynamic, dynamic> map, String key) {
 
 @Freezed(toJson: false)
 abstract class AmiiboCollectionDriftDto with _$AmiiboCollectionDriftDto {
-  const factory ({
+  const factory({
     @JsonKey(required: true, name: 'amiibo.key') required int key,
     @JsonKey(name: 'amiibo.amiiboSeries', required: true)
     required String amiiboSeries,
@@ -34,10 +34,7 @@ abstract class AmiiboCollectionDriftDto with _$AmiiboCollectionDriftDto {
     @Default(0) @JsonKey(name: 'amiibo_user_preferences.boxed') int boxed,
     @Default(0) @JsonKey(name: 'amiibo_user_preferences.opened') int opened,
     @Default(false)
-    @JsonKey(
-      fromJson: intToBool,
-      name: 'amiibo_user_preferences.wishlist'
-    )
+    @JsonKey(fromJson: intToBool, name: 'amiibo_user_preferences.wishlist')
     bool wishlist,
   }) = _AmiiboCollectionDriftDto;
 
@@ -46,8 +43,9 @@ abstract class AmiiboCollectionDriftDto with _$AmiiboCollectionDriftDto {
 }
 
 @Freezed(toJson: false)
-abstract class AmiiboCollectionDetailDriftDto with _$AmiiboCollectionDetailDriftDto {
-  const factory ({
+abstract class AmiiboCollectionDetailDriftDto
+    with _$AmiiboCollectionDetailDriftDto {
+  const factory({
     @JsonKey(required: true, name: 'amiibo.key') required int key,
     @JsonKey(required: true, name: 'amiibo.nfcId') required String? nfcId,
     @JsonKey(name: 'amiibo.amiiboSeries', required: true)
@@ -58,8 +56,11 @@ abstract class AmiiboCollectionDetailDriftDto with _$AmiiboCollectionDetailDrift
     required String gameSeries,
     @JsonKey(name: 'amiibo.name', required: true) required String name,
     @JsonKey(includeIfNull: true, name: 'images', readValue: _decodeList)
-    @Default(const []) List<String> images,
-    @Default(const []) List<AmiiboBundleDriftModel> bundles,
+    @Default(const [])
+    List<String> images,
+    @JsonKey(readValue: _decodeList)
+    @Default(const [])
+    List<AmiiboBundleDriftModel> bundles,
     @JsonKey(includeIfNull: true, name: 'amiibo.au') String? au,
     @JsonKey(includeIfNull: true, name: 'amiibo.eu') String? eu,
     @JsonKey(includeIfNull: true, name: 'amiibo.jp') String? jp,
@@ -70,10 +71,7 @@ abstract class AmiiboCollectionDetailDriftDto with _$AmiiboCollectionDetailDrift
     @Default(0) @JsonKey(name: 'amiibo_user_preferences.boxed') int boxed,
     @Default(0) @JsonKey(name: 'amiibo_user_preferences.opened') int opened,
     @Default(false)
-    @JsonKey(
-      fromJson: intToBool,
-      name: 'amiibo_user_preferences.wishlist'
-    )
+    @JsonKey(fromJson: intToBool, name: 'amiibo_user_preferences.wishlist')
     bool wishlist,
   }) = _AmiiboCollectionDetailDriftDto;
 
@@ -86,19 +84,14 @@ abstract class AmiiboBundleDriftModel with _$AmiiboBundleDriftModel {
   const AmiiboBundleDriftModel._();
 
   const factory AmiiboBundleDriftModel({
-    @JsonKey(name: 'amiibo.id', required: true) required String id,
-    @JsonKey(name: 'amiibo.name', required: true) required String name,
-    @JsonKey(name: 'amiibo_images.file_path', readValue: _decodeList)
-    @Default(const []) List<String> images,
-    @JsonKey(name: 'amiibo.au', required: true) required List<String> amiiboIds,
-  
-    @Default(0) @JsonKey(name: 'amiibo_user_preferences.boxed') int boxed,
-    @Default(0) @JsonKey(name: 'amiibo_user_preferences.opened') int opened,
+    @JsonKey(name: 'id', required: true) required int id,
+    @JsonKey(name: 'amiiboIds', required: true) required List<int> amiiboIds,
+    @JsonKey(name: 'name', required: true) required String name,
+    @JsonKey(name: 'images') @Default(const []) List<String> images,
+    @Default(0) @JsonKey(name: 'boxed') int boxed,
+    @Default(0) @JsonKey(name: 'opened') int opened,
     @Default(false)
-    @JsonKey(
-      fromJson: intToBool,
-      name: 'amiibo_user_preferences.wishlist',
-    )
+    @JsonKey(fromJson: intToBool, name: 'wishlist')
     bool wishlist,
   }) = _AmiiboBundleDriftModel;
 
