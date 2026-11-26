@@ -34,18 +34,15 @@ Dio _dio(Ref ref) {
 }
 
 @riverpod
-(String? nfc, String character)? _character(Ref ref, int key) {
-  return ref
-      .watch(detailAmiiboProvider(key))
-      .maybeWhen(
-        data: (cb) => cb == null ? null : (cb.details.nfcId, cb.details.character),
-        orElse: () => null,
-      );
+Future<(String? nfc, String character)?> _character(Ref ref, int key) async {
+  final cb = ref.watch(detailAmiiboProvider(key)).requireValue;
+  if (cb == null) return null;
+  return (cb.details.nfcId, cb.details.character);
 }
 
 @riverpod
 Future<NintendoPlatform> game(Ref ref, int key) async {
-  final amiibo = await ref.watch(_characterProvider(key));
+  final amiibo = ref.watch(_characterProvider(key)).requireValue;
   if (amiibo == null) return const NintendoPlatform();
   final dio = ref.watch(_dioProvider);
   final token = CancelToken();
