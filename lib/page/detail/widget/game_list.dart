@@ -1,17 +1,17 @@
 // ignore_for_file: unused_element
 
-import 'dart:io';
-import 'package:amiibo_network/shared/generated/l10n.dart';
-import 'package:amiibo_network/entity/game/model/game.dart';
-import 'package:amiibo_network/shared/resources/resources.dart';
+import 'dart:math' as math;
+
 import 'package:amiibo_network/app/configuration/amiibo_info_configuration/configuration.dart';
 import 'package:amiibo_network/entity/game/infrastructure/game_provider.dart';
-import 'package:dio/dio.dart';
-import 'package:material_ui/material_ui.dart';
-import 'package:gap/gap.dart';
+import 'package:amiibo_network/entity/game/model/game.dart';
+import 'package:amiibo_network/page/detail/widget/empty_game.dart';
+import 'package:amiibo_network/page/detail/widget/error_game_widget.dart';
+import 'package:amiibo_network/shared/generated/l10n.dart';
+import 'package:amiibo_network/shared/resources/resources.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:sliver_tools/sliver_tools.dart';
-import 'dart:math' as math;
 
 class GameListWidget extends ConsumerWidget {
   const GameListWidget({Key? key}) : super(key: key);
@@ -47,98 +47,18 @@ class GameListWidget extends ConsumerWidget {
                   asset: NetworkIcons.wiiUPlatform,
                 ),
             ];
-            if (games.isEmpty) {
-              games.add(const _EmptyGames());
-            }
+            if (games.isEmpty) games.add(const EmptyGames());
             return MultiSliver(children: games);
           },
           loading: () =>
               const SliverToBoxAdapter(child: LinearProgressIndicator()),
           error: (e, _) {
-            late final Widget child;
-            if (e is DioException) {
-              if (e.response != null)
-                switch (e.response!.statusCode) {
-                  case 404:
-                    child = const _EmptyGames();
-                    break;
-                  default:
-                    child = Text(
-                      e.response!.statusMessage ?? translate.no_games_found,
-                      textAlign: TextAlign.center,
-                    );
-                    break;
-                }
-              else if (e.error is SocketException &&
-                  (e.error as SocketException).osError != null) {
-                child = TextButton(
-                  onPressed: () => ref.invalidate(gameProvider(id)),
-                  child: Text(translate.socket_exception),
-                );
-              } else
-                child = Text(e.message ?? e.type.name);
-            } else if (e is ArgumentError) {
-              child = Text(
-                translate.no_games_found,
-                textAlign: TextAlign.center,
-              );
-            } else if (e is SocketException) {
-              child = TextButton(
-                onPressed: () => ref.invalidate(gameProvider(id)),
-                child: Text(translate.socket_exception),
-              );
-            } else
-              child = Text(e.toString());
             return SliverPadding(
-              padding: const EdgeInsets.symmetric(
-                horizontal: 24.0,
-                vertical: 8.0,
-              ),
-              sliver: SliverToBoxAdapter(
-                child: Center(
-                  child: DefaultTextStyle.merge(
-                    style: Theme.of(context).textTheme.headlineMedium,
-                    child: child,
-                  ),
-                ),
-              ),
+              padding: const .symmetric(horizontal: 24.0, vertical: 8.0),
+              sliver: SliverToBoxAdapter(child: ErrorGameWidget(e)),
             );
           },
         );
-  }
-}
-
-class _EmptyGames extends StatelessWidget {
-  const _EmptyGames();
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    return Padding(
-      padding: const EdgeInsets.all(24.0),
-      child: Column(
-        children: [
-          ImageIcon(
-            const AssetImage(GameIcons.nintendoSwitch),
-            size: 196,
-            color: theme.colorScheme.primary,
-          ),
-          const Gap(12),
-          SizedBox(
-            width: 340.0,
-            child: Text(
-              S.of(context).no_games_found,
-              style: theme.textTheme.headlineMedium?.copyWith(
-                fontSize: 24.0,
-                fontWeight: .w500,
-                color: theme.colorScheme.primary,
-              ),
-              textAlign: TextAlign.center,
-            ),
-          ),
-        ],
-      ),
-    );
   }
 }
 
@@ -157,9 +77,8 @@ class _PlatformGameList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final showUsage = Localizations.localeOf(
-      context,
-    ).languageCode.contains('en');
+    final showUsage = Localizations.localeOf(context).languageCode
+        .contains('en');
     final delegate = SliverChildBuilderDelegate((context, index) {
       if (index.isOdd)
         return const Divider(

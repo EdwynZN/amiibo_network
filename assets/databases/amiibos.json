@@ -12943,7 +12943,7 @@
     },
     {
       "key": 952,
-      "id": null,
+      "id": "1F02010004C81E03",
       "amiiboSeries": "Kirby Air Riders",
       "character": "King Dedede",
       "gameSeries": "Kirby",
@@ -13083,7 +13083,33 @@
       "jp": "2027",
       "na": "2027",
       "type": "Figure"
+    },
+    {
+      "key": 963,
+      "id": "0000000404431C02",
+      "amiiboSeries": "My Mario Wooden Blocks",
+      "character": "Mario",
+      "gameSeries": "Super Mario",
+      "name": "Mario (Melody Car)",
+      "au": null,
+      "eu": null,
+      "jp": "20261020",
+      "na": null,
+      "type": "Figure"
+    },
+    {
+      "key": 964,
+      "id": "000D000404451C02",
+      "amiiboSeries": "My Mario Wooden Blocks",
+      "character": "Toad",
+      "gameSeries": "Super Mario",
+      "name": "Toad",
+      "au": null,
+      "eu": null,
+      "jp": "20261020",
+      "na": null,
+      "type": "Figure"
     }
   ],
-  "lastUpdated": "2026-08-28T08:00:00.000Z"
+  "lastUpdated": "2026-11-25T08:00:00.000Z"
 }
